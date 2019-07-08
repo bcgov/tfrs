@@ -5,18 +5,10 @@
         "template": "tfrs-postgresql-persistent-template"
     },
     "metadata": {
-        "name": "tfrs-postgresql-dc",
+        "name": "postgresql-dc",
         "creationTimestamp": null
     },
     "parameters": [
-        {
-            "name": "ENV_NAME",
-            "required": true
-        },
-        {
-            "name": "NAME_SUFFIX",
-            "required": true
-        },
         {
             "description": "Username for PostgreSQL user that will be used for accessing the database.",
             "from": "user[A-Z0-9]{3}",
@@ -30,6 +22,12 @@
             "generate": "expression",
             "name": "TFRS_DB_PASSWORD",
             "required": true
+        },
+        {
+            "name": "BACKUP_PVC_NAME",
+            "displayName": "The backup PVC name",
+            "description": "The backup volume should be nfs-backup type. It needs to be requested before applying this template. A folder named postgresql-backup should be create under this PVC.",
+            "required": true
         }
     ],
     "objects": [
@@ -40,24 +38,22 @@
                 "annotations": {
                     "template.openshift.io/expose-database_name": "{.data['database-name']}",
                     "template.openshift.io/expose-password": "{.data['database-password']}",
-                    "template.openshift.io/expose-username": "{.data['database-user']}",
-                    "as-copy-of": "tfrs-postgresql-secrets"
+                    "template.openshift.io/expose-username": "{.data['database-user']}"
                 },
-                "name": "tfrs-postgresql${NAME_SUFFIX}",
+                "name": "tfrs-postgresql",
                 "labels":{
-                    "template": "tfrs-postgresql-persistent-template"
                 }
             },
             "stringData": {
-                "database-user": "${TFRS_DB_USER}",
-                "database-password": "${TFRS_DB_PASSWORD}"
+                "DATABASE_USER": "${TFRS_DB_USER}",
+                "DATABASE_PASSWORD": "${TFRS_DB_PASSWORD}"
             }
         },
         {
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "tfrs-postgresql${NAME_SUFFIX}",
+                "name": "postgresql",
                 "annotations": {
                     "template.openshift.io/expose-uri": "postgres://{.spec.clusterIP}:{.spec.ports[?(.name==\"postgresql\")].port}"
                 }
@@ -72,7 +68,7 @@
                     }
                 ],
                 "selector": {
-                    "name": "tfrs-postgresql${NAME_SUFFIX}"
+                    "name": "postgresql96"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -85,8 +81,9 @@
             "apiVersion": "v1",
             "kind": "PersistentVolumeClaim",
             "metadata": {
-                "name": "tfrs-postgresql${NAME_SUFFIX}",
+                "name": "postgresql",
                 "annotations":{
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file-db",
                     "template.openshift.io.bcgov/create": "true"
                 }
             },
@@ -96,26 +93,8 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "1Gi"
+                        "storage": "5Gi"
                     }
-                }
-            }
-        },
-        {
-            "kind": "ImageStream",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs-postgresql${NAME_SUFFIX}",
-                "creationTimestamp": null,
-                "labels": {
-                    "base-name": "tfrs-postgresql",
-                    "appver": "tfrs${NAME_SUFFIX}"
-                },
-                "annotations": {}
-            },
-            "spec": {
-                "lookupPolicy": {
-                    "local": false
                 }
             }
         },
@@ -126,7 +105,7 @@
                 "annotations": {
                     "template.alpha.openshift.io/wait-for-ready": "true"
                 },
-                "name": "tfrs-postgresql${NAME_SUFFIX}"
+                "name": "postgresql96"
             },
             "spec": {
                 "replicas": 1,
@@ -139,11 +118,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "postgresql"
+                                "postgresql96"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "tfrs-postgresql${NAME_SUFFIX}:${ENV_NAME}"
+                                "namespace": "openshift",
+                                "name": "postgresql:9.6"
                             }
                         }
                     },
@@ -153,27 +133,33 @@
                 ],
                 "test": false,
                 "selector": {
-                    "name": "tfrs-postgresql${NAME_SUFFIX}"
+                    "name": "postgresql96"
                 },
                 "template": {
                     "metadata": {
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "tfrs-postgresql${NAME_SUFFIX}"
+                            "name": "postgresql96"
                         }
                     },
                     "spec": {
                         "volumes": [
                             {
-                                "name": "tfrs-postgresql${NAME_SUFFIX}",
+                                "name": "postgresql-data",
                                 "persistentVolumeClaim": {
-                                    "claimName": "tfrs-postgresql${NAME_SUFFIX}"
+                                    "claimName": "postgresql"
+                                }
+                            },
+                            {
+                                "name": "postgresql-backup",
+                                "persistentVolumeClaim": {
+                                    "claimName": "${BACKUP_PVC_NAME}"
                                 }
                             }
                         ],
                         "containers": [
                             {
-                                "name": "postgresql",
+                                "name": "postgresql96",
                                 "image": " ",
                                 "ports": [
                                     {
@@ -184,14 +170,14 @@
                                 "env": [
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "value": "tfrs${NAME_SUFFIX}"
+                                        "value": "tfrs"
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-postgresql${NAME_SUFFIX}",
-                                                "key": "database-user"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
                                             }
                                         }
                                     },
@@ -199,8 +185,8 @@
                                         "name": "POSTGRESQL_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-postgresql${NAME_SUFFIX}",
-                                                "key": "database-password"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
                                             }
                                         }
                                     }
@@ -217,8 +203,13 @@
                                 },
                                 "volumeMounts": [
                                     {
-                                        "name": "tfrs-postgresql${NAME_SUFFIX}",
+                                        "name": "postgresql-data",
                                         "mountPath": "/var/lib/pgsql/data"
+                                    },
+                                    {
+                                        "name": "postgresql-backup",
+                                        "mountPath": "/postgresql-backup",
+                                        "subPath": "postgresql-backup"
                                     }
                                 ],
                                 "livenessProbe": {
@@ -237,7 +228,7 @@
                                             "/bin/sh",
                                             "-i",
                                             "-c",
-                                            "psql -h 127.0.0.1 -U $TFRS_DB_USER -q -d tfrs -c 'SELECT 1'"
+                                            "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d tfrs -c 'SELECT 1'"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,

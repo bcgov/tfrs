@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import ScheduleButtons from './ScheduleButtons';
 
 const ScheduleSummaryPage = props => (
   <div className="schedule-summary">
@@ -49,14 +48,6 @@ const ScheduleSummaryPage = props => (
         />
       </div>
     </div>
-
-    <div className="sticky">
-      <ScheduleButtons
-        edit={props.edit}
-        submit
-        delete
-      />
-    </div>
   </div>
 );
 
@@ -70,7 +61,6 @@ ScheduleSummaryPage.propTypes = {
     PropTypes.node
   ]),
   diesel: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  edit: PropTypes.bool.isRequired,
   gasoline: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleDieselChanged: PropTypes.func.isRequired,
   handleGasolineChanged: PropTypes.func.isRequired,

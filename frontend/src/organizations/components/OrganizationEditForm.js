@@ -7,6 +7,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
 
 const OrganizationEditForm = props => (
   <div className="organization-edit-details">
@@ -18,6 +19,7 @@ const OrganizationEditForm = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="organization-name">Organization Name:
+              {props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
               <input
                 className="form-control"
                 id="organization-name"
@@ -26,6 +28,10 @@ const OrganizationEditForm = props => (
                 onChange={props.handleInputChange}
                 value={props.fields.name}
               />
+              }
+              {!props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
+              <div className="form-control read-only">{props.fields.name}</div>
+              }
             </label>
           </div>
         </div>
@@ -49,6 +55,7 @@ const OrganizationEditForm = props => (
         }
       </div>
 
+      {props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
@@ -83,6 +90,7 @@ const OrganizationEditForm = props => (
           </div>
         </div>
       </div>
+      }
 
       <div className="row">
         <div className="col-sm-6">
@@ -232,6 +240,7 @@ const OrganizationEditForm = props => (
 
 OrganizationEditForm.defaultProps = {
   fields: {},
+  loggedInUser: null,
   referenceData: {},
   mode: 'add'
 };
@@ -253,6 +262,9 @@ OrganizationEditForm.propTypes = {
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }),
   referenceData: PropTypes.shape({
     organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),

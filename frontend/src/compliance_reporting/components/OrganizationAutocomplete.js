@@ -60,13 +60,16 @@ class OrganizationAutocomplete extends PureComponent {
             key={item.name}
           >
             <strong>{item.name}</strong>
+            {item && item.organization_address &&
             <div>
               {item.organization_address.address_line_1}
-              {` ${item.organization_address.address_line_2}`}
-              {` ${item.organization_address.address_line_3}`}
-              {` ${item.organization_address.city}`}, {item.organization_address.state}
-              {` ${item.organization_address.postal_code}`}
+              {item.organization_address.address_line_2 && ` ${item.organization_address.address_line_2} `}
+              {item.organization_address.address_line_3 && ` ${item.organization_address.address_line_3} `}
+              {item.organization_address.city && ` ${item.organization_address.city}, `}
+              {item.organization_address.state && ` ${item.organization_address.state} `}
+              {item.organization_address.postal_code && ` ${item.organization_address.postal_code}`}
             </div>
+            }
           </div>
         )}
         value={value}

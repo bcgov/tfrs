@@ -1,19 +1,18 @@
-import React, {Component} from 'react';
-import Loading from "../app/components/Loading";
-import {loadAutosaveData, saveAutosaveData, clearAutosaveData} from "../actions/autosaveActions";
-import {connect} from "react-redux";
-import {withRouter} from "react-router";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-}
+import Loading from '../app/components/Loading';
+import { loadAutosaveData, saveAutosaveData, clearAutosaveData } from '../actions/autosaveActions';
 
-function autosaved(config) {
-  return function (WrappedComponent) {
+const getDisplayName = WrappedComponent => (
+  WrappedComponent.displayName || WrappedComponent.name || 'Component'
+);
 
+function autosaved (config) {
+  return function component (WrappedComponent) {
     class AutosaveSupport extends Component {
-
-      constructor(props) {
+      constructor (props) {
         super(props);
 
         this.state = {
@@ -28,91 +27,93 @@ function autosaved(config) {
           timerId: null
         };
 
-        this.updateStateToSave = this.updateStateToSave.bind(this);
+        this._setTimer = this._setTimer.bind(this);
         this.invalidateAutosaved = this.invalidateAutosaved.bind(this);
         this.tick = this.tick.bind(this);
+        this.updateStateToSave = this.updateStateToSave.bind(this);
       }
 
-      _getKey() {
+      componentDidMount () {
+        this._setTimer();
+        this._doLoad();
+      }
+
+      componentWillUnmount () {
+        clearInterval(this.state.timerId);
+        this._doSaveNoStateUpdates();
+      }
+
+      _getKey () {
         const s = this.state;
-        return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`
+        return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`;
       }
 
-      invalidateAutosaved() {
+      invalidateAutosaved () {
         this.props.clearState();
       }
 
-      _doSave() {
+      _doSave () {
         this.setState({
           saving: true
         });
 
         this.props.saveState(this._getKey(), this.state.stateToSave).then(() => {
-          this.setState({saving: false, dirty: false});
+          this.setState({ saving: false, dirty: false });
         }).catch(() => {
-          this.setState({saving: false});
+          this.setState({ saving: false });
         });
       }
 
-      _doSaveNoStateUpdates() {
+      _doSaveNoStateUpdates () {
         this.props.saveState(this._getKey(), this.state.stateToSave);
       }
 
-      _doLoad() {
+      _doLoad () {
         this.props.loadState(this._getKey()).then((result) => {
           this.setState({
-              loading: false,
-              loadedState: result
-            }
-          );
-        }).catch(reason => {
+            loading: false,
+            loadedState: result
+          });
+        }).catch((reason) => {
           this.setState({
-              loading: false,
-              loadedState: null
-            }
-          );
+            loading: false,
+            loadedState: null
+          });
         });
       }
 
-      updateStateToSave(stateToSave) {
+      _setTimer () {
+        const timerId = setInterval(this.tick, 5000);
+        this.setState({
+          timerId
+        });
+      }
+
+      updateStateToSave (stateToSave) {
         this.setState({
           stateToSave,
           dirty: true
         });
       }
 
-      componentDidMount() {
-        const timerId = setInterval(this.tick, 5000);
-        this.setState({
-          timerId
-        });
-        this._doLoad();
-      }
-
-      tick() {
+      tick () {
         if (this.state.dirty) {
           this._doSave();
         }
       }
 
-      componentWillUnmount() {
-        clearInterval(this.state.timerId);
-        this._doSaveNoStateUpdates();
-      }
-
-      render() {
+      render () {
         if (this.state.loading) {
-          return (<Loading/>);
-        } else {
-          return (<WrappedComponent
-            updateStateToSave={this.updateStateToSave}
-            loadedState={this.state.loadedState}
-            invalidateAutosaved={this.invalidateAutosaved}
-            saving={this.state.saving}
-            {...this.props}
-          />)
+          return (<Loading />);
         }
 
+        return (<WrappedComponent
+          updateStateToSave={this.updateStateToSave}
+          loadedState={this.state.loadedState}
+          invalidateAutosaved={this.invalidateAutosaved}
+          saving={this.state.saving}
+          {...this.props}
+        />);
       }
     }
 
@@ -120,30 +121,28 @@ function autosaved(config) {
       .displayName = `AutosaveSupport(${getDisplayName(WrappedComponent)})`;
 
     const
-      mapDispatchToProps = (dispatch) => {
-        return {
-          loadState: (key) => {
-            return new Promise((resolve, reject) => {
-              dispatch(loadAutosaveData({key, resolve, reject}));
-            })
-          },
-          saveState: (key, state) => {
-            return new Promise((resolve, reject) => {
-              dispatch(saveAutosaveData({key, state, resolve, reject}));
-            });
-          },
-          clearState: () => {
-            return new Promise((resolve, reject) => {
-              dispatch(clearAutosaveData({resolve, reject}));
-            });
-          }
-        }
-      };
+      mapDispatchToProps = dispatch => ({
+        loadState: key => (
+          new Promise((resolve, reject) => {
+            dispatch(loadAutosaveData({ key, resolve, reject }));
+          })
+        ),
+        saveState: (key, state) => (
+          new Promise((resolve, reject) => {
+            dispatch(saveAutosaveData({
+              key, state, resolve, reject
+            }));
+          })
+        ),
+        clearState: () => (
+          new Promise((resolve, reject) => {
+            dispatch(clearAutosaveData({ resolve, reject }));
+          })
+        )
+      });
 
     return withRouter(connect(null, mapDispatchToProps)(AutosaveSupport));
-  }
-
-};
-
+  };
+}
 
 export default autosaved;

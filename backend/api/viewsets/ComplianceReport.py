@@ -1,13 +1,14 @@
 from rest_framework import viewsets, permissions, status, mixins, filters
 from rest_framework.decorators import list_route
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.models.ComplianceReport import ComplianceReport, ComplianceReportType
 from api.permissions.ComplianceReport import ComplianceReportPermissions
-from api.serializers.ComplianceReport import ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
-    ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, ComplianceReportDeleteSerializer, \
-    ComplianceReportDetailSerializer
+from api.serializers.ComplianceReport import \
+    ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
+    ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
+    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -51,11 +52,13 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
-        else:
-            return self.serializer_classes['default']
+
+        return self.serializer_classes['default']
 
     def perform_create(self, serializer):
-        compliance_report = serializer.save(organization=self.request.user.organization)
+        _compliance_report = serializer.save(
+            organization=self.request.user.organization
+        )
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def types(self, request):
