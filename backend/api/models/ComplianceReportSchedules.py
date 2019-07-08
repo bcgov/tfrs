@@ -171,6 +171,7 @@ class ScheduleBRecord(Model):
 class ScheduleD(Model):
     class Meta:
         db_table = 'compliance_report_schedule_d'
+    db_table_comment = 'Sets of worksheets for "Schedule D" report.'
 
 
 class ScheduleDSheet(Model):
@@ -201,6 +202,7 @@ class ScheduleDSheet(Model):
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet'
+    db_table_comment = 'Represents a single fuel in a Schedule D report'
 
 
 class ScheduleDSheetInput(Model):
@@ -214,31 +216,37 @@ class ScheduleDSheetInput(Model):
     worksheet_name = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Short descriptive name of the worksheet for user reference'
     )
     cell = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Spreadsheet cell address'
     )
     value = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Value entered in spreadsheet cell'
     )
     units = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Unit (eg percent, L) of value in spreadsheet cell'
     )
     description = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Description or purpose of the value'
     )
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet_input'
+    db_table_comment = 'Represents a set of spreadsheet inputs for a Schedule D record'
 
 
 class ScheduleDSheetOutput(Model):
@@ -280,9 +288,11 @@ class ScheduleDSheetOutput(Model):
         choices=[(c, c.name) for c in OutputCells],
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Spreadsheet model output type (enumerated value)'
     )
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet_output'
         unique_together = [['description', 'sheet']]
+    db_table_comment = 'Represents a set of spreadsheet outputs for a Schedule D record'
