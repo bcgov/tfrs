@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0151_rename_table_sequences'),
+        ('api', '0154_add_address_effective_dates'),
     ]
 
     operations = [
