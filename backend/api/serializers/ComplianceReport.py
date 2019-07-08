@@ -22,19 +22,20 @@
 """
 
 from rest_framework import serializers
-from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import \
     ComplianceReportType, ComplianceReportStatus, ComplianceReport
 from api.models.ComplianceReportSchedules import \
     ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
-    ScheduleBRecord, ScheduleB
+    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet,\
+    ScheduleDSheetOutput, ScheduleDSheetInput
 from api.serializers import \
     OrganizationMinSerializer, CompliancePeriodSerializer
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
-    ScheduleBDetailSerializer, ScheduleBRecordSerializer
+    ScheduleBDetailSerializer, ScheduleDDetailSerializer
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
