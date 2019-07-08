@@ -24,6 +24,7 @@ class MyOrganizationContainer extends Component {
     return ([
       <OrganizationDetails
         key="details"
+        loggedInUser={this.props.loggedInUser}
         organization={this.props.loggedInUser.organization}
       />,
       <OrganizationMembers

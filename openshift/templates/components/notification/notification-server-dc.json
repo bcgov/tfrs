@@ -19,10 +19,10 @@
             "required": true
         },
         {
-            "name": "ENV_NAME_WITH_DASH",
-            "value": "",
-            "displayName": "Environment name",
-            "description": "Sample values: -dev and -test. For prod, please don't pass in any value."
+            "name": "KEYCLOAK_CERTS_URL",
+            "displayName": "KEYCLOAK_CERTS_URL",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+            "required": true
         }
     ],
     "objects": [
@@ -118,7 +118,7 @@
                                     },
                                     {
                                         "name": "KEYCLOAK_CERTS_URL",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca/auth/realms/tfrs${ENV_NAME_WITH_DASH}/protocol/openid-connect/certs"
+                                        "value": "${KEYCLOAK_CERTS_URL}"
                                     }
                                 ],
                                 "resources": {

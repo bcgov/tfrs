@@ -3,10 +3,30 @@ import React from 'react';
 import Input from './Input';
 import { getQuantity } from '../../utils/functions';
 
+const numericColumn = {
+  className: 'numeric',
+  readOnly: true,
+  value: '',
+  valueViewer: (cell) => {
+    const { value } = cell;
+
+    if (value === '') {
+      return '-';
+    }
+
+    if (Number(value) < 0) {
+      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
+    }
+
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+  }
+};
+
 const numericInput = {
   attributes: {
-    dataNumberToFixed: 50,
-    step: '0.01'
+    dataNumberToFixed: 0,
+    maxLength: '50',
+    step: '1'
   },
   className: 'number',
   dataEditor: Input,
@@ -42,10 +62,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 1'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -53,10 +70,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 2'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -64,10 +78,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 3'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -75,10 +86,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 4'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -87,10 +95,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 5'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -106,7 +111,9 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 7'
-  }, numericInput],
+  }, {
+    readOnly: true
+  }],
   [{
     className: 'text',
     readOnly: true,
@@ -122,7 +129,9 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 9'
-  }, numericInput],
+  }, {
+    readOnly: true
+  }],
   [{
     className: 'text',
     readOnly: true,
@@ -131,10 +140,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 10'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text total',
     readOnly: true,
@@ -144,9 +150,22 @@ const ScheduleSummaryGasoline = [
     readOnly: true,
     value: 'Line 11'
   }, {
-    className: 'total',
+    className: 'numeric',
     readOnly: true,
-    value: '-'
+    value: '',
+    valueViewer: (cell) => {
+      const { value } = cell;
+
+      if (value === '') {
+        return '-';
+      }
+
+      if (Number(value) < 0) {
+        return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L)</span>;
+      }
+
+      return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L</span>;
+    }
   }]
 ];
 

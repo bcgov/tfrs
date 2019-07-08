@@ -1,0 +1,108 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "client-angular-app",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "image.openshift.io/v1",
+            "metadata": {
+                "name": "client-angular-app",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "build": "client-angular-app-build"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-angular-app:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "client-angular-app",
+                "creationTimestamp": null,
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":null,\"name\":\"client-angular-app\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"failedBuildsHistoryLimit\":5,\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"client-angular-app:latest\"}},\"postCommit\":{},\"resources\":{\"limits\":{\"cpu\":\"1\",\"memory\":\"4Gi\"},\"requests\":{\"memory\":\"2Gi\"}},\"runPolicy\":\"Serial\",\"source\":{\"contextDir\":\"frontend\",\"git\":{\"ref\":\"v1.4.8-dc-pipeline-fix\",\"uri\":\"https://github.com/bcgov/tfrs.git\"},\"type\":\"Git\"},\"strategy\":{\"sourceStrategy\":{\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"nodejs:8\",\"namespace\":\"openshift\"}},\"type\":\"Source\"},\"successfulBuildsHistoryLimit\":5,\"triggers\":[{\"type\":\"ConfigChange\"},{\"imageChange\":{},\"type\":\"ImageChange\"}]},\"status\":{\"lastVersion\":0}}\n"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "v1.4.8-dc-pipeline-fix"
+                    },
+                    "contextDir": "frontend"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "client-angular-app:latest"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "4Gi"
+                    },
+                    "requests": {
+                        "memory": "2Gi"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}

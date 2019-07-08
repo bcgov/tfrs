@@ -18,6 +18,7 @@ import ScheduleSummaryContainer from './ScheduleSummaryContainer';
 import withReferenceData from '../utils/reference_data_support';
 import ComplianceReportIntroContainer from './ComplianceReportIntroContainer';
 import Loading from '../app/components/Loading';
+import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleTabs from './components/ScheduleTabs';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
@@ -200,25 +201,30 @@ class ComplianceReportingEditContainer extends Component {
         key="nav"
       />,
       <TabComponent
-        edit={this.edit}
         key="tab-component"
         period={period}
         id={id}
         create={!this.edit}
         complianceReport={this.props.complianceReporting.item}
+        loadedState={this.props.loadedState}
         updateScheduleState={this._updateScheduleState}
-        saving={this.props.saving}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
         }}
       />,
-
+      <ScheduleButtons
+        edit={this.edit}
+        key="scheduleButtons"
+        submit
+        delete
+        saving={this.props.saving}
+      />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to save this schedule?
+        Are you sure you want to save this compliance report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleDelete(event)}
@@ -236,7 +242,7 @@ ComplianceReportingEditContainer.defaultProps = {
     isCreating: false,
     success: false
   },
-  loadedState: false
+  loadedState: null
 };
 
 ComplianceReportingEditContainer.propTypes = {
@@ -245,9 +251,12 @@ ComplianceReportingEditContainer.propTypes = {
     isGetting: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
-      compliancePeriod: PropTypes.shape({
-        description: PropTypes.string
-      })
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ])
     }),
     success: PropTypes.bool
   }),
@@ -255,8 +264,7 @@ ComplianceReportingEditContainer.propTypes = {
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  loadedState: PropTypes.any,
+  loadedState: PropTypes.shape(),
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

@@ -1,6 +1,5 @@
 import datetime
 
-from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, mixins
@@ -9,15 +8,14 @@ from rest_framework.response import Response
 
 from api.models.OrganizationStatus import OrganizationStatus
 from api.serializers.OrganizationType import OrganizationTypeSerializer
-from auditable.views import AuditableMixin
-
 from api.decorators import permission_required
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationType import OrganizationType
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.User import User
-from api.serializers import OrganizationSerializer, OrganizationActionsTypeSerializer, OrganizationStatusSerializer, \
+from api.serializers import OrganizationSerializer, \
+    OrganizationActionsTypeSerializer, OrganizationStatusSerializer, \
     OrganizationUpdateSerializer, OrganizationCreateSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
@@ -26,6 +24,8 @@ from api.serializers import UserMinSerializer
 from api.permissions.OrganizationPermissions import OrganizationPermissions
 
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
+
+from auditable.views import AuditableMixin
 
 
 class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,

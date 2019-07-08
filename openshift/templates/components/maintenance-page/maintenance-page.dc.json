@@ -2,28 +2,14 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "${APP_NAME}"
+        "name": "maintenance-page-dc"
     },
     "parameters": [
-            {
-                "name": "NAME",
-                "displayName": "Name",
-                "description": "The suffix for all created objects",
-                "required": false,
-                "value": "maintenance-page"
-            },
             {
                 "name": "ENV_NAME",
                 "displayName": "Environment name",
                 "description": "The environment name",
                 "required": true
-            },
-            {
-                "name": "BUILD_PROJECT",
-                "displayName": "Build project",
-                "description": "The suffix for all created objects",
-                "required": false,
-                "value": "mem-tfrs-tools"
             }
     ],
     "objects": [
@@ -31,10 +17,10 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${NAME}",
+                "name": "maintenance-page",
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "${NAME}"
+                    "app": "maintenance-page"
                 }
             },
             "spec": {
@@ -59,12 +45,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "${NAME}"
+                                "maintenance-page"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${BUILD_PROJECT}",
-                                "name": "${NAME}:latest"
+                                "namespace": "mem-tfrs-tools",
+                                "name": "maintenance-page:latest"
                             }
                         }
                     }
@@ -73,15 +59,15 @@
                 "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
-                    "app": "${NAME}",
-                    "deploymentconfig": "${NAME}"
+                    "app": "maintenance-page",
+                    "deploymentconfig": "maintenance-page"
                 },
                 "template": {
                     "metadata": {
                         "creationTimestamp": null,
                         "labels": {
-                            "app": "${NAME}",
-                            "deploymentconfig": "${NAME}"
+                            "app": "maintenance-page",
+                            "deploymentconfig": "maintenance-page"
                         },
                         "annotations": {
                             "openshift.io/generated-by": "OpenShiftNewApp"
@@ -90,7 +76,7 @@
                     "spec": {
                         "containers": [
                             {
-                                "name": "${NAME}",
+                                "name": "maintenance-page",
                                 "image": " ",
                                 "ports": [
                                     {
@@ -125,10 +111,10 @@
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${NAME}",
+                "name": "maintenance-page",
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "${NAME}"
+                    "app": "maintenance-page"
                 }
             },
             "spec": {
@@ -141,8 +127,8 @@
                     }
                 ],
                 "selector": {
-                    "app": "${NAME}",
-                    "deploymentconfig": "${NAME}"
+                    "app": "maintenance-page",
+                    "deploymentconfig": "maintenance-page"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -152,20 +138,20 @@
             "kind": "Route",
             "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "${NAME}",
+                "name": "maintenance-page",
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "${NAME}"
+                    "app": "maintenance-page"
                 },
                 "annotations": {
                     "openshift.io/host.generated": "true"
                 }
             },
             "spec": {
-                "host": "${NAME}-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "host": "maintenance-page-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
-                    "name": "${NAME}",
+                    "name": "maintenance-page",
                     "weight": 100
                 },
                 "port": {

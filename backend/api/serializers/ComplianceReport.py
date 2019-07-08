@@ -25,12 +25,16 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.ComplianceReport import ComplianceReportType, ComplianceReportStatus, ComplianceReport
-from api.models.ComplianceReportSchedules import ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA,\
-    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, ScheduleDSheetInput, ScheduleDSheetOutput
-from api.serializers import OrganizationMinSerializer, CompliancePeriodSerializer
-from api.serializers.ComplianceReportSchedules import ScheduleCDetailSerializer, ScheduleADetailSerializer,\
-    ScheduleBDetailSerializer, ScheduleDDetailSerializer
+from api.models.ComplianceReport import \
+    ComplianceReportType, ComplianceReportStatus, ComplianceReport
+from api.models.ComplianceReportSchedules import \
+    ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
+    ScheduleBRecord, ScheduleB
+from api.serializers import \
+    OrganizationMinSerializer, CompliancePeriodSerializer
+from api.serializers.ComplianceReportSchedules import \
+    ScheduleCDetailSerializer, ScheduleADetailSerializer, \
+    ScheduleBDetailSerializer, ScheduleBRecordSerializer
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -67,12 +71,59 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_a = ScheduleADetailSerializer(read_only=True)
     schedule_b = ScheduleBDetailSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(read_only=True)
-    schedule_d = ScheduleDDetailSerializer(read_only=True)
+    summary = serializers.SerializerMethodField()
+
+    def get_summary(self, obj):
+        total_petroleum_diesel = 0
+        total_petroleum_gasoline = 0
+        total_renewable_diesel = 0
+        total_renewable_gasoline = 0
+
+        schedule_b_records = ScheduleBRecord.objects.filter(
+            schedule=obj.schedule_b
+        )
+
+        for record in schedule_b_records:
+            percentage = 100
+
+            if record.fuel_code is not None and \
+                    record.fuel_code.renewable_percentage and \
+                    record.fuel_code.renewable_percentage > 0:
+                percentage = record.fuel_code.renewable_percentage
+
+            if record.fuel_type.name in [
+                    "Biodiesel", "HDRD", "Renewable diesel"]:
+                total_renewable_diesel += record.quantity * percentage/100
+
+            elif record.fuel_type.name in ["Ethanol", "Renewable gasoline"]:
+                total_renewable_gasoline += record.quantity * percentage/100
+
+            elif record.fuel_type.name == "Petroleum-based diesel":
+                total_petroleum_diesel += record.quantity
+
+            elif record.fuel_type.name == "Petroleum-based gasoline":
+                total_petroleum_gasoline += record.quantity
+
+        schedule_c_records = ScheduleCRecord.objects.filter(
+            schedule=obj.schedule_c
+        )
+
+        for record in schedule_c_records:
+            if record.fuel_type.name == "Petroleum-based diesel" and \
+                    record.expected_use.description == "Heating Oil":
+                total_petroleum_diesel += record.quantity
+
+        return {
+            "total_petroleum_diesel": total_petroleum_diesel,
+            "total_petroleum_gasoline": total_petroleum_gasoline,
+            "total_renewable_diesel": total_renewable_diesel,
+            "total_renewable_gasoline": total_renewable_gasoline
+        }
 
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
-                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d']
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d', 'summary']
 
 
 class ComplianceReportCreateSerializer(serializers.ModelSerializer):

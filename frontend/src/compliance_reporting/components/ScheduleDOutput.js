@@ -6,6 +6,7 @@ const numericInput = {
   attributes: {
     allowNegative: true,
     dataNumberToFixed: 50,
+    maxLength: '100',
     step: '0.01'
   },
   className: 'number',
