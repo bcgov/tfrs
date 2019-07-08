@@ -69,6 +69,7 @@ export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transa
 
 export const TEXT_ERROR_INVALID_CHARACTER = 'Non-numeric characters are not allowed.';
 export const TEXT_ERROR_MAX_DECIMALS = 'Cannot add more decimals.';
+export const TEXT_ERROR_MAX_VALUE = 'Cannot be more than :number.';
 export const TEXT_ERROR_MULTIPLE_DOTS = 'Multiple dots are not allowed.';
 export const TEXT_ERROR_NEGATIVE_VALUE = 'Negative values are not allowed.';
 export const TEXT_ERROR_NO_DECIMALS = 'Decimals are not allowed.';

@@ -7,6 +7,7 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 
 import {
   TEXT_ERROR_MAX_DECIMALS,
+  TEXT_ERROR_MAX_VALUE,
   TEXT_ERROR_MULTIPLE_DOTS,
   TEXT_ERROR_NEGATIVE_VALUE,
   TEXT_ERROR_NO_DECIMALS
@@ -16,6 +17,7 @@ class InputWithTooltip extends Component {
   constructor (props, context) {
     super(props, context);
 
+    this.getValue = this.getValue.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
     this.patternMatch = this.patternMatch.bind(this);
@@ -25,6 +27,19 @@ class InputWithTooltip extends Component {
       showTooltip: false,
       tooltipMessage: ''
     };
+  }
+
+  getValue () {
+    if (this.props.addCommas) {
+      let { value } = this.props;
+
+      value = value.replace(/\D/g, '');
+      value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+      return value;
+    }
+
+    return this.props.value;
   }
 
   handleInputChange (event) {
@@ -52,6 +67,15 @@ class InputWithTooltip extends Component {
     if (event.target.value.includes('e') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
       this.target.value = event.target.value.replace('e', '');
+    }
+
+    if (this.props.maxValue !== null && event.target.value > this.props.maxValue) {
+      this.target.value = this.state.currentValue;
+      showTooltip = true;
+
+      tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
+    } else {
+      this.props.handleInputChange(event);
     }
 
     const parsed = value.split('.');
@@ -177,7 +201,7 @@ class InputWithTooltip extends Component {
           }}
           step={this.props.step}
           type={this.props.addCommas ? 'text' : 'number'}
-          value={this.props.value}
+          value={this.getValue()}
         />
         <Overlay
           container={this}
@@ -207,6 +231,7 @@ InputWithTooltip.defaultProps = {
   id: null,
   max: null,
   maxLength: null,
+  maxValue: null,
   min: null,
   placeholder: '',
   required: false,
@@ -225,6 +250,7 @@ InputWithTooltip.propTypes = {
   id: PropTypes.string,
   max: PropTypes.string,
   maxLength: PropTypes.string,
+  maxValue: PropTypes.number,
   min: PropTypes.string,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,

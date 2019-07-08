@@ -73,7 +73,6 @@ ScheduleDPage.defaultProps = {};
 
 ScheduleDPage.propTypes = {
   addRow: PropTypes.func.isRequired,
-  edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'

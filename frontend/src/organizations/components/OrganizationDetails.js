@@ -29,7 +29,9 @@ const OrganizationDetails = props => (
       </h1>
       <div className="actions-container">
         {props.loggedInUser &&
-        props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
+        (props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) ||
+          props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER)
+        ) &&
         <button
           id="edit-organization"
           className="btn btn-info"
@@ -50,7 +52,10 @@ const OrganizationDetails = props => (
           <dt />
           <dd>{props.organization.organizationAddress.addressLine_3}</dd>
           <dt />
-          <dd>{`${props.organization.organizationAddress.city}, ${props.organization.organizationAddress.postalCode}, ${props.organization.organizationAddress.country}`}</dd>
+          <dd>{props.organization.organizationAddress.city && `${props.organization.organizationAddress.city}, `}
+            {props.organization.organizationAddress.postalCode && `${props.organization.organizationAddress.postalCode}, `}
+            {props.organization.organizationAddress.country}
+          </dd>
         </dl>
       </div>
       }

@@ -3,27 +3,6 @@
     margin: 2.5rem 0;
   }
 
-  .btn-container {
-    background-color: $background-grey;
-    border: 1px solid $border-grey;
-    border-radius: 0.5rem;
-    box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
-    font-size: 1.5rem;
-    padding: 1rem;
-    text-align: right;
-    margin-left: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .left {
-      text-align: left;
-    }
-    .right {
-      text-align: right;
-    }
-  }
-
   .data-grid-container {
     display: block;
   
@@ -109,7 +88,7 @@
     background-color: $background-grey;
     border-radius: 0.5rem;
     border: 1px solid $border-grey;
-    bottom: 8rem;
+    bottom: 0;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
     cursor: move;
     font-size: 1.5rem;
@@ -166,8 +145,24 @@
   }
 
   .sticky {
-    bottom: 7rem;
+    bottom: 20rem;
     position: sticky;
+  }
+
+  .draggable-bounds {
+    position: relative;
+
+    .spacer {
+      margin-bottom: 2rem;
+
+      &.schedule-a {
+        height: 26rem;
+      }
+
+      &.schedule-b {
+        height: 16rem;
+      }
+    }
   }
 }
 
@@ -371,10 +366,40 @@
   min-width: 1200px;
 }
 
+.schedule-buttons {
+  background-color: $background-grey;
+  border: 1px solid $border-grey;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: right;
+  margin-left: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    text-align: left;
+
+    * {
+      text-align: left !important;
+    }
+  }
+  .right {
+    text-align: right;
+  }
+}
+
 .schedule-summary {
   > .row {
     margin-left: -15px;
     margin-right: -15px;
+  }
+
+  .data-grid-container .cell {
+    &.numeric {
+      text-align: right;
+    }
   }
 
   .col-lg-6 {
