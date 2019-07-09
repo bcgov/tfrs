@@ -4,7 +4,7 @@ from api.managers.ComplianceReportStatusManager import \
     ComplianceReportStatusManager
 from api.managers.TheTypeManager import TheTypeManager
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.ComplianceReportSchedules import ScheduleC, ScheduleB, ScheduleA
+from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, ScheduleB, ScheduleA
 from api.models.Organization import Organization
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -75,7 +75,7 @@ class ComplianceReportType(DisplayOrder):
 
 class ComplianceReport(Auditable):
     """
-    List of Possible statuses for compliance reports.
+    Compliance Report records
     """
     status = models.ForeignKey(
         ComplianceReportStatus,
@@ -117,6 +117,13 @@ class ComplianceReport(Auditable):
 
     schedule_c = models.OneToOneField(
         ScheduleC,
+        related_name='compliance_report',
+        on_delete=models.CASCADE,
+        null=True
+    )
+
+    schedule_d = models.OneToOneField(
+        ScheduleD,
         related_name='compliance_report',
         on_delete=models.CASCADE,
         null=True
