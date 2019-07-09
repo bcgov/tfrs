@@ -27,7 +27,7 @@ stage('Test DEV using Browserstack') {
           withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
                            file(credentialsId: 'functional_test_users', variable: 'envfile')]) {
           sh "cp \$envfile .env"
-          sh './gradlew remoteTest --tests specs.CreditTransferSpec'
+          sh './gradlew remoteChromeTest remoteFirefoxTest --tests specs.CreditTransferSpec'
         }
         } catch (Throwable t) {
           result = 1
