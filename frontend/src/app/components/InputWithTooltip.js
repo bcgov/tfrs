@@ -43,39 +43,37 @@ class InputWithTooltip extends Component {
   }
 
   handleInputChange (event) {
-    const { value } = event.target;
+    let { value } = event.target;
     let showTooltip = false;
     let tooltipMessage = '';
 
     if (value === '' && (event.nativeEvent.data === '.' ||
       event.nativeEvent.inputType === 'insertFromPaste')) { // prevent multiple dots
-      this.target.value = this.state.currentValue;
+      value = this.state.currentValue;
       showTooltip = true;
       tooltipMessage = TEXT_ERROR_MULTIPLE_DOTS;
     }
 
     if (!this.props.allowNegative &&
-      event.target.value.includes('-') &&
+      value.includes('-') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
-      this.target.value = this.state.currentValue;
+      value = this.state.currentValue;
       showTooltip = true;
       tooltipMessage = TEXT_ERROR_NEGATIVE_VALUE;
     }
 
     // e is normally allowed, but to simulate the copy/paste functionality containing a letter
     // we can just get rid of the e
-    if (event.target.value.includes('e') &&
+    if (value.includes('e') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
-      this.target.value = event.target.value.replace('e', '');
+      value = value.replace('e', '');
     }
 
-    if (this.props.maxValue !== null && event.target.value > this.props.maxValue) {
-      this.target.value = this.state.currentValue;
+    if (this.props.maxValue !== null && value > this.props.maxValue) {
+      value = this.state.currentValue;
       showTooltip = true;
 
       tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
-    } else {
-      this.props.handleInputChange(event);
     }
 
     const parsed = value.split('.');
@@ -91,14 +89,14 @@ class InputWithTooltip extends Component {
       newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 
       if (parsed.length > 1) {
-        this.target.value = `${newValue}.${parsed[1]}`;
+        value = `${newValue}.${parsed[1]}`;
       } else {
-        this.target.value = newValue;
+        value = newValue;
       }
     }
 
     if (parsed.length > 1 && parsed[1].length > this.props.dataNumberToFixed) {
-      this.target.value = this.state.currentValue;
+      value = this.state.currentValue;
       showTooltip = true;
 
       if (this.props.dataNumberToFixed === 0) {
@@ -106,12 +104,14 @@ class InputWithTooltip extends Component {
       } else {
         tooltipMessage = TEXT_ERROR_MAX_DECIMALS;
       }
-    } else {
+    }
+
+    if (tooltipMessage === '') {
       this.props.handleInputChange(event);
     }
 
     this.setState({
-      currentValue: event.target.value,
+      currentValue: value,
       showTooltip,
       tooltipMessage
     });
