@@ -1,6 +1,6 @@
 package specs
 
-import geb.spock.GebReportingSpec
+import listeners.BrowserStackReportingSpec
 
 import specs.traits.Utils
 
@@ -9,6 +9,6 @@ import specs.traits.Utils
  *
  * All specs should extend this class.
  */
-abstract class BaseSpec extends BetterReportingSpec implements Utils {
+abstract class BaseSpec extends BrowserStackReportingSpec implements Utils {
 
 }

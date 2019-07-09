@@ -14,6 +14,7 @@ import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
+import listeners.SessionIdHolder
 //import docgen.DocumentGenerationListener
 
 // Allows for setting you baseurl in an environment variable.
@@ -37,17 +38,60 @@ waiting {
 
 atCheckWaiting = [20, 0.5]
 
+String buildId = SessionIdHolder.instance.buildId
+
 environments {
 
-  remote {
+  remoteFirefox {
     driver = {
       DesiredCapabilities caps = new DesiredCapabilities();
-      caps.setCapability("browser", "Firefox");
-      caps.setCapability("browser_version", "67.0");
-      caps.setCapability("os", "Windows");
-      caps.setCapability("os_version", "10");
-      caps.setCapability("resolution", "1920x1200");
-      caps.setCapability("name", "Geb-integration-test")
+      caps.setCapability("browser", "Firefox")
+      caps.setCapability("browser_version", "67.0")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Firefox")
+
+      String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
+
+      driver = new RemoteWebDriver(new URL(URL), caps)
+
+      return driver
+    }
+  }
+
+  remoteEdge {
+    driver = {
+      DesiredCapabilities caps = new DesiredCapabilities();
+      caps.setCapability("browser", "Edge")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Edge")
+
+      String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
+
+      driver = new RemoteWebDriver(new URL(URL), caps)
+
+      return driver
+    }
+  }
+
+
+  remoteChrome {
+    driver = {
+      DesiredCapabilities caps = new DesiredCapabilities();
+      caps.setCapability("browser", "Firefox")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Chrome")
 
       String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
 

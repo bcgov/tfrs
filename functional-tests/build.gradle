@@ -8,7 +8,7 @@ plugins {
 }
 
 ext {
-    drivers = ["remote"]
+    drivers = ["remoteEdge", "remoteFirefox", "remoteChrome"]
 
 
     ext {
@@ -61,6 +61,8 @@ dependencies {
         exclude group: "org.codehaus.groovy"
     }
     testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+
 
     // If using JUnit, need to depend on geb-junit (3 or 4)
     testCompile "org.gebish:geb-junit4:$gebVersion"
@@ -85,6 +87,7 @@ tasks.withType(Test) {
     jvmArgs '-XX:MaxMetaspaceSize=128m'
     testLogging {
         exceptionFormat = 'full'
+        showStandardStreams = true
     }
 //    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/reports/spock'
 //    systemProperty 'com.athaydes.spockframework.report.internal.HtmlReportCreator.inlineCss', false
