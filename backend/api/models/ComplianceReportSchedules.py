@@ -1,3 +1,5 @@
+from enum import Enum
+
 from django.db.models import Model
 from django.db import models
 
@@ -7,6 +9,7 @@ from api.models.ExpectedUse import ExpectedUse
 from api.models.FuelClass import FuelClass
 from api.models.FuelCode import FuelCode
 from api.models.NotionalTransferType import NotionalTransferType
+from decimal import Decimal
 
 
 class ScheduleC(Model):
@@ -163,3 +166,133 @@ class ScheduleBRecord(Model):
     class Meta:
         db_table = 'compliance_report_schedule_b_record'
     db_table_comment = 'Line items for "Schedule B - Part 3 Fuel Supply" report.'
+
+
+class ScheduleD(Model):
+    class Meta:
+        db_table = 'compliance_report_schedule_d'
+    db_table_comment = 'Sets of worksheets for "Schedule D" report.'
+
+
+class ScheduleDSheet(Model):
+    schedule = models.ForeignKey(
+        ScheduleD,
+        related_name='sheets',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_type = models.ForeignKey(
+        ApprovedFuel,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_class = models.ForeignKey(
+        FuelClass,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    feedstock = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_d_sheet'
+    db_table_comment = 'Represents a single fuel in a Schedule D report'
+
+
+class ScheduleDSheetInput(Model):
+    sheet = models.ForeignKey(
+        ScheduleDSheet,
+        related_name='inputs',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    worksheet_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Short descriptive name of the worksheet for user reference'
+    )
+    cell = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Spreadsheet cell address'
+    )
+    value = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Value entered in spreadsheet cell'
+    )
+    units = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Unit (eg percent, L) of value in spreadsheet cell'
+    )
+    description = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Description or purpose of the value'
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_d_sheet_input'
+    db_table_comment = 'Represents a set of spreadsheet inputs for a Schedule D record'
+
+
+class ScheduleDSheetOutput(Model):
+
+    class OutputCells(Enum):
+        """
+        Enum of possible output cell names
+        """
+        DISPENSING = "Fuel Dispensing"
+        DISTRIBUTION = "Fuel Distribution and Storage"
+        PRODUCTION = "Fuel Production"
+        FEEDSTOCK_TRANSMISSION = "Feedstock Transmission"
+        FEEDSTOCK_RECOVERY = "Feedstock Recovery"
+        FEEDSTOCK_UPGRADING = "Feedstock Upgrading"
+        LAND_USE_CHANGE = "Land Use Change"
+        FERTILIZER = "Fertilizer Manufacture"
+        GAS_LEAKS_AND_FLARES = "Gas Leaks and Flares"
+        CO2_AND_H2S_REMOVED = "CO₂ and H₂S Removed"
+        EMISSIONS_DISPLACED = "Emissions Displaced"
+        FUEL_USE_HIGH_HEATING_VALUE = "Fuel Use (High Heating Value)"
+
+    sheet = models.ForeignKey(
+        ScheduleDSheet,
+        related_name='outputs',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    intensity = models.DecimalField(
+        blank=True,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        max_digits=5,
+        null=True,
+        db_comment="Carbon Intensity (gCO2e/MJ)"
+    )
+
+    description = models.CharField(
+        choices=[(c, c.name) for c in OutputCells],
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Spreadsheet model output type (enumerated value)'
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_d_sheet_output'
+        unique_together = [['description', 'sheet']]
+    db_table_comment = 'Represents a set of spreadsheet outputs for a Schedule D record'

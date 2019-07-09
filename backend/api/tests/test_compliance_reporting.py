@@ -116,22 +116,48 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_draft_compliance_report_authorized_with_schedule_c(self):
+    def test_create_draft_compliance_report_authorized_with_schedules(self):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
             'compliancePeriod': '2019',
             'scheduleA': {
-              'records': [
-                  {
-                      'tradingPartner': 'Test 2',
-                      'postalAddress': '123 Main St\nVictoria, BC',
-                      'fuelClass': 'Diesel',
-                      'transferType': 'Received',
-                      'quantity': 98.1
-                  }
+                'records': [
+                    {
+                        'tradingPartner': 'Test 2',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98.1
+                    }
 
-              ]
+                ]
+            }
+            ,
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A2',
+                                'value': '12.04',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'ZZ9ZZA',
+                                'value': 'about 98',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    }
+                ]
             },
             'scheduleC': {
                 'records': [
@@ -255,7 +281,37 @@ class TestComplianceReporting(BaseTestCase):
                         'rationale': 'Patched Again'
                     }
                 ]
-            }
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A2',
+                                'value': '12.04',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'ZZ9ZZA',
+                                'value': 'about 98',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': [
+                            {
+                                'description': 'CO₂ and H₂S Removed',
+                                'intensity': 3.01
+                            }
+                        ]
+                    }
+                ]
+            },
         }
 
         response = self.clients['fs_user_1'].patch(
@@ -271,6 +327,11 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertIsNotNone(response_data['scheduleA'])
         self.assertEqual(len(response_data['scheduleA']['records']), 1)
+
+        self.assertIsNotNone(response_data['scheduleD'])
+        self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -307,6 +368,10 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(response_data['scheduleC']['records']), 2)
         self.assertIsNotNone(response_data['scheduleA'])
         self.assertEqual(len(response_data['scheduleA']['records']), 1)
+        self.assertIsNotNone(response_data['scheduleD'])
+        self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
