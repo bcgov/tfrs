@@ -1,45 +1,4 @@
-import React from 'react';
-
-import Input from './Input';
-import { getQuantity } from '../../utils/functions';
-
-const numericColumn = {
-  className: 'numeric',
-  readOnly: true,
-  value: '',
-  valueViewer: (cell) => {
-    const { value } = cell;
-
-    if (value === '') {
-      return '-';
-    }
-
-    if (Number(value) < 0) {
-      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
-    }
-
-    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
-  }
-};
-
-const numericInput = {
-  attributes: {
-    dataNumberToFixed: 0,
-    maxLength: '50',
-    step: '1'
-  },
-  className: 'number',
-  dataEditor: Input,
-  valueViewer: (cell) => {
-    const { value } = cell;
-
-    if (!value) {
-      return '';
-    }
-
-    return <span>{getQuantity(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
-  }
-};
+import { numericColumn, numericInput, totalViewer } from './Columns';
 
 const ScheduleSummaryDiesel = [
   [{
@@ -55,39 +14,39 @@ const ScheduleSummaryDiesel = [
     readOnly: true,
     value: 'Litres (L)'
   }], // header
-  [{
+  [{ // line 12
     className: 'text',
     readOnly: true,
     value: 'Volume of petroleum-based diesel supplied'
   }, {
     readOnly: true,
     value: 'Line 12'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 12
+  [{ // line 13
     className: 'text',
     readOnly: true,
     value: 'Volume of diesel class renewable fuel supplied'
   }, {
     readOnly: true,
     value: 'Line 13'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 13
+  [{ // line 14
     className: 'text',
     readOnly: true,
     value: 'Total volume of diesel class fuel supplied (Line 12 + Line 13)'
   }, {
     readOnly: true,
     value: 'Line 14'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 14
+  [{ // line 15
     className: 'text',
     readOnly: true,
-    value: 'Volume of Part 2 diesel class renewable fuel required'
+    value: 'Volume of Part 2 diesel class renewable fuel required (4% of Line 14)'
   }, {
     readOnly: true,
     value: 'Line 15'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 15
+  [{ // line 16
     className: 'text',
     readOnly: true,
     value: 'Net volume of renewable fuel notionally transferred to and received ' +
@@ -95,16 +54,16 @@ const ScheduleSummaryDiesel = [
   }, {
     readOnly: true,
     value: 'Line 16'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 16
+  [{ // line 17
     className: 'text',
     readOnly: true,
     value: 'Volume of renewable fuel retained (up to 5% of Line 15)'
   }, {
     readOnly: true,
     value: 'Line 17'
-  }, numericInput],
-  [{
+  }, numericInput], // line 17
+  [{ // line 18
     className: 'text',
     readOnly: true,
     value: 'Volume of renewable credit (from Line 17 of previous compliance report)'
@@ -113,16 +72,16 @@ const ScheduleSummaryDiesel = [
     value: 'Line 18'
   }, {
     readOnly: true
-  }],
-  [{
+  }], // line 18
+  [{ // line 19
     className: 'text',
     readOnly: true,
     value: 'Volume of renewable obligation deferred (up to 5% of Line 15)'
   }, {
     readOnly: true,
     value: 'Line 19'
-  }, numericInput],
-  [{
+  }, numericInput], // line 19
+  [{ // line 20
     className: 'text',
     readOnly: true,
     value: 'Volume of renewable fuel previously retained (from Line 19 of previous compliance period)'
@@ -131,17 +90,17 @@ const ScheduleSummaryDiesel = [
     value: 'Line 20'
   }, {
     readOnly: true
-  }],
-  [{
+  }], // line 20
+  [{ // line 21
     className: 'text',
     readOnly: true,
-    value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of lines 13 ' +
-            'and 16 to 20)'
+    value: 'Net volume of renewable Part 2 gasoline class fuel supplied ' +
+           '(Total of Line 13 + Line 16 - Line 17 + Line 18 + Line 19 - Line 20)'
   }, {
     readOnly: true,
     value: 'Line 21'
-  }, numericColumn],
-  [{
+  }, numericColumn], // line 21
+  [{ // line 22
     className: 'text total',
     readOnly: true,
     value: 'Diesel class non-compliance payable (Line 15 - Line 21) x $0.45/L'
@@ -149,24 +108,7 @@ const ScheduleSummaryDiesel = [
     className: 'total',
     readOnly: true,
     value: 'Line 22'
-  }, {
-    className: 'numeric',
-    readOnly: true,
-    value: '',
-    valueViewer: (cell) => {
-      const { value } = cell;
-
-      if (value === '') {
-        return '-';
-      }
-
-      if (Number(value) < 0) {
-        return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L)</span>;
-      }
-
-      return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L</span>;
-    }
-  }]
+  }, totalViewer]
 ];
 
 export default ScheduleSummaryDiesel;
