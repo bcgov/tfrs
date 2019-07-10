@@ -69,14 +69,16 @@ class InputWithTooltip extends Component {
       value = value.replace('e', '');
     }
 
-    if (this.props.maxValue !== null && value > this.props.maxValue) {
+    const numericValue = Number(String(value).replace(/,/g, ''));
+
+    if (this.props.maxValue !== null && numericValue > this.props.maxValue) {
       value = this.state.currentValue;
       showTooltip = true;
 
       tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
     }
 
-    const parsed = value.split('.');
+    const parsed = event.target.value.split('.');
 
     if (this.props.addCommas) {
       let newValue = parsed[0];

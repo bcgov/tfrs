@@ -12,6 +12,13 @@ import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import getCreditCalculation from '../actions/creditCalculation';
 import Input from './components/Input';
 import Select from './components/Select';
+import {
+  calculateCredit,
+  getCarbonIntensityLimit,
+  getCreditCalculationValues,
+  getEnergyEffectivenessRatio,
+  getSelectedFuel
+} from './components/ScheduleFunctions';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
@@ -106,7 +113,7 @@ class ScheduleBContainer extends Component {
     let value = '';
 
     if (energyDensity && quantity) {
-      value = Number(energyDensity) * Number(String(quantity).replace(/\D/g, ''));
+      value = Number(energyDensity) * Number(String(quantity).replace(/,/g, ''));
     }
 
     row[SCHEDULE_B.ENERGY_CONTENT] = {
@@ -126,10 +133,12 @@ class ScheduleBContainer extends Component {
 
     // Formula (CI class x EER fuel - CI fuel) x EC fuel / 1000000
     if (carbonIntensityFuel && carbonIntensityLimit && energyContent && energyContent) {
-      let rawValue = Number(carbonIntensityLimit) * Number(energyEffectivenessRatio);
-      rawValue -= Number(carbonIntensityFuel);
-      rawValue *= Number(energyContent);
-      rawValue /= 1000000;
+      const rawValue = calculateCredit(
+        carbonIntensityLimit,
+        carbonIntensityFuel,
+        energyEffectivenessRatio,
+        energyContent
+      );
 
       const credit = {
         value: 0
@@ -187,18 +196,6 @@ class ScheduleBContainer extends Component {
     };
   }
 
-  static getCarbonIntensityLimit (fuelClass, values) {
-    if (fuelClass === 'Diesel') {
-      return values.carbonIntensityLimit.diesel.toFixed(2);
-    }
-
-    if (fuelClass === 'Gasoline') {
-      return values.carbonIntensityLimit.gasoline.toFixed(2);
-    }
-
-    return '-';
-  }
-
   static getDefaultCarbonIntensity (row, selectedFuel, values) {
     const provision = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
     const fuelCode = row[SCHEDULE_B.FUEL_CODE];
@@ -227,7 +224,7 @@ class ScheduleBContainer extends Component {
     }
 
     if (determinationType.theType === 'Alternative') {
-      return '';
+      return '-';
     }
 
     return '-';
@@ -493,8 +490,8 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _getCreditCalculationValues (value) {
-    return this.creditCalculationValues.find(fuel => fuel.id === value);
+  _getCreditCalculationValues (id) {
+    return getCreditCalculationValues(this.creditCalculationValues, id);
   }
 
   _getFuelCalculationValues (currentRow) {
@@ -509,7 +506,7 @@ class ScheduleBContainer extends Component {
     if (values) {
       row[SCHEDULE_B.CARBON_INTENSITY_LIMIT] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_LIMIT],
-        value: ScheduleBContainer.getCarbonIntensityLimit(fuelClass.value, values)
+        value: getCarbonIntensityLimit(values, fuelClass.value)
       };
 
       let determinationType = {};
@@ -539,17 +536,7 @@ class ScheduleBContainer extends Component {
         value: values.energyDensity.toFixed(2)
       };
 
-      let value = '';
-
-      if (values.energyEffectivenessRatio) {
-        if (values.energyEffectivenessRatio.diesel && fuelClass.value === 'Diesel') {
-          value = values.energyEffectivenessRatio.diesel.toFixed(1);
-        }
-
-        if (values.energyEffectivenessRatio.gasoline && fuelClass.value === 'Gasoline') {
-          value = values.energyEffectivenessRatio.gasoline.toFixed(1);
-        }
-      }
+      const value = getEnergyEffectivenessRatio(values, fuelClass.value);
 
       row[SCHEDULE_B.EER] = {
         ...row[SCHEDULE_B.EER],
@@ -605,7 +592,7 @@ class ScheduleBContainer extends Component {
   }
 
   _getSelectedFuel (value) {
-    return this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
+    return getSelectedFuel(this.props.referenceData.approvedFuels, value);
   }
 
   _handleCellsChanged (changes, addition = null) {
@@ -640,7 +627,7 @@ class ScheduleBContainer extends Component {
       if (col === SCHEDULE_B.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: value.replace(/\D/g, '')
+          value: value.replace(/,/g, '')
         };
       }
 
@@ -804,19 +791,11 @@ class ScheduleBContainer extends Component {
     const selectedFuel = this._getSelectedFuel(fuelType);
     const selectedProvision = ScheduleBContainer.getSelectedProvision(selectedFuel, value);
 
-    if (selectedProvision && selectedProvision.determinationType.theType === 'Alternative') {
-      row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
-        ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        readOnly: false,
-        value: ''
-      };
-    } else {
-      row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
-        ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        readOnly: true,
-        value: ''
-      };
-    }
+    row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
+      ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
+      readOnly: !(selectedProvision && selectedProvision.determinationType.theType === 'Alternative'),
+      value: ''
+    };
 
     if (selectedProvision && selectedProvision.determinationType.theType === 'Fuel Code') {
       row[SCHEDULE_B.FUEL_CODE] = {

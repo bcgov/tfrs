@@ -6,11 +6,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+
 import 'react-datasheet/lib/react-datasheet.css';
 
-import { fuelClasses } from '../actions/fuelClasses';
-import { notionalTransferTypes } from '../actions/notionalTransferTypes';
+import getCreditCalculation from '../actions/creditCalculation';
 import Modal from '../app/components/Modal';
+import {
+  calculateCredit,
+  getCarbonIntensityLimit,
+  getCreditCalculationValues,
+  getDefaultCarbonIntensity,
+  getEnergyEffectivenessRatio,
+  getSelectedFuel,
+  getSelectedProvision,
+  getEnergyContent
+} from './components/ScheduleFunctions';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
@@ -136,6 +147,30 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
+  static calculatePart3Payable (part3, credits = 0) {
+    const grid = part3;
+    const balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value);
+    let outstandingBalance = balance + Number(credits);
+    let payable = outstandingBalance * -200; // negative symbole so that the product is positive
+
+    if (balance > 0) {
+      outstandingBalance = '';
+      payable = '';
+    }
+
+    grid[SCHEDULE_SUMMARY.LINE_27][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_27][2],
+      value: outstandingBalance
+    };
+
+    grid[SCHEDULE_SUMMARY.LINE_28][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_28][2],
+      value: payable
+    };
+
+    return grid;
+  }
+
   constructor (props) {
     super(props);
 
@@ -155,6 +190,7 @@ class ScheduleSummaryContainer extends Component {
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
+    this._handlePart3Changed = this._handlePart3Changed.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
@@ -166,6 +202,131 @@ class ScheduleSummaryContainer extends Component {
     } else {
       this.createSchedules();
     }
+  }
+
+  _calculatePart3 () {
+    let { part3 } = this.state;
+    const { compliancePeriod, scheduleB } = this.props.complianceReport;
+    const values = [];
+    const promises = [];
+    let totalCredits = 0;
+    let totalDebits = 0;
+
+    if (scheduleB) {
+      scheduleB.records.forEach((row) => {
+        const selectedFuel = getSelectedFuel(this.props.referenceData.approvedFuels, row.fuelType);
+
+        const promise = this.props.getCreditCalculation(selectedFuel.id, {
+          compliance_period_id: compliancePeriod.id
+        }).then(() => {
+          let creditCalculationValues = getCreditCalculationValues(
+            values,
+            selectedFuel.id
+          );
+
+          if (!creditCalculationValues) {
+            values.push(this.props.creditCalculation.item);
+
+            creditCalculationValues = getCreditCalculationValues(
+              values,
+              selectedFuel.id
+            );
+          }
+
+          const carbonIntensityLimit = getCarbonIntensityLimit(
+            creditCalculationValues,
+            row.fuelClass
+          );
+
+          const selectedProvision = getSelectedProvision(
+            selectedFuel,
+            row.provisionOfTheAct
+          );
+
+          const { determinationType } = selectedProvision;
+
+          const carbonIntensityFuel = getDefaultCarbonIntensity(
+            creditCalculationValues,
+            selectedFuel,
+            determinationType,
+            row.fuelCode
+          );
+
+          const energyEffectivenessRatio = getEnergyEffectivenessRatio(
+            creditCalculationValues,
+            row.fuelClass
+          );
+
+          const energyContent = getEnergyContent(
+            creditCalculationValues,
+            row.quantity
+          );
+
+          const credit = calculateCredit(
+            carbonIntensityLimit,
+            carbonIntensityFuel,
+            energyEffectivenessRatio,
+            energyContent
+          );
+
+          if (credit < 0) {
+            totalDebits += credit;
+          } else {
+            totalCredits += credit;
+          }
+        });
+
+        promises.push(promise);
+      });
+    }
+
+    Promise.all(promises).then(() => {
+      part3[SCHEDULE_SUMMARY.LINE_23][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_23][2],
+        value: totalCredits
+      };
+
+      part3[SCHEDULE_SUMMARY.LINE_24][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_24][2],
+        value: totalDebits
+      };
+
+      const netTotal = totalCredits + totalDebits;
+
+      part3[SCHEDULE_SUMMARY.LINE_25][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_25][2],
+        value: netTotal
+      };
+
+      let maxValue = '';
+
+      if (netTotal < 0) {
+        const { organizationBalance } = this.props.loggedInUser.organization;
+        maxValue = (netTotal * -1).toFixed(0);
+
+        if (organizationBalance.validatedCredits < maxValue) {
+          maxValue = organizationBalance.validatedCredits;
+        }
+      }
+
+      part3[SCHEDULE_SUMMARY.LINE_26][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_26][2],
+        readOnly: (netTotal >= 0),
+        attributes: {
+          ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
+          maxValue
+        }
+      };
+
+      part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
+
+      this.setState({
+        ...this.state,
+        part3
+      });
+    });
+
+    return part3;
   }
 
   createSchedules () {
@@ -181,11 +342,14 @@ class ScheduleSummaryContainer extends Component {
 
   loadSchedules () {
     const { scheduleA, summary } = this.props.complianceReport;
+
     this.populateSchedules(summary, scheduleA);
   }
 
-  populateSchedules (summary, scheduleA = null) {
+  populateSchedules (summary, scheduleA = null, scheduleB = null) {
     const { diesel, gasoline } = this.state;
+
+    const part3Values = this._calculatePart3();
 
     const {
       totalPetroleumDiesel,
@@ -391,12 +555,13 @@ class ScheduleSummaryContainer extends Component {
     this.setState({
       ...this.state,
       diesel,
-      gasoline
+      gasoline,
+      part3: part3Values
     });
   }
 
   _handleCellsChanged (gridName, changes, addition = null) {
-    const grid = this.state[gridName].map(row => [...row]);
+    let grid = this.state[gridName].map(row => [...row]);
 
     changes.forEach((change) => {
       const {
@@ -411,6 +576,10 @@ class ScheduleSummaryContainer extends Component {
         ...grid[row][col],
         value
       };
+
+      if (gridName === 'part3' && row === SCHEDULE_SUMMARY.LINE_26) {
+        grid = ScheduleSummaryContainer.calculatePart3Payable(grid, value);
+      }
     });
 
     if (gridName === 'diesel') {
@@ -450,6 +619,10 @@ class ScheduleSummaryContainer extends Component {
     this._handleCellsChanged('gasoline', changes, addition);
   }
 
+  _handlePart3Changed (changes, addition = null) {
+    this._handleCellsChanged('part3', changes, addition);
+  }
+
   _handleSubmit () {
     console.log(this.state.grid);
   }
@@ -467,6 +640,7 @@ class ScheduleSummaryContainer extends Component {
         gasoline={this.state.gasoline}
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
+        handlePart3Changed={this._handlePart3Changed}
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
@@ -490,6 +664,7 @@ ScheduleSummaryContainer.defaultProps = {
 
 ScheduleSummaryContainer.propTypes = {
   complianceReport: PropTypes.shape({
+    compliancePeriod: PropTypes.shape(),
     scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
     scheduleC: PropTypes.shape(),
@@ -501,17 +676,31 @@ ScheduleSummaryContainer.propTypes = {
     })
   }),
   create: PropTypes.bool.isRequired,
-  fuelClasses: PropTypes.shape({
+  creditCalculation: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
+    item: PropTypes.shape({
+      carbonIntensityLimit: PropTypes.shape({
+        diesel: PropTypes.number,
+        gasoline: PropTypes.number
+      }),
+      defaultCarbonIntensity: PropTypes.number,
+      energyDensity: PropTypes.number,
+      energyEffectivenessRatio: PropTypes.shape({
+        diesel: PropTypes.number,
+        gasoline: PropTypes.number
+      }),
+      fuelCodes: PropTypes.arrayOf(PropTypes.shape({
+        fuelCode: PropTypes.string,
+        fuelCodeVersion: PropTypes.number,
+        fuelCodeVersionMinor: PropTypes.number,
+        id: PropTypes.number
+      }))
+    }),
+    success: PropTypes.bool
   }).isRequired,
+  getCreditCalculation: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
-  loadFuelClasses: PropTypes.func.isRequired,
-  loadNotionalTransferTypes: PropTypes.func.isRequired,
-  notionalTransferTypes: PropTypes.shape({
-    isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired,
+  loggedInUser: PropTypes.shape().isRequired,
   period: PropTypes.string,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
@@ -519,22 +708,18 @@ ScheduleSummaryContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fuelClasses: {
-    isFetching: state.rootReducer.fuelClasses.isFinding,
-    items: state.rootReducer.fuelClasses.items
-  },
-  notionalTransferTypes: {
-    isFetching: state.rootReducer.notionalTransferTypes.isFinding,
-    items: state.rootReducer.notionalTransferTypes.items
+  creditCalculation: {
+    isFetching: state.rootReducer.creditCalculation.isFetching,
+    item: state.rootReducer.creditCalculation.item,
+    success: state.rootReducer.creditCalculation.success
   },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 
-const mapDispatchToProps = {
-  loadFuelClasses: fuelClasses.find,
-  loadNotionalTransferTypes: notionalTransferTypes.find
-};
+const mapDispatchToProps = dispatch => ({
+  getCreditCalculation: bindActionCreators(getCreditCalculation, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleSummaryContainer);

@@ -7,11 +7,11 @@ const numericColumn = {
   className: 'numeric',
   readOnly: true,
   value: '',
-  valueViewer: (cell) => {
-    const { value } = cell;
+  valueViewer: (data) => {
+    const { value } = data;
 
     if (value === '') {
-      return '-';
+      return '';
     }
 
     if (Number(value) < 0) {
@@ -30,14 +30,18 @@ const numericInput = {
   },
   className: 'number',
   dataEditor: Input,
-  valueViewer: (cell) => {
-    const { value } = cell;
+  valueViewer: (data) => {
+    const { attributes } = data.cell;
+    let { value } = data;
 
     if (!value) {
       return '';
     }
 
-    return <span>{getQuantity(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    value = value.replace(/,/g, '');
+    value = Number(value);
+
+    return <span>{getQuantity(value).toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
   }
 };
 
@@ -45,11 +49,11 @@ const totalViewer = {
   className: 'numeric',
   readOnly: true,
   value: '',
-  valueViewer: (cell) => {
-    const { value } = cell;
+  valueViewer: (data) => {
+    const { value } = data;
 
     if (value === '') {
-      return '-';
+      return '';
     }
 
     if (Number(value) < 0) {
