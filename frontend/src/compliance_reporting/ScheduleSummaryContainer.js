@@ -236,12 +236,17 @@ class ScheduleSummaryContainer extends Component {
       value: line4Value // Line 3 x 5%
     };
 
-    const line6Value = Math.round(line4Value * 0.05); // Line 4 x 5%
+    const line6Value = line4Value * 0.05; // Line 4 x 5%
+    let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
+    if (line6Value > 0) {
+      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+    }
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][0],
-      value: gasoline[SCHEDULE_SUMMARY.LINE_6][0]
-        .value.replace('4)', ` is ${formatNumeric(line6Value, 0)} L)`)
+      valueViewer: () => (
+        <span>{line6Label}</span>
+      )
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = { // line 6, 3rd column
@@ -252,10 +257,16 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
+    let line8Label = gasoline[SCHEDULE_SUMMARY.LINE_8][0].value;
+    if (line6Value > 0) {
+      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+    }
+
     gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][0],
-      value: gasoline[SCHEDULE_SUMMARY.LINE_8][0]
-        .value.replace('4)', ` is ${formatNumeric(line6Value, 0)} L)`)
+      valueViewer: () => (
+        <span>{line8Label}</span>
+      )
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = { // line 8, 3rd column
@@ -287,12 +298,17 @@ class ScheduleSummaryContainer extends Component {
       value: line15Value // Line 14 x 4%
     };
 
-    const line17Value = Math.round(line15Value * 0.05); // Line 15 x 5%
+    const line17Value = line15Value * 0.05; // Line 15 x 5%
+    let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
+    if (line17Value > 0) {
+      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+    }
 
     diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
       ...diesel[SCHEDULE_SUMMARY.LINE_17][0],
-      value: diesel[SCHEDULE_SUMMARY.LINE_17][0]
-        .value.replace('15)', ` is ${formatNumeric(line17Value, 0)} L)`)
+      valueViewer: () => (
+        <span>{line17Label}</span>
+      )
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = { // line 17, 3rd column
@@ -303,10 +319,16 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
+    let line19label = diesel[SCHEDULE_SUMMARY.LINE_19][0].value;
+    if (line17Value > 0) {
+      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+    }
+
     diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
       ...diesel[SCHEDULE_SUMMARY.LINE_19][0],
-      value: diesel[SCHEDULE_SUMMARY.LINE_19][0]
-        .value.replace('15)', ` is ${formatNumeric(line17Value, 0)} L)`)
+      valueViewer: () => (
+        <span>{line19label}</span>
+      )
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = { // line 19, 3rd column
@@ -346,17 +368,25 @@ class ScheduleSummaryContainer extends Component {
       value: dieselReceived - dieselTransferred
     };
 
-    gasoline[SCHEDULE_SUMMARY.LINE_10][2].value =
-    ScheduleSummaryContainer.calculateGasolineTotal(gasoline);
+    gasoline[SCHEDULE_SUMMARY.LINE_10][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_10][2],
+      value: ScheduleSummaryContainer.calculateGasolineTotal(gasoline)
+    };
 
-    gasoline[SCHEDULE_SUMMARY.LINE_11][2].value =
-    ScheduleSummaryContainer.calculateGasolinePayable(gasoline);
+    gasoline[SCHEDULE_SUMMARY.LINE_11][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_11][2],
+      value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
+    };
 
-    diesel[SCHEDULE_SUMMARY.LINE_21][2].value =
-    ScheduleSummaryContainer.calculateDieselTotal(diesel);
+    diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_21][2],
+      value: ScheduleSummaryContainer.calculateDieselTotal(diesel)
+    };
 
-    diesel[SCHEDULE_SUMMARY.LINE_22][2].value =
-    ScheduleSummaryContainer.calculateDieselPayable(diesel);
+    diesel[SCHEDULE_SUMMARY.LINE_22][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_22][2],
+      value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
+    };
 
     this.setState({
       ...this.state,
@@ -384,19 +414,27 @@ class ScheduleSummaryContainer extends Component {
     });
 
     if (gridName === 'diesel') {
-      grid[SCHEDULE_SUMMARY.LINE_21][2].value =
-      ScheduleSummaryContainer.calculateDieselTotal(grid);
+      grid[SCHEDULE_SUMMARY.LINE_21][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_21][2],
+        value: ScheduleSummaryContainer.calculateDieselTotal(grid)
+      };
 
-      grid[SCHEDULE_SUMMARY.LINE_22][2].value =
-      ScheduleSummaryContainer.calculateDieselPayable(grid);
+      grid[SCHEDULE_SUMMARY.LINE_22][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_22][2],
+        value: ScheduleSummaryContainer.calculateDieselPayable(grid)
+      };
     }
 
     if (gridName === 'gasoline') {
-      grid[SCHEDULE_SUMMARY.LINE_10][2].value =
-      ScheduleSummaryContainer.calculateGasolineTotal(grid);
+      grid[SCHEDULE_SUMMARY.LINE_10][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_10][2],
+        value: ScheduleSummaryContainer.calculateGasolineTotal(grid)
+      };
 
-      grid[SCHEDULE_SUMMARY.LINE_11][2].value =
-      ScheduleSummaryContainer.calculateGasolinePayable(grid);
+      grid[SCHEDULE_SUMMARY.LINE_11][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_11][2],
+        value: ScheduleSummaryContainer.calculateGasolinePayable(grid)
+      };
     }
 
     this.setState({
