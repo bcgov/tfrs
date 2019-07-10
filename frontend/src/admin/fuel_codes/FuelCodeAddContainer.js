@@ -133,7 +133,7 @@ class FuelCodeAddContainer extends Component {
               value = formatFacilityNameplate(value);
             }
 
-            if (name === 'renewablePercentage' && value !== '') {
+            if (name === 'renewablePercentage' && value && value !== '') {
               fieldState.partiallyRenewable = true;
             }
 
