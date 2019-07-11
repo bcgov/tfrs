@@ -11,7 +11,7 @@ class BrowserStackReportingSpec extends GebReportingSpec {
 
     if (_browser && _browser.driver) {
       SessionIdHolder.instance.sessionId.set(_browser.driver.getSessionId())
-      _browser.driver.manage.window.maximize()
+      _browser.driver.manage().window().maximize()
     }
 
 
