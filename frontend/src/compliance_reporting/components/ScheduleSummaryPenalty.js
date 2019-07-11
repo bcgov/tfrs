@@ -47,8 +47,8 @@ class ScheduleSummaryPenalty {
       }, {
         readOnly: true
       }, {
-        className: 'total',
-        readOnly: true
+        ...totalViewer,
+        className: 'total numeric'
       }],
       [{
         className: 'text total',

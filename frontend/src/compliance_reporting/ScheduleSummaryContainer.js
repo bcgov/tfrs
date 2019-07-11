@@ -89,6 +89,22 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
+  static calculateNonCompliancePayable (penalty) {
+    const grid = penalty;
+    let total = 0;
+
+    total += grid[SCHEDULE_PENALTY.LINE_11][2].value;
+    total += grid[SCHEDULE_PENALTY.LINE_22][2].value;
+    total += grid[SCHEDULE_PENALTY.LINE_28][2].value;
+
+    grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = {
+      ...grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2],
+      value: total
+    };
+
+    return penalty;
+  }
+
   static calculateGasolinePayable (grid) {
     let totals = 0;
 
@@ -203,8 +219,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   _calculatePart3 () {
-    const { penalty } = this.state;
-    let { part3 } = this.state;
+    let { part3, penalty } = this.state;
 
     if (!this.props.complianceReport) {
       return part3;
@@ -331,6 +346,8 @@ class ScheduleSummaryContainer extends Component {
         value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
       };
 
+      penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+
       this.setState({
         ...this.state,
         part3,
@@ -348,8 +365,8 @@ class ScheduleSummaryContainer extends Component {
   }
 
   populateSchedules (summary, scheduleA = null) {
-    const { diesel, gasoline, penalty } = this.state;
-    let { part3 } = this.state;
+    const { diesel, gasoline } = this.state;
+    let { part3, penalty } = this.state;
 
     part3 = this._calculatePart3();
 
@@ -563,6 +580,8 @@ class ScheduleSummaryContainer extends Component {
       ...penalty[SCHEDULE_PENALTY.LINE_22][2],
       value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
     };
+
+    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
     this.setState({
       ...this.state,
