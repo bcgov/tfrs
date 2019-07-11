@@ -57,7 +57,7 @@ class InputWithTooltip extends Component {
     if (!this.props.allowNegative &&
       value.includes('-') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
-      value = this.state.currentValue;
+      this.target.value = this.state.currentValue;
       showTooltip = true;
       tooltipMessage = TEXT_ERROR_NEGATIVE_VALUE;
     }
@@ -66,13 +66,13 @@ class InputWithTooltip extends Component {
     // we can just get rid of the e
     if (value.includes('e') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
-      value = value.replace('e', '');
+      this.target.value = value.replace('e', '');
     }
 
     const numericValue = Number(String(value).replace(/,/g, ''));
 
     if (this.props.maxValue !== null && numericValue > this.props.maxValue) {
-      value = this.state.currentValue;
+      this.target.value = this.state.currentValue;
       showTooltip = true;
 
       tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
@@ -91,14 +91,14 @@ class InputWithTooltip extends Component {
       newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 
       if (parsed.length > 1) {
-        value = `${newValue}.${parsed[1]}`;
+        this.target.value = `${newValue}.${parsed[1]}`;
       } else {
-        value = newValue;
+        this.target.value = newValue;
       }
     }
 
     if (parsed.length > 1 && parsed[1].length > this.props.dataNumberToFixed) {
-      value = this.state.currentValue;
+      this.target.value = this.state.currentValue;
       showTooltip = true;
 
       if (this.props.dataNumberToFixed === 0) {

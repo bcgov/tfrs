@@ -27,7 +27,7 @@ import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
-import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
 
 class ScheduleSummaryContainer extends Component {
@@ -149,7 +149,7 @@ class ScheduleSummaryContainer extends Component {
 
   static calculatePart3Payable (part3, credits = 0) {
     const grid = part3;
-    const balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value);
+    const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
     let payable = outstandingBalance * -200; // negative symbole so that the product is positive
 
@@ -159,12 +159,12 @@ class ScheduleSummaryContainer extends Component {
     }
 
     grid[SCHEDULE_SUMMARY.LINE_27][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_27][2],
+      ...grid[SCHEDULE_SUMMARY.LINE_27][2],
       value: outstandingBalance
     };
 
     grid[SCHEDULE_SUMMARY.LINE_28][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_28][2],
+      ...grid[SCHEDULE_SUMMARY.LINE_28][2],
       value: payable
     };
 
@@ -175,10 +175,10 @@ class ScheduleSummaryContainer extends Component {
     super(props);
 
     this.state = {
-      diesel: ScheduleSummaryDiesel,
-      gasoline: ScheduleSummaryGasoline,
-      part3: ScheduleSummaryPart3,
-      penalty: ScheduleSummaryPenalty,
+      diesel: new ScheduleSummaryDiesel(),
+      gasoline: new ScheduleSummaryGasoline(),
+      part3: new ScheduleSummaryPart3(),
+      penalty: new ScheduleSummaryPenalty(),
       totals: {
         diesel: 0,
         gasoline: 0
@@ -199,86 +199,92 @@ class ScheduleSummaryContainer extends Component {
       // this.restoreFromAutosaved();
     } else if (!this.props.create) {
       this.loadSchedules();
-    } else {
-      this.createSchedules();
     }
   }
 
   _calculatePart3 () {
+    const { penalty } = this.state;
     let { part3 } = this.state;
+
+    if (!this.props.complianceReport) {
+      return part3;
+    }
+
     const { compliancePeriod, scheduleB } = this.props.complianceReport;
     const values = [];
     const promises = [];
     let totalCredits = 0;
     let totalDebits = 0;
 
-    if (scheduleB) {
-      scheduleB.records.forEach((row) => {
-        const selectedFuel = getSelectedFuel(this.props.referenceData.approvedFuels, row.fuelType);
+    if (!scheduleB) {
+      return part3;
+    }
 
-        const promise = this.props.getCreditCalculation(selectedFuel.id, {
-          compliance_period_id: compliancePeriod.id
-        }).then(() => {
-          let creditCalculationValues = getCreditCalculationValues(
+    scheduleB.records.forEach((row) => {
+      const selectedFuel = getSelectedFuel(this.props.referenceData.approvedFuels, row.fuelType);
+
+      const promise = this.props.getCreditCalculation(selectedFuel.id, {
+        compliance_period_id: compliancePeriod.id
+      }).then(() => {
+        let creditCalculationValues = getCreditCalculationValues(
+          values,
+          selectedFuel.id
+        );
+
+        if (!creditCalculationValues) {
+          values.push(this.props.creditCalculation.item);
+
+          creditCalculationValues = getCreditCalculationValues(
             values,
             selectedFuel.id
           );
+        }
 
-          if (!creditCalculationValues) {
-            values.push(this.props.creditCalculation.item);
+        const carbonIntensityLimit = getCarbonIntensityLimit(
+          creditCalculationValues,
+          row.fuelClass
+        );
 
-            creditCalculationValues = getCreditCalculationValues(
-              values,
-              selectedFuel.id
-            );
-          }
+        const selectedProvision = getSelectedProvision(
+          selectedFuel,
+          row.provisionOfTheAct
+        );
 
-          const carbonIntensityLimit = getCarbonIntensityLimit(
-            creditCalculationValues,
-            row.fuelClass
-          );
+        const { determinationType } = selectedProvision;
 
-          const selectedProvision = getSelectedProvision(
-            selectedFuel,
-            row.provisionOfTheAct
-          );
+        const carbonIntensityFuel = getDefaultCarbonIntensity(
+          creditCalculationValues,
+          selectedFuel,
+          determinationType,
+          row.fuelCode
+        );
 
-          const { determinationType } = selectedProvision;
+        const energyEffectivenessRatio = getEnergyEffectivenessRatio(
+          creditCalculationValues,
+          row.fuelClass
+        );
 
-          const carbonIntensityFuel = getDefaultCarbonIntensity(
-            creditCalculationValues,
-            selectedFuel,
-            determinationType,
-            row.fuelCode
-          );
+        const energyContent = getEnergyContent(
+          creditCalculationValues,
+          row.quantity
+        );
 
-          const energyEffectivenessRatio = getEnergyEffectivenessRatio(
-            creditCalculationValues,
-            row.fuelClass
-          );
+        const credit = calculateCredit(
+          carbonIntensityLimit,
+          carbonIntensityFuel,
+          energyEffectivenessRatio,
+          energyContent
+        );
 
-          const energyContent = getEnergyContent(
-            creditCalculationValues,
-            row.quantity
-          );
-
-          const credit = calculateCredit(
-            carbonIntensityLimit,
-            carbonIntensityFuel,
-            energyEffectivenessRatio,
-            energyContent
-          );
-
-          if (credit < 0) {
-            totalDebits += credit;
-          } else {
-            totalCredits += credit;
-          }
-        });
-
-        promises.push(promise);
+        if (credit < 0) {
+          totalDebits += credit;
+        } else {
+          totalCredits += credit;
+        }
       });
-    }
+
+      promises.push(promise);
+    });
 
     Promise.all(promises).then(() => {
       part3[SCHEDULE_SUMMARY.LINE_23][2] = {
@@ -320,24 +326,19 @@ class ScheduleSummaryContainer extends Component {
 
       part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
 
+      penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+        ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+        value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
+      };
+
       this.setState({
         ...this.state,
-        part3
+        part3,
+        penalty
       });
     });
 
     return part3;
-  }
-
-  createSchedules () {
-    const summary = {
-      totalPetroleumDiesel: 0,
-      totalPetroleumGasoline: 0,
-      totalRenewableDiesel: 0,
-      totalRenewableGasoline: 0
-    };
-
-    this.populateSchedules(summary);
   }
 
   loadSchedules () {
@@ -346,10 +347,11 @@ class ScheduleSummaryContainer extends Component {
     this.populateSchedules(summary, scheduleA);
   }
 
-  populateSchedules (summary, scheduleA = null, scheduleB = null) {
-    const { diesel, gasoline } = this.state;
+  populateSchedules (summary, scheduleA = null) {
+    const { diesel, gasoline, penalty } = this.state;
+    let { part3 } = this.state;
 
-    const part3Values = this._calculatePart3();
+    part3 = this._calculatePart3();
 
     const {
       totalPetroleumDiesel,
@@ -542,6 +544,11 @@ class ScheduleSummaryContainer extends Component {
       value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
     };
 
+    penalty[SCHEDULE_PENALTY.LINE_11][2] = {
+      ...penalty[SCHEDULE_PENALTY.LINE_11][2],
+      value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
+    };
+
     diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_21][2],
       value: ScheduleSummaryContainer.calculateDieselTotal(diesel)
@@ -552,11 +559,17 @@ class ScheduleSummaryContainer extends Component {
       value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
     };
 
+    penalty[SCHEDULE_PENALTY.LINE_22][2] = {
+      ...penalty[SCHEDULE_PENALTY.LINE_22][2],
+      value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
+    };
+
     this.setState({
       ...this.state,
       diesel,
       gasoline,
-      part3: part3Values
+      part3,
+      penalty
     });
   }
 
