@@ -1,123 +1,44 @@
 result = 0
 
 stage('Test DEV using Browserstack') {
-  parallel {
-    stage('Chrome') {
-      podTemplate(label: "browserstack-gradle-chrome-${env.BUILD_NUMBER}", name: "browserstack-gradle-chrome-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
-          containers: [
-              containerTemplate(
-                  name: 'jnlp',
-                  image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
-                  resourceRequestCpu: '500m',
-                  resourceLimitCpu: '1000m',
-                  resourceRequestMemory: '1Gi',
-                  resourceLimitMemory: '1Gi',
-                  workingDir: '/home/jenkins',
-                  command: '',
-                  args: '${computer.jnlpmac} ${computer.name}'
-              )
-          ]
-      ) {
-        node("develop-maven-${env.BUILD_NUMBER}") {
-          checkout scm
+  podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
+      containers: [
+          containerTemplate(
+              name: 'jnlp',
+              image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
+              resourceRequestCpu: '500m',
+              resourceLimitCpu: '1000m',
+              resourceRequestMemory: '1Gi',
+              resourceLimitMemory: '1Gi',
+              workingDir: '/home/jenkins',
+              command: '',
+              args: '${computer.jnlpmac} ${computer.name}'
+          )
+      ]
+  ) {
+    node("develop-maven-${env.BUILD_NUMBER}") {
+      checkout scm
 
-          dir('functional-tests') {
-            try {
-              withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
-                               file(credentialsId: 'functional_test_users_v2', variable: 'envfile')]) {
-                sh "cp \$envfile .env"
-                sh './gradlew remoteChromeTest --tests specs.CreditTransferSpec'
-              }
-            } catch (Throwable t) {
-              result = 1
-            } finally {
-//junit 'nosetests.xml'
-            }
+      dir('functional-tests') {
+        try {
+          withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
+                           file(credentialsId: 'functional_test_users_v2', variable: 'envfile')]) {
+            sh "cp \$envfile .env"
+            sh './gradlew remoteChromeTest --tests specs.CreditTransferSpec'
+            sh './gradlew remoteFirefoxTest --tests specs.CreditTransferSpec'
+            sh './gradlew remoteEdgeTest --tests specs.CreditTransferSpec'
+            
           }
-
-        } //end of node
-
-      } //end of podTemplate
-    }
-    stage('Edge') {
-      podTemplate(label: "browserstack-gradle-edge-${env.BUILD_NUMBER}", name: "browserstack-gradle-edge-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
-          containers: [
-              containerTemplate(
-                  name: 'jnlp',
-                  image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
-                  resourceRequestCpu: '500m',
-                  resourceLimitCpu: '1000m',
-                  resourceRequestMemory: '1Gi',
-                  resourceLimitMemory: '1Gi',
-                  workingDir: '/home/jenkins',
-                  command: '',
-                  args: '${computer.jnlpmac} ${computer.name}'
-              )
-          ]
-      ) {
-        node("develop-maven-${env.BUILD_NUMBER}") {
-          checkout scm
-
-          dir('functional-tests') {
-            try {
-              withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
-                               file(credentialsId: 'functional_test_users_v2', variable: 'envfile')]) {
-                sh "cp \$envfile .env"
-                sh './gradlew remoteEdgeTest --tests specs.CreditTransferSpec'
-              }
-            } catch (Throwable t) {
-              result = 1
-            } finally {
+        } catch (Throwable t) {
+          result = 1
+        } finally {
 //junit 'nosetests.xml'
-            }
-          }
+        }
+      }
 
-        } //end of node
+    } //end of node
 
-      } //end of podTemplate
-
-    }
-    stage('Firefox') {
-      podTemplate(label: "browserstack-gradle-firefox-${env.BUILD_NUMBER}", name: "browserstack-gradle-firefox-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
-          containers: [
-              containerTemplate(
-                  name: 'jnlp',
-                  image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
-                  resourceRequestCpu: '500m',
-                  resourceLimitCpu: '1000m',
-                  resourceRequestMemory: '1Gi',
-                  resourceLimitMemory: '1Gi',
-                  workingDir: '/home/jenkins',
-                  command: '',
-                  args: '${computer.jnlpmac} ${computer.name}'
-              )
-          ]
-      ) {
-        node("develop-maven-${env.BUILD_NUMBER}") {
-          checkout scm
-
-          dir('functional-tests') {
-            try {
-              withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
-                               file(credentialsId: 'functional_test_users_v2', variable: 'envfile')]) {
-                sh "cp \$envfile .env"
-                sh './gradlew remoteFirefoxTest --tests specs.CreditTransferSpec'
-              }
-            } catch (Throwable t) {
-              result = 1
-            } finally {
-//junit 'nosetests.xml'
-            }
-          }
-
-        } //end of node
-
-      } //end of podTemplate
-    }
-
-  }
-
-
+  } //end of podTemplate
 
 }
 
