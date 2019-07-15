@@ -11,7 +11,7 @@ import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
 import Select from './components/Select';
-import {SCHEDULE_B, SCHEDULE_C, SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
+import {SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
 import {numericInput} from "./components/Columns";
 
 class ScheduleDContainer extends Component {
