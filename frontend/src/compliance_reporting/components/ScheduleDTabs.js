@@ -39,7 +39,7 @@ const ScheduleDTabs = (props) => {
       <li
         role="presentation"
       >
-        <button type="button" onClick={props.addSheet}>Add Fuel</button>
+        <button type="button" onClick={() => props.addSheet()}>Add Fuel</button>
       </li>
       {renderTabs(props.active)}
     </ul>
