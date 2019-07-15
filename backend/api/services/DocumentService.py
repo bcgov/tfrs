@@ -7,9 +7,10 @@ from minio import Minio
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentHistory import DocumentHistory
 from api.models.Organization import Organization
-from api.notifications.notifications import AMQPNotificationService
 from api.notifications.notification_types import NotificationType
+from api.async_tasks import async_send_notification
 from tfrs.settings import MINIO
+from django.db.transaction import on_commit
 
 
 class DocumentService(object):
@@ -168,10 +169,12 @@ class DocumentService(object):
 
         if notification_type:
             for organization in interested_organizations:
-                AMQPNotificationService.send_notification(
-                    interested_organization=organization,
-                    message=notification_type.name,
-                    notification_type=notification_type,
-                    originating_user=originating_user,
-                    related_document=document
-                )
+                on_commit(lambda:
+                        async_send_notification.delay(
+                            interested_organization_id=organization.id,
+                            message=notification_type.name,
+                            notification_type=notification_type.value,
+                            originating_user_id=originating_user.id,
+                            related_document_id=document.id
+                        )
+                    )
