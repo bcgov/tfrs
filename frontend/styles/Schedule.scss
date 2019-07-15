@@ -396,6 +396,11 @@
     margin-right: -15px;
   }
 
+  .credits {
+    min-width: 10rem;
+    width: 10rem;
+  }
+
   .data-grid-container .cell {
     &.numeric {
       text-align: right;
