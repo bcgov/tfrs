@@ -93,13 +93,19 @@ const CreditTransferDetails = props => (
           }
           {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
           {props.comments.map(c => (
-            <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
+            <CreditTransferComment
+              comment={c}
+              key={c.id}
+              saveComment={props.saveComment}
+              selectIdForModal={props.selectIdForModal}
+            />
           ))
           }
           {props.isCommenting && <CreditTransferCommentForm
             saveComment={props.saveComment}
             cancelComment={props.cancelComment}
             isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+            selectIdForModal={props.selectIdForModal}
           />
           }
           <CreditTransferCommentButtons
@@ -283,7 +289,8 @@ CreditTransferDetails.propTypes = {
   hasCommented: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
-  documents: PropTypes.arrayOf(PropTypes.shape)
+  documents: PropTypes.arrayOf(PropTypes.shape),
+  selectIdForModal: PropTypes.func.isRequired
 };
 
 export default CreditTransferDetails;

@@ -13,6 +13,7 @@ import CreditTransferUtilityFunctions from './CreditTransferUtilityFunctions';
 
 import {
   addCommentToCreditTransfer,
+  deleteCommentOnCreditTransfer,
   updateCommentOnCreditTransfer,
   approveCreditTransfer,
   deleteCreditTransfer,
@@ -43,7 +44,8 @@ class CreditTransferViewContainer extends Component {
       },
       isCommenting: false,
       isCreatingPrivilegedComment: false,
-      hasCommented: false
+      hasCommented: false,
+      selectedId: 0
     };
 
     this._addComment = this._addComment.bind(this);
@@ -54,6 +56,7 @@ class CreditTransferViewContainer extends Component {
     this._modalAccept = this._modalAccept.bind(this);
     this._modalDecline = this._modalDecline.bind(this);
     this._modalDelete = this._modalDelete.bind(this);
+    this._modalDeleteComment = this._modalDeleteComment.bind(this);
     this._modalNotRecommend = this._modalNotRecommend.bind(this);
     this._modalPullBack = this._modalPullBack.bind(this);
     this._modalRefuse = this._modalRefuse.bind(this);
@@ -61,6 +64,7 @@ class CreditTransferViewContainer extends Component {
     this._modalReturn = this._modalReturn.bind(this);
     this._modalSubmit = this._modalSubmit.bind(this);
     this._saveComment = this._saveComment.bind(this);
+    this._selectIdForModal = this._selectIdForModal.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -293,6 +297,12 @@ class CreditTransferViewContainer extends Component {
     }
   }
 
+  _selectIdForModal (id) {
+    this.setState({
+      selectedId: id
+    });
+  }
+
   _addComment (privileged = false) {
     this.setState({
       isCommenting: true,
@@ -385,6 +395,23 @@ class CreditTransferViewContainer extends Component {
         key="confirmDelete"
       >
         Are you sure you want to delete this draft?
+      </Modal>
+    );
+  }
+
+  _modalDeleteComment () {
+    return (
+      <Modal
+        handleSubmit={() => {
+          this.props.deleteCommentOnCreditTransfer(this.state.selectedId).then(() => {
+            this.props.invalidateCreditTransfer();
+            this.props.getCreditTransferIfNeeded(this.props.match.params.id);
+          });
+        }}
+        id="confirmDeleteComment"
+        key="confirmDeleteComment"
+      >
+        Are you sure you want to delete this comment?
       </Modal>
     );
   }
@@ -588,7 +615,10 @@ class CreditTransferViewContainer extends Component {
           this.props.item
         )
       }
+      selectIdForModal={this._selectIdForModal}
     />);
+
+    content.push(this._modalDeleteComment());
 
     return content;
   }
@@ -668,6 +698,7 @@ CreditTransferViewContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   addCommentToCreditTransfer: PropTypes.func.isRequired,
+  deleteCommentOnCreditTransfer: PropTypes.func.isRequired,
   partialUpdateCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
@@ -690,6 +721,7 @@ const mapDispatchToProps = dispatch => ({
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
+  deleteCommentOnCreditTransfer: bindActionCreators(deleteCommentOnCreditTransfer, dispatch),
   partialUpdateCreditTransfer: bindActionCreators(partialUpdateCreditTransfer, dispatch),
   updateCommentOnCreditTransfer: bindActionCreators(updateCommentOnCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
