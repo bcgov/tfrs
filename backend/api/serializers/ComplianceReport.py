@@ -72,6 +72,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_a = ScheduleADetailSerializer(read_only=True)
     schedule_b = ScheduleBDetailSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(read_only=True)
+    schedule_d = ScheduleDDetailSerializer(read_only=True)
     summary = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
