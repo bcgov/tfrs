@@ -101,7 +101,8 @@ class DocumentViewSet(AuditableMixin,
             return self.queryset.filter(
                 ~Q(status__status__in=['Draft',
                                        'Cancelled',
-                                       'Pending Submission'])
+                                       'Pending Submission',
+                                       'Security Scan Failed'])
             ).all()
 
         return self.queryset.filter(
