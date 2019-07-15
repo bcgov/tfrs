@@ -34,6 +34,7 @@ const ScheduleSummaryPage = props => (
         <ReactDataSheet
           className="schedule"
           data={props.part3}
+          onCellsChanged={props.handlePart3Changed}
           valueRenderer={cell => cell.value}
         />
       </div>
@@ -64,6 +65,7 @@ ScheduleSummaryPage.propTypes = {
   gasoline: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleDieselChanged: PropTypes.func.isRequired,
   handleGasolineChanged: PropTypes.func.isRequired,
+  handlePart3Changed: PropTypes.func.isRequired,
   part3: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   penalty: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired
 };

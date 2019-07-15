@@ -207,6 +207,7 @@ class ComplianceReportingEditContainer extends Component {
         create={!this.edit}
         complianceReport={this.props.complianceReporting.item}
         loadedState={this.props.loadedState}
+        loggedInUser={this.props.loggedInUser}
         updateScheduleState={this._updateScheduleState}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
@@ -265,6 +266,7 @@ ComplianceReportingEditContainer.propTypes = {
   getComplianceReport: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
+  loggedInUser: PropTypes.shape().isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -296,6 +298,7 @@ const
       item: state.rootReducer.complianceReporting.item,
       errorMessage: state.rootReducer.complianceReporting.errorMessage
     },
+    loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
       isFetching: state.rootReducer.referenceData.isFetching
