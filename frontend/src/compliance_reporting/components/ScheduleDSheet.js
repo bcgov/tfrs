@@ -35,15 +35,19 @@ class ScheduleDSheet extends Component {
   constructor (props) {
     super(props);
 
-    this.rowNumber = 1;
+    this.rowNumber = this.props.sheet.grid.length;
 
     this._addRow = this._addRow.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
+
+
   }
 
   componentDidMount () {
-    this._addRow(10);
+    if (this.rowNumber === 1) {
+      this._addRow(10);
+    }
   }
 
   _addRow (numberOfRows = 1) {

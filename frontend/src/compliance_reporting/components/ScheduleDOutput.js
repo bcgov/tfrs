@@ -32,7 +32,7 @@ const totalViewer = (cell) => {
   return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
 };
 
-const ScheduleDOutput = [
+const ScheduleDOutput = () => ([
   [{
     className: 'output-label',
     readOnly: true,
@@ -112,6 +112,6 @@ const ScheduleDOutput = [
     readOnly: true,
     valueViewer: totalViewer
   }]
-];
+]);
 
 export default ScheduleDOutput;
