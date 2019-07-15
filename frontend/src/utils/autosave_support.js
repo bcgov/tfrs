@@ -45,7 +45,11 @@ function autosaved (config) {
 
       _getKey () {
         const s = this.state;
-        return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`;
+        if (config.customPathGenerator) {
+          return `autosave-${s.name}:${s.key}:${s.version}:${config.customPathGenerator(this.props)}`;
+        } else {
+          return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`;
+        }
       }
 
       invalidateAutosaved () {
@@ -124,7 +128,7 @@ function autosaved (config) {
       mapDispatchToProps = dispatch => ({
         loadState: key => (
           new Promise((resolve, reject) => {
-            dispatch(loadAutosaveData({ key, resolve, reject }));
+            dispatch(loadAutosaveData({ key: encodeURIComponent(key), resolve, reject }));
           })
         ),
         saveState: (key, state) => (
