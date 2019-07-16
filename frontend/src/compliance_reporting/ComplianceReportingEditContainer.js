@@ -124,6 +124,7 @@ class ComplianceReportingEditContainer extends Component {
     if (this.edit) {
       this.props.deleteComplianceReport({ id: this.props.match.params.id });
     }
+    this.props.getComplianceReports();
     history.push(COMPLIANCE_REPORTING.LIST);
     toastr.complianceReporting('Cancelled');
     this.props.invalidateAutosaved();
@@ -264,6 +265,7 @@ ComplianceReportingEditContainer.propTypes = {
   createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
+  getComplianceReports: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
@@ -284,7 +286,8 @@ const
     createComplianceReport: complianceReporting.create,
     updateComplianceReport: complianceReporting.update,
     deleteComplianceReport: complianceReporting.remove,
-    getComplianceReport: complianceReporting.get
+    getComplianceReport: complianceReporting.get,
+    getComplianceReports: complianceReporting.find
   };
 
 const

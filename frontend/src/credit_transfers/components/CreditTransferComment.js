@@ -35,6 +35,7 @@ class CreditTransferComment extends Component {
         isEditingExistingComment
         comment={this.props.comment.comment}
         saveComment={this.props.saveComment}
+        selectIdForModal={this.props.selectIdForModal}
         cancelComment={this._cancelEdit}
         id={this.props.comment.id}
       />
@@ -82,14 +83,26 @@ class CreditTransferComment extends Component {
           </div>
           <div className="row">
             <div className="col-xs-11">
-              {!this.props.isReadOnly && this.props.comment.actions.includes('EDIT_COMMENT') &&
-              <button
-                className="btn btn-primary"
-                onClick={() => this._beginEdit()}
-                type="submit"
-              >
-                {Lang.BTN_EDIT_COMMENT}
-              </button>}
+              {!this.props.isReadOnly && this.props.comment.actions.includes('EDIT_COMMENT') && [
+                <button
+                  className="btn btn-danger"
+                  data-toggle="modal"
+                  data-target="#confirmDeleteComment"
+                  key="btn-delete"
+                  onClick={() => this.props.selectIdForModal(this.props.comment.id)}
+                  type="button"
+                >
+                  {Lang.BTN_DELETE}
+                </button>,
+                <button
+                  className="btn btn-primary"
+                  key="btn-edit"
+                  onClick={() => this._beginEdit()}
+                  type="submit"
+                >
+                  {Lang.BTN_EDIT}
+                </button>
+              ]}
             </div>
           </div>
         </div>
@@ -131,6 +144,7 @@ CreditTransferComment.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   saveComment: PropTypes.func,
+  selectIdForModal: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool
 };
 

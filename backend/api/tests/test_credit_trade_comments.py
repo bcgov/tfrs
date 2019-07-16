@@ -698,3 +698,41 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin,
             self,
             before_change_callback=check_before,
             after_change_callback=check_after)
+
+    def test_delete_as_fs_invalid(self):
+        """
+        Test a Credit Trade Comment DELETE by a Fuel supplier for a comment
+        belonging to another fuel supplier
+        """
+        # User  doesn't own this comment
+        c_url = "/api/comments/1"
+
+        response = self.clients['fs_husky'].delete(
+            c_url,
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_as_fs(self):
+        """
+        Test a Credit Trade Comment DELETE by a Fuel supplier
+        """
+        c_url = "/api/comments/1"
+
+        response = self.clients['fs_air_liquide'].delete(
+            c_url,
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # check and make sure the comment is no longer visible
+        c_url = "/api/credit_trades/200"
+
+        response = self.clients['fs_air_liquide'].get(c_url)
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+
+        comments = data['comments']
+
+        for comment in comments:
+            self.assertNotEqual(comment['id'], 1)

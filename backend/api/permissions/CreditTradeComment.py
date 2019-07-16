@@ -160,7 +160,6 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """Check permissions When an object does exist (PUT, GET)"""
-
         # Users can always see and edit their own comments
         if obj.create_user == request.user:
             return True
