@@ -367,7 +367,6 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     """
     Delete serializer for Compliance Reports
     """
-
     def destroy(self):
         """
         Delete function to mark the compliance report as deleted.

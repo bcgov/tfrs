@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 
 import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
@@ -151,6 +152,8 @@ class Navbar extends Component {
           </NavLink>
           }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
           <NavLink
             activeClassName="active"
             id="navbar-compliance-reporting"

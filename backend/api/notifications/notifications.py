@@ -21,6 +21,7 @@ from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 
 subscription_cache = caches['notification_subscriptions']
 
+
 def send_amqp_notification(user):
     try:
         parameters = AMQP_CONNECTION_PARAMETERS

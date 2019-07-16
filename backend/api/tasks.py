@@ -10,6 +10,7 @@ def remove_orphans():
     print('starting orphan removal')
     DocumentService.remove_orphans()
 
+
 @celery_app.task
 def reap_autosave():
     print('starting autosave cache reaper')
