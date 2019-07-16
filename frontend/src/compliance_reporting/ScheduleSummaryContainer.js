@@ -3,10 +3,10 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 
 import 'react-datasheet/lib/react-datasheet.css';
 
@@ -27,11 +27,11 @@ import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
-import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
-import { formatNumeric } from '../utils/functions';
+import {SCHEDULE_PENALTY, SCHEDULE_SUMMARY} from '../constants/schedules/scheduleColumns';
+import {formatNumeric} from '../utils/functions';
 
 class ScheduleSummaryContainer extends Component {
-  static calculateDieselPayable (grid) {
+  static calculateDieselPayable(grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_15][2].value;
@@ -53,7 +53,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateDieselTotal (grid) {
+  static calculateDieselTotal(grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_13][2].value;
@@ -89,7 +89,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateNonCompliancePayable (penalty) {
+  static calculateNonCompliancePayable(penalty) {
     const grid = penalty;
     let total = 0;
 
@@ -105,7 +105,7 @@ class ScheduleSummaryContainer extends Component {
     return penalty;
   }
 
-  static calculateGasolinePayable (grid) {
+  static calculateGasolinePayable(grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_4][2].value;
@@ -127,7 +127,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateGasolineTotal (grid) {
+  static calculateGasolineTotal(grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_2][2].value;
@@ -163,7 +163,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculatePart3Payable (part3, credits = 0) {
+  static calculatePart3Payable(part3, credits = 0) {
     const grid = part3;
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
@@ -187,7 +187,7 @@ class ScheduleSummaryContainer extends Component {
     return grid;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -207,10 +207,10 @@ class ScheduleSummaryContainer extends Component {
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
     this._handlePart3Changed = this._handlePart3Changed.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._gridStateToPayload = this._gridStateToPayload.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.loadedState) {
       // this.restoreFromAutosaved();
     } else if (!this.props.create) {
@@ -218,14 +218,14 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  _calculatePart3 () {
-    let { part3, penalty } = this.state;
+  _calculatePart3() {
+    let {part3, penalty} = this.state;
 
     if (!this.props.complianceReport) {
       return part3;
     }
 
-    const { compliancePeriod, scheduleB } = this.props.complianceReport;
+    const {compliancePeriod, scheduleB} = this.props.complianceReport;
     const values = [];
     const promises = [];
     let totalCredits = 0;
@@ -265,7 +265,7 @@ class ScheduleSummaryContainer extends Component {
           row.provisionOfTheAct
         );
 
-        const { determinationType } = selectedProvision;
+        const {determinationType} = selectedProvision;
 
         const carbonIntensityFuel = getDefaultCarbonIntensity(
           creditCalculationValues,
@@ -322,7 +322,7 @@ class ScheduleSummaryContainer extends Component {
       let maxValue = '';
 
       if (netTotal < 0) {
-        const { organizationBalance } = this.props.loggedInUser.organization;
+        const {organizationBalance} = this.props.loggedInUser.organization;
         maxValue = (netTotal * -1).toFixed(0);
 
         if (organizationBalance.validatedCredits < maxValue) {
@@ -358,15 +358,15 @@ class ScheduleSummaryContainer extends Component {
     return part3;
   }
 
-  loadSchedules () {
-    const { scheduleA, summary } = this.props.complianceReport;
+  loadSchedules() {
+    const {scheduleA, summary} = this.props.complianceReport;
 
     this.populateSchedules(summary, scheduleA);
   }
 
-  populateSchedules (summary, scheduleA = null) {
-    const { diesel, gasoline } = this.state;
-    let { part3, penalty } = this.state;
+  populateSchedules(summary, scheduleA = null) {
+    const {diesel, gasoline} = this.state;
+    let {part3, penalty} = this.state;
 
     part3 = this._calculatePart3();
 
@@ -583,6 +583,20 @@ class ScheduleSummaryContainer extends Component {
 
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
+    if (summary.dieselClassDeferred) {
+      diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
+    }
+    if (summary.gasolineClassDeferred) {
+      gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
+    }
+    if (summary.dieselClassRetained) {
+      diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained
+    }
+    if (summary.gasolineClassRetained) {
+      gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained
+
+    }
+
     this.setState({
       ...this.state,
       diesel,
@@ -592,7 +606,7 @@ class ScheduleSummaryContainer extends Component {
     });
   }
 
-  _handleCellsChanged (gridName, changes, addition = null) {
+  _handleCellsChanged(gridName, changes, addition = null) {
     let grid = this.state[gridName].map(row => [...row]);
 
     changes.forEach((change) => {
@@ -638,29 +652,52 @@ class ScheduleSummaryContainer extends Component {
       };
     }
 
+    switch(gridName) {
+      case 'diesel':
+        this._gridStateToPayload({
+          [gridName]: grid,
+          gasoline: this.state.gasoline
+        });
+        break;
+      case 'gasoline':
+        this._gridStateToPayload({
+          [gridName]: grid,
+          diesel: this.state.diesel
+        });
+        break;
+    }
+
     this.setState({
       [gridName]: grid
     });
   }
 
-  _handleDieselChanged (changes, addition = null) {
+  _handleDieselChanged(changes, addition = null) {
     this._handleCellsChanged('diesel', changes, addition);
   }
 
-  _handleGasolineChanged (changes, addition = null) {
+  _handleGasolineChanged(changes, addition = null) {
     this._handleCellsChanged('gasoline', changes, addition);
   }
 
-  _handlePart3Changed (changes, addition = null) {
+  _handlePart3Changed(changes, addition = null) {
     this._handleCellsChanged('part3', changes, addition);
   }
 
-  _handleSubmit () {
-    console.log(this.state.grid);
+  _gridStateToPayload(state) {
+    this.props.updateScheduleState({
+      summary: {
+        dieselClassDeferred: state.diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+        dieselClassRetained: state.diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+        gasolineClassDeferred: state.gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+        gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+      }
+    })
   }
 
-  render () {
-    let { period } = this.props;
+
+  render() {
+    let {period} = this.props;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
@@ -676,14 +713,7 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
-      />,
-      <Modal
-        handleSubmit={event => this._handleSubmit(event)}
-        id="confirmSubmit"
-        key="confirmSubmit"
-      >
-        Are you sure you want to save this compliance report?
-      </Modal>
+      />
     ]);
   }
 }
@@ -704,7 +734,11 @@ ScheduleSummaryContainer.propTypes = {
       totalPetroleumDiesel: PropTypes.number,
       totalPetroleumGasoline: PropTypes.number,
       totalRenewableDiesel: PropTypes.number,
-      totalRenewableGasoline: PropTypes.number
+      totalRenewableGasoline: PropTypes.number,
+      dieselClassDeferred: PropTypes.number,
+      dieselClassRetained: PropTypes.number,
+      gasolineClassDeferred: PropTypes.number,
+      gasolineClassRetained: PropTypes.number
     })
   }),
   create: PropTypes.bool.isRequired,
@@ -736,7 +770,8 @@ ScheduleSummaryContainer.propTypes = {
   period: PropTypes.string,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired
+  }).isRequired,
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
