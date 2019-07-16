@@ -44,7 +44,7 @@ class ScheduleCRecord(Model):
         null=False,
         decimal_places=2,
         max_digits=20,
-        db_comment='Quantity of fuel supplied.'
+        db_comment="Quantity of fuel supplied."
     )
 
     expected_use = models.ForeignKey(
@@ -98,7 +98,7 @@ class ScheduleARecord(Model):
         null=False,
         decimal_places=2,
         max_digits=20,
-        db_comment='Quantity of fuel supplied.'
+        db_comment="Quantity of fuel supplied."
     )
 
     trading_partner = models.CharField(
@@ -157,7 +157,7 @@ class ScheduleBRecord(Model):
         null=False,
         decimal_places=2,
         max_digits=20,
-        db_comment='Quantity of fuel supplied.'
+        db_comment="Quantity of fuel supplied."
     )
 
     provision_of_the_act = models.ForeignKey(
@@ -212,7 +212,7 @@ class ScheduleDSheet(Model):
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet'
-    db_table_comment = 'Represents a single fuel in a Schedule D report'
+    db_table_comment = "Represents a single fuel in a Schedule D report"
 
 
 class ScheduleDSheetInput(Model):
@@ -227,31 +227,31 @@ class ScheduleDSheetInput(Model):
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Short descriptive name of the worksheet for user reference'
+        db_comment="Short descriptive name of the worksheet for user reference"
     )
     cell = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Spreadsheet cell address'
+        db_comment="Spreadsheet cell address"
     )
     value = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Value entered in spreadsheet cell'
+        db_comment="Value entered in spreadsheet cell"
     )
     units = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Unit (eg percent, L) of value in spreadsheet cell'
+        db_comment="Unit (eg percent, L) of value in spreadsheet cell"
     )
     description = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Description or purpose of the value'
+        db_comment="Description or purpose of the value"
     )
 
     class Meta:
@@ -300,7 +300,7 @@ class ScheduleDSheetOutput(Model):
         max_length=100,
         blank=True,
         null=True,
-        db_comment='Spreadsheet model output type (enumerated value)'
+        db_comment="Spreadsheet model output type (enumerated value)"
     )
 
     class Meta:
@@ -308,3 +308,41 @@ class ScheduleDSheetOutput(Model):
         unique_together = [['description', 'sheet']]
     db_table_comment = "Represents a set of spreadsheet outputs for a " \
                        "Schedule D record"
+
+
+class ScheduleSummary(Model):
+    class Meta:
+        db_table = 'compliance_report_summary'
+    db_table_comment = "Stores a set of inputs from the summary page of a " \
+                       "compliance report (eg fuel volume retained or " \
+                       "deferred)"
+
+    gasoline_class_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Liters of gasoline-class fuel retained"
+    )
+    gasoline_class_deferred = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Liters of gasoline-class fuel deferred"
+    )
+
+    diesel_class_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Liters of diesel-class fuel retained"
+    )
+    diesel_class_deferred = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Liters of diesel-class fuel deferred"
+    )

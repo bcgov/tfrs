@@ -90,6 +90,27 @@ class TestComplianceReporting(BaseTestCase):
         compliance_reports = response.json()
         self.assertEqual(len(compliance_reports), 4)
 
+    def test_create_draft_compliance_report_authorized_with_summary(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'summary': {
+                'dieselClassRetained': '100',
+                'dieselClassDeferred': '200',
+                'gasolineClassRetained': '300',
+                'gasolineClassDeferred': '400'
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_create_submitted_compliance_report_authorized(self):
         payload = {
             'status': 'Submitted',
@@ -218,6 +239,12 @@ class TestComplianceReporting(BaseTestCase):
                         'rationale': 'Patched'
                     }
                 ]
+            },
+            'summary': {
+                'dieselClassRetained': '100',
+                'dieselClassDeferred': '200',
+                'gasolineClassRetained': '300',
+                'gasolineClassDeferred': '400'
             }
         }
 
@@ -231,6 +258,8 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertIsNotNone(response_data['scheduleC'])
         self.assertEqual(len(response_data['scheduleC']['records']), 1)
+        self.assertIsNotNone(response_data['summary'])
+        self.assertEqual(response_data['summary']['dieselClassRetained'], '100.00')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         payload = {
@@ -243,7 +272,6 @@ class TestComplianceReporting(BaseTestCase):
                         'transferType': 'Received',
                         'quantity': 98.1
                     }
-
                 ]
             },
             'scheduleB': {
@@ -333,7 +361,23 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
 
+        self.assertIsNotNone(response_data['summary'])
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/1')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertIsNotNone(response_data['scheduleC'])
+        self.assertEqual(len(response_data['scheduleC']['records']), 2)
+        self.assertIsNotNone(response_data['scheduleA'])
+        self.assertEqual(len(response_data['scheduleA']['records']), 1)
+        self.assertIsNotNone(response_data['scheduleD'])
+        self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
 
         payload = {
             'scheduleC': {

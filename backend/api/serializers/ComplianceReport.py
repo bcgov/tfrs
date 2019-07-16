@@ -29,13 +29,13 @@ from api.models.ComplianceReport import \
     ComplianceReportType, ComplianceReportStatus, ComplianceReport
 from api.models.ComplianceReportSchedules import \
     ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
-    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet,\
-    ScheduleDSheetOutput, ScheduleDSheetInput
+    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
+    ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
 from api.serializers import \
     OrganizationMinSerializer, CompliancePeriodSerializer
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
-    ScheduleBDetailSerializer, ScheduleDDetailSerializer
+    ScheduleBDetailSerializer, ScheduleDDetailSerializer, ScheduleSummaryDetailSerializer
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -115,12 +115,19 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                     record.expected_use.description == "Heating Oil":
                 total_petroleum_diesel += record.quantity
 
-        return {
+        synthetic_totals = {
             "total_petroleum_diesel": total_petroleum_diesel,
             "total_petroleum_gasoline": total_petroleum_gasoline,
             "total_renewable_diesel": total_renewable_diesel,
             "total_renewable_gasoline": total_renewable_gasoline
         }
+
+        if obj.summary is not None:
+            ser = ScheduleSummaryDetailSerializer(obj.summary)
+            data = ser.data
+            synthetic_totals = {**data, **synthetic_totals}
+
+        return synthetic_totals
 
     class Meta:
         model = ComplianceReport
@@ -140,6 +147,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
+    summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
         schedule_d_data = None
@@ -157,6 +165,10 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         schedule_a_data = None
         if 'schedule_a' in validated_data:
             schedule_a_data = validated_data.pop('schedule_a')
+
+        summary_data = None
+        if 'summary' in validated_data:
+            summary_data = validated_data.pop('summary')
 
         instance = ComplianceReport.objects.create(**validated_data)
 
@@ -210,13 +222,18 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 schedule_a.records.add(record)
                 schedule_a.save()
 
+        if summary_data:
+            summary = ScheduleSummary.objects.create(**summary_data, compliance_report=instance)
+            instance.summary = summary
+
         instance.save()
         return instance
 
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d')
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
+                  'summary')
 
 
 class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
@@ -229,6 +246,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
+    summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
 
     def update(self, instance, validated_data):
 
@@ -324,13 +342,25 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
 
             instance.save()
 
+        if 'summary' in validated_data:
+            summary_data = validated_data.pop('summary')
+
+            if instance.summary:
+                instance.summary.delete()
+
+            summary = ScheduleSummary.objects.create(**summary_data, compliance_report=instance)
+            instance.summary = summary
+
+            instance.save()
+
         # all other fields are read-only
         return instance
 
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d')
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
+                  'summary')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

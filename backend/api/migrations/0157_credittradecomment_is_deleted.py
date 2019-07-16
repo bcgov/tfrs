@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0155_schedule_d'),
+        ('api', '0156_auto_20190716_0523'),
     ]
 
     operations = [
