@@ -86,6 +86,20 @@ class CreditTransferCommentForm extends Component {
                 >
                   {Lang.BTN_CANCEL_COMMENT}
                 </button>
+                {this.props.id &&
+                <button
+                  id="credit-transfer-delete-comment"
+                  className="btn btn-danger"
+                  data-toggle="modal"
+                  data-target="#confirmDeleteComment"
+                  onClick={() => {
+                    this.props.selectIdForModal(this.props.id);
+                  }}
+                  type="button"
+                >
+                  {Lang.BTN_DELETE}
+                </button>
+                }
                 <button
                   id="credit-transfer-save-comment"
                   className="btn btn-primary"
@@ -96,7 +110,7 @@ class CreditTransferCommentForm extends Component {
                     id: this.props.id
                   })}
                 >
-                  {Lang.BTN_SAVE_COMMENT}
+                  {Lang.BTN_SAVE}
                 </button>
               </div>
             }
@@ -142,7 +156,8 @@ CreditTransferCommentForm.propTypes = {
   embedded: PropTypes.bool,
   saveComment: PropTypes.func,
   cancelComment: PropTypes.func,
-  handleCommentChanged: PropTypes.func
+  handleCommentChanged: PropTypes.func,
+  selectIdForModal: PropTypes.func.isRequired
 };
 
 export default CreditTransferCommentForm;

@@ -58,6 +58,12 @@ class CreditTradeComment(Auditable):
                    'only.'
     )
 
+    is_deleted = models.BooleanField(
+        null=False,
+        default=False,
+        db_comment='Flag. True if the user has "deleted" the comment.'
+    )
+
     # For tracking the status at the point in time the comment was made
     trade_history_at_creation = models.ForeignKey(
         'CreditTradeHistory',

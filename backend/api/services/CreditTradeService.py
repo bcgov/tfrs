@@ -54,16 +54,16 @@ class CreditTradeService(object):
             #   show "Submitted" and other transactions where the fuel
             #   supplier is the respondent
             credit_trades = CreditTrade.objects.filter((
-                    (
-                            (~Q(status__status__in=[
-                                "Recorded", "Cancelled"]) &
-                             Q(type__is_gov_only_type=False)) |
-                            (Q(status__status__in=[
-                                "Approved", "Declined"]) &
-                             Q(type__is_gov_only_type=True))
-                    ) &
-                    ((~Q(status__status__in=["Draft"]) &
-                      Q(respondent=organization)) | Q(initiator=organization))
+                (
+                    (~Q(status__status__in=[
+                        "Recorded", "Cancelled"]) &
+                     Q(type__is_gov_only_type=False)) |
+                    (Q(status__status__in=[
+                        "Approved", "Declined"]) &
+                     Q(type__is_gov_only_type=True))
+                ) &
+                ((~Q(status__status__in=["Draft"]) &
+                  Q(respondent=organization)) | Q(initiator=organization))
             ))
 
         return credit_trades
@@ -99,7 +99,7 @@ class CreditTradeService(object):
             type_id=credit_trade.type.id,
             number_of_credits=credit_trade.number_of_credits,
             fair_market_value_per_credit=credit_trade.
-                fair_market_value_per_credit,
+            fair_market_value_per_credit,
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
             compliance_period_id=credit_trade.compliance_period_id,
@@ -234,7 +234,7 @@ class CreditTradeService(object):
                     "[ID: {}] "
                     "Can't complete transaction,"
                     "`{}` has insufficient credits.".
-                        format(credit_trade.id, credit_trade.credits_from.name))
+                    format(credit_trade.id, credit_trade.credits_from.name))
 
         if errors:
             raise PositiveIntegerException(errors)
@@ -341,7 +341,7 @@ class CreditTradeService(object):
                 allowed_statuses.append("Not Recommended")
 
         elif credit_trade.status.status in [
-            "Not Recommended", "Recommended"
+                "Not Recommended", "Recommended"
         ]:
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
                 allowed_statuses.append("Approved")

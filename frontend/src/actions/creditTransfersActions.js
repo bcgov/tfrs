@@ -462,3 +462,36 @@ const updateCommentOnCreditTransferError = error => ({
   type: ActionTypes.ERROR,
   errorMessage: error
 });
+
+/*
+ * Delete comment on credit transfer
+ */
+export const deleteCommentOnCreditTransfer = id => (dispatch) => {
+  dispatch(deleteCommentOnCreditTransferRequest());
+
+  return axios
+    .delete(`${Routes.BASE_URL}${Routes.COMMENTS_API}/${id}`)
+    .then((response) => {
+      dispatch(deleteCommentOnCreditTransferSuccess(response.data));
+    }).catch((error) => {
+      dispatch(deleteCommentOnCreditTransferError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const deleteCommentOnCreditTransferRequest = () => ({
+  name: ReducerTypes.UPDATE_COMMENT_ON_CREDIT_TRANSFER_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const deleteCommentOnCreditTransferSuccess = data => ({
+  name: ReducerTypes.SUCCESS_UPDATE_COMMENT_ON_CREDIT_TRANSFER,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const deleteCommentOnCreditTransferError = error => ({
+  name: ReducerTypes.ERROR_UPDATE_COMMENT_ON_CREDIT_TRANSFER,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
