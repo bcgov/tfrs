@@ -82,8 +82,10 @@ class ScheduleDContainer extends Component {
         const rowIndex = sheets[i].output.findIndex(x =>
           x[0].value === sheet.outputs[j].description);
         if (rowIndex !== -1) {
-          sheets[i].output[rowIndex][1] = Object.create(numericInput);
-          sheets[i].output[rowIndex][1].value = sheet.outputs[j].intensity;
+          sheets[i].output[rowIndex][1] = {
+            ...numericInput,
+            value: sheet.outputs[j].intensity
+          };
         }
       }
 
