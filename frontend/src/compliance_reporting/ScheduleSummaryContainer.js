@@ -11,7 +11,6 @@ import {bindActionCreators} from 'redux';
 import 'react-datasheet/lib/react-datasheet.css';
 
 import getCreditCalculation from '../actions/creditCalculation';
-import Modal from '../app/components/Modal';
 import {
   calculateCredit,
   getCarbonIntensityLimit,
