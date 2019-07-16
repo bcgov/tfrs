@@ -3,7 +3,7 @@ from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.ComplianceReportSchedules import ScheduleC, ScheduleCRecord, ScheduleARecord, ScheduleA, \
-    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, ScheduleDSheetInput, ScheduleDSheetOutput
+    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, ScheduleDSheetInput, ScheduleDSheetOutput, ScheduleSummary
 from api.models.ExpectedUse import ExpectedUse
 from api.models.FuelClass import FuelClass
 from api.models.FuelCode import FuelCode
@@ -101,3 +101,11 @@ class ScheduleADetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleA
         fields = ('records',)
+
+
+class ScheduleSummaryDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ScheduleSummary
+        fields = ('diesel_class_retained', 'gasoline_class_retained',
+                  'diesel_class_deferred', 'gasoline_class_deferred')

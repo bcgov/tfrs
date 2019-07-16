@@ -296,3 +296,40 @@ class ScheduleDSheetOutput(Model):
         db_table = 'compliance_report_schedule_d_sheet_output'
         unique_together = [['description', 'sheet']]
     db_table_comment = 'Represents a set of spreadsheet outputs for a Schedule D record'
+
+
+class ScheduleSummary(Model):
+    class Meta:
+        db_table = 'compliance_report_summary'
+    db_table_comment = 'Stores a set of inputs from the summary page of a compliance report' \
+                       ' (eg fuel volume retained or deferred)'
+
+    gasoline_class_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment='Liters of gasoline-class fuel retained'
+    )
+    gasoline_class_deferred = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment='Liters of gasoline-class fuel deferred'
+    )
+
+    diesel_class_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment='Liters of diesel-class fuel retained'
+    )
+    diesel_class_deferred = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment='Liters of diesel-class fuel deferred'
+    )

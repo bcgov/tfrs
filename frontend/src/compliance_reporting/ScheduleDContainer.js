@@ -315,7 +315,8 @@ ScheduleDContainer.defaultProps = {};
 ScheduleDContainer.propTypes = {
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired
+  }).isRequired,
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
