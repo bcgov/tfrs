@@ -19,14 +19,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from collections import defaultdict
-from enum import Enum
-
 from rest_framework import permissions
-
-from api.models.CreditTradeComment import CreditTradeComment
-from api.models.CreditTradeStatus import CreditTradeStatus
-from api.services.CreditTradeService import CreditTradeService
 
 
 class ComplianceReportPermissions(permissions.BasePermission):

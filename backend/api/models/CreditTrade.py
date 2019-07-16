@@ -155,7 +155,8 @@ class CreditTrade(Auditable):
         specific permission
         """
         comments = CreditTradeComment.objects.filter(
-            credit_trade_id=self.id
+            credit_trade_id=self.id,
+            is_deleted=False
         )
 
         return comments
@@ -166,7 +167,8 @@ class CreditTrade(Auditable):
         Comments that are unrestricted
         """
         comments = CreditTradeComment.objects.filter(
-            credit_trade_id=self.id
+            credit_trade_id=self.id,
+            is_deleted=False
         ).filter(
             privileged_access=False
         )

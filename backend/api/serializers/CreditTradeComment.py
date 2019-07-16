@@ -50,6 +50,33 @@ class CreditTradeCommentSerializer(serializers.ModelSerializer):
             request, obj)
 
 
+class CreditTradeCommentDestroySerializer(serializers.ModelSerializer):
+    """
+    Delete serializer for credit trade comments
+    """
+    create_user = UserMinSerializer(read_only=True)
+    actions = serializers.SerializerMethodField()
+
+    def destroy(self):
+        """
+        Delete function to mark the comment as deleted
+        """
+        request = self.context.get('request')
+
+        comment = self.instance
+        comment.is_deleted = True
+        comment.update_user = request.user
+        comment.save()
+
+    class Meta:
+        model = CreditTradeComment
+        fields = (
+            'id', 'create_timestamp', 'update_timestamp', 'create_user')
+
+        read_only_fields = (
+            'id', 'create_timestamp', 'update_timestamp', 'create_user')
+
+
 class CreditTradeCommentUpdateSerializer(serializers.ModelSerializer):
     """
     Identical to above except that credit_trade and privileged_access are also

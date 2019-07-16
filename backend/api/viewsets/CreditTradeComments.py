@@ -19,13 +19,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, status, mixins
 from rest_framework import filters
+from rest_framework.response import Response
 
 from api.models.CreditTradeComment import CreditTradeComment
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
-from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
-    CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer
+from api.serializers.CreditTradeComment import CreditTradeCommentSerializer, \
+    CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer, \
+    CreditTradeCommentDestroySerializer
 from api.services.CreditTradeCommentActions import CreditTradeCommentService
 
 from auditable.views import AuditableMixin
@@ -34,11 +36,11 @@ from auditable.views import AuditableMixin
 class CreditTradeCommentsViewSet(AuditableMixin,
                                  mixins.RetrieveModelMixin,
                                  mixins.CreateModelMixin,
+                                 mixins.DestroyModelMixin,
                                  mixins.UpdateModelMixin,
                                  viewsets.GenericViewSet):
-
     permission_classes = (CreditTradeCommentPermissions,)
-    http_method_names = ['get', 'put', 'post']
+    http_method_names = ['get', 'put', 'post', 'delete']
     queryset = CreditTradeComment.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
@@ -49,7 +51,8 @@ class CreditTradeCommentsViewSet(AuditableMixin,
     serializer_classes = {
         'default': CreditTradeCommentSerializer,
         'update': CreditTradeCommentUpdateSerializer,
-        'create': CreditTradeCommentCreateSerializer
+        'create': CreditTradeCommentCreateSerializer,
+        'destroy': CreditTradeCommentDestroySerializer
     }
 
     def get_serializer_class(self):
@@ -62,3 +65,18 @@ class CreditTradeCommentsViewSet(AuditableMixin,
         comment = serializer.save()
         CreditTradeCommentService.associate_history(comment)
         comment.save()
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        'Delete' functionality for individual submissions
+        Triggers when a DELETE request has been sent
+        """
+        comment = self.get_object()
+
+        serializer = self.get_serializer(
+            comment,
+            read_only=True)
+
+        serializer.destroy()
+
+        return Response(None, status=status.HTTP_200_OK)
