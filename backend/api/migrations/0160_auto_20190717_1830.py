@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0157_credittradecomment_is_deleted'),
+        ('api', '0159_schedulesummary_credits_offset'),
     ]
 
     operations = [
