@@ -146,6 +146,7 @@ class ComplianceReportingEditContainer extends Component {
       const payload = {
         ...this.state.schedules
       };
+
       this.props.updateComplianceReport({
         id: this.props.match.params.id,
         state: payload,
