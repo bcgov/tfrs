@@ -34,9 +34,15 @@ class ScheduleDSheetInputSerializer(serializers.ModelSerializer):
 
 class ScheduleDSheetSerializer(serializers.ModelSerializer):
     fuel_type = SlugRelatedField(
-        slug_field='name', queryset=ApprovedFuel.objects.all())
+        slug_field='name',
+        queryset=ApprovedFuel.objects.all(),
+        required=False
+    )
     fuel_class = SlugRelatedField(
-        slug_field='fuel_class', queryset=FuelClass.objects.all())
+        slug_field='fuel_class',
+        queryset=FuelClass.objects.all(),
+        required=False
+    )
     inputs = ScheduleDSheetInputSerializer(many=True, required=True)
     outputs = ScheduleDSheetOutputSerializer(many=True, required=True)
 
