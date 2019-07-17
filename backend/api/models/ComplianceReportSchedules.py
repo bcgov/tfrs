@@ -12,67 +12,6 @@ from api.models.NotionalTransferType import NotionalTransferType
 from auditable.models import Commentable
 
 
-class ScheduleC(Commentable):
-    """
-    Container for a single instance of "Schedule C - " Fuels Used for
-    Other Purposes" report.
-    """
-    class Meta:
-        db_table = 'compliance_report_schedule_c'
-    db_table_comment = 'Container for a single instance of "Schedule C - "' \
-                       'Fuels Used for Other Purposes" report.'
-
-
-class ScheduleCRecord(Commentable):
-    """
-    Line items for "Schedule C - Fuels Used for Other Purposes" report.
-    """
-    schedule = models.ForeignKey(
-        ScheduleC,
-        related_name='records',
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    fuel_type = models.ForeignKey(
-        ApprovedFuel,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    fuel_class = models.ForeignKey(
-        FuelClass,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    quantity = models.DecimalField(
-        blank=False,
-        null=False,
-        decimal_places=2,
-        max_digits=20,
-        db_comment="Quantity of fuel supplied."
-    )
-
-    expected_use = models.ForeignKey(
-        ExpectedUse,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    rationale = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        db_comment='Alternate rationale when expected use is "other".'
-    )
-
-    class Meta:
-        db_table = 'compliance_report_schedule_c_record'
-    db_table_comment = 'Line items for "Schedule C - Fuels Used for Other ' \
-                       'Purposes" report.'
-
-
 class ScheduleA(Commentable):
     """
     Container for a single instance of "Schedule A - Notional Transfers of
@@ -199,6 +138,67 @@ class ScheduleBRecord(Commentable):
                        'report.'
 
 
+class ScheduleC(Commentable):
+    """
+    Container for a single instance of "Schedule C - " Fuels Used for
+    Other Purposes" report.
+    """
+    class Meta:
+        db_table = 'compliance_report_schedule_c'
+    db_table_comment = 'Container for a single instance of "Schedule C - "' \
+                       'Fuels Used for Other Purposes" report.'
+
+
+class ScheduleCRecord(Commentable):
+    """
+    Line items for "Schedule C - Fuels Used for Other Purposes" report.
+    """
+    schedule = models.ForeignKey(
+        ScheduleC,
+        related_name='records',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_type = models.ForeignKey(
+        ApprovedFuel,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_class = models.ForeignKey(
+        FuelClass,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    quantity = models.DecimalField(
+        blank=False,
+        null=False,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Quantity of fuel supplied."
+    )
+
+    expected_use = models.ForeignKey(
+        ExpectedUse,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    rationale = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Alternate rationale when expected use is "other".'
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_c_record'
+    db_table_comment = 'Line items for "Schedule C - Fuels Used for Other ' \
+                       'Purposes" report.'
+
+
 class ScheduleD(Commentable):
     class Meta:
         db_table = 'compliance_report_schedule_d'
@@ -219,13 +219,15 @@ class ScheduleDSheet(Commentable):
     fuel_type = models.ForeignKey(
         ApprovedFuel,
         on_delete=models.PROTECT,
-        null=False
+        blank=True,
+        null=True
     )
 
     fuel_class = models.ForeignKey(
         FuelClass,
         on_delete=models.PROTECT,
-        null=False
+        blank=True,
+        null=True
     )
 
     feedstock = models.CharField(
@@ -291,6 +293,23 @@ class ScheduleDSheetOutput(Commentable):
     """
     Represents a set of spreadsheet outputs for a Schedule D record
     """
+    class OutputCells(Enum):
+        """
+        Enum of possible output cell names
+        """
+        DISPENSING = "Fuel Dispensing"
+        DISTRIBUTION = "Fuel Distribution and Storage"
+        PRODUCTION = "Fuel Production"
+        FEEDSTOCK_TRANSMISSION = "Feedstock Transmission"
+        FEEDSTOCK_RECOVERY = "Feedstock Recovery"
+        FEEDSTOCK_UPGRADING = "Feedstock Upgrading"
+        LAND_USE_CHANGE = "Land Use Change"
+        FERTILIZER = "Fertilizer Manufacture"
+        GAS_LEAKS_AND_FLARES = "Gas Leaks and Flares"
+        CO2_AND_H2S_REMOVED = "CO₂ and H₂S Removed"
+        EMISSIONS_DISPLACED = "Emissions Displaced"
+        FUEL_USE_HIGH_HEATING_VALUE = "Fuel Use (High Heating Value)"
+
     sheet = models.ForeignKey(
         ScheduleDSheet,
         related_name='outputs',
@@ -314,23 +333,6 @@ class ScheduleDSheetOutput(Commentable):
         null=True,
         db_comment="Spreadsheet model output type (enumerated value)"
     )
-
-    class OutputCells(Enum):
-        """
-        Enum of possible output cell names
-        """
-        DISPENSING = "Fuel Dispensing"
-        DISTRIBUTION = "Fuel Distribution and Storage"
-        PRODUCTION = "Fuel Production"
-        FEEDSTOCK_TRANSMISSION = "Feedstock Transmission"
-        FEEDSTOCK_RECOVERY = "Feedstock Recovery"
-        FEEDSTOCK_UPGRADING = "Feedstock Upgrading"
-        LAND_USE_CHANGE = "Land Use Change"
-        FERTILIZER = "Fertilizer Manufacture"
-        GAS_LEAKS_AND_FLARES = "Gas Leaks and Flares"
-        CO2_AND_H2S_REMOVED = "CO₂ and H₂S Removed"
-        EMISSIONS_DISPLACED = "Emissions Displaced"
-        FUEL_USE_HIGH_HEATING_VALUE = "Fuel Use (High Heating Value)"
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet_output'
