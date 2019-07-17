@@ -21,6 +21,7 @@
     limitations under the License.
 """
 
+
 class DBComments(object):
     """Mixin to support database metadata."""
 
