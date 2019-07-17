@@ -319,9 +319,9 @@ class ScheduleDSheetOutput(Commentable):
 
     intensity = models.DecimalField(
         blank=True,
-        decimal_places=2,
+        decimal_places=50,
         default=Decimal('0.00'),
-        max_digits=5,
+        max_digits=100,
         null=True,
         db_comment="Carbon Intensity (gCO2e/MJ)"
     )
@@ -360,7 +360,6 @@ class ScheduleSummary(Commentable):
         max_digits=20,
         db_comment="Liters of gasoline-class fuel deferred"
     )
-
     diesel_class_retained = models.DecimalField(
         blank=True,
         null=True,
@@ -374,6 +373,11 @@ class ScheduleSummary(Commentable):
         decimal_places=2,
         max_digits=20,
         db_comment="Liters of diesel-class fuel deferred"
+    )
+    credits_offset = models.IntegerField(
+        blank=True,
+        null=True,
+        db_comment="Credits used to off set debits (if applicable)"
     )
 
     class Meta:

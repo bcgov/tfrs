@@ -40,8 +40,6 @@ class ScheduleDSheet extends Component {
     this._addRow = this._addRow.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
-
-
   }
 
   componentDidMount () {

@@ -114,7 +114,7 @@ class ScheduleSummaryGasoline {
         ...totalViewer,
         className: 'total numeric'
       }]
-    ]
+    ];
   }
 }
 
