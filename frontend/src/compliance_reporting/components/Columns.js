@@ -38,7 +38,7 @@ const numericInput = {
       return '';
     }
 
-    value = value.replace(/,/g, '');
+    value = String(value).replace(/,/g, '');
     value = Number(value);
 
     return <span>{getQuantity(value).toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
