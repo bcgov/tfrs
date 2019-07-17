@@ -61,3 +61,12 @@ class Auditable(models.Model, DBComments):
 
     class Meta:
         abstract = True
+
+
+class Commentable(models.Model, DBComments):
+    """
+    Parent model class to just add the comments.
+    The Auditable class contains timestamp fields, this one is blank.
+    """
+    class Meta:
+        abstract = True
