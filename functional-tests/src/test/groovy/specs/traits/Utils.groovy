@@ -1,6 +1,7 @@
 package specs.traits
 
 import geb.driver.CachingDriverFactory
+import geb.Browser
 
 /**
  * Generic re-usable utility methods.
@@ -12,7 +13,6 @@ trait Utils {
    */
   void clearAndResetBrowser() {
     resetBrowser()
-    CachingDriverFactory.clearCacheAndQuitDriver()
   }
 
   /**
@@ -21,7 +21,7 @@ trait Utils {
    * @param String the exception message to throw. (optional, default: '')
    * @throws AssertionError
    */
-  void fail(String message='') {
+  void fail(String message = '') {
     throw new AssertionError(message)
   }
 
