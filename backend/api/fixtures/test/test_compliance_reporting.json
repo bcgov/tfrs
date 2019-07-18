@@ -61,7 +61,7 @@
   },
   {
     "fields": {
-      "provision": "Alternative",
+      "provision": "Section 6 (5) (d) (ii) (B)",
       "description": "AlternativeMethod",
       "display_order": 99,
       "effective_date": "2017-01-01"
@@ -71,7 +71,17 @@
   },
   {
     "fields": {
-      "provision": "Fuel Code",
+      "provision": "Section 6 (5) (d) (ii) (A)",
+      "description": "GHGenius modelled",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.provisionoftheact",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "provision": "Section 6 (5) (c)",
       "description": "Fuel Code Method",
       "display_order": 99,
       "effective_date": "2017-01-01"
