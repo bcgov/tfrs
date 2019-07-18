@@ -218,11 +218,226 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  _calculatePart3 () {
+  _calculateDiesel (summary, dieselReceived, dieselTransferred) {
+    const { diesel } = this.state;
+    const {
+      totalPetroleumDiesel,
+      totalRenewableDiesel
+    } = summary;
+
+    let totalDiesel = 0;
+
+    diesel[SCHEDULE_SUMMARY.LINE_12][2] = { // line 12, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_12][2],
+      value: totalPetroleumDiesel
+    };
+
+    if (totalPetroleumDiesel) {
+      totalDiesel += totalPetroleumDiesel;
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
+      value: totalRenewableDiesel
+    };
+
+    if (totalRenewableDiesel) {
+      totalDiesel += totalRenewableDiesel;
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_14][2] = { // line 14, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_14][2],
+      value: totalDiesel === 0 ? '' : totalDiesel
+    };
+
+    const line15Value = totalDiesel * 0.04;
+
+    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
+      value: line15Value // Line 14 x 4%
+    };
+
+    const line17Value = line15Value * 0.05; // Line 15 x 5%
+    let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
+    if (line17Value > 0) {
+      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
+      ...diesel[SCHEDULE_SUMMARY.LINE_17][0],
+      valueViewer: () => (
+        <span>{line17Label}</span>
+      )
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_17][2] = { // line 17, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
+      attributes: {
+        ...diesel[SCHEDULE_SUMMARY.LINE_17][2].attributes,
+        maxValue: line17Value
+      }
+    };
+
+    let line19label = diesel[SCHEDULE_SUMMARY.LINE_19][0].value;
+    if (line17Value > 0) {
+      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
+      ...diesel[SCHEDULE_SUMMARY.LINE_19][0],
+      valueViewer: () => (
+        <span>{line19label}</span>
+      )
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_19][2] = { // line 19, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
+      attributes: {
+        ...diesel[SCHEDULE_SUMMARY.LINE_19][2].attributes,
+        maxValue: line17Value
+      }
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
+      value: dieselReceived - dieselTransferred
+    };
+
+    if (summary.dieselClassRetained) {
+      diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
+    }
+
+    if (summary.dieselClassDeferred) {
+      diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_21][2],
+      value: ScheduleSummaryContainer.calculateDieselTotal(diesel)
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_22][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_22][2],
+      value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
+    };
+
+    return diesel;
+  }
+
+  _calculateGasoline (summary, gasolineReceived, gasolineTransferred) {
+    const { gasoline } = this.state;
+    const {
+      totalPetroleumGasoline,
+      totalRenewableGasoline
+    } = summary;
+
+    let totalGasoline = 0;
+
+    gasoline[SCHEDULE_SUMMARY.LINE_1][2] = { // line 1, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_1][2],
+      value: totalPetroleumGasoline
+    };
+
+    if (totalPetroleumGasoline) {
+      totalGasoline += totalPetroleumGasoline;
+    }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
+      value: totalRenewableGasoline
+    };
+
+    if (totalRenewableGasoline) {
+      totalGasoline += totalRenewableGasoline;
+    }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_3][2] = { // line 3, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_3][2],
+      value: totalGasoline === 0 ? '' : totalGasoline
+    };
+
+    const line4Value = totalGasoline * 0.05;
+
+    gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
+      value: line4Value // Line 3 x 5%
+    };
+
+    const line6Value = line4Value * 0.05; // Line 4 x 5%
+    let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
+    if (line6Value > 0) {
+      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+    }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_6][0],
+      valueViewer: () => (
+        <span>{line6Label}</span>
+      )
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_6][2] = { // line 6, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
+      attributes: {
+        ...gasoline[SCHEDULE_SUMMARY.LINE_6][2].attributes,
+        maxValue: line6Value
+      }
+    };
+
+    let line8Label = gasoline[SCHEDULE_SUMMARY.LINE_8][0].value;
+    if (line6Value > 0) {
+      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+    }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_8][0],
+      valueViewer: () => (
+        <span>{line8Label}</span>
+      )
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_8][2] = { // line 8, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
+      attributes: {
+        ...gasoline[SCHEDULE_SUMMARY.LINE_8][2].attributes,
+        maxValue: line6Value
+      }
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
+      value: gasolineReceived - gasolineTransferred
+    };
+
+    if (summary.gasolineClassDeferred) {
+      gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
+    }
+    if (summary.gasolineClassRetained) {
+      gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
+    }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_10][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_10][2],
+      value: ScheduleSummaryContainer.calculateGasolineTotal(gasoline)
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_11][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_11][2],
+      value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
+    };
+
+    return gasoline;
+  }
+
+  _calculatePart3 (summary) {
     let { part3, penalty } = this.state;
 
     if (!this.props.complianceReport) {
       return part3;
+    }
+
+    if (summary.creditsOffset) {
+      part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
     }
 
     const { compliancePeriod, scheduleB } = this.props.complianceReport;
@@ -369,162 +584,12 @@ class ScheduleSummaryContainer extends Component {
   }
 
   populateSchedules (summary, scheduleA = null) {
-    const { diesel, gasoline } = this.state;
-    let { part3, penalty } = this.state;
-
-    part3 = this._calculatePart3();
-
-    const {
-      totalPetroleumDiesel,
-      totalPetroleumGasoline,
-      totalRenewableDiesel,
-      totalRenewableGasoline
-    } = summary;
-
-    let totalDiesel = 0;
-    let totalGasoline = 0;
-
-    diesel[SCHEDULE_SUMMARY.LINE_12][2] = { // line 12, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_12][2],
-      value: totalPetroleumDiesel
-    };
-
-    if (totalPetroleumDiesel) {
-      totalDiesel += totalPetroleumDiesel;
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_1][2] = { // line 1, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_1][2],
-      value: totalPetroleumGasoline
-    };
-
-    if (totalPetroleumGasoline) {
-      totalGasoline += totalPetroleumGasoline;
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
-      value: totalRenewableGasoline
-    };
-
-    if (totalRenewableGasoline) {
-      totalGasoline += totalRenewableGasoline;
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_3][2] = { // line 3, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_3][2],
-      value: totalGasoline === 0 ? '' : totalGasoline
-    };
-
-    const line4Value = totalGasoline * 0.05;
-
-    gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
-      value: line4Value // Line 3 x 5%
-    };
-
-    const line6Value = line4Value * 0.05; // Line 4 x 5%
-    let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
-    if (line6Value > 0) {
-      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_6][0],
-      valueViewer: () => (
-        <span>{line6Label}</span>
-      )
-    };
-
-    gasoline[SCHEDULE_SUMMARY.LINE_6][2] = { // line 6, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
-      attributes: {
-        ...gasoline[SCHEDULE_SUMMARY.LINE_6][2].attributes,
-        maxValue: line6Value
-      }
-    };
-
-    let line8Label = gasoline[SCHEDULE_SUMMARY.LINE_8][0].value;
-    if (line6Value > 0) {
-      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_8][0],
-      valueViewer: () => (
-        <span>{line8Label}</span>
-      )
-    };
-
-    gasoline[SCHEDULE_SUMMARY.LINE_8][2] = { // line 8, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
-      attributes: {
-        ...gasoline[SCHEDULE_SUMMARY.LINE_8][2].attributes,
-        maxValue: line6Value
-      }
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
-      value: totalRenewableDiesel
-    };
-
-    if (totalRenewableDiesel) {
-      totalDiesel += totalRenewableDiesel;
-    }
-
-    diesel[SCHEDULE_SUMMARY.LINE_14][2] = { // line 14, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_14][2],
-      value: totalDiesel === 0 ? '' : totalDiesel
-    };
-
-    const line15Value = totalDiesel * 0.04;
-
-    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
-      value: line15Value // Line 14 x 4%
-    };
-
-    const line17Value = line15Value * 0.05; // Line 15 x 5%
-    let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
-    if (line17Value > 0) {
-      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
-    }
-
-    diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
-      ...diesel[SCHEDULE_SUMMARY.LINE_17][0],
-      valueViewer: () => (
-        <span>{line17Label}</span>
-      )
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_17][2] = { // line 17, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
-      attributes: {
-        ...diesel[SCHEDULE_SUMMARY.LINE_17][2].attributes,
-        maxValue: line17Value
-      }
-    };
-
-    let line19label = diesel[SCHEDULE_SUMMARY.LINE_19][0].value;
-    if (line17Value > 0) {
-      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
-    }
-
-    diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
-      ...diesel[SCHEDULE_SUMMARY.LINE_19][0],
-      valueViewer: () => (
-        <span>{line19label}</span>
-      )
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_19][2] = { // line 19, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
-      attributes: {
-        ...diesel[SCHEDULE_SUMMARY.LINE_19][2].attributes,
-        maxValue: line17Value
-      }
-    };
+    let {
+      diesel,
+      gasoline,
+      part3,
+      penalty
+    } = this.state;
 
     let dieselReceived = 0;
     let dieselTransferred = 0;
@@ -545,55 +610,13 @@ class ScheduleSummaryContainer extends Component {
       });
     }
 
-    gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
-      ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
-      value: gasolineReceived - gasolineTransferred
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
-      value: dieselReceived - dieselTransferred
-    };
-
-    if (summary.dieselClassDeferred) {
-      diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
-    }
-    if (summary.gasolineClassDeferred) {
-      gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
-    }
-    if (summary.dieselClassRetained) {
-      diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
-    }
-    if (summary.gasolineClassRetained) {
-      gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
-    }
-    if (summary.creditsOffset) {
-      part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
-    }
-
-    gasoline[SCHEDULE_SUMMARY.LINE_10][2] = {
-      ...gasoline[SCHEDULE_SUMMARY.LINE_10][2],
-      value: ScheduleSummaryContainer.calculateGasolineTotal(gasoline)
-    };
-
-    gasoline[SCHEDULE_SUMMARY.LINE_11][2] = {
-      ...gasoline[SCHEDULE_SUMMARY.LINE_11][2],
-      value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
-    };
+    diesel = this._calculateDiesel(summary, dieselReceived, dieselTransferred);
+    gasoline = this._calculateGasoline(summary, gasolineReceived, gasolineTransferred);
+    part3 = this._calculatePart3(summary);
 
     penalty[SCHEDULE_PENALTY.LINE_11][2] = {
       ...penalty[SCHEDULE_PENALTY.LINE_11][2],
       value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
-      ...diesel[SCHEDULE_SUMMARY.LINE_21][2],
-      value: ScheduleSummaryContainer.calculateDieselTotal(diesel)
-    };
-
-    diesel[SCHEDULE_SUMMARY.LINE_22][2] = {
-      ...diesel[SCHEDULE_SUMMARY.LINE_22][2],
-      value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
     };
 
     penalty[SCHEDULE_PENALTY.LINE_22][2] = {
