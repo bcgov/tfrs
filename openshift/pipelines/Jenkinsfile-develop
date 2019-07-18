@@ -71,8 +71,8 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds
-        backendBuildStages = prepareBuilds.backendBuildStages()
-        frontendBuildStages = prepareBuilds.frontendBuildStages()
+        backendBuildStages = prepareBuilds.backendBuildStages('dev')
+        frontendBuildStages = prepareBuilds.frontendBuildStages('dev')
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
