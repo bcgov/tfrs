@@ -15,76 +15,99 @@ const bootstrapClassFor = (extraConfirmType) => {
   }
 };
 
-const Modal = props => (
-  <div
-    className="modal fade"
-    id={props.id}
-    tabIndex="-1"
-    role="dialog"
-    aria-labelledby="confirmSubmitLabel"
-  >
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <button
-            type="button"
-            className="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4
-            className="modal-title"
-            id="confirmSubmitLabel"
-          >
-            {props.title}
-          </h4>
-        </div>
-        <div className="modal-body">
-          {props.showExtraConfirm &&
-          <div className={bootstrapClassFor(props.extraConfirmType)}>
-            {props.extraConfirmText}
+class Modal extends React.Component {
+
+  componentDidMount() {
+    if (this.props.initiallyShown) {
+      this.show();
+    }
+    if (this.props.handleCancel) {
+      $(this.element).on('hidden.bs.modal', e => {
+        this.props.handleCancel();
+      });
+    }
+  }
+
+  show() {
+    $(this.element).modal('show');
+  }
+
+  render() {
+    return (
+      <div
+        className="modal fade"
+        id={this.props.id}
+        ref={element => this.element = element}
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="confirmSubmitLabel"
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4
+                className="modal-title"
+                id="confirmSubmitLabel"
+              >
+                {this.props.title}
+              </h4>
+            </div>
+            <div className="modal-body">
+              {this.props.showExtraConfirm &&
+              <div className={bootstrapClassFor(this.props.extraConfirmType)}>
+                {this.props.extraConfirmText}
+              </div>
+              }
+              {this.props.children}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-default"
+                data-dismiss="modal"
+              >
+                {this.props.cancelLabel}
+              </button>
+              {this.props.showConfirmButton &&
+              <button
+                id="modal-yes"
+                type="button"
+                className="btn btn-primary"
+                data-dismiss="modal"
+                disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm)}
+                onClick={this.props.handleSubmit}
+              >
+                {this.props.confirmLabel}
+              </button>
+              }
+            </div>
           </div>
-          }
-          {props.children}
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-default"
-            data-dismiss="modal"
-          >
-            {props.cancelLabel}
-          </button>
-          {props.showConfirmButton &&
-          <button
-            id="modal-yes"
-            type="button"
-            className="btn btn-primary"
-            data-dismiss="modal"
-            disabled={!((!props.showExtraConfirm) || props.canBypassExtraConfirm)}
-            onClick={props.handleSubmit}
-          >
-            {props.confirmLabel}
-          </button>
-          }
         </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 Modal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   handleSubmit: null,
+  handleCancel: null,
   showConfirmButton: true,
   showExtraConfirm: false,
   canBypassExtraConfirm: true,
   extraConfirmType: 'info',
   extraConfirmText: '',
-  title: 'Confirmation'
+  title: 'Confirmation',
+  initiallyShown: false
 };
 
 Modal.propTypes = {
@@ -100,10 +123,12 @@ Modal.propTypes = {
     'info', 'warning', 'error'
   ]),
   handleSubmit: PropTypes.func,
+  handleCancel: PropTypes.func,
   id: PropTypes.string.isRequired,
   showConfirmButton: PropTypes.bool,
   showExtraConfirm: PropTypes.bool,
-  title: PropTypes.string
+  title: PropTypes.string,
+  initiallyShown: PropTypes.bool
 };
 
 export default Modal;
