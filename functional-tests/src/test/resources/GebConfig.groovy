@@ -13,88 +13,9 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.remote.DesiredCapabilities
-
-waiting {
-  timeout = 20
-  retryInterval = 0.5
-}
-
-atCheckWaiting = [20, 0.5]
-
-environments {
-
-  // run via “./gradlew chromeTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
-  chrome {
-    driver = {
-      ChromeOptions o = new ChromeOptions()
-      o.addArguments("window-size=1600,900")
-      new ChromeDriver(o);
-    }
-  }
-
-  // run via “./gradlew chromeHeadlessTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
-  chromeHeadless {
-    driver = {
-      ChromeOptions o = new ChromeOptions()
-      o.addArguments('headless')
-      o.addArguments('disable-gpu')
-      o.addArguments('no-sandbox')
-      o.addArguments('window-size=1600,900')
-      new ChromeDriver(o)
-    }
-  }
-
-  // run via “./gradlew firefoxTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki/FirefoxDriver
-  firefox {
-    driver = {
-      FirefoxOptions o = new FirefoxOptions()
-      o.addArguments("-window-size=1600,900")
-      new FirefoxDriver(o)
-    }
-  }
-
-  firefoxHeadless {
-    driver = {
-      FirefoxOptions o = new FirefoxOptions()
-      o.addArguments("-headless")
-      o.addArguments("-window-size=1600,900")
-      new FirefoxDriver(o)
-    }
-  }
-
-  // run via “./gradlew ieTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver
-  ie {
-    def d = new DesiredCapabilities();
-    d.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-    d.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-    d.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
-    d.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
-    d.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-    d.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "");
-
-    driver = { new InternetExplorerDriver(d) }
-  }
-
-  // run via “./gradlew edgeTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki
-  edge {
-    driver = { new EdgeDriver() }
-  }
-
-  // run via “./gradlew safariTest”
-  // See: https://github.com/SeleniumHQ/selenium/wiki
-  safari {
-    driver = { new SafariDriver() }
-  }
-}
-
-// To run the tests with all browsers just run “./gradlew test”
-
-baseNavigatorWaiting = true
+import org.openqa.selenium.remote.RemoteWebDriver
+import listeners.SessionIdHolder
+//import docgen.DocumentGenerationListener
 
 // Allows for setting you baseurl in an environment variable.
 // This is particularly handy for development and the pipeline
@@ -104,7 +25,91 @@ if (!baseUrl) {
   baseUrl = "https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/"
 }
 
-autoClearCookies = true
-autoClearWebStorage = true
-cacheDriverPerThread = true
+USERNAME = env['BROWSERSTACK_USERNAME']
+AUTOMATE_KEY = env['BROWSERSTACK_TOKEN']
+
+if (!USERNAME || !AUTOMATE_KEY)
+    throw RuntimeError('BROWSERSTACK_USERNAME and BROWSERSTACK_TOKEN are required');
+
+waiting {
+  timeout = 20
+  retryInterval = 0.5
+}
+
+atCheckWaiting = [20, 0.5]
+
+String buildId = SessionIdHolder.instance.buildId
+
+environments {
+
+  remoteFirefox {
+    driver = {
+      DesiredCapabilities caps = new DesiredCapabilities();
+      caps.setCapability("browser", "Firefox")
+      caps.setCapability("browser_version", "67.0")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Firefox")
+
+      String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
+
+      driver = new RemoteWebDriver(new URL(URL), caps)
+
+      return driver
+    }
+  }
+
+  remoteEdge {
+    driver = {
+      DesiredCapabilities caps = new DesiredCapabilities();
+      caps.setCapability("browser", "Edge")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Edge")
+
+      String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
+
+      driver = new RemoteWebDriver(new URL(URL), caps)
+
+      return driver
+    }
+  }
+
+
+  remoteChrome {
+    driver = {
+      DesiredCapabilities caps = new DesiredCapabilities();
+      caps.setCapability("browser", "Chrome")
+      caps.setCapability("os", "Windows")
+      caps.setCapability("os_version", "10")
+      caps.setCapability("resolution", "1920x1200")
+      caps.setCapability("name", "Automated Test")
+      caps.setCapability("project", "TFRS")
+      caps.setCapability("build", "${buildId}:Chrome")
+
+      String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
+
+      driver = new RemoteWebDriver(new URL(URL), caps)
+
+      return driver
+    }
+  }
+}
+
+// To run the tests with all browsers just run “./gradlew test”
+baseNavigatorWaiting = true
+
+autoClearCookies = false
+autoClearWebStorage = false
+cacheDriver = false
+cacheDriverPerThread = false
 quitCachedDriverOnShutdown = true
+reportOnTestFailureOnly = false
+//reportingListener = new DocumentGenerationListener();
+reportsDir = 'build/reports/spock'
