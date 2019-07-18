@@ -219,15 +219,13 @@ class ScheduleDSheet(Commentable):
     fuel_type = models.ForeignKey(
         ApprovedFuel,
         on_delete=models.PROTECT,
-        blank=True,
-        null=True
+        null=False
     )
 
     fuel_class = models.ForeignKey(
         FuelClass,
         on_delete=models.PROTECT,
-        blank=True,
-        null=True
+        null=False
     )
 
     feedstock = models.CharField(
