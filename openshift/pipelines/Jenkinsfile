@@ -89,6 +89,9 @@ node("master-maven-${env.BUILD_NUMBER}") {
         }
 
         //===== deploy on test =====
+        //Please confirm to continue the deployment on Test
+        prepareOtherStages.confirmStage("Please confirm to continue the deployment on Test").call()
+
         //Bring up Maintenance Page
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-test").call()
 
@@ -104,6 +107,9 @@ node("master-maven-${env.BUILD_NUMBER}") {
         //prepareDCStages.notificationServerDCStage("test").call()
         //prepareDCStages.frontendDCStage("test").call()
 
+        //last chance to quit Test deployment
+        prepareOtherStages.confirmStage("Please confirm the deployment on Test, this is the last chance to quit.").call()
+
         //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendStage("mem-tfrs-test").call()
     
@@ -114,7 +120,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         prepareOtherStages.refreshSchemaspyStage("mem-tfrs-test").call()
 
         //Ask for confirmation before take down maintenance page.
-        prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Test").call()
+        prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Test. If there are operational scripts to run, this is the time.").call()
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-test").call()
