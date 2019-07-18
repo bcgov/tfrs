@@ -162,8 +162,9 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculatePart3Payable (part3, credits = 0) {
+  static calculatePart3Payable (part3) {
     const grid = part3;
+    const credits = grid[SCHEDULE_SUMMARY.LINE_26][2].value;
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
     let payable = outstandingBalance * -200; // negative symbole so that the product is positive
@@ -600,6 +601,11 @@ class ScheduleSummaryContainer extends Component {
       value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
     };
 
+    penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+      ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+      value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
+    };
+
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
     this.setState({
@@ -613,6 +619,7 @@ class ScheduleSummaryContainer extends Component {
 
   _handleCellsChanged (gridName, changes, addition = null) {
     let grid = this.state[gridName].map(row => [...row]);
+    let { penalty } = this.state;
 
     changes.forEach((change) => {
       const {
@@ -635,7 +642,14 @@ class ScheduleSummaryContainer extends Component {
           value: numericValue
         };
 
-        grid = ScheduleSummaryContainer.calculatePart3Payable(grid, numericValue);
+        grid = ScheduleSummaryContainer.calculatePart3Payable(grid);
+
+        penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+          ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+          value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
+        };
+
+        penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
       }
     });
 
@@ -689,7 +703,8 @@ class ScheduleSummaryContainer extends Component {
     }
 
     this.setState({
-      [gridName]: grid
+      [gridName]: grid,
+      penalty
     });
   }
 
