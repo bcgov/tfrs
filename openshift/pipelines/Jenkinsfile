@@ -108,7 +108,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareDCStages.frontendDCStage("test").call()
 
         //last chance to quit Test deployment
-        prepareOtherStages.confirmStage("Please confirm the deployment on Test, this is the last chance to quit.").call()
+        prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Test, this is the last chance to quit.").call()
 
         //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendStage("mem-tfrs-test").call()
@@ -146,7 +146,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareDCStages.frontendDCStage("prod").call()
 
         //last chance to quit prod deployment
-        prepareOtherStages.confirmStage("Please confirm the deployment on Prod, this is the last chance to quit.").call()
+        prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Prod, this is the last chance to quit.").call()
 
         //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendStage("mem-tfrs-prod").call()

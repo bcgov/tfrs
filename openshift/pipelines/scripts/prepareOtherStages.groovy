@@ -44,15 +44,19 @@ def bringUpMaintenancePageStage (String projectName) {
 def databaseBackupStage (String projectName, String tfrsRelease) {
     return {
         stage('Datebase Backup') {
+            def ENV_NAME
             if( projectName == "mem-tfrs-dev") {
+                ENV_NAME='dev'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             } else if( projectName == "mem-tfrs-test") {
+                ENV_NAME='test'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             } else if( projectName == "mem-tfrs-prod") {
+                ENV_NAME='prod'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             }
             echo "start backup script on ${projectName}, postgresql_pod_name is ${postgresql_pod_name}"
-            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
+            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} ${ENV_NAME}"
             echo 'backup script completed'
         }
     }
