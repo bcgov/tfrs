@@ -14,6 +14,7 @@ export const BTN_EDIT = 'Edit';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
 export const BTN_NEW_COMPLIANCE_REPORT = 'New Compliance Report';
+export const BTN_NEW_EXCLUSION_REPORT = 'New Exclusion Report';
 export const BTN_NEW_FUEL_CODE = 'New Fuel Code';
 export const BTN_NEW_USER = 'New User';
 export const BTN_NEW_SUBMISSION = 'New Submission';

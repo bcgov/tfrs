@@ -12,5 +12,6 @@ window.tfrs_config = {
   'keycloak.custom_login': true,
   'credit_transfer.enabled': true,
   'compliance_reporting.enabled': true,
-  'credit_calculation_api.enabled': true
+  'credit_calculation_api.enabled': true,
+  'exclusion_reports.enabled': true
 };

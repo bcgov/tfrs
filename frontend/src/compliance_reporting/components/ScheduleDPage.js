@@ -7,7 +7,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 const ScheduleDPage = props => ([
   <div className="scrollable" key="input">
     <ReactDataSheet
-      className={`schedule ${props.scheduleType} input`}
+      className={`spreadsheet ${props.scheduleType} input`}
       data={props.sheet.input}
       onCellsChanged={(changes, additions) => {
         props.handleCellsChanged('input', changes, additions);
@@ -17,7 +17,7 @@ const ScheduleDPage = props => ([
   </div>,
   <div className="scrollable" key="grid">
     <ReactDataSheet
-      className={`schedule ${props.scheduleType}`}
+      className={`spreadsheet ${props.scheduleType}`}
       data={props.sheet.grid}
       onCellsChanged={(changes, additions) => {
         props.handleCellsChanged('grid', changes, additions);
@@ -58,7 +58,7 @@ const ScheduleDPage = props => ([
   </div>,
   <div className="scrollable output" key="output">
     <ReactDataSheet
-      className={`schedule ${props.scheduleType} output`}
+      className={`spreadsheet ${props.scheduleType} output`}
       data={props.sheet.output}
       key="output-summary"
       onCellsChanged={(changes, additions) => {
