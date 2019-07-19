@@ -4,11 +4,8 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import ScheduleATotals from './ScheduleATotals';
-import ScheduleBTotals from './ScheduleBTotals';
-
-const SchedulesPage = props => (
-  <div className="page_schedule spreadsheet-component">
+const ExclusionAgreementPage = props => (
+  <div className="spreadsheet-component">
     <div className="draggable-bounds">
       <h1>{props.title}</h1>
 
@@ -16,7 +13,7 @@ const SchedulesPage = props => (
 
       <div className="scrollable">
         <ReactDataSheet
-          className={`spreadsheet ${props.scheduleType}`}
+          className="spreadsheet exclusion-agreement"
           data={props.data}
           onCellsChanged={props.handleCellsChanged}
           valueRenderer={cell => cell.value}
@@ -54,30 +51,16 @@ const SchedulesPage = props => (
           </ul>
         </div>
       </div>
-
-      {props.scheduleType === 'schedule-a' &&
-        <ScheduleATotals
-          totals={props.totals}
-        />
-      }
-
-      {props.scheduleType === 'schedule-b' &&
-        <ScheduleBTotals
-          totals={props.totals}
-        />
-      }
-
-      <div className={`spacer ${props.scheduleType}`} />
     </div>
   </div>
 );
 
-SchedulesPage.defaultProps = {
+ExclusionAgreementPage.defaultProps = {
   children: null,
   totals: {}
 };
 
-SchedulesPage.propTypes = {
+ExclusionAgreementPage.propTypes = {
   addRow: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -85,11 +68,8 @@ SchedulesPage.propTypes = {
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
-  scheduleType: PropTypes.oneOf([
-    'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
-  ]).isRequired,
   title: PropTypes.string.isRequired,
   totals: PropTypes.shape()
 };
 
-export default SchedulesPage;
+export default ExclusionAgreementPage;

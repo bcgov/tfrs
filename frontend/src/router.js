@@ -18,6 +18,7 @@ import CREDIT_CALCULATIONS from './constants/routes/CreditCalculations';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
 import COMPLIANCE_REPORTING from './constants/routes/ComplianceReporting';
+import EXCLUSION_REPORTS from './constants/routes/ExclusionReports';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
@@ -52,6 +53,8 @@ import UserAddContainer from './admin/users/UserAddContainer';
 import UserEditContainer from './admin/users/UserEditContainer';
 import NotFound from './app/components/NotFound';
 import ComplianceReportingContainer from './compliance_reporting/ComplianceReportingContainer';
+import ExclusionReportContainer from './exclusion_reports/ExclusionReportContainer';
+import ExclusionReportEditContainer from './exclusion_reports/ExclusionReportEditContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
@@ -341,6 +344,22 @@ const Router = routerProps => (
             exact
             strict
             component={withRouter(ComplianceReportingContainer)}
+          />
+        ]}
+        {CONFIG.EXCLUSION_REPORTS.ENABLED && [
+          <Route
+            key="exclusion_reports"
+            path={EXCLUSION_REPORTS.LIST}
+            exact
+            strict
+            component={withRouter(ExclusionReportContainer)}
+          />,
+          <Route
+            key="exclusion_reports_add"
+            path={EXCLUSION_REPORTS.ADD}
+            exact={false}
+            strict={false}
+            component={withRouter(ExclusionReportEditContainer)}
           />
         ]}
         <Route component={NotFound} />
