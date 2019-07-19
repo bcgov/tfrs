@@ -114,7 +114,7 @@ class ScheduleSummaryDiesel {
         ...totalViewer,
         className: 'total numeric'
       }]
-    ]
+    ];
   }
 }
 
