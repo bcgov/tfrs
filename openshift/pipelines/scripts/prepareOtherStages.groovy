@@ -101,6 +101,23 @@ def deployBackendStage (String projectName) {
     }
 }
 
+def deployBackendToProdStage () {
+    return {
+        stage("Deploy Backend on Prod") {
+            script {
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/tfrs:test", "mem-tfrs-tools/tfrs:prod")
+                    sh 'sleep 300s'
+                    openshift.tag("mem-tfrs-tools/scan-coordinator:test", "mem-tfrs-tools/scan-coordinator:prod")
+                    openshift.tag("mem-tfrs-tools/scan-handler:test", "mem-tfrs-tools/scan-handler:prod")
+                    openshift.tag("mem-tfrs-tools/celery:test", "mem-tfrs-tools/celery:prod")
+                    sh 'sleep 180s'
+                }
+            }
+        }
+    }
+}
+
 def deployFrontendStage(String projectName) {
     return {
         stage("Deploy Frontend on ${projectName}") {
@@ -124,6 +141,20 @@ def deployFrontendStage(String projectName) {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/${clientISName}:latest", "mem-tfrs-tools/${clientISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${notificationServerISName}:latest", "mem-tfrs-tools/${notificationServerISName}:${envName}")
+                    sh 'sleep 120s'
+                }
+            }
+        }
+    }
+}
+
+def deployFrontendToProdStage() {
+    return {
+        stage("Deploy Frontend on Prod") {
+            script {
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/client:test", "mem-tfrs-tools/client:prod")
+                    openshift.tag("mem-tfrs-tools/notification-server:test", "mem-tfrs-tools/notification-server:prod")
                     sh 'sleep 120s'
                 }
             }
