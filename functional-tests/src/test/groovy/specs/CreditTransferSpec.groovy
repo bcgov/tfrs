@@ -46,8 +46,8 @@ class CreditTransferSpec extends LoggedInSpec {
       clickYesButton()
     then: 'The credit transfer is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I am shown a success toast popup'
-      at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
+  //  and: 'I am shown a success toast popup'
+  //    at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
     and: 'My unread notification count has increased by 1'
       headerModule.getNotificationCount() == initialNotificationCount+1
     and: 'My credit balance has not changed'
@@ -72,8 +72,8 @@ class CreditTransferSpec extends LoggedInSpec {
       acceptCreditTransaction()
     then: 'The credit transfer is accepted and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I am shown a success toast popup'
-      at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
+   // and: 'I am shown a success toast popup'
+     // at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
     and: 'My unread notification count has not increased'
       headerModule.getNotificationCount() == initialNotificationCount
     and: 'My credit balance has not changed'
@@ -97,8 +97,8 @@ class CreditTransferSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The credit transfer is recommended and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I am shown a success toast popup'
-      at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
+   // and: 'I am shown a success toast popup'
+   //   at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
     and: 'My unread notification count has not increased'
       headerModule.getNotificationCount() == initialNotificationCount
   }
@@ -119,8 +119,8 @@ class CreditTransferSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The credit transfer is approved and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I am shown a success toast popup'
-      at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
+   // and: 'I am shown a success toast popup'
+    //  at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
     and: 'My unread notification count has not increased'
       headerModule.getNotificationCount() == initialNotificationCount
   }
