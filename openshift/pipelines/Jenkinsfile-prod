@@ -45,7 +45,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareDCStages.frontendDCStage("prod").call()
 
         //last chance to quit prod deployment
-        prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Prod, this is the last chance to quit.").call()
+        prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Prod. Will tag prod from test tags. This is the last chance to quit.").call()
 
         //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendToProdStage().call()
