@@ -19,6 +19,7 @@ class ScheduleA(Commentable):
     """
     class Meta:
         db_table = 'compliance_report_schedule_a'
+
     db_table_comment = 'Container for a single instance of "Schedule A - ' \
                        'Notional Transfers of Renewable Fuel" report.'
 
@@ -74,6 +75,8 @@ class ScheduleARecord(Commentable):
 
     class Meta:
         db_table = 'compliance_report_schedule_a_record'
+        ordering = ['id']
+
     db_table_comment = 'Line items for "Schedule A - Notional Transfers of ' \
                        'Renewable Fuel" report.'
 
@@ -85,6 +88,7 @@ class ScheduleB(Commentable):
     """
     class Meta:
         db_table = 'compliance_report_schedule_b'
+
     db_table_comment = 'Container for a single instance of "Schedule B - ' \
                        'Part 3 Fuel Supply" report.'
 
@@ -132,8 +136,27 @@ class ScheduleBRecord(Commentable):
         null=True
     )
 
+    intensity = models.DecimalField(
+        blank=True,
+        decimal_places=2,
+        default=None,
+        max_digits=5,
+        null=True,
+        db_comment="Carbon Intensity (gCO2e/MJ). Only for alternative method."
+                   "Must be Null otherwise"
+    )
+
+    schedule_d_sheet_index = models.IntegerField(
+        default=None,
+        null=True,
+        db_comment='An zero-based index into id-sorted schedule D sheets for the case where '
+                   'intensity was computed via the GHGenius provision'
+    )
+
     class Meta:
         db_table = 'compliance_report_schedule_b_record'
+        ordering = ['id']
+
     db_table_comment = 'Line items for "Schedule B - Part 3 Fuel Supply" ' \
                        'report.'
 
@@ -202,6 +225,7 @@ class ScheduleCRecord(Commentable):
 class ScheduleD(Commentable):
     class Meta:
         db_table = 'compliance_report_schedule_d'
+
     db_table_comment = 'Sets of worksheets for "Schedule D" report.'
 
 
@@ -236,6 +260,8 @@ class ScheduleDSheet(Commentable):
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet'
+        ordering = ['id']
+
     db_table_comment = "Represents a single fuel in a Schedule D report"
 
 
@@ -283,6 +309,8 @@ class ScheduleDSheetInput(Commentable):
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet_input'
+        ordering = ['id']
+
     db_table_comment = "Represents a set of spreadsheet inputs for a " \
                        "Schedule D record"
 
@@ -335,6 +363,7 @@ class ScheduleDSheetOutput(Commentable):
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet_output'
         unique_together = [['description', 'sheet']]
+
     db_table_comment = "Represents a set of spreadsheet outputs for a " \
                        "Schedule D record"
 
@@ -358,6 +387,7 @@ class ScheduleSummary(Commentable):
         max_digits=20,
         db_comment="Liters of gasoline-class fuel deferred"
     )
+
     diesel_class_retained = models.DecimalField(
         blank=True,
         null=True,
