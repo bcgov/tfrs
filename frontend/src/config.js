@@ -37,7 +37,10 @@ const CONFIG = {
   },
   CREDIT_CALCULATION_API: {
     ENABLED: getConfig('credit_calculation_api.enabled', false)
-
+  },
+  EXCLUSION_REPORTS: {
+    ENABLED: getConfig('exclusion_reports.enabled', false),
+    CREATE_EFFECTIVE_DATE: getConfig('exclusion_reports.create_effective_date', '2013-07-01')
   }
 };
 

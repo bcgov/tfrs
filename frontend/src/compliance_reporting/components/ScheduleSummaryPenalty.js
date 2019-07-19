@@ -8,11 +8,11 @@ class ScheduleSummaryPenalty {
         readOnly: true,
         value: 'Non-compliance Penalty Payable'
       }, {
-        className: 'header',
+        className: 'line header',
         readOnly: true,
         value: 'Line'
       }, {
-        className: 'header',
+        className: 'cad header',
         readOnly: true,
         value: '$CAD'
       }], // header
