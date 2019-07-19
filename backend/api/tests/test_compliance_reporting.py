@@ -111,72 +111,27 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_submitted_compliance_report_authorized(self):
-        payload = {
-            'status': 'Submitted',
-            'type': 'Compliance Report',
-            'compliancePeriod': '2019',
-            'scheduleC': {
-                'records': [
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 40,
-                        'expectedUse': 'Other',
-                        'rationale': 'Test rationale'
-                    }
-                ]
-            }
-        }
-
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_draft_compliance_report_authorized_with_schedules(self):
+    def test_row_ordering(self):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliancePeriod': '2019',
-            'scheduleA': {
+            'compliance_period': '2015',
+            'scheduleB': {
                 'records': [
-                    {
-                        'tradingPartner': 'Test 2',
-                        'postalAddress': '123 Main St\nVictoria, BC',
-                        'fuelClass': 'Diesel',
-                        'transferType': 'Received',
-                        'quantity': 98.1
-                    }
-
-                ]
-            }
-            ,
-            'scheduleD': {
-                'sheets': [
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'feedstock': 'Corn',
-                        'inputs': [
-                            {
-                                'worksheet_name': 'GHG Inputs',
-                                'cell': 'A2',
-                                'value': '12.04',
-                                'units': 'tonnes',
-                                'description': 'test',
-                            },
-                            {
-                                'worksheet_name': 'GHG Inputs',
-                                'cell': 'ZZ9ZZA',
-                                'value': 'about 98',
-                                'units': 'percent',
-                            }
-                        ],
-                        'outputs': []
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'fuelCode': None,
+                        'intensity': 12.1
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 5,
+                        'provisionOfTheAct': 'Section 6 (5) (c)',
+                        'fuelCode': 1
                     }
                 ]
             },
@@ -209,6 +164,481 @@ class TestComplianceReporting(BaseTestCase):
                         'quantity': 40,
                         'expectedUse': 'Other',
                         'rationale': 'Test rationale 4 '
+                    }
+                ]
+            },
+            'scheduleA': {
+                'records': [
+                    {
+                        'tradingPartner': 'CD',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98.1
+                    },
+                    {
+                        'tradingPartner': 'AB',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98.1
+                    },
+                    {
+                        'tradingPartner': 'EF',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98.1
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    },
+                    {
+                        'fuelType': 'CNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    }
+                    ,
+                    {
+                        'fuelType': 'CNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Wheat',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    }
+                ]
+            },
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['scheduleA']['records'][0]['tradingPartner'], 'CD')
+        self.assertEqual(response_data['scheduleA']['records'][1]['tradingPartner'], 'AB')
+        self.assertEqual(response_data['scheduleA']['records'][2]['tradingPartner'], 'EF')
+
+        self.assertEqual(response_data['scheduleB']['records'][0]['quantity'], '10.00')
+        self.assertEqual(response_data['scheduleB']['records'][1]['quantity'], '5.00')
+
+        self.assertEqual(response_data['scheduleC']['records'][0]['quantity'], '10.00')
+        self.assertEqual(response_data['scheduleC']['records'][1]['quantity'], '20.00')
+        self.assertEqual(response_data['scheduleC']['records'][2]['quantity'], '30.00')
+        self.assertEqual(response_data['scheduleC']['records'][3]['quantity'], '40.00')
+
+        self.assertEqual(response_data['scheduleD']['sheets'][0]['fuelType'], 'LNG')
+        self.assertEqual(response_data['scheduleD']['sheets'][0]['feedstock'], 'Corn')
+        self.assertEqual(response_data['scheduleD']['sheets'][0]['inputs'][0]['value'], '10')
+        self.assertEqual(response_data['scheduleD']['sheets'][0]['inputs'][1]['value'], '20')
+
+        self.assertEqual(response_data['scheduleD']['sheets'][1]['fuelType'], 'CNG')
+        self.assertEqual(response_data['scheduleD']['sheets'][1]['feedstock'], 'Corn')
+        self.assertEqual(response_data['scheduleD']['sheets'][1]['inputs'][0]['value'], '10')
+        self.assertEqual(response_data['scheduleD']['sheets'][1]['inputs'][1]['value'], '20')
+
+        self.assertEqual(response_data['scheduleD']['sheets'][2]['fuelType'], 'CNG')
+        self.assertEqual(response_data['scheduleD']['sheets'][2]['feedstock'], 'Wheat')
+        self.assertEqual(response_data['scheduleD']['sheets'][2]['inputs'][0]['value'], '10')
+        self.assertEqual(response_data['scheduleD']['sheets'][2]['inputs'][1]['value'], '20')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_schedule_b_alternative_method(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': '23.5'
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], 23.5)
+
+    def test_schedule_b_altnerative_method_no_intensity(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)'
+                        # no intensity
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_schedule_b_alternative_method_fuel_code(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 1,
+                        'fuelCode': 1  # invalid to supply fuel code
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_schedule_b_fuel_code_method_intensity(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (c)',
+                        'intensity': 1,  # invalid to supply intensity
+                        'fuelCode': 1
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_schedule_b_d_integration_valid(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': 1
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    },
+                    {
+                        'fuelType': 'CNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    }
+                ]
+            },
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        # I don't understand why the Django serializer doesn't call it scheduleDSheetIndex
+        self.assertEqual(response_data['scheduleB']['records'][0]['scheduleD_sheetIndex'], 1)
+        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], None)
+
+    def test_schedule_b_d_integration_invalid_null(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliance_period': '2015',
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': None
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    },
+                    {
+                        'fuelType': 'CNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'B1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
+                    }
+                ]
+            },
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_submitted_compliance_report_authorized(self):
+        payload = {
+            'status': 'Submitted',
+            'type': 'Compliance Report',
+            'compliancePeriod': '2019',
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 40,
+                        'expectedUse': 'Other',
+                        'rationale': 'Test rationale'
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_draft_compliance_report_authorized_with_schedules(self):
+        payload = {
+            'status': 'Draft',
+            'type': 'Compliance Report',
+            'compliancePeriod': '2019',
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched Again'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched Again'
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A2',
+                                'value': '12.04',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'ZZ9ZZA',
+                                'value': 'about 98',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': []
                     }
                 ]
             }
@@ -280,14 +710,14 @@ class TestComplianceReporting(BaseTestCase):
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
                         'quantity': 11.11,
-                        'provisionOfTheAct': 'Alternative',
-                        'fuelCode': None
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 88.8,
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
                         'quantity': 12.12,
-                        'provisionOfTheAct': 'Fuel Code',
+                        'provisionOfTheAct': 'Section 6 (5) (c)',
                         'fuelCode': 1
                     }
                 ]
