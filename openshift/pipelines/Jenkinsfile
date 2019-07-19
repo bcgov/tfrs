@@ -65,8 +65,8 @@ node("master-maven-${env.BUILD_NUMBER}") {
         //prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds for test
-        backendBuildStages = prepareBuilds.backendBuildStages('test')
-        frontendBuildStages = prepareBuilds.frontendBuildStages('test')
+        backendBuildStages = prepareBuilds.backendBuildStages('prod')
+        frontendBuildStages = prepareBuilds.frontendBuildStages('prod')
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
