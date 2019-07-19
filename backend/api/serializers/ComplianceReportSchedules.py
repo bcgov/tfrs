@@ -89,6 +89,40 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
         slug_field='provision', queryset=ProvisionOfTheAct.objects.all())
     fuel_code = PrimaryKeyRelatedField(
         queryset=FuelCode.objects.all(), required=False, allow_null=True)
+    fuel_type = SlugRelatedField(slug_field='name', queryset=ApprovedFuel.objects.all())
+    fuel_class = SlugRelatedField(slug_field='fuel_class', queryset=FuelClass.objects.all())
+    provision_of_the_act = SlugRelatedField(slug_field='provision', queryset=ProvisionOfTheAct.objects.all())
+    fuel_code = PrimaryKeyRelatedField(queryset=FuelCode.objects.all(), required=False, allow_null=True)
+    schedule_d_sheet_index = serializers.IntegerField(required=False, allow_null=True, min_value=0)
+    intensity = serializers.FloatField(required=False, allow_null=True, min_value=0)
+
+    def validate(self, data):
+        """
+        Check that start is before finish.
+        """
+        if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (A)' and
+                ('schedule_d_sheet_index' not in data or
+                 data['schedule_d_sheet_index'] is None)):
+            raise serializers.ValidationError({'schedule_d_index': 'Must supply relevant Schedule D Index'})
+
+        if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (B)' and
+                ('intensity' not in data or data['intensity'] is None)):
+            raise serializers.ValidationError({'intensity': 'Must supply intensity'})
+
+        if (data['provision_of_the_act'].provision == 'Section 6 (5) (c)' and
+                ('fuel_code' not in data or data['fuel_code'] is None)):
+            raise serializers.ValidationError({'fuel_code': 'Must supply fuel code'})
+
+        if (('intensity' in data and data['intensity'] is not None) and
+                ('fuel_code' in data and data['fuel_code'] is not None)):
+            raise serializers.ValidationError({'fuel_code': 'Must not supply fuel code AND intensity'})
+
+        if (('intensity' in data and data['intensity'] is not None) and
+                data['provision_of_the_act'].provision != 'Section 6 (5) (d) (ii) (B)'):
+            raise serializers.ValidationError({'intensity': 'Must not supply intensity when provision'
+                                                            ' is not "Section 6 (5) (d) (ii) (B)"'})
+
+        return data
 
     class Meta:
         model = ScheduleBRecord
@@ -96,6 +130,8 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
             'fuel_type', 'fuel_class', 'provision_of_the_act', 'quantity',
             'fuel_code'
         )
+        fields = ('fuel_type', 'fuel_class', 'provision_of_the_act', 'quantity', 'fuel_code',
+                  'schedule_d_sheet_index', 'intensity')
 
 
 class ScheduleBDetailSerializer(serializers.ModelSerializer):
@@ -129,7 +165,6 @@ class ScheduleADetailSerializer(serializers.ModelSerializer):
 
 
 class ScheduleSummaryDetailSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ScheduleSummary
         fields = ('diesel_class_retained', 'gasoline_class_retained',
