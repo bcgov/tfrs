@@ -1,7 +1,6 @@
 from enum import Enum
 from decimal import Decimal
 
-from django.db.models import Model
 from django.db import models
 
 from api.models.ProvisionOfTheAct import ProvisionOfTheAct
@@ -10,66 +9,14 @@ from api.models.ExpectedUse import ExpectedUse
 from api.models.FuelClass import FuelClass
 from api.models.FuelCode import FuelCode
 from api.models.NotionalTransferType import NotionalTransferType
+from auditable.models import Commentable
 
 
-class ScheduleC(Model):
-    class Meta:
-        db_table = 'compliance_report_schedule_c'
-
-    db_table_comment = 'Container for a single instance of "Schedule C - "' \
-                       'Fuels Used for Other Purposes" report.'
-
-
-class ScheduleCRecord(Model):
-    schedule = models.ForeignKey(
-        ScheduleC,
-        related_name='records',
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    fuel_type = models.ForeignKey(
-        ApprovedFuel,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    fuel_class = models.ForeignKey(
-        FuelClass,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    quantity = models.DecimalField(
-        blank=False,
-        null=False,
-        decimal_places=2,
-        max_digits=20,
-        db_comment="Quantity of fuel supplied."
-    )
-
-    expected_use = models.ForeignKey(
-        ExpectedUse,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    rationale = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        db_comment='Alternate rationale when expected use is "other".'
-    )
-
-    class Meta:
-        db_table = 'compliance_report_schedule_c_record'
-        ordering = ['id']
-
-    db_table_comment = 'Line items for "Schedule C - Fuels Used for Other ' \
-                       'Purposes" report.'
-
-
-class ScheduleA(Model):
+class ScheduleA(Commentable):
+    """
+    Container for a single instance of "Schedule A - Notional Transfers of
+    Renewable Fuel" report.
+    """
     class Meta:
         db_table = 'compliance_report_schedule_a'
 
@@ -77,7 +24,10 @@ class ScheduleA(Model):
                        'Notional Transfers of Renewable Fuel" report.'
 
 
-class ScheduleARecord(Model):
+class ScheduleARecord(Commentable):
+    """
+    Line items for "Schedule A - Notional Transfers of Renewable Fuel" report.
+    """
     schedule = models.ForeignKey(
         ScheduleA,
         related_name='records',
@@ -131,7 +81,11 @@ class ScheduleARecord(Model):
                        'Renewable Fuel" report.'
 
 
-class ScheduleB(Model):
+class ScheduleB(Commentable):
+    """
+    Container for a single instance of "Schedule B - Part 3 Fuel Supply"
+    report.
+    """
     class Meta:
         db_table = 'compliance_report_schedule_b'
 
@@ -139,7 +93,10 @@ class ScheduleB(Model):
                        'Part 3 Fuel Supply" report.'
 
 
-class ScheduleBRecord(Model):
+class ScheduleBRecord(Commentable):
+    """
+    Sets of worksheets for "Schedule D" report.
+    """
     schedule = models.ForeignKey(
         ScheduleB,
         related_name='records',
@@ -204,14 +161,78 @@ class ScheduleBRecord(Model):
                        'report.'
 
 
-class ScheduleD(Model):
+class ScheduleC(Commentable):
+    """
+    Container for a single instance of "Schedule C - " Fuels Used for
+    Other Purposes" report.
+    """
+    class Meta:
+        db_table = 'compliance_report_schedule_c'
+    db_table_comment = 'Container for a single instance of "Schedule C - "' \
+                       'Fuels Used for Other Purposes" report.'
+
+
+class ScheduleCRecord(Commentable):
+    """
+    Line items for "Schedule C - Fuels Used for Other Purposes" report.
+    """
+    schedule = models.ForeignKey(
+        ScheduleC,
+        related_name='records',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_type = models.ForeignKey(
+        ApprovedFuel,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_class = models.ForeignKey(
+        FuelClass,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    quantity = models.DecimalField(
+        blank=False,
+        null=False,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Quantity of fuel supplied."
+    )
+
+    expected_use = models.ForeignKey(
+        ExpectedUse,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    rationale = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment='Alternate rationale when expected use is "other".'
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_c_record'
+    db_table_comment = 'Line items for "Schedule C - Fuels Used for Other ' \
+                       'Purposes" report.'
+
+
+class ScheduleD(Commentable):
     class Meta:
         db_table = 'compliance_report_schedule_d'
 
     db_table_comment = 'Sets of worksheets for "Schedule D" report.'
 
 
-class ScheduleDSheet(Model):
+class ScheduleDSheet(Commentable):
+    """
+    Represents a single fuel in a Schedule D report
+    """
     schedule = models.ForeignKey(
         ScheduleD,
         related_name='sheets',
@@ -244,7 +265,10 @@ class ScheduleDSheet(Model):
     db_table_comment = "Represents a single fuel in a Schedule D report"
 
 
-class ScheduleDSheetInput(Model):
+class ScheduleDSheetInput(Commentable):
+    """
+    Represents a set of spreadsheet inputs for a Schedule D record
+    """
     sheet = models.ForeignKey(
         ScheduleDSheet,
         related_name='inputs',
@@ -291,7 +315,10 @@ class ScheduleDSheetInput(Model):
                        "Schedule D record"
 
 
-class ScheduleDSheetOutput(Model):
+class ScheduleDSheetOutput(Commentable):
+    """
+    Represents a set of spreadsheet outputs for a Schedule D record
+    """
     class OutputCells(Enum):
         """
         Enum of possible output cell names
@@ -318,9 +345,9 @@ class ScheduleDSheetOutput(Model):
 
     intensity = models.DecimalField(
         blank=True,
-        decimal_places=2,
+        decimal_places=50,
         default=Decimal('0.00'),
-        max_digits=5,
+        max_digits=100,
         null=True,
         db_comment="Carbon Intensity (gCO2e/MJ)"
     )
@@ -341,14 +368,11 @@ class ScheduleDSheetOutput(Model):
                        "Schedule D record"
 
 
-class ScheduleSummary(Model):
-    class Meta:
-        db_table = 'compliance_report_summary'
-
-    db_table_comment = "Stores a set of inputs from the summary page of a " \
-                       "compliance report (eg fuel volume retained or " \
-                       "deferred)"
-
+class ScheduleSummary(Commentable):
+    """
+    Stores a set of inputs from the summary page of a compliance report
+    (eg fuel volume retained or deferred)
+    """
     gasoline_class_retained = models.DecimalField(
         blank=True,
         null=True,
@@ -378,3 +402,14 @@ class ScheduleSummary(Model):
         max_digits=20,
         db_comment="Liters of diesel-class fuel deferred"
     )
+    credits_offset = models.IntegerField(
+        blank=True,
+        null=True,
+        db_comment="Credits used to off set debits (if applicable)"
+    )
+
+    class Meta:
+        db_table = 'compliance_report_summary'
+    db_table_comment = "Stores a set of inputs from the summary page of a " \
+                       "compliance report (eg fuel volume retained or " \
+                       "deferred)"

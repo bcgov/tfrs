@@ -329,15 +329,19 @@ class ScheduleBContainer extends Component {
         const {fuelCodes} = this._getCreditCalculationValues(selectedFuel.id);
         const selectedFuelCode = fuelCodes.find(fuelCode => fuelCode.id === record.fuelCode);
 
-        if (selectedFuelCode) {
-          grid[row][SCHEDULE_B.FUEL_CODE] = {
-            ...grid[row][SCHEDULE_B.FUEL_CODE],
-            readOnly: !selectedProvision.determinationType || selectedProvision.determinationType.theType !== 'Fuel Code',
-            value: `${selectedFuelCode.fuelCode}${selectedFuelCode.fuelCodeVersion}.${selectedFuelCode.fuelCodeVersionMinor}`
-          };
+        let value = '';
 
-          grid[row] = this._getFuelCalculationValues(grid[row]);
+        if (selectedFuelCode) {
+          value = `${selectedFuelCode.fuelCode}${selectedFuelCode.fuelCodeVersion}.${selectedFuelCode.fuelCodeVersionMinor}`;
         }
+
+        grid[row][SCHEDULE_B.FUEL_CODE] = {
+          ...grid[row][SCHEDULE_B.FUEL_CODE],
+          readOnly: !selectedProvision.determinationType || selectedProvision.determinationType.theType !== 'Fuel Code',
+          value
+        };
+
+        grid[row] = this._getFuelCalculationValues(grid[row]);
 
         grid[row] = ScheduleBContainer.calculateEnergyContent(grid[row]);
         grid[row] = ScheduleBContainer.calculateCredit(grid[row]);
