@@ -51,7 +51,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
             )
         ]
 ) {
-node("master-maven-${env.BUILD_NUMBER}") {
+    node("master-maven-${env.BUILD_NUMBER}") {
 
         //checkout code
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
@@ -163,5 +163,5 @@ node("master-maven-${env.BUILD_NUMBER}") {
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-prod").call()
 
-} //end of node
+    } //end of node
 } //end of podTemplate
