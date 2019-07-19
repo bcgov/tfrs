@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0157_credittradecomment_is_deleted'),
+        ('api', '0161_auto_20190718_1421'),
     ]
 
     operations = [
