@@ -1,0 +1,11 @@
+const API = '/exclusion_reports';
+const BASE_PATH = '/exclusion_reports';
+
+const EXCLUSION_REPORTS = {
+  API,
+  ADD: `${BASE_PATH}/add/:period/:tab`,
+  EDIT: `${BASE_PATH}/edit/:id/:tab`,
+  LIST: BASE_PATH
+};
+
+export default EXCLUSION_REPORTS;
