@@ -74,11 +74,11 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity Limit<br/>(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity Limit<br />(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity of Fuel<br/>(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity of Fuel<br />(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,

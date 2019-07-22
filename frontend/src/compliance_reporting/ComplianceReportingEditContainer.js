@@ -185,6 +185,8 @@ class ComplianceReportingEditContainer extends Component {
       return (<Loading />);
     }
 
+    let item = {};
+
     if (this.edit) {
       if (this.props.complianceReporting.item) {
         period = this.props.complianceReporting.item.compliancePeriod.description;
@@ -192,6 +194,8 @@ class ComplianceReportingEditContainer extends Component {
           return (<Loading />);
         }
       }
+    } else {
+      ({ item } = this.props.complianceReporting);
     }
 
     return ([
@@ -207,7 +211,7 @@ class ComplianceReportingEditContainer extends Component {
         period={period}
         id={id}
         create={!this.edit}
-        complianceReport={this.props.complianceReporting.item}
+        complianceReport={item}
         loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
         updateScheduleState={this._updateScheduleState}

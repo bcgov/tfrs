@@ -7,7 +7,6 @@
 class ComplianceReportingService {
 
   static getAvailableScheduleDFuels(complianceReport) {
-
     if(!complianceReport) {
       throw 'complianceReport is a required parameter'
     }
