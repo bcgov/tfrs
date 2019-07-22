@@ -210,6 +210,7 @@ class ComplianceReportingEditContainer extends Component {
         complianceReport={this.props.complianceReporting.item}
         loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
+        scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);

@@ -3,19 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
 import Select from './components/Select';
-import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
-import { numericInput } from './components/Columns';
+import {SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
+import {numericInput} from './components/Columns';
 
 class ScheduleDContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -30,72 +30,114 @@ class ScheduleDContainer extends Component {
     this._handleSheetChanged = this._handleSheetChanged.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
     this._setActiveSheet = this._setActiveSheet.bind(this);
-    this.loadData = this.loadData.bind(this);
+    this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount () {
-    if (this.props.loadedState) {
-      // this.restoreFromAutosaved();
-    } else if (this.props.create || !this.props.complianceReport.scheduleD) {
+  componentDidMount() {
+    if (this.props.create || !this.props.complianceReport.scheduleD) {
       this._addSheet();
+    } else if (this.props.scheduleState.scheduleD) {
+      this.componentWillReceiveProps(this.props); // it's probably more elegant to use getDerivedStateFromProps, but it is defined static and we need to access instance methods to set the headers
+      // we already have the state. don't load it. just render it.
     } else {
-      this.loadData();
+      this.loadInitialState();
     }
   }
 
-  loadData () {
+  loadInitialState() {
     this.rowNumber = 1;
-    this._addSheet(this.props.complianceReport.scheduleD.sheets.length);
+
+    let sheets = [];
 
     for (let i = 0; i < this.props.complianceReport.scheduleD.sheets.length; i += 1) {
-      const { sheets } = this.state;
-      const sheet = this.props.complianceReport.scheduleD.sheets[i];
 
-      sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType;
-      sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock;
-      sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass;
+      let sheet = {
+        ...this.props.complianceReport.scheduleD.sheets[i]
+      };
+      sheet.inputs = [];
+      sheet.outputs = [];
 
-      for (let j = 0; j < sheet.inputs.length; j += 1) {
-        sheets[i].grid.push([{
-          readOnly: true,
-          value: j + 1
-        }, {
-          className: 'text'
-        }, {
-          className: 'text'
-        }, {
-          className: 'text'
-        }, {
-          className: 'text'
-        }, {
-          className: 'text'
-        }]);
-
-        sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell;
-        sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName;
-        sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value;
-        sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units;
-        sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description;
+      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].inputs.length; j++) {
+        sheet.inputs.push({...this.props.complianceReport.scheduleD.sheets[i].inputs[j]})
+      }
+      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].outputs.length; j++) {
+        sheet.outputs.push({...this.props.complianceReport.scheduleD.sheets[i].outputs[j]})
       }
 
-      for (let j = 0; j < sheet.outputs.length; j += 1) {
-        const rowIndex = sheets[i].output.findIndex(x =>
-          x[0].value === sheet.outputs[j].description);
-        if (rowIndex !== -1) {
-          sheets[i].output[rowIndex][1] = {
-            ...numericInput,
-            value: sheet.outputs[j].intensity
-          };
+      sheets.push(sheet);
+      this.props.updateScheduleState({
+        scheduleD: {
+          sheets
         }
-      }
-
-      sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output);
-
-      this.setState({ sheets });
+      });
     }
   }
 
-  _addHeaders (id) {
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {sheets} = this.state;
+
+    if (nextProps.scheduleState.scheduleD && nextProps.scheduleState.scheduleD.sheets) {
+
+      if ((sheets.length) < nextProps.scheduleState.scheduleD.sheets.length) {
+        this._addSheet(nextProps.scheduleState.scheduleD.sheets.length - (sheets.length));
+      }
+
+      for (let i = 0; i < nextProps.scheduleState.scheduleD.sheets.length; i++) {
+        const sheet = nextProps.scheduleState.scheduleD.sheets[i];
+        if (sheets.length < i) {
+          sheets.push(
+            this._addHeaders(sheets.length)
+          );
+        }
+
+        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType;
+        sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock;
+        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass;
+
+        for (let j = 0; j < sheet.inputs.length; j += 1) {
+          if (j >= sheets[i].grid.length - 1) {
+            sheets[i].grid.push([{
+              readOnly: true,
+              value: j + 1
+            }, {
+              className: 'text'
+            }, {
+              className: 'text'
+            }, {
+              className: 'text'
+            }, {
+              className: 'text'
+            }, {
+              className: 'text'
+            }]);
+          }
+
+          sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell;
+          sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName;
+          sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value;
+          sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units;
+          sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description;
+        }
+
+        for (let j = 0; j < sheet.outputs.length; j += 1) {
+          const rowIndex = sheets[i].output.findIndex(x =>
+            x[0].value === sheet.outputs[j].description);
+          if (rowIndex !== -1) {
+            sheets[i].output[rowIndex][1] = {
+              ...numericInput,
+              value: sheet.outputs[j].intensity
+            };
+          }
+        }
+
+        sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output);
+
+      }
+      this.setState({sheets});
+    }
+  }
+
+  _addHeaders(id) {
     return {
       grid: [
         [{
@@ -162,8 +204,8 @@ class ScheduleDContainer extends Component {
     };
   }
 
-  _addSheet (sheetsToAdd = 1) {
-    const { sheets } = this.state;
+  _addSheet(sheetsToAdd = 1) {
+    const {sheets} = this.state;
 
     for (let i = 0; i < sheetsToAdd; i += 1) {
       const sheet = this._addHeaders(sheets.length);
@@ -176,7 +218,7 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _getFuelClasses (row, id) {
+  _getFuelClasses(row, id) {
     const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -189,8 +231,8 @@ class ScheduleDContainer extends Component {
     return [];
   }
 
-  _handleSheetChanged (grid, index) {
-    const { sheets } = this.state;
+  _handleSheetChanged(grid, index) {
+    const {sheets} = this.state;
 
     sheets[index] = {
       ...sheets[index],
@@ -206,7 +248,7 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const sheets = [];
 
     for (let i = 0; i < state.sheets.length; i += 1) {
@@ -262,14 +304,14 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _setActiveSheet (id) {
+  _setActiveSheet(id) {
     this.setState({
       activeSheet: id
     });
   }
 
-  renderSheets () {
-    const { sheets } = this.state;
+  renderSheets() {
+    const {sheets} = this.state;
 
     return (
       <div className="page_schedule" key="sheets">
@@ -298,7 +340,7 @@ class ScheduleDContainer extends Component {
     );
   }
 
-  render () {
+  render() {
     return ([
       this.renderSheets()
     ]);
@@ -307,7 +349,6 @@ class ScheduleDContainer extends Component {
 
 ScheduleDContainer.defaultProps = {
   complianceReport: null,
-  loadedState: null
 };
 
 ScheduleDContainer.propTypes = {
@@ -315,7 +356,6 @@ ScheduleDContainer.propTypes = {
     scheduleD: PropTypes.shape()
   }),
   create: PropTypes.bool.isRequired,
-  loadedState: PropTypes.shape(),
   match: PropTypes.shape({}).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)

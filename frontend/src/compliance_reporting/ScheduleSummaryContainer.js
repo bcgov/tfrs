@@ -741,7 +741,6 @@ class ScheduleSummaryContainer extends Component {
 
 ScheduleSummaryContainer.defaultProps = {
   complianceReport: null,
-  loadedState: null,
   period: null
 };
 
@@ -802,7 +801,6 @@ ScheduleSummaryContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getCreditCalculation: PropTypes.func.isRequired,
-  loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
   period: PropTypes.string,
   referenceData: PropTypes.shape({
