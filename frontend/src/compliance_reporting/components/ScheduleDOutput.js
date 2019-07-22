@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from './Input';
+import Input from '../../app/components/Spreadsheet/Input';
 
 const numericInput = {
   attributes: {

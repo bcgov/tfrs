@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
-import Select from './components/Select';
+import Select from '../app/components/Spreadsheet/Select';
 import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
 import { numericInput } from './components/Columns';
 
