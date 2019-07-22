@@ -166,7 +166,7 @@ class ScheduleSummaryContainer extends Component {
     const grid = part3;
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
-    let payable = outstandingBalance * -200; // negative symbole so that the product is positive
+    let payable = outstandingBalance * -200; // negative symbol so that the product is positive
 
     if (balance > 0) {
       outstandingBalance = '';
@@ -305,26 +305,26 @@ class ScheduleSummaryContainer extends Component {
     Promise.all(promises).then(() => {
       part3[SCHEDULE_SUMMARY.LINE_23][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_23][2],
-        value: totalCredits
+        value: Math.round(totalCredits)
       };
 
       part3[SCHEDULE_SUMMARY.LINE_24][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_24][2],
-        value: totalDebits
+        value: Math.round(totalDebits)
       };
 
       const netTotal = totalCredits + totalDebits;
 
       part3[SCHEDULE_SUMMARY.LINE_25][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_25][2],
-        value: netTotal
+        value: Math.round(netTotal)
       };
 
       let maxValue = '';
 
       if (netTotal < 0) {
         const { organizationBalance } = this.props.loggedInUser.organization;
-        maxValue = (netTotal * -1).toFixed(0);
+        maxValue = Math.round(netTotal * -1);
 
         if (organizationBalance.validatedCredits < maxValue) {
           maxValue = organizationBalance.validatedCredits;
