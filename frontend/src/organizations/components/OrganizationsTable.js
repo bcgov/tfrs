@@ -17,7 +17,7 @@ const OrganizationsTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-name',
-    Header: 'Company Name',
+    Header: 'Organization Name',
     id: 'name',
     minWidth: 200,
     Cell: (row) => {

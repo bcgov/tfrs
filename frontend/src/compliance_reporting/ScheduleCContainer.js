@@ -167,9 +167,10 @@ class ScheduleCContainer extends Component {
           }
         }, {
           attributes: {
-            dataNumberToFixed: 2,
+            addCommas: true,
+            dataNumberToFixed: 0,
             maxLength: '12',
-            step: '0.01'
+            step: '1'
           },
           className: 'number',
           dataEditor: Input,
@@ -242,7 +243,7 @@ class ScheduleCContainer extends Component {
       if (col === SCHEDULE_C.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: (value === '') ? '' : getQuantity(value).toFixed(2)
+          value: value.replace(/,/g, '')
         };
       }
 

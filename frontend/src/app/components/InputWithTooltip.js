@@ -33,7 +33,7 @@ class InputWithTooltip extends Component {
     if (this.props.addCommas) {
       let { value } = this.props;
 
-      value = String(value).replace(/\D/g, '');
+      value = String(value).replace(/,/g, '');
       value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 
       return value;

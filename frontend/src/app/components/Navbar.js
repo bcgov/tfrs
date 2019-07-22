@@ -106,7 +106,7 @@ class Navbar extends Component {
               key="company-details"
               to={ORGANIZATIONS.MINE}
             >
-              Company Details
+              Organization Details
             </NavLink>,
             <a
               href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
@@ -257,7 +257,7 @@ class Navbar extends Component {
                 }}
                 to={ORGANIZATIONS.MINE}
               >
-                Company Details
+                Organization Details
               </NavLink>
             </li>,
             <li key="credit-market-report">
