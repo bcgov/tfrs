@@ -28,21 +28,32 @@ const getCreditCalculationValues = (creditCalculationValues, id) => (
   creditCalculationValues.find(fuel => fuel.id === id)
 );
 
-const getDefaultCarbonIntensity = (values, selectedFuel, determinationType, fuelCodeId) => {
+const getDefaultCarbonIntensity = (
+  values,
+  selectedFuel,
+  determinationType,
+  row,
+  scheduleDFuels = null
+) => {
   if (selectedFuel.provisions.length === 1 ||
     (determinationType.theType === 'Default Carbon Intensity')) {
     return values.defaultCarbonIntensity.toFixed(2);
   }
 
-  if (determinationType.theType === 'Fuel Code' && fuelCodeId && fuelCodeId !== '') {
+  if (determinationType.theType === 'Fuel Code' && row.fuelCodeId && row.fuelCodeId !== '') {
     const { fuelCodes } = values;
-    const selectedFuelCode = getFuelCode(fuelCodes, fuelCodeId);
+    const selectedFuelCode = getFuelCode(fuelCodes, row.fuelCodeId);
 
     return selectedFuelCode.carbonIntensity;
   }
 
+  if (determinationType.theType === 'GHGenius' && row.scheduleD_sheetIndex !== null) {
+    const GHGenius = scheduleDFuels[row.scheduleD_sheetIndex];
+    return GHGenius.intensity;
+  }
+
   if (determinationType.theType === 'Alternative') {
-    return '-';
+    return row.intensity;
   }
 
   return '-';

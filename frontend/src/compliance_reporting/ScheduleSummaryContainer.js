@@ -27,6 +27,7 @@ import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
 import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
+import ComplianceReportingService from './services/ComplianceReportingService';
 import { formatNumeric } from '../utils/functions';
 
 class ScheduleSummaryContainer extends Component {
@@ -237,6 +238,8 @@ class ScheduleSummaryContainer extends Component {
     scheduleB.records.forEach((row) => {
       const selectedFuel = getSelectedFuel(this.props.referenceData.approvedFuels, row.fuelType);
 
+      const scheduleDFuels = ComplianceReportingService.getAvailableScheduleDFuels(this.props.complianceReport);
+
       const promise = this.props.getCreditCalculation(selectedFuel.id, {
         compliance_period_id: compliancePeriod.id
       }).then(() => {
@@ -270,7 +273,8 @@ class ScheduleSummaryContainer extends Component {
           creditCalculationValues,
           selectedFuel,
           determinationType,
-          row.fuelCode
+          row,
+          scheduleDFuels
         );
 
         const energyEffectivenessRatio = getEnergyEffectivenessRatio(
