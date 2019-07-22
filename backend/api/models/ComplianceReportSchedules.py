@@ -218,6 +218,8 @@ class ScheduleCRecord(Commentable):
 
     class Meta:
         db_table = 'compliance_report_schedule_c_record'
+        ordering = ['id']
+
     db_table_comment = 'Line items for "Schedule C - Fuels Used for Other ' \
                        'Purposes" report.'
 
