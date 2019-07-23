@@ -1006,8 +1006,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
-  getCreditCalculation: bindActionCreators(getCreditCalculation, dispatch)
+  getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBContainer);
