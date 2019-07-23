@@ -425,7 +425,7 @@ class ScheduleSummaryContainer extends Component {
     const line6Value = line4Value * 0.05; // Line 4 x 5%
     let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
     if (line6Value > 0) {
-      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 0)} L)`);
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
@@ -445,7 +445,7 @@ class ScheduleSummaryContainer extends Component {
 
     let line8Label = gasoline[SCHEDULE_SUMMARY.LINE_8][0].value;
     if (line6Value > 0) {
-      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 0)} L)`);
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
@@ -487,7 +487,7 @@ class ScheduleSummaryContainer extends Component {
     const line17Value = line15Value * 0.05; // Line 15 x 5%
     let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
     if (line17Value > 0) {
-      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 0)} L)`);
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
@@ -507,7 +507,7 @@ class ScheduleSummaryContainer extends Component {
 
     let line19label = diesel[SCHEDULE_SUMMARY.LINE_19][0].value;
     if (line17Value > 0) {
-      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 0)} L)`);
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
