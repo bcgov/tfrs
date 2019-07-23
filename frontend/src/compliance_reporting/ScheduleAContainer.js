@@ -13,7 +13,6 @@ import Input from './components/Input';
 import OrganizationAutocomplete from './components/OrganizationAutocomplete';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { getQuantity } from '../utils/functions';
 import { SCHEDULE_A } from '../constants/schedules/scheduleColumns';
 
 class ScheduleAContainer extends Component {
@@ -135,9 +134,10 @@ class ScheduleAContainer extends Component {
         }
       }, {
         attributes: {
-          dataNumberToFixed: 2,
+          addCommas: true,
+          dataNumberToFixed: 0,
           maxLength: '20',
-          step: '0.01'
+          step: '1'
         },
         className: 'number',
         dataEditor: Input,
@@ -212,7 +212,7 @@ class ScheduleAContainer extends Component {
       if (col === SCHEDULE_A.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: (value === '') ? '' : getQuantity(value)
+          value: value.replace(/,/g, '')
         };
       }
 

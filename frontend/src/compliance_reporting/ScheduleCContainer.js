@@ -12,7 +12,6 @@ import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
-import { getQuantity } from '../utils/functions';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
