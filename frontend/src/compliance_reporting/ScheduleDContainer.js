@@ -58,10 +58,10 @@ class ScheduleDContainer extends Component {
       sheet.outputs = [];
 
       for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].inputs.length; j++) {
-        sheet.inputs.push({...this.props.complianceReport.scheduleD.sheets[i].inputs[j]})
+        sheet.inputs.push({...this.props.complianceReport.scheduleD.sheets[i].inputs[j]});
       }
       for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].outputs.length; j++) {
-        sheet.outputs.push({...this.props.complianceReport.scheduleD.sheets[i].outputs[j]})
+        sheet.outputs.push({...this.props.complianceReport.scheduleD.sheets[i].outputs[j]});
       }
 
       sheets.push(sheet);
