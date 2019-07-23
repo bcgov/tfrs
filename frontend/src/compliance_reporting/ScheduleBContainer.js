@@ -10,8 +10,8 @@ import {bindActionCreators} from 'redux';
 
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import getCreditCalculation from '../actions/creditCalculation';
-import Input from './components/Input';
-import Select from './components/Select';
+import Input from '../app/components/Spreadsheet/Input';
+import Select from '../app/components/Spreadsheet/Select';
 import {
   calculateCredit,
   getCarbonIntensityLimit,
