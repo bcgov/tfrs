@@ -38,7 +38,7 @@ const ExclusionReportPage = (props) => {
                   <button
                     onClick={() => {
                       const route = EXCLUSION_REPORTS.ADD.replace(':period', compliancePeriod.description)
-                        .replace(':tab', 'exclusion-agreement');
+                        .replace(':tab', 'intro');
 
                       history.push(route);
                     }}

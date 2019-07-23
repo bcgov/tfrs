@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
+import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
 import Loading from '../app/components/Loading';
 import ExclusionReportButtons from './components/ExclusionReportButtons';
@@ -27,7 +28,7 @@ class ExclusionReportEditContainer extends Component {
         break;
 
       default:
-        TabComponent = ExclusionAgreementContainer;
+        TabComponent = ExclusionReportIntroContainer;
     }
 
     return TabComponent;

@@ -61,3 +61,29 @@
     text-align: right;
   }
 }
+
+.page-exclusion-report-intro {
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 0 1rem;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 0 3rem;
+    text-align: center;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-top: 3rem;
+  }
+
+  p {
+    margin: 0 0 2rem;
+  }
+}
