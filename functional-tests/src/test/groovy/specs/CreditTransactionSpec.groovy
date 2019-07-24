@@ -33,7 +33,6 @@ class CreditTransactionSpec extends LoggedInSpec {
   void 'Log in as an analyst and initiate a new part 3 award credit transaction'() {
     given: 'I am logged in as an Analyst'
       logInAsAnalyst()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields for a new part 3 award'
       to NewCreditTransactionPage
       setTransactionType('Part 3 Award')
@@ -49,15 +48,11 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the part 3 award credit transaction'() {
     given: 'I am logged in as a Director'
       logInAsDirector()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended part 3 award credit transaction'
       to NotificationsPage
       getCreditTransferLinkByText('Part 3 Award Recommended For Approval').click()
@@ -72,9 +67,6 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Validation
@@ -82,7 +74,6 @@ class CreditTransactionSpec extends LoggedInSpec {
   void 'Log in as an analyst and initiate a new validation credit transaction'() {
     given: 'I am logged in as an Analyst'
       logInAsAnalyst()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields for a new validation'
       to NewCreditTransactionPage
       setTransactionType('Validation')
@@ -98,15 +89,11 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the validation credit transaction'() {
     given: 'I am logged in as a Director'
       logInAsDirector()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended validation credit transaction'
       to NotificationsPage
       getCreditTransferLinkByText('Credit Validation Recommended For Approval').click()
@@ -121,9 +108,6 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Reduction
@@ -131,7 +115,6 @@ class CreditTransactionSpec extends LoggedInSpec {
   void 'Log in as an analyst and initiate a new reduction credit transaction'() {
     given: 'I am logged in as an Analyst'
       logInAsAnalyst()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields for a new reduction'
       to NewCreditTransactionPage
       setTransactionType('Reduction')
@@ -147,15 +130,11 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the reduction credit transaction'() {
     given: 'I am logged in as a Director'
       logInAsDirector()
-      Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended reduction credit transaction'
       to NotificationsPage
       getCreditTransferLinkByText('Credit Reduction Recommended For Approval').click()
@@ -170,9 +149,6 @@ class CreditTransactionSpec extends LoggedInSpec {
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
-    and: 'My unread notification count has increased by 1'
-      page(HomePage)
-      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Verify credit balance after all 3 above transactions completed
