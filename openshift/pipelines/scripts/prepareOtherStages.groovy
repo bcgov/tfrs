@@ -213,7 +213,6 @@ def confirmStage(String message) {
 def sonarqubeStage() {
     return {
         stage('Code Quality Check') {
-            //checkout scm
             SONARQUBE_URL = sh (
                 script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
                 returnStdout: true
@@ -225,6 +224,22 @@ def sonarqubeStage() {
             dir('backend/sonar-runner') {
                 unstash 'coverage'
                 sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
+        }
+    }
+}
+
+def functionalTestStage() {
+    return {
+        stage('Functional Test') {
+            dir('functional-tests') {
+                withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
+                            file(credentialsId: 'functional_test_users_v2', variable: 'envfile')]) {
+                    sh "cp \$envfile .env"
+                    sh './gradlew remoteChromeTest --tests specs.CreditTransferSpec'
+                    sh './gradlew remoteFirefoxTest --tests specs.CreditTransferSpec'
+                    sh './gradlew remoteEdgeTest --tests specs.CreditTransferSpec'
+                }
             }
         }
     }
