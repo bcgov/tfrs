@@ -120,6 +120,8 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 ****/
         //Functional Test
+        echo "===="
+        echo "${env.runFunctionalTest}"
         if(env.runFunctionalTest == 'Yes') {
             echo "confirmed to run functional test"
             prepareOtherStages.functionalTestStage()
