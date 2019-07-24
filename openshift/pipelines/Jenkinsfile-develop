@@ -121,7 +121,8 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ****/
         //Functional Test
         echo "===="
-        echo "${env.runFunctionalTest}"
+        echo "${params.runFunctionalTest}"
+        echo params.runFunctionalTest
         if(env.runFunctionalTest == 'Yes') {
             echo "confirmed to run functional test"
             prepareOtherStages.functionalTestStage()
