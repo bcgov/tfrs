@@ -36,7 +36,7 @@ class TransactionType(Auditable, DisplayOrder, EffectiveDates):
     the_type = models.CharField(
         max_length=25,
         unique=True,
-        db_comment="Transfacion types for Exclusion Agreement Report."
+        db_comment="Transaction types for Exclusion Agreement Report."
                    "e.g. Purchased or Sold."
     )
 
