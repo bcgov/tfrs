@@ -92,9 +92,17 @@ class ScheduleSummaryContainer extends Component {
     const grid = penalty;
     let total = 0;
 
-    total += grid[SCHEDULE_PENALTY.LINE_11][2].value;
-    total += grid[SCHEDULE_PENALTY.LINE_22][2].value;
-    total += grid[SCHEDULE_PENALTY.LINE_28][2].value;
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_11][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_11][2].value);
+    }
+
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_22][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_22][2].value);
+    }
+
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_28][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_28][2].value);
+    }
 
     grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = {
       ...grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2],
