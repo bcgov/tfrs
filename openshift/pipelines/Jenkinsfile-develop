@@ -1,6 +1,7 @@
 result = 0
 runParallel = true
 tfrsRelease="v1.4.18"
+def runFunctionalTest
 input message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
 /****
@@ -119,7 +120,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 ****/
         //Functional Test
-        if(runFunctionalTest == 'Yes') {
+        if(env.runFunctionalTest == 'Yes') {
             echo "confirmed to run functional test"
             prepareOtherStages.functionalTestStage()
         }
