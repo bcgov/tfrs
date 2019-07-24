@@ -11,11 +11,10 @@ import {bindActionCreators} from 'redux';
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import Input from './components/Input';
 import Select from './components/Select';
-import {calculateCredit, getSelectedFuel} from './components/ScheduleFunctions';
+import {calculateCredit} from './components/ScheduleFunctions';
 import SchedulesPage from './components/SchedulesPage';
 import {SCHEDULE_B} from '../constants/schedules/scheduleColumns';
 import {formatNumeric} from '../utils/functions';
-import ScheduleBGHGeniusProvisionModal from "./components/ScheduleBGHGeniusProvisionModal";
 import ComplianceReportingService from './services/ComplianceReportingService';
 
 class ScheduleBContainer extends Component {
@@ -179,7 +178,6 @@ class ScheduleBContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
-    this._handleScheduleDSelection = this._handleScheduleDSelection.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
 
     this.loadInitialState = this.loadInitialState.bind(this);
@@ -215,106 +213,45 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps(nextProps) {
     const {grid} = this.state;
-    // const promises = [];
 
-    // if (nextProps.scheduleState.scheduleB && nextProps.scheduleState.scheduleB.records) {
-    //
-    //   if ((grid.length - 2) < nextProps.scheduleState.scheduleB.records.length) {
-    //     this._addRow(nextProps.scheduleState.scheduleB.records.length - (grid.length - 2));
-    //   }
-    //
-    //   for (let i = 0; i < nextProps.scheduleState.scheduleB.records.length; i++) {
-    //     const record = nextProps.scheduleState.scheduleB.records[i];
-    //     const row = 2 + i;
-    //
-    //     grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
-    //     grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
-    //     grid[row][SCHEDULE_B.QUANTITY].value = Number(record.quantity ? record.quantity : 0);
-    //     const selectedFuel = this._getSelectedFuel(record.fuelType);
-    //
-    //     if (record.provisionOfTheAct) {
-    //       const selectedProvision = selectedFuel.provisions.find(provision =>
-    //         `${provision.provision}` === record.provisionOfTheAct);
-    //
-    //       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value =
-    //         `${selectedProvision.provision} - ${selectedProvision.description}`;
-    //     }
-    //
-    //     grid[row][SCHEDULE_B.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-    //       ? selectedFuel.unitOfMeasure.name : '';
-    //
-    //     if (record.intensity !== null) {
-    //       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.intensity;
-    //     } else {
-    //       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = '';
-    //     }
-    //
-    //     if (record.scheduleD_sheetIndex !== null) {
-    //       grid[row][SCHEDULE_B.FUEL_CODE].scheduleDIndex = record.scheduleD_sheetIndex;
-    //       const fuels = ComplianceReportingService.getAvailableScheduleDFuels(this.props.complianceReport);
-    //       const fuel = fuels[record.scheduleD_sheetIndex];
-    //
-    //       grid[row][SCHEDULE_B.FUEL_CODE].value = `Schedule D: ${fuel.fuelType} ${fuel.intensity ? formatNumeric(fuel.intensity, 2) : ''}`;
-    //       grid[row][SCHEDULE_B.FUEL_CODE].scheduleDIndex = fuel.index;
-    //       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = fuel.intensity ? fuel.intensity : '';
-    //     }
-    //
-    //     //   const promise = this._fetchCreditCalculationValues(grid[row], selectedFuel).then(() => {
-    //     //     const {fuelCodes} = this._getCreditCalculationValues(selectedFuel.id);
-    //     //     const selectedFuelCode = fuelCodes.find(fuelCode => fuelCode.id === record.fuelCode);
-    //     //
-    //     //     let value = '';
-    //     //
-    //     //     if (selectedFuelCode) {
-    //     //       value = `${selectedFuelCode.fuelCode}${selectedFuelCode.fuelCodeVersion}.${selectedFuelCode.fuelCodeVersionMinor}`;
-    //     //     }
-    //     //
-    //     //     grid[row][SCHEDULE_B.FUEL_CODE] = {
-    //     //       ...grid[row][SCHEDULE_B.FUEL_CODE],
-    //     //       readOnly: !selectedProvision.determinationType || selectedProvision.determinationType.theType !== 'Fuel Code',
-    //     //       value
-    //     //     };
-    //     //
-    //     //     grid[row] = this._getFuelCalculationValues(grid[row]);
-    //     //
-    //     //     grid[row] = ScheduleBContainer.calculateEnergyContent(grid[row]);
-    //     //     grid[row] = ScheduleBContainer.calculateCredit(grid[row]);
-    //     //   });
-    //     //
-    //     //   promises.push(promise);
-    //     // }
-    //     //
-    //     //
-    //
-    //     this.setState({
-    //       grid
-    //     });
-    //     // Promise.all(promises).then(() => {
-    //     //   this._calculateTotal(grid);
-    //     // });
-    //   }
-    // }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const grid = this.state.grid;
-    const prevGrid = prevState.grid;
-
-    if (grid.length !== prevGrid.length) {
-      this.recomputeDerivedState(this.props, this.state);
+    if (!nextProps.scheduleState.scheduleB || !nextProps.scheduleState.scheduleB.records) {
       return;
     }
-    for (let i = 2; i < grid.length; i++) {
-      let row = grid[i];
-      let prevRow = prevGrid[i];
-      if (row[SCHEDULE_B.FUEL_TYPE].value !== prevRow[SCHEDULE_B.FUEL_TYPE].value ||
-        row[SCHEDULE_B.FUEL_CLASS].value !== prevRow[SCHEDULE_B.FUEL_CLASS].value ||
-        row[SCHEDULE_B.FUEL_CODE].value !== prevRow[SCHEDULE_B.FUEL_CODE].value ||
-        row[SCHEDULE_B.PROVISION_OF_THE_ACT].value !== prevRow[SCHEDULE_B.PROVISION_OF_THE_ACT].value) {
-        this.recomputeDerivedState(this.props, this.state);
+
+    if ((grid.length - 2) < nextProps.scheduleState.scheduleB.records.length) {
+      this._addRow(nextProps.scheduleState.scheduleB.records.length - (grid.length - 2));
+    }
+
+    for (let i = 0; i < nextProps.scheduleState.scheduleB.records.length; i++) {
+      const record = nextProps.scheduleState.scheduleB.records[i];
+      const row = 2 + i;
+
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
+      if (record.fuelCode != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
+      } else if (record.scheduleD_sheetIndex != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = record.scheduleD_sheetIndex;
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
+      } else {
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
       }
+
+      grid[row][SCHEDULE_B.QUANTITY].value = Number(record.quantity ? record.quantity : 0);
+      if (record.intensity !== null) {
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.intensity;
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue = record.intensity;
+      }
+
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+
+      this.recomputeDerivedState(nextProps, {
+        ...this.state,
+        grid
+      });
     }
 
   }
@@ -326,32 +263,76 @@ class ScheduleBContainer extends Component {
       const row = i;
 
       const context = {
-        compliancePeriod: props.period
+        compliancePeriod: props.period,
+        availableScheduleDFuels: ComplianceReportingService.getAvailableScheduleDFuels(props.complianceReport, props.scheduleState)
       };
 
       const values = {
         customIntensity: grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value,
         quantity: grid[row][SCHEDULE_B.QUANTITY].value,
         fuelClass: grid[row][SCHEDULE_B.FUEL_CLASS].value,
+        fuelCode: grid[row][SCHEDULE_B.FUEL_CODE].value,
         fuelType: grid[row][SCHEDULE_B.FUEL_TYPE].value,
         provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value
       };
 
       ComplianceReportingService.computeCredits(context, values).then((response) => {
 
-        grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits;
-        grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits;
-
         grid[row][SCHEDULE_B.FUEL_CLASS].getOptions = () => (response.parameters.fuelClasses);
+        if (response.parameters.singleFuelClassAvailable) {
+          grid[row][SCHEDULE_B.FUEL_CLASS].value = response.inputs.fuelClass;
+          grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = true;
+        } else {
+          grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = false;
+        }
+
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () => (response.parameters.provisions);
-        grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
+        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].selectedProvision = response.outputs.selectedProvision;
+
+        if (response.parameters.fuelCodeSelectionRequired) {
+          grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
+          grid[row][SCHEDULE_B.FUEL_CODE].mode = "fuelCode";
+        } else if (response.parameters.scheduleDSelectionRequired) {
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
+          grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.scheduleDSelections);
+          grid[row][SCHEDULE_B.FUEL_CODE].mode = "scheduleD";
+        } else {
+          grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => [];
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = true;
+          grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
+        }
 
         grid[row][SCHEDULE_B.UNITS].value = response.parameters.unitOfMeasure.name;
+
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = response.outputs.carbonIntensityLimit;
+        grid[row][SCHEDULE_B.ENERGY_DENSITY].value = response.outputs.energyDensity;
+        grid[row][SCHEDULE_B.EER].value = response.outputs.energyEffectivenessRatio;
+
+        if (response.parameters.intensityInputRequired) {
+          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.inputs.customIntensity;
+          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = false;
+        } else {
+          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel;
+          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true;
+        }
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue = response.outputs.customIntensityValue;
+
+        grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent;
+        grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits;
+        grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits;
 
 
         this.setState({
           grid
         });
+
+        this._gridStateToPayload({
+          grid
+        });
+
+        this._calculateTotal(grid);
+
       }, (failure) => {
         console.log(failure);
       });
@@ -384,18 +365,34 @@ class ScheduleBContainer extends Component {
       }, { // provision of the act
         className: 'text',
         dataEditor: Select,
+        valueViewer: (props) => {
+          const selectedOption = props.cell.getOptions().find(e => e.provision === props.value);
+          if (selectedOption) {
+            return <span>{selectedOption.descriptiveName}</span>;
+          }
+          return <span>{props.value}</span>;
+        },
         getOptions: () => [],
         mapping: {
           key: 'id',
-          value: 'description'
+          value: 'provision',
+          display: 'descriptiveName'
         }
       }, { // fuel code
         className: 'text',
         dataEditor: Select,
-        getOptions: this._getFuelCodes,
+        getOptions: () => [],
         mapping: {
           key: 'id',
-          value: 'value'
+          value: 'id',
+          display: 'descriptiveName'
+        },
+        valueViewer: (props) => {
+          const selectedOption = props.cell.getOptions().find(e => String(e.id) === props.value);
+          if (selectedOption) {
+            return <span>{selectedOption.descriptiveName}</span>;
+          }
+          return <span>{props.value}</span>;
         },
         readOnly: true
       }, { // quantity of fuel supplied
@@ -495,22 +492,11 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _handleScheduleDSelection(row, fuel) {
-    const grid = this.state.grid.map(row => [...row]);
-    grid[row][SCHEDULE_B.FUEL_CODE].value = `Schedule D: ${fuel.fuelType} ${fuel.intensity ? formatNumeric(fuel.intensity, 2) : ''}`;
-    grid[row][SCHEDULE_B.FUEL_CODE].scheduleDIndex = fuel.index;
-    grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = fuel.intensity ? fuel.intensity : '';
-
-    this.setState({
-      grid
-    });
-    this._gridStateToPayload({grid});
-  }
-
   _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
+
       const {
         cell, row, col, value
       } = change;
@@ -524,21 +510,6 @@ class ScheduleBContainer extends Component {
         value
       };
 
-
-      // if (col === SCHEDULE_B.PROVISION_OF_THE_ACT) {
-      //   grid[row] = this._validateProvisionColumn(grid[row], value);
-      //   if (value === 'Section 6 (5) (d) (ii) (A) - GHGenius modelled') {
-      //     this.setState({
-      //       showScheduleDModal: true,
-      //       scheduleDModalRow: row,
-      //       availableScheduleDFuels: ComplianceReportingService.getAvailableScheduleDFuels(this.props.complianceReport),
-      //       scheduleDModalFuelClass: grid[row][SCHEDULE_B.FUEL_CLASS].value,
-      //       scheduleDModalFuelType: grid[row][SCHEDULE_B.FUEL_TYPE].value
-      //     });
-      //
-      //   }
-      // }
-
       if (col === SCHEDULE_B.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
@@ -551,11 +522,7 @@ class ScheduleBContainer extends Component {
       grid
     });
 
-    this._gridStateToPayload({
-      grid
-    });
-
-    this._calculateTotal(grid);
+    this.recomputeDerivedState(this.props, {grid});
   }
 
   _gridStateToPayload(state) {
@@ -566,41 +533,14 @@ class ScheduleBContainer extends Component {
     for (let i = startingRow; i < state.grid.length; i += 1) {
       const row = state.grid[i];
 
-      const {value} = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
-      const fuelType = row[SCHEDULE_B.FUEL_TYPE].value;
-      // const selectedFuel = this._getSelectedFuel(fuelType);
-      // const selectedProvision = selectedFuel ? ScheduleBContainer.getSelectedProvision(
-      //   selectedFuel,
-      //   value
-      // ) : null;
-      //
-      // let selectedFuelCode = null;
-      //
-      // if (selectedProvision && selectedProvision.determinationType.theType === 'Fuel Code') {
-      //   const {fuelCodes} = this._getCreditCalculationValues(selectedFuel.id);
-      //   const fuelCode = row[SCHEDULE_B.FUEL_CODE].value;
-      //
-      //   selectedFuelCode = ScheduleBContainer.getFuelCode(fuelCodes, fuelCode);
-      // }
-      //
-      // let scheduleDIndex = null;
-      // if (selectedProvision && selectedProvision.determinationType.theType === 'GHGenius') {
-      //   scheduleDIndex = row[SCHEDULE_B.FUEL_CODE].scheduleDIndex;
-      // }
-
-      let intensity = null;
-      // if (selectedProvision && selectedProvision.determinationType.theType === 'Alternative') {
-      //   intensity = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].value;
-      // }
-
       const record = {
-        fuelCode: null,//selectedFuelCode ? selectedFuelCode.id : null,
+        fuelCode: row[SCHEDULE_B.FUEL_CODE].mode === 'fuelCode' ? row[SCHEDULE_B.FUEL_CODE].value : null,
         fuelType: row[SCHEDULE_B.FUEL_TYPE].value,
         fuelClass: row[SCHEDULE_B.FUEL_CLASS].value,
-        provisionOfTheAct: null,//selectedProvision ? selectedProvision.provision : null,
+        provisionOfTheAct: row[SCHEDULE_B.PROVISION_OF_THE_ACT].value,
         quantity: row[SCHEDULE_B.QUANTITY].value,
-        intensity: intensity,
-        scheduleD_sheetIndex: null//scheduleDIndex
+        intensity: row[SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue,
+        scheduleD_sheetIndex: row[SCHEDULE_B.FUEL_CODE].mode === 'scheduleD' ? row[SCHEDULE_B.FUEL_CODE].value : null
       };
 
       const rowIsEmpty = !(record.fuelType || record.fuelClass ||
@@ -611,11 +551,36 @@ class ScheduleBContainer extends Component {
       }
     }
 
-    this.props.updateScheduleState({
-      scheduleB: {
-        records
+    // check if we should update (infinite loop possible if we don't do this)
+    let shouldUpdate = false;
+
+    if (!this.props.scheduleState.scheduleB || !this.props.scheduleState.scheduleB.records) {
+      shouldUpdate = true;
+    } else if (this.props.scheduleState.scheduleB.records.length != records.length) {
+      shouldUpdate = true;
+    } else {
+      const compareOn = ['fuelCode', 'fuelType', 'fuelClass', 'provisionOfTheAct', 'quantity', 'intensity', 'scheduleD_sheetIndex'];
+      for (let i = 0; i < records.length; i++) {
+        const prevRecord = this.props.scheduleState.scheduleB.records[i];
+        for (const field of compareOn) {
+          if (typeof prevRecord[field] !== typeof undefined) {
+            if (prevRecord[field] !== records[i][field]) {
+              shouldUpdate = true;
+              break;
+            }
+          }
+        }
       }
-    });
+    }
+
+    if (shouldUpdate) {
+      this.props.updateScheduleState({
+        scheduleB: {
+          records
+        }
+      });
+    }
+
   }
 
   render() {
@@ -628,16 +593,17 @@ class ScheduleBContainer extends Component {
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
-      />,
-      (this.state.showScheduleDModal &&
-        <ScheduleBGHGeniusProvisionModal
-          key='ghgenius-selection'
-          matchFuelClass={this.state.scheduleDModalFuelClass}
-          matchFuelType={this.state.scheduleDModalFuelType}
-          availableSelections={this.state.availableScheduleDFuels}
-          handleSelection={(fuel) => this._handleScheduleDSelection(this.state.scheduleDModalRow, fuel)}
-          handleCancel={() => this.setState({showScheduleDModal: false})}
-        />)
+      />
+      //,
+      // (this.state.showScheduleDModal &&
+      //   <ScheduleBGHGeniusProvisionModal
+      //     key='ghgenius-selection'
+      //     matchFuelClass={this.state.scheduleDModalFuelClass}
+      //     matchFuelType={this.state.scheduleDModalFuelType}
+      //     availableSelections={this.state.availableScheduleDFuels}
+      //     handleSelection={(fuel) => this._handleScheduleDSelection(this.state.scheduleDModalRow, fuel)}
+      //     handleCancel={() => this.setState({showScheduleDModal: false})}
+      //   />)
     ]);
   }
 }
@@ -647,28 +613,6 @@ ScheduleBContainer.defaultProps = {
 };
 
 ScheduleBContainer.propTypes = {
-  creditCalculation: PropTypes.shape({
-    isFetching: PropTypes.bool,
-    item: PropTypes.shape({
-      carbonIntensityLimit: PropTypes.shape({
-        diesel: PropTypes.number,
-        gasoline: PropTypes.number
-      }),
-      defaultCarbonIntensity: PropTypes.number,
-      energyDensity: PropTypes.number,
-      energyEffectivenessRatio: PropTypes.shape({
-        diesel: PropTypes.number,
-        gasoline: PropTypes.number
-      }),
-      fuelCodes: PropTypes.arrayOf(PropTypes.shape({
-        fuelCode: PropTypes.string,
-        fuelCodeVersion: PropTypes.number,
-        fuelCodeVersionMinor: PropTypes.number,
-        id: PropTypes.number
-      }))
-    }),
-    success: PropTypes.bool
-  }).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReport: PropTypes.shape({
     scheduleB: PropTypes.shape()

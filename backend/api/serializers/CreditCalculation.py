@@ -156,7 +156,9 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
             Q(effective_date__gte=self.effective_date,
               effective_date__lte=self.expiration_date) |
             Q(expiry_date__gte=self.effective_date,
-              expiry_date__lte=self.expiration_date)
+              expiry_date__lte=self.expiration_date) |
+            Q(effective_date__lte=self.effective_date,
+              expiry_date__gte=self.expiration_date)
         ).order_by(
             'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
         )
