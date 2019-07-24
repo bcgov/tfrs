@@ -31,7 +31,8 @@ from api.viewsets.DocumentComments import DocumentCommentsViewSet
 from api.viewsets.FuelCode import FuelCodeViewSet
 from api.viewsets.Notification import NotificationViewSet
 from tfrs.settings import DOCUMENTS_API, FUEL_CODES_API, \
-    CREDIT_CALCULATION_API, TESTING, COMPLIANCE_REPORTING_API
+    CREDIT_CALCULATION_API, TESTING, COMPLIANCE_REPORTING_API, \
+    EXCLUSION_REPORTS_API
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
@@ -54,6 +55,7 @@ from .viewsets.PertroleumCarbonIntensity import PetroleumCarbonIntensityViewSet
 from .viewsets.ExpectedUse import ExpectedUseViewSet
 from .viewsets.FuelClass import FuelClassViewSet
 from .viewsets.NotionalTransferType import NotionalTransferTypeViewSet
+from .viewsets.TransactionType import TransactionTypeViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -105,28 +107,34 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
         EnergyEffectivenessRatioViewSet
     )
     ROUTER.register(
-        R'credit_calculation/expected_uses',
+        r'credit_calculation/expected_uses',
         ExpectedUseViewSet
     )
     ROUTER.register(
-        R'credit_calculation/fuel_classes',
+        r'credit_calculation/fuel_classes',
         FuelClassViewSet
     )
     ROUTER.register(
-        R'credit_calculation/notional_transfer_types',
+        r'credit_calculation/notional_transfer_types',
         NotionalTransferTypeViewSet
     )
     ROUTER.register(
-        R'credit_calculation/petroleum_carbon_intensities',
+        r'credit_calculation/petroleum_carbon_intensities',
         PetroleumCarbonIntensityViewSet
     )
     ROUTER.register(
-        R'credit_calculation/fuel_types',
+        r'credit_calculation/fuel_types',
         CreditCalculationViewSet
     )
 
 if COMPLIANCE_REPORTING_API['ENABLED'] or TESTING:
     ROUTER.register(r'compliance_reports', ComplianceReportViewSet)
+
+if EXCLUSION_REPORTS_API['ENABLED'] or TESTING:
+    ROUTER.register(
+        r'exclusion_reports/transaction_types',
+        TransactionTypeViewSet
+    )
 
 urlpatterns = [
     # Swagger documentation

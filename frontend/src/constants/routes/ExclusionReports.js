@@ -5,7 +5,8 @@ const EXCLUSION_REPORTS = {
   API,
   ADD: `${BASE_PATH}/add/:period/:tab`,
   EDIT: `${BASE_PATH}/edit/:id/:tab`,
-  LIST: BASE_PATH
+  LIST: BASE_PATH,
+  TRANSACTION_TYPES: `${BASE_PATH}/transaction_types`
 };
 
 export default EXCLUSION_REPORTS;

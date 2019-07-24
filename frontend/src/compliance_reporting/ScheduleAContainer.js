@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { fuelClasses } from '../actions/fuelClasses';
 import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import Input from '../app/components/Spreadsheet/Input';
-import OrganizationAutocomplete from './components/OrganizationAutocomplete';
+import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
 import { getQuantity } from '../utils/functions';

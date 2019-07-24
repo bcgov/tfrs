@@ -22,19 +22,34 @@
     width: 20rem;
   }
 
-  .quantity {
+  .organization {
     min-width: 20rem;
     width: 20rem;
   }
 
+  .quantity {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .quantity-not-sold {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
   .transaction-type {
-    min-width: 25rem;
-    width: 25rem;
+    min-width: 15rem;
+    width: 15rem;
   }
 
   .units {
-    min-width: 15rem;
-    width: 15rem;
+    min-width: 10rem;
+    width: 10rem;
   }
 }
 
