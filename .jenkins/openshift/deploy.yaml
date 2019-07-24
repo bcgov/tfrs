@@ -156,6 +156,12 @@ objects:
           - mountPath: /run/secrets/github
             name: github
             readOnly: true
+          - mountPath: /run/secrets/browserstack
+            name: browserstack
+            readOnly: true
+          - mountPath: /run/secrets/functional-test-users
+            name: functional-test-users
+            readOnly: true
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -194,6 +200,14 @@ objects:
           secret:
             defaultMode: 420
             secretName: ${NAME}${SUFFIX}-github
+        - name: browserstack
+          secret:
+            defaultMode: 420
+            secretName: ${NAME}${SUFFIX}-browserstack
+        - name: functional-test-users
+          secret:
+            defaultMode: 420
+            secretName: ${NAME}${SUFFIX}-functional-test-users
     test: false
     triggers:
     - imageChangeParams:
