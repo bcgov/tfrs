@@ -1,12 +1,7 @@
 result = 0
 runParallel = true
 tfrsRelease="v1.4.18"
-input (
-    message: "Do you want to run functional test?",
-    parameters [
-        choice ( name: 'runFunctionalTest', choices: 'Yes\nNo', description: 'Do you want to run functional test')
-    ]
-)
+input message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
 /****
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
