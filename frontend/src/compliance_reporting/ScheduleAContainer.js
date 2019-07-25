@@ -111,11 +111,13 @@ class ScheduleAContainer extends Component {
       for (let i = 0; i < nextProps.scheduleState.scheduleA.records.length; i++) {
         const record = nextProps.scheduleState.scheduleA.records[i];
 
+        const qty = Number(record.quantity);
+
         grid[1 + i][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;
         grid[1 + i][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress;
         grid[1 + i][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass;
         grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
-        grid[1 + i][SCHEDULE_A.QUANTITY].value = Number(record.quantity);
+        grid[1 + i][SCHEDULE_A.QUANTITY].value = isNaN(qty) ? '' : qty;
       }
     }
 
@@ -320,8 +322,7 @@ class ScheduleAContainer extends Component {
 }
 
 ScheduleAContainer.defaultProps = {
-  complianceReport: null,
-  loadedState: null
+  complianceReport: null
 };
 
 ScheduleAContainer.propTypes = {

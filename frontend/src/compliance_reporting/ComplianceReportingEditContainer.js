@@ -24,6 +24,7 @@ import Modal from '../app/components/Modal';
 import history from '../app/History';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
+import withCreditCalculationService from "./services/credit_calculation_hoc";
 
 class ComplianceReportingEditContainer extends Component {
   static componentForTabName(tab) {
@@ -35,7 +36,7 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-b':
-        TabComponent = withReferenceData()(ScheduleBContainer);
+        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleBContainer));
         break;
 
       case 'schedule-c':
