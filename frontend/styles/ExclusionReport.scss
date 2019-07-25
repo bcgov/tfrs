@@ -22,19 +22,34 @@
     width: 20rem;
   }
 
-  .quantity {
+  .organization {
     min-width: 20rem;
     width: 20rem;
   }
 
+  .quantity {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .quantity-not-sold {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
   .transaction-type {
-    min-width: 25rem;
-    width: 25rem;
+    min-width: 15rem;
+    width: 15rem;
   }
 
   .units {
-    min-width: 15rem;
-    width: 15rem;
+    min-width: 10rem;
+    width: 10rem;
   }
 }
 
@@ -59,5 +74,31 @@
   }
   .right {
     text-align: right;
+  }
+}
+
+.page-exclusion-report-intro {
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 0 1rem;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 0 3rem;
+    text-align: center;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-top: 3rem;
+  }
+
+  p {
+    margin: 0 0 2rem;
   }
 }

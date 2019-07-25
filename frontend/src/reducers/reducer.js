@@ -25,6 +25,7 @@ import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 import { complianceReporting } from '../actions/complianceReporting';
+import { transactionTypes } from '../actions/transactionTypes';
 import creditCalculation from './creditCalculationReducer';
 
 const rootReducer = combineReducers({
@@ -63,7 +64,8 @@ const rootReducer = combineReducers({
   complianceReporting: complianceReporting.reducer(),
   fuelClasses: fuelClasses.reducer(),
   notionalTransferTypes: notionalTransferTypes.reducer(),
-  petroleumCarbonIntensities: petroleumCarbonIntensities.reducer()
+  petroleumCarbonIntensities: petroleumCarbonIntensities.reducer(),
+  transactionTypes: transactionTypes.reducer()
 });
 
 export default rootReducer;

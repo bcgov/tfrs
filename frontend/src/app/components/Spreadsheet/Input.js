@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import InputWithTooltip from '../../app/components/InputWithTooltip';
+import InputWithTooltip from '../InputWithTooltip';
 
 class Input extends PureComponent {
   constructor (props) {

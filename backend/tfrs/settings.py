@@ -180,6 +180,11 @@ COMPLIANCE_REPORTING_API = {
         os.getenv('COMPLIANCE_REPORTING_API_ENABLED', 'False').lower() in ['true', 1]),
 }
 
+EXCLUSION_REPORTS_API = {
+    'ENABLED': bool(
+        os.getenv('EXCLUSION_REPORTS_API_ENABLED', 'False').lower() in ['true', 1]),
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

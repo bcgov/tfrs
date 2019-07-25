@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { expectedUses } from '../actions/expectedUses';
-import Input from './components/Input';
-import Select from './components/Select';
+import Input from '../app/components/Spreadsheet/Input';
+import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
 

@@ -28,6 +28,7 @@ import { expectedUses } from '../actions/expectedUses';
 import { fuelClasses } from '../actions/fuelClasses';
 import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
+import { transactionTypes } from '../actions/transactionTypes';
 import { roles } from '../actions/roleActions';
 import autosaveSaga from './autosaveStore';
 import { complianceReporting } from '../actions/complianceReporting';
@@ -85,5 +86,6 @@ sagaMiddleware.run(expectedUses.saga);
 sagaMiddleware.run(fuelClasses.saga);
 sagaMiddleware.run(notionalTransferTypes.saga);
 sagaMiddleware.run(petroleumCarbonIntensities.saga);
+sagaMiddleware.run(transactionTypes.saga);
 
 export default store;

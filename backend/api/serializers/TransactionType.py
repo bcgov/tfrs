@@ -20,10 +20,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
+from api.models.TransactionType import TransactionType
 
 
-class NotionalTransferTypeManager(models.Manager):
-    def get_by_natural_key(self, the_type):
-        return self.get(the_type=the_type)
+class TransactionTypeSerializer(serializers.ModelSerializer):
+    """
+    Basic Serializer for Transaction Types
+    """
+    class Meta:
+        model = TransactionType
+        fields = ('id', 'the_type')
