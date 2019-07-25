@@ -31,16 +31,26 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
-      {props.submit &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmSubmit"
-        data-toggle="modal"
-        type="button"
-      >
-        <FontAwesomeIcon icon="save" /> Save
-      </button>
-      }
+      {props.submit && [
+        <button
+          className="btn btn-primary"
+          data-target="#confirmSubmit"
+          data-toggle="modal"
+          key="btn-save"
+          type="button"
+        >
+          <FontAwesomeIcon icon="save" /> Save
+        </button>,
+        <button
+          className="btn btn-primary"
+          data-target="#confirmSubmit"
+          data-toggle="modal"
+          key="btn-submit"
+          type="button"
+        >
+          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
+        </button>
+      ]}
     </div>
   </div>
 );
