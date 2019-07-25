@@ -3,12 +3,12 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { toastr as reduxToastr } from 'react-redux-toastr';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {toastr as reduxToastr} from 'react-redux-toastr';
 import PropTypes from 'prop-types';
 
-import { complianceReporting } from '../actions/complianceReporting';
+import {complianceReporting} from '../actions/complianceReporting';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
 import ScheduleBContainer from './ScheduleBContainer';
@@ -24,9 +24,10 @@ import Modal from '../app/components/Modal';
 import history from '../app/History';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
+import withCreditCalculationService from "./services/credit_calculation_hoc";
 
 class ComplianceReportingEditContainer extends Component {
-  static componentForTabName (tab) {
+  static componentForTabName(tab) {
     let TabComponent;
 
     switch (tab) {
@@ -35,7 +36,7 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-b':
-        TabComponent = withReferenceData()(ScheduleBContainer);
+        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleBContainer));
         break;
 
       case 'schedule-c':
@@ -57,10 +58,10 @@ class ComplianceReportingEditContainer extends Component {
     return TabComponent;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.tabComponent = Loading;
-    const { tab } = props.match.params;
+    const {tab} = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
 
     this.edit = document.location.pathname.indexOf('/edit/') >= 0;
@@ -74,14 +75,14 @@ class ComplianceReportingEditContainer extends Component {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.edit) {
       this.loadData();
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    const { tab } = nextProps.match.params;
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {tab} = nextProps.match.params;
 
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
@@ -109,8 +110,8 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _updateScheduleState (mergedState) {
-    const { schedules } = this.state;
+  _updateScheduleState(mergedState) {
+    const {schedules} = this.state;
 
     this.setState({
       schedules: {
@@ -120,9 +121,9 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleDelete () {
+  _handleDelete() {
     if (this.edit) {
-      this.props.deleteComplianceReport({ id: this.props.match.params.id });
+      this.props.deleteComplianceReport({id: this.props.match.params.id});
     }
     this.props.getComplianceReports();
     history.push(COMPLIANCE_REPORTING.LIST);
@@ -130,7 +131,7 @@ class ComplianceReportingEditContainer extends Component {
     this.props.invalidateAutosaved();
   }
 
-  _handleSubmit () {
+  _handleSubmit() {
     if (!this.edit) {
       // creating new
       const payload = {
@@ -155,11 +156,11 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  loadData () {
+  loadData() {
     this.props.getComplianceReport(this.props.match.params.id);
   }
 
-  _updateAutosaveState (tab, state) {
+  _updateAutosaveState(tab, state) {
     const autosaveState = {
       ...this.state.autosaveState,
       tab: state
@@ -171,25 +172,25 @@ class ComplianceReportingEditContainer extends Component {
     this.props.updateStateToSave(autosaveState);
   }
 
-  render () {
+  render() {
     const TabComponent = this.tabComponent;
 
-    const { tab, id } = this.props.match.params;
-    let { period } = this.props.match.params;
+    const {tab, id} = this.props.match.params;
+    let {period} = this.props.match.params;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
     }
 
     if (this.props.complianceReporting.isGetting) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     if (this.edit) {
       if (this.props.complianceReporting.item) {
         period = this.props.complianceReporting.item.compliancePeriod.description;
         if (!period) {
-          return (<Loading />);
+          return (<Loading/>);
         }
       }
     }
@@ -210,6 +211,7 @@ class ComplianceReportingEditContainer extends Component {
         complianceReport={this.props.complianceReporting.item}
         loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
+        scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
