@@ -3,19 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { expectedUses } from '../actions/expectedUses';
+import {expectedUses} from '../actions/expectedUses';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
-import { getQuantity } from '../utils/functions';
+import {SCHEDULE_A, SCHEDULE_C} from '../constants/schedules/scheduleColumns';
+import {getQuantity} from '../utils/functions';
 
 class ScheduleCContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -63,7 +63,7 @@ class ScheduleCContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
@@ -74,75 +74,74 @@ class ScheduleCContainer extends Component {
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
-    this.loadData = this.loadData.bind(this);
+    this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadExpectedUses();
 
-    if (this.props.loadedState) {
-      this.restoreFromAutosaved();
-    } else if (this.props.create || !this.props.complianceReport.scheduleC) {
+    if (this.props.create || !this.props.complianceReport.scheduleC) {
       this._addRow(5);
+    } else if (this.props.scheduleState.scheduleC) {
+      // we already have the state. don't load it. just render it.
     } else {
-      this.loadData();
+      this.loadInitialState();
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {grid} = this.state;
+
+    if (nextProps.scheduleState.scheduleC && nextProps.scheduleState.scheduleC.records) {
+
+      if ((grid.length - 2) < nextProps.scheduleState.scheduleC.records.length) {
+        this._addRow(nextProps.scheduleState.scheduleC.records.length - (grid.length - 2));
+      }
+
+      for (let i = 0; i < nextProps.scheduleState.scheduleC.records.length; i++) {
+        const record = nextProps.scheduleState.scheduleC.records[i];
+
+        grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
+        grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
+        grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
+        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
+        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other');
+        grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+
+
+        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+          fuel.name === record.fuelType);
+
+        grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+          ? selectedFuel.unitOfMeasure.name : '';
+      }
+    }
+
+    this.setState({
+      grid
+    });
   }
 
-  loadData () {
+  loadInitialState() {
+
     this.rowNumber = 1;
-    this._addRow(this.props.complianceReport.scheduleC.records.length);
+    // this._addRow(this.props.complianceReport.scheduleC.records.length);
+
+    let records = [];
 
     for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
-      const { grid } = this.state;
-      const record = this.props.complianceReport.scheduleC.records[i];
 
-      grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
-      grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
-      grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
-      grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
-      grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
-
-      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-        fuel.name === record.fuelType);
-
-      grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-        ? selectedFuel.unitOfMeasure.name : '';
-
-      this.setState({ grid });
+      records.push({...this.props.complianceReport.scheduleC.records[i]});
+      this.props.updateScheduleState({
+        scheduleC: {
+          records
+        }
+      });
     }
+
   }
-
-  restoreFromAutosaved () {
-    const { loadedState } = this.props;
-
-    this.setState(ScheduleCContainer.addHeaders());
-    this.rowNumber = 1;
-    this._addRow(loadedState.tab.grid.length - 2);
-
-    for (let i = 2; i < loadedState.tab.grid.length; i += 1) {
-      const { grid } = this.state;
-      const record = loadedState.tab.grid[i];
-
-      grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
-      grid[i][SCHEDULE_C.FUEL_CLASS].value = record[SCHEDULE_C.FUEL_CLASS].value;
-      grid[i][SCHEDULE_C.EXPECTED_USE].value = record[SCHEDULE_C.EXPECTED_USE].value;
-      grid[i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record[SCHEDULE_C.EXPECTED_USE_OTHER].value;
-      grid[i][SCHEDULE_C.QUANTITY].value = record[SCHEDULE_C.QUANTITY].value;
-      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-        fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
-      grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-        ? selectedFuel.unitOfMeasure.name : '';
-
-      this.setState({ grid });
-    }
-  }
-
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
@@ -174,7 +173,7 @@ class ScheduleCContainer extends Component {
           className: 'number',
           dataEditor: Input,
           valueViewer: (props) => {
-            const { value } = props;
+            const {value} = props;
             return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
           }
         }, {
@@ -201,7 +200,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses (row) {
+  _getFuelClasses(row) {
     const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -214,7 +213,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -249,14 +248,12 @@ class ScheduleCContainer extends Component {
       if (col === SCHEDULE_C.EXPECTED_USE) { //  Expected Use
         if (value !== 'Other') {
           grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
-            ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
-            readOnly: true,
+              ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
             value: ''
           };
         } else {
           grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
             ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
-            readOnly: false
           };
         }
       }
@@ -270,10 +267,9 @@ class ScheduleCContainer extends Component {
       grid
     });
 
-    this.props.updateAutosaveState({ grid });
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const startingRow = 2;
 
     const records = [];
@@ -288,8 +284,8 @@ class ScheduleCContainer extends Component {
         rationale: row[6].value
       };
 
-      const rowIsEmpty = !record.expectedUse || !record.fuelClass ||
-        !record.fuelType || !record.quantity;
+      const rowIsEmpty = !(record.expectedUse || record.fuelClass ||
+        record.fuelType || record.quantity);
 
       if (!rowIsEmpty) {
         records.push(record);
@@ -303,7 +299,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _validateFuelClassColumn (currentRow, value) {
+  _validateFuelClassColumn(currentRow, value) {
     const row = currentRow;
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
@@ -321,7 +317,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  _validateFuelTypeColumn (currentRow, value) {
+  _validateFuelTypeColumn(currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -349,7 +345,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  render () {
+  render() {
     return ([
       <SchedulesPage
         addRow={this._addRow}
@@ -384,8 +380,7 @@ class ScheduleCContainer extends Component {
 }
 
 ScheduleCContainer.defaultProps = {
-  complianceReport: null,
-  loadedState: null
+  complianceReport: null
 };
 
 ScheduleCContainer.propTypes = {
@@ -402,10 +397,8 @@ ScheduleCContainer.propTypes = {
   complianceReport: PropTypes.shape({
     scheduleC: PropTypes.shape()
   }),
-  loadedState: PropTypes.shape(),
   period: PropTypes.string.isRequired,
   updateScheduleState: PropTypes.func.isRequired,
-  updateAutosaveState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
