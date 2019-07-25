@@ -44,15 +44,19 @@ def bringUpMaintenancePageStage (String projectName) {
 def databaseBackupStage (String projectName, String tfrsRelease) {
     return {
         stage('Datebase Backup') {
+            def ENV_NAME
             if( projectName == "mem-tfrs-dev") {
+                ENV_NAME='dev'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             } else if( projectName == "mem-tfrs-test") {
+                ENV_NAME='test'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             } else if( projectName == "mem-tfrs-prod") {
+                ENV_NAME='prod'
                 postgresql_pod_name= sh (script: "oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             }
             echo "start backup script on ${projectName}, postgresql_pod_name is ${postgresql_pod_name}"
-            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
+            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} ${ENV_NAME}"
             echo 'backup script completed'
         }
     }
@@ -97,6 +101,23 @@ def deployBackendStage (String projectName) {
     }
 }
 
+def deployBackendToProdStage () {
+    return {
+        stage("Deploy Backend on Prod") {
+            script {
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/tfrs:test", "mem-tfrs-tools/tfrs:prod")
+                    sh 'sleep 300s'
+                    openshift.tag("mem-tfrs-tools/scan-coordinator:test", "mem-tfrs-tools/scan-coordinator:prod")
+                    openshift.tag("mem-tfrs-tools/scan-handler:test", "mem-tfrs-tools/scan-handler:prod")
+                    openshift.tag("mem-tfrs-tools/celery:test", "mem-tfrs-tools/celery:prod")
+                    sh 'sleep 180s'
+                }
+            }
+        }
+    }
+}
+
 def deployFrontendStage(String projectName) {
     return {
         stage("Deploy Frontend on ${projectName}") {
@@ -120,6 +141,20 @@ def deployFrontendStage(String projectName) {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/${clientISName}:latest", "mem-tfrs-tools/${clientISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${notificationServerISName}:latest", "mem-tfrs-tools/${notificationServerISName}:${envName}")
+                    sh 'sleep 120s'
+                }
+            }
+        }
+    }
+}
+
+def deployFrontendToProdStage() {
+    return {
+        stage("Deploy Frontend on Prod") {
+            script {
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/client:test", "mem-tfrs-tools/client:prod")
+                    openshift.tag("mem-tfrs-tools/notification-server:test", "mem-tfrs-tools/notification-server:prod")
                     sh 'sleep 120s'
                 }
             }

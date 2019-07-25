@@ -1,0 +1,63 @@
+.page_exclusion_report {
+  .inactive {
+    display: none;
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+
+    #new-exclusion-report {
+      margin: 0;
+    }
+  }
+}
+
+.page_exclusion_report .data-grid-container {
+  min-width: 1200px;
+}
+
+.exclusion-agreement {
+  .fuel-type {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .quantity {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .transaction-type {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .units {
+    min-width: 15rem;
+    width: 15rem;
+  }
+}
+
+.exclusion-report-buttons {
+  background-color: $background-grey;
+  border: 1px solid $border-grey;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: right;
+  margin-left: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    text-align: left;
+
+    * {
+      text-align: left !important;
+    }
+  }
+  .right {
+    text-align: right;
+  }
+}

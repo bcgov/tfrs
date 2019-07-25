@@ -314,7 +314,7 @@ class ScheduleDContainer extends Component {
     const {sheets} = this.state;
 
     return (
-      <div className="page_schedule" key="sheets">
+      <div className="page_schedule spreadsheet-component" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
 
         <ScheduleDTabs
@@ -349,6 +349,7 @@ class ScheduleDContainer extends Component {
 
 ScheduleDContainer.defaultProps = {
   complianceReport: null,
+  match: {}
 };
 
 ScheduleDContainer.propTypes = {
@@ -356,7 +357,7 @@ ScheduleDContainer.propTypes = {
     scheduleD: PropTypes.shape()
   }),
   create: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}),
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
