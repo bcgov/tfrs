@@ -51,6 +51,19 @@ objects:
       requests:
         storage: 1Gi
 - apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    name: ${NAME}${SUFFIX}-builds
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+- apiVersion: v1
   kind: ServiceAccount
   metadata:
     annotations:
@@ -148,6 +161,9 @@ objects:
           - mountPath: /var/lib/jenkins/jobs
             name: jenkins-jobs
             readOnly: false
+          - mountPath: /var/lib/jenkins/builds
+            name: jenkins-builds
+            readOnly: false
           - mountPath: /var/run/pod
             name: pod-metadata
           - mountPath: /run/secrets/jenkins-slave-user
@@ -173,6 +189,9 @@ objects:
         - name: jenkins-jobs
           persistentVolumeClaim:
             claimName: ${NAME}${SUFFIX}
+        - name: jenkins-builds
+          persistentVolumeClaim:
+            claimName: ${NAME}${SUFFIX}-builds
         - downwardAPI:
             items:
             - fieldRef:
