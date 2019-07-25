@@ -445,6 +445,13 @@ class ScheduleBContainer extends Component {
           value: value.replace(/,/g, '')
         };
       }
+
+      if (col === SCHEDULE_B.FUEL_TYPE) {
+        grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
+        grid[row][SCHEDULE_B.FUEL_CODE].value = null;
+      }
+      
     });
 
     this.setState({
