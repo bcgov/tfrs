@@ -1,9 +1,8 @@
 result = 0
 runParallel = true
-tfrsRelease="devops-browserstack-integration"
+tfrsRelease="v1.4.19"
 def runFunctionalTest = input id: 'runFunctionalTest', message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
-/****
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -40,7 +39,6 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
-******/
 
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -69,7 +67,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
         def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
-/****
+
         //Sonarqube stage
         prepareOtherStages.sonarqubeStage().call()
 
@@ -117,19 +115,13 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
-****/
+
         //Functional Test
-        echo "====1"
-        echo "${params.runFunctionalTest}"
-        echo "====2"
-        echo params.runFunctionalTest
-        echo "====3"
-        echo runFunctionalTest
         if(runFunctionalTest == 'Yes') {
             echo "confirmed to run functional test"
             prepareOtherStages.functionalTestStage().call()
         }
-/****
+
         //Refresh SchemaSpy
         prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
 
@@ -138,7 +130,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
-****/
+
     } //end of node
 
 } //end of podTemplate
