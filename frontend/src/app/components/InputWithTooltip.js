@@ -35,7 +35,7 @@ class InputWithTooltip extends Component {
     if (this.props.addCommas) {
       let { value } = this.props;
 
-      value = String(value).replace(/\D/g, '');
+      value = String(value).replace(/,/g, '');
       value = formatNumeric(Number(value), this.props.dataNumberToFixed);
 
       return value;
