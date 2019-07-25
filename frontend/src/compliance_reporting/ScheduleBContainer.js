@@ -126,9 +126,7 @@ class ScheduleBContainer extends Component {
     } else {
       this.loadInitialState();
     }
-    // this.recomputeDerivedState(this.props, this.state);
   }
-
 
 
   componentWillReceiveProps (nextProps) {

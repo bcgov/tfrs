@@ -3,10 +3,10 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 
 import 'react-datasheet/lib/react-datasheet.css';
 
@@ -16,21 +16,21 @@ import {
   getCarbonIntensityLimit,
   getCreditCalculationValues,
   getDefaultCarbonIntensity,
+  getEnergyContent,
   getEnergyEffectivenessRatio,
   getSelectedFuel,
-  getSelectedProvision,
-  getEnergyContent
+  getSelectedProvision
 } from './components/ScheduleFunctions';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
-import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
-import { formatNumeric } from '../utils/functions';
+import {SCHEDULE_PENALTY, SCHEDULE_SUMMARY} from '../constants/schedules/scheduleColumns';
+import {formatNumeric} from '../utils/functions';
 
 class ScheduleSummaryContainer extends Component {
-  static calculateDieselPayable (grid) {
+  static calculateDieselPayable(grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_15][2].value;
@@ -52,7 +52,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateDieselTotal (grid) {
+  static calculateDieselTotal(grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_13][2].value;
@@ -88,7 +88,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateNonCompliancePayable (penalty) {
+  static calculateNonCompliancePayable(penalty) {
     const grid = penalty;
     let total = 0;
 
@@ -104,7 +104,7 @@ class ScheduleSummaryContainer extends Component {
     return penalty;
   }
 
-  static calculateGasolinePayable (grid) {
+  static calculateGasolinePayable(grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_4][2].value;
@@ -126,7 +126,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateGasolineTotal (grid) {
+  static calculateGasolineTotal(grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_2][2].value;
@@ -162,7 +162,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculatePart3Payable (part3, credits = 0) {
+  static calculatePart3Payable(part3, credits = 0) {
     const grid = part3;
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
@@ -186,7 +186,7 @@ class ScheduleSummaryContainer extends Component {
     return grid;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -209,26 +209,57 @@ class ScheduleSummaryContainer extends Component {
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
   }
 
-  componentDidMount () {
-    if (this.props.loadedState) {
-      // this.restoreFromAutosaved();
-    } else if (!this.props.create) {
-      this.loadSchedules();
-    }
+  componentDidMount() {
+    this.componentWillReceiveProps(this.props);
   }
 
-  _calculatePart3 () {
-    let { part3, penalty } = this.state;
+  componentWillReceiveProps(nextProps, nextContext) {
 
-    if (!this.props.complianceReport) {
+    let sourceSummary = null;
+    let sourceScheduleA = null;
+
+    if (nextProps.scheduleState && nextProps.scheduleState.summary) {
+      // prefer fresh state
+      sourceSummary = nextProps.scheduleState.summary;
+    } else if (nextProps.complianceReport && nextProps.complianceReport.summary) {
+      // use server-side if not available
+      sourceSummary = nextProps.complianceReport.summary;
+    }
+
+    if (nextProps.scheduleState && nextProps.scheduleState.scheduleA) {
+      // prefer fresh state
+      sourceScheduleA = nextProps.scheduleState.scheduleA;
+    } else if (nextProps.complianceReport && nextProps.complianceReport.scheduleA) {
+      // use server-side if not available
+      sourceScheduleA = nextProps.complianceReport.scheduleA;
+    }
+
+    if (sourceSummary == null || sourceScheduleA == null) {
+      return;
+    }
+
+    this.populateSchedules(sourceSummary, sourceScheduleA);
+
+  }
+
+  _calculatePart3() {
+    let {part3, penalty} = this.state;
+
+    if (!this.props.scheduleState.scheduleB) {
+      return part3;
+    } else if (!this.props.complianceReport) {
       return part3;
     }
 
-    const { compliancePeriod, scheduleB } = this.props.complianceReport;
+    let {compliancePeriod, scheduleB} = this.props.complianceReport;
     const values = [];
     const promises = [];
     let totalCredits = 0;
     let totalDebits = 0;
+
+    if (this.props.scheduleState.scheduleB) {
+      scheduleB = this.props.scheduleState.scheduleB;
+    }
 
     if (!scheduleB) {
       return part3;
@@ -240,6 +271,9 @@ class ScheduleSummaryContainer extends Component {
       const promise = this.props.getCreditCalculation(selectedFuel.id, {
         compliance_period_id: compliancePeriod.id
       }).then(() => {
+
+        console.log(row);
+
         let creditCalculationValues = getCreditCalculationValues(
           values,
           selectedFuel.id
@@ -264,7 +298,7 @@ class ScheduleSummaryContainer extends Component {
           row.provisionOfTheAct
         );
 
-        const { determinationType } = selectedProvision;
+        const {determinationType} = selectedProvision;
 
         const carbonIntensityFuel = getDefaultCarbonIntensity(
           creditCalculationValues,
@@ -323,7 +357,7 @@ class ScheduleSummaryContainer extends Component {
       let maxValue = '';
 
       if (netTotal < 0) {
-        const { organizationBalance } = this.props.loggedInUser.organization;
+        const {organizationBalance} = this.props.loggedInUser.organization;
         maxValue = (netTotal * -1).toFixed(0);
 
         if (organizationBalance.validatedCredits < maxValue) {
@@ -340,7 +374,7 @@ class ScheduleSummaryContainer extends Component {
         }
       };
 
-      part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
+     // part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
 
       penalty[SCHEDULE_PENALTY.LINE_28][2] = {
         ...penalty[SCHEDULE_PENALTY.LINE_28][2],
@@ -359,17 +393,9 @@ class ScheduleSummaryContainer extends Component {
     return part3;
   }
 
-  loadSchedules () {
-    if (this.props.complianceReport) {
-      const { scheduleA, summary } = this.props.complianceReport;
-
-      this.populateSchedules(summary, scheduleA);
-    }
-  }
-
-  populateSchedules (summary, scheduleA = null) {
-    const { diesel, gasoline } = this.state;
-    let { part3, penalty } = this.state;
+  populateSchedules(summary, scheduleA = null) {
+    const {diesel, gasoline} = this.state;
+    let {part3, penalty} = this.state;
 
     part3 = this._calculatePart3();
 
@@ -611,7 +637,7 @@ class ScheduleSummaryContainer extends Component {
     });
   }
 
-  _handleCellsChanged (gridName, changes, addition = null) {
+  _handleCellsChanged(gridName, changes, addition = null) {
     let grid = this.state[gridName].map(row => [...row]);
 
     changes.forEach((change) => {
@@ -691,22 +717,26 @@ class ScheduleSummaryContainer extends Component {
     this.setState({
       [gridName]: grid
     });
+
   }
 
-  _handleDieselChanged (changes, addition = null) {
+  _handleDieselChanged(changes, addition = null) {
     this._handleCellsChanged('diesel', changes, addition);
   }
 
-  _handleGasolineChanged (changes, addition = null) {
+  _handleGasolineChanged(changes, addition = null) {
     this._handleCellsChanged('gasoline', changes, addition);
   }
 
-  _handlePart3Changed (changes, addition = null) {
+  _handlePart3Changed(changes, addition = null) {
     this._handleCellsChanged('part3', changes, addition);
   }
 
-  _gridStateToPayload (state) {
-    this.props.updateScheduleState({
+  _gridStateToPayload(state) {
+    let shouldUpdate = false;
+    const compareOn = ['dieselClassDeferred', 'dieselClassRetained', 'gasolineClassDeferred', 'gasolineClassRetained', 'creditsOffset'];
+
+    const nextState = {
       summary: {
         dieselClassDeferred: state.diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
         dieselClassRetained: state.diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
@@ -714,11 +744,31 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value
       }
-    });
+    };
+
+    const prevState = this.props.scheduleState.summary ? this.props.scheduleState.summary : null;
+    if (prevState == null) {
+      shouldUpdate = true;
+    } else {
+      for (const field of compareOn) {
+        if (prevState[field] !== nextState.summary[field]) {
+          if (!(prevState[field] == null && typeof nextState.summary[field] === typeof undefined)) {
+            shouldUpdate = true;
+            break;
+          }
+        }
+      }
+    }
+
+    if (shouldUpdate) {
+      this.props.updateScheduleState({
+        summary: nextState.summary
+      });
+    }
   }
 
-  render () {
-    let { period } = this.props;
+  render() {
+    let {period} = this.props;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
