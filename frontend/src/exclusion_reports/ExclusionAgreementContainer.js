@@ -7,7 +7,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { transactionTypes } from '../actions/transactionTypes';
+import Select from '../app/components/Spreadsheet/Select';
+import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import ExclusionAgreementPage from './components/ExclusionAgreementPage';
+import { EXCLUSION_AGREEMENT } from '../constants/schedules/exclusionReportColumns';
 
 class ExclusionAgreementContainer extends Component {
   static addHeaders () {
@@ -25,9 +29,13 @@ class ExclusionAgreementContainer extends Component {
           readOnly: true,
           value: 'Fuel Type'
         }, {
-          className: 'transaction-partner',
+          className: 'organization',
           readOnly: true,
-          value: 'Legal Name and Address of Transaction Partner'
+          value: 'Legal Name of Transaction Partner'
+        }, {
+          className: 'address',
+          readOnly: true,
+          value: 'Address of Transaction Partner'
         }, {
           className: 'quantity',
           readOnly: true,
@@ -37,7 +45,7 @@ class ExclusionAgreementContainer extends Component {
           readOnly: true,
           value: 'Units'
         }, {
-          className: 'quantity',
+          className: 'quantity-not-sold',
           readOnly: true,
           value: 'Quantity not sold or supplied within the Compliance Period'
         }, {
@@ -61,6 +69,7 @@ class ExclusionAgreementContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.loadTransactionTypes();
     this._addRow(5);
   }
 
@@ -76,13 +85,29 @@ class ExclusionAgreementContainer extends Component {
         readOnly: true,
         value: this.rowNumber
       }, {
-        attributes: {},
-        className: 'text'
+        className: 'text',
+        dataEditor: Select,
+        getOptions: () => !this.props.transactionTypes.isFetching &&
+          this.props.transactionTypes.items,
+        mapping: {
+          key: 'id',
+          value: 'theType'
+        }
+      }, { // fuel type
+        className: 'text',
+        dataEditor: Select,
+        getOptions: () => this.props.referenceData.approvedFuels.filter(fuel => (
+          fuel.creditCalculationOnly === false
+        )),
+        mapping: {
+          key: 'id',
+          value: 'name'
+        }
       }, {
         attributes: {},
-        className: 'text'
+        className: 'text',
+        dataEditor: OrganizationAutocomplete
       }, {
-        attributes: {},
         className: 'text'
       }, {
         attributes: {},
@@ -122,6 +147,15 @@ class ExclusionAgreementContainer extends Component {
         ...grid[row][col],
         value
       };
+
+      if (col === EXCLUSION_AGREEMENT.LEGAL_NAME) {
+        if (cell.attributes.address) {
+          grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
+            ...grid[row][EXCLUSION_AGREEMENT.ADDRESS],
+            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
+          };
+        }
+      }
     });
 
     this.setState({
@@ -154,17 +188,32 @@ ExclusionAgreementContainer.defaultProps = {
 };
 
 ExclusionAgreementContainer.propTypes = {
+  create: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   loadedState: PropTypes.any,
-  create: PropTypes.bool.isRequired,
+  loadTransactionTypes: PropTypes.func.isRequired,
   period: PropTypes.string.isRequired,
-  updateScheduleState: PropTypes.func.isRequired
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  transactionTypes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
+  transactionTypes: {
+    isFetching: state.rootReducer.transactionTypes.isFinding,
+    items: state.rootReducer.transactionTypes.items
+  },
+  referenceData: {
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
+  }
 });
 
 const mapDispatchToProps = {
+  loadTransactionTypes: transactionTypes.find
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExclusionAgreementContainer);

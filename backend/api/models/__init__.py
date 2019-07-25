@@ -71,5 +71,6 @@ from . import NotionalTransferType
 from . import CarbonIntensityDeterminationType
 from . import ProvisionOfTheAct
 from . import ApprovedFuelProvision
+from . import TransactionType
 
 patch_fields()
