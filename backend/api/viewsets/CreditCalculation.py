@@ -1,6 +1,6 @@
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, mixins
 from rest_framework.response import Response
 
 from auditable.views import AuditableMixin
@@ -11,7 +11,7 @@ from api.permissions.CreditCalculation import \
 from api.serializers.CreditCalculation import CreditCalculationSerializer
 
 
-class CreditCalculationViewSet(AuditableMixin, viewsets.GenericViewSet):
+class CreditCalculationViewSet(AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """

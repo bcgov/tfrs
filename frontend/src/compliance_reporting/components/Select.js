@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 class Select extends PureComponent {
   constructor (props) {
     super(props);
-
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -19,7 +18,7 @@ class Select extends PureComponent {
   render () {
     const options = this.props.cell.getOptions(this.props.row);
     const { value, onKeyDown } = this.props;
-    const { key: optionKey, value: optionValue } = this.props.cell.mapping;
+    const { key: optionKey, value: optionValue, display: optionDisplay } = this.props.cell.mapping;
 
     return (
       <select
@@ -32,7 +31,9 @@ class Select extends PureComponent {
         <option key="0" value="" default />
         {options &&
         options.map(mode => (
-          <option key={mode[optionKey]} value={mode[optionValue]}>{mode[optionValue]}</option>
+          <option key={mode[optionKey]} value={mode[optionValue]}>
+            {optionDisplay ? mode[optionDisplay] : mode[optionValue]}
+          </option>
         ))}
       </select>
     );
@@ -48,13 +49,14 @@ Select.propTypes = {
     getOptions: PropTypes.func,
     mapping: PropTypes.shape({
       key: PropTypes.string,
-      value: PropTypes.string
+      value: PropTypes.string,
+      display: PropTypes.string
     }).isRequired
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   row: PropTypes.number.isRequired,
-  value: PropTypes.string
+  value: PropTypes.any
 };
 
 export default Select;
