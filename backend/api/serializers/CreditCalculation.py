@@ -20,15 +20,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 from django.db.models import Q
-
+from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.FuelCode import FuelCode
 from api.serializers.FuelCode import FuelCodeSerializer
 from api.services.CreditCalculationService import CreditCalculationService
+from .FuelClass import FuelClassSerializer
+from .ProvisionOfTheAct import ProvisionOfTheActSerializer
+from .UnitOfMeasure import UnitOfMeasureSerializer
 
 
 class CreditCalculationSerializer(serializers.ModelSerializer):
@@ -41,6 +43,9 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
     energy_density = serializers.SerializerMethodField()
     energy_effectiveness_ratio = serializers.SerializerMethodField()
     fuel_codes = serializers.SerializerMethodField()
+    fuel_classes = serializers.SerializerMethodField()
+    provisions = serializers.SerializerMethodField()
+    unit_of_measure = UnitOfMeasureSerializer(read_only=True)
 
     def __init__(self, *args, **kwargs):
         super(CreditCalculationSerializer, self).__init__(
@@ -48,10 +53,17 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         )
 
         request = self.context.get('request')
-        compliance_period_id = request.GET.get('compliance_period_id', None)
-        compliance_period_obj = CompliancePeriod.objects.get(
-            id=compliance_period_id
-        )
+        compliance_period_description = request.GET.get('compliance_period', None)
+        if compliance_period_description:
+            compliance_period_obj = CompliancePeriod.objects.get(
+                description=compliance_period_description
+            )
+            compliance_period_id = compliance_period_obj.id
+        else:
+            compliance_period_id = request.GET.get('compliance_period_id', None)
+            compliance_period_obj = CompliancePeriod.objects.get(
+                id=compliance_period_id
+            )
 
         self.compliance_period_id = compliance_period_id
         self.effective_date = compliance_period_obj.effective_date
@@ -144,7 +156,9 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
             Q(effective_date__gte=self.effective_date,
               effective_date__lte=self.expiration_date) |
             Q(expiry_date__gte=self.effective_date,
-              expiry_date__lte=self.expiration_date)
+              expiry_date__lte=self.expiration_date) |
+            Q(effective_date__lte=self.effective_date,
+              expiry_date__gte=self.expiration_date)
         ).order_by(
             'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
         )
@@ -153,9 +167,34 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
 
         return serializer.data
 
+    def get_fuel_classes(self, obj):
+        """
+        Fuel classes attached to the approved fuel.
+        """
+        serializer = FuelClassSerializer(
+            obj.fuel_classes.order_by('fuel_class'),
+            many=True,
+            read_only=True
+        )
+
+        return serializer.data
+
+    def get_provisions(self, obj):
+        """
+        Provisions allowed for the approved fuel
+        """
+        serializer = ProvisionOfTheActSerializer(
+            obj.provisions.order_by('display_order'),
+            many=True,
+            read_only=True
+        )
+
+        return serializer.data
+
     class Meta:
         model = ApprovedFuel
         fields = (
             'id', 'name', 'carbon_intensity_limit', 'default_carbon_intensity',
-            'energy_density', 'energy_effectiveness_ratio', 'fuel_codes'
+            'energy_density', 'energy_effectiveness_ratio', 'fuel_codes',
+            'fuel_classes', 'provisions', 'unit_of_measure'
         )

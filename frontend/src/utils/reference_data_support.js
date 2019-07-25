@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import Loading from "../app/components/Loading";
-import {connect} from "react-redux";
+import Loading from '../app/components/Loading';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import getCompliancePeriods from '../actions/compliancePeriodsActions';
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -8,17 +10,24 @@ function getDisplayName(WrappedComponent) {
 
 function withReferenceData(config) {
   return function (WrappedComponent) {
-
     class ReferenceDataSupport extends Component {
+      componentDidMount() {
+        if (config && config.includeCompliancePeriods) {
+          this.props.getCompliancePeriods();
+        }
+      }
 
       render() {
-
         if (this.props.referenceData.isFetching) {
           return (<Loading/>);
-        } else {
-          return (<WrappedComponent {...this.props}/>)
         }
-
+        if (config && config.includeCompliancePeriods) {
+          // wait for compliance periods
+          if (this.props.compliancePeriods.isFetching) {
+            return (<Loading/>);
+          }
+        }
+        return (<WrappedComponent {...this.props} />);
       }
     }
 
@@ -26,17 +35,16 @@ function withReferenceData(config) {
       .displayName = `ReferenceDataSupport(${getDisplayName(WrappedComponent)})`;
 
     const
-      mapStateToProps = (state) => {
-        return {
-          referenceData: state.rootReducer.referenceData
-        }
-      };
+      mapStateToProps = state => ({
+        referenceData: state.rootReducer.referenceData,
+        compliancePeriods: state.rootReducer.compliancePeriods
+      });
+    const mapDispatchToProps = dispatch => ({
+      getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
+    });
 
-
-    return connect(mapStateToProps, null)(ReferenceDataSupport);
-  }
-
-};
-
+    return connect(mapStateToProps, mapDispatchToProps)(ReferenceDataSupport);
+  };
+}
 
 export default withReferenceData;

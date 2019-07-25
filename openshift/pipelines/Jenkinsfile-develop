@@ -1,6 +1,7 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.18"
+tfrsRelease="v1.4.19"
+def runFunctionalTest = input id: 'runFunctionalTest', message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
@@ -115,10 +116,16 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 
+        //Functional Test
+        if(runFunctionalTest == 'Yes') {
+            echo "confirmed to run functional test"
+            prepareOtherStages.functionalTestStage().call()
+        }
+
         //Refresh SchemaSpy
         prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
 
-        //Ask for confirmation before take down maintenance page.
+        //Ask for confirmation before taking down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page").call()
         
         //Take down Maintenance Page

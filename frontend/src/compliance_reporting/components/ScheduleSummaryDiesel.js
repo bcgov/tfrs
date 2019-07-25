@@ -64,7 +64,15 @@ class ScheduleSummaryDiesel {
       }, {
         readOnly: true,
         value: 'Line 17'
-      }, numericInput], // line 17
+      }, {
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
+      }], // line 17
       [{ // line 18
         className: 'text',
         readOnly: true,
@@ -82,7 +90,15 @@ class ScheduleSummaryDiesel {
       }, {
         readOnly: true,
         value: 'Line 19'
-      }, numericInput], // line 19
+      }, {
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
+      }], // line 19
       [{ // line 20
         className: 'text',
         readOnly: true,
