@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import AutocompletedInput from '../../app/components/AutocompletedInput';
+import AutocompletedInput from '../AutocompletedInput';
 
 class OrganizationAutocomplete extends PureComponent {
   constructor (props) {

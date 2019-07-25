@@ -3,19 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
-import Select from './components/Select';
-import {SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
-import {numericInput} from './components/Columns';
+import Select from '../app/components/Spreadsheet/Select';
+import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
+import { numericInput } from './components/Columns';
 
 class ScheduleDContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -33,7 +33,7 @@ class ScheduleDContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.create || !this.props.complianceReport.scheduleD) {
       this._addSheet();
     } else if (this.props.scheduleState.scheduleD) {
@@ -44,50 +44,18 @@ class ScheduleDContainer extends Component {
     }
   }
 
-  loadInitialState() {
-    this.rowNumber = 1;
-
-    let sheets = [];
-
-    for (let i = 0; i < this.props.complianceReport.scheduleD.sheets.length; i += 1) {
-
-      let sheet = {
-        ...this.props.complianceReport.scheduleD.sheets[i]
-      };
-      sheet.inputs = [];
-      sheet.outputs = [];
-
-      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].inputs.length; j++) {
-        sheet.inputs.push({...this.props.complianceReport.scheduleD.sheets[i].inputs[j]});
-      }
-      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].outputs.length; j++) {
-        sheet.outputs.push({...this.props.complianceReport.scheduleD.sheets[i].outputs[j]});
-      }
-
-      sheets.push(sheet);
-      this.props.updateScheduleState({
-        scheduleD: {
-          sheets
-        }
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {sheets} = this.state;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { sheets } = this.state;
 
     if (nextProps.scheduleState.scheduleD && nextProps.scheduleState.scheduleD.sheets) {
-
       if ((sheets.length) < nextProps.scheduleState.scheduleD.sheets.length) {
         this._addSheet(nextProps.scheduleState.scheduleD.sheets.length - (sheets.length));
       }
 
-      for (let i = 0; i < nextProps.scheduleState.scheduleD.sheets.length; i++) {
+      for (let i = 0; i < nextProps.scheduleState.scheduleD.sheets.length; i += 1) {
         const sheet = nextProps.scheduleState.scheduleD.sheets[i];
         if (sheets.length < i) {
-          sheets.push(
-            this._addHeaders(sheets.length)
-          );
+          sheets.push(this._addHeaders(sheets.length));
         }
 
         sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType;
@@ -131,13 +99,41 @@ class ScheduleDContainer extends Component {
         }
 
         sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output);
-
       }
-      this.setState({sheets});
+
+      this.setState({ sheets });
     }
   }
 
-  _addHeaders(id) {
+  loadInitialState () {
+    this.rowNumber = 1;
+
+    const sheets = [];
+
+    for (let i = 0; i < this.props.complianceReport.scheduleD.sheets.length; i += 1) {
+      const sheet = {
+        ...this.props.complianceReport.scheduleD.sheets[i]
+      };
+      sheet.inputs = [];
+      sheet.outputs = [];
+
+      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].inputs.length; j += 1) {
+        sheet.inputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].inputs[j] });
+      }
+      for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].outputs.length; j += 1) {
+        sheet.outputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].outputs[j] });
+      }
+
+      sheets.push(sheet);
+      this.props.updateScheduleState({
+        scheduleD: {
+          sheets
+        }
+      });
+    }
+  }
+
+  _addHeaders (id) {
     return {
       grid: [
         [{
@@ -204,8 +200,8 @@ class ScheduleDContainer extends Component {
     };
   }
 
-  _addSheet(sheetsToAdd = 1) {
-    const {sheets} = this.state;
+  _addSheet (sheetsToAdd = 1) {
+    const { sheets } = this.state;
 
     for (let i = 0; i < sheetsToAdd; i += 1) {
       const sheet = this._addHeaders(sheets.length);
@@ -218,7 +214,7 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _getFuelClasses(row, id) {
+  _getFuelClasses (row, id) {
     const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -231,8 +227,8 @@ class ScheduleDContainer extends Component {
     return [];
   }
 
-  _handleSheetChanged(grid, index) {
-    const {sheets} = this.state;
+  _handleSheetChanged (grid, index) {
+    const { sheets } = this.state;
 
     sheets[index] = {
       ...sheets[index],
@@ -248,7 +244,7 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _gridStateToPayload(state) {
+  _gridStateToPayload (state) {
     const sheets = [];
 
     for (let i = 0; i < state.sheets.length; i += 1) {
@@ -304,14 +300,14 @@ class ScheduleDContainer extends Component {
     });
   }
 
-  _setActiveSheet(id) {
+  _setActiveSheet (id) {
     this.setState({
       activeSheet: id
     });
   }
 
-  renderSheets() {
-    const {sheets} = this.state;
+  renderSheets () {
+    const { sheets } = this.state;
 
     return (
       <div className="page_schedule spreadsheet-component" key="sheets">
@@ -340,7 +336,7 @@ class ScheduleDContainer extends Component {
     );
   }
 
-  render() {
+  render () {
     return ([
       this.renderSheets()
     ]);
@@ -360,6 +356,11 @@ ScheduleDContainer.propTypes = {
   match: PropTypes.shape({}),
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  scheduleState: PropTypes.shape({
+    scheduleD: PropTypes.shape({
+      sheets: PropTypes.arrayOf(PropTypes.shape())
+    })
   }).isRequired,
   updateScheduleState: PropTypes.func.isRequired
 };

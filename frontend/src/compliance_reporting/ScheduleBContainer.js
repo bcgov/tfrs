@@ -7,9 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Input from './components/Input';
-import Select from './components/Select';
-import { calculateCredit } from './components/ScheduleFunctions';
+import Input from '../app/components/Spreadsheet/Input';
+import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
@@ -102,7 +101,7 @@ class ScheduleBContainer extends Component {
     super(props);
 
     this.state = {
-      ...ScheduleBContainer.addHeaders(),
+      ...ScheduleBContainer.addHeaders()
     };
 
     this.rowNumber = 1;
@@ -128,7 +127,6 @@ class ScheduleBContainer extends Component {
     }
   }
 
-
   componentWillReceiveProps (nextProps) {
     const { grid } = this.state;
 
@@ -140,7 +138,7 @@ class ScheduleBContainer extends Component {
       this._addRow(nextProps.scheduleState.scheduleB.records.length - (grid.length - 2));
     }
 
-    for (let i = 0; i < nextProps.scheduleState.scheduleB.records.length; i++) {
+    for (let i = 0; i < nextProps.scheduleState.scheduleB.records.length; i += 1) {
       const record = nextProps.scheduleState.scheduleB.records[i];
       const row = 2 + i;
 
@@ -187,12 +185,15 @@ class ScheduleBContainer extends Component {
   recomputeDerivedState (props, state) {
     const { grid } = state;
 
-    for (let i = 2; i < grid.length; i++) {
+    for (let i = 2; i < grid.length; i += 1) {
       const row = i;
 
       const context = {
         compliancePeriod: props.period,
-        availableScheduleDFuels: ComplianceReportingService.getAvailableScheduleDFuels(props.complianceReport, props.scheduleState)
+        availableScheduleDFuels: ComplianceReportingService.getAvailableScheduleDFuels(
+          props.complianceReport,
+          props.scheduleState
+        )
       };
 
       const values = {
@@ -214,24 +215,26 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = false;
       }
 
-      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () => (response.parameters.provisions);
-      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].selectedProvision = response.outputs.selectedProvision;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () =>
+        (response.parameters.provisions);
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].selectedProvision =
+      response.outputs.selectedProvision;
 
       if (response.parameters.singleProvisionAvailable) {
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = response.inputs.provisionOfTheAct;
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = true;
       } else {
-
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = false;
-
       }
+
       if (response.parameters.fuelCodeSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
         grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
       } else if (response.parameters.scheduleDSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
-        grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.scheduleDSelections);
+        grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () =>
+          (response.parameters.scheduleDSelections);
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
       } else {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => [];
@@ -252,7 +255,8 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel;
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true;
       }
-      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue = response.outputs.customIntensityValue;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue =
+      response.outputs.customIntensityValue;
 
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent;
       grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits;
@@ -318,7 +322,8 @@ class ScheduleBContainer extends Component {
           display: 'descriptiveName'
         },
         valueViewer: (props) => {
-          const selectedOption = props.cell.getOptions().find(e => String(e.id) === String(props.value));
+          const selectedOption = props.cell.getOptions().find(e =>
+            String(e.id) === String(props.value));
           if (selectedOption) {
             return <span>{selectedOption.descriptiveName}</span>;
           }
@@ -451,7 +456,6 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
         grid[row][SCHEDULE_B.FUEL_CODE].value = null;
       }
-      
     });
 
     this.setState({
@@ -496,7 +500,7 @@ class ScheduleBContainer extends Component {
       shouldUpdate = true;
     } else {
       const compareOn = ['fuelCode', 'fuelType', 'fuelClass', 'provisionOfTheAct', 'quantity', 'intensity', 'scheduleD_sheetIndex'];
-      for (let i = 0; i < records.length; i++) {
+      for (let i = 0; i < records.length; i += 1) {
         const prevRecord = this.props.scheduleState.scheduleB.records[i];
         for (const field of compareOn) {
           if (prevRecord[field] !== records[i][field]) {
@@ -550,6 +554,11 @@ ScheduleBContainer.propTypes = {
   period: PropTypes.string.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  scheduleState: PropTypes.shape({
+    scheduleB: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    })
   }).isRequired,
   updateScheduleState: PropTypes.func.isRequired
 };
