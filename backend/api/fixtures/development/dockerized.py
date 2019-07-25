@@ -29,6 +29,7 @@ from api.models.PetroleumCarbonIntensity import PetroleumCarbonIntensity
 from api.models.PetroleumCarbonIntensityCategory import PetroleumCarbonIntensityCategory
 from api.models.ProvisionOfTheAct import ProvisionOfTheAct
 from api.models.Role import Role
+from api.models.TransactionType import TransactionType
 from api.models.User import User
 from api.models.UserRole import UserRole
 
@@ -629,5 +630,15 @@ class DockerEnvironment(OperationalDataScript):
 
         ApprovedFuelProvision.objects.bulk_create(obj)
 
+        TransactionType.objects.create(
+            the_type="Purchased",
+            display_order="1",
+            effective_date="2017-01-01"
+        )
+        TransactionType.objects.create(
+            the_type="Sold",
+            display_order="2",
+            effective_date="2017-01-01"
+        )
 
 script_class = DockerEnvironment
