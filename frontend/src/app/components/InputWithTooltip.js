@@ -13,6 +13,8 @@ import {
   TEXT_ERROR_NO_DECIMALS
 } from '../../constants/langEnUs';
 
+import { formatNumeric } from '../../utils/functions';
+
 class InputWithTooltip extends Component {
   constructor (props, context) {
     super(props, context);
@@ -34,7 +36,7 @@ class InputWithTooltip extends Component {
       let { value } = this.props;
 
       value = String(value).replace(/,/g, '');
-      value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      value = formatNumeric(Number(value), this.props.dataNumberToFixed);
 
       return value;
     }
@@ -75,7 +77,7 @@ class InputWithTooltip extends Component {
       this.target.value = this.state.currentValue;
       showTooltip = true;
 
-      tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
+      tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', formatNumeric(Number(this.props.maxValue), this.props.dataNumberToFixed));
     }
 
     const parsed = event.target.value.split('.');
@@ -217,6 +219,9 @@ class InputWithTooltip extends Component {
             placement="top"
           >
             {this.state.tooltipMessage}
+            {this.props.additionalTooltip !== '' &&
+              <div>{this.props.additionalTooltip}</div>
+            }
           </Tooltip>
         </Overlay>
       </div>
@@ -226,6 +231,7 @@ class InputWithTooltip extends Component {
 
 InputWithTooltip.defaultProps = {
   addCommas: false,
+  additionalTooltip: '',
   allowNegative: false,
   className: 'form-control',
   dataNumberToFixed: 0,
@@ -244,6 +250,7 @@ InputWithTooltip.defaultProps = {
 
 InputWithTooltip.propTypes = {
   addCommas: PropTypes.bool,
+  additionalTooltip: PropTypes.string,
   allowNegative: PropTypes.bool,
   className: PropTypes.string,
   dataNumberToFixed: PropTypes.number,
