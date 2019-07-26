@@ -11,6 +11,10 @@ Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supportin
 
 ## Project Status
 Develop Branch:  
+* [![Functional Test Status](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/job/browserstack/badge/icon)](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/job/browserstack/)
+
+
+
 * Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools/mem-tfrs-tools-develop-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools/mem-tfrs-tools-develop-tfrs-pipeline)     Code Quality: [![Quality Gate](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/api/badges/gate?key=tfrs-backend&template=ROUNDED)](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/dashboard?id=tfrs-backend) Code Coverage: [![Quality Gate](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/api/badges/measure?key=tfrs-backend&template=ROUNDED&metric=coverage&template=ROUNDED)](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-backend&metric=coverage&view=treemap)  
 * Frontend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools/mem-tfrs-tools-develop-client-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools/mem-tfrs-tools-develop-client-pipeline)     Code Quality: [![Quality Gate](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/api/badges/gate?key=tfrs-frontend&template=ROUNDED)](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/dashboard?id=tfrs-frontend) Code Coverage: [![Quality Gate](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/api/badges/measure?key=tfrs-frontend&template=ROUNDED&metric=coverage&template=ROUNDED)](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-frontend&metric=coverage&view=treemap)
 
