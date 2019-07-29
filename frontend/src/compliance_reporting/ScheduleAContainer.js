@@ -73,11 +73,11 @@ class ScheduleAContainer extends Component {
     this.props.loadFuelClasses();
     this.props.loadNotionalTransferTypes();
 
-    if (this.props.create || !this.props.complianceReport.scheduleA) {
-      this._addRow(5);
-    } else if (this.props.scheduleState.scheduleA) {
+    if (this.props.scheduleState.scheduleA) {
       // we already have the state. don't load it. just render it.
-    } else {
+    } else if (this.props.create || !this.props.complianceReport.scheduleA) {
+      this._addRow(5);
+    } else  {
       this.loadInitialState();
     }
   }
