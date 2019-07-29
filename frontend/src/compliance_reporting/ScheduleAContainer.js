@@ -3,21 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {fuelClasses} from '../actions/fuelClasses';
-import {notionalTransferTypes} from '../actions/notionalTransferTypes';
-import Input from './components/Input';
-import OrganizationAutocomplete from './components/OrganizationAutocomplete';
-import Select from './components/Select';
+import { fuelClasses } from '../actions/fuelClasses';
+import { notionalTransferTypes } from '../actions/notionalTransferTypes';
+import Input from '../app/components/Spreadsheet/Input';
+import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
+import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import {getQuantity} from '../utils/functions';
-import {SCHEDULE_A} from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_A } from '../constants/schedules/scheduleColumns';
 
 class ScheduleAContainer extends Component {
-  static addHeaders() {
+  static addHeaders () {
     return {
       grid: [
         [{
@@ -58,7 +57,7 @@ class ScheduleAContainer extends Component {
     };
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = ScheduleAContainer.addHeaders();
@@ -70,7 +69,7 @@ class ScheduleAContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadFuelClasses();
     this.props.loadNotionalTransferTypes();
 
@@ -83,32 +82,15 @@ class ScheduleAContainer extends Component {
     }
   }
 
-  loadInitialState() {
-    this.rowNumber = 1;
-
-    let records = [];
-
-    for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
-
-      records.push({...this.props.complianceReport.scheduleA.records[i]});
-      this.props.updateScheduleState({
-        scheduleA: {
-          records
-        }
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {grid} = this.state;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { grid } = this.state;
 
     if (nextProps.scheduleState.scheduleA && nextProps.scheduleState.scheduleA.records) {
-
       if ((grid.length - 1) < nextProps.scheduleState.scheduleA.records.length) {
         this._addRow(nextProps.scheduleState.scheduleA.records.length - (grid.length - 1));
       }
 
-      for (let i = 0; i < nextProps.scheduleState.scheduleA.records.length; i++) {
+      for (let i = 0; i < nextProps.scheduleState.scheduleA.records.length; i += 1) {
         const record = nextProps.scheduleState.scheduleA.records[i];
 
         const qty = Number(record.quantity);
@@ -117,7 +99,7 @@ class ScheduleAContainer extends Component {
         grid[1 + i][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress;
         grid[1 + i][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass;
         grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
-        grid[1 + i][SCHEDULE_A.QUANTITY].value = isNaN(qty) ? '' : qty;
+        grid[1 + i][SCHEDULE_A.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
       }
     }
 
@@ -126,8 +108,23 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _addRow(numberOfRows = 1) {
-    const {grid} = this.state;
+  loadInitialState () {
+    this.rowNumber = 1;
+
+    const records = [];
+
+    for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
+      records.push({ ...this.props.complianceReport.scheduleA.records[i] });
+      this.props.updateScheduleState({
+        scheduleA: {
+          records
+        }
+      });
+    }
+  }
+
+  _addRow (numberOfRows = 1) {
+    const { grid } = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -159,14 +156,15 @@ class ScheduleAContainer extends Component {
         }
       }, {
         attributes: {
-          dataNumberToFixed: 2,
+          addCommas: true,
+          dataNumberToFixed: 0,
           maxLength: '20',
-          step: '0.01'
+          step: '1'
         },
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const {value} = props;
+          const { value } = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }]);
@@ -179,7 +177,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _calculateTotal(grid) {
+  _calculateTotal (grid) {
     const totals = {
       diesel: {
         received: 0,
@@ -216,7 +214,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _handleCellsChanged(changes, addition = null) {
+  _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -236,7 +234,7 @@ class ScheduleAContainer extends Component {
       if (col === SCHEDULE_A.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: (value === '') ? '' : getQuantity(value)
+          value: value.replace(/,/g, '')
         };
       }
 
@@ -261,7 +259,7 @@ class ScheduleAContainer extends Component {
     this._calculateTotal(grid);
   }
 
-  _gridStateToPayload(state) {
+  _gridStateToPayload (state) {
     const startingRow = 1;
 
     const records = [];
@@ -291,7 +289,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  render() {
+  render () {
     return ([
       <SchedulesPage
         addRow={this._addRow}
@@ -342,6 +340,11 @@ ScheduleAContainer.propTypes = {
   }),
   create: PropTypes.bool.isRequired,
   period: PropTypes.string.isRequired,
+  scheduleState: PropTypes.shape({
+    scheduleA: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    })
+  }).isRequired,
   updateScheduleState: PropTypes.func.isRequired
 };
 

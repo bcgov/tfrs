@@ -167,7 +167,7 @@ class SpreadSheetBuilder(object):
         row_index = 0
 
         columns = [
-            "ID", "Company Name", "Credit Balance", "Status", "Actions"
+            "ID", "Organization Name", "Credit Balance", "Status", "Actions"
         ]
 
         header_style = xlwt.easyxf('font: bold on')
