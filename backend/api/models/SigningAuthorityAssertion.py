@@ -54,6 +54,7 @@ class SigningAuthorityAssertion(Auditable, DisplayOrder, EffectiveDates):
 
     description = models.CharField(
         choices=[(d, d.name) for d in AssertionModules],
+        default="credit_trade",
         max_length=50,
         blank=False,
         null=False,
