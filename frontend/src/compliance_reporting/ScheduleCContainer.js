@@ -81,7 +81,7 @@ class ScheduleCContainer extends Component {
 
     if (this.props.scheduleState.scheduleC) {
       // we already have the state. don't load it. just render it.
-    } else if (this.props.create || !this.props.complianceReport.scheduleC) {
+    } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);
     } else  {
       this.loadInitialState();
@@ -388,7 +388,6 @@ ScheduleCContainer.propTypes = {
     approvedFuels: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool
   }).isRequired,
-  create: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
     scheduleC: PropTypes.shape()
   }),
