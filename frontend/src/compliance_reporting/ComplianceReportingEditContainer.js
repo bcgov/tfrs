@@ -66,13 +66,18 @@ class ComplianceReportingEditContainer extends Component {
 
     this.edit = document.location.pathname.indexOf('/edit/') >= 0;
     this._updateScheduleState = this._updateScheduleState.bind(this);
-    this._updateAutosaveState = this._updateAutosaveState.bind(this);
     this.loadData = this.loadData.bind(this);
 
-    this.state = {
+    let initialState = {
       schedules: {},
-      autosaveState: {}
     };
+    if (props.loadedState) {
+      initialState = {
+        ...props.loadedState
+      }
+    }
+
+    this.state = initialState;
   }
 
   componentDidMount() {
@@ -119,6 +124,14 @@ class ComplianceReportingEditContainer extends Component {
         ...mergedState
       }
     });
+
+    this.props.updateStateToSave({
+        schedules: {
+          ...schedules,
+          ...mergedState
+        }
+      }
+    );
   }
 
   _handleDelete() {
@@ -158,18 +171,6 @@ class ComplianceReportingEditContainer extends Component {
 
   loadData() {
     this.props.getComplianceReport(this.props.match.params.id);
-  }
-
-  _updateAutosaveState(tab, state) {
-    const autosaveState = {
-      ...this.state.autosaveState,
-      tab: state
-    };
-    this.setState({
-      autosaveState
-    });
-
-    this.props.updateStateToSave(autosaveState);
   }
 
   render() {
@@ -213,9 +214,6 @@ class ComplianceReportingEditContainer extends Component {
         loggedInUser={this.props.loggedInUser}
         scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
-        updateAutosaveState={(state) => {
-          this._updateAutosaveState(tab, state);
-        }}
       />,
       <ScheduleButtons
         edit={this.edit}
