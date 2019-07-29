@@ -4,8 +4,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import history from '../../app/History';
 import ComplianceReportingTable from './ComplianceReportingTable';
 
 const ComplianceReportingPage = (props) => {
@@ -37,10 +35,7 @@ const ComplianceReportingPage = (props) => {
                 <li key={compliancePeriod.description}>
                   <button
                     onClick={() => {
-                      const route = COMPLIANCE_REPORTING.ADD.replace(':period', compliancePeriod.description)
-                        .replace(':tab', 'intro');
-
-                      history.push(route);
+                      props.createComplianceReport(compliancePeriod.description);
                     }}
                     type="button"
                   >
@@ -69,6 +64,7 @@ ComplianceReportingPage.defaultProps = {
 };
 
 ComplianceReportingPage.propTypes = {
+  createComplianceReport: PropTypes.func.isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,

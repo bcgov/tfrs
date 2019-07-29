@@ -75,7 +75,7 @@ class ScheduleAContainer extends Component {
 
     if (this.props.scheduleState.scheduleA) {
       // we already have the state. don't load it. just render it.
-    } else if (this.props.create || !this.props.complianceReport.scheduleA) {
+    } else if (!this.props.complianceReport.scheduleA) {
       this._addRow(5);
     } else  {
       this.loadInitialState();
@@ -338,7 +338,6 @@ ScheduleAContainer.propTypes = {
   complianceReport: PropTypes.shape({
     scheduleA: PropTypes.shape()
   }),
-  create: PropTypes.bool.isRequired,
   period: PropTypes.string.isRequired,
   scheduleState: PropTypes.shape({
     scheduleA: PropTypes.shape({

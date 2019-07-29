@@ -3,26 +3,61 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
-import { complianceReporting } from '../actions/complianceReporting';
+import {complianceReporting} from '../actions/complianceReporting';
 import CONFIG from '../config';
+import history from "../app/History";
+import COMPLIANCE_REPORTING from "../constants/routes/ComplianceReporting";
+import toastr from "../utils/toastr";
+import {toastr as reduxToastr} from 'react-redux-toastr';
 
 class ComplianceReportingContainer extends Component {
-  componentDidMount () {
+  constructor(props) {
+    super(props);
+    this.createComplianceReport = this.createComplianceReport.bind(this);
+  }
+
+  componentDidMount() {
     this.loadData();
   }
 
-  loadData () {
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
+      if (nextProps.complianceReporting.success) {
+        console.log(nextProps.complianceReporting.item);
+        history.push(COMPLIANCE_REPORTING.EDIT
+          .replace(':id', nextProps.complianceReporting.item.id)
+          .replace(':tab', 'intro')
+        );
+        toastr.complianceReporting('Created');
+      } else {
+        reduxToastr.error('Error saving');
+      }
+    }
+  }
+
+  loadData() {
     this.props.getCompliancePeriods();
     this.props.getComplianceReports();
   }
 
-  render () {
+  createComplianceReport(compliancePeriodDescription) {
+    console.log(compliancePeriodDescription);
+    const payload = {
+      status: 'Draft',
+      type: 'Compliance Report',
+      compliancePeriod: compliancePeriodDescription
+    };
+
+    this.props.createComplianceReport(payload);
+  }
+
+  render() {
     const currentYear = new Date().getFullYear();
     const currentEffectiveDate = `${currentYear}-01-01`;
 
@@ -37,6 +72,7 @@ class ComplianceReportingContainer extends Component {
           items: this.props.complianceReports.items
         }}
         loggedInUser={this.props.loggedInUser}
+        createComplianceReport={this.createComplianceReport}
         title="Compliance Reporting"
       />
     );
@@ -51,7 +87,20 @@ ComplianceReportingContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()),
     isFinding: PropTypes.bool
   }).isRequired,
+  complianceReporting: PropTypes.shape({
+    isCreating: PropTypes.bool,
+    success: PropTypes.bool,
+    item: PropTypes.shape({
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ])
+    }),
+  }),
   getCompliancePeriods: PropTypes.func.isRequired,
+  createComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired
 };
@@ -59,12 +108,19 @@ ComplianceReportingContainer.propTypes = {
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items,
   complianceReports: state.rootReducer.complianceReporting,
+  complianceReporting: {
+    isCreating: state.rootReducer.complianceReporting.isCreating,
+    success: state.rootReducer.complianceReporting.success,
+    item: state.rootReducer.complianceReporting.item,
+    errorMessage: state.rootReducer.complianceReporting.errorMessage
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = {
   getCompliancePeriods,
-  getComplianceReports: complianceReporting.find
+  getComplianceReports: complianceReporting.find,
+  createComplianceReport: complianceReporting.create
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
