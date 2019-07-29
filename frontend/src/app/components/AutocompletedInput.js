@@ -73,6 +73,7 @@ class AutocompletedInput extends Component {
   render () {
     return (
       <Autocomplete
+        autoComplete="off"
         getItemValue={this.props.getItemValue}
         inputProps={this.props.inputProps}
         items={this.state.items}

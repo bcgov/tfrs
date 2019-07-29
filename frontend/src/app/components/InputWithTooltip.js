@@ -187,6 +187,7 @@ class InputWithTooltip extends Component {
           <span className="input-group-addon">$</span>
         }
         <input
+          autoComplete="off"
           className={this.props.className}
           data-number-to-fixed={this.props.dataNumberToFixed}
           id={this.props.id}
