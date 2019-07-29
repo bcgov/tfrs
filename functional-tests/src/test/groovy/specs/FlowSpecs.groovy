@@ -33,7 +33,7 @@ class FlowSpecs extends LoggedInSpec {
       TextSelector                    || AssertPage
       // TODO pdfs in headless mode dont work (works in headful mode)
       // [ text:'Fuel Suppliers' ]       || new ExternalLinkPage('013\\.pdf', 'www2\\.gov\\.bc\\.ca.*013\\.pdf')
-      [ text:'Company Details' ]      || CompanyDetailsPage
+      [ text:'Organization Details' ]      || CompanyDetailsPage
       // TODO pdfs in headless mode dont work (works in headful mode)
       // [ text:'Credit Market Report' ] || new ExternalLinkPage('017\\.pdf', 'www2\\.gov\\.bc\\.ca.*017\\.pdf')
       [ text:'Credit Transactions' ]  || CreditTransactionsPage

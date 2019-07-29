@@ -16,10 +16,10 @@ import {
   getCarbonIntensityLimit,
   getCreditCalculationValues,
   getDefaultCarbonIntensity,
+  getEnergyContent,
   getEnergyEffectivenessRatio,
   getSelectedFuel,
-  getSelectedProvision,
-  getEnergyContent
+  getSelectedProvision
 } from './components/ScheduleFunctions';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
@@ -175,7 +175,7 @@ class ScheduleSummaryContainer extends Component {
     const credits = grid[SCHEDULE_SUMMARY.LINE_26][2].value;
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
     let outstandingBalance = balance + Number(credits);
-    let payable = outstandingBalance * -200; // negative symbole so that the product is positive
+    let payable = outstandingBalance * -200; // negative symbol so that the product is positive
 
     if (balance > 0) {
       outstandingBalance = '';
@@ -219,11 +219,34 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.loadedState) {
-      // this.restoreFromAutosaved();
-    } else if (!this.props.create) {
-      this.loadSchedules();
+    this.componentWillReceiveProps(this.props);
+  }
+
+  componentWillReceiveProps (nextProps, nextContext) {
+    let sourceSummary = null;
+    let sourceScheduleA = null;
+
+    if (nextProps.scheduleState && nextProps.scheduleState.summary) {
+      // prefer fresh state
+      sourceSummary = nextProps.scheduleState.summary;
+    } else if (nextProps.complianceReport && nextProps.complianceReport.summary) {
+      // use server-side if not available
+      sourceSummary = nextProps.complianceReport.summary;
     }
+
+    if (nextProps.scheduleState && nextProps.scheduleState.scheduleA) {
+      // prefer fresh state
+      sourceScheduleA = nextProps.scheduleState.scheduleA;
+    } else if (nextProps.complianceReport && nextProps.complianceReport.scheduleA) {
+      // use server-side if not available
+      sourceScheduleA = nextProps.complianceReport.scheduleA;
+    }
+
+    if (sourceSummary == null || sourceScheduleA == null) {
+      return;
+    }
+
+    this.populateSchedules(sourceSummary, sourceScheduleA);
   }
 
   _calculateDiesel (summary, dieselReceived, dieselTransferred) {
@@ -438,9 +461,12 @@ class ScheduleSummaryContainer extends Component {
   }
 
   _calculatePart3 (summary) {
-    let { part3, penalty } = this.state;
+    const { part3 } = this.state;
+    let { penalty } = this.state;
 
-    if (!this.props.complianceReport) {
+    if (!this.props.scheduleState.scheduleB) {
+      return part3;
+    } else if (!this.props.complianceReport) {
       return part3;
     }
 
@@ -448,11 +474,16 @@ class ScheduleSummaryContainer extends Component {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
     }
 
-    const { compliancePeriod, scheduleB } = this.props.complianceReport;
+    const { compliancePeriod } = this.props.complianceReport;
+    let { scheduleB } = this.props.complianceReport;
     const values = [];
     const promises = [];
     let totalCredits = 0;
     let totalDebits = 0;
+
+    if (this.props.scheduleState.scheduleB) {
+      ({ scheduleB } = this.props.scheduleState);
+    }
 
     if (!scheduleB) {
       return part3;
@@ -529,26 +560,26 @@ class ScheduleSummaryContainer extends Component {
     Promise.all(promises).then(() => {
       part3[SCHEDULE_SUMMARY.LINE_23][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_23][2],
-        value: totalCredits
+        value: Math.round(totalCredits)
       };
 
       part3[SCHEDULE_SUMMARY.LINE_24][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_24][2],
-        value: totalDebits
+        value: Math.round(totalDebits)
       };
 
       const netTotal = totalCredits + totalDebits;
 
       part3[SCHEDULE_SUMMARY.LINE_25][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_25][2],
-        value: netTotal
+        value: Math.round(netTotal)
       };
 
       let maxValue = '';
 
       if (netTotal < 0) {
         const { organizationBalance } = this.props.loggedInUser.organization;
-        maxValue = (netTotal * -1).toFixed(0);
+        maxValue = Math.round(netTotal * -1);
 
         if (organizationBalance.validatedCredits < maxValue) {
           maxValue = organizationBalance.validatedCredits;
@@ -563,8 +594,6 @@ class ScheduleSummaryContainer extends Component {
           maxValue
         }
       };
-
-      part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
 
       penalty[SCHEDULE_PENALTY.LINE_28][2] = {
         ...penalty[SCHEDULE_PENALTY.LINE_28][2],
@@ -752,7 +781,10 @@ class ScheduleSummaryContainer extends Component {
   }
 
   _gridStateToPayload (state) {
-    this.props.updateScheduleState({
+    let shouldUpdate = false;
+    const compareOn = ['dieselClassDeferred', 'dieselClassRetained', 'gasolineClassDeferred', 'gasolineClassRetained', 'creditsOffset'];
+
+    const nextState = {
       summary: {
         dieselClassDeferred: state.diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
         dieselClassRetained: state.diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
@@ -760,7 +792,27 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value
       }
-    });
+    };
+
+    const prevState = this.props.scheduleState.summary ? this.props.scheduleState.summary : null;
+    if (prevState == null) {
+      shouldUpdate = true;
+    } else {
+      for (const field of compareOn) {
+        if (prevState[field] !== nextState.summary[field]) {
+          if (!(prevState[field] == null && typeof nextState.summary[field] === typeof undefined)) {
+            shouldUpdate = true;
+            break;
+          }
+        }
+      }
+    }
+
+    if (shouldUpdate) {
+      this.props.updateScheduleState({
+        summary: nextState.summary
+      });
+    }
   }
 
   render () {
@@ -787,7 +839,6 @@ class ScheduleSummaryContainer extends Component {
 
 ScheduleSummaryContainer.defaultProps = {
   complianceReport: null,
-  loadedState: null,
   period: null
 };
 
@@ -848,11 +899,27 @@ ScheduleSummaryContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getCreditCalculation: PropTypes.func.isRequired,
-  loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
   period: PropTypes.string,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  scheduleState: PropTypes.shape({
+    scheduleA: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    }),
+    scheduleB: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    }),
+    scheduleC: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    }),
+    scheduleD: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    }),
+    summary: PropTypes.shape({
+      records: PropTypes.arrayOf(PropTypes.shape())
+    })
   }).isRequired,
   updateScheduleState: PropTypes.func.isRequired
 };

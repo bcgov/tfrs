@@ -64,3 +64,4 @@ export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthori
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
 export { default as NOTIFICATIONS } from './routes/Notifications';
 export { default as SECURE_DOCUMENT_UPLOAD } from './routes/SecureDocumentUpload';
+export { default as EXCLUSION_REPORTS } from './routes/ExclusionReports';

@@ -12,6 +12,7 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -105,7 +106,7 @@ class Navbar extends Component {
               key="company-details"
               to={ORGANIZATIONS.MINE}
             >
-              Company Details
+              Organization Details
             </NavLink>,
             <a
               href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
@@ -167,6 +168,22 @@ class Navbar extends Component {
             to={COMPLIANCE_REPORTING.LIST}
           >
             Compliance Reporting
+          </NavLink>
+          }
+          {CONFIG.EXCLUSION_REPORTS.ENABLED &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-exclusion-reports"
+            isActive={(match, location) => {
+              if (location.pathname.indexOf('/exclusion_reports') >= 0) {
+                return true;
+              }
+
+              return false;
+            }}
+            to={EXCLUSION_REPORTS.LIST}
+          >
+            Exclusion Report
           </NavLink>
           }
           <a
@@ -240,7 +257,7 @@ class Navbar extends Component {
                 }}
                 to={ORGANIZATIONS.MINE}
               >
-                Company Details
+                Organization Details
               </NavLink>
             </li>,
             <li key="credit-market-report">
@@ -318,6 +335,17 @@ class Navbar extends Component {
               to={COMPLIANCE_REPORTING.LIST}
             >
               Compliance Reporting
+            </NavLink>
+          </li>
+          }
+          {CONFIG.EXCLUSION_REPORTS.ENABLED &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-exclusion-report"
+              to={EXCLUSION_REPORTS.LIST}
+            >
+              Exclusion Report
             </NavLink>
           </li>
           }

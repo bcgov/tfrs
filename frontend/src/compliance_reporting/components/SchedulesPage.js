@@ -8,7 +8,7 @@ import ScheduleATotals from './ScheduleATotals';
 import ScheduleBTotals from './ScheduleBTotals';
 
 const SchedulesPage = props => (
-  <div className="page_schedule">
+  <div className="page_schedule spreadsheet-component">
     <div className="draggable-bounds">
       <h1>{props.title}</h1>
 
@@ -16,7 +16,7 @@ const SchedulesPage = props => (
 
       <div className="scrollable">
         <ReactDataSheet
-          className={`schedule ${props.scheduleType}`}
+          className={`spreadsheet ${props.scheduleType}`}
           data={props.data}
           onCellsChanged={props.handleCellsChanged}
           valueRenderer={cell => cell.value}

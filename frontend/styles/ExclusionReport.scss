@@ -1,0 +1,104 @@
+.page_exclusion_report {
+  .inactive {
+    display: none;
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+
+    #new-exclusion-report {
+      margin: 0;
+    }
+  }
+}
+
+.page_exclusion_report .data-grid-container {
+  min-width: 1200px;
+}
+
+.exclusion-agreement {
+  .fuel-type {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .organization {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .quantity {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .quantity-not-sold {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
+  .transaction-type {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .units {
+    min-width: 10rem;
+    width: 10rem;
+  }
+}
+
+.exclusion-report-buttons {
+  background-color: $background-grey;
+  border: 1px solid $border-grey;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: right;
+  margin-left: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    text-align: left;
+
+    * {
+      text-align: left !important;
+    }
+  }
+  .right {
+    text-align: right;
+  }
+}
+
+.page-exclusion-report-intro {
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 0 1rem;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 0 3rem;
+    text-align: center;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-top: 3rem;
+  }
+
+  p {
+    margin: 0 0 2rem;
+  }
+}

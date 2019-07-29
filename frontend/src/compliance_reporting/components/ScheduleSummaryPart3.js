@@ -63,6 +63,7 @@ class ScheduleSummaryPart3 {
         ...numericInput,
         attributes: {
           addCommas: true,
+          additionalTooltip: 'This cannot be higher than the organization\'s credit nor the net debit.',
           dataNumberToFixed: 0,
           maxLength: '20',
           step: '1'
