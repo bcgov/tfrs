@@ -34,7 +34,7 @@ const ScheduleButtons = props => (
       {props.submit && [
         <button
           className="btn btn-primary"
-          data-target="#confirmSubmit"
+          data-target="#confirmSave"
           data-toggle="modal"
           key="btn-save"
           type="button"
