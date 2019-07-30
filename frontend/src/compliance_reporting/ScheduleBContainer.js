@@ -281,7 +281,7 @@ class ScheduleBContainer extends Component {
         readOnly: true,
         value: this.rowNumber
       }, { // fuel type
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => this.props.referenceData.data.approvedFuels,
         mapping: {
@@ -289,7 +289,7 @@ class ScheduleBContainer extends Component {
           value: 'name'
         }
       }, { // fuel class
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => [],
         mapping: {
@@ -297,7 +297,7 @@ class ScheduleBContainer extends Component {
           value: 'fuelClass'
         }
       }, { // provision of the act
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         valueViewer: (props) => {
           const selectedOption = props.cell.getOptions().find(e => e.provision === props.value);
@@ -313,7 +313,7 @@ class ScheduleBContainer extends Component {
           display: 'descriptiveName'
         }
       }, { // fuel code
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => [],
         mapping: {

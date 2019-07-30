@@ -144,7 +144,7 @@ class ScheduleCContainer extends Component {
           readOnly: true,
           value: this.rowNumber
         }, {
-          className: 'text',
+          className: 'text dropdown-indicator',
           dataEditor: Select,
           getOptions: () => this.props.referenceData.approvedFuels,
           mapping: {
@@ -152,7 +152,7 @@ class ScheduleCContainer extends Component {
             value: 'name'
           }
         }, {
-          className: 'text',
+          className: 'text dropdown-indicator',
           dataEditor: Select,
           getOptions: this._getFuelClasses,
           mapping: {
@@ -175,7 +175,7 @@ class ScheduleCContainer extends Component {
         }, {
           readOnly: true
         }, {
-          className: 'text',
+          className: 'text dropdown-indicator',
           dataEditor: Select,
           getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
           mapping: {
