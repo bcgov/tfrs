@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, status, mixins, filters
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -8,7 +8,7 @@ from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
-    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer
+    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, ComplianceReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -34,6 +34,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         'default': ComplianceReportListSerializer,
         'update': ComplianceReportUpdateSerializer,
         'partial_update': ComplianceReportUpdateSerializer,
+        'validate_partial': ComplianceReportValidationSerializer,
         'create': ComplianceReportCreateSerializer,
         'destroy': ComplianceReportDeleteSerializer,
         'retrieve': ComplianceReportDetailSerializer,
@@ -71,3 +72,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             types, read_only=True, many=True)
 
         return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def validate_partial(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+
+        return Response(serializer.errors)
