@@ -6,11 +6,43 @@ import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import AutosaveNotifier from './AutosaveNotifier';
+import TooltipWhenDisabled from "../../app/components/TooltipWhenDisabled";
+
+function _prettyPrint(messages, validationInProgress)
+{
+  let result = [];
+  
+  if (validationInProgress) {
+    result.push('Validation in progress');
+    return result;
+  }
+
+  if (messages == null || Object.keys(messages).length === 0) {
+    result.push('No changes to save');
+    return result;
+  }
+
+  result.push('Validation errors prevent saving');
+
+  const mapToResult = (m, prefix) => {
+    Object.keys(m).map(el => {
+      if (typeof m[el] === 'string') {
+        result.push(`${prefix} - ${m[el]}`);
+      } else {
+        mapToResult(m[el], `${prefix}.${el}`)
+      }
+    });
+  };
+
+  mapToResult(messages, '');
+
+  return result;
+}
 
 const ScheduleButtons = props => (
   <div className="schedule-buttons btn-container">
     <div className="left">
-      <AutosaveNotifier saving={props.saving} />
+      <AutosaveNotifier saving={props.saving}/>
     </div>
 
     <div className="right">
@@ -19,7 +51,7 @@ const ScheduleButtons = props => (
         onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
       </button>
       {props.delete &&
       <button
@@ -28,18 +60,24 @@ const ScheduleButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.submit &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmSubmit"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.validating || !props.valid}
+        title={_prettyPrint(props.validationMessages, props.validating)}
       >
-        <FontAwesomeIcon icon="save" /> Save
-      </button>
+        <button
+          className="btn btn-primary"
+          data-target="#confirmSubmit"
+          data-toggle="modal"
+          type="button"
+          disabled={props.validating || !props.valid}
+        >
+          <FontAwesomeIcon icon="save"/> Save
+        </button>
+      </TooltipWhenDisabled>
       }
     </div>
   </div>
@@ -53,7 +91,10 @@ ScheduleButtons.defaultProps = {
 ScheduleButtons.propTypes = {
   delete: PropTypes.bool,
   submit: PropTypes.bool,
-  saving: PropTypes.bool.isRequired
+  saving: PropTypes.bool.isRequired,
+  validating: PropTypes.bool,
+  valid: PropTypes.bool,
+  validationMessages: PropTypes.object
 };
 
 export default ScheduleButtons;

@@ -105,9 +105,21 @@ class ComplianceReportingEditContainer extends Component {
 
   _updateScheduleState(mergedState) {
     const {schedules} = this.state;
+    const {id} = this.props.match.params;
+    const period = this.props.complianceReporting.item.compliancePeriod.description;
+
 
     this.setState({
       schedules: {
+        ...schedules,
+        ...mergedState
+      }
+    });
+
+    this.props.validateComplianceReport({
+      id,
+      state: {
+        compliancePeriod: period,
         ...schedules,
         ...mergedState
       }
@@ -183,6 +195,9 @@ class ComplianceReportingEditContainer extends Component {
         submit
         delete
         saving={this.props.saving}
+        validating={this.props.complianceReporting.validating}
+        valid={this.props.complianceReporting.valid}
+        validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -223,7 +238,10 @@ ComplianceReportingEditContainer.propTypes = {
         PropTypes.string
       ])
     }),
-    success: PropTypes.bool
+    success: PropTypes.bool,
+    validating: PropTypes.bool,
+    valid: PropTypes.bool,
+    validationMessages: PropTypes.object
   }),
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
@@ -240,11 +258,14 @@ ComplianceReportingEditContainer.propTypes = {
   }).isRequired,
   saving: PropTypes.bool.isRequired,
   updateComplianceReport: PropTypes.func.isRequired,
-  updateStateToSave: PropTypes.func.isRequired
+  validateComplianceReport: PropTypes.func.isRequired,
+  updateStateToSave: PropTypes.func.isRequired,
 };
 
 const
   mapDispatchToProps = {
+    createComplianceReport: complianceReporting.create,
+    validateComplianceReport: complianceReporting.validate,
     updateComplianceReport: complianceReporting.update,
     deleteComplianceReport: complianceReporting.remove,
     getComplianceReport: complianceReporting.get,
@@ -259,7 +280,10 @@ const
       isUpdating: state.rootReducer.complianceReporting.isUpdating,
       success: state.rootReducer.complianceReporting.success,
       item: state.rootReducer.complianceReporting.item,
-      errorMessage: state.rootReducer.complianceReporting.errorMessage
+      errorMessage: state.rootReducer.complianceReporting.errorMessage,
+      validating: state.rootReducer.complianceReporting.isValidating,
+      valid: state.rootReducer.complianceReporting.validationPassed,
+      validationMessages: state.rootReducer.complianceReporting.validationMessages
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
