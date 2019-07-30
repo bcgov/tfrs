@@ -875,7 +875,6 @@ ScheduleSummaryContainer.propTypes = {
       ])
     })
   }),
-  create: PropTypes.bool.isRequired,
   creditCalculation: PropTypes.shape({
     isFetching: PropTypes.bool,
     item: PropTypes.shape({

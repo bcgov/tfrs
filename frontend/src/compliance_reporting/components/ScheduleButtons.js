@@ -51,7 +51,6 @@ ScheduleButtons.defaultProps = {
 };
 
 ScheduleButtons.propTypes = {
-  edit: PropTypes.bool.isRequired,
   delete: PropTypes.bool,
   submit: PropTypes.bool,
   saving: PropTypes.bool.isRequired
