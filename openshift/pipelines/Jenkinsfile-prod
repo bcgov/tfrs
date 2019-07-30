@@ -1,4 +1,4 @@
-tfrsRelease="v1.4.20"
+tfrsRelease="v1.4.21"
         
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -37,7 +37,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("prod").call()
+        prepareDCStages.backendDCStage("prod").call()
         //prepareDCStages.celeryDCStage("prod").call()
         //prepareDCStages.scanCoordinatorDCStage("prod").call()
         //prepareDCStages.scanHandlerDCStage("prod").call()
