@@ -336,6 +336,10 @@
                                     {
                                         "name": "COMPLIANCE_REPORTING_API_ENABLED",
                                         "value": "true"
+                                    },
+                                    {
+                                        "name": "EXCLUSION_REPORTS_API_ENABLED",
+                                        "value": "true"
                                     }
                                 ],
                                 "resources": {
