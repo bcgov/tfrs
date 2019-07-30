@@ -37,7 +37,7 @@ class ScheduleDContainer extends Component {
     if (this.props.scheduleState.scheduleD) {
       this.componentWillReceiveProps(this.props); // it's probably more elegant to use getDerivedStateFromProps, but it is defined static and we need to access instance methods to set the headers
       // we already have the state. don't load it. just render it.
-    } else if (this.props.create || !this.props.complianceReport.scheduleD) {
+    } else if (!this.props.complianceReport.scheduleD) {
       this._addSheet();
     } else {
       this.loadInitialState();
@@ -352,7 +352,6 @@ ScheduleDContainer.propTypes = {
   complianceReport: PropTypes.shape({
     scheduleD: PropTypes.shape()
   }),
-  create: PropTypes.bool.isRequired,
   match: PropTypes.shape({}),
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
