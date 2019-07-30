@@ -90,32 +90,8 @@ class TestComplianceReporting(BaseTestCase):
         compliance_reports = response.json()
         self.assertEqual(len(compliance_reports), 4)
 
-    def test_create_draft_compliance_report_authorized_with_summary(self):
-        payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
-            'summary': {
-                'dieselClassRetained': '100',
-                'dieselClassDeferred': '200',
-                'gasolineClassRetained': '300',
-                'gasolineClassDeferred': '400'
-            }
-        }
-
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
     def test_row_ordering(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -262,8 +238,8 @@ class TestComplianceReporting(BaseTestCase):
             },
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -296,13 +272,10 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response_data['scheduleD']['sheets'][2]['inputs'][0]['value'], '10')
         self.assertEqual(response_data['scheduleD']['sheets'][2]['inputs'][1]['value'], '20')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_schedule_b_alternative_method(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -316,12 +289,12 @@ class TestComplianceReporting(BaseTestCase):
             }
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = json.loads(response.content.decode("utf-8"))
 
@@ -329,9 +302,6 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_schedule_b_altnerative_method_no_intensity(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -345,8 +315,8 @@ class TestComplianceReporting(BaseTestCase):
             }
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -354,9 +324,6 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_schedule_b_alternative_method_fuel_code(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -371,8 +338,8 @@ class TestComplianceReporting(BaseTestCase):
             }
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -380,9 +347,6 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_schedule_b_fuel_code_method_intensity(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -397,8 +361,8 @@ class TestComplianceReporting(BaseTestCase):
             }
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -406,9 +370,6 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_schedule_b_d_integration_valid(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -469,12 +430,12 @@ class TestComplianceReporting(BaseTestCase):
             },
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = json.loads(response.content.decode("utf-8"))
 
@@ -484,9 +445,6 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_schedule_b_d_integration_invalid_null(self):
         payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliance_period': '2015',
             'scheduleB': {
                 'records': [
                     {
@@ -547,8 +505,8 @@ class TestComplianceReporting(BaseTestCase):
             },
         }
 
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -558,18 +516,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Submitted',
             'type': 'Compliance Report',
-            'compliancePeriod': '2019',
-            'scheduleC': {
-                'records': [
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 40,
-                        'expectedUse': 'Other',
-                        'rationale': 'Test rationale'
-                    }
-                ]
-            }
+            'compliancePeriod': '2019'
         }
 
         response = self.clients['fs_user_1'].post(
@@ -579,83 +526,6 @@ class TestComplianceReporting(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_draft_compliance_report_authorized_with_schedules(self):
-        payload = {
-            'status': 'Draft',
-            'type': 'Compliance Report',
-            'compliancePeriod': '2019',
-            'scheduleC': {
-                'records': [
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 88.1,
-                        'expectedUse': 'Other',
-                        'rationale': 'Patched'
-                    },
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 88.1,
-                        'expectedUse': 'Other',
-                        'rationale': 'Patched Again'
-                    },
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 88.1,
-                        'expectedUse': 'Other',
-                        'rationale': 'Patched'
-                    },
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 88.1,
-                        'expectedUse': 'Other',
-                        'rationale': 'Patched Again'
-                    }
-                ]
-            },
-            'scheduleD': {
-                'sheets': [
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'feedstock': 'Corn',
-                        'inputs': [
-                            {
-                                'worksheet_name': 'GHG Inputs',
-                                'cell': 'A2',
-                                'value': '12.04',
-                                'units': 'tonnes',
-                                'description': 'test',
-                            },
-                            {
-                                'worksheet_name': 'GHG Inputs',
-                                'cell': 'ZZ9ZZA',
-                                'value': 'about 98',
-                                'units': 'percent',
-                            }
-                        ],
-                        'outputs': []
-                    }
-                ]
-            }
-        }
-
-        response = self.clients['fs_user_1'].post(
-            '/api/compliance_reports',
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        response_data = json.loads(response.content.decode("utf-8"))
-
-        self.assertIsNotNone(response_data['scheduleC'])
-        self.assertEqual(len(response_data['scheduleC']['records']), 4)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_patch_compliance_report(self):
         payload = {
