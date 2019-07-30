@@ -6,6 +6,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {toastr as reduxToastr} from 'react-redux-toastr';
+import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
 import {
@@ -304,7 +305,11 @@ class ComplianceReportingEditContainer extends Component {
                   toggleCheck={this._toggleCheck}
                 />
               </div>
-              <div>{assertion.description.substr(1)}</div>
+              <div>
+                <ReactMarkdown
+                  source={assertion.description.substr(1)}
+                />
+              </div>
             </div>
           ))}
           Are you sure you want to submit this Compliance Report to the
