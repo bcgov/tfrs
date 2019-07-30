@@ -117,11 +117,11 @@ class ScheduleBContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.create || !this.props.complianceReport.scheduleB) {
-      this._addRow(5);
-    } else if (this.props.scheduleState.scheduleB) {
+    if (this.props.scheduleState.scheduleB) {
       // we already have the state. don't load it. just render it.
       this.componentWillReceiveProps(this.props);
+    } else if (!this.props.complianceReport.scheduleB) {
+      this._addRow(5);
     } else {
       this.loadInitialState();
     }
@@ -549,7 +549,6 @@ ScheduleBContainer.propTypes = {
   complianceReport: PropTypes.shape({
     scheduleB: PropTypes.shape()
   }),
-  create: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   period: PropTypes.string.isRequired,
   referenceData: PropTypes.shape({

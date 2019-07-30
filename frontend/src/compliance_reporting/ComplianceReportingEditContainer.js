@@ -70,18 +70,22 @@ class ComplianceReportingEditContainer extends Component {
     const {tab} = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
 
-    this.edit = document.location.pathname.indexOf('/edit/') >= 0;
-    this._addToFields = this._addToFields.bind(this);
-    this._toggleCheck = this._toggleCheck.bind(this);
     this._updateScheduleState = this._updateScheduleState.bind(this);
-    this._updateAutosaveState = this._updateAutosaveState.bind(this);
-    this.loadData = this.loadData.bind(this);
 
-    this.state = {
+    let initialState = {
       schedules: {},
       terms: [],
-      autosaveState: {}
+      getCalled: false
     };
+    if (props.loadedState) {
+      initialState = {
+        ...props.loadedState
+      };
+    }
+
+    this.state = initialState;
+    this._addToFields = this._addToFields.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount() {
@@ -89,9 +93,10 @@ class ComplianceReportingEditContainer extends Component {
       module: 'compliance_report'
     });
 
-    if (this.edit) {
-      this.loadData();
-    }
+    this.props.getComplianceReport(this.props.match.params.id);
+    this.setState({
+      getCalled: true
+    });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -101,22 +106,10 @@ class ComplianceReportingEditContainer extends Component {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
-    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
-      if (!nextProps.complianceReporting.success) {
-        reduxToastr.error('Error saving');
-      } else {
-        history.push(COMPLIANCE_REPORTING.LIST);
-        toastr.complianceReporting('Draft');
-        this.props.invalidateAutosaved();
-      }
-      return;
-    }
-
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
-        history.push(COMPLIANCE_REPORTING.LIST);
         toastr.complianceReporting('Draft');
         this.props.invalidateAutosaved();
       }
@@ -125,6 +118,9 @@ class ComplianceReportingEditContainer extends Component {
 
   _updateScheduleState(mergedState) {
     const {schedules} = this.state;
+    const {id} = this.props.match.params;
+    const period = this.props.complianceReporting.item.compliancePeriod.description;
+
 
     this.setState({
       schedules: {
@@ -132,11 +128,27 @@ class ComplianceReportingEditContainer extends Component {
         ...mergedState
       }
     });
+
+    this.props.validateComplianceReport({
+      id,
+      state: {
+        compliancePeriod: period,
+        ...schedules,
+        ...mergedState
+      }
+    });
+
+    this.props.updateStateToSave({
+      schedules: {
+        ...schedules,
+        ...mergedState
+      }
+    });
   }
 
-  _handleDelete() {
+  _handleDelete () {
     if (this.edit) {
-      this.props.deleteComplianceReport({id: this.props.match.params.id});
+      this.props.deleteComplianceReport({ id: this.props.match.params.id });
     }
     this.props.getComplianceReports();
     history.push(COMPLIANCE_REPORTING.LIST);
@@ -144,54 +156,10 @@ class ComplianceReportingEditContainer extends Component {
     this.props.invalidateAutosaved();
   }
 
-  _handleSubmit (event, status = 'Draft') {
-    if (!this.edit) {
-      // creating new
-      const payload = {
-        status,
-        type: 'Compliance Report',
-        compliancePeriod: this.props.match.params.period,
-        ...this.state.schedules
-      };
-
-      this.props.createComplianceReport(payload);
-    } else {
-      // patch existing
-      const payload = {
-        status,
-        ...this.state.schedules
-      };
-
-      this.props.updateComplianceReport({
-        id: this.props.match.params.id,
-        state: payload,
-        patch: true
-      });
-
-      const data = [];
-      this.state.terms.forEach((term) => {
-        if (term.value) {
-          data.push({
-            complianceReport: this.props.match.params.id,
-            hasAccepted: term.value,
-            signingAuthorityAssertion: term.id
-          });
-        }
-      });
-
-      if (data.length > 0) {
-        this.props.addSigningAuthorityConfirmation(data);
-      }
-    }
-  }
-
-  loadData() {
-    this.props.getComplianceReport(this.props.match.params.id);
-  }
-
   _addToFields (value) {
     const { terms } = this.state;
-    const found = this.state.terms.find(term => term.id === value.id);
+
+    const found = terms.find(term => term.id === value.id);
 
     if (!found) {
       terms.push(value);
@@ -212,40 +180,49 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _updateAutosaveState(tab, state) {
-    const autosaveState = {
-      ...this.state.autosaveState,
-      tab: state
+  _handleSubmit(event, status = 'Draft') {
+    // patch existing
+    const payload = {
+      status,
+      ...this.state.schedules
     };
-    this.setState({
-      autosaveState
+
+    this.props.updateComplianceReport({
+      id: this.props.match.params.id,
+      state: payload,
+      patch: true
     });
 
-    this.props.updateStateToSave(autosaveState);
+    const data = [];
+    this.state.terms.forEach((term) => {
+      if (term.value) {
+        data.push({
+          complianceReport: this.props.match.params.id,
+          hasAccepted: term.value,
+          signingAuthorityAssertion: term.id
+        });
+      }
+    });
+
+    if (data.length > 0) {
+      this.props.addSigningAuthorityConfirmation(data);
+    }
   }
 
   render() {
     const TabComponent = this.tabComponent;
 
     const {tab, id} = this.props.match.params;
-    let {period} = this.props.match.params;
 
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
+    if (!this.state.getCalled) {
+      return (<Loading/>);
     }
 
     if (this.props.complianceReporting.isGetting) {
       return (<Loading/>);
     }
 
-    if (this.edit) {
-      if (this.props.complianceReporting.item) {
-        period = this.props.complianceReporting.item.compliancePeriod.description;
-        if (!period) {
-          return (<Loading/>);
-        }
-      }
-    }
+    const period = this.props.complianceReporting.item.compliancePeriod.description;
 
     return ([
       <ScheduleTabs
@@ -259,15 +236,10 @@ class ComplianceReportingEditContainer extends Component {
         key="tab-component"
         period={period}
         id={id}
-        create={!this.edit}
         complianceReport={this.props.complianceReporting.item}
-        loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
         scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
-        updateAutosaveState={(state) => {
-          this._updateAutosaveState(tab, state);
-        }}
       />,
       <ScheduleButtons
         edit={this.edit}
@@ -275,6 +247,9 @@ class ComplianceReportingEditContainer extends Component {
         submit
         delete
         saving={this.props.saving}
+        validating={this.props.complianceReporting.validating}
+        valid={this.props.complianceReporting.valid}
+        validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -349,9 +324,11 @@ ComplianceReportingEditContainer.propTypes = {
         PropTypes.string
       ])
     }),
-    success: PropTypes.bool
+    success: PropTypes.bool,
+    validating: PropTypes.bool,
+    valid: PropTypes.bool,
+    validationMessages: PropTypes.object
   }),
-  createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
@@ -375,13 +352,15 @@ ComplianceReportingEditContainer.propTypes = {
     isFetching: PropTypes.bool
   }).isRequired,
   updateComplianceReport: PropTypes.func.isRequired,
-  updateStateToSave: PropTypes.func.isRequired
+  validateComplianceReport: PropTypes.func.isRequired,
+  updateStateToSave: PropTypes.func.isRequired,
 };
 
 const
   mapDispatchToProps = {
     addSigningAuthorityConfirmation,
     createComplianceReport: complianceReporting.create,
+    validateComplianceReport: complianceReporting.validate,
     updateComplianceReport: complianceReporting.update,
     deleteComplianceReport: complianceReporting.remove,
     getComplianceReport: complianceReporting.get,
@@ -394,11 +373,13 @@ const
     complianceReporting: {
       isGetting: state.rootReducer.complianceReporting.isGetting,
       isFinding: state.rootReducer.complianceReporting.isFinding,
-      isCreating: state.rootReducer.complianceReporting.isCreating,
       isUpdating: state.rootReducer.complianceReporting.isUpdating,
       success: state.rootReducer.complianceReporting.success,
       item: state.rootReducer.complianceReporting.item,
-      errorMessage: state.rootReducer.complianceReporting.errorMessage
+      errorMessage: state.rootReducer.complianceReporting.errorMessage,
+      validating: state.rootReducer.complianceReporting.isValidating,
+      valid: state.rootReducer.complianceReporting.validationPassed,
+      validationMessages: state.rootReducer.complianceReporting.validationMessages
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
@@ -414,15 +395,10 @@ const
 const
   config = {
     key: '-',
-    version: 3,
+    version: 4,
     name: 'compliance-report',
     customPathGenerator: (props) => {
-      if (props.match.path.indexOf('/edit/') >= 0) {
-        return `edit:${props.match.params.id}`;
-      } else if (props.match.path.indexOf('/add/') >= 0) {
-        return `add:${props.match.params.period}`;
-      }
-      return props.location.pathname;
+      return `edit:${props.match.params.id}`;
     }
   };
 
