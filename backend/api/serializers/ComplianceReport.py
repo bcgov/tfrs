@@ -151,6 +151,26 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'summary']
 
 
+class ComplianceReportValidationSerializer(serializers.ModelSerializer):
+    """
+    Validation-only Serializer for the Compliance Report
+    """
+    compliance_period = SlugRelatedField(
+        slug_field='description',
+        queryset=CompliancePeriod.objects.all()
+    )
+
+    schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
+    schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
+    schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
+    schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
+    summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
+
+    class Meta:
+        model = ComplianceReport
+        fields = ('compliance_period', 'schedule_a', 'schedule_b', 'schedule_c',
+                  'schedule_d', 'summary')
+
 class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     """
     Create Serializer for the Compliance Report
