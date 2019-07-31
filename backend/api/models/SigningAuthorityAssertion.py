@@ -19,26 +19,57 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from enum import Enum
 
 from django.db import models
 
-from api.managers.SigningAuthorityAssertionManager import SigningAuthorityAssertionManager
+from api.managers.SigningAuthorityAssertionManager import \
+    SigningAuthorityAssertionManager
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
 class SigningAuthorityAssertion(Auditable, DisplayOrder, EffectiveDates):
-    description = models.CharField(max_length=4000,
-                                   blank=True,
-                                   null=True,
-                                   db_comment='Description of the signing authority assertion statement. This is the displayed name.')
+    """
+    Contains a list of valid regulatory statements that must be confirmed or
+    certified by the officer or employee of the fuel supplier(s) (i.e. signing
+    authority) prior to signing and submitting a Credit Transfer Proposal, or
+    an Exclusion Report to government for review.
+    """
+    class AssertionModules(Enum):
+        """
+        List of possible modules for the assertion
+        """
+        CREDIT_TRADE = "credit_trade"
+        COMPLIANCE_REPORTING = "compliance_report"
+
+    description = models.CharField(
+        max_length=4000,
+        blank=True,
+        null=True,
+        db_comment="Description of the signing authority assertion statement. "
+                   "This is the displayed name."
+    )
+
+    module = models.CharField(
+        choices=[(d, d.name) for d in AssertionModules],
+        default="credit_trade",
+        max_length=50,
+        blank=False,
+        null=False,
+        db_comment="Module that uses the assertion."
+                   "e.g. Credit Trade or Compliance Reporting"
+    )
 
     objects = SigningAuthorityAssertionManager()
 
     class Meta:
         db_table = 'signing_authority_assertion'
 
-    db_table_comment = 'Contains a list of valid regulatory statements that must be' \
-                       ' confirmed or certified by the officer or employee of the fuel supplier(s)' \
-                       ' (i.e. signing authority) prior to signing and submitting a Credit Transfer Proposal, or an Exclusion Report to government for review.'
+    db_table_comment = "Contains a list of valid regulatory statements that " \
+                       "must be confirmed or certified by the officer or " \
+                       "employee of the fuel supplier(s) (i.e. signing " \
+                       "authority) prior to signing and submitting a Credit " \
+                       "Transfer Proposal, or an Exclusion Report to " \
+                       "government for review."

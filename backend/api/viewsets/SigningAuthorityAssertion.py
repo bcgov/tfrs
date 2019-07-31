@@ -22,7 +22,6 @@
 from datetime import datetime
 
 from rest_framework import filters, mixins, permissions, viewsets
-from django.db.models import Q
 
 from auditable.views import AuditableMixin
 
@@ -48,4 +47,10 @@ class SigningAuthorityAssertionViewSet(AuditableMixin, mixins.ListModelMixin,
         This view should return a list of all the assertions that don't have
         an expiration date
         """
-        return SigningAuthorityAssertion.objects.get_active_as_of_date(datetime.today())
+        module = self.request.query_params.get('module', 'credit_trade')
+
+        return SigningAuthorityAssertion.objects.get_active_as_of_date(
+            datetime.today()
+        ).filter(
+            module=module
+        )

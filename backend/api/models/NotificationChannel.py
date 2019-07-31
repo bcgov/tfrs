@@ -39,7 +39,7 @@ class NotificationChannel(Auditable):
         EMAIL = "Email"
 
     channel = models.CharField(
-        choices=[(d, d.name) for d in AvailableChannels],
+        choices=[(channel, channel.name) for channel in AvailableChannels],
         max_length=64,
         null=False,
         blank=False,

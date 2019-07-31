@@ -63,22 +63,32 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
-      {props.submit &&
-      <TooltipWhenDisabled
-        disabled={props.validating || !props.valid}
-        title={_prettyPrint(props.validationMessages, props.validating)}
-      >
+      {props.submit && [
+        <TooltipWhenDisabled
+          disabled={props.validating || !props.valid}
+          key="btn-save"
+          title={_prettyPrint(props.validationMessages, props.validating)}
+        >
+          <button
+            className="btn btn-primary"
+            data-target="#confirmSubmit"
+            data-toggle="modal"
+            type="button"
+            disabled={props.validating || !props.valid}
+          >
+            <FontAwesomeIcon icon="save" /> Save
+          </button>
+        </TooltipWhenDisabled>,
         <button
           className="btn btn-primary"
           data-target="#confirmSubmit"
           data-toggle="modal"
+          key="btn-submit"
           type="button"
-          disabled={props.validating || !props.valid}
         >
-          <FontAwesomeIcon icon="save"/> Save
+          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
         </button>
-      </TooltipWhenDisabled>
-      }
+      ]}
     </div>
   </div>
 );

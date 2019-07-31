@@ -73,7 +73,7 @@ class ComplianceReportingService {
         for (let i = 0; i < response.data.length; i++) {
           for (let j = 0; j < response.data[i].fuelCodes.length; j++) {
             const fc = response.data[i].fuelCodes[j];
-            response.data[i].fuelCodes[j].descriptiveName = `${fc.fuelCode}.${fc.fuelCodeVersion}.${fc.fuelCodeVersionMinor}`;
+            response.data[i].fuelCodes[j].descriptiveName = `${fc.fuelCode}${fc.fuelCodeVersion}.${fc.fuelCodeVersionMinor}`;
           }
           for (let j = 0; j < response.data[i].provisions.length; j++) {
             const p = response.data[i].provisions[j];
