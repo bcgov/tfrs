@@ -65,6 +65,7 @@ class ComplianceReportingEditContainer extends Component {
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
 
     this._updateScheduleState = this._updateScheduleState.bind(this);
+    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
 
     let initialState = {
       schedules: {},
@@ -135,9 +136,7 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   _handleDelete() {
-    if (this.edit) {
-      this.props.deleteComplianceReport({id: this.props.match.params.id});
-    }
+    this.props.deleteComplianceReport({id: this.props.match.params.id});
     this.props.getComplianceReports();
     history.push(COMPLIANCE_REPORTING.LIST);
     toastr.complianceReporting('Cancelled');
@@ -157,6 +156,18 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
+  _handleRecomputeRequest() {
+    const {schedules} = this.state;
+    const {id} = this.props.match.params;
+
+    this.props.recomputeTotals({
+      id,
+      state: {
+        ...schedules
+      }
+    });
+  }
+
   render() {
     const TabComponent = this.tabComponent;
 
@@ -170,7 +181,12 @@ class ComplianceReportingEditContainer extends Component {
       return (<Loading/>);
     }
 
-    const period = this.props.complianceReporting.item.compliancePeriod.description;
+    let period = null;
+    if (typeof (this.props.complianceReporting.item.compliancePeriod) === 'string') {
+      period = this.props.complianceReporting.item.compliancePeriod;
+    } else {
+      period = this.props.complianceReporting.item.compliancePeriod.description;
+    }
 
     return ([
       <ScheduleTabs
@@ -187,7 +203,12 @@ class ComplianceReportingEditContainer extends Component {
         complianceReport={this.props.complianceReporting.item}
         loggedInUser={this.props.loggedInUser}
         scheduleState={this.state.schedules}
+        recomputedTotals={this.props.complianceReporting.recomputeResult}
+        recomputeRequest={this._handleRecomputeRequest}
+        recomputing={this.props.complianceReporting.isRecomputing}
         updateScheduleState={this._updateScheduleState}
+        validating={this.props.complianceReporting.validating}
+        valid={this.props.complianceReporting.valid !== false}
       />,
       <ScheduleButtons
         edit={this.edit}
@@ -196,7 +217,7 @@ class ComplianceReportingEditContainer extends Component {
         delete
         saving={this.props.saving}
         validating={this.props.complianceReporting.validating}
-        valid={this.props.complianceReporting.valid}
+        valid={this.props.complianceReporting.valid !== false}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
@@ -241,12 +262,15 @@ ComplianceReportingEditContainer.propTypes = {
     success: PropTypes.bool,
     validating: PropTypes.bool,
     valid: PropTypes.bool,
-    validationMessages: PropTypes.object
+    validationMessages: PropTypes.object,
+    isRecomputing: PropTypes.bool,
+    recomputeResult: PropTypes.object
   }),
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
+  recomputeTotals: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
   match: PropTypes.shape({
@@ -266,6 +290,7 @@ const
   mapDispatchToProps = {
     createComplianceReport: complianceReporting.create,
     validateComplianceReport: complianceReporting.validate,
+    recomputeTotals: complianceReporting.recompute,
     updateComplianceReport: complianceReporting.update,
     deleteComplianceReport: complianceReporting.remove,
     getComplianceReport: complianceReporting.get,
@@ -283,7 +308,9 @@ const
       errorMessage: state.rootReducer.complianceReporting.errorMessage,
       validating: state.rootReducer.complianceReporting.isValidating,
       valid: state.rootReducer.complianceReporting.validationPassed,
-      validationMessages: state.rootReducer.complianceReporting.validationMessages
+      validationMessages: state.rootReducer.complianceReporting.validationMessages,
+      isRecomputing: state.rootReducer.complianceReporting.isRecomputing,
+      recomputeResult: state.rootReducer.complianceReporting.recomputeResult
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
