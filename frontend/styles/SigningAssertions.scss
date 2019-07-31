@@ -1,0 +1,15 @@
+@import './variables.scss';
+
+#signing-assertions {
+  .assertion {
+    margin-bottom: 1rem;
+    padding-left: 4rem;
+    position: relative;
+  
+    .check {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+}
