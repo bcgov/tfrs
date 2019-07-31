@@ -11,7 +11,7 @@ import TooltipWhenDisabled from "../../app/components/TooltipWhenDisabled";
 function _prettyPrint(messages, validationInProgress)
 {
   let result = [];
-  
+
   if (validationInProgress) {
     result.push('Validation in progress');
     return result;
@@ -71,7 +71,7 @@ const ScheduleButtons = props => (
         >
           <button
             className="btn btn-primary"
-            data-target="#confirmSubmit"
+            data-target="#confirmSave"
             data-toggle="modal"
             type="button"
             disabled={props.validating || !props.valid}

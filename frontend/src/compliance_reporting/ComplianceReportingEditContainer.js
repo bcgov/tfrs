@@ -80,6 +80,7 @@ class ComplianceReportingEditContainer extends Component {
     };
     if (props.loadedState) {
       initialState = {
+        ...initialState,
         ...props.loadedState
       };
     }
