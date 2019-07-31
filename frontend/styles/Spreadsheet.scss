@@ -17,6 +17,30 @@
         padding: 0.5rem;
         vertical-align: middle;
 
+        &.dropdown-indicator {
+          padding-right: 1rem;
+          position: relative;
+
+          &:not(.read-only):not(.editing) {
+            &::before {
+              align-items: center;
+              bottom: 0;
+              color: $light-font;
+              content: "\f0d7";
+              display: flex;
+              font-family: "Font Awesome 5 Free";
+              font-size: 1.5rem;
+              font-weight: bold;
+              position: absolute;
+              right: 0.5rem;
+              text-rendering: auto;
+              top: 0;
+              vertical-align: middle;
+              -webkit-font-smoothing: antialiased;
+            }
+          }
+        }
+
         &.editing {
           padding: 0;
 

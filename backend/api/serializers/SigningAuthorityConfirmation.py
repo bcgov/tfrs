@@ -30,6 +30,10 @@ class SigningAuthorityConfirmationSerializer(serializers.ModelSerializer):
     """
     Default Serializer for SigningAuthorityConfirmation
     """
+
+    # def validate_compliance_reporting_id(self, value):
+
+
     class Meta:
         model = SigningAuthorityConfirmation
         fields = '__all__'

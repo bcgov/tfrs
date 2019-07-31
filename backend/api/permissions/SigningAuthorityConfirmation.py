@@ -24,6 +24,7 @@ from enum import Enum
 
 from rest_framework import permissions
 
+from api.models.ComplianceReport import ComplianceReport
 from api.services.CreditTradeService import CreditTradeService
 
 
@@ -40,7 +41,7 @@ class SigningAuthorityConfirmationPermissions(permissions.BasePermission):
 
     action_mapping[(_Relationship.INITIATOR, 'Draft', False)] = True
     action_mapping[(_Relationship.INITIATOR, 'Submitted', False)] = True
-    action_mapping[(_Relationship.RESPONDENT, 'Submitted', False)] = True # There's a client-side race
+    action_mapping[(_Relationship.RESPONDENT, 'Submitted', False)] = True  # There's a client-side race
     action_mapping[(_Relationship.RESPONDENT, 'Accepted', False)] = True
 
 
@@ -77,25 +78,36 @@ class SigningAuthorityConfirmationPermissions(permissions.BasePermission):
         # Need this information to make a decision
 
         for obj in to_check:
+            if 'credit_trade' in obj:
+                credit_trade = obj['credit_trade']
 
-            if 'credit_trade' not in obj:
-                return False
+                # Check if the user is a party to this credit_trade
+                # (or Government) using CreditTradeService logic
+                found = CreditTradeService.get_organization_credit_trades(
+                    request.user.organization
+                ).filter(id=credit_trade).first()
 
-            credit_trade = obj['credit_trade']
+                if not found:
+                    return False
 
-            # Check if the user is a party to this credit_trade (or Government)
-            # using CreditTradeService logic
-            found = CreditTradeService.get_organization_credit_trades(request.user.organization) \
-                .filter(id=credit_trade).first()
+                if not SigningAuthorityConfirmationPermissions.user_can_sign(
+                        request.user,
+                        found
+                ):
+                    return False
+            elif 'compliance_report' in obj:
+                # check that the compliance report does exist and the user can
+                # sign it
+                compliance_report = obj['compliance_report']
 
-            if not found:
-                return False
+                found = ComplianceReport.objects.filter(
+                    id=compliance_report,
+                    organization=request.user.organization
+                )
 
-            if not SigningAuthorityConfirmationPermissions.user_can_sign(
-                request.user,
-                found
-            ):
+                if not found:
+                    return False
+            else:  # Neither credit trade or compliance report was provided
                 return False
 
         return True
-

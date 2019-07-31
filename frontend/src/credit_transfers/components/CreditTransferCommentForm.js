@@ -137,14 +137,15 @@ class CreditTransferCommentForm extends Component {
 }
 
 CreditTransferCommentForm.defaultProps = {
-  comment: '',
-  isEditingExistingComment: false,
-  isCommentingOnUnsavedCreditTransfer: false,
-  id: null,
-  saveComment: null,
   cancelComment: null,
+  comment: '',
   embedded: false,
-  handleCommentChanged: null
+  handleCommentChanged: null,
+  id: null,
+  isCommentingOnUnsavedCreditTransfer: false,
+  isEditingExistingComment: false,
+  saveComment: null,
+  selectIdForModal: null
 };
 
 CreditTransferCommentForm.propTypes = {
@@ -157,7 +158,7 @@ CreditTransferCommentForm.propTypes = {
   saveComment: PropTypes.func,
   cancelComment: PropTypes.func,
   handleCommentChanged: PropTypes.func,
-  selectIdForModal: PropTypes.func.isRequired
+  selectIdForModal: PropTypes.func
 };
 
 export default CreditTransferCommentForm;
