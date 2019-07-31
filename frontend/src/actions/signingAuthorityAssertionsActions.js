@@ -4,9 +4,10 @@ import ActionTypes from '../constants/actionTypes/SigningAuthorityAssertions';
 import ReducerTypes from '../constants/reducerTypes/SigningAuthorityAssertions';
 import * as Routes from '../constants/routes';
 
-const getSigningAuthorityAssertions = () => (dispatch) => {
+const getSigningAuthorityAssertions = data => (dispatch) => {
   dispatch(getSigningAuthorityAssertionsRequest());
-  return axios.get(Routes.BASE_URL + Routes.SIGNING_AUTHORITY_ASSERTIONS.LIST)
+
+  return axios.get(Routes.BASE_URL + Routes.SIGNING_AUTHORITY_ASSERTIONS.LIST, { params: data })
     .then((response) => {
       dispatch(getSigningAuthorityAssertionsSuccess(response.data));
     }).catch((error) => {

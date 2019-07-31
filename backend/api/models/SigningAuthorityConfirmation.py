@@ -36,12 +36,21 @@ class SigningAuthorityConfirmation(Auditable):
     )
     credit_trade = models.ForeignKey(
         'CreditTrade',
+        null=True,
         related_name='confirmations',
-        on_delete=models.PROTECT)
+        on_delete=models.DO_NOTHING
+    )
+    compliance_report = models.ForeignKey(
+        'ComplianceReport',
+        null=True,
+        related_name='confirmations',
+        on_delete=models.DO_NOTHING
+    )
     signing_authority_assertion = models.ForeignKey(
         'SigningAuthorityAssertion',
         related_name='confirmations',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
 
     class Meta:
         db_table = 'signing_authority_confirmation'

@@ -16,28 +16,28 @@ const bootstrapClassFor = (extraConfirmType) => {
 };
 
 class Modal extends React.Component {
-
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.initiallyShown) {
       this.show();
     }
+
     if (this.props.handleCancel) {
-      $(this.element).on('hidden.bs.modal', e => {
+      $(this.element).on('hidden.bs.modal', (e) => {
         this.props.handleCancel();
       });
     }
   }
 
-  show() {
+  show () {
     $(this.element).modal('show');
   }
 
-  render() {
+  render () {
     return (
       <div
         className="modal fade"
         id={this.props.id}
-        ref={element => this.element = element}
+        ref={element => (this.element = element)}
         tabIndex="-1"
         role="dialog"
         aria-labelledby="confirmSubmitLabel"
@@ -82,7 +82,8 @@ class Modal extends React.Component {
                 type="button"
                 className="btn btn-primary"
                 data-dismiss="modal"
-                disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm)}
+                disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
+                  this.props.disabled}
                 onClick={this.props.handleSubmit}
               >
                 {this.props.confirmLabel}
@@ -99,6 +100,7 @@ class Modal extends React.Component {
 Modal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
+  disabled: false,
   handleSubmit: null,
   handleCancel: null,
   showConfirmButton: true,
@@ -118,6 +120,7 @@ Modal.propTypes = {
     PropTypes.node
   ]).isRequired,
   confirmLabel: PropTypes.string,
+  disabled: PropTypes.bool,
   extraConfirmText: PropTypes.string,
   extraConfirmType: PropTypes.oneOf([
     'info', 'warning', 'error'

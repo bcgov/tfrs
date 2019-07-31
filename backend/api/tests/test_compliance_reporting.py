@@ -720,9 +720,8 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_draft_compliance_report_authorized(self):
-        # for now, 'Submitted' reports are not possible
         payload = {
-            'status': 'Submitted'  # currently invalid status
+            'status': 'Submitted'
         }
 
         response = self.clients['fs_user_1'].patch(
@@ -731,7 +730,7 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_draft_compliance_report_unauthorized(self):
         payload = {

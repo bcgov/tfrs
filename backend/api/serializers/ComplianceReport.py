@@ -202,7 +202,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     """
     status = SlugRelatedField(
         slug_field='status',
-        queryset=ComplianceReportStatus.objects.filter(status__in=['Draft'])
+        queryset=ComplianceReportStatus.objects.filter(status__in=['Draft', 'Submitted'])
     )
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     compliance_period = SlugRelatedField(
@@ -217,7 +217,6 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
 
     def update(self, instance, validated_data):
-
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 
@@ -364,6 +363,12 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
             )
             instance.summary = summary
 
+            instance.save()
+
+        status = validated_data.get('status', None)
+
+        if status:
+            instance.status = status
             instance.save()
 
         # all other fields are read-only
