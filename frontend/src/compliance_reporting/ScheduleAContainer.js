@@ -137,7 +137,7 @@ class ScheduleAContainer extends Component {
       }, {
         className: 'text'
       }, {
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => !this.props.fuelClasses.isFetching &&
           this.props.fuelClasses.items,
@@ -146,7 +146,7 @@ class ScheduleAContainer extends Component {
           value: 'fuelClass'
         }
       }, {
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => !this.props.notionalTransferTypes.isFetching &&
           this.props.notionalTransferTypes.items,
