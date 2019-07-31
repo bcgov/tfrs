@@ -176,7 +176,7 @@ class ScheduleDContainer extends Component {
           value: 'Fuel Class'
         }],
         [{
-          className: 'text',
+          className: 'text dropdown-indicator',
           dataEditor: Select,
           getOptions: () => this.props.referenceData.approvedFuels,
           mapping: {
@@ -186,7 +186,7 @@ class ScheduleDContainer extends Component {
         }, {
           className: 'text'
         }, {
-          className: 'text',
+          className: 'text dropdown-indicator',
           dataEditor: Select,
           getOptions: row => this._getFuelClasses(row, id),
           mapping: {
