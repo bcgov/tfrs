@@ -259,6 +259,22 @@ class ScheduleSummaryContainer extends Component {
 
   componentWillReceiveProps(nextProps, nextContext) {
     this.populateSchedules();
+
+    const {diesel, gasoline, part3} = this.state;
+    const {summary} = nextProps.scheduleState;
+
+    diesel[SCHEDULE_SUMMARY.LINE_6][2].value = summary.dieselClassRetained;
+    diesel[SCHEDULE_SUMMARY.LINE_8][2].value = summary.dieselClassDeferred;
+    gasoline[SCHEDULE_SUMMARY.LINE_17][2].value = summary.gasolineClassRetained;
+    gasoline[SCHEDULE_SUMMARY.LINE_19][2].value = summary.gasolineClassDeferred;
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+
+    this.setState({
+      diesel,
+      gasoline,
+      part3
+    });
+
   }
 
   _calculateDiesel() {
@@ -269,8 +285,8 @@ class ScheduleSummaryContainer extends Component {
     const totals = this.props.recomputedTotals;
 
     const totalPetroleumDiesel = totals.summary.totalPetroleumDiesel;
-    const totalRenewableDiesel =  totals.summary.totalRenewableDiesel;
-    const netDieselClassTransferred =  totals.summary.netDieselClassTransferred;
+    const totalRenewableDiesel = totals.summary.totalRenewableDiesel;
+    const netDieselClassTransferred = totals.summary.netDieselClassTransferred;
 
     let totalDiesel = 0;
 
@@ -378,7 +394,7 @@ class ScheduleSummaryContainer extends Component {
     const totals = this.props.recomputedTotals;
 
     const totalPetroleumGasoline = totals.summary.totalPetroleumGasoline;
-    const totalRenewableGasoline =  totals.summary.totalRenewableGasoline;
+    const totalRenewableGasoline = totals.summary.totalRenewableGasoline;
     const netGasolineClassTransferred = totals.summary.netGasolineClassTransferred;
 
 
@@ -499,7 +515,7 @@ class ScheduleSummaryContainer extends Component {
 
     part3[SCHEDULE_SUMMARY.LINE_24][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_24][2],
-      value: -1*Math.round(totalDebits)
+      value: -1 * Math.round(totalDebits)
     };
 
     const netTotal = totalCredits - totalDebits;
@@ -548,7 +564,6 @@ class ScheduleSummaryContainer extends Component {
 
   populateSchedules() {
     if (!this.props.scheduleState.summary) {
-      console.log('unpop');
       return;
     }
 
