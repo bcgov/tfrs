@@ -95,46 +95,29 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         total_petroleum_gasoline = 0
         total_renewable_diesel = 0
         total_renewable_gasoline = 0
+        net_gasoline_class_transferred = None
+        net_diesel_class_transferred = None
 
-        schedule_b_records = ScheduleBRecord.objects.filter(
-            schedule=obj.schedule_b
-        )
+        if obj.schedule_a:
+            net_gasoline_class_transferred = obj.schedule_a.net_gasoline_class_transferred
+            net_diesel_class_transferred = obj.schedule_a.net_diesel_class_transferred
 
-        for record in schedule_b_records:
-            percentage = 100
+        if obj.schedule_b:
+            total_petroleum_diesel += obj.schedule_b.total_petroleum_diesel
+            total_petroleum_gasoline += obj.schedule_b.total_petroleum_gasoline
+            total_renewable_diesel += obj.schedule_b.total_renewable_diesel
+            total_renewable_gasoline += obj.schedule_b.total_renewable_gasoline
 
-            if record.fuel_code is not None and \
-                    record.fuel_code.renewable_percentage and \
-                    record.fuel_code.renewable_percentage > 0:
-                percentage = record.fuel_code.renewable_percentage
-
-            if record.fuel_type.name in [
-                "Biodiesel", "HDRD", "Renewable diesel"]:
-                total_renewable_diesel += record.quantity * percentage / 100
-
-            elif record.fuel_type.name in ["Ethanol", "Renewable gasoline"]:
-                total_renewable_gasoline += record.quantity * percentage / 100
-
-            elif record.fuel_type.name == "Petroleum-based diesel":
-                total_petroleum_diesel += record.quantity
-
-            elif record.fuel_type.name == "Petroleum-based gasoline":
-                total_petroleum_gasoline += record.quantity
-
-        schedule_c_records = ScheduleCRecord.objects.filter(
-            schedule=obj.schedule_c
-        )
-
-        for record in schedule_c_records:
-            if record.fuel_type.name == "Petroleum-based diesel" and \
-                    record.expected_use.description == "Heating Oil":
-                total_petroleum_diesel += record.quantity
+        if obj.schedule_c:
+            total_petroleum_diesel += obj.schedule_c.total_petroleum_diesel
 
         synthetic_totals = {
             "total_petroleum_diesel": total_petroleum_diesel,
             "total_petroleum_gasoline": total_petroleum_gasoline,
             "total_renewable_diesel": total_renewable_diesel,
-            "total_renewable_gasoline": total_renewable_gasoline
+            "total_renewable_gasoline": total_renewable_gasoline,
+            "net_diesel_class_transferred": net_diesel_class_transferred,
+            "net_gasoline_class_transferred": net_gasoline_class_transferred
         }
 
         if obj.summary is not None:
@@ -170,6 +153,7 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ('compliance_period', 'schedule_a', 'schedule_b', 'schedule_c',
                   'schedule_d', 'summary')
+
 
 class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     """
@@ -215,6 +199,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
+    strip_summary = False
 
     def update(self, instance, validated_data):
         if 'schedule_d' in validated_data:
@@ -351,7 +336,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
 
             instance.save()
 
-        if 'summary' in validated_data:
+        if 'summary' in validated_data and not self.strip_summary:
             summary_data = validated_data.pop('summary')
 
             if instance.summary:
@@ -406,3 +391,4 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = '__all__'
+

@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import viewsets, permissions, status, mixins, filters
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
@@ -79,3 +80,25 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer.is_valid()
 
         return Response(serializer.errors)
+
+    @detail_route(methods=['patch'])
+    def compute_totals(self, request, pk=None):
+        """
+        This works much like a regular PATCH, but rolls back the transaction
+        """
+
+        sid = transaction.savepoint()
+        obj = self.get_object()
+        deserializer = ComplianceReportUpdateSerializer(obj, data=request.data, partial=True)
+        deserializer.strip_summary = True
+
+        if not deserializer.is_valid():
+            transaction.savepoint_rollback(sid)
+            return Response(deserializer.errors)
+
+        patched_obj = deserializer.save()
+        serializer = ComplianceReportDetailSerializer(patched_obj)
+        result = serializer.data
+        transaction.savepoint_rollback(sid)
+
+        return Response(result)

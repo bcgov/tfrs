@@ -1,3 +1,4 @@
+import decimal
 from enum import Enum
 from decimal import Decimal
 
@@ -9,6 +10,7 @@ from api.models.ExpectedUse import ExpectedUse
 from api.models.FuelClass import FuelClass
 from api.models.FuelCode import FuelCode
 from api.models.NotionalTransferType import NotionalTransferType
+from api.services.CreditCalculationService import CreditCalculationService
 from auditable.models import Commentable
 
 
@@ -17,12 +19,30 @@ class ScheduleA(Commentable):
     Container for a single instance of "Schedule A - Notional Transfers of
     Renewable Fuel" report.
     """
+
     class Meta:
         db_table = 'compliance_report_schedule_a'
 
     db_table_comment = 'Container for a single instance of "Schedule A - ' \
                        'Notional Transfers of Renewable Fuel" report.'
 
+    @property
+    def net_diesel_class_transferred(self):
+        records = self.records.all()
+        total = 0
+        for record in records:
+            if record.fuel_class.fuel_class == 'Diesel':
+             total += record.net_transferred
+        return total
+
+    @property
+    def net_gasoline_class_transferred(self):
+        records = self.records.all()
+        total = 0
+        for record in records:
+            if record.fuel_class.fuel_class == 'Gasoline':
+                total += record.net_transferred
+        return total
 
 class ScheduleARecord(Commentable):
     """
@@ -73,6 +93,17 @@ class ScheduleARecord(Commentable):
                    "Organization addresses."
     )
 
+    @property
+    def net_transferred(self):
+        k = 0
+
+        if self.transfer_type.the_type == 'Transferred':
+            k = -1
+        if self.transfer_type.the_type == 'Received':
+            k = 1
+
+        return decimal.Decimal(k) * self.quantity
+
     class Meta:
         db_table = 'compliance_report_schedule_a_record'
         ordering = ['id']
@@ -86,11 +117,78 @@ class ScheduleB(Commentable):
     Container for a single instance of "Schedule B - Part 3 Fuel Supply"
     report.
     """
+
     class Meta:
         db_table = 'compliance_report_schedule_b'
 
     db_table_comment = 'Container for a single instance of "Schedule B - ' \
                        'Part 3 Fuel Supply" report.'
+
+    @property
+    def total_credits(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            cred = record.credits
+            if cred is not None:
+                total += cred
+
+        return round(total)
+
+    @property
+    def total_debits(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            deb = record.debits
+            if deb is not None:
+                total += deb
+
+        return round(total)
+
+    @property
+    def total_petroleum_diesel(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.petroleum_diesel_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_petroleum_gasoline(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.petroleum_gasoline_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_renewable_diesel(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.renewable_diesel_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_renewable_gasoline(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.renewable_gasoline_volume
+            if val is not None:
+                total += val
+
+        return total
 
 
 class ScheduleBRecord(Commentable):
@@ -153,6 +251,152 @@ class ScheduleBRecord(Commentable):
                    'intensity was computed via the GHGenius provision'
     )
 
+    @property
+    def effective_carbon_intensity(self):
+        if self.provision_of_the_act is None:
+            return None
+
+        t = self.provision_of_the_act.determination_type.the_type
+
+        if t == 'Alternative':
+            return self.intensity
+        if t == 'GHGenius':
+            i = self.schedule_d_sheet_index
+            sheets = self.schedule.compliance_report.schedule_d.sheets.all()
+            return sheets[i].carbon_intensity
+        if t == 'Fuel Code':
+            if self.fuel_code is None:
+                return None
+            return self.fuel_code.carbon_intensity
+        if t == 'Carbon Intensity' or t == 'Default Carbon Intensity':
+            period = self.schedule.compliance_report.compliance_period
+            if self.fuel_type.credit_calculation_only:
+                obj = CreditCalculationService.get(
+                    category__name=self.fuel_type.name,
+                    effective_date=period.effective_date,
+                    model_name="PetroleumCarbonIntensity"
+                )
+                return obj.density
+            else:
+                obj = CreditCalculationService.get(
+                    category__name=self.fuel_type.default_carbon_intensity_category.name,
+                    effective_date=period.effective_date,
+                    model_name="DefaultCarbonIntensity"
+                )
+                return obj.density
+
+        return None
+
+    @property
+    def ci_limit(self):
+        period = self.schedule.compliance_report.compliance_period
+        obj = CreditCalculationService.get(
+            compliance_period=period,
+            effective_date=period.effective_date,
+            fuel_class__fuel_class=self.fuel_class.fuel_class,
+            model_name="CarbonIntensityLimit"
+        )
+        return obj.density
+
+    @property
+    def energy_density(self):
+        period = self.schedule.compliance_report.compliance_period
+        obj = CreditCalculationService.get(
+            category_id=self.fuel_type.energy_density_category_id,
+            effective_date=period.effective_date,
+            model_name="EnergyDensity"
+        )
+
+        return obj.density
+
+    @property
+    def eer(self):
+        period = self.schedule.compliance_report.compliance_period
+        obj = CreditCalculationService.get(
+            category_id=self.fuel_type.energy_effectiveness_ratio_category_id,
+            effective_date=period.effective_date,
+            fuel_class__fuel_class=self.fuel_class.fuel_class,
+            model_name="EnergyEffectivenessRatio"
+        )
+        return obj.ratio
+
+    @property
+    def energy_content(self):
+        try:
+            return self.energy_density * self.quantity
+        except TypeError:
+            return None
+
+    @property
+    def raw_credits(self):
+        credit = self.ci_limit * self.eer
+        credit = credit - self.effective_carbon_intensity
+        credit = credit * self.energy_content
+        credit = credit / 1000000
+
+        # unrounded values
+        return credit
+
+    @property
+    def credits(self):
+        try:
+            rc = self.raw_credits
+            if rc >= 0:
+                return rc
+        except TypeError:
+            return None
+
+    @property
+    def debits(self):
+        try:
+            rc = self.raw_credits
+            if rc < 0:
+                return -1 * rc
+        except TypeError:
+            return None
+
+    @property
+    def renewable_gasoline_volume(self):
+        fraction = 1
+
+        if self.fuel_code is not None and self.fuel_code.renewable_percentage is not None:
+            fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
+
+        renewable_fuels = ["Ethanol", "Renewable gasoline"]
+        if self.fuel_type.name in renewable_fuels:
+            if self.fuel_class.fuel_class == 'Gasoline':
+                return self.quantity * fraction
+
+        return 0
+
+    @property
+    def renewable_diesel_volume(self):
+        fraction = 1
+
+        if self.fuel_code is not None and self.fuel_code.renewable_percentage is not None:
+            fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
+
+        renewable_fuels = ["Biodiesel", "HDRD", "Renewable diesel"]
+        if self.fuel_type.name in renewable_fuels:
+            if self.fuel_class.fuel_class == 'Diesel':
+                return self.quantity * fraction
+
+        return 0
+
+    @property
+    def petroleum_gasoline_volume(self):
+        if self.fuel_type.name == 'Petroleum-based gasoline':
+            return self.quantity
+
+        return 0
+
+    @property
+    def petroleum_diesel_volume(self):
+        if self.fuel_type.name == 'Petroleum-based diesel':
+            return self.quantity
+
+        return 0
+
     class Meta:
         db_table = 'compliance_report_schedule_b_record'
         ordering = ['id']
@@ -166,8 +410,21 @@ class ScheduleC(Commentable):
     Container for a single instance of "Schedule C - " Fuels Used for
     Other Purposes" report.
     """
+
+    @property
+    def total_petroleum_diesel(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.petroleum_diesel_volume
+            if val is not None:
+                total += val
+
+        return total
+
     class Meta:
         db_table = 'compliance_report_schedule_c'
+
     db_table_comment = 'Container for a single instance of "Schedule C - "' \
                        'Fuels Used for Other Purposes" report.'
 
@@ -216,6 +473,14 @@ class ScheduleCRecord(Commentable):
         db_comment='Alternate rationale when expected use is "other".'
     )
 
+    @property
+    def petroleum_diesel_volume(self):
+        if self.fuel_type.name == 'Petroleum-based diesel' and \
+                self.expected_use.description == 'Heating Oil':
+            return self.quantity
+
+        return 0
+
     class Meta:
         db_table = 'compliance_report_schedule_c_record'
         ordering = ['id']
@@ -259,6 +524,15 @@ class ScheduleDSheet(Commentable):
         blank=True,
         null=True
     )
+
+    @property
+    def carbon_intensity(self):
+        out = self.outputs.all()
+        total = 0
+        for record in out:
+            total += record.intensity
+
+        return round(total / 1000, 2)
 
     class Meta:
         db_table = 'compliance_report_schedule_d_sheet'
@@ -321,6 +595,7 @@ class ScheduleDSheetOutput(Commentable):
     """
     Represents a set of spreadsheet outputs for a Schedule D record
     """
+
     class OutputCells(Enum):
         """
         Enum of possible output cell names
@@ -412,6 +687,7 @@ class ScheduleSummary(Commentable):
 
     class Meta:
         db_table = 'compliance_report_summary'
+
     db_table_comment = "Stores a set of inputs from the summary page of a " \
                        "compliance report (eg fuel volume retained or " \
                        "deferred)"

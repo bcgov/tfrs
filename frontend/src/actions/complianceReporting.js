@@ -14,17 +14,23 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     this.validateHandler = this.validateHandler.bind(this);
     this.doValidate = this.doValidate.bind(this);
 
+    this.recomputeHandler = this.recomputeHandler.bind(this);
+    this.doRecompute = this.doRecompute.bind(this);
+
   }
 
   getCustomIdentityActions() {
-    return ['VALIDATE', 'VALIDATE_SUCCESS']
+    return ['VALIDATE', 'VALIDATE_SUCCESS',
+            'RECOMPUTE', 'RECOMPUTE_SUCCESS']
   }
 
   getCustomDefaultState() {
     return {
       isValidating: false,
       validationMessages: {},
-      validationPassed: false
+      validationPassed: null,
+      isRecomputing: false,
+      recomputeResult: {},
     }
   }
 
@@ -35,7 +41,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isValidating: true,
         validationState: action.payload || null,
         validationMessages: {},
-        validationPassed: false
+        validationPassed: null
       })],
       [this.validateSuccess, (state, action) => ({
         ...state,
@@ -44,6 +50,18 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         validationMessages: action.payload,
         validationPassed: Object.keys(action.payload).length === 0
       })],
+      [this.recompute, (state, action) => ({
+        ...state,
+        isRecomputing: true,
+        recomputeState: action.payload || null,
+        recomputeResult: {}
+      })],
+      [this.recomputeSuccess, (state, action) => ({
+        ...state,
+        isRecomputing: false,
+        recomputeState: null,
+        recomputeResult: action.payload,
+      })]
     ]
   }
 
@@ -53,13 +71,19 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     return state => (state.rootReducer[sn].validationState);
   }
 
+  recomputeStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].recomputeState);
+  }
+
   doValidate(data = null) {
     const {id, state} = data;
     return axios.post(`${this.baseUrl}/${id}/validate_partial`, state);
   }
 
   * validateHandler() {
-    yield call(delay, 2500); //debounce
+    yield call(delay, 1000); //debounce
 
     const data = yield (select(this.validationStateSelector()));
 
@@ -71,9 +95,28 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
+  doRecompute(data = null) {
+    const {id, state} = data;
+    return axios.patch(`${this.baseUrl}/${id}/compute_totals`, state);
+  }
+
+  * recomputeHandler() {
+    yield call(delay, 500); //debounce
+
+    const data = yield (select(this.recomputeStateSelector()));
+
+    try {
+      const response = yield call(this.doRecompute, data);
+      yield put(this.recomputeSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
   getCustomSagas() {
     return [
       takeLatest(this.validate, this.validateHandler),
+      takeLatest(this.recompute, this.recomputeHandler),
     ]
   }
 
