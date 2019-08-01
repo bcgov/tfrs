@@ -68,8 +68,10 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleCRecord
         fields = (
-            'fuel_type', 'fuel_class', 'quantity', 'expected_use', 'rationale'
+            'fuel_type', 'fuel_class', 'quantity', 'expected_use', 'rationale',
+            'petroleum_diesel_volume'
         )
+        read_only_fields = ('petroleum_diesel_volume',)
 
 
 class ScheduleCDetailSerializer(serializers.ModelSerializer):
@@ -77,7 +79,8 @@ class ScheduleCDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleC
-        fields = ('records',)
+        fields = ('records', 'total_petroleum_diesel')
+        read_only_fields = ('total_petroleum_diesel',)
 
 
 class ScheduleBRecordSerializer(serializers.ModelSerializer):
@@ -128,10 +131,18 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
         model = ScheduleBRecord
         fields = (
             'fuel_type', 'fuel_class', 'provision_of_the_act', 'quantity',
-            'fuel_code'
+            'fuel_code', 'intensity', 'schedule_d_sheet_index',
+            'energy_density', 'eer', 'ci_limit', 'energy_content',
+            'effective_carbon_intensity', 'credits', 'debits',
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
         )
-        fields = ('fuel_type', 'fuel_class', 'provision_of_the_act', 'quantity', 'fuel_code',
-                  'schedule_d_sheet_index', 'intensity')
+        read_only_fields = (
+            'energy_density', 'eer', 'ci_limit', 'energy_content',
+            'effective_carbon_intensity', 'credits', 'debits',
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
+        )
 
 
 class ScheduleBDetailSerializer(serializers.ModelSerializer):
@@ -139,7 +150,12 @@ class ScheduleBDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleB
-        fields = ('records',)
+        fields = ('records', 'total_credits', 'total_debits',
+                  'total_petroleum_diesel', 'total_petroleum_gasoline',
+                  'total_renewable_diesel', 'total_renewable_gasoline')
+        read_only_fields = ('total_credits', 'total_debits',
+                            'total_petroleum_diesel', 'total_petroleum_gasoline',
+                            'total_renewable_diesel', 'total_renewable_gasoline')
 
 
 class ScheduleARecordSerializer(serializers.ModelSerializer):
