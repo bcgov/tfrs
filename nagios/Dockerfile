@@ -38,6 +38,8 @@ RUN chgrp -R root /var/cache/nagios3
 RUN chmod -R g+w /var/cache/nagios3
 RUN chgrp -R root /var/lib/nagios3
 RUN chmod -R g+w /var/lib/nagios3
+RUN chgrp -R root /var/log/nagios3
+RUN chmod -R g+w /var/log/nagios3
 RUN mkdir /.kube
 RUN chgrp -R root /.kube
 RUN chmod -R g+w /.kube
