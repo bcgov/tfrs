@@ -501,8 +501,13 @@ class ScheduleSummaryContainer extends Component {
     let {penalty} = this.state;
     const {summary} = this.props.scheduleState;
 
-    const {totalCredits, totalDebits} = this.props.recomputedTotals.scheduleB;
 
+    let totalCredits = 0;
+    let totalDebits= 0;
+    if (this.props.recomputedTotals.scheduleB) {
+      totalCredits = this.props.recomputedTotals.scheduleB.totalCredits;
+      totalDebits = this.props.recomputedTotals.scheduleB.totalDebits;
+    }
     if (summary.creditsOffset) {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
     }
