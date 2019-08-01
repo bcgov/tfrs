@@ -288,8 +288,15 @@
       text-align: left !important;
     }
   }
+
   .right {
     text-align: right;
+  }
+
+  &.btn-container {
+    .btn, .overlay-trigger {
+      margin: 0 0.4rem;
+    }  
   }
 }
 

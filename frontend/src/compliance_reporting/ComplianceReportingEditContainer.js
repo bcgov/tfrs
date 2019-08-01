@@ -79,6 +79,7 @@ class ComplianceReportingEditContainer extends Component {
     };
     if (props.loadedState) {
       initialState = {
+        ...initialState,
         ...props.loadedState
       };
     }
@@ -244,9 +245,10 @@ class ComplianceReportingEditContainer extends Component {
       <ScheduleButtons
         edit={this.edit}
         key="scheduleButtons"
-        submit
         delete
+        loggedInUser={this.props.loggedInUser}
         saving={this.props.saving}
+        submit
         validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid}
         validationMessages={this.props.complianceReporting.validationMessages}
@@ -265,6 +267,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
+        tooltipMessage="All declarations needs to be accepted."
       >
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
