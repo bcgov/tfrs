@@ -100,6 +100,9 @@ class ScheduleAContainer extends Component {
         grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
         grid[1 + i][SCHEDULE_A.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
       }
+
+      this._calculateTotal(grid);
+
     }
 
     this.setState({
@@ -254,8 +257,6 @@ class ScheduleAContainer extends Component {
     this._gridStateToPayload({
       grid
     });
-
-    this._calculateTotal(grid);
   }
 
   _gridStateToPayload (state) {
