@@ -4,7 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
 const ExclusionReportButtons = props => (
   <div className="exclusion-report-buttons btn-container">
@@ -12,7 +12,7 @@ const ExclusionReportButtons = props => (
     <div className="right">
       <button
         className="btn btn-default"
-        onClick={() => history.push(EXCLUSION_REPORTS.LIST)}
+        onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
