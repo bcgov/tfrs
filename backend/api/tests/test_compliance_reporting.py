@@ -100,7 +100,7 @@ class TestComplianceReporting(BaseTestCase):
                         'quantity': 10,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
                         'fuelCode': None,
-                        'intensity': 12.1
+                        'intensity': 12
                     },
                     {
                         'fuelType': 'LNG',
@@ -150,21 +150,21 @@ class TestComplianceReporting(BaseTestCase):
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 98
                     },
                     {
                         'tradingPartner': 'AB',
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 99
                     },
                     {
                         'tradingPartner': 'EF',
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 100
                     }
                 ]
             },
@@ -189,7 +189,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -210,7 +223,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                     ,
                     {
@@ -232,7 +258,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
@@ -403,7 +442,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -424,7 +476,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
@@ -478,7 +543,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -499,7 +577,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
@@ -534,7 +625,7 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     }
@@ -570,7 +661,7 @@ class TestComplianceReporting(BaseTestCase):
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 4
                     }
                 ]
             },
@@ -579,14 +670,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 11.11,
+                        'quantity': 11,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
-                        'intensity': 88.8,
+                        'intensity': 33.2,
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 12.12,
+                        'quantity': 44,
                         'provisionOfTheAct': 'Section 6 (5) (c)',
                         'fuelCode': 1
                     }
@@ -597,14 +688,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 89,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched Again'
                     }
@@ -632,10 +723,18 @@ class TestComplianceReporting(BaseTestCase):
                             }
                         ],
                         'outputs': [
-                            {
-                                'description': 'CO₂ and H₂S Removed',
-                                'intensity': 3.01
-                            }
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
                         ]
                     }
                 ]
@@ -659,7 +758,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         self.assertIsNotNone(response_data['summary'])
 
@@ -677,7 +776,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         payload = {
             'scheduleC': {
@@ -685,14 +784,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched Again'
                     }
@@ -715,7 +814,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

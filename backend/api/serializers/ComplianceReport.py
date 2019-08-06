@@ -193,8 +193,8 @@ class ComplianceReportValidator:
         seen_tuples = {}
 
         for (i, record) in enumerate(data['records']):
-            fc = record['fuel_code']
-            sdi = record['schedule_d_sheet_index']
+            fc = record['fuel_code'] if 'fuel_code' in record else None
+            sdi = record['schedule_d_sheet_index']if 'schedule_d_sheet_index' in record else None
             prov = None
 
             if ('fuel_type' in record and record['fuel_type'] is not None) and \
