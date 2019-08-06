@@ -173,6 +173,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     )
     organization = OrganizationMinSerializer(read_only=True)
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+        self.instance.create_user = request.user
+        self.instance.save()
+
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
@@ -354,7 +361,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
 
         if status:
             instance.status = status
-            instance.save()
+        
+        request = self.context['request']
+        instance.update_user = request.user
+        instance.save()
 
         # all other fields are read-only
         return instance
@@ -391,4 +401,3 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = '__all__'
-
