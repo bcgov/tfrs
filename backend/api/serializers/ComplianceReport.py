@@ -141,6 +141,44 @@ class ComplianceReportValidator:
     schedule validation (like preventing duplicate rows)
     """
 
+    def validate_schedule_a(self, data):
+        if 'records' not in data:
+            return data
+
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            prov = None
+
+            if ('trading_partner' in record and record['trading_partner'] is not None) and \
+                    ('postal_address' in record and record['postal_address'] is not None) and \
+                    ('transfer_type' in record and record['transfer_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None):
+                prov = (record['trading_partner'],
+                        record['postal_address'],
+                        record['transfer_type'],
+                        record['fuel_class']
+                        )
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
     def validate_schedule_b(self, data):
         if 'records' not in data:
             return data
@@ -164,8 +202,6 @@ class ComplianceReportValidator:
                     ('provision_of_the_act' in record and record['provision_of_the_act'] is not None) and \
                     record['provision_of_the_act'].provision in obligate_unique_provisions:
                 prov = (record['fuel_type'], record['fuel_class'], record['provision_of_the_act'])
-
-            record_path = 'scheduleB.records.{i}.{column}'
 
             if fc is not None:
                 if fc in seen_fuelcodes.keys():
@@ -191,19 +227,56 @@ class ComplianceReportValidator:
             if len(seen_fuelcodes[k]) > 1:
                 for x in seen_fuelcodes[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
 
         for k in seen_indices.keys():
             if len(seen_indices[k]) > 1:
                 for x in seen_indices[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
 
         for k in seen_tuples.keys():
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+    def validate_schedule_c(self, data):
+        if 'records' not in data:
+            return data
+
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            prov = None
+
+            if ('expected_use' in record and record['expected_use'] is not None) and \
+                    ('fuel_type' in record and record['fuel_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None) and \
+                    record['expected_use'].description != 'Other':
+                prov = (record['fuel_type'],
+                        record['fuel_class'],
+                        record['expected_use']
+                        )
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
