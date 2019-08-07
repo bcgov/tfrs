@@ -27,6 +27,14 @@ class ComplianceReportHistory(Auditable):
         related_name='compliance_reports'
     )
 
+    @property
+    def user(self):
+        """
+        Attribute to get the user who made the most recent change to the
+        record.
+        """
+        return self.create_user
+
     class Meta:
         db_table = 'compliance_report_history'
 

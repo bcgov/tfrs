@@ -89,6 +89,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_c = ScheduleCDetailSerializer(read_only=True)
     schedule_d = ScheduleDDetailSerializer(read_only=True)
     summary = serializers.SerializerMethodField()
+    history = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
         total_petroleum_diesel = 0
@@ -127,11 +128,25 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
         return synthetic_totals
 
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the credit trade
+        """
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+
+        history = obj.get_history(["Submitted"])
+
+        serializer = ComplianceReportHistorySerializer(
+            history, many=True
+        )
+
+        return serializer.data
+
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary']
+                  'summary', 'history']
 
 
 class ComplianceReportValidationSerializer(serializers.ModelSerializer):
@@ -361,10 +376,11 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
 
         if status:
             instance.status = status
-        
-        request = self.context['request']
-        instance.update_user = request.user
-        instance.save()
+
+        request = self.context.get('request')
+        if request:
+            instance.update_user = request.user
+            instance.save()
 
         # all other fields are read-only
         return instance
