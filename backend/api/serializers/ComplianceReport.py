@@ -22,6 +22,7 @@
 """
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
@@ -197,6 +198,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     strip_summary = False
 
     def update(self, instance, validated_data):
+
+        if instance.read_only:
+            raise PermissionDenied('Cannot modify this compliance report')
+
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 

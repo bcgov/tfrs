@@ -119,6 +119,7 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   _updateScheduleState(mergedState) {
+
     const {schedules} = this.state;
     const {id} = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
@@ -263,12 +264,13 @@ class ComplianceReportingEditContainer extends Component {
         updateScheduleState={this._updateScheduleState}
         validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}
+        readOnly={this.props.complianceReporting.item.readOnly}
       />,
       <ScheduleButtons
         edit={this.edit}
         key="scheduleButtons"
-        submit
-        delete
+        submit={!this.props.complianceReporting.item.readOnly}
+        delete={!this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
         validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}
