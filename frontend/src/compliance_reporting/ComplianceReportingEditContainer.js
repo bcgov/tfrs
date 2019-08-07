@@ -69,6 +69,7 @@ class ComplianceReportingEditContainer extends Component {
     this.tabComponent = Loading;
     const {tab} = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
+    this.status = 'Draft';
 
     this._updateScheduleState = this._updateScheduleState.bind(this);
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
@@ -112,8 +113,12 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
-        toastr.complianceReporting('Draft');
+        toastr.complianceReporting(this.status);
         this.props.invalidateAutosaved();
+
+        if (this.status === 'Submitted') {
+          history.push(COMPLIANCE_REPORTING.LIST);
+        }
       }
     }
   }
@@ -188,6 +193,8 @@ class ComplianceReportingEditContainer extends Component {
       status,
       ...this.state.schedules
     };
+
+    this.status = status;
 
     this.props.updateComplianceReport({
       id: this.props.match.params.id,
