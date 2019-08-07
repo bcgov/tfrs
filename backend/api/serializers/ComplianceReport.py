@@ -22,6 +22,7 @@
 """
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
@@ -132,7 +133,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary']
+                  'summary', 'read_only']
 
 
 class ComplianceReportValidator:
@@ -215,11 +216,6 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer, Complian
     """
     Validation-only Serializer for the Compliance Report
     """
-    compliance_period = SlugRelatedField(
-        slug_field='description',
-        queryset=CompliancePeriod.objects.all()
-    )
-
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
@@ -228,7 +224,7 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer, Complian
 
     class Meta:
         model = ComplianceReport
-        fields = ('compliance_period', 'schedule_a', 'schedule_b', 'schedule_c',
+        fields = ('schedule_a', 'schedule_b', 'schedule_c',
                   'schedule_d', 'summary')
 
 
@@ -279,6 +275,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
     strip_summary = False
 
     def update(self, instance, validated_data):
+
+        if instance.read_only:
+            raise PermissionDenied('Cannot modify this compliance report')
+
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 
@@ -440,7 +440,8 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary')
+                  'summary', 'read_only')
+        read_only_fields = ('compliance_period', 'read_only', 'organization')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

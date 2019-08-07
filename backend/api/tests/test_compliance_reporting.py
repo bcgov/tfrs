@@ -25,6 +25,9 @@ import json
 
 from rest_framework import status
 
+from api.models.CompliancePeriod import CompliancePeriod
+from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus, ComplianceReportType
+from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 
 
@@ -34,6 +37,17 @@ class TestComplianceReporting(BaseTestCase):
         'test/test_compliance_reporting.json',
         'test/test_fuel_codes.json'
     ]
+
+    def _create_draft_trade(self):
+        report = ComplianceReport()
+        report.status = ComplianceReportStatus.objects.get_by_natural_key('Draft')
+        report.organization = Organization.objects.get_by_natural_key(
+            "Test Org 1")
+        report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
+        report.type = ComplianceReportType.objects.get_by_natural_key('Compliance Report')
+        report.save()
+        report.refresh_from_db()
+        return report.id
 
     def test_list_compliance_reports_fs1(self):
         response = self.clients['fs_user_1'].get('/api/compliance_reports')
@@ -54,11 +68,13 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(compliance_reports), 1)
 
     def test_get_compliance_report_details_authorized(self):
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/1')
+        rid = self._create_draft_trade()
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_compliance_report_details_unauthorized(self):
-        response = self.clients['fs_user_2'].get('/api/compliance_reports/1')
+        rid = self._create_draft_trade()
+        response = self.clients['fs_user_2'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_compliance_report_details_gov_authorized(self):
@@ -237,9 +253,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -288,9 +305,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -314,9 +332,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -337,9 +356,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -360,9 +380,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -429,9 +450,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -504,9 +526,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -547,9 +570,10 @@ class TestComplianceReporting(BaseTestCase):
                 'gasolineClassDeferred': '400'
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -643,7 +667,7 @@ class TestComplianceReporting(BaseTestCase):
         }
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -665,7 +689,8 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/1')
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'
+                                                 .format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = json.loads(response.content.decode("utf-8"))
@@ -701,7 +726,7 @@ class TestComplianceReporting(BaseTestCase):
         }
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -723,14 +748,105 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Submitted'
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_revert_submitted_compliance_report_fails(self):
+        payload = {
+            'status': 'Submitted'
+        }
+
+        rid = self._create_draft_trade()
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': 'Draft'
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_patch_submitted_fails(self):
+        payload = {
+            'status': 'Submitted'
+        }
+
+        rid = self._create_draft_trade()
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 211,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 88.8,
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 500,
+                        'provisionOfTheAct': 'Section 6 (5) (c)',
+                        'fuelCode': 1
+                    }
+                ]
+            },
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 400,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 200,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched Again'
+                    }
+                ]
+            },
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
     def test_create_draft_compliance_report_unauthorized(self):
         payload = {
@@ -746,6 +862,7 @@ class TestComplianceReporting(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
     def test_create_draft_compliance_report_gov_unauthorized(self):
         payload = {

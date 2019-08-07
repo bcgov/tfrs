@@ -25,7 +25,9 @@ const ScheduleDPage = props => ([
       valueRenderer={cell => cell.value}
     />
   </div>,
+
   <div className="sheet-buttons" key="buttons">
+    {props.addRowEnabled &&
     <div className="btn-group">
       <button
         className="btn btn-default left"
@@ -34,10 +36,11 @@ const ScheduleDPage = props => ([
         }}
         type="button"
       >
-        <FontAwesomeIcon icon="plus" /> Add Row
+        <FontAwesomeIcon icon="plus"/> Add Row
       </button>
-      <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span className="caret" />
+      <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <span className="caret"/>
         <span className="sr-only">Toggle Dropdown</span>
       </button>
       <ul className="dropdown-menu">
@@ -55,7 +58,9 @@ const ScheduleDPage = props => ([
         ))}
       </ul>
     </div>
-  </div>,
+    }
+  </div>
+  ,
   <div className="scrollable output" key="output">
     <ReactDataSheet
       className={`spreadsheet ${props.scheduleType} output`}
@@ -69,10 +74,13 @@ const ScheduleDPage = props => ([
   </div>
 ]);
 
-ScheduleDPage.defaultProps = {};
+ScheduleDPage.defaultProps = {
+  addRowEnabled: true
+};
 
 ScheduleDPage.propTypes = {
   addRow: PropTypes.func.isRequired,
+  addRowEnabled: PropTypes.bool,
   handleCellsChanged: PropTypes.func.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'

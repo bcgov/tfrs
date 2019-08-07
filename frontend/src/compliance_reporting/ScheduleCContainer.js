@@ -103,7 +103,7 @@ class ScheduleCContainer extends Component {
         grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other');
+        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
         grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
 
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
@@ -145,6 +145,7 @@ class ScheduleCContainer extends Component {
           value: this.rowNumber
         }, {
           className: 'text dropdown-indicator',
+          readOnly: this.props.readOnly,
           dataEditor: Select,
           getOptions: () => this.props.referenceData.approvedFuels,
           mapping: {
@@ -153,6 +154,7 @@ class ScheduleCContainer extends Component {
           }
         }, {
           className: 'text dropdown-indicator',
+          readOnly: this.props.readOnly,
           dataEditor: Select,
           getOptions: this._getFuelClasses,
           mapping: {
@@ -167,6 +169,7 @@ class ScheduleCContainer extends Component {
             step: '1'
           },
           className: 'number',
+          readOnly: this.props.readOnly,
           dataEditor: Input,
           valueViewer: (props) => {
             const { value } = props;
@@ -176,6 +179,7 @@ class ScheduleCContainer extends Component {
           readOnly: true
         }, {
           className: 'text dropdown-indicator',
+          readOnly: this.props.readOnly,
           dataEditor: Select,
           getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
           mapping: {
@@ -344,6 +348,7 @@ class ScheduleCContainer extends Component {
     return ([
       <SchedulesPage
         addRow={this._addRow}
+        addRowEnabled={!this.props.readOnly}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
@@ -392,6 +397,7 @@ ScheduleCContainer.propTypes = {
     scheduleC: PropTypes.shape()
   }),
   period: PropTypes.string.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   scheduleState: PropTypes.shape({
     scheduleC: PropTypes.shape({
       records: PropTypes.arrayOf(PropTypes.shape())

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Input from '../../app/components/Spreadsheet/Input';
 
-const numericInput = {
+const numericInput = (readOnly) => ({
   attributes: {
     allowNegative: true,
     dataNumberToFixed: 50,
@@ -10,6 +10,7 @@ const numericInput = {
     step: '0.01'
   },
   className: 'number',
+  readOnly: readOnly,
   dataEditor: Input,
   valueViewer: (cell) => {
     const { value } = cell;
@@ -20,7 +21,7 @@ const numericInput = {
 
     return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
   }
-};
+});
 
 const totalViewer = (cell) => {
   const { value } = cell;
@@ -32,67 +33,67 @@ const totalViewer = (cell) => {
   return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
 };
 
-const ScheduleDOutput = () => ([
+const ScheduleDOutput = (readOnly) => ([
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Fuel Dispensing'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Fuel Distribution and Storage'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Fuel Production'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Feedstock Transmission'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Feedstock Recovery'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Feedstock Upgrading'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Land Use Change'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Fertilizer Manufacture'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Gas Leaks and Flares'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'CO₂ and H₂S Removed'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Emissions Displaced'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label',
     readOnly: true,
     value: 'Fuel Use (High Heating Value)'
-  }, numericInput],
+  }, numericInput(readOnly)],
   [{
     className: 'output-label total',
     readOnly: true,
