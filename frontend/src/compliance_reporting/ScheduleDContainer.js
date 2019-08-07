@@ -13,6 +13,7 @@ import ScheduleDTabs from './components/ScheduleDTabs';
 import Select from '../app/components/Spreadsheet/Select';
 import {SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
 import {numericInput} from './components/Columns';
+import SchedulesPage from "./components/SchedulesPage";
 
 class ScheduleDContainer extends Component {
   constructor(props) {
@@ -68,15 +69,20 @@ class ScheduleDContainer extends Component {
               readOnly: true,
               value: j + 1
             }, {
-              className: 'text'
+              className: 'text',
+              readOnly: nextProps.readOnly
             }, {
-              className: 'text'
+              className: 'text',
+              readOnly: nextProps.readOnly
             }, {
-              className: 'text'
+              className: 'text',
+              readOnly: nextProps.readOnly
             }, {
-              className: 'text'
+              className: 'text',
+              readOnly: nextProps.readOnly
             }, {
-              className: 'text'
+              className: 'text',
+              readOnly: nextProps.readOnly
             }]);
           }
 
@@ -93,6 +99,7 @@ class ScheduleDContainer extends Component {
           if (rowIndex !== -1) {
             sheets[i].output[rowIndex][1] = {
               ...numericInput,
+              readOnly: nextProps.readOnly,
               value: sheet.outputs[j].intensity
             };
           }
@@ -177,6 +184,7 @@ class ScheduleDContainer extends Component {
         }],
         [{
           className: 'text dropdown-indicator',
+          readOnly: this.props.readOnly,
           dataEditor: Select,
           getOptions: () => this.props.referenceData.approvedFuels,
           mapping: {
@@ -184,9 +192,11 @@ class ScheduleDContainer extends Component {
             value: 'name'
           }
         }, {
-          className: 'text'
+          className: 'text',
+          readOnly: this.props.readOnly,
         }, {
           className: 'text dropdown-indicator',
+          readOnly: this.props.readOnly,
           dataEditor: Select,
           getOptions: row => this._getFuelClasses(row, id),
           mapping: {
@@ -196,7 +206,7 @@ class ScheduleDContainer extends Component {
         }]
       ],
       id,
-      output: ScheduleDOutput()
+      output: ScheduleDOutput(this.props.readOnly)
     };
   }
 
@@ -316,6 +326,7 @@ class ScheduleDContainer extends Component {
         <ScheduleDTabs
           active={this.state.activeSheet}
           addSheet={this._addSheet}
+          addSheetEnabled={!this.props.readOnly}
           sheets={sheets}
           setActiveSheet={this._setActiveSheet}
         />
@@ -324,11 +335,13 @@ class ScheduleDContainer extends Component {
           <div className={this.state.activeSheet === sheet.id ? 'active' : 'inactive'} key={sheet.id}>
             <ScheduleDSheet
               addHeaders={this._addHeaders}
+              addRowEnabled={!this.props.readOnly}
               handleSheetChanged={this._handleSheetChanged}
               id={sheet.id}
               match={this.props.match}
               referenceData={this.props.referenceData}
               sheet={sheet}
+              readOnly={this.props.readOnly}
             />
           </div>
         ))}
@@ -353,6 +366,7 @@ ScheduleDContainer.propTypes = {
     scheduleD: PropTypes.shape()
   }),
   match: PropTypes.shape({}),
+  readOnly: PropTypes.bool.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
