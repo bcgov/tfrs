@@ -37,6 +37,7 @@ from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
     ScheduleSummaryDetailSerializer
+from api.serializers.constants import ComplianceReportValidation
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -134,7 +135,83 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'summary']
 
 
-class ComplianceReportValidationSerializer(serializers.ModelSerializer):
+class ComplianceReportValidator:
+    """
+    Validation method mixin used for validate and update serializers to check business rules for
+    schedule validation (like preventing duplicate rows)
+    """
+
+    def validate_schedule_b(self, data):
+        if 'records' not in data:
+            return data
+
+        # these provisions must be unique together with fuelType and fuelClass
+        obligate_unique_provisions = ['Section 6 (5) (a)',
+                                      'Section 6 (5) (b)',
+                                      'Section 6 (5) (d) (i)']
+
+        seen_fuelcodes = {}
+        seen_indices = {}
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            fc = record['fuel_code']
+            sdi = record['schedule_d_sheet_index']
+            prov = None
+
+            if ('fuel_type' in record and record['fuel_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None) and \
+                    ('provision_of_the_act' in record and record['provision_of_the_act'] is not None) and \
+                    record['provision_of_the_act'].provision in obligate_unique_provisions:
+                prov = (record['fuel_type'], record['fuel_class'], record['provision_of_the_act'])
+
+            record_path = 'scheduleB.records.{i}.{column}'
+
+            if fc is not None:
+                if fc in seen_fuelcodes.keys():
+                    seen_fuelcodes[fc].append(i)
+                else:
+                    seen_fuelcodes[fc] = [i]
+
+            if sdi is not None:
+                if sdi in seen_indices.keys():
+                    seen_indices[sdi].append(i)
+                else:
+                    seen_indices[sdi] = [i]
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_fuelcodes.keys():
+            if len(seen_fuelcodes[k]) > 1:
+                for x in seen_fuelcodes[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        for k in seen_indices.keys():
+            if len(seen_indices[k]) > 1:
+                for x in seen_indices[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+
+class ComplianceReportValidationSerializer(serializers.ModelSerializer, ComplianceReportValidator):
     """
     Validation-only Serializer for the Compliance Report
     """
@@ -180,7 +257,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
+class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceReportValidator):
     """
     Update Serializer for the Compliance Report
     """
@@ -391,4 +468,3 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = '__all__'
-
