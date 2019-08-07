@@ -25,6 +25,7 @@ import logging
 import uuid
 from itertools import product
 
+from api.models.ComplianceReport import ComplianceReportStatus, ComplianceReport
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType

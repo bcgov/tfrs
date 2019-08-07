@@ -29,7 +29,6 @@ class ComplianceReportingContainer extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
-        console.log(nextProps.complianceReporting.item);
         history.push(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
           .replace(':tab', 'intro')
@@ -47,7 +46,6 @@ class ComplianceReportingContainer extends Component {
   }
 
   createComplianceReport(compliancePeriodDescription) {
-    console.log(compliancePeriodDescription);
     const payload = {
       status: 'Draft',
       type: 'Compliance Report',

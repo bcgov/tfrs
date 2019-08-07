@@ -1,7 +1,7 @@
 import { numericColumn, numericInput, totalViewer } from './Columns';
 
 class ScheduleSummaryGasoline {
-  constructor () {
+  constructor (readOnly = false) {
     return [
       [{
         className: 'summary-label header',
@@ -66,6 +66,7 @@ class ScheduleSummaryGasoline {
         value: 'Line 6'
       }, {
         ...numericInput,
+        readOnly: readOnly,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
@@ -92,6 +93,7 @@ class ScheduleSummaryGasoline {
         value: 'Line 8'
       }, {
         ...numericInput,
+        readOnly: readOnly,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
