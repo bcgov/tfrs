@@ -44,6 +44,24 @@ class ScheduleDSheetSerializer(serializers.ModelSerializer):
     )
     inputs = ScheduleDSheetInputSerializer(many=True, required=True)
     outputs = ScheduleDSheetOutputSerializer(many=True, required=True)
+    feedstock = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+
+    def validate_outputs(self, data):
+        required_keys = [e.value for e in ScheduleDSheetOutput.OutputCells]
+        failures = []
+
+        actual_keys = [e['description'] for e in data]
+
+        for key in required_keys:
+            if key not in actual_keys:
+                failures.append(serializers.ValidationError(
+                    ComplianceReportValidation.missing_key.format(key=key))
+                )
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
 
     class Meta:
         model = ScheduleDSheet
@@ -65,6 +83,25 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
         slug_field='fuel_class', queryset=FuelClass.objects.all())
     expected_use = SlugRelatedField(
         slug_field='description', queryset=ExpectedUse.objects.all())
+
+    def validate_quantity(self, value):
+        if value == 0:
+            raise serializers.ValidationError(ComplianceReportValidation.zero)
+
+        if value < 0:
+            raise serializers.ValidationError(ComplianceReportValidation.negative)
+
+        if round(value) != value:
+            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+
+        return value
+
+    def validate(self, data):
+        if data['expected_use'].description == 'Other' and \
+                ('rationale' not in data or len(data['rationale']) == 0):
+            raise serializers.ValidationError(ComplianceReportValidation.missing)
+
+        return data
 
     class Meta:
         model = ScheduleCRecord
@@ -101,6 +138,9 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
     intensity = serializers.FloatField(required=False, allow_null=True, min_value=0)
 
     def validate_quantity(self, value):
+        if value == 0:
+            raise serializers.ValidationError(ComplianceReportValidation.zero)
+
         if value < 0:
             raise serializers.ValidationError(ComplianceReportValidation.negative)
 
@@ -177,6 +217,18 @@ class ScheduleARecordSerializer(serializers.ModelSerializer):
         slug_field='the_type', queryset=NotionalTransferType.objects.all())
     fuel_class = SlugRelatedField(
         slug_field='fuel_class', queryset=FuelClass.objects.all())
+
+    def validate_quantity(self, value):
+        if value == 0:
+            raise serializers.ValidationError(ComplianceReportValidation.zero)
+
+        if value < 0:
+            raise serializers.ValidationError(ComplianceReportValidation.negative)
+
+        if round(value) != value:
+            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+
+        return value
 
     class Meta:
         model = ScheduleARecord
