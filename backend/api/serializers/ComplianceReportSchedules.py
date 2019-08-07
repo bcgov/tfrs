@@ -10,6 +10,7 @@ from api.models.FuelClass import FuelClass
 from api.models.FuelCode import FuelCode
 from api.models.NotionalTransferType import NotionalTransferType
 from api.models.ProvisionOfTheAct import ProvisionOfTheAct
+from api.serializers.constants import ComplianceReportValidation
 
 
 class OutputCellSerializer(serializers.ChoiceField):
@@ -99,6 +100,15 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
     schedule_d_sheet_index = serializers.IntegerField(required=False, allow_null=True, min_value=0)
     intensity = serializers.FloatField(required=False, allow_null=True, min_value=0)
 
+    def validate_quantity(self, value):
+        if value < 0:
+            raise serializers.ValidationError(ComplianceReportValidation.negative)
+
+        if round(value) != value:
+            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+
+        return value
+
     def validate(self, data):
         """
         Check that start is before finish.
@@ -106,24 +116,28 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (A)' and
                 ('schedule_d_sheet_index' not in data or
                  data['schedule_d_sheet_index'] is None)):
-            raise serializers.ValidationError({'schedule_d_index': 'Must supply relevant Schedule D Index'})
+            raise serializers.ValidationError({'schedule_d_index': ComplianceReportValidation.missing})
 
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (B)' and
                 ('intensity' not in data or data['intensity'] is None)):
-            raise serializers.ValidationError({'intensity': 'Must supply intensity'})
+            raise serializers.ValidationError({'intensity': ComplianceReportValidation.missing})
 
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (c)' and
                 ('fuel_code' not in data or data['fuel_code'] is None)):
-            raise serializers.ValidationError({'fuel_code': 'Must supply fuel code'})
+            raise serializers.ValidationError({'fuel_code': ComplianceReportValidation.missing})
 
         if (('intensity' in data and data['intensity'] is not None) and
                 ('fuel_code' in data and data['fuel_code'] is not None)):
-            raise serializers.ValidationError({'fuel_code': 'Must not supply fuel code AND intensity'})
+            raise serializers.ValidationError(
+                {
+                    'fuel_code': ComplianceReportValidation.extra_value,
+                    'intensity': ComplianceReportValidation.extra_value
+                }
+            )
 
         if (('intensity' in data and data['intensity'] is not None) and
                 data['provision_of_the_act'].provision != 'Section 6 (5) (d) (ii) (B)'):
-            raise serializers.ValidationError({'intensity': 'Must not supply intensity when provision'
-                                                            ' is not "Section 6 (5) (d) (ii) (B)"'})
+            raise serializers.ValidationError({'intensity': ComplianceReportValidation.extra_value})
 
         return data
 
