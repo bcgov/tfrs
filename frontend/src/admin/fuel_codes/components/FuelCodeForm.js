@@ -195,7 +195,7 @@ class FuelCodeForm extends Component {
                 </button>
               </TooltipWhenDisabled>
               <TooltipWhenDisabled
-                className={`adjust-tooltip ${this.props.fields.facilityNameplate === '' ? 'adjust-for-facility-nameplate' : ''}`}
+                className={`danger adjust-tooltip ${this.props.fields.facilityNameplate === '' ? 'adjust-for-facility-nameplate' : ''}`}
                 disabled={this._getValidationMessagesForApproval().length > 0}
                 title={this._getValidationMessagesForApproval()}
               >

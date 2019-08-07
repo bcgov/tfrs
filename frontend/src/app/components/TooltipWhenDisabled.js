@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
@@ -15,12 +16,12 @@ class TooltipWhenDisabled extends Component {
 
   _tooltip () {
     return (
-      <Tooltip className={`danger ${this.props.className}`} id="tooltip">
+      <Tooltip className={this.props.className} id="tooltip">
         {Array.isArray(this.props.title) &&
-          this.props.title.map(title => (<div key={title}>{title}</div>))
+          this.props.title.map(title => (<div key={title}><ReactMarkdown source={title} /></div>))
         }
         {!Array.isArray(this.props.title) &&
-          this.props.title
+          <ReactMarkdown source={this.props.title} />
         }
       </Tooltip>
     );
@@ -36,7 +37,7 @@ class TooltipWhenDisabled extends Component {
 }
 
 TooltipWhenDisabled.defaultProps = {
-  className: '',
+  className: 'danger',
   disabled: true
 };
 
