@@ -1,0 +1,6 @@
+negative = 'Cannot be negative'
+fractional = 'Must be a whole number'
+duplicate = 'Duplicate entry'
+duplicateWithRow = 'Duplicate entry in row {row}'
+missing = 'Missing value'
+extra_value = 'Extraneous value'
