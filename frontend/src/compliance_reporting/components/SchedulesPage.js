@@ -23,6 +23,7 @@ const SchedulesPage = props => (
         />
       </div>
 
+      {props.addRowEnabled &&
       <div className="sheet-buttons">
         <div className="btn-group">
           <button
@@ -32,10 +33,11 @@ const SchedulesPage = props => (
             }}
             type="button"
           >
-            <FontAwesomeIcon icon="plus" /> Add Row
+            <FontAwesomeIcon icon="plus"/> Add Row
           </button>
-          <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span className="caret" />
+          <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false">
+            <span className="caret"/>
             <span className="sr-only">Toggle Dropdown</span>
           </button>
           <ul className="dropdown-menu">
@@ -54,6 +56,7 @@ const SchedulesPage = props => (
           </ul>
         </div>
       </div>
+      }
 
       {props.scheduleType === 'schedule-a' &&
         <ScheduleATotals
@@ -74,11 +77,13 @@ const SchedulesPage = props => (
 
 SchedulesPage.defaultProps = {
   children: null,
-  totals: {}
+  totals: {},
+  addRowEnabled: true
 };
 
 SchedulesPage.propTypes = {
   addRow: PropTypes.func.isRequired,
+  addRowEnabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

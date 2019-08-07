@@ -47,7 +47,9 @@ class ComplianceReportingService {
       empty = false;
     }
 
-    return empty ? null : (total / 1000.0);
+    total = (total / 1000).toFixed(2);
+
+    return empty ? null : total;
   }
 
   static _fetchCalculationValuePromise(compliancePeriod) {
@@ -154,7 +156,10 @@ class ComplianceReportingService {
     const response = cached.data;
 
     const fuel = response.find(e => e.name === fuelType);
-    const filteredScheduleDFuels = availableScheduleDFuels.filter(f => f.fuelType === fuel.name);
+    const filteredScheduleDFuels = availableScheduleDFuels.filter(f =>
+      (f.fuelType === fuel.name) &&
+      (fuel.fuelClasses.some(fc => f.fuelClass === fc.fuelClass))
+    );
 
     let result = {
       inputs: {
@@ -200,7 +205,7 @@ class ComplianceReportingService {
       result.inputs.provisionOfTheAct = result.parameters.provisions[0].provision;
     }
 
-    // select carbon intensity limit
+// select carbon intensity limit
     switch (result.inputs.fuelClass) {
       case 'Diesel':
         result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.diesel;
@@ -216,7 +221,7 @@ class ComplianceReportingService {
 
     const provisionObject = fuel.provisions.find(p => p.provision === provisionOfTheAct);
 
-    // select carbon intensity of fuel
+// select carbon intensity of fuel
     if (provisionObject) {
       switch (provisionObject.description) {
         case 'Default Carbon Intensity Value':
@@ -251,12 +256,12 @@ class ComplianceReportingService {
       }
     }
 
-    // compute energy content
+// compute energy content
     if (result.inputs.quantity) {
       result.outputs.energyContent = Number(result.outputs.energyDensity) * Number(result.inputs.quantity);
     }
 
-    // compute credit or debit
+// compute credit or debit
     if (result.outputs.carbonIntensityFuel && result.outputs.energyContent &&
       result.outputs.carbonIntensityLimit && result.outputs.energyEffectivenessRatio) {
       let credit = Number(result.outputs.carbonIntensityLimit) * Number(result.outputs.energyEffectivenessRatio);
