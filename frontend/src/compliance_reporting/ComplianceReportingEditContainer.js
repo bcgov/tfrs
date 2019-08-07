@@ -69,6 +69,7 @@ class ComplianceReportingEditContainer extends Component {
     this.tabComponent = Loading;
     const {tab} = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
+    this.status = 'Draft';
 
     this._updateScheduleState = this._updateScheduleState.bind(this);
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
@@ -112,13 +113,18 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
-        toastr.complianceReporting('Draft');
+        toastr.complianceReporting(this.status);
         this.props.invalidateAutosaved();
+
+        if (this.status === 'Submitted') {
+          history.push(COMPLIANCE_REPORTING.LIST);
+        }
       }
     }
   }
 
   _updateScheduleState(mergedState) {
+
     const {schedules} = this.state;
     const {id} = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
@@ -187,6 +193,8 @@ class ComplianceReportingEditContainer extends Component {
       status,
       ...this.state.schedules
     };
+
+    this.status = status;
 
     this.props.updateComplianceReport({
       id: this.props.match.params.id,
@@ -263,12 +271,13 @@ class ComplianceReportingEditContainer extends Component {
         updateScheduleState={this._updateScheduleState}
         validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}
+        readOnly={this.props.complianceReporting.item.readOnly}
       />,
       <ScheduleButtons
         edit={this.edit}
         key="scheduleButtons"
-        submit
-        delete
+        submit={!this.props.complianceReporting.item.readOnly}
+        delete={!this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
         validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}

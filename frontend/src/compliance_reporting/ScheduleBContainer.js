@@ -217,7 +217,7 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.FUEL_CLASS].value = response.inputs.fuelClass;
         grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = true;
       } else {
-        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = false;
+        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = props.readOnly;
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () =>
@@ -229,17 +229,17 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = response.inputs.provisionOfTheAct;
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = true;
       } else {
-        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = false;
+        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = props.readOnly;
       }
 
       if (response.parameters.fuelCodeSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
-        grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
+        grid[row][SCHEDULE_B.FUEL_CODE].readOnly = props.readOnly;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
       } else if (response.parameters.scheduleDSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
         if (response.parameters.scheduleDSelections.length > 0) {
-          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = props.readOnly;
           grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () =>
             (response.parameters.scheduleDSelections);
           grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select;
@@ -291,7 +291,7 @@ class ScheduleBContainer extends Component {
 
       if (response.parameters.intensityInputRequired) {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.inputs.customIntensity;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = false;
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = props.readOnly;
       } else {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel;
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true;
@@ -323,6 +323,7 @@ class ScheduleBContainer extends Component {
         value: this.rowNumber
       }, { // fuel type
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => this.props.referenceData.data.approvedFuels,
         mapping: {
@@ -331,6 +332,7 @@ class ScheduleBContainer extends Component {
         }
       }, { // fuel class
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => [],
         mapping: {
@@ -339,6 +341,7 @@ class ScheduleBContainer extends Component {
         }
       }, { // provision of the act
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         valueViewer: (props) => {
           const selectedOption = props.cell.getOptions().find(e => e.provision === props.value);
@@ -379,6 +382,7 @@ class ScheduleBContainer extends Component {
           step: '0.01'
         },
         className: 'number',
+        readOnly: this.props.readOnly,
         dataEditor: Input,
         valueViewer: (props) => {
           const {value} = props;
@@ -567,6 +571,7 @@ class ScheduleBContainer extends Component {
     return ([
       <SchedulesPage
         addRow={this._addRow}
+        addRowEnabled={!this.props.readOnly}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
@@ -602,6 +607,7 @@ ScheduleBContainer.propTypes = {
   }),
   // eslint-disable-next-line react/forbid-prop-types
   period: PropTypes.string.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,

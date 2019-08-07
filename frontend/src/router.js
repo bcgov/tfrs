@@ -53,7 +53,6 @@ import UserAddContainer from './admin/users/UserAddContainer';
 import UserEditContainer from './admin/users/UserEditContainer';
 import NotFound from './app/components/NotFound';
 import ComplianceReportingContainer from './compliance_reporting/ComplianceReportingContainer';
-import ExclusionReportContainer from './exclusion_reports/ExclusionReportContainer';
 import ExclusionReportEditContainer from './exclusion_reports/ExclusionReportEditContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
@@ -347,13 +346,6 @@ const Router = routerProps => (
           />
         ]}
         {CONFIG.EXCLUSION_REPORTS.ENABLED && [
-          <Route
-            key="exclusion_reports"
-            path={EXCLUSION_REPORTS.LIST}
-            exact
-            strict
-            component={withRouter(ExclusionReportContainer)}
-          />,
           <Route
             key="exclusion_reports_add"
             path={EXCLUSION_REPORTS.ADD}

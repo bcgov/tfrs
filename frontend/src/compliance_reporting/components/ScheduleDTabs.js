@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/scheduleColumns';
+import {SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT} from '../../constants/schedules/scheduleColumns';
 
 const ScheduleDTabs = (props) => {
   const renderTabs = (active) => {
@@ -39,7 +39,9 @@ const ScheduleDTabs = (props) => {
       <li
         role="presentation"
       >
+        {props.addSheetEnabled &&
         <button type="button" onClick={() => props.addSheet()}>Add Fuel</button>
+        }
       </li>
       {renderTabs(props.active)}
     </ul>
@@ -47,11 +49,13 @@ const ScheduleDTabs = (props) => {
 };
 
 ScheduleDTabs.defaultProps = {
+  addSheetEnabled: true
 };
 
 ScheduleDTabs.propTypes = {
   active: PropTypes.number.isRequired,
   addSheet: PropTypes.func.isRequired,
+  addSheetEnabled: PropTypes.bool,
   setActiveSheet: PropTypes.func.isRequired,
   sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };

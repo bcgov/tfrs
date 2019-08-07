@@ -22,6 +22,7 @@
 """
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
@@ -37,6 +38,7 @@ from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
     ScheduleSummaryDetailSerializer
+from api.serializers.constants import ComplianceReportValidation
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -146,18 +148,239 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'history']
+                  'summary', 'read_only', 'history']
 
 
-class ComplianceReportValidationSerializer(serializers.ModelSerializer):
+class ComplianceReportValidator:
+    """
+    Validation method mixin used for validate and update serializers to check business rules for
+    schedule validation (like preventing duplicate rows)
+    """
+
+class ComplianceReportValidator:
+    """
+    Validation method mixin used for validate and update serializers to check business rules for
+    schedule validation (like preventing duplicate rows)
+    """
+
+    def validate_schedule_a(self, data):
+        if 'records' not in data:
+            return data
+
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            prov = None
+
+            if ('trading_partner' in record and record['trading_partner'] is not None) and \
+                    ('postal_address' in record and record['postal_address'] is not None) and \
+                    ('transfer_type' in record and record['transfer_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None):
+                prov = (record['trading_partner'],
+                        record['postal_address'],
+                        record['transfer_type'],
+                        record['fuel_class']
+                        )
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+    def validate_schedule_b(self, data):
+        if 'records' not in data:
+            return data
+
+        # these provisions must be unique together with fuelType and fuelClass
+        obligate_unique_provisions = ['Section 6 (5) (a)',
+                                      'Section 6 (5) (b)',
+                                      'Section 6 (5) (d) (i)']
+
+        seen_fuelcodes = {}
+        seen_indices = {}
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            fc = record['fuel_code'] if 'fuel_code' in record else None
+            sdi = record['schedule_d_sheet_index']if 'schedule_d_sheet_index' in record else None
+            prov = None
+
+            if ('fuel_type' in record and record['fuel_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None) and \
+                    ('provision_of_the_act' in record and record['provision_of_the_act'] is not None) and \
+                    record['provision_of_the_act'].provision in obligate_unique_provisions:
+                prov = (record['fuel_type'], record['fuel_class'], record['provision_of_the_act'])
+
+            if fc is not None:
+                if fc in seen_fuelcodes.keys():
+                    seen_fuelcodes[fc].append(i)
+                else:
+                    seen_fuelcodes[fc] = [i]
+
+            if sdi is not None:
+                if sdi in seen_indices.keys():
+                    seen_indices[sdi].append(i)
+                else:
+                    seen_indices[sdi] = [i]
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_fuelcodes.keys():
+            if len(seen_fuelcodes[k]) > 1:
+                for x in seen_fuelcodes[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        for k in seen_indices.keys():
+            if len(seen_indices[k]) > 1:
+                for x in seen_indices[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+    def validate_schedule_c(self, data):
+        if 'records' not in data:
+            return data
+
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            prov = None
+
+            if ('expected_use' in record and record['expected_use'] is not None) and \
+                    ('fuel_type' in record and record['fuel_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None) and \
+                    record['expected_use'].description != 'Other':
+                prov = (record['fuel_type'],
+                        record['fuel_class'],
+                        record['expected_use']
+                        )
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+
+class ComplianceReportValidationSerializer(serializers.ModelSerializer, ComplianceReportValidator):
+    def validate_schedule_b(self, data):
+        if 'records' not in data:
+            return data
+
+        # these provisions must be unique together with fuelType and fuelClass
+        obligate_unique_provisions = ['Section 6 (5) (a)',
+                                      'Section 6 (5) (b)',
+                                      'Section 6 (5) (d) (i)']
+
+        seen_fuelcodes = {}
+        seen_indices = {}
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            fc = record['fuel_code']
+            sdi = record['schedule_d_sheet_index']
+            prov = None
+
+            if ('fuel_type' in record and record['fuel_type'] is not None) and \
+                    ('fuel_class' in record and record['fuel_class'] is not None) and \
+                    ('provision_of_the_act' in record and record['provision_of_the_act'] is not None) and \
+                    record['provision_of_the_act'].provision in obligate_unique_provisions:
+                prov = (record['fuel_type'], record['fuel_class'], record['provision_of_the_act'])
+
+            record_path = 'scheduleB.records.{i}.{column}'
+
+            if fc is not None:
+                if fc in seen_fuelcodes.keys():
+                    seen_fuelcodes[fc].append(i)
+                else:
+                    seen_fuelcodes[fc] = [i]
+
+            if sdi is not None:
+                if sdi in seen_indices.keys():
+                    seen_indices[sdi].append(i)
+                else:
+                    seen_indices[sdi] = [i]
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_fuelcodes.keys():
+            if len(seen_fuelcodes[k]) > 1:
+                for x in seen_fuelcodes[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        for k in seen_indices.keys():
+            if len(seen_indices[k]) > 1:
+                for x in seen_indices[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+
+class ComplianceReportValidationSerializer(serializers.ModelSerializer, ComplianceReportValidator):
     """
     Validation-only Serializer for the Compliance Report
     """
-    compliance_period = SlugRelatedField(
-        slug_field='description',
-        queryset=CompliancePeriod.objects.all()
-    )
-
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
@@ -166,7 +389,7 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReport
-        fields = ('compliance_period', 'schedule_a', 'schedule_b', 'schedule_c',
+        fields = ('schedule_a', 'schedule_b', 'schedule_c',
                   'schedule_d', 'summary')
 
 
@@ -202,7 +425,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
+class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceReportValidator):
     """
     Update Serializer for the Compliance Report
     """
@@ -224,6 +447,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     strip_summary = False
 
     def update(self, instance, validated_data):
+
+        if instance.read_only:
+            raise PermissionDenied('Cannot modify this compliance report')
+
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 
@@ -389,7 +616,8 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary')
+                  'summary', 'read_only')
+        read_only_fields = ('compliance_period', 'read_only', 'organization')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
