@@ -18,6 +18,9 @@ const toastr = {
       case 'Created':
         reduxToastr.success('Success!', 'New Compliance Report Created');
         break;
+      case 'Submitted':
+        reduxToastr.success('Success!', 'Compliance Report submitted.');
+        break;
       default:
         reduxToastr.success('Success!', 'Compliance Report saved.');
     }

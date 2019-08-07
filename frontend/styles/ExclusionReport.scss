@@ -1,17 +1,3 @@
-.page_exclusion_report {
-  .inactive {
-    display: none;
-  }
-
-  .right-toolbar-container .actions-container {
-    margin-bottom: 1rem;
-
-    #new-exclusion-report {
-      margin: 0;
-    }
-  }
-}
-
 .page_exclusion_report .data-grid-container {
   min-width: 1200px;
 }

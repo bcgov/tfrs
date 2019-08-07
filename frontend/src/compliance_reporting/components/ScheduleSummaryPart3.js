@@ -1,4 +1,8 @@
+import React from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import { numericColumn, numericInput, totalViewer } from './Columns';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 
 class ScheduleSummaryPart3 {
   constructor () {
@@ -25,7 +29,18 @@ class ScheduleSummaryPart3 {
         value: 'Total credits from fuel supplied (from Schedule B)'
       }, {
         readOnly: true,
-        value: 'Line 23'
+        value: (
+          <div>
+            {`Line 23 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="This line displays the total number of credits for the compliance period and is informed from reporting in Schedule B."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, numericColumn, {
         readOnly: true,
         value: 'Credits'
@@ -36,7 +51,18 @@ class ScheduleSummaryPart3 {
         value: 'Total debits from fuel supplied (from Schedule B)'
       }, {
         readOnly: true,
-        value: 'Line 24'
+        value: (
+          <div>
+            {`Line 24 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="This line displays the total number of debits for the compliance period and is informed from reporting in Schedule B."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, numericColumn, {
         readOnly: true,
         value: '(Debits)'
@@ -47,7 +73,18 @@ class ScheduleSummaryPart3 {
         value: 'Net credit or debit balance for compliance period'
       }, {
         readOnly: true,
-        value: 'Line 25'
+        value: (
+          <div>
+            {`Line 25 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="This line displays the net balance of credits or debits for the compliance period."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, numericColumn, {
         readOnly: true,
         value: 'Credits (Debits)'
@@ -58,7 +95,18 @@ class ScheduleSummaryPart3 {
         value: 'Credits used to offset debits (if applicable)'
       }, {
         readOnly: true,
-        value: 'Line 26'
+        value: (
+          <div>
+            {`Line 26 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, {
         ...numericInput,
         attributes: {
@@ -80,7 +128,18 @@ class ScheduleSummaryPart3 {
       }, {
         className: 'total',
         readOnly: true,
-        value: 'Line 27'
+        value: (
+          <div>
+            {`Line 27 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="This line displays the outstanding debit balance (if any) based on the information provided."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, numericColumn, {
         className: 'total',
         readOnly: true,
@@ -93,7 +152,18 @@ class ScheduleSummaryPart3 {
       }, {
         className: 'total',
         readOnly: true,
-        value: 'Line 28'
+        value: (
+          <div>
+            {`Line 28 `}
+            <TooltipWhenDisabled
+              className="info"
+              disabled
+              title="This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </TooltipWhenDisabled>
+          </div>
+        )
       }, {
         ...totalViewer,
         className: 'total numeric'
