@@ -170,21 +170,42 @@ class ScheduleBContainer extends Component {
       if (!this.props.valid &&
         this.props.validationMessages &&
         this.props.validationMessages.scheduleB &&
-        'fuelClass' in this.props.validationMessages.scheduleB.records[row - 2] &&
-        grid[row][SCHEDULE_B.FUEL_CLASS].className.indexOf('error') < 0) {
-        grid[row][SCHEDULE_B.FUEL_CLASS] = {
-          ...grid[row][SCHEDULE_B.FUEL_CLASS],
-          className: `${grid[row][SCHEDULE_B.FUEL_CLASS].className} error`
-        };
-
+        this.props.validationMessages.scheduleB.records.length > (row - 2)) {
         const errorCells = Object.keys(this.props.validationMessages.scheduleB.records[row - 2]);
+
+        if (errorCells.indexOf('fuelType') < 0) {
+          grid[row][SCHEDULE_B.FUEL_TYPE].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+        }
+
+        if (errorCells.indexOf('fuelClass') < 0) {
+          grid[row][SCHEDULE_B.FUEL_CLASS].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+        }
+
+        if (errorCells.indexOf('provisionOfTheAct') < 0) {
+          grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+        }
+
+        if (errorCells.indexOf('quantity') < 0) {
+          grid[row][SCHEDULE_B.QUANTITY].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+        }
+
+        if (errorCells.indexOf('intensity') < 0) {
+          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].className = grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
+        }
+
         // eslint-disable-next-line no-loop-func
         errorCells.forEach((error) => {
-          const col = SCHEDULE_B_ERROR_KEYS[error];
-          if (grid[row][col].className.indexOf('error') < 0) {
+          if (error in SCHEDULE_B_ERROR_KEYS) {
+            const col = SCHEDULE_B_ERROR_KEYS[error];
+            let { className } = grid[row][col];
+
+            if (grid[row][col].className.indexOf('error') < 0) {
+              className += ' error';
+            }
+
             grid[row][col] = {
               ...grid[row][col],
-              className: `${grid[row][col].className} error`
+              className
             };
           }
         });

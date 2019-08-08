@@ -63,6 +63,10 @@
           }
         }
 
+        &.error {
+          background-color: $light-red;
+        }
+
         &.number {
           text-align: right;
 
