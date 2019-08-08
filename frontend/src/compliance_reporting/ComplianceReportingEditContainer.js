@@ -248,6 +248,7 @@ class ComplianceReportingEditContainer extends Component {
         active={tab}
         compliancePeriod={period}
         edit={this.edit}
+        hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
         id={id}
         key="nav"
       />,

@@ -32,8 +32,9 @@ from api.models.ComplianceReportSchedules import \
     ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
+from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.serializers import \
-    OrganizationMinSerializer, CompliancePeriodSerializer
+    OrganizationMinSerializer, CompliancePeriodSerializer, datetime
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
@@ -75,7 +76,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
-                  'update_timestamp')
+                  'update_timestamp', 'has_snapshot', 'read_only')
 
 
 class ComplianceReportDetailSerializer(serializers.ModelSerializer):
@@ -133,7 +134,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only']
+                  'summary', 'read_only', 'has_snapshot']
 
 
 class ComplianceReportValidator:
@@ -581,7 +582,24 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
         if status:
             instance.status = status
+            if (status.status in ['Submitted']):
+                # Create a snapshot
+                request = self.context.get('request')
+                snap = dict(ComplianceReportDetailSerializer(instance).data)
+                snap['version'] = 1  # to track deserialization version
+                snap['timestamp'] = datetime.now()
+
+                ComplianceReportSnapshot.objects.filter(compliance_report=instance).delete()
+                ComplianceReportSnapshot.objects.create(
+                    compliance_report=instance,
+                    create_user=request.user,
+                    create_timestamp=datetime.now(),
+                    snapshot=snap
+                )
+
             instance.save()
+
+
 
         # all other fields are read-only
         return instance
@@ -590,8 +608,9 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only')
-        read_only_fields = ('compliance_period', 'read_only', 'organization')
+                  'summary', 'read_only', 'has_snapshot')
+        read_only_fields = ('compliance_period', 'read_only',
+                            'has_snapshot', 'organization')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
@@ -619,3 +638,13 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = '__all__'
+
+
+class ComplianceReportSnapshotSerializer(serializers.ModelSerializer):
+    """
+    Serialize snapshots
+    """
+    class Meta:
+        model = ComplianceReportSnapshot
+        fields = '__all__'
+

@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from api.managers.ComplianceReportStatusManager import \
@@ -5,6 +6,7 @@ from api.managers.ComplianceReportStatusManager import \
 from api.managers.TheTypeManager import TheTypeManager
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, ScheduleB, ScheduleA, ScheduleSummary
+from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.models.Organization import Organization
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -139,6 +141,12 @@ class ComplianceReport(Auditable):
     @property
     def read_only(self):
         return self.status.status not in ['Draft']
+
+    @property
+    def has_snapshot(self):
+        return ComplianceReportSnapshot.objects.\
+                   filter(compliance_report=self).count() > 0
+
 
     class Meta:
         db_table = 'compliance_report'

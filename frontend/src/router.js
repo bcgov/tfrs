@@ -72,6 +72,7 @@ import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 import ComplianceReportingEditContainer from './compliance_reporting/ComplianceReportingEditContainer';
+import ComplianceReportingSnapshotContainer from './compliance_reporting/SnapshotContainer';
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -273,6 +274,12 @@ const Router = routerProps => (
             key="compliance_reporting_list"
             path={CREDIT_CALCULATIONS.LIST}
             component={withRouter(AdminComplianceReportingContainer)}
+          />,
+          <Route
+            exact
+            key="compliance_reporting_snapshot"
+            path={COMPLIANCE_REPORTING.SNAPSHOT}
+            component={withRouter(ComplianceReportingSnapshotContainer)}
           />,
           <Route
             key="carbon_intensity_limit_details"

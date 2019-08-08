@@ -17,11 +17,14 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     this.recomputeHandler = this.recomputeHandler.bind(this);
     this.doRecompute = this.doRecompute.bind(this);
 
+    this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
+    this.doGetSnapshot = this.doGetSnapshot.bind(this);
   }
 
   getCustomIdentityActions() {
     return ['VALIDATE', 'VALIDATE_SUCCESS',
-            'RECOMPUTE', 'RECOMPUTE_SUCCESS']
+            'RECOMPUTE', 'RECOMPUTE_SUCCESS',
+            'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS']
   }
 
   getCustomDefaultState() {
@@ -30,6 +33,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       validationMessages: {},
       validationPassed: null,
       isRecomputing: false,
+      isGettingSnapshot: false,
+      snapshotItem: null,
       recomputeResult: {},
     }
   }
@@ -61,6 +66,17 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isRecomputing: false,
         recomputeState: null,
         recomputeResult: action.payload,
+      })],
+      [this.getSnapshot, (state, action) => ({
+        ...state,
+        id: action.payload.id || action.payload,
+        isGettingSnapshot: true,
+        snapshotItem: null,
+      })],
+      [this.getSnapshotSuccess, (state, action) => ({
+        ...state,
+        isGettingSnapshot: false,
+        snapshotItem: action.payload,
       })]
     ]
   }
@@ -113,10 +129,28 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
+  doGetSnapshot(data = null) {
+    const id = data;
+    return axios.get(`${this.baseUrl}/${id}/snapshot`);
+  }
+
+  * getSnapshotHandler() {
+    const data = yield (select(this.idSelector()));
+
+    try {
+      const response = yield call(this.doGetSnapshot, data);
+      yield put(this.getSnapshotSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
   getCustomSagas() {
     return [
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
+      takeLatest(this.getSnapshot, this.getSnapshotHandler),
+
     ]
   }
 
