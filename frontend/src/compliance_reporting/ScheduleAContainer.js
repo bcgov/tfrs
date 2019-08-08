@@ -135,11 +135,14 @@ class ScheduleAContainer extends Component {
       }, {
         attributes: {},
         className: 'text',
+        readOnly: this.props.readOnly,
         dataEditor: OrganizationAutocomplete
       }, {
-        className: 'text'
+        className: 'text',
+        readOnly: this.props.readOnly,
       }, {
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => !this.props.fuelClasses.isFetching &&
           this.props.fuelClasses.items,
@@ -149,6 +152,7 @@ class ScheduleAContainer extends Component {
         }
       }, {
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => !this.props.notionalTransferTypes.isFetching &&
           this.props.notionalTransferTypes.items,
@@ -164,6 +168,7 @@ class ScheduleAContainer extends Component {
           step: '1'
         },
         className: 'number',
+        readOnly: this.props.readOnly,
         dataEditor: Input,
         valueViewer: (props) => {
           const { value } = props;
@@ -293,6 +298,7 @@ class ScheduleAContainer extends Component {
     return ([
       <SchedulesPage
         addRow={this._addRow}
+        addRowEnabled={!this.props.readOnly}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
@@ -339,6 +345,7 @@ ScheduleAContainer.propTypes = {
     scheduleA: PropTypes.shape()
   }),
   period: PropTypes.string.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   scheduleState: PropTypes.shape({
     scheduleA: PropTypes.shape({
       records: PropTypes.arrayOf(PropTypes.shape())

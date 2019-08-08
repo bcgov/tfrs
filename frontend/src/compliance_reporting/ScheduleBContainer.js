@@ -3,19 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
-import { formatNumeric } from '../utils/functions';
+import {SCHEDULE_B} from '../constants/schedules/scheduleColumns';
+import {formatNumeric} from '../utils/functions';
 import ComplianceReportingService from './services/ComplianceReportingService';
+import Modal from "../app/components/Modal";
 
 class ScheduleBContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -63,11 +64,11 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity Limit<br />(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity Limit<br/>(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity of Fuel<br />(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity of Fuel<br/>(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,
@@ -97,11 +98,15 @@ class ScheduleBContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
-      ...ScheduleBContainer.addHeaders()
+      ...ScheduleBContainer.addHeaders(),
+      warningModal: {
+        fuelType: '',
+        fuelClass: ''
+      }
     };
 
     this.rowNumber = 1;
@@ -116,7 +121,7 @@ class ScheduleBContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.scheduleState.scheduleB) {
       // we already have the state. don't load it. just render it.
       this.componentWillReceiveProps(this.props);
@@ -127,8 +132,8 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    const { grid } = this.state;
+  componentWillReceiveProps(nextProps) {
+    const {grid} = this.state;
 
     if (!nextProps.scheduleState.scheduleB || !nextProps.scheduleState.scheduleB.records) {
       return;
@@ -168,12 +173,12 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  loadInitialState () {
+  loadInitialState() {
     this.rowNumber = 1;
 
     const records = [];
     for (let i = 0; i < this.props.complianceReport.scheduleB.records.length; i += 1) {
-      records.push({ ...this.props.complianceReport.scheduleB.records[i] });
+      records.push({...this.props.complianceReport.scheduleB.records[i]});
       this.props.updateScheduleState({
         scheduleB: {
           records
@@ -182,8 +187,8 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  recomputeDerivedState (props, state) {
-    const { grid } = state;
+  recomputeDerivedState(props, state) {
+    const {grid} = state;
 
     for (let i = 2; i < grid.length; i += 1) {
       const row = i;
@@ -212,34 +217,70 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.FUEL_CLASS].value = response.inputs.fuelClass;
         grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = true;
       } else {
-        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = false;
+        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = props.readOnly;
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () =>
         (response.parameters.provisions);
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].selectedProvision =
-      response.outputs.selectedProvision;
+        response.outputs.selectedProvision;
 
       if (response.parameters.singleProvisionAvailable) {
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = response.inputs.provisionOfTheAct;
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = true;
       } else {
-        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = false;
+        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].readOnly = props.readOnly;
       }
 
       if (response.parameters.fuelCodeSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
-        grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
+        grid[row][SCHEDULE_B.FUEL_CODE].readOnly = props.readOnly;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
       } else if (response.parameters.scheduleDSelectionRequired) {
-        grid[row][SCHEDULE_B.FUEL_CODE].readOnly = false;
-        grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () =>
-          (response.parameters.scheduleDSelections);
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
+        if (response.parameters.scheduleDSelections.length > 0) {
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = props.readOnly;
+          grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () =>
+            (response.parameters.scheduleDSelections);
+          grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select;
+          grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (props) => {
+            const selectedOption = props.cell.getOptions().find(e =>
+              String(e.id) === String(props.value));
+            if (selectedOption) {
+              return <span>{selectedOption.descriptiveName}</span>;
+            }
+            return <span>{props.value}</span>;
+          }
+
+        } else {
+          grid[row][SCHEDULE_B.FUEL_CODE].readOnly = true;
+
+          grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (props) => {
+            return <a onClick={() => {
+              this.setState({
+                warningModal: {
+                  fuelType: response.inputs.fuelType,
+                  fuelClass: response.inputs.fuelClass
+                }
+              });
+            }
+            } data-toggle='modal' data-target='#GHGeniusWarning'>Not Found</a>;
+          }
+
+        }
       } else {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => [];
         grid[row][SCHEDULE_B.FUEL_CODE].readOnly = true;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
+        grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select;
+        grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (props) => {
+          const selectedOption = props.cell.getOptions().find(e =>
+            String(e.id) === String(props.value));
+          if (selectedOption) {
+            return <span>{selectedOption.descriptiveName}</span>;
+          }
+          return <span>{props.value}</span>;
+        }
       }
 
       grid[row][SCHEDULE_B.UNITS].value = response.parameters.unitOfMeasure.name;
@@ -250,13 +291,13 @@ class ScheduleBContainer extends Component {
 
       if (response.parameters.intensityInputRequired) {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.inputs.customIntensity;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = false;
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = props.readOnly;
       } else {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel;
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true;
       }
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue =
-      response.outputs.customIntensityValue;
+        response.outputs.customIntensityValue;
 
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent;
       grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits;
@@ -273,8 +314,8 @@ class ScheduleBContainer extends Component {
     this._calculateTotal(grid);
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{ // id
@@ -282,6 +323,7 @@ class ScheduleBContainer extends Component {
         value: this.rowNumber
       }, { // fuel type
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => this.props.referenceData.data.approvedFuels,
         mapping: {
@@ -290,6 +332,7 @@ class ScheduleBContainer extends Component {
         }
       }, { // fuel class
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         getOptions: () => [],
         mapping: {
@@ -298,6 +341,7 @@ class ScheduleBContainer extends Component {
         }
       }, { // provision of the act
         className: 'text dropdown-indicator',
+        readOnly: this.props.readOnly,
         dataEditor: Select,
         valueViewer: (props) => {
           const selectedOption = props.cell.getOptions().find(e => e.provision === props.value);
@@ -338,9 +382,10 @@ class ScheduleBContainer extends Component {
           step: '0.01'
         },
         className: 'number',
+        readOnly: this.props.readOnly,
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }, { // units
@@ -359,7 +404,7 @@ class ScheduleBContainer extends Component {
         dataEditor: Input,
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value && value !== '-' ? formatNumeric(Number(value), 2) : value}</span>;
         }
       }, { // energy density
@@ -372,21 +417,21 @@ class ScheduleBContainer extends Component {
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // credit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // debit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }]);
@@ -399,8 +444,8 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _calculateTotal (grid) {
-    let { totals } = this.state;
+  _calculateTotal(grid) {
+    let {totals} = this.state;
     totals = {
       credit: 0,
       debit: 0
@@ -427,7 +472,7 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -462,10 +507,10 @@ class ScheduleBContainer extends Component {
       grid
     });
 
-    this.recomputeDerivedState(this.props, { grid });
+    this.recomputeDerivedState(this.props, {grid});
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const startingRow = 2;
 
     const records = [];
@@ -522,17 +567,28 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  render () {
+  render() {
     return ([
       <SchedulesPage
         addRow={this._addRow}
+        addRowEnabled={!this.props.readOnly}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
-      />
+      />,
+      <Modal
+        id="GHGeniusWarning"
+        key="ghgeniusWarning"
+        showConfirmButton={false}
+        cancelLabel="OK"
+        title="No Entry Found"
+      >
+        No Schedule D entry exists for {this.state.warningModal.fuelType}, {this.state.warningModal.fuelClass} class.
+        Please complete a record of inputs and outputs within Schedule D of this compliance report.
+      </Modal>
     ]);
   }
 }
@@ -551,6 +607,7 @@ ScheduleBContainer.propTypes = {
   }),
   // eslint-disable-next-line react/forbid-prop-types
   period: PropTypes.string.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,

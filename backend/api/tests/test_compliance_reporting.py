@@ -25,6 +25,9 @@ import json
 
 from rest_framework import status
 
+from api.models.CompliancePeriod import CompliancePeriod
+from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus, ComplianceReportType
+from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 
 
@@ -34,6 +37,17 @@ class TestComplianceReporting(BaseTestCase):
         'test/test_compliance_reporting.json',
         'test/test_fuel_codes.json'
     ]
+
+    def _create_draft_trade(self):
+        report = ComplianceReport()
+        report.status = ComplianceReportStatus.objects.get_by_natural_key('Draft')
+        report.organization = Organization.objects.get_by_natural_key(
+            "Test Org 1")
+        report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
+        report.type = ComplianceReportType.objects.get_by_natural_key('Compliance Report')
+        report.save()
+        report.refresh_from_db()
+        return report.id
 
     def test_list_compliance_reports_fs1(self):
         response = self.clients['fs_user_1'].get('/api/compliance_reports')
@@ -54,11 +68,13 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(compliance_reports), 1)
 
     def test_get_compliance_report_details_authorized(self):
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/1')
+        rid = self._create_draft_trade()
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_compliance_report_details_unauthorized(self):
-        response = self.clients['fs_user_2'].get('/api/compliance_reports/1')
+        rid = self._create_draft_trade()
+        response = self.clients['fs_user_2'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_compliance_report_details_gov_authorized(self):
@@ -100,7 +116,7 @@ class TestComplianceReporting(BaseTestCase):
                         'quantity': 10,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
                         'fuelCode': None,
-                        'intensity': 12.1
+                        'intensity': 12
                     },
                     {
                         'fuelType': 'LNG',
@@ -150,21 +166,21 @@ class TestComplianceReporting(BaseTestCase):
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 98
                     },
                     {
                         'tradingPartner': 'AB',
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 99
                     },
                     {
                         'tradingPartner': 'EF',
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 100
                     }
                 ]
             },
@@ -189,7 +205,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -210,7 +239,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                     ,
                     {
@@ -232,14 +274,28 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -288,9 +344,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -314,9 +371,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -337,9 +395,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -360,9 +419,10 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -403,7 +463,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -424,14 +497,28 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -478,7 +565,20 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     },
                     {
                         'fuelType': 'CNG',
@@ -499,14 +599,28 @@ class TestComplianceReporting(BaseTestCase):
                                 'units': 'percent',
                             }
                         ],
-                        'outputs': []
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
                     }
                 ]
             },
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -534,7 +648,7 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     }
@@ -547,9 +661,10 @@ class TestComplianceReporting(BaseTestCase):
                 'gasolineClassDeferred': '400'
             }
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -570,7 +685,7 @@ class TestComplianceReporting(BaseTestCase):
                         'postalAddress': '123 Main St\nVictoria, BC',
                         'fuelClass': 'Diesel',
                         'transferType': 'Received',
-                        'quantity': 98.1
+                        'quantity': 4
                     }
                 ]
             },
@@ -579,14 +694,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 11.11,
+                        'quantity': 11,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
-                        'intensity': 88.8,
+                        'intensity': 33.2,
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 12.12,
+                        'quantity': 44,
                         'provisionOfTheAct': 'Section 6 (5) (c)',
                         'fuelCode': 1
                     }
@@ -597,14 +712,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 89,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched Again'
                     }
@@ -632,10 +747,18 @@ class TestComplianceReporting(BaseTestCase):
                             }
                         ],
                         'outputs': [
-                            {
-                                'description': 'CO₂ and H₂S Removed',
-                                'intensity': 3.01
-                            }
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
                         ]
                     }
                 ]
@@ -643,7 +766,7 @@ class TestComplianceReporting(BaseTestCase):
         }
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -659,13 +782,14 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         self.assertIsNotNone(response_data['summary'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/1')
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'
+                                                 .format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = json.loads(response.content.decode("utf-8"))
@@ -677,7 +801,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         payload = {
             'scheduleC': {
@@ -685,14 +809,14 @@ class TestComplianceReporting(BaseTestCase):
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched'
                     },
                     {
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
-                        'quantity': 88.1,
+                        'quantity': 88,
                         'expectedUse': 'Other',
                         'rationale': 'Patched Again'
                     }
@@ -701,7 +825,7 @@ class TestComplianceReporting(BaseTestCase):
         }
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -715,7 +839,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertIsNotNone(response_data['scheduleD'])
         self.assertEqual(len(response_data['scheduleD']['sheets']), 1)
         self.assertEqual(len(response_data['scheduleD']['sheets'][0]['inputs']), 2)
-        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 1)
+        self.assertEqual(len(response_data['scheduleD']['sheets'][0]['outputs']), 12)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -723,14 +847,105 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Submitted'
         }
+        rid = self._create_draft_trade()
 
         response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/1',
+            '/api/compliance_reports/{id}'.format(id=rid),
             content_type='application/json',
             data=json.dumps(payload)
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_revert_submitted_compliance_report_fails(self):
+        payload = {
+            'status': 'Submitted'
+        }
+
+        rid = self._create_draft_trade()
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': 'Draft'
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_patch_submitted_fails(self):
+        payload = {
+            'status': 'Submitted'
+        }
+
+        rid = self._create_draft_trade()
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 211,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 88.8,
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 500,
+                        'provisionOfTheAct': 'Section 6 (5) (c)',
+                        'fuelCode': 1
+                    }
+                ]
+            },
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 400,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 200,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched Again'
+                    }
+                ]
+            },
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
     def test_create_draft_compliance_report_unauthorized(self):
         payload = {
@@ -746,6 +961,7 @@ class TestComplianceReporting(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
     def test_create_draft_compliance_report_gov_unauthorized(self):
         payload = {

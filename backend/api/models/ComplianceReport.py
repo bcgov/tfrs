@@ -136,6 +136,10 @@ class ComplianceReport(Auditable):
         null=True
     )
 
+    @property
+    def read_only(self):
+        return self.status.status not in ['Draft']
+
     class Meta:
         db_table = 'compliance_report'
 

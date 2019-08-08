@@ -201,8 +201,8 @@ class ScheduleSummaryContainer extends Component {
     super(props);
 
     this.state = {
-      diesel: new ScheduleSummaryDiesel(),
-      gasoline: new ScheduleSummaryGasoline(),
+      diesel: new ScheduleSummaryDiesel(props.readOnly),
+      gasoline: new ScheduleSummaryGasoline(props.readOnly),
       part3: new ScheduleSummaryPart3(),
       penalty: new ScheduleSummaryPenalty(),
       totals: {
@@ -501,8 +501,13 @@ class ScheduleSummaryContainer extends Component {
     let {penalty} = this.state;
     const {summary} = this.props.scheduleState;
 
-    const {totalCredits, totalDebits} = this.props.recomputedTotals.scheduleB;
 
+    let totalCredits = 0;
+    let totalDebits= 0;
+    if (this.props.recomputedTotals.scheduleB) {
+      totalCredits = this.props.recomputedTotals.scheduleB.totalCredits;
+      totalDebits = this.props.recomputedTotals.scheduleB.totalDebits;
+    }
     if (summary.creditsOffset) {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
     }
@@ -538,7 +543,7 @@ class ScheduleSummaryContainer extends Component {
 
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2],
-      readOnly: (netTotal >= 0),
+      readOnly: (netTotal >= 0 || this.props.readOnly),
       attributes: {
         ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
         maxValue
@@ -845,6 +850,7 @@ ScheduleSummaryContainer.propTypes = {
   getCreditCalculation: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   period: PropTypes.string,
+  readOnly: PropTypes.bool.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
