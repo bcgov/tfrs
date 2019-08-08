@@ -178,15 +178,15 @@ class ScheduleBContainer extends Component {
         }
 
         if (errorCells.indexOf('fuelClass') < 0) {
-          grid[row][SCHEDULE_B.FUEL_CLASS].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+          grid[row][SCHEDULE_B.FUEL_CLASS].className = grid[row][SCHEDULE_B.FUEL_CLASS].className.replace('error', '');
         }
 
         if (errorCells.indexOf('provisionOfTheAct') < 0) {
-          grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+          grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className = grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className.replace('error', '');
         }
 
         if (errorCells.indexOf('quantity') < 0) {
-          grid[row][SCHEDULE_B.QUANTITY].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+          grid[row][SCHEDULE_B.QUANTITY].className = grid[row][SCHEDULE_B.QUANTITY].className.replace('error', '');
         }
 
         if (errorCells.indexOf('intensity') < 0) {
