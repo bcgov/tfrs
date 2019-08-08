@@ -11,7 +11,7 @@ import Modal from '../app/components/Modal';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_B, SCHEDULE_B_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
 import ComplianceReportingService from './services/ComplianceReportingService';
 
@@ -166,7 +166,31 @@ class ScheduleBContainer extends Component {
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+
+      if (!this.props.valid &&
+        this.props.validationMessages &&
+        this.props.validationMessages.scheduleB &&
+        'fuelClass' in this.props.validationMessages.scheduleB.records[row - 2] &&
+        grid[row][SCHEDULE_B.FUEL_CLASS].className.indexOf('error') < 0) {
+        grid[row][SCHEDULE_B.FUEL_CLASS] = {
+          ...grid[row][SCHEDULE_B.FUEL_CLASS],
+          className: `${grid[row][SCHEDULE_B.FUEL_CLASS].className} error`
+        };
+
+        const errorCells = Object.keys(this.props.validationMessages.scheduleB.records[row - 2]);
+        // eslint-disable-next-line no-loop-func
+        errorCells.forEach((error) => {
+          const col = SCHEDULE_B_ERROR_KEYS[error];
+          if (grid[row][col].className.indexOf('error') < 0) {
+            grid[row][col] = {
+              ...grid[row][col],
+              className: `${grid[row][col].className} error`
+            };
+          }
+        });
+      }
     }
+
     this.recomputeDerivedState(nextProps, {
       ...this.state,
       grid
@@ -213,11 +237,18 @@ class ScheduleBContainer extends Component {
       const response = ComplianceReportingService.computeCredits(context, values);
 
       grid[row][SCHEDULE_B.FUEL_CLASS].getOptions = () => (response.parameters.fuelClasses);
+
       if (response.parameters.singleFuelClassAvailable) {
-        grid[row][SCHEDULE_B.FUEL_CLASS].value = response.inputs.fuelClass;
-        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = true;
+        grid[row][SCHEDULE_B.FUEL_CLASS] = {
+          ...grid[row][SCHEDULE_B.FUEL_CLASS],
+          value: response.inputs.fuelClass,
+          readOnly: true
+        };
       } else {
-        grid[row][SCHEDULE_B.FUEL_CLASS].readOnly = props.readOnly;
+        grid[row][SCHEDULE_B.FUEL_CLASS] = {
+          ...grid[row][SCHEDULE_B.FUEL_CLASS],
+          readOnly: props.readOnly
+        };
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () =>
@@ -601,7 +632,8 @@ class ScheduleBContainer extends Component {
 }
 
 ScheduleBContainer.defaultProps = {
-  complianceReport: null
+  complianceReport: null,
+  validationMessages: null
 };
 
 ScheduleBContainer.propTypes = {
@@ -624,7 +656,9 @@ ScheduleBContainer.propTypes = {
       records: PropTypes.arrayOf(PropTypes.shape())
     })
   }).isRequired,
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  valid: PropTypes.bool.isRequired,
+  validationMessages: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({

@@ -22,6 +22,14 @@ const SCHEDULE_B = {
   DEBIT: 13
 };
 
+const SCHEDULE_B_ERROR_KEYS = {
+  fuelType: 1,
+  fuelClass: 2,
+  provisionOfTheAct: 3,
+  fuelCode: 4,
+  quantity: 5
+};
+
 const SCHEDULE_C = {
   FUEL_TYPE: 1,
   FUEL_CLASS: 2,
@@ -108,6 +116,7 @@ const SCHEDULE_PENALTY = {
 export {
   SCHEDULE_A,
   SCHEDULE_B,
+  SCHEDULE_B_ERROR_KEYS,
   SCHEDULE_C,
   SCHEDULE_D,
   SCHEDULE_D_INPUT,

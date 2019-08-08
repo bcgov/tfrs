@@ -257,28 +257,29 @@ class ComplianceReportingEditContainer extends Component {
         key="nav"
       />,
       <TabComponent
-        key="tab-component"
-        period={period}
-        id={id}
         complianceReport={this.props.complianceReporting.item}
+        id={id}
+        key="tab-component"
         loggedInUser={this.props.loggedInUser}
-        scheduleState={this.state.schedules}
+        period={period}
+        readOnly={this.props.complianceReporting.item.readOnly}
         recomputedTotals={this.props.complianceReporting.recomputeResult}
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
+        scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
-        validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}
-        readOnly={this.props.complianceReporting.item.readOnly}
+        validating={this.props.complianceReporting.validating}
+        validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <ScheduleButtons
+        delete={!this.props.complianceReporting.item.readOnly}
         edit={this.edit}
         key="scheduleButtons"
-        submit={!this.props.complianceReporting.item.readOnly}
-        delete={!this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
-        validating={this.props.complianceReporting.validating}
+        submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
+        validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
