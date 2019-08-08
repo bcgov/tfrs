@@ -257,11 +257,11 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps (nextProps, nextContext) {
     this.populateSchedules();
 
-    const {diesel, gasoline, part3} = this.state;
-    const {summary} = nextProps.scheduleState;
+    const { diesel, gasoline, part3 } = this.state;
+    const { summary } = nextProps.scheduleState;
 
     diesel[SCHEDULE_SUMMARY.LINE_6][2].value = summary.dieselClassRetained;
     diesel[SCHEDULE_SUMMARY.LINE_8][2].value = summary.dieselClassDeferred;
@@ -274,19 +274,22 @@ class ScheduleSummaryContainer extends Component {
       gasoline,
       part3
     });
-
   }
 
-  _calculateDiesel() {
-    const {diesel} = this.state;
+  _calculateDiesel () {
+    const { diesel } = this.state;
 
-    const {summary} = this.props.scheduleState;
+    const { summary } = this.props.scheduleState;
 
     const totals = this.props.recomputedTotals;
 
-    const totalPetroleumDiesel = totals.summary.totalPetroleumDiesel;
-    const totalRenewableDiesel = totals.summary.totalRenewableDiesel;
-    const netDieselClassTransferred = totals.summary.netDieselClassTransferred;
+    let totalPetroleumDiesel = 0;
+    let totalRenewableDiesel = 0;
+    let netDieselClassTransferred = 0;
+
+    if (totals.summary) {
+      ({ totalPetroleumDiesel, totalRenewableDiesel, netDieselClassTransferred } = totals.summary);
+    }
 
     let totalDiesel = 0;
 
@@ -387,16 +390,23 @@ class ScheduleSummaryContainer extends Component {
     return diesel;
   }
 
-  _calculateGasoline() {
-    const {gasoline} = this.state;
-    const {summary} = this.props.scheduleState;
+  _calculateGasoline () {
+    const { gasoline } = this.state;
+    const { summary } = this.props.scheduleState;
 
     const totals = this.props.recomputedTotals;
 
-    const totalPetroleumGasoline = totals.summary.totalPetroleumGasoline;
-    const totalRenewableGasoline = totals.summary.totalRenewableGasoline;
-    const netGasolineClassTransferred = totals.summary.netGasolineClassTransferred;
+    let totalPetroleumGasoline = 0;
+    let totalRenewableGasoline = 0;
+    let netGasolineClassTransferred = 0;
 
+    if (totals.summary) {
+      ({
+        totalPetroleumGasoline,
+        totalRenewableGasoline,
+        netGasolineClassTransferred
+      } = totals.summary);
+    }
 
     let totalGasoline = 0;
 
