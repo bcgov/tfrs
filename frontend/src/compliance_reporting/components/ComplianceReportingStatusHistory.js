@@ -14,7 +14,7 @@ class ComplianceReportingStatusHistory extends Component {
 
     return (
       <div className="credit-transfer-signing-history">
-        <h3 className="signing-authority-header" key="header">Transaction History</h3>
+        <h3 className="signing-authority-header" key="header">Report History</h3>
         {this.props.history.length > 0 &&
         this.props.history.map((history, index, arr) => {
           let action;
