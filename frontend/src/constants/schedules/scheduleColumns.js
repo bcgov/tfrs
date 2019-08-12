@@ -7,6 +7,7 @@ const SCHEDULE_A = {
 };
 
 const SCHEDULE_B = {
+  ROW_NUMBER: 0,
   FUEL_TYPE: 1,
   FUEL_CLASS: 2,
   PROVISION_OF_THE_ACT: 3,

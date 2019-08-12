@@ -98,6 +98,23 @@ class ScheduleBContainer extends Component {
     };
   }
 
+  static clearErrorColumns (_row) {
+    const row = _row;
+
+    row.forEach((cell, col) => {
+      const { className } = cell;
+
+      if (className && className.indexOf('error') >= 0) {
+        row[col] = {
+          ...row[col],
+          className: className.replace(/error/g, '')
+        };
+      }
+    });
+
+    return row;
+  }
+
   constructor (props) {
     super(props);
 
@@ -167,8 +184,6 @@ class ScheduleBContainer extends Component {
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
-
-      grid[row] = this._validate(grid[row], row - 2);
     }
 
     this.recomputeDerivedState(nextProps, {
@@ -319,7 +334,12 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent;
       grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits;
       grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits;
+
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], row - 2);
+      }
     }
+
     this.setState({
       grid
     });
@@ -586,25 +606,14 @@ class ScheduleBContainer extends Component {
   }
 
   _validate (_row, rowIndex) {
-    const row = _row;
+    let row = _row;
 
     if (this.props.valid) {
-      row.forEach((cell, col) => {
-        const { className } = cell;
-
-        if (className && className.indexOf('error') >= 0) {
-          row[col] = {
-            ...row[col],
-            className: className.replace(/error/g, '')
-          };
-        }
-      });
-    }
-
-    if (
-      !this.props.valid &&
+      row = ScheduleBContainer.clearErrorColumns(row);
+    } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleB &&
+      this.props.validationMessages.scheduleB.records &&
       this.props.validationMessages.scheduleB.records.length > (rowIndex)) {
       const errorCells = Object.keys(this.props.validationMessages.scheduleB.records[rowIndex]);
 
@@ -628,10 +637,9 @@ class ScheduleBContainer extends Component {
         row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
       }
 
-      // eslint-disable-next-line no-loop-func
-      errorCells.forEach((error) => {
-        if (error in SCHEDULE_B_ERROR_KEYS) {
-          const col = SCHEDULE_B_ERROR_KEYS[error];
+      errorCells.forEach((errorKey) => {
+        if (errorKey in SCHEDULE_B_ERROR_KEYS) {
+          const col = SCHEDULE_B_ERROR_KEYS[errorKey];
           let { className } = row[col];
 
           if (row[col].className.indexOf('error') < 0) {
@@ -644,17 +652,46 @@ class ScheduleBContainer extends Component {
           };
         }
       });
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleB &&
+      Array.isArray(this.props.validationMessages.scheduleB)
+    ) {
+      row = ScheduleBContainer.clearErrorColumns(row);
+
+      this.props.validationMessages.scheduleB.forEach((message) => {
+        if (message.indexOf('Duplicate entry in row') >= 0) {
+          const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '');
+
+          if (Number(rowIndex) === Number(duplicateRowIndex)) {
+            let { className } = row[SCHEDULE_B.ROW_NUMBER];
+
+            if (!className) {
+              className = 'error';
+            } else if (row[SCHEDULE_B.ROW_NUMBER].className.indexOf('error') < 0) {
+              className += ' error';
+            }
+
+            row[SCHEDULE_B.ROW_NUMBER] = {
+              ...row[SCHEDULE_B.ROW_NUMBER],
+              className
+            };
+          }
+        }
+      });
     }
 
     return row;
   }
 
   render () {
+    const { grid } = this.state;
+
     return ([
       <SchedulesPage
         addRow={this._addRow}
         addRowEnabled={!this.props.readOnly}
-        data={this.state.grid}
+        data={grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-b"
@@ -702,6 +739,7 @@ ScheduleBContainer.propTypes = {
   }).isRequired,
   updateScheduleState: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired,
+  validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
 };
 
