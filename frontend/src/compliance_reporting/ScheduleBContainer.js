@@ -117,6 +117,7 @@ class ScheduleBContainer extends Component {
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
+    this._validate = this._validate.bind(this);
 
     this.loadInitialState = this.loadInitialState.bind(this);
   }
@@ -167,49 +168,7 @@ class ScheduleBContainer extends Component {
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
 
-      if (!this.props.valid &&
-        this.props.validationMessages &&
-        this.props.validationMessages.scheduleB &&
-        this.props.validationMessages.scheduleB.records.length > (row - 2)) {
-        const errorCells = Object.keys(this.props.validationMessages.scheduleB.records[row - 2]);
-
-        if (errorCells.indexOf('fuelType') < 0) {
-          grid[row][SCHEDULE_B.FUEL_TYPE].className = grid[row][SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
-        }
-
-        if (errorCells.indexOf('fuelClass') < 0) {
-          grid[row][SCHEDULE_B.FUEL_CLASS].className = grid[row][SCHEDULE_B.FUEL_CLASS].className.replace('error', '');
-        }
-
-        if (errorCells.indexOf('provisionOfTheAct') < 0) {
-          grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className = grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].className.replace('error', '');
-        }
-
-        if (errorCells.indexOf('quantity') < 0) {
-          grid[row][SCHEDULE_B.QUANTITY].className = grid[row][SCHEDULE_B.QUANTITY].className.replace('error', '');
-        }
-
-        if (errorCells.indexOf('intensity') < 0) {
-          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].className = grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
-        }
-
-        // eslint-disable-next-line no-loop-func
-        errorCells.forEach((error) => {
-          if (error in SCHEDULE_B_ERROR_KEYS) {
-            const col = SCHEDULE_B_ERROR_KEYS[error];
-            let { className } = grid[row][col];
-
-            if (grid[row][col].className.indexOf('error') < 0) {
-              className += ' error';
-            }
-
-            grid[row][col] = {
-              ...grid[row][col],
-              className
-            };
-          }
-        });
-      }
+      grid[row] = this._validate(grid[row], row - 2);
     }
 
     this.recomputeDerivedState(nextProps, {
@@ -624,6 +583,70 @@ class ScheduleBContainer extends Component {
         }
       });
     }
+  }
+
+  _validate (_row, rowIndex) {
+    const row = _row;
+
+    if (this.props.valid) {
+      row.forEach((cell, col) => {
+        const { className } = cell;
+
+        if (className && className.indexOf('error') >= 0) {
+          row[col] = {
+            ...row[col],
+            className: className.replace(/error/g, '')
+          };
+        }
+      });
+    }
+
+    if (
+      !this.props.valid &&
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleB &&
+      this.props.validationMessages.scheduleB.records.length > (rowIndex)) {
+      const errorCells = Object.keys(this.props.validationMessages.scheduleB.records[rowIndex]);
+
+      if (errorCells.indexOf('fuelType') < 0) {
+        row[SCHEDULE_B.FUEL_TYPE].className = row[SCHEDULE_B.FUEL_TYPE].className.replace('error', '');
+      }
+
+      if (errorCells.indexOf('fuelClass') < 0) {
+        row[SCHEDULE_B.FUEL_CLASS].className = row[SCHEDULE_B.FUEL_CLASS].className.replace('error', '');
+      }
+
+      if (errorCells.indexOf('provisionOfTheAct') < 0) {
+        row[SCHEDULE_B.PROVISION_OF_THE_ACT].className = row[SCHEDULE_B.PROVISION_OF_THE_ACT].className.replace('error', '');
+      }
+
+      if (errorCells.indexOf('quantity') < 0) {
+        row[SCHEDULE_B.QUANTITY].className = row[SCHEDULE_B.QUANTITY].className.replace('error', '');
+      }
+
+      if (errorCells.indexOf('intensity') < 0) {
+        row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
+      }
+
+      // eslint-disable-next-line no-loop-func
+      errorCells.forEach((error) => {
+        if (error in SCHEDULE_B_ERROR_KEYS) {
+          const col = SCHEDULE_B_ERROR_KEYS[error];
+          let { className } = row[col];
+
+          if (row[col].className.indexOf('error') < 0) {
+            className += ' error';
+          }
+
+          row[col] = {
+            ...row[col],
+            className
+          };
+        }
+      });
+    }
+
+    return row;
   }
 
   render () {
