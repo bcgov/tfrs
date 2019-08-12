@@ -83,7 +83,7 @@ class ScheduleCContainer extends Component {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);
-    } else  {
+    } else {
       this.loadInitialState();
     }
   }
@@ -98,13 +98,14 @@ class ScheduleCContainer extends Component {
 
       for (let i = 0; i < nextProps.scheduleState.scheduleC.records.length; i += 1) {
         const record = nextProps.scheduleState.scheduleC.records[i];
+        const qty = Number(record.quantity);
 
         grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
         grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
-        grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+        grid[2 + i][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
 
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
           fuel.name === record.fuelType);
@@ -275,12 +276,13 @@ class ScheduleCContainer extends Component {
 
     for (let i = startingRow; i < state.grid.length; i += 1) {
       const row = state.grid[i];
+
       const record = {
-        expectedUse: row[5].value,
-        fuelType: row[1].value,
-        fuelClass: row[2].value,
-        quantity: row[3].value,
-        rationale: row[6].value
+        expectedUse: row[SCHEDULE_C.EXPECTED_USE].value,
+        fuelType: row[SCHEDULE_C.FUEL_TYPE].value,
+        fuelClass: row[SCHEDULE_C.FUEL_CLASS].value,
+        quantity: row[SCHEDULE_C.QUANTITY].value,
+        rationale: row[SCHEDULE_C.EXPECTED_USE_OTHER].value
       };
 
       const rowIsEmpty = !(record.expectedUse || record.fuelClass ||

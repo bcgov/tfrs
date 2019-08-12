@@ -262,6 +262,12 @@ table {
   .alert-success {
     margin: 1rem 0 0 0;
   }
+
+  .modal-footer {
+    .btn, .overlay-trigger {
+      margin: 0 0.4rem;
+    } 
+  }
 }
 
 .react-bs-table .table-bordered > tbody > tr > td {
