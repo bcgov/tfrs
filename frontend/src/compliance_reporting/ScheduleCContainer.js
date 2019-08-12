@@ -83,7 +83,7 @@ class ScheduleCContainer extends Component {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);
-    } else  {
+    } else {
       this.loadInitialState();
     }
   }

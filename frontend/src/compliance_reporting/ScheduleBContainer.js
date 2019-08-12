@@ -697,6 +697,9 @@ class ScheduleBContainer extends Component {
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
+        valid={this.props.valid}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       />,
       <Modal
         id="GHGeniusWarning"

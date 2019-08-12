@@ -95,6 +95,18 @@
         .fa-info-circle {
           color: $light-font;
         }
+
+        button.fuel-code-not-found {
+          background-color: transparent;
+          border: none;
+          color: $red;
+          text-align: center;
+          width: 100%;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }

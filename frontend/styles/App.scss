@@ -36,3 +36,23 @@
     }
   }
 }
+
+.panel {
+  &.panel-danger {
+    border-color: $red;
+    border-radius: 0.5rem;
+    color: $red;
+  }
+
+  .panel-body {
+    ul {
+      margin: 0;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  .panel-title {
+    font-size: 2rem;
+  }
+}
