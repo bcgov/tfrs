@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import * as Lang from '../../constants/langEnUs';
 
 const bootstrapClassFor = (extraConfirmType) => {
@@ -77,17 +78,22 @@ class Modal extends React.Component {
                 {this.props.cancelLabel}
               </button>
               {this.props.showConfirmButton &&
-              <button
-                id="modal-yes"
-                type="button"
-                className="btn btn-primary"
-                data-dismiss="modal"
-                disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
-                  this.props.disabled}
-                onClick={this.props.handleSubmit}
+              <TooltipWhenDisabled
+                disabled={this.props.disabled}
+                title={this.props.tooltipMessage}
               >
-                {this.props.confirmLabel}
-              </button>
+                <button
+                  id="modal-yes"
+                  type="button"
+                  className="btn btn-primary"
+                  data-dismiss="modal"
+                  disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
+                    this.props.disabled}
+                  onClick={this.props.handleSubmit}
+                >
+                  {this.props.confirmLabel}
+                </button>
+              </TooltipWhenDisabled>
               }
             </div>
           </div>
@@ -98,18 +104,19 @@ class Modal extends React.Component {
 }
 
 Modal.defaultProps = {
+  canBypassExtraConfirm: true,
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   disabled: false,
-  handleSubmit: null,
+  extraConfirmText: '',
+  extraConfirmType: 'info',
   handleCancel: null,
+  handleSubmit: null,
+  initiallyShown: false,
   showConfirmButton: true,
   showExtraConfirm: false,
-  canBypassExtraConfirm: true,
-  extraConfirmType: 'info',
-  extraConfirmText: '',
   title: 'Confirmation',
-  initiallyShown: false
+  tooltipMessage: ''
 };
 
 Modal.propTypes = {
@@ -128,10 +135,11 @@ Modal.propTypes = {
   handleSubmit: PropTypes.func,
   handleCancel: PropTypes.func,
   id: PropTypes.string.isRequired,
+  initiallyShown: PropTypes.bool,
   showConfirmButton: PropTypes.bool,
   showExtraConfirm: PropTypes.bool,
   title: PropTypes.string,
-  initiallyShown: PropTypes.bool
+  tooltipMessage: PropTypes.string
 };
 
 export default Modal;

@@ -19,7 +19,7 @@ const ExclusionReportIntro = (props) => {
         <p>
         The {props.period} compliance period for Part 2 and Part 3 requirements is from January 1 to
         December 31, {props.period}.
-          <strong>Exclusion reports are due March 31, {exclusionReportDueDate}</strong>.
+          <strong> Exclusion reports are due March 31, {exclusionReportDueDate}</strong>.
         </p>
 
         <h3>Should I complete an &quot;Exclusion Report for {props.period}&quot;?</h3>
@@ -28,9 +28,7 @@ const ExclusionReportIntro = (props) => {
         required to submit an annual report to the Director.  For more information, see Information
         Bulletin RLCF-015 Exclusion Agreements and Reports, available
         from <a href="http://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">www.gov.bc.ca/lowcarbonfuels</a>.
-          <strong>
-            This report does not apply to petroleum-based gasoline or petroleum-based diesel fuel.
-          </strong>
+          <strong> This report does not apply to petroleum-based gasoline or petroleum-based diesel fuel.</strong>
         </p>
 
         <h3>Questions?</h3>
