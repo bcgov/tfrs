@@ -109,6 +109,19 @@ class ComplianceReportingEditContainer extends Component {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
+    if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
+      const {id} = this.props.match.params;
+      //const period = nextProps.complianceReporting.item.compliancePeriod.description;
+
+      this.props.validateComplianceReport({
+        id,
+        state: {
+         // compliancePeriod: period,
+          ...this.state.schedules,
+        }
+      });
+    }
+
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');

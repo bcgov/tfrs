@@ -3,18 +3,18 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { expectedUses } from '../actions/expectedUses';
+import {expectedUses} from '../actions/expectedUses';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
+import {SCHEDULE_C} from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -62,7 +62,7 @@ class ScheduleCContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
@@ -76,20 +76,20 @@ class ScheduleCContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadExpectedUses();
 
     if (this.props.scheduleState.scheduleC) {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);
-    } else  {
+    } else {
       this.loadInitialState();
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    const { grid } = this.state;
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {grid} = this.state;
 
     if (nextProps.scheduleState.scheduleC && nextProps.scheduleState.scheduleC.records) {
       if ((grid.length - 2) < nextProps.scheduleState.scheduleC.records.length) {
@@ -104,7 +104,7 @@ class ScheduleCContainer extends Component {
         grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
-        grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+        grid[2 + i][SCHEDULE_C.QUANTITY].value = Number.isNaN(record.quantity) ? '' : Number(record.quantity);
 
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
           fuel.name === record.fuelType);
@@ -119,14 +119,14 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  loadInitialState () {
+  loadInitialState() {
     this.rowNumber = 1;
     // this._addRow(this.props.complianceReport.scheduleC.records.length);
 
     const records = [];
 
     for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
-      records.push({ ...this.props.complianceReport.scheduleC.records[i] });
+      records.push({...this.props.complianceReport.scheduleC.records[i]});
       this.props.updateScheduleState({
         scheduleC: {
           records
@@ -135,8 +135,8 @@ class ScheduleCContainer extends Component {
     }
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
@@ -172,7 +172,7 @@ class ScheduleCContainer extends Component {
           readOnly: this.props.readOnly,
           dataEditor: Input,
           valueViewer: (props) => {
-            const { value } = props;
+            const {value} = props;
             return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
           }
         }, {
@@ -200,7 +200,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses (row) {
+  _getFuelClasses(row) {
     const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -213,7 +213,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -239,9 +239,10 @@ class ScheduleCContainer extends Component {
       }
 
       if (col === SCHEDULE_C.QUANTITY) {
+        let cleanedValue = value.replace(/,/g, '');
         grid[row][col] = {
           ...grid[row][col],
-          value: value.replace(/,/g, '')
+          value: Number.isNaN(Number(cleanedValue)) ? '' : cleanedValue
         };
       }
 
@@ -268,7 +269,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const startingRow = 2;
 
     const records = [];
@@ -298,7 +299,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _validateFuelClassColumn (currentRow, value) {
+  _validateFuelClassColumn(currentRow, value) {
     const row = currentRow;
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
@@ -316,7 +317,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  _validateFuelTypeColumn (currentRow, value) {
+  _validateFuelTypeColumn(currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -344,7 +345,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  render () {
+  render() {
     return ([
       <SchedulesPage
         addRow={this._addRow}
