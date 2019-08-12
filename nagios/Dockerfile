@@ -24,6 +24,8 @@ RUN chown -R nagios.nagios /var/lib/nagios/.kube
 # USER nagios
 RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
+RUN chgrp -R root /var/log/apache2
+RUN chmod -R g+w /var/log/apache2
 RUN chgrp -R root /run/supervisord
 RUN chmod -R g+w /run/supervisord
 RUN chgrp -R root /run/apache2

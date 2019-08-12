@@ -13,6 +13,27 @@
     ],
     "objects": [
         {
+            "apiVersion": "v1",
+            "kind": "PersistentVolumeClaim",
+            "metadata": {
+                "name": "nagios",
+                "annotations":{
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "template.openshift.io.bcgov/create": "true"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "5Gi"
+                    }
+                }
+            }
+        },
+        {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
@@ -82,6 +103,14 @@
                         }
                     },
                     "spec": {
+                        "volumes": [
+                            {
+                                "name": "nagios-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "nagios"
+                                }
+                            }
+                        ],
                         "containers": [
                             {
                                 "name": "nagios",
@@ -93,6 +122,18 @@
                                         "memory": "3Gi"
                                     }
                                 },
+                                "volumeMounts": [
+                                    {
+                                        "name": "nagios-data",
+                                        "mountPath": "/var/log",
+                                        "subPath": "nagios3-log"
+                                    },
+                                    {
+                                        "name": "nagios-data",
+                                        "mountPath": "/etc/nagios3",
+                                        "subPath": "nagios3-config"
+                                    }
+                                ],
                                 "terminationMessagePath": "/dev/termination-log",
                                 "imagePullPolicy": "Always"
                             }
