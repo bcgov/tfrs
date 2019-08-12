@@ -276,6 +276,7 @@ class ComplianceReportingEditContainer extends Component {
       <ScheduleButtons
         edit={this.edit}
         key="scheduleButtons"
+        loggedInUser={this.props.loggedInUser}
         submit={!this.props.complianceReporting.item.readOnly}
         delete={!this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
@@ -297,6 +298,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
+        tooltipMessage="All declarations needs to be accepted."
       >
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
