@@ -13,24 +13,28 @@ const numericInput = (readOnly) => ({
   readOnly: readOnly,
   dataEditor: Input,
   valueViewer: (cell) => {
-    const { value } = cell;
+    const {value} = cell;
 
     if (!value) {
       return '';
     }
 
-    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return <span>
+    {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+  </span>;
   }
 });
 
 const totalViewer = (cell) => {
-  const { value } = cell;
+  const {value} = cell;
 
   if (value === '') {
     return '';
   }
 
-  return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+  return <span>
+    {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+  </span>;
 };
 
 const ScheduleDOutput = (readOnly) => ([
