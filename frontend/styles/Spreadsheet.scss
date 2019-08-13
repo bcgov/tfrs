@@ -80,6 +80,16 @@
           }
         }
 
+        &.row-number {
+          .fa-check {
+            color: $green;
+          }
+
+          .fa-exclamation-triangle {
+            color: $red;
+          }
+        }
+
         &.text, &.text input {
           text-align: left;
         }

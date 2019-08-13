@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Modal from '../app/components/Modal';
 import Input from '../app/components/Spreadsheet/Input';
@@ -103,7 +104,6 @@ class ScheduleBContainer extends Component {
 
     row.forEach((cell, col) => {
       const { className } = cell;
-
       if (className && className.indexOf('error') >= 0) {
         row[col] = {
           ...row[col],
@@ -111,6 +111,23 @@ class ScheduleBContainer extends Component {
         };
       }
     });
+
+    const hasContent = row[SCHEDULE_B.FUEL_TYPE].value &&
+      row[SCHEDULE_B.FUEL_CLASS].value &&
+      row[SCHEDULE_B.PROVISION_OF_THE_ACT].value &&
+      row[SCHEDULE_B.QUANTITY];
+
+    row[SCHEDULE_B.ROW_NUMBER] = {
+      ...row[SCHEDULE_B.ROW_NUMBER],
+      valueViewer: data => (
+        <div>
+          {!hasContent && data.value}
+          {hasContent &&
+            <FontAwesomeIcon icon="check" />
+          }
+        </div>
+      )
+    };
 
     return row;
   }
@@ -356,6 +373,7 @@ class ScheduleBContainer extends Component {
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{ // id
+        className: 'row-number',
         readOnly: true,
         value: this.rowNumber
       }, { // fuel type
@@ -637,6 +655,20 @@ class ScheduleBContainer extends Component {
         row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
       }
 
+      let { className } = row[SCHEDULE_B.ROW_NUMBER];
+
+      if (errorCells.length === 0) {
+        className = className.replace(/error/g, '');
+      }
+
+      row[SCHEDULE_B.ROW_NUMBER] = {
+        ...row[SCHEDULE_B.ROW_NUMBER],
+        className,
+        valueViewer: data => (
+          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
+        )
+      };
+
       errorCells.forEach((errorKey) => {
         if (errorKey in SCHEDULE_B_ERROR_KEYS) {
           const col = SCHEDULE_B_ERROR_KEYS[errorKey];
@@ -674,7 +706,10 @@ class ScheduleBContainer extends Component {
 
             row[SCHEDULE_B.ROW_NUMBER] = {
               ...row[SCHEDULE_B.ROW_NUMBER],
-              className
+              className,
+              valueViewer: data => (
+                <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
+              )
             };
           }
         }
