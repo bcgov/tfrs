@@ -109,6 +109,19 @@ class ComplianceReportingEditContainer extends Component {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
+    if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
+      const { id } = this.props.match.params;
+      // const period = nextProps.complianceReporting.item.compliancePeriod.description;
+
+      this.props.validateComplianceReport({
+        id,
+        state: {
+          // compliancePeriod: period,
+          ...this.state.schedules
+        }
+      });
+    }
+
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
@@ -276,6 +289,7 @@ class ComplianceReportingEditContainer extends Component {
         delete={!this.props.complianceReporting.item.readOnly}
         edit={this.edit}
         key="scheduleButtons"
+        loggedInUser={this.props.loggedInUser}
         saving={this.props.saving}
         submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
@@ -296,6 +310,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
+        tooltipMessage="All declarations needs to be accepted."
       >
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>

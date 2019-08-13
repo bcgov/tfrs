@@ -292,7 +292,7 @@ class ScheduleDContainer extends Component {
         if (!isTotalField) {
           const outputRecord = {
             description: sheet.output[j][0].value,
-            intensity: sheet.output[j][1].value
+            intensity: Number.isNaN(Number(sheet.output[j][1].value)) ? 0 : sheet.output[j][1].value
           };
           if (outputRecord.intensity) {
             sheetRecord.outputs.push(outputRecord);

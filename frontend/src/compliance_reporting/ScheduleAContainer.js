@@ -92,7 +92,6 @@ class ScheduleAContainer extends Component {
 
       for (let i = 0; i < nextProps.scheduleState.scheduleA.records.length; i += 1) {
         const record = nextProps.scheduleState.scheduleA.records[i];
-
         const qty = Number(record.quantity);
 
         grid[1 + i][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;

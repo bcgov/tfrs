@@ -317,6 +317,7 @@ class ScheduleBContainer extends Component {
         }
       } else {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => [];
+        grid[row][SCHEDULE_B.FUEL_CODE].value = null;
         grid[row][SCHEDULE_B.FUEL_CODE].readOnly = true;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
         grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select;
@@ -545,9 +546,10 @@ class ScheduleBContainer extends Component {
       };
 
       if (col === SCHEDULE_B.QUANTITY) {
+        const cleanedValue = value.replace(/,/g, '');
         grid[row][col] = {
           ...grid[row][col],
-          value: value.replace(/,/g, '')
+          value: Number.isNaN(Number(cleanedValue)) ? '' : cleanedValue
         };
       }
 
@@ -555,6 +557,14 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
         grid[row][SCHEDULE_B.FUEL_CODE].value = null;
+      }
+
+      if (col === SCHEDULE_B.CARBON_INTENSITY_FUEL) {
+        const cleanedValue = value.replace(/,/g, '');
+        grid[row][col] = {
+          ...grid[row][col],
+          value: Number.isNaN(Number(cleanedValue)) ? '' : cleanedValue
+        };
       }
     });
 
@@ -596,7 +606,7 @@ class ScheduleBContainer extends Component {
 
     if (!this.props.scheduleState.scheduleB || !this.props.scheduleState.scheduleB.records) {
       shouldUpdate = true;
-    } else if (this.props.scheduleState.scheduleB.records.length != records.length) {
+    } else if (this.props.scheduleState.scheduleB.records.length !== records.length) {
       shouldUpdate = true;
     } else {
       const compareOn = ['fuelCode', 'fuelType', 'fuelClass', 'provisionOfTheAct', 'quantity', 'intensity', 'scheduleD_sheetIndex'];
