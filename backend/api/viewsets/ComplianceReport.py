@@ -100,6 +100,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             partial=True
         )
         deserializer.strip_summary = True
+        deserializer.disregard_status = True
 
         if not deserializer.is_valid():
             transaction.savepoint_rollback(sid)

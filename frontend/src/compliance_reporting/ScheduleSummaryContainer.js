@@ -259,6 +259,15 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+
+    if (nextProps.validating || !nextProps.valid) {
+      return;
+    }
+
+    if (nextProps.recomputing) {
+      return;
+    }
+
     this.populateSchedules();
 
     const {diesel, gasoline, part3} = this.state;
@@ -504,7 +513,7 @@ class ScheduleSummaryContainer extends Component {
 
 
     let totalCredits = 0;
-    let totalDebits= 0;
+    let totalDebits = 0;
     if (this.props.recomputedTotals.scheduleB) {
       totalCredits = this.props.recomputedTotals.scheduleB.totalCredits;
       totalDebits = this.props.recomputedTotals.scheduleB.totalDebits;
@@ -760,7 +769,7 @@ class ScheduleSummaryContainer extends Component {
       return (<Loading/>)
     }
 
-    if (!this.props.valid && !this.props.validating) {
+    if (!this.props.valid || this.props.validating) {
       return (<div>
         Validation errors in schedule entries must be fixed
         before summary computation is possible. Fix the errors
