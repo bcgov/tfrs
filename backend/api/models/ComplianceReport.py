@@ -1,10 +1,13 @@
+from typing import List
 from django.db import models
 
 from api.managers.ComplianceReportStatusManager import \
     ComplianceReportStatusManager
 from api.managers.TheTypeManager import TheTypeManager
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, ScheduleB, ScheduleA, ScheduleSummary
+from api.models.ComplianceReportHistory import ComplianceReportHistory
+from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, \
+    ScheduleB, ScheduleA, ScheduleSummary
 from api.models.Organization import Organization
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -135,6 +138,19 @@ class ComplianceReport(Auditable):
         on_delete=models.CASCADE,
         null=True
     )
+
+    def get_history(self, statuses: List):
+        """
+        Fetch the compliance report status changes.
+        The parameter needed here would be the statuses that
+        we'd like to show.
+        """
+        history = ComplianceReportHistory.objects.filter(
+            status__status__in=statuses,
+            compliance_report_id=self.id
+        ).order_by('create_timestamp')
+
+        return history
 
     @property
     def read_only(self):

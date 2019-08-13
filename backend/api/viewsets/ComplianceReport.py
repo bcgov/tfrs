@@ -1,5 +1,5 @@
 from django.db import transaction
-from rest_framework import viewsets, permissions, status, mixins, filters
+from rest_framework import viewsets, mixins, filters
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -9,7 +9,8 @@ from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
-    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, ComplianceReportValidationSerializer
+    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
+    ComplianceReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -62,6 +63,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             organization=self.request.user.organization
         )
 
+    def perform_update(self, serializer):
+        compliance_report = serializer.save()
+        ComplianceReportService.create_history(compliance_report, False)
+
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def types(self, request):
         """
@@ -89,7 +94,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         sid = transaction.savepoint()
         obj = self.get_object()
-        deserializer = ComplianceReportUpdateSerializer(obj, data=request.data, partial=True)
+        deserializer = ComplianceReportUpdateSerializer(
+            obj,
+            data=request.data,
+            partial=True
+        )
         deserializer.strip_summary = True
 
         if not deserializer.is_valid():

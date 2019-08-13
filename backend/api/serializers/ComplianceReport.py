@@ -91,6 +91,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_c = ScheduleCDetailSerializer(read_only=True)
     schedule_d = ScheduleDDetailSerializer(read_only=True)
     summary = serializers.SerializerMethodField()
+    history = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
         total_petroleum_diesel = 0
@@ -129,11 +130,25 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
         return synthetic_totals
 
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the credit trade
+        """
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+
+        history = obj.get_history(["Submitted"])
+
+        serializer = ComplianceReportHistorySerializer(
+            history, many=True
+        )
+
+        return serializer.data
+
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only']
+                  'summary', 'read_only', 'history']
 
 
 class ComplianceReportValidator:
@@ -396,6 +411,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     )
     organization = OrganizationMinSerializer(read_only=True)
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+        self.instance.create_user = request.user
+        self.instance.save()
+
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
@@ -581,6 +603,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
         if status:
             instance.status = status
+
+        request = self.context.get('request')
+        if request:
+            instance.update_user = request.user
             instance.save()
 
         # all other fields are read-only

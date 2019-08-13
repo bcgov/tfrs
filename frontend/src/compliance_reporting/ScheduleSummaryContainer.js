@@ -21,6 +21,7 @@ import {
   getSelectedFuel,
   getSelectedProvision
 } from './components/ScheduleFunctions';
+import ComplianceReportingStatusHistory from './components/ComplianceReportingStatusHistory';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
@@ -777,6 +778,10 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
+      />,
+      <ComplianceReportingStatusHistory
+        key="history"
+        history={this.props.complianceReport.history}
       />
     ]);
   }
@@ -795,6 +800,7 @@ ScheduleSummaryContainer.propTypes = {
   valid: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
     compliancePeriod: PropTypes.shape(),
+    history: PropTypes.arrayOf(PropTypes.shape()),
     scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
     scheduleC: PropTypes.shape(),
