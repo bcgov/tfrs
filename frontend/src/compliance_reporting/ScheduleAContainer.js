@@ -77,7 +77,7 @@ class ScheduleAContainer extends Component {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleA) {
       this._addRow(5);
-    } else  {
+    } else {
       this.loadInitialState();
     }
   }
@@ -103,7 +103,6 @@ class ScheduleAContainer extends Component {
       }
 
       this._calculateTotal(grid);
-
     }
 
     this.setState({
@@ -140,7 +139,7 @@ class ScheduleAContainer extends Component {
         dataEditor: OrganizationAutocomplete
       }, {
         className: 'text',
-        readOnly: this.props.readOnly,
+        readOnly: this.props.readOnly
       }, {
         className: 'text dropdown-indicator',
         readOnly: this.props.readOnly,

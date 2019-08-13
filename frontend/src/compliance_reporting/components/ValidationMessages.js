@@ -3,8 +3,6 @@ import { Collapse } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import Loading from '../../app/components/Loading';
-
 class ValidationMessages extends Component {
   constructor (props) {
     super(props);
@@ -15,14 +13,15 @@ class ValidationMessages extends Component {
 
     this._getClassNames = this._getClassNames.bind(this);
     this._toggleErrorMessages = this._toggleErrorMessages.bind(this);
+    this._validateScheduleB = this._validateScheduleB.bind(this);
   }
 
-  _getClassNames () {
+  _getClassNames (valid = true) {
     if (this.props.validating) {
       return 'panel panel-warning';
     }
 
-    if (this.props.valid) {
+    if (valid) {
       return 'panel panel-success';
     }
 
@@ -37,10 +36,12 @@ class ValidationMessages extends Component {
     });
   }
 
-  render () {
+  _validateScheduleB () {
     const errorMessages = [];
 
-    if (
+    if (this.props.validationMessages && !this.props.validationMessages.scheduleB) {
+      errorMessages.push('Errors found in other schedules');
+    } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleB &&
       this.props.validationMessages.scheduleB.records
@@ -93,8 +94,18 @@ class ValidationMessages extends Component {
       }
     }
 
+    return errorMessages;
+  }
+
+  render () {
+    let errorMessages = [];
+
+    if (this.props.scheduleType === 'schedule-b') {
+      errorMessages = this._validateScheduleB();
+    }
+
     return (
-      <div className={this._getClassNames()}>
+      <div className={this._getClassNames(errorMessages.length === 0)}>
         <div
           className="panel-heading"
           id="message-header"
@@ -110,10 +121,10 @@ class ValidationMessages extends Component {
               {this.props.validating &&
                 'Validating...'
               }
-              {!this.props.validating && this.props.valid &&
+              {!this.props.validating && errorMessages.length === 0 &&
                 'No Validation Errors'
               }
-              {!this.props.validating && !this.props.valid &&
+              {!this.props.validating && errorMessages.length > 0 &&
                 'Validation Errors'
               }
             </button>
@@ -135,14 +146,14 @@ class ValidationMessages extends Component {
           >
             <div className="panel-body">
               {this.props.validating &&
-              <Loading />
+                'Validating...'
               }
               {!this.props.validating &&
               <ul>
                 {errorMessages.map(message => <li key={message}>{message}</li>)}
               </ul>
               }
-              {!this.props.validating && this.props.valid &&
+              {!this.props.validating && errorMessages.length === 0 &&
                 'No errors found'
               }
             </div>
@@ -158,7 +169,9 @@ ValidationMessages.defaultProps = {
 };
 
 ValidationMessages.propTypes = {
-  valid: PropTypes.bool.isRequired,
+  scheduleType: PropTypes.oneOf([
+    'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
+  ]).isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
 };

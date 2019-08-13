@@ -626,7 +626,10 @@ class ScheduleBContainer extends Component {
   _validate (_row, rowIndex) {
     let row = _row;
 
-    if (this.props.valid) {
+    if (
+      this.props.valid ||
+      (this.props.validationMessages && !this.props.validationMessages.scheduleB)
+    ) {
       row = ScheduleBContainer.clearErrorColumns(row);
     } else if (
       this.props.validationMessages &&
@@ -655,15 +658,15 @@ class ScheduleBContainer extends Component {
         row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].className.replace('error', '');
       }
 
-      let { className } = row[SCHEDULE_B.ROW_NUMBER];
+      let rowNumberClassName = row[SCHEDULE_B.ROW_NUMBER].className;
 
       if (errorCells.length === 0) {
-        className = className.replace(/error/g, '');
+        rowNumberClassName = rowNumberClassName.replace(/error/g, '');
       }
 
       row[SCHEDULE_B.ROW_NUMBER] = {
         ...row[SCHEDULE_B.ROW_NUMBER],
-        className,
+        className: rowNumberClassName,
         valueViewer: data => (
           <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
         )
