@@ -72,5 +72,6 @@ from . import CarbonIntensityDeterminationType
 from . import ProvisionOfTheAct
 from . import ApprovedFuelProvision
 from . import TransactionType
+from . import ComplianceReportHistory
 
 patch_fields()

@@ -51,6 +51,12 @@ class SigningAuthorityConfirmation(Auditable):
         related_name='confirmations',
         on_delete=models.PROTECT
     )
+    title = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment="Title of the user who acccepted the assertion."
+    )
 
     class Meta:
         db_table = 'signing_authority_confirmation'

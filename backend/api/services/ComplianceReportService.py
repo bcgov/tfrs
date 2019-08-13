@@ -1,8 +1,7 @@
-from datetime import timedelta
-from django.apps import apps
-from django.db.models import F, Max, Q
+from django.db.models import Q
 
 from api.models.ComplianceReport import ComplianceReport
+from api.models.ComplianceReportHistory import ComplianceReportHistory
 from api.models.Organization import Organization
 
 
@@ -36,3 +35,31 @@ class ComplianceReportService(object):
             )
 
         return compliance_reports
+
+    @staticmethod
+    def create_history(compliance_report, is_new=False):
+        """
+        Create the CreditTradeHistory
+        """
+        user = (
+            compliance_report.create_user
+            if is_new
+            else compliance_report.update_user)
+
+        role_id = None
+
+        if user.roles.filter(name="GovDirector").exists():
+            role_id = user.roles.get(name="GovDirector").id
+        elif user.roles.filter(name="GovDeputyDirector").exists():
+            role_id = user.roles.get(name="GovDeputyDirector").id
+        else:
+            role_id = user.roles.first().id
+
+        history = ComplianceReportHistory(
+            compliance_report_id=compliance_report.id,
+            status_id=compliance_report.status.id,
+            create_user=user,
+            user_role_id=role_id
+        )
+
+        history.save()
