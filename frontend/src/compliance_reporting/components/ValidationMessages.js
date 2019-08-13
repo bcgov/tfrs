@@ -15,6 +15,7 @@ class ValidationMessages extends Component {
     this._toggleErrorMessages = this._toggleErrorMessages.bind(this);
     this._validateScheduleA = this._validateScheduleA.bind(this);
     this._validateScheduleB = this._validateScheduleB.bind(this);
+    this._validateScheduleC = this._validateScheduleC.bind(this);
   }
 
   _getClassNames (valid = true) {
@@ -153,6 +154,59 @@ class ValidationMessages extends Component {
     return errorMessages;
   }
 
+  _validateScheduleC () {
+    const errorMessages = [];
+
+    if (!this.props.valid &&
+      this.props.validationMessages &&
+      !this.props.validationMessages.scheduleC) {
+      errorMessages.push('Errors found in other schedules');
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleC &&
+      this.props.validationMessages.scheduleC.records
+    ) {
+      this.props.validationMessages.scheduleC.records.forEach((record) => {
+        let errorCount = Object.keys(record).length;
+
+        if ('quantity' in record) {
+          const message = 'The Quantity of Fuel Supplied cannot contain a zero, negative or decimal value.';
+
+          if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+            errorMessages.push(message);
+          }
+
+          errorCount -= 1;
+        }
+
+        // if we still have errors after checking for 0 quantities and missing GHGenius
+        // that means we're missing some columns (it's very tedious and unnecessary to check each
+        // column for missing information)
+        if (errorCount > 0) {
+          const message = 'There is missing information, please ensure all fields are completed.';
+
+          if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+            errorMessages.push(message);
+          }
+        }
+      });
+    }
+
+    if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleC &&
+      Array.isArray(this.props.validationMessages.scheduleC)
+    ) {
+      const message = 'There are duplicate trade records, please combine the Quantity into a single value on one row.';
+
+      if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+        errorMessages.push(message);
+      }
+    }
+
+    return errorMessages;
+  }
+
   render () {
     let errorMessages = [];
 
@@ -162,6 +216,9 @@ class ValidationMessages extends Component {
         break;
       case 'schedule-b':
         errorMessages = this._validateScheduleB();
+        break;
+      case 'schedule-c':
+        errorMessages = this._validateScheduleC();
         break;
       default:
     }
