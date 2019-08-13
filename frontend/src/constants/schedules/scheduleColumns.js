@@ -1,9 +1,18 @@
 const SCHEDULE_A = {
+  ROW_NUMBER: 0,
   LEGAL_NAME: 1,
   POSTAL_ADDRESS: 2,
   FUEL_CLASS: 3,
   TRANSFER_TYPE: 4,
   QUANTITY: 5
+};
+
+const SCHEDULE_A_ERROR_KEYS = {
+  tradingPartner: 1,
+  postalAddress: 2,
+  fuelClass: 3,
+  transferType: 4,
+  quantity: 5
 };
 
 const SCHEDULE_B = {
@@ -117,6 +126,7 @@ const SCHEDULE_PENALTY = {
 
 export {
   SCHEDULE_A,
+  SCHEDULE_A_ERROR_KEYS,
   SCHEDULE_B,
   SCHEDULE_B_ERROR_KEYS,
   SCHEDULE_C,

@@ -17,6 +17,7 @@ const SchedulesPage = props => (
 
       <ValidationMessages
         scheduleType={props.scheduleType}
+        valid={props.valid}
         validating={props.validating}
         validationMessages={props.validationMessages}
       />

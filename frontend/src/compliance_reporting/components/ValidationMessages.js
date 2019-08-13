@@ -13,6 +13,7 @@ class ValidationMessages extends Component {
 
     this._getClassNames = this._getClassNames.bind(this);
     this._toggleErrorMessages = this._toggleErrorMessages.bind(this);
+    this._validateScheduleA = this._validateScheduleA.bind(this);
     this._validateScheduleB = this._validateScheduleB.bind(this);
   }
 
@@ -36,10 +37,65 @@ class ValidationMessages extends Component {
     });
   }
 
+  _validateScheduleA () {
+    const errorMessages = [];
+
+    if (!this.props.valid &&
+      this.props.validationMessages &&
+      !this.props.validationMessages.scheduleA) {
+      errorMessages.push('Errors found in other schedules');
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleA &&
+      this.props.validationMessages.scheduleA.records
+    ) {
+      this.props.validationMessages.scheduleA.records.forEach((record) => {
+        let errorCount = Object.keys(record).length;
+
+        if ('quantity' in record) {
+          const message = 'The Quantity of Fuel Supplied cannot contain a zero, negative or decimal value.';
+
+          if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+            errorMessages.push(message);
+          }
+
+          errorCount -= 1;
+        }
+
+        // if we still have errors after checking for 0 quantities and missing GHGenius
+        // that means we're missing some columns (it's very tedious and unnecessary to check each
+        // column for missing information)
+        if (errorCount > 0) {
+          const message = 'There is missing information, please ensure all fields are completed.';
+
+          if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+            errorMessages.push(message);
+          }
+        }
+      });
+    }
+
+    if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleA &&
+      Array.isArray(this.props.validationMessages.scheduleA)
+    ) {
+      const message = 'There are duplicate trade records, please combine the Quantity into a single value on one row.';
+
+      if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+        errorMessages.push(message);
+      }
+    }
+
+    return errorMessages;
+  }
+
   _validateScheduleB () {
     const errorMessages = [];
 
-    if (this.props.validationMessages && !this.props.validationMessages.scheduleB) {
+    if (!this.props.valid &&
+      this.props.validationMessages &&
+      !this.props.validationMessages.scheduleB) {
       errorMessages.push('Errors found in other schedules');
     } else if (
       this.props.validationMessages &&
@@ -100,8 +156,14 @@ class ValidationMessages extends Component {
   render () {
     let errorMessages = [];
 
-    if (this.props.scheduleType === 'schedule-b') {
-      errorMessages = this._validateScheduleB();
+    switch (this.props.scheduleType) {
+      case 'schedule-a':
+        errorMessages = this._validateScheduleA();
+        break;
+      case 'schedule-b':
+        errorMessages = this._validateScheduleB();
+        break;
+      default:
     }
 
     return (
@@ -172,6 +234,7 @@ ValidationMessages.propTypes = {
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,
+  valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
 };
