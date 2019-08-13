@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0165_compliance_reporting_manager_role'),
+        ('api', '0166_add_sign_compliance_report_permission'),
     ]
 
     operations = [
