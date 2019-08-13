@@ -21,23 +21,27 @@
     limitations under the License.
 """
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
-from api.models.SigningAuthorityConfirmation \
-  import SigningAuthorityConfirmation
+from api.models.ComplianceReportHistory import ComplianceReportHistory
+from api.serializers import UserMinSerializer
+from api.serializers.ComplianceReport import ComplianceReportStatusSerializer
 
 
-class SigningAuthorityConfirmationSerializer(serializers.ModelSerializer):
-    """
-    Default Serializer for SigningAuthorityConfirmation
-    """
-    def save(self, **kwargs):
-        super().save(**kwargs)
+class ComplianceReportHistorySerializer(serializers.ModelSerializer):
+    from .Role import RoleMinSerializer
 
-        request = self.context['request']
-        if request.user:
-            self.instance.title = request.user.title
-            self.instance.save()
+    status = ComplianceReportStatusSerializer(read_only=True)
+    user = SerializerMethodField()
+    user_role = RoleMinSerializer(read_only=True)
+
+    def get_user(self, obj):
+        serializer = UserMinSerializer(
+            obj.user,
+            read_only=True)
+
+        return serializer.data
 
     class Meta:
-        model = SigningAuthorityConfirmation
-        fields = '__all__'
+        model = ComplianceReportHistory
+        fields = ('id', 'user', 'status', 'user', 'user_role')
