@@ -445,10 +445,11 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
     strip_summary = False
+    disregard_status = False
 
     def update(self, instance, validated_data):
 
-        if instance.read_only:
+        if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
 
         if 'schedule_d' in validated_data:
