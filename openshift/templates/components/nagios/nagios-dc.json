@@ -125,7 +125,7 @@
                                 "volumeMounts": [
                                     {
                                         "name": "nagios-data",
-                                        "mountPath": "/home/nagios3"
+                                        "mountPath": "/var/log/nagios3"
                                     }
                                 ],
                                 "terminationMessagePath": "/dev/termination-log",
