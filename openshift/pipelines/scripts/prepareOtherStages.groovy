@@ -90,11 +90,11 @@ def deployBackendStage (String projectName) {
                 }
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/${tfrsISName}:latest", "mem-tfrs-tools/${tfrsISName}:${envName}")
-                    sh 'sleep 300s'
+                    sh 'sleep 180s'
                     openshift.tag("mem-tfrs-tools/${scanCoordinatorISName}:latest", "mem-tfrs-tools/${scanCoordinatorISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${scanHandlerISName}:latest", "mem-tfrs-tools/${scanHandlerISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${celeryISName}:latest", "mem-tfrs-tools/${celeryISName}:${envName}")
-                    sh 'sleep 180s'
+                    sh 'sleep 120s'
                 }
             }
         }
@@ -107,11 +107,11 @@ def deployBackendToProdStage () {
             script {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/tfrs:test", "mem-tfrs-tools/tfrs:prod")
-                    sh 'sleep 300s'
+                    sh 'sleep 180s'
                     openshift.tag("mem-tfrs-tools/scan-coordinator:test", "mem-tfrs-tools/scan-coordinator:prod")
                     openshift.tag("mem-tfrs-tools/scan-handler:test", "mem-tfrs-tools/scan-handler:prod")
                     openshift.tag("mem-tfrs-tools/celery:test", "mem-tfrs-tools/celery:prod")
-                    sh 'sleep 180s'
+                    sh 'sleep 120s'
                 }
             }
         }
