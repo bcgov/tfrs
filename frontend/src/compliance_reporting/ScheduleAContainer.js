@@ -349,26 +349,15 @@ class ScheduleAContainer extends Component {
       this.props.validationMessages.scheduleA.records &&
       this.props.validationMessages.scheduleA.records.length > (rowIndex)) {
       const errorCells = Object.keys(this.props.validationMessages.scheduleA.records[rowIndex]);
+      const errorKeys = Object.keys(SCHEDULE_A_ERROR_KEYS);
 
-      if (errorCells.indexOf('fuelClass') < 0) {
-        row[SCHEDULE_A.FUEL_CLASS].className = row[SCHEDULE_A.FUEL_CLASS].className.replace('error', '');
-      }
+      errorKeys.forEach((errorKey) => {
+        const col = SCHEDULE_A_ERROR_KEYS[errorKey];
 
-      if (errorCells.indexOf('postalAddress') < 0) {
-        row[SCHEDULE_A.POSTAL_ADDRESS].className = row[SCHEDULE_A.POSTAL_ADDRESS].className.replace('error', '');
-      }
-
-      if (errorCells.indexOf('quantity') < 0) {
-        row[SCHEDULE_A.QUANTITY].className = row[SCHEDULE_A.QUANTITY].className.replace('error', '');
-      }
-
-      if (errorCells.indexOf('tradingPartner') < 0) {
-        row[SCHEDULE_A.LEGAL_NAME].className = row[SCHEDULE_A.LEGAL_NAME].className.replace('error', '');
-      }
-
-      if (errorCells.indexOf('transferType') < 0) {
-        row[SCHEDULE_A.TRANSFER_TYPE].className = row[SCHEDULE_A.TRANSFER_TYPE].className.replace('error', '');
-      }
+        if (errorCells.indexOf(errorKey) < 0) {
+          row[col].className = row[col].className.replace(/error/g, '');
+        }
+      });
 
       let rowNumberClassName = row[SCHEDULE_A.ROW_NUMBER].className;
 
