@@ -116,15 +116,14 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-test").call()
 
-        //Refresh SchemaSpy
-        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-test").call()
-
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Test. If there are operational scripts to run, this is the time.").call()
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-test").call()
 
+        //Refresh SchemaSpy
+        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-test").call()
 
         //===== deploy on prod =====
         //Please confirm to continue the deployment on Prod
@@ -154,14 +153,14 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
 
-        //Refresh SchemaSpy
-        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-prod").call()
-
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Prod. If there are operational scripts to run, this is the time.").call()
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-prod").call()
+
+        //Refresh SchemaSpy
+        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-prod").call()
 
     } //end of node
 } //end of podTemplate
