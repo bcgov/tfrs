@@ -17,15 +17,25 @@ class SnapshotDisplay extends Component {
   static _build_schedule_a_grid(snapshot) {
     let grid = [
       [{
-        value: 'Legal Name of Trading Partner'
+        value: 'Legal Name of Trading Partner',
+        className: 'header',
+        disableEvents: true
       }, {
-        value: 'Postal Address'
+        value: 'Postal Address',
+        className: 'header',
+        disableEvents: true
       }, {
-        value: 'Fuel Class'
+        value: 'Fuel Class',
+        className: 'header',
+        disableEvents: true
       }, {
-        value: 'Received OR Transferred'
+        value: 'Received OR Transferred',
+        className: 'header',
+        disableEvents: true
       }, {
-        value: 'Quantity (L)'
+        value: 'Quantity (L)',
+        className: 'header',
+        disableEvents: true
       }]
     ];
 
@@ -49,31 +59,57 @@ class SnapshotDisplay extends Component {
   static _build_schedule_b_grid(snapshot) {
     let grid = [
       [{
-        value: 'Fuel Type'
+        value: 'Fuel Type',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Fuel Class'
+        value: 'Fuel Class',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Provision Of The Act'
+        value: 'Provision Of The Act',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Fuel Code'
+        value: 'Fuel Code',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Quantity Supplied'
+        value: 'Quantity Supplied',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Units'
+        value: 'Units',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'CI Limit'
+        value: 'CI Limit',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'CI Fuel'
+        value: 'CI Fuel',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Energy Density'
+        value: 'Energy Density',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'EER'
+        value: 'EER',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Energy'
+        value: 'Energy',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Credits'
+        value: 'Credits',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Debits'
+        value: 'Debits',
+        disableEvents: true,
+        className: 'header'
       }]
     ];
 
@@ -105,15 +141,25 @@ class SnapshotDisplay extends Component {
   static _build_schedule_c_grid(snapshot) {
     let grid = [
       [{
-        value: 'Fuel Type'
+        value: 'Fuel Type',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Fuel Class'
+        value: 'Fuel Class',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Quantity'
+        value: 'Quantity',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Expected Use'
+        value: 'Expected Use',
+        disableEvents: true,
+        className: 'header'
       }, {
-        value: 'Rationale'
+        value: 'Rationale',
+        disableEvents: true,
+        className: 'header'
       }]
     ];
 
@@ -143,20 +189,32 @@ class SnapshotDisplay extends Component {
           [
             {
               value: 'Inputs',
-              colspan: 5
+              disableEvents: true,
+              colspan: 5,
+              className: 'header'
             }
           ]
           ,
           [{
-            value: 'Worksheet'
+            value: 'Worksheet',
+            disableEvents: true,
+            className: 'header'
           }, {
-            value: 'Cell'
+            value: 'Cell',
+            disableEvents: true,
+            className: 'header'
           }, {
-            value: 'Value'
+            value: 'Value',
+            disableEvents: true,
+            className: 'header'
           }, {
-            value: 'Units'
+            value: 'Units',
+            disableEvents: true,
+            className: 'header'
           }, {
-            value: 'Description'
+            value: 'Description',
+            disableEvents: true,
+            className: 'header'
           }]
         );
 
@@ -176,14 +234,20 @@ class SnapshotDisplay extends Component {
           [
             {
               value: 'Outputs',
-              colspan: 5
+              disableEvents: true,
+              colspan: 5,
+              className: 'header'
             }
           ]
           ,
           [{
-            value: 'Output'
+            value: 'Output',
+            disableEvents: true,
+            className: 'header'
           }, {
-            value: 'Value'
+            value: 'Value',
+            disableEvents: true,
+            className: 'header'
           }]
         );
         sheet.outputs.forEach(r => {
