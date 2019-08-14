@@ -194,7 +194,7 @@ class ComplianceReportValidator:
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -249,19 +249,19 @@ class ComplianceReportValidator:
             if len(seen_fuelcodes[k]) > 1:
                 for x in seen_fuelcodes[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         for k in seen_indices.keys():
             if len(seen_indices[k]) > 1:
                 for x in seen_indices[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         for k in seen_tuples.keys():
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -298,7 +298,7 @@ class ComplianceReportValidator:
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -357,19 +357,19 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer, Complian
             if len(seen_fuelcodes[k]) > 1:
                 for x in seen_fuelcodes[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         for k in seen_indices.keys():
             if len(seen_indices[k]) > 1:
                 for x in seen_indices[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         for k in seen_tuples.keys():
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
