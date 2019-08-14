@@ -63,6 +63,10 @@
           }
         }
 
+        &.error {
+          background-color: $light-red;
+        }
+
         &.number {
           text-align: right;
 
@@ -73,6 +77,16 @@
 
           input {
             text-align: right
+          }
+        }
+
+        &.row-number {
+          .fa-check {
+            color: $green;
+          }
+
+          .fa-exclamation-triangle {
+            color: $red;
           }
         }
 
@@ -90,6 +104,18 @@
 
         .fa-info-circle {
           color: $light-font;
+        }
+
+        button.fuel-code-not-found {
+          background-color: transparent;
+          border: none;
+          color: $red;
+          text-align: center;
+          width: 100%;
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
