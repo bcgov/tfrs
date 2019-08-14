@@ -107,35 +107,35 @@ class ComplianceReport(Auditable):
     schedule_a = models.OneToOneField(
         ScheduleA,
         related_name='compliance_report',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
 
     schedule_b = models.OneToOneField(
         ScheduleB,
         related_name='compliance_report',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
 
     schedule_c = models.OneToOneField(
         ScheduleC,
         related_name='compliance_report',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
 
     schedule_d = models.OneToOneField(
         ScheduleD,
         related_name='compliance_report',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
 
     summary = models.OneToOneField(
         ScheduleSummary,
         related_name='compliance_report',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
 
