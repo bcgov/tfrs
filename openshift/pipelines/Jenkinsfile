@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.26"
+tfrsRelease="v1.4.27"
 
 podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
