@@ -11,7 +11,7 @@ import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
 import Select from '../app/components/Spreadsheet/Select';
-import {SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
+import {SCHEDULE_A, SCHEDULE_D, SCHEDULE_D_INPUT} from '../constants/schedules/scheduleColumns';
 import {numericInput} from './components/Columns';
 import SchedulesPage from "./components/SchedulesPage";
 
@@ -91,6 +91,15 @@ class ScheduleDContainer extends Component {
           sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value;
           sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units;
           sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description;
+        }
+
+        //zero remaining rows
+        for (let row = sheet.inputs.length + 1; row < sheets[i].grid.length; row += 1) {
+          sheets[i].grid[row][SCHEDULE_D.CELL].value = null;
+          sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null;
+          sheets[i].grid[row][SCHEDULE_D.VALUE].value = null;
+          sheets[i].grid[row][SCHEDULE_D.UNITS].value = null;
+          sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null;
         }
 
         for (let j = 0; j < sheet.outputs.length; j += 1) {

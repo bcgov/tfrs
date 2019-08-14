@@ -12,7 +12,7 @@ import { expectedUses } from '../actions/expectedUses';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_C, SCHEDULE_C_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
+import {SCHEDULE_A, SCHEDULE_C, SCHEDULE_C_ERROR_KEYS} from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -154,6 +154,21 @@ class ScheduleCContainer extends Component {
           grid[row] = this._validate(grid[row], i);
         }
       }
+
+      //zero remaining rows
+      for (let row = nextProps.scheduleState.scheduleC.records.length + 2; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_C.FUEL_TYPE].value = null;
+        grid[row][SCHEDULE_C.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = null;
+        grid[row][SCHEDULE_C.QUANTITY].value = null;
+
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row);
+        }
+      }
+
     }
 
     this.setState({
