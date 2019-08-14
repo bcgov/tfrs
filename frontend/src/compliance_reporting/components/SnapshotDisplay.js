@@ -18,23 +18,23 @@ class SnapshotDisplay extends Component {
     let grid = [
       [{
         value: 'Legal Name of Trading Partner',
-        className: 'header',
+        className: 'header underlined',
         disableEvents: true
       }, {
         value: 'Postal Address',
-        className: 'header',
+        className: 'header underlined',
         disableEvents: true
       }, {
         value: 'Fuel Class',
-        className: 'header',
+        className: 'header underlined',
         disableEvents: true
       }, {
         value: 'Received OR Transferred',
-        className: 'header',
+        className: 'header underlined',
         disableEvents: true
       }, {
         value: 'Quantity (L)',
-        className: 'header',
+        className: 'header underlined',
         disableEvents: true
       }]
     ];
@@ -61,55 +61,55 @@ class SnapshotDisplay extends Component {
       [{
         value: 'Fuel Type',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Fuel Class',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Provision Of The Act',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Fuel Code',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Quantity Supplied',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Units',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'CI Limit',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'CI Fuel',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Energy Density',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'EER',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Energy',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Credits',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Debits',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }]
     ];
 
@@ -141,25 +141,25 @@ class SnapshotDisplay extends Component {
   static _build_schedule_c_grid(snapshot) {
     let grid = [
       [{
-        value: 'Fuel Type',
+        value: 'Fuel Type underlined',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Fuel Class',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Quantity',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Expected Use',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }, {
         value: 'Rationale',
         disableEvents: true,
-        className: 'header'
+        className: 'header underlined'
       }]
     ];
 
@@ -190,7 +190,7 @@ class SnapshotDisplay extends Component {
             {
               value: 'Inputs',
               disableEvents: true,
-              colspan: 5,
+              colSpan: 5,
               className: 'header'
             }
           ]
@@ -198,23 +198,23 @@ class SnapshotDisplay extends Component {
           [{
             value: 'Worksheet',
             disableEvents: true,
-            className: 'header'
+            className: 'header underlined'
           }, {
             value: 'Cell',
             disableEvents: true,
-            className: 'header'
+            className: 'header underlined'
           }, {
             value: 'Value',
             disableEvents: true,
-            className: 'header'
+            className: 'header underlined'
           }, {
             value: 'Units',
             disableEvents: true,
-            className: 'header'
+            className: 'header underlined'
           }, {
             value: 'Description',
             disableEvents: true,
-            className: 'header'
+            className: 'header underlined'
           }]
         );
 
@@ -235,7 +235,7 @@ class SnapshotDisplay extends Component {
             {
               value: 'Outputs',
               disableEvents: true,
-              colspan: 5,
+              colSpan: 5,
               className: 'header'
             }
           ]
