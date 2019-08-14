@@ -1,4 +1,5 @@
 const SCHEDULE_A = {
+  ROW_NUMBER: 0,
   LEGAL_NAME: 1,
   POSTAL_ADDRESS: 2,
   FUEL_CLASS: 3,
@@ -6,7 +7,16 @@ const SCHEDULE_A = {
   QUANTITY: 5
 };
 
+const SCHEDULE_A_ERROR_KEYS = {
+  tradingPartner: 1,
+  postalAddress: 2,
+  fuelClass: 3,
+  transferType: 4,
+  quantity: 5
+};
+
 const SCHEDULE_B = {
+  ROW_NUMBER: 0,
   FUEL_TYPE: 1,
   FUEL_CLASS: 2,
   PROVISION_OF_THE_ACT: 3,
@@ -22,13 +32,30 @@ const SCHEDULE_B = {
   DEBIT: 13
 };
 
+const SCHEDULE_B_ERROR_KEYS = {
+  fuelType: 1,
+  fuelClass: 2,
+  provisionOfTheAct: 3,
+  fuelCode: 4,
+  quantity: 5,
+  intensity: 8
+};
+
 const SCHEDULE_C = {
+  ROW_NUMBER: 0,
   FUEL_TYPE: 1,
   FUEL_CLASS: 2,
   QUANTITY: 3,
   UNITS: 4,
   EXPECTED_USE: 5,
   EXPECTED_USE_OTHER: 6
+};
+
+const SCHEDULE_C_ERROR_KEYS = {
+  fuelType: 1,
+  fuelClass: 2,
+  quantity: 3,
+  expectedUse: 5
 };
 
 const SCHEDULE_D = {
@@ -107,8 +134,11 @@ const SCHEDULE_PENALTY = {
 
 export {
   SCHEDULE_A,
+  SCHEDULE_A_ERROR_KEYS,
   SCHEDULE_B,
+  SCHEDULE_B_ERROR_KEYS,
   SCHEDULE_C,
+  SCHEDULE_C_ERROR_KEYS,
   SCHEDULE_D,
   SCHEDULE_D_INPUT,
   SCHEDULE_D_OUTPUT,

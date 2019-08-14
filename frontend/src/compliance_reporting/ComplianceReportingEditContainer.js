@@ -3,17 +3,15 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {toastr as reduxToastr} from 'react-redux-toastr';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { toastr as reduxToastr } from 'react-redux-toastr';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
-import {
-  addSigningAuthorityConfirmation
-} from '../actions/signingAuthorityConfirmationsActions';
+import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
-import {complianceReporting} from '../actions/complianceReporting';
+import { complianceReporting } from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
@@ -28,12 +26,12 @@ import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleTabs from './components/ScheduleTabs';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
+import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
-import withCreditCalculationService from "./services/credit_calculation_hoc";
 
 class ComplianceReportingEditContainer extends Component {
-  static componentForTabName(tab) {
+  static componentForTabName (tab) {
     let TabComponent;
 
     switch (tab) {
@@ -42,7 +40,9 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-b':
-        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleBContainer));
+        TabComponent = withReferenceData({
+          includeCompliancePeriods: true
+        })(withCreditCalculationService()(ScheduleBContainer));
         break;
 
       case 'schedule-c':
@@ -64,10 +64,10 @@ class ComplianceReportingEditContainer extends Component {
     return TabComponent;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.tabComponent = Loading;
-    const {tab} = props.match.params;
+    const { tab } = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     this.status = 'Draft';
 
@@ -91,7 +91,7 @@ class ComplianceReportingEditContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getSigningAuthorityAssertions({
       module: 'compliance_report'
     });
@@ -102,22 +102,22 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {tab} = nextProps.match.params;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { tab } = nextProps.match.params;
 
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
-      const {id} = this.props.match.params;
-      //const period = nextProps.complianceReporting.item.compliancePeriod.description;
+      const { id } = this.props.match.params;
+      // const period = nextProps.complianceReporting.item.compliancePeriod.description;
 
       this.props.validateComplianceReport({
         id,
         state: {
-         // compliancePeriod: period,
-          ...this.state.schedules,
+          // compliancePeriod: period,
+          ...this.state.schedules
         }
       });
     }
@@ -136,12 +136,10 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _updateScheduleState(mergedState) {
-
-    const {schedules} = this.state;
-    const {id} = this.props.match.params;
+  _updateScheduleState (mergedState) {
+    const { schedules } = this.state;
+    const { id } = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
-
 
     this.setState({
       schedules: {
@@ -167,8 +165,8 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleDelete() {
-    this.props.deleteComplianceReport({id: this.props.match.params.id});
+  _handleDelete () {
+    this.props.deleteComplianceReport({ id: this.props.match.params.id });
 
     this.props.getComplianceReports();
     history.push(COMPLIANCE_REPORTING.LIST);
@@ -200,7 +198,7 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleSubmit(event, status = 'Draft') {
+  _handleSubmit (event, status = 'Draft') {
     // patch existing
     const payload = {
       status,
@@ -231,9 +229,9 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _handleRecomputeRequest() {
-    const {schedules} = this.state;
-    const {id} = this.props.match.params;
+  _handleRecomputeRequest () {
+    const { schedules } = this.state;
+    const { id } = this.props.match.params;
 
     this.props.recomputeTotals({
       id,
@@ -243,17 +241,17 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  render() {
+  render () {
     const TabComponent = this.tabComponent;
 
-    const {tab, id} = this.props.match.params;
+    const { tab, id } = this.props.match.params;
 
     if (!this.state.getCalled) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     if (this.props.complianceReporting.isGetting) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     let period = null;
@@ -272,29 +270,30 @@ class ComplianceReportingEditContainer extends Component {
         key="nav"
       />,
       <TabComponent
-        key="tab-component"
-        period={period}
-        id={id}
         complianceReport={this.props.complianceReporting.item}
+        id={id}
+        key="tab-component"
         loggedInUser={this.props.loggedInUser}
-        scheduleState={this.state.schedules}
+        period={period}
+        readOnly={this.props.complianceReporting.item.readOnly}
         recomputedTotals={this.props.complianceReporting.recomputeResult}
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
+        scheduleState={this.state.schedules}
         updateScheduleState={this._updateScheduleState}
-        validating={this.props.complianceReporting.validating}
         valid={this.props.complianceReporting.valid !== false}
-        readOnly={this.props.complianceReporting.item.readOnly}
+        validating={this.props.complianceReporting.validating}
+        validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <ScheduleButtons
+        delete={!this.props.complianceReporting.item.readOnly}
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
-        submit={!this.props.complianceReporting.item.readOnly}
-        delete={!this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
-        validating={this.props.complianceReporting.validating}
+        submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
+        validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
@@ -369,21 +368,21 @@ ComplianceReportingEditContainer.propTypes = {
           description: PropTypes.string
         }),
         PropTypes.string
-      ])
+      ]),
+      readOnly: PropTypes.bool
     }),
-    success: PropTypes.bool,
-    validating: PropTypes.bool,
-    valid: PropTypes.bool,
-    validationMessages: PropTypes.object,
     isRecomputing: PropTypes.bool,
-    recomputeResult: PropTypes.object
+    recomputeResult: PropTypes.object,
+    success: PropTypes.bool,
+    valid: PropTypes.bool,
+    validating: PropTypes.bool,
+    validationMessages: PropTypes.object
   }),
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
-  recomputeTotals: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -396,43 +395,44 @@ ComplianceReportingEditContainer.propTypes = {
       tab: PropTypes.string
     }).isRequired
   }).isRequired,
+  recomputeTotals: PropTypes.func.isRequired,
   saving: PropTypes.bool.isRequired,
   signingAuthorityAssertions: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool
   }).isRequired,
   updateComplianceReport: PropTypes.func.isRequired,
-  validateComplianceReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired,
+  validateComplianceReport: PropTypes.func.isRequired
 };
 
 const
   mapDispatchToProps = {
     addSigningAuthorityConfirmation,
     createComplianceReport: complianceReporting.create,
-    validateComplianceReport: complianceReporting.validate,
-    recomputeTotals: complianceReporting.recompute,
-    updateComplianceReport: complianceReporting.update,
     deleteComplianceReport: complianceReporting.remove,
     getComplianceReport: complianceReporting.get,
     getComplianceReports: complianceReporting.find,
-    getSigningAuthorityAssertions
+    getSigningAuthorityAssertions,
+    recomputeTotals: complianceReporting.recompute,
+    updateComplianceReport: complianceReporting.update,
+    validateComplianceReport: complianceReporting.validate
   };
 
 const
   mapStateToProps = state => ({
     complianceReporting: {
-      isGetting: state.rootReducer.complianceReporting.isGetting,
-      isFinding: state.rootReducer.complianceReporting.isFinding,
-      isUpdating: state.rootReducer.complianceReporting.isUpdating,
-      success: state.rootReducer.complianceReporting.success,
-      item: state.rootReducer.complianceReporting.item,
       errorMessage: state.rootReducer.complianceReporting.errorMessage,
-      validating: state.rootReducer.complianceReporting.isValidating,
-      valid: state.rootReducer.complianceReporting.validationPassed,
-      validationMessages: state.rootReducer.complianceReporting.validationMessages,
+      isFinding: state.rootReducer.complianceReporting.isFinding,
+      isGetting: state.rootReducer.complianceReporting.isGetting,
       isRecomputing: state.rootReducer.complianceReporting.isRecomputing,
-      recomputeResult: state.rootReducer.complianceReporting.recomputeResult
+      isUpdating: state.rootReducer.complianceReporting.isUpdating,
+      item: state.rootReducer.complianceReporting.item,
+      recomputeResult: state.rootReducer.complianceReporting.recomputeResult,
+      success: state.rootReducer.complianceReporting.success,
+      valid: state.rootReducer.complianceReporting.validationPassed,
+      validating: state.rootReducer.complianceReporting.isValidating,
+      validationMessages: state.rootReducer.complianceReporting.validationMessages
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
@@ -450,9 +450,7 @@ const
     key: '-',
     version: 4,
     name: 'compliance-report',
-    customPathGenerator: (props) => {
-      return `edit:${props.match.params.id}`;
-    }
+    customPathGenerator: props => (`edit:${props.match.params.id}`)
   };
 
 export default connect(

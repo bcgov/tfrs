@@ -36,3 +36,53 @@
     }
   }
 }
+
+.panel {
+  &.panel-danger {
+    border-color: $red;
+    border-radius: 0.5rem;
+    color: $red;
+  }
+
+  &.panel-success {
+    border-color: $green;
+    border-radius: 0.5rem;
+    color: $green;
+  }
+
+  &.panel-warning {
+    border-color: $dark-yellow;
+    border-radius: 0.5rem;
+  }
+
+  .panel-body {
+    ul {
+      margin: 0;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .fa-circle-notch { // Loading icon
+      font-size: 3rem;
+    }
+  }
+
+  .panel-title {
+    font-size: 2rem;
+    position: relative;
+
+    button {
+      background-color: transparent;
+      border: none;
+      margin: 0;
+      padding: 0;
+      vertical-align: middle;
+
+      &.toggle {
+        padding: 0 0.5rem;
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
