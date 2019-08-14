@@ -122,14 +122,14 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             prepareOtherStages.functionalTestStage().call()
         }
 
-        //Refresh SchemaSpy
-        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
-
         //Ask for confirmation before taking down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page").call()
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
+
+        //Refresh SchemaSpy
+        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
 
     } //end of node
 
