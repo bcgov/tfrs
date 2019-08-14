@@ -1,7 +1,22 @@
 .spreadsheet {
-  width: 100%;
+  min-width: 100%;
+  table-layout: auto;
+  overflow-x: auto;
 
-  &.header {
-    font-weight: bold;
+  td.cell {
+    padding: 1px 2px;
   }
+
+  td.header {
+    font-weight: bold;
+    text-align: center !important;
+    background: #eeeeee;
+  }
+
+  td.underlined {
+    border-bottom: 2px solid #000 !important;
+  }
+
+  margin-bottom: 2em;
+
 }
