@@ -15,6 +15,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import history from '../app/History';
 
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
+import SnapshotDisplay from "./components/SnapshotDisplay";
 
 class SnapshotContainer extends Component {
 
@@ -53,6 +54,7 @@ class SnapshotContainer extends Component {
           enableClipboard={false}
           sortKeys={true}
         />,
+        <SnapshotDisplay snapshot={this.props.snapshot}/>,
         <button
           className="btn btn-default"
           type="button"
