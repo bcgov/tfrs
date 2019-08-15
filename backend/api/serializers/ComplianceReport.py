@@ -465,7 +465,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleDSheet.objects.filter(
                     schedule=instance.schedule_d
                 ).delete()
-                instance.schedule_d.delete()
+                ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
 
             sheets_data = schedule_d_data.pop('sheets')
             schedule_d = ScheduleD.objects.create(
@@ -509,7 +509,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleCRecord.objects.filter(
                     schedule=instance.schedule_c
                 ).delete()
-                instance.schedule_c.delete()
+                ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
 
             if 'records' in schedule_c_data:
                 records_data = schedule_c_data.pop('records')
@@ -537,7 +537,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleBRecord.objects.filter(
                     schedule=instance.schedule_b
                 ).delete()
-                instance.schedule_b.delete()
+                ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
 
             if 'records' in schedule_b_data:
                 records_data = schedule_b_data.pop('records')
@@ -565,7 +565,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleARecord.objects.filter(
                     schedule=instance.schedule_a
                 ).delete()
-                instance.schedule_a.delete()
+                ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
 
             if 'records' in schedule_a_data:
                 records_data = schedule_a_data.pop('records')
@@ -590,7 +590,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
             summary_data = validated_data.pop('summary')
 
             if instance.summary:
-                instance.summary.delete()
+                ScheduleSummary.objects.filter(id=instance.summary.id).delete()
 
             summary = ScheduleSummary.objects.create(
                 **summary_data,

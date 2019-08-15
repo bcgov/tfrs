@@ -142,6 +142,18 @@ class ScheduleAContainer extends Component {
         }
       }
 
+      //zero remaining rows
+      for (let row = nextProps.scheduleState.scheduleA.records.length + 1; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_A.LEGAL_NAME].value = null;
+        grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null;
+        grid[row][SCHEDULE_A.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_A.TRANSFER_TYPE].value = null;
+        grid[row][SCHEDULE_A.QUANTITY].value = null;
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row);
+        }
+      }
+
       this._calculateTotal(grid);
     }
 
@@ -431,6 +443,7 @@ class ScheduleAContainer extends Component {
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        readOnly={this.props.readOnly}
         scheduleType="schedule-a"
         title="Schedule A - Notional Transfers of Renewable Fuel"
         totals={this.state.totals}

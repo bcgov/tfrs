@@ -101,6 +101,15 @@ class ScheduleDContainer extends Component {
           sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description;
         }
 
+        // zero remaining rows
+        for (let row = sheet.inputs.length + 1; row < sheets[i].grid.length; row += 1) {
+          sheets[i].grid[row][SCHEDULE_D.CELL].value = null;
+          sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null;
+          sheets[i].grid[row][SCHEDULE_D.VALUE].value = null;
+          sheets[i].grid[row][SCHEDULE_D.UNITS].value = null;
+          sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null;
+        }
+
         for (let j = 0; j < sheet.outputs.length; j += 1) {
           const rowIndex = sheets[i].output.findIndex(x =>
             x[0].value === sheet.outputs[j].description);
@@ -402,6 +411,7 @@ class ScheduleDContainer extends Component {
       <div className="page_schedule spreadsheet-component" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
 
+        {!this.props.readOnly &&
         <ValidationMessages
           activeSheet={this.state.activeSheet}
           scheduleType="schedule-d"
@@ -409,6 +419,7 @@ class ScheduleDContainer extends Component {
           validating={this.props.validating}
           validationMessages={this.props.validationMessages}
         />
+        }
 
         <ScheduleDTabs
           active={this.state.activeSheet}

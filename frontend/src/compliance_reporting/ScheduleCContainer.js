@@ -154,6 +154,21 @@ class ScheduleCContainer extends Component {
           grid[row] = this._validate(grid[row], i);
         }
       }
+
+      //zero remaining rows
+      for (let row = nextProps.scheduleState.scheduleC.records.length + 2; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_C.FUEL_TYPE].value = null;
+        grid[row][SCHEDULE_C.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = null;
+        grid[row][SCHEDULE_C.QUANTITY].value = null;
+
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row);
+        }
+      }
+
     }
 
     this.setState({
@@ -485,6 +500,7 @@ class ScheduleCContainer extends Component {
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        readOnly={this.props.readOnly}
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
         valid={this.props.valid}

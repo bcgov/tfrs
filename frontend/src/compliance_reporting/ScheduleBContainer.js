@@ -201,6 +201,29 @@ class ScheduleBContainer extends Component {
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], i);
+      }
+    }
+
+    //zero any remaining rows
+    for (let row = nextProps.scheduleState.scheduleB.records.length + 2; row < grid.length; row += 1) {
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = null;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
+      grid[row][SCHEDULE_B.QUANTITY].value = null;
+      grid[row][SCHEDULE_B.UNITS].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null;
+      grid[row][SCHEDULE_B.CREDIT].value = null;
+      grid[row][SCHEDULE_B.DEBIT].value = null;
+      grid[row][SCHEDULE_B.EER].value = null;
+      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = null;
+      grid[row][SCHEDULE_B.ENERGY_DENSITY].value = null;
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], row);
+      }
     }
 
     this.recomputeDerivedState(nextProps, {
@@ -731,6 +754,7 @@ class ScheduleBContainer extends Component {
         data={grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        readOnly={this.props.readOnly}
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
