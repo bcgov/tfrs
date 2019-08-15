@@ -18,6 +18,8 @@ import {
 } from '../constants/schedules/scheduleColumns';
 import { numericInput } from './components/Columns';
 
+import ValidationMessages from './components/ValidationMessages';
+
 class ScheduleDContainer extends Component {
   constructor (props) {
     super(props);
@@ -400,6 +402,14 @@ class ScheduleDContainer extends Component {
       <div className="page_schedule spreadsheet-component" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
 
+        <ValidationMessages
+          activeSheet={this.state.activeSheet}
+          scheduleType="schedule-d"
+          valid={this.props.valid}
+          validating={this.props.validating}
+          validationMessages={this.props.validationMessages}
+        />
+
         <ScheduleDTabs
           active={this.state.activeSheet}
           addSheet={this._addSheet}
@@ -419,6 +429,9 @@ class ScheduleDContainer extends Component {
               referenceData={this.props.referenceData}
               sheet={sheet}
               readOnly={this.props.readOnly}
+              valid={this.props.valid}
+              validating={this.props.validating}
+              validationMessages={this.props.validationMessages}
             />
           </div>
         ))}

@@ -36,11 +36,16 @@ const ScheduleDPage = props => ([
         }}
         type="button"
       >
-        <FontAwesomeIcon icon="plus"/> Add Row
+        <FontAwesomeIcon icon="plus" /> Add Row
       </button>
-      <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-        <span className="caret"/>
+      <button
+        aria-expanded="false"
+        aria-haspopup="true"
+        className="btn btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        type="button"
+      >
+        <span className="caret" />
         <span className="sr-only">Toggle Dropdown</span>
       </button>
       <ul className="dropdown-menu">
@@ -59,8 +64,7 @@ const ScheduleDPage = props => ([
       </ul>
     </div>
     }
-  </div>
-  ,
+  </div>,
   <div className="scrollable output" key="output">
     <ReactDataSheet
       className={`spreadsheet ${props.scheduleType} output`}
