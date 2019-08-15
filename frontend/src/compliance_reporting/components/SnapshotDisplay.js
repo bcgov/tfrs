@@ -14,6 +14,10 @@ class SnapshotDisplay extends Component {
     super(props);
   }
 
+  static _decimalViewer(digits = 2) {
+    return (cell) => Number(cell.value).toFixed(digits);
+  }
+
   static _build_schedule_a_grid(snapshot) {
     let grid = [
       [{
@@ -43,11 +47,11 @@ class SnapshotDisplay extends Component {
       snapshot.scheduleA.records.forEach(r => {
         grid.push(
           [
-            {value: r.tradingPartner},
-            {value: r.postalAddress},
-            {value: r.fuelClass},
-            {value: r.transferType},
-            {value: r.quantity}
+            {value: r.tradingPartner, readOnly: true},
+            {value: r.postalAddress, readOnly: true},
+            {value: r.fuelClass, readOnly: true},
+            {value: r.transferType, readOnly: true},
+            {value: r.quantity, readOnly: true}
           ]
         )
       })
@@ -117,22 +121,42 @@ class SnapshotDisplay extends Component {
       snapshot.scheduleB.records.forEach(r => {
         grid.push(
           [
-            {value: r.fuelType},
-            {value: r.fuelClass},
-            {value: r.provisionOfTheAct},
-            {value: r.fuelCode},
-            {value: r.quantity},
-            {value: r.units},
-            {value: r.ciLimit},
-            {value: r.effectiveCarbonIntensity},
-            {value: r.energyDensity},
-            {value: r.eer},
-            {value: r.energyContent},
-            {value: r.credits},
-            {value: r.debits}
+            {value: r.fuelType, readOnly: true},
+            {value: r.fuelClass, readOnly: true},
+            {value: r.provisionOfTheAct, readOnly: true},
+            {value: r.fuelCode, readOnly: true},
+            {value: r.quantity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.units, readOnly: true},
+            {value: r.ciLimit, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.effectiveCarbonIntensity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.energyDensity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.eer, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.energyContent, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.credits, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(2)},
+            {value: r.debits, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(2)}
           ]
         )
       })
+      grid.push(
+        [
+          {
+            value: 'Totals',
+            className: 'strong',
+            colSpan: 11,
+            readOnly: true
+          },
+          {
+            value: snapshot.scheduleB.totalCredits,
+            readOnly: true,
+            valueViewer: SnapshotDisplay._decimalViewer(0)
+          },
+          {
+            value: snapshot.scheduleB.totalDebits,
+            readOnly: true,
+            valueViewer: SnapshotDisplay._decimalViewer(0)
+          },
+        ]
+      )
     }
 
     return grid;
@@ -141,7 +165,7 @@ class SnapshotDisplay extends Component {
   static _build_schedule_c_grid(snapshot) {
     let grid = [
       [{
-        value: 'Fuel Type underlined',
+        value: 'Fuel Type',
         disableEvents: true,
         className: 'header underlined'
       }, {
@@ -167,11 +191,11 @@ class SnapshotDisplay extends Component {
       snapshot.scheduleC.records.forEach(r => {
         grid.push(
           [
-            {value: r.fuelType},
-            {value: r.fuelClass},
-            {value: r.quantity},
-            {value: r.expectedUse},
-            {value: r.rationale}
+            {value: r.fuelType, readOnly: true},
+            {value: r.fuelClass, readOnly: true},
+            {value: r.quantity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
+            {value: r.expectedUse, readOnly: true},
+            {value: r.rationale, readOnly: true}
           ]
         )
       })
@@ -180,88 +204,146 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  static _build_schedule_d_grid(snapshot) {
+  static _build_schedule_d_grid(snapshot, i) {
     let grid = [];
+    const sheet = snapshot.scheduleD.sheets[i];
+    grid.push(
+      [
+        {
+          value: 'Parameters',
+          disableEvents: true,
+          colSpan: 5,
+          className: 'header underlined'
+        }
+      ]
+    );
+    grid.push(
+      [
+        {
+          value: 'Fuel Class',
+          disableEvents: true,
+          colSpan: 3,
+          className: 'strong'
+        },
+        {
+          value: sheet.fuelClass,
+          colSpan: 2,
+          readOnly: true,
+        }
+      ],
+      [
+        {
+          value: 'Fuel Type',
+          disableEvents: true,
+          colSpan: 3,
+          className: 'strong'
+        },
+        {
+          value: sheet.fuelType,
+          colSpan: 2,
+          readOnly: true,
+        }
+      ]
+      , [
+        {
+          value: 'Feedstock',
+          disableEvents: true,
+          colSpan: 3,
+          className: 'strong'
+        },
+        {
+          value: sheet.feedstock,
+          colSpan: 2,
+          readOnly: true,
+        }
+      ]
+    );
 
-    if (snapshot.scheduleD) {
-      for (const sheet of snapshot.scheduleD.sheets) {
-        grid.push(
-          [
-            {
-              value: 'Inputs',
-              disableEvents: true,
-              colSpan: 5,
-              className: 'header'
-            }
-          ]
-          ,
-          [{
-            value: 'Worksheet',
-            disableEvents: true,
-            className: 'header underlined'
-          }, {
-            value: 'Cell',
-            disableEvents: true,
-            className: 'header underlined'
-          }, {
-            value: 'Value',
-            disableEvents: true,
-            className: 'header underlined'
-          }, {
-            value: 'Units',
-            disableEvents: true,
-            className: 'header underlined'
-          }, {
-            value: 'Description',
-            disableEvents: true,
-            className: 'header underlined'
-          }]
-        );
+    grid.push(
+      [
+        {
+          value: 'Inputs',
+          disableEvents: true,
+          colSpan: 5,
+          className: 'header'
+        }
+      ]
+      ,
+      [{
+        value: 'Worksheet',
+        disableEvents: true,
+        className: 'header underlined', readOnly: true
+      }, {
+        value: 'Cell',
+        disableEvents: true,
+        className: 'header underlined', readOnly: true
+      }, {
+        value: 'Value',
+        disableEvents: true,
+        className: 'header underlined', readOnly: true
+      }, {
+        value: 'Units',
+        disableEvents: true,
+        className: 'header underlined', readOnly: true
+      }, {
+        value: 'Description',
+        disableEvents: true,
+        className: 'header underlined', readOnly: true
+      }]
+    );
 
-        sheet.inputs.forEach(r => {
-          grid.push(
-            [
-              {value: r.fuelType},
-              {value: r.fuelClass},
-              {value: r.quantity},
-              {value: r.expectedUse},
-              {value: r.rationale}
-            ]
-          )
-        });
+    sheet.inputs.forEach(r => {
+      grid.push(
+        [
+          {value: r.worksheetName, readOnly: true},
+          {value: r.cell, readOnly: true},
+          {value: r.value, readOnly: true},
+          {value: r.units, readOnly: true},
+          {value: r.description, readOnly: true}
+        ]
+      )
+    });
 
-        grid.push(
-          [
-            {
-              value: 'Outputs',
-              disableEvents: true,
-              colSpan: 5,
-              className: 'header'
-            }
-          ]
-          ,
-          [{
-            value: 'Output',
-            disableEvents: true,
-            className: 'header'
-          }, {
-            value: 'Value',
-            disableEvents: true,
-            className: 'header'
-          }]
-        );
-        sheet.outputs.forEach(r => {
-          grid.push(
-            [
-              {value: r.description},
-              {value: r.intensity}
-            ]
-          )
-        });
-
-      }
-
-    }
+    grid.push(
+      [
+        {
+          value: 'Outputs',
+          disableEvents: true,
+          colSpan: 5,
+          className: 'header'
+        }
+      ]
+      ,
+      [{
+        value: 'Output',
+        disableEvents: true,
+        className: 'header underlined',
+        colSpan: 3
+      }, {
+        value: 'Value',
+        disableEvents: true,
+        className: 'header underlined',
+        colSpan: 2
+      }]
+    );
+    sheet.outputs.forEach(r => {
+      grid.push(
+        [
+          {
+            value: r.description,
+            readOnly: true,
+            className: 'strong',
+            colSpan: 3
+          },
+          {
+            value: r.intensity,
+            readOnly: true,
+            colSpan: 2,
+            valueViewer: SnapshotDisplay._decimalViewer(2)
+          }
+        ]
+      )
+    });
 
     return grid;
   }
@@ -270,44 +352,75 @@ class SnapshotDisplay extends Component {
     const {snapshot} = this.props;
 
     if (!snapshot) {
-      return (<p>l</p>);
+      return (<p>???</p>);
     }
 
     return (
-      <div>
-        {snapshot.scheduleA &&
-        <ReactDataSheet
-          key="snapshot-a"
-          className={`spreadsheet snapshot_a`}
-          data={SnapshotDisplay._build_schedule_a_grid(snapshot)}
-          valueRenderer={cell => cell.value}
-        />
-        }
-        {snapshot.scheduleB &&
-        <ReactDataSheet
-          key="snapshot-b"
-          className={`spreadsheet snapshot_b`}
-          data={SnapshotDisplay._build_schedule_b_grid(snapshot)}
-          valueRenderer={cell => cell.value}
-        />
-        }
-        {snapshot.scheduleC &&
-        <ReactDataSheet
-          key="snapshot-c"
-          className={`spreadsheet snapshot_c`}
-          data={SnapshotDisplay._build_schedule_c_grid(snapshot)}
-          valueRenderer={cell => cell.value}
-        />
-        }
-        {snapshot.scheduleD &&
-        <ReactDataSheet
-          key="snapshot-d"
-          className={`spreadsheet snapshot_d`}
-          data={SnapshotDisplay._build_schedule_d_grid(snapshot)}
-          valueRenderer={cell => cell.value}
-        />
-        }
-      </div>
+
+      [<div>
+        <h1>Compliance Report for {this.props.snapshot.compliancePeriod.description}</h1>
+        <h3>{this.props.snapshot.organization.name}</h3>
+        <h3>Submitted: {this.props.snapshot.timestamp}</h3>
+        <hr/>
+
+      </div>,
+
+        <div>
+          {snapshot.scheduleA &&
+          <div>
+            <h1 className="schedule-header">Schedule A</h1>
+            <hr/>
+            < ReactDataSheet
+              key="snapshot-a"
+              className={`spreadsheet snapshot_a`}
+              data={SnapshotDisplay._build_schedule_a_grid(snapshot)}
+              valueRenderer={cell => cell.value}
+            />
+          </div>
+          }
+          {snapshot.scheduleB &&
+          <div>
+            <h1 className="schedule-header">Schedule B</h1>
+            <hr/>
+            < ReactDataSheet
+              key="snapshot-b"
+              className={`spreadsheet snapshot_b`}
+              data={SnapshotDisplay._build_schedule_b_grid(snapshot)}
+              valueRenderer={cell => cell.value}
+            />
+          </div>
+          }
+          {snapshot.scheduleC &&
+          <div>
+            <h1 className="schedule-header">Schedule C</h1>
+            <hr/>
+            < ReactDataSheet
+              key="snapshot-c"
+              className={`spreadsheet snapshot_c`}
+              data={SnapshotDisplay._build_schedule_c_grid(snapshot)}
+              valueRenderer={cell => cell.value}
+            />
+          </div>
+          }
+          {snapshot.scheduleD &&
+          <div>
+            <h1 className="schedule-header">Schedule D</h1>
+            <hr/>
+            {snapshot.scheduleD.sheets.map((s, i) => (
+              <div key={`snapshot-d-${i}`}>
+                <h2>Fuel {i + 1}</h2>
+                <ReactDataSheet
+                  className={`spreadsheet snapshot_d`}
+                  data={SnapshotDisplay._build_schedule_d_grid(snapshot, i)}
+                  valueRenderer={cell => cell.value}
+                />
+              </div>
+            ))
+            }
+          </div>
+          }
+        </div>
+      ]
     )
 
   }

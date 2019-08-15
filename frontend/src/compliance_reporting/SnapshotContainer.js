@@ -21,6 +21,9 @@ class SnapshotContainer extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      active: 'tables'
+    }
   }
 
   componentDidMount() {
@@ -39,23 +42,54 @@ class SnapshotContainer extends Component {
     };
 
     return (
-      [<h1>Data Snapshot</h1>,
-        <p>A record of the contents of the report at the moment it was submitted</p>,
-        <hr/>,
-        <ReactJson
-          src={this.props.snapshot}
-          // theme='monokai'
-          iconStyle='triangle'
-          style={{
-            'fontFamily': ['Hack', 'Source Code Pro', 'monospace'],
-            'fontSize': '18px'
-          }}
-          displayDataTypes={false}
-          enableClipboard={false}
-          sortKeys={true}
-        />,
-        <SnapshotDisplay snapshot={this.props.snapshot}/>,
-        <button
+      <div>
+        <div>
+          <ul className="nav nav-tabs">
+            <li className="nav-item">
+              <a
+                className={`nav-link ${this.state.active === 'tables' ? 'active' : ''}`}
+                href="#"
+                onClick={() => {
+                  this.setState({active: 'tables'});
+                }}
+              >Tables</a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={`nav-link ${this.state.active === 'debug' ? 'active' : ''}`}
+                href="#"
+                onClick={() => {
+                  this.setState({active: 'debug'});
+                }}
+              >Raw JSON</a>
+            </li>
+          </ul>
+        </div>
+        {this.state.active === 'debug' &&
+        <div>
+          <h1>Data Snapshot</h1>
+          < p> A record of the contents of the report at the moment it was submitted</p>,
+          <hr/>
+          <ReactJson
+            src={this.props.snapshot}
+            // theme='monokai'
+            iconStyle='triangle'
+            style={{
+              'fontFamily': ['Hack', 'Source Code Pro', 'monospace'],
+              'fontSize': '18px'
+            }}
+            displayDataTypes={false}
+            enableClipboard={false}
+            sortKeys={true}
+          />
+        </div>
+        }
+        {this.state.active === 'tables' &&
+        <div>
+          <SnapshotDisplay snapshot={this.props.snapshot}/>
+        </div>
+        }
+        < button
           className="btn btn-default"
           type="button"
           onClick={() => {
@@ -64,9 +98,11 @@ class SnapshotContainer extends Component {
         >
           <FontAwesomeIcon icon="arrow-circle-left"/> Back
         </button>
-      ])
+      </div>
+    );
   }
 }
+
 
 SnapshotContainer.defaultProps = {
   snapshot: null,

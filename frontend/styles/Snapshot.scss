@@ -4,13 +4,17 @@
   overflow-x: auto;
 
   td.cell {
-    padding: 1px 2px;
+    padding: 4px 6px;
   }
 
   td.header {
     font-weight: bold;
     text-align: center !important;
-    background: #eeeeee;
+    background: #eeeeee !important;
+  }
+
+  .strong {
+    font-weight: bold;
   }
 
   td.underlined {
@@ -19,4 +23,9 @@
 
   margin-bottom: 2em;
 
+  .read-only {
+    background: #fff !important;
+    color: #000 !important;
+    text-align: right !important;
+  }
 }
