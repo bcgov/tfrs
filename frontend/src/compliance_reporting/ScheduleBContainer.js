@@ -3,8 +3,8 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
@@ -12,12 +12,12 @@ import Modal from '../app/components/Modal';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_B, SCHEDULE_B_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
-import { formatNumeric } from '../utils/functions';
+import {SCHEDULE_B, SCHEDULE_B_ERROR_KEYS} from '../constants/schedules/scheduleColumns';
+import {formatNumeric} from '../utils/functions';
 import ComplianceReportingService from './services/ComplianceReportingService';
 
 class ScheduleBContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -65,11 +65,11 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity Limit<br />(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity Limit<br/>(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity of Fuel<br />(gCO₂e/MJ)</div>
+          value: <div>Carbon Intensity of Fuel<br/>(gCO₂e/MJ)</div>
         }, {
           className: 'density',
           readOnly: true,
@@ -99,11 +99,11 @@ class ScheduleBContainer extends Component {
     };
   }
 
-  static clearErrorColumns (_row) {
+  static clearErrorColumns(_row) {
     const row = _row;
 
     row.forEach((cell, col) => {
-      const { className } = cell;
+      const {className} = cell;
       if (className && className.indexOf('error') >= 0) {
         row[col] = {
           ...row[col],
@@ -123,7 +123,7 @@ class ScheduleBContainer extends Component {
         <div>
           {!hasContent && data.value}
           {hasContent &&
-            <FontAwesomeIcon icon="check" />
+          <FontAwesomeIcon icon="check"/>
           }
         </div>
       )
@@ -132,7 +132,7 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -156,7 +156,7 @@ class ScheduleBContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.scheduleState.scheduleB) {
       // we already have the state. don't load it. just render it.
       this.componentWillReceiveProps(this.props);
@@ -167,8 +167,8 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    const { grid } = this.state;
+  componentWillReceiveProps(nextProps) {
+    const {grid} = this.state;
 
     if (!nextProps.scheduleState.scheduleB || !nextProps.scheduleState.scheduleB.records) {
       return;
@@ -201,6 +201,29 @@ class ScheduleBContainer extends Component {
       }
 
       grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], i);
+      }
+    }
+
+    //zero any remaining rows
+    for (let row = nextProps.scheduleState.scheduleB.records.length + 2; row < grid.length; row += 1) {
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = null;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
+      grid[row][SCHEDULE_B.QUANTITY].value = null;
+      grid[row][SCHEDULE_B.UNITS].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null;
+      grid[row][SCHEDULE_B.CREDIT].value = null;
+      grid[row][SCHEDULE_B.DEBIT].value = null;
+      grid[row][SCHEDULE_B.EER].value = null;
+      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = null;
+      grid[row][SCHEDULE_B.ENERGY_DENSITY].value = null;
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], row);
+      }
     }
 
     this.recomputeDerivedState(nextProps, {
@@ -209,12 +232,12 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  loadInitialState () {
+  loadInitialState() {
     this.rowNumber = 1;
 
     const records = [];
     for (let i = 0; i < this.props.complianceReport.scheduleB.records.length; i += 1) {
-      records.push({ ...this.props.complianceReport.scheduleB.records[i] });
+      records.push({...this.props.complianceReport.scheduleB.records[i]});
       this.props.updateScheduleState({
         scheduleB: {
           records
@@ -223,8 +246,8 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  recomputeDerivedState (props, state) {
-    const { grid } = state;
+  recomputeDerivedState(props, state) {
+    const {grid} = state;
 
     for (let i = 2; i < grid.length; i += 1) {
       const row = i;
@@ -369,8 +392,8 @@ class ScheduleBContainer extends Component {
     this._calculateTotal(grid);
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{ // id
@@ -441,7 +464,7 @@ class ScheduleBContainer extends Component {
         readOnly: this.props.readOnly,
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }, { // units
@@ -460,7 +483,7 @@ class ScheduleBContainer extends Component {
         dataEditor: Input,
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value && value !== '-' ? formatNumeric(Number(value), 2) : value}</span>;
         }
       }, { // energy density
@@ -473,21 +496,21 @@ class ScheduleBContainer extends Component {
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // credit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // debit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }]);
@@ -500,8 +523,8 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _calculateTotal (grid) {
-    let { totals } = this.state;
+  _calculateTotal(grid) {
+    let {totals} = this.state;
     totals = {
       credit: 0,
       debit: 0
@@ -528,7 +551,7 @@ class ScheduleBContainer extends Component {
     });
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -572,10 +595,10 @@ class ScheduleBContainer extends Component {
       grid
     });
 
-    this.recomputeDerivedState(this.props, { grid });
+    this.recomputeDerivedState(this.props, {grid});
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const startingRow = 2;
 
     const records = [];
@@ -633,7 +656,7 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  _validate (_row, rowIndex) {
+  _validate(_row, rowIndex) {
     let row = _row;
 
     if (
@@ -678,14 +701,14 @@ class ScheduleBContainer extends Component {
         ...row[SCHEDULE_B.ROW_NUMBER],
         className: rowNumberClassName,
         valueViewer: data => (
-          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
+          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'}/></div>
         )
       };
 
       errorCells.forEach((errorKey) => {
         if (errorKey in SCHEDULE_B_ERROR_KEYS) {
           const col = SCHEDULE_B_ERROR_KEYS[errorKey];
-          let { className } = row[col];
+          let {className} = row[col];
 
           if (row[col].className.indexOf('error') < 0) {
             className += ' error';
@@ -709,7 +732,7 @@ class ScheduleBContainer extends Component {
           const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '');
 
           if (Number(rowIndex) === Number(duplicateRowIndex)) {
-            let { className } = row[SCHEDULE_B.ROW_NUMBER];
+            let {className} = row[SCHEDULE_B.ROW_NUMBER];
 
             if (!className) {
               className = 'error';
@@ -721,7 +744,7 @@ class ScheduleBContainer extends Component {
               ...row[SCHEDULE_B.ROW_NUMBER],
               className,
               valueViewer: data => (
-                <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
+                <div><FontAwesomeIcon icon="exclamation-triangle"/></div>
               )
             };
           }
@@ -732,8 +755,8 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
-  render () {
-    const { grid } = this.state;
+  render() {
+    const {grid} = this.state;
 
     return ([
       <SchedulesPage
