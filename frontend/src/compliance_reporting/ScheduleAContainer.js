@@ -14,7 +14,7 @@ import Input from '../app/components/Spreadsheet/Input';
 import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_A, SCHEDULE_A_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
+import {SCHEDULE_A, SCHEDULE_A_ERROR_KEYS, SCHEDULE_B} from '../constants/schedules/scheduleColumns';
 
 class ScheduleAContainer extends Component {
   static addHeaders () {
@@ -139,6 +139,18 @@ class ScheduleAContainer extends Component {
 
         if (!this.props.validating) {
           grid[row] = this._validate(grid[row], i);
+        }
+      }
+
+      //zero remaining rows
+      for (let row = nextProps.scheduleState.scheduleA.records.length + 1; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_A.LEGAL_NAME].value = null;
+        grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null;
+        grid[row][SCHEDULE_A.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_A.TRANSFER_TYPE].value = null;
+        grid[row][SCHEDULE_A.QUANTITY].value = null;
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row);
         }
       }
 
