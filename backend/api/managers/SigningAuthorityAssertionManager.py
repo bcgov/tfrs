@@ -28,11 +28,15 @@ from django.db.models import Q
 
 class SigningAuthorityAssertionManager(models.Manager):
 
-    def get_active_as_of_date(self, as_of: date):
+    def get_active_as_of_date(self, as_of: date, module='credit_trade'):
         result = self.filter(
+            module=module
+        )
+        result = result.filter(
             Q(expiration_date__gte=as_of) | Q(expiration_date=None)
         )
         result = result.filter(
             effective_date__lte=as_of
         )
+
         return result
