@@ -9,7 +9,11 @@ if ! (oc project -q $PROJECT_NAME > /dev/null); then
     exit 2
 fi
 
-availableReplicas=$(oc get -o json dc $DEPLOYMENT| jq '.status.availableReplicas')
+if ($DEPLOYMENT=="rabbitmq"); then
+        availableReplicas=$(oc get -o json StatefulSet $DEPLOYMENT| jq '.status.availableReplicas')
+    else
+        availableReplicas=$(oc get -o json dc $DEPLOYMENT| jq '.status.availableReplicas')
+fi
 
 if (($availableReplicas>=$MIN_REPLICAS)); then
                 echo "OK - $1:$2 has $availableReplicas replicas available"
