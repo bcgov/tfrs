@@ -15,12 +15,14 @@ const SchedulesPage = props => (
 
       {props.children}
 
+      {!props.readOnly &&
       <ValidationMessages
         scheduleType={props.scheduleType}
         valid={props.valid}
         validating={props.validating}
         validationMessages={props.validationMessages}
       />
+      }
 
       <div className="scrollable">
         <ReactDataSheet
@@ -104,6 +106,7 @@ SchedulesPage.propTypes = {
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,

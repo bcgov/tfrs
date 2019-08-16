@@ -12,7 +12,7 @@ import { expectedUses } from '../actions/expectedUses';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import {SCHEDULE_A, SCHEDULE_C, SCHEDULE_C_ERROR_KEYS} from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_C, SCHEDULE_C_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -372,22 +372,15 @@ class ScheduleCContainer extends Component {
       this.props.validationMessages.scheduleC.records &&
       this.props.validationMessages.scheduleC.records.length > (rowIndex)) {
       const errorCells = Object.keys(this.props.validationMessages.scheduleC.records[rowIndex]);
+      const errorKeys = Object.keys(SCHEDULE_C_ERROR_KEYS);
 
-      if (errorCells.indexOf('expectedUse') < 0) {
-        row[SCHEDULE_C.EXPECTED_USE].className = row[SCHEDULE_C.EXPECTED_USE].className.replace('error', '');
-      }
+      errorKeys.forEach((errorKey) => {
+        const col = SCHEDULE_C_ERROR_KEYS[errorKey];
 
-      if (errorCells.indexOf('fuelClass') < 0) {
-        row[SCHEDULE_C.FUEL_CLASS].className = row[SCHEDULE_C.FUEL_CLASS].className.replace('error', '');
-      }
-
-      if (errorCells.indexOf('fuelType') < 0) {
-        row[SCHEDULE_C.FUEL_TYPE].className = row[SCHEDULE_C.FUEL_TYPE].className.replace('error', '');
-      }
-
-      if (errorCells.indexOf('quantity') < 0) {
-        row[SCHEDULE_C.QUANTITY].className = row[SCHEDULE_C.QUANTITY].className.replace('error', '');
-      }
+        if (errorCells.indexOf(errorKey) < 0) {
+          row[col].className = row[col].className.replace(/error/g, '');
+        }
+      });
 
       let rowNumberClassName = row[SCHEDULE_C.ROW_NUMBER].className;
 
@@ -507,6 +500,7 @@ class ScheduleCContainer extends Component {
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        readOnly={this.props.readOnly}
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
         valid={this.props.valid}

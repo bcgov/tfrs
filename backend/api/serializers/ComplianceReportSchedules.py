@@ -54,9 +54,8 @@ class ScheduleDSheetSerializer(serializers.ModelSerializer):
 
         for key in required_keys:
             if key not in actual_keys:
-                failures.append(serializers.ValidationError(
+                failures.append(
                     ComplianceReportValidation.missing_key.format(key=key))
-                )
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
