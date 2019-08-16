@@ -1,5 +1,6 @@
 import json
 from email.utils import make_msgid
+from smtplib import SMTPException
 from typing import List
 
 import pika
@@ -27,7 +28,7 @@ def send_amqp_notification(user):
         parameters = AMQP_CONNECTION_PARAMETERS
         connection = pika.BlockingConnection(parameters)
         channel = connection.channel()
-        channel.confirm_delivery()
+        # channel.confirm_delivery()
         channel.exchange_declare(exchange='notifications',
                                  durable=True,
                                  auto_delete=False,
@@ -182,7 +183,10 @@ class AMQPNotificationService:
 
         with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
                           port=EMAIL['SMTP_SERVER_PORT']) as server:
-            server.send_message(msg)
+            try:
+                server.send_message(msg)
+            except SMTPException as error:
+                raise NotificationDeliveryFailure(error)
 
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
