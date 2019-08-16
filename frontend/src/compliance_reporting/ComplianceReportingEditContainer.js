@@ -290,12 +290,28 @@ class ComplianceReportingEditContainer extends Component {
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
+        managerRecommend={false}
+        recommend={this.props.complianceReporting.item.readOnly}
         saving={this.props.saving}
         submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Analyst Accepted')}
+        id="confirmAnalystRecommendAcceptance"
+        key="confirmAnalystRecommendAcceptance"
+      >
+        Are you sure you want to recommend acceptance of the compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Analyst Rejection')}
+        id="confirmAnalystRecommendRejection"
+        key="confirmAnalystRecommendRejection"
+      >
+        Are you sure you want to recommend rejection of the compliance report?
+      </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSave"
