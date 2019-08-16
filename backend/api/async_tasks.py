@@ -10,6 +10,11 @@ from api.notifications.notifications import AMQPNotificationService
 from tfrs.celery import app as celery_app
 
 
+def async_send_notifications(notifications: List):
+    for n in notifications:
+        async_send_notification.delay(**n)
+
+
 @celery_app.task
 def async_send_notification(
         message: str = None,
