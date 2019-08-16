@@ -16,6 +16,7 @@ class ValidationMessages extends Component {
     this._validateScheduleA = this._validateScheduleA.bind(this);
     this._validateScheduleB = this._validateScheduleB.bind(this);
     this._validateScheduleC = this._validateScheduleC.bind(this);
+    this._validateScheduleD = this._validateScheduleD.bind(this);
   }
 
   _getClassNames (valid = true) {
@@ -207,6 +208,39 @@ class ValidationMessages extends Component {
     return errorMessages;
   }
 
+  _validateScheduleD () {
+    const errorMessages = [];
+
+    if (!this.props.valid &&
+      this.props.validationMessages &&
+      !this.props.validationMessages.scheduleD) {
+      errorMessages.push('Errors found in other schedules');
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleD &&
+      this.props.validationMessages.scheduleD.sheets &&
+      this.props.validationMessages.scheduleD.sheets.length > 0
+    ) {
+      const errors = this.props.validationMessages.scheduleD.sheets[this.props.activeSheet];
+
+      if (Object.keys(errors).length > 0) {
+        const message = 'There is missing information, please ensure all fields are completed.';
+
+        if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+          errorMessages.push(message);
+        }
+      } else {
+        const message = 'Errors found in other sheets';
+
+        if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
+          errorMessages.push(message);
+        }
+      }
+    }
+
+    return errorMessages;
+  }
+
   render () {
     let errorMessages = [];
 
@@ -219,6 +253,9 @@ class ValidationMessages extends Component {
         break;
       case 'schedule-c':
         errorMessages = this._validateScheduleC();
+        break;
+      case 'schedule-d':
+        errorMessages = this._validateScheduleD();
         break;
       default:
     }
@@ -284,10 +321,12 @@ class ValidationMessages extends Component {
 }
 
 ValidationMessages.defaultProps = {
+  activeSheet: 0,
   validationMessages: null
 };
 
 ValidationMessages.propTypes = {
+  activeSheet: PropTypes.number,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,

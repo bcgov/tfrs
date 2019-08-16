@@ -30,17 +30,6 @@ class CreditTransferSigningHistory extends Component {
     }
   }
 
-  _renderAccepted (history) {
-    const userIndex = this.props.signatures.findIndex(signature => (
-      signature.user.id === history.user.id));
-
-    if (userIndex >= 0) {
-      return (<strong>Signed 2/2</strong>);
-    }
-
-    return (<strong>Accepted</strong>);
-  }
-
   _renderApproved (history) {
     let roleDisplay = null;
 
@@ -117,15 +106,8 @@ class CreditTransferSigningHistory extends Component {
     );
   }
 
-  _renderSubmitted (history) {
-    const userIndex = this.props.signatures.findIndex(signature => (
-      signature.user.id === history.user.id));
-
-    if (userIndex >= 0) {
-      return (<strong>Signed 1/2</strong>);
-    }
-
-    return (<strong>Proposed</strong>);
+  static renderAccepted (history) {
+    return (<strong>Signed 2/2</strong>);
   }
 
   static renderHistory (history) {
@@ -162,6 +144,10 @@ class CreditTransferSigningHistory extends Component {
     return (<strong className="text-danger">Rescinded</strong>);
   }
 
+  static renderSubmitted (history) {
+    return (<strong>Signed 1/2</strong>);
+  }
+
   render () {
     return (
       <div className="credit-transfer-signing-history">
@@ -187,7 +173,7 @@ class CreditTransferSigningHistory extends Component {
 
             switch (history.status.id) {
               case CREDIT_TRANSFER_STATUS.accepted.id:
-                action = this._renderAccepted(history);
+                action = CreditTransferSigningHistory.renderAccepted(history);
                 break;
 
               case CREDIT_TRANSFER_STATUS.approved.id:
@@ -201,7 +187,7 @@ class CreditTransferSigningHistory extends Component {
                 break;
 
               case CREDIT_TRANSFER_STATUS.proposed.id:
-                action = this._renderSubmitted(history);
+                action = CreditTransferSigningHistory.renderSubmitted(history);
                 break;
 
               case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
