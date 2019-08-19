@@ -6,12 +6,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import { expectedUses } from '../actions/expectedUses';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_C, SCHEDULE_C_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -62,6 +63,40 @@ class ScheduleCContainer extends Component {
     };
   }
 
+  static clearErrorColumns (_row) {
+    const row = _row;
+
+    row.forEach((cell, col) => {
+      const { className } = cell;
+      if (className && className.indexOf('error') >= 0) {
+        row[col] = {
+          ...row[col],
+          className: className.replace(/error/g, '')
+        };
+      }
+    });
+
+    const hasContent = row[SCHEDULE_C.FUEL_TYPE].value &&
+      row[SCHEDULE_C.FUEL_CLASS].value &&
+      row[SCHEDULE_C.QUANTITY].value &&
+      row[SCHEDULE_C.EXPECTED_USE].value &&
+      row[SCHEDULE_C.QUANTITY];
+
+    row[SCHEDULE_C.ROW_NUMBER] = {
+      ...row[SCHEDULE_C.ROW_NUMBER],
+      valueViewer: data => (
+        <div>
+          {!hasContent && data.value}
+          {hasContent &&
+            <FontAwesomeIcon icon="check" />
+          }
+        </div>
+      )
+    };
+
+    return row;
+  }
+
   constructor (props) {
     super(props);
 
@@ -71,6 +106,7 @@ class ScheduleCContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
+    this._validate = this._validate.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
     this.loadInitialState = this.loadInitialState.bind(this);
@@ -83,7 +119,7 @@ class ScheduleCContainer extends Component {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);
-    } else  {
+    } else {
       this.loadInitialState();
     }
   }
@@ -97,21 +133,42 @@ class ScheduleCContainer extends Component {
       }
 
       for (let i = 0; i < nextProps.scheduleState.scheduleC.records.length; i += 1) {
+        const row = 2 + i;
         const record = nextProps.scheduleState.scheduleC.records[i];
+        const qty = Number(record.quantity);
 
-        grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
-        grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
-        grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+        grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
+        grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
+        grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
+        grid[row][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
 
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
           fuel.name === record.fuelType);
 
-        grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        grid[row][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
           ? selectedFuel.unitOfMeasure.name : '';
+
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], i);
+        }
       }
+
+      //zero remaining rows
+      for (let row = nextProps.scheduleState.scheduleC.records.length + 2; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_C.FUEL_TYPE].value = null;
+        grid[row][SCHEDULE_C.FUEL_CLASS].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = null;
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = null;
+        grid[row][SCHEDULE_C.QUANTITY].value = null;
+
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row);
+        }
+      }
+
     }
 
     this.setState({
@@ -141,6 +198,7 @@ class ScheduleCContainer extends Component {
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
         {
+          className: 'row-number',
           readOnly: true,
           value: this.rowNumber
         }, {
@@ -239,9 +297,10 @@ class ScheduleCContainer extends Component {
       }
 
       if (col === SCHEDULE_C.QUANTITY) {
+        const cleanedValue = value.replace(/,/g, '');
         grid[row][col] = {
           ...grid[row][col],
-          value: value.replace(/,/g, '')
+          value: Number.isNaN(Number(cleanedValue)) ? '' : cleanedValue
         };
       }
 
@@ -275,12 +334,13 @@ class ScheduleCContainer extends Component {
 
     for (let i = startingRow; i < state.grid.length; i += 1) {
       const row = state.grid[i];
+
       const record = {
-        expectedUse: row[5].value,
-        fuelType: row[1].value,
-        fuelClass: row[2].value,
-        quantity: row[3].value,
-        rationale: row[6].value
+        expectedUse: row[SCHEDULE_C.EXPECTED_USE].value,
+        fuelType: row[SCHEDULE_C.FUEL_TYPE].value,
+        fuelClass: row[SCHEDULE_C.FUEL_CLASS].value,
+        quantity: row[SCHEDULE_C.QUANTITY].value,
+        rationale: row[SCHEDULE_C.EXPECTED_USE_OTHER].value
       };
 
       const rowIsEmpty = !(record.expectedUse || record.fuelClass ||
@@ -296,6 +356,94 @@ class ScheduleCContainer extends Component {
         records
       }
     });
+  }
+
+  _validate (_row, rowIndex) {
+    let row = _row;
+
+    if (
+      this.props.valid ||
+      (this.props.validationMessages && !this.props.validationMessages.scheduleC)
+    ) {
+      row = ScheduleCContainer.clearErrorColumns(row);
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleC &&
+      this.props.validationMessages.scheduleC.records &&
+      this.props.validationMessages.scheduleC.records.length > (rowIndex)) {
+      const errorCells = Object.keys(this.props.validationMessages.scheduleC.records[rowIndex]);
+      const errorKeys = Object.keys(SCHEDULE_C_ERROR_KEYS);
+
+      errorKeys.forEach((errorKey) => {
+        const col = SCHEDULE_C_ERROR_KEYS[errorKey];
+
+        if (errorCells.indexOf(errorKey) < 0) {
+          row[col].className = row[col].className.replace(/error/g, '');
+        }
+      });
+
+      let rowNumberClassName = row[SCHEDULE_C.ROW_NUMBER].className;
+
+      if (errorCells.length === 0) {
+        rowNumberClassName = rowNumberClassName.replace(/error/g, '');
+      }
+
+      row[SCHEDULE_C.ROW_NUMBER] = {
+        ...row[SCHEDULE_C.ROW_NUMBER],
+        className: rowNumberClassName,
+        valueViewer: data => (
+          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
+        )
+      };
+
+      errorCells.forEach((errorKey) => {
+        if (errorKey in SCHEDULE_C_ERROR_KEYS) {
+          const col = SCHEDULE_C_ERROR_KEYS[errorKey];
+          let { className } = row[col];
+
+          if (row[col].className.indexOf('error') < 0) {
+            className += ' error';
+          }
+
+          row[col] = {
+            ...row[col],
+            className
+          };
+        }
+      });
+    } else if (
+      this.props.validationMessages &&
+      this.props.validationMessages.scheduleC &&
+      Array.isArray(this.props.validationMessages.scheduleC)
+    ) {
+      row = ScheduleCContainer.clearErrorColumns(row);
+
+      this.props.validationMessages.scheduleC.forEach((message) => {
+        if (message.indexOf('Duplicate entry in row') >= 0) {
+          const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '');
+
+          if (Number(rowIndex) === Number(duplicateRowIndex)) {
+            let { className } = row[SCHEDULE_C.ROW_NUMBER];
+
+            if (!className) {
+              className = 'error';
+            } else if (row[SCHEDULE_C.ROW_NUMBER].className.indexOf('error') < 0) {
+              className += ' error';
+            }
+
+            row[SCHEDULE_C.ROW_NUMBER] = {
+              ...row[SCHEDULE_C.ROW_NUMBER],
+              className,
+              valueViewer: data => (
+                <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
+              )
+            };
+          }
+        }
+      });
+    }
+
+    return row;
   }
 
   _validateFuelClassColumn (currentRow, value) {
@@ -352,8 +500,12 @@ class ScheduleCContainer extends Component {
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        readOnly={this.props.readOnly}
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
+        valid={this.props.valid}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       >
         <p>
           Under section 6 (3) of the
@@ -380,7 +532,8 @@ class ScheduleCContainer extends Component {
 }
 
 ScheduleCContainer.defaultProps = {
-  complianceReport: null
+  complianceReport: null,
+  validationMessages: null
 };
 
 ScheduleCContainer.propTypes = {
@@ -403,7 +556,10 @@ ScheduleCContainer.propTypes = {
       records: PropTypes.arrayOf(PropTypes.shape())
     })
   }).isRequired,
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  valid: PropTypes.bool.isRequired,
+  validating: PropTypes.bool.isRequired,
+  validationMessages: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({

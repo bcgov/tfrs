@@ -44,7 +44,6 @@ class SigningAuthorityConfirmationPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.RESPONDENT, 'Submitted', False)] = True  # There's a client-side race
     action_mapping[(_Relationship.RESPONDENT, 'Accepted', False)] = True
 
-
     @staticmethod
     def user_can_sign(user, credit_trade):
         """Return true if this user can sign this trade in this status"""

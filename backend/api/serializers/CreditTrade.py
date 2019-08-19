@@ -693,6 +693,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         Returns all the users that have signed the credit trade
         """
         signatures = []
+
         for signature in obj.signatures:
             user = User.objects.get(id=signature['create_user_id'])
             serializer = UserMinSerializer(user, read_only=True)

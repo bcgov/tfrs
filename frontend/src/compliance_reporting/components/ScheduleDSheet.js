@@ -1,13 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-datasheet/lib/react-datasheet.css';
 
 import ScheduleDPage from './ScheduleDPage';
-import {SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT} from '../../constants/schedules/scheduleColumns';
-import SchedulesPage from "./SchedulesPage";
+import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/scheduleColumns';
 
 class ScheduleDSheet extends Component {
-  static calculateTotal(grid) {
+  static calculateTotal (grid) {
     let total = 0;
     let emptyCells = true;
 
@@ -33,7 +32,7 @@ class ScheduleDSheet extends Component {
     return updatedGrid;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.rowNumber = this.props.sheet.grid.length;
@@ -43,14 +42,14 @@ class ScheduleDSheet extends Component {
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.rowNumber === 1) {
       this._addRow(10);
     }
   }
 
-  _addRow(numberOfRows = 1) {
-    const {grid} = this.props.sheet;
+  _addRow (numberOfRows = 1) {
+    const { grid } = this.props.sheet;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -71,7 +70,6 @@ class ScheduleDSheet extends Component {
       }, {
         className: 'text',
         readOnly: this.props.readOnly
-
       }]);
 
       this.rowNumber += 1;
@@ -80,7 +78,7 @@ class ScheduleDSheet extends Component {
     this.props.handleSheetChanged(grid, this.props.id);
   }
 
-  _handleCellsChanged(gridType, changes, addition = null) {
+  _handleCellsChanged (gridType, changes, addition = null) {
     let grid = this.props.sheet[gridType].map(row => [...row]);
 
     changes.forEach((change) => {
@@ -106,10 +104,10 @@ class ScheduleDSheet extends Component {
       }
     });
 
-    this.props.handleSheetChanged({[gridType]: grid}, this.props.id);
+    this.props.handleSheetChanged({ [gridType]: grid }, this.props.id);
   }
 
-  _validateFuelTypeColumn(currentRow, value) {
+  _validateFuelTypeColumn (currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -129,7 +127,7 @@ class ScheduleDSheet extends Component {
     return row;
   }
 
-  render() {
+  render () {
     return (
       <ScheduleDPage
         addRow={this._addRow}
@@ -137,19 +135,25 @@ class ScheduleDSheet extends Component {
         handleCellsChanged={this._handleCellsChanged}
         scheduleType="schedule-d"
         sheet={this.props.sheet}
+        valid={this.props.valid}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       />
     );
   }
 }
 
 ScheduleDSheet.defaultProps = {
-  addRowEnabled: true
+  addRowEnabled: true,
+  readOnly: false,
+  validationMessages: null
 };
 
 ScheduleDSheet.propTypes = {
   handleSheetChanged: PropTypes.func.isRequired,
   addRowEnabled: PropTypes.bool,
   id: PropTypes.number.isRequired,
+  readOnly: PropTypes.bool,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
@@ -157,7 +161,10 @@ ScheduleDSheet.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
     input: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
     output: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape()))
-  }).isRequired
+  }).isRequired,
+  valid: PropTypes.bool.isRequired,
+  validating: PropTypes.bool.isRequired,
+  validationMessages: PropTypes.shape()
 };
 
 export default ScheduleDSheet;

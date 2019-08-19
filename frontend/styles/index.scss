@@ -188,7 +188,7 @@ h1 {
 }
 
 .btn-container {
-  .btn + .btn, .btn + div, div + div {
+  .btn + .btn, .btn + div, div + div, div + .btn {
     margin-left: 0.5rem;
     margin-right: 0.3rem;
   }
@@ -262,6 +262,12 @@ table {
 
   .alert-success {
     margin: 1rem 0 0 0;
+  }
+
+  .modal-footer {
+    .btn, .overlay-trigger {
+      margin: 0 0.4rem;
+    } 
   }
 }
 

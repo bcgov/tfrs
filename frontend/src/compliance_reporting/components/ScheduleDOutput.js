@@ -2,7 +2,7 @@ import React from 'react';
 
 import Input from '../../app/components/Spreadsheet/Input';
 
-const numericInput = (readOnly) => ({
+const numericInput = readOnly => ({
   attributes: {
     allowNegative: true,
     dataNumberToFixed: 50,
@@ -10,7 +10,7 @@ const numericInput = (readOnly) => ({
     step: '0.01'
   },
   className: 'number',
-  readOnly: readOnly,
+  readOnly,
   dataEditor: Input,
   valueViewer: (cell) => {
     const { value } = cell;
@@ -19,7 +19,11 @@ const numericInput = (readOnly) => ({
       return '';
     }
 
-    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return (
+      <span>
+        {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+      </span>
+    );
   }
 });
 
@@ -30,10 +34,14 @@ const totalViewer = (cell) => {
     return '';
   }
 
-  return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+  return (
+    <span>
+      {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+    </span>
+  );
 };
 
-const ScheduleDOutput = (readOnly) => ([
+const ScheduleDOutput = readOnly => ([
   [{
     className: 'output-label',
     readOnly: true,

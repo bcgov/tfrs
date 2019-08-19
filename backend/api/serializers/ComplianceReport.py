@@ -94,6 +94,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_c = ScheduleCDetailSerializer(read_only=True)
     schedule_d = ScheduleDDetailSerializer(read_only=True)
     summary = serializers.SerializerMethodField()
+    history = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -108,10 +109,18 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         lines = {}
 
         if obj.summary is not None:
-            lines['6'] = obj.summary.gasoline_class_retained if obj.summary.gasoline_class_retained is not None else Decimal(0)
-            lines['8'] = obj.summary.gasoline_class_deferred if obj.summary.gasoline_class_deferred is not None else Decimal(0)
-            lines['17'] = obj.summary.diesel_class_retained if obj.summary.diesel_class_retained is not None else Decimal(0)
-            lines['19'] = obj.summary.diesel_class_deferred if obj.summary.diesel_class_deferred is not None else Decimal(0)
+            lines[
+                '6'] = obj.summary.gasoline_class_retained if obj.summary.gasoline_class_retained is not None else Decimal(
+                0)
+            lines[
+                '8'] = obj.summary.gasoline_class_deferred if obj.summary.gasoline_class_deferred is not None else Decimal(
+                0)
+            lines[
+                '17'] = obj.summary.diesel_class_retained if obj.summary.diesel_class_retained is not None else Decimal(
+                0)
+            lines[
+                '19'] = obj.summary.diesel_class_deferred if obj.summary.diesel_class_deferred is not None else Decimal(
+                0)
             lines['26'] = obj.summary.credits_offset if obj.summary.credits_offset is not None else Decimal(0)
         else:
             lines['6'] = Decimal(0)
@@ -141,20 +150,24 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         lines['1'] = total_petroleum_gasoline
         lines['2'] = total_renewable_gasoline
         lines['3'] = lines['1'] + lines['2']
-        lines['4'] = (lines['3'] * Decimal('0.05')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)  # hardcoded 5% renewable requirement
+        lines['4'] = (lines['3'] * Decimal('0.05')).quantize(Decimal('1.'),
+                                                             rounding=ROUND_HALF_UP)  # hardcoded 5% renewable requirement
         lines['7'] = Decimal(0)
         lines['9'] = Decimal(0)
         lines['10'] = lines['2'] + lines['5'] - lines['6'] + lines['7'] + lines['8'] - lines['9']
-        lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
+        lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(Decimal(0)).quantize(Decimal('.01'),
+                                                                                              rounding=ROUND_HALF_UP)
 
         lines['12'] = total_petroleum_diesel
         lines['13'] = total_renewable_diesel
         lines['14'] = lines['12'] + lines['13']
-        lines['15'] = (lines['14'] * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)  # hardcoded 4% renewable requirement
+        lines['15'] = (lines['14'] * Decimal('0.04')).quantize(Decimal('1.'),
+                                                               rounding=ROUND_HALF_UP)  # hardcoded 4% renewable requirement
         lines['18'] = Decimal(0)
         lines['20'] = Decimal(0)
         lines['21'] = lines['13'] + lines['16'] - lines['17'] + lines['18'] + lines['19'] - lines['20']
-        lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
+        lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(Decimal(0)).quantize(Decimal('.01'),
+                                                                                               rounding=ROUND_HALF_UP)
 
         lines['23'] = total_credits
         lines['24'] = total_debits
@@ -183,11 +196,25 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
         return synthetic_totals
 
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the credit trade
+        """
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+
+        history = obj.get_history(["Submitted"])
+
+        serializer = ComplianceReportHistorySerializer(
+            history, many=True
+        )
+
+        return serializer.data
+
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot']
+                  'summary', 'read_only', 'history', 'has_snapshot']
 
 
 class ComplianceReportValidator:
@@ -227,7 +254,7 @@ class ComplianceReportValidator:
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -282,19 +309,19 @@ class ComplianceReportValidator:
             if len(seen_fuelcodes[k]) > 1:
                 for x in seen_fuelcodes[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         for k in seen_indices.keys():
             if len(seen_indices[k]) > 1:
                 for x in seen_indices[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         for k in seen_tuples.keys():
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -331,7 +358,7 @@ class ComplianceReportValidator:
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicate_with_row.format(row=x)))
+                        ComplianceReportValidation.duplicate_with_row.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -390,19 +417,19 @@ class ComplianceReportValidationSerializer(serializers.ModelSerializer, Complian
             if len(seen_fuelcodes[k]) > 1:
                 for x in seen_fuelcodes[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         for k in seen_indices.keys():
             if len(seen_indices[k]) > 1:
                 for x in seen_indices[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         for k in seen_tuples.keys():
             if len(seen_tuples[k]) > 1:
                 for x in seen_tuples[k]:
                     failures.append(
-                        serializers.ValidationError(ComplianceReportValidation.duplicateWithRow.format(row=x)))
+                        ComplianceReportValidation.duplicateWithRow.format(row=x))
 
         if len(failures) > 0:
             raise (serializers.ValidationError(failures))
@@ -444,6 +471,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     )
     organization = OrganizationMinSerializer(read_only=True)
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+        self.instance.create_user = request.user
+        self.instance.save()
+
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
@@ -471,10 +505,11 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
     strip_summary = False
+    disregard_status = False
 
     def update(self, instance, validated_data):
 
-        if instance.read_only:
+        if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
 
         if 'schedule_d' in validated_data:
@@ -490,7 +525,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleDSheet.objects.filter(
                     schedule=instance.schedule_d
                 ).delete()
-                instance.schedule_d.delete()
+                ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
 
             sheets_data = schedule_d_data.pop('sheets')
             schedule_d = ScheduleD.objects.create(
@@ -534,7 +569,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleCRecord.objects.filter(
                     schedule=instance.schedule_c
                 ).delete()
-                instance.schedule_c.delete()
+                ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
 
             if 'records' in schedule_c_data:
                 records_data = schedule_c_data.pop('records')
@@ -562,7 +597,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleBRecord.objects.filter(
                     schedule=instance.schedule_b
                 ).delete()
-                instance.schedule_b.delete()
+                ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
 
             if 'records' in schedule_b_data:
                 records_data = schedule_b_data.pop('records')
@@ -590,7 +625,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                 ScheduleARecord.objects.filter(
                     schedule=instance.schedule_a
                 ).delete()
-                instance.schedule_a.delete()
+                ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
 
             if 'records' in schedule_a_data:
                 records_data = schedule_a_data.pop('records')
@@ -615,7 +650,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
             summary_data = validated_data.pop('summary')
 
             if instance.summary:
-                instance.summary.delete()
+                ScheduleSummary.objects.filter(id=instance.summary.id).delete()
 
             summary = ScheduleSummary.objects.create(
                 **summary_data,
@@ -644,6 +679,9 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
                     snapshot=snap
                 )
 
+        request = self.context.get('request')
+        if request:
+            instance.update_user = request.user
             instance.save()
 
         # all other fields are read-only

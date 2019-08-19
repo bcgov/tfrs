@@ -1,14 +1,14 @@
 import React from 'react';
 
 import Input from '../../app/components/Spreadsheet/Input';
-import { getQuantity } from '../../utils/functions';
+import {getQuantity} from '../../utils/functions';
 
 const numericColumn = {
   className: 'numeric',
   readOnly: true,
   value: '',
   valueViewer: (data) => {
-    const { value } = data;
+    const {value} = data;
 
     if (value === '') {
       return '';
@@ -31,8 +31,8 @@ const numericInput = {
   className: 'number',
   dataEditor: Input,
   valueViewer: (data) => {
-    const { attributes } = data.cell;
-    let { value } = data;
+    const {attributes} = data.cell;
+    let {value} = data;
 
     if (!value) {
       return '';
@@ -40,9 +40,13 @@ const numericInput = {
 
     value = String(value).replace(/,/g, '');
     value = Number(value);
-
-    return <span>{getQuantity(value).toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    let qty = getQuantity(value);
+    if (qty !== '') {
+      return <span>{qty.toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    }
+    return <span></span>;
   }
+
 };
 
 const totalViewer = {
@@ -50,7 +54,7 @@ const totalViewer = {
   readOnly: true,
   value: '',
   valueViewer: (data) => {
-    const { value } = data;
+    const {value} = data;
 
     if (value === '') {
       return '';
@@ -64,4 +68,4 @@ const totalViewer = {
   }
 };
 
-export { numericColumn, numericInput, totalViewer };
+export {numericColumn, numericInput, totalViewer};

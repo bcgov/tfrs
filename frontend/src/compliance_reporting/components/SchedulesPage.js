@@ -6,6 +6,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleATotals from './ScheduleATotals';
 import ScheduleBTotals from './ScheduleBTotals';
+import ValidationMessages from './ValidationMessages';
 
 const SchedulesPage = props => (
   <div className="page_schedule spreadsheet-component">
@@ -13,6 +14,15 @@ const SchedulesPage = props => (
       <h1>{props.title}</h1>
 
       {props.children}
+
+      {!props.readOnly &&
+      <ValidationMessages
+        scheduleType={props.scheduleType}
+        valid={props.valid}
+        validating={props.validating}
+        validationMessages={props.validationMessages}
+      />
+      }
 
       <div className="scrollable">
         <ReactDataSheet
@@ -33,11 +43,16 @@ const SchedulesPage = props => (
             }}
             type="button"
           >
-            <FontAwesomeIcon icon="plus"/> Add Row
+            <FontAwesomeIcon icon="plus" /> Add Row
           </button>
-          <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">
-            <span className="caret"/>
+          <button
+            aria-expanded="false"
+            aria-haspopup="true"
+            className="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            type="button"
+          >
+            <span className="caret" />
             <span className="sr-only">Toggle Dropdown</span>
           </button>
           <ul className="dropdown-menu">
@@ -76,9 +91,10 @@ const SchedulesPage = props => (
 );
 
 SchedulesPage.defaultProps = {
+  addRowEnabled: true,
   children: null,
   totals: {},
-  addRowEnabled: true
+  validationMessages: {}
 };
 
 SchedulesPage.propTypes = {
@@ -90,11 +106,15 @@ SchedulesPage.propTypes = {
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,
   title: PropTypes.string.isRequired,
-  totals: PropTypes.shape()
+  totals: PropTypes.shape(),
+  valid: PropTypes.bool.isRequired,
+  validating: PropTypes.bool.isRequired,
+  validationMessages: PropTypes.shape()
 };
 
 export default SchedulesPage;

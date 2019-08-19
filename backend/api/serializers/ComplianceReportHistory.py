@@ -20,23 +20,28 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import date
+from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
-from django.db import models
-from django.db.models import Q
+from api.models.ComplianceReportHistory import ComplianceReportHistory
+from api.serializers import UserMinSerializer
+from api.serializers.ComplianceReport import ComplianceReportStatusSerializer
 
 
-class SigningAuthorityAssertionManager(models.Manager):
+class ComplianceReportHistorySerializer(serializers.ModelSerializer):
+    from .Role import RoleMinSerializer
 
-    def get_active_as_of_date(self, as_of: date, module='credit_trade'):
-        result = self.filter(
-            module=module
-        )
-        result = result.filter(
-            Q(expiration_date__gte=as_of) | Q(expiration_date=None)
-        )
-        result = result.filter(
-            effective_date__lte=as_of
-        )
+    status = ComplianceReportStatusSerializer(read_only=True)
+    user = SerializerMethodField()
+    user_role = RoleMinSerializer(read_only=True)
 
-        return result
+    def get_user(self, obj):
+        serializer = UserMinSerializer(
+            obj.user,
+            read_only=True)
+
+        return serializer.data
+
+    class Meta:
+        model = ComplianceReportHistory
+        fields = ('id', 'user', 'status', 'user', 'user_role')

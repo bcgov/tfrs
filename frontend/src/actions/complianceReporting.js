@@ -1,14 +1,12 @@
-import * as Routes from '../constants/routes';
-import {GenericRestTemplate} from './base/genericTemplate';
 import axios from 'axios';
-import {createActions, handleActions} from 'redux-actions';
-import {call, put, select, takeLatest} from 'redux-saga/effects';
-import {delay} from 'redux-saga';
+import { delay } from 'redux-saga';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 
+import * as Routes from '../constants/routes';
+import { GenericRestTemplate } from './base/genericTemplate';
 
 class ComplianceReportingRestInterface extends GenericRestTemplate {
-
-  constructor(name, baseUrl, stateName) {
+  constructor (name, baseUrl, stateName) {
     super(name, baseUrl, stateName);
 
     this.validateHandler = this.validateHandler.bind(this);
@@ -27,7 +25,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
             'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS']
   }
 
-  getCustomDefaultState() {
+  // eslint-disable-next-line class-methods-use-this
+  getCustomDefaultState () {
     return {
       isValidating: false,
       validationMessages: {},
@@ -39,7 +38,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-  getCustomReducerMap() {
+  getCustomReducerMap () {
     return [
       [this.validate, (state, action) => ({
         ...state,
@@ -78,7 +77,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isGettingSnapshot: false,
         snapshotItem: action.payload,
       })]
-    ]
+    ];
   }
 
   validationStateSelector () {
@@ -93,13 +92,13 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     return state => (state.rootReducer[sn].recomputeState);
   }
 
-  doValidate(data = null) {
-    const {id, state} = data;
+  doValidate (data = null) {
+    const { id, state } = data;
     return axios.post(`${this.baseUrl}/${id}/validate_partial`, state);
   }
 
-  * validateHandler() {
-    yield call(delay, 1000); //debounce
+  * validateHandler () {
+    yield call(delay, 1000); // debounce
 
     const data = yield (select(this.validationStateSelector()));
 
@@ -111,13 +110,13 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-  doRecompute(data = null) {
-    const {id, state} = data;
+  doRecompute (data = null) {
+    const { id, state } = data;
     return axios.patch(`${this.baseUrl}/${id}/compute_totals`, state);
   }
 
-  * recomputeHandler() {
-    yield call(delay, 500); //debounce
+  * recomputeHandler () {
+    yield call(delay, 500); // debounce
 
     const data = yield (select(this.recomputeStateSelector()));
 
@@ -153,7 +152,6 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
 
     ]
   }
-
 }
 
 const complianceReporting = new ComplianceReportingRestInterface(
@@ -162,4 +160,5 @@ const complianceReporting = new ComplianceReportingRestInterface(
   'complianceReporting'
 );
 
-export {complianceReporting};
+// eslint-disable-next-line import/prefer-default-export
+export { complianceReporting };
