@@ -24,14 +24,14 @@ class ComplianceReportService(object):
             #  don't show "Draft" transactions
             #  don't show "Deleted" transactions
             compliance_reports = ComplianceReport.objects.filter(
-                ~Q(status__status__in=["Draft", "Deleted"])
+                ~Q(status__fuel_supplier_status__status__in=["Draft", "Deleted"])
             )
         else:
             # If organization == Fuel Supplier
             # Show all compliance reports for which we are the organization
             compliance_reports = ComplianceReport.objects.filter(
                 Q(organization=organization) &
-                ~Q(status__status__in=["Deleted"])
+                ~Q(status__fuel_supplier_status__status__in=["Deleted"])
             )
 
         return compliance_reports
@@ -57,7 +57,7 @@ class ComplianceReportService(object):
 
         history = ComplianceReportHistory(
             compliance_report_id=compliance_report.id,
-            status_id=compliance_report.status.id,
+            status_id=compliance_report.status.fuel_supplier_status.id, # TODO FIXME
             create_user=user,
             user_role_id=role_id
         )

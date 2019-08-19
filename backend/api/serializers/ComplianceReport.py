@@ -27,7 +27,7 @@ from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import \
-    ComplianceReportType, ComplianceReportStatus, ComplianceReport
+    ComplianceReportType, ComplianceReportStatus, ComplianceReport, ComplianceReportWorkflowState
 from api.models.ComplianceReportSchedules import \
     ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
@@ -52,6 +52,29 @@ class ComplianceReportTypeSerializer(serializers.ModelSerializer):
         read_only_fields = ('the_type', 'description')
 
 
+class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
+    """
+    Default serializer for the Compliance Report Status
+    """
+    fuel_supplier_status = SlugRelatedField(slug_field='status',
+                                            queryset=ComplianceReportStatus.objects.all(), # TODO filter
+                                            required=False)
+    director_status = SlugRelatedField(slug_field='status',
+                                       queryset=ComplianceReportStatus.objects.all(), # TODO filter
+                                       required=False)
+    analyst_status = SlugRelatedField(slug_field='status',
+                                      queryset=ComplianceReportStatus.objects.all(), # TODO filter
+                                      required=False)
+    manager_status = SlugRelatedField(slug_field='status',
+                                      queryset=ComplianceReportStatus.objects.all(), # TODO filter
+                                      required=False)
+
+    class Meta:
+        model = ComplianceReportWorkflowState
+        fields = ('fuel_supplier_status', 'director_status', 'analyst_status',
+                  'manager_status')
+
+
 class ComplianceReportStatusSerializer(serializers.ModelSerializer):
     """
     Default serializer for the Compliance Report Status
@@ -67,7 +90,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     """
     Default List serializer for Compliance Reports
     """
-    status = SlugRelatedField(slug_field='status', read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
@@ -82,7 +105,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     """
     Detail Serializer for the Compliance Report
     """
-    status = ComplianceReportStatusSerializer(read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
     type = ComplianceReportTypeSerializer(read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
@@ -157,6 +180,7 @@ class ComplianceReportValidator:
     schedule validation (like preventing duplicate rows)
     """
 
+
 class ComplianceReportValidator:
     """
     Validation method mixin used for validate and update serializers to check business rules for
@@ -216,7 +240,7 @@ class ComplianceReportValidator:
 
         for (i, record) in enumerate(data['records']):
             fc = record['fuel_code'] if 'fuel_code' in record else None
-            sdi = record['schedule_d_sheet_index']if 'schedule_d_sheet_index' in record else None
+            sdi = record['schedule_d_sheet_index'] if 'schedule_d_sheet_index' in record else None
             prov = None
 
             if ('fuel_type' in record and record['fuel_type'] is not None) and \
@@ -397,10 +421,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     """
     Create Serializer for the Compliance Report
     """
-    status = SlugRelatedField(
-        slug_field='status',
-        queryset=ComplianceReportStatus.objects.filter(status__in=['Draft'])
-    )
+    status = ComplianceReportWorkflowStateSerializer()
+
     type = SlugRelatedField(
         slug_field='the_type',
         queryset=ComplianceReportType.objects.all()
@@ -410,6 +432,18 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         queryset=CompliancePeriod.objects.all()
     )
     organization = OrganizationMinSerializer(read_only=True)
+
+    def validate_status(self, value):
+        if value['fuel_supplier_status'].status not in ['Draft']:
+            raise serializers.ValidationError('Value must be Draft')
+        return value
+
+    def create(self, validated_data):
+        status_data = validated_data.pop('status')
+        status = ComplianceReportWorkflowState.objects.create(**status_data)
+        return ComplianceReport.objects.create(
+            status=status,
+            **validated_data)
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -429,10 +463,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
     """
     Update Serializer for the Compliance Report
     """
-    status = SlugRelatedField(
-        slug_field='status',
-        queryset=ComplianceReportStatus.objects.filter(status__in=['Draft', 'Submitted'])
-    )
+    status = ComplianceReportWorkflowStateSerializer(required=False)
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     compliance_period = SlugRelatedField(
         slug_field='description',
@@ -451,6 +482,11 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
         if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
+
+        if 'status' in validated_data:
+            status_data = validated_data.pop('status')
+            instance.status.fuel_supplier_status = status_data['fuel_supplier_status']
+            instance.status.save()
 
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
@@ -603,7 +639,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
         status = validated_data.get('status', None)
 
         if status:
-            instance.status = status
+            instance.status.fuel_supplier_status = status
 
         request = self.context.get('request')
         if request:
@@ -631,17 +667,17 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
         Delete function to mark the compliance report as deleted.
         """
         compliance_report = self.instance
-        if compliance_report.status not in ComplianceReportStatus.objects. \
+        if compliance_report.status.fuel_supplier_status not in ComplianceReportStatus.objects. \
                 filter(status__in=["Draft"]):
             raise serializers.ValidationError({
                 'readOnly': "Cannot delete a compliance report that's not a "
                             "draft."
             })
 
-        compliance_report.status = ComplianceReportStatus.objects.get(
+        compliance_report.fuel_supplier_status = ComplianceReportStatus.objects.get(
             status="Deleted"
         )
-        compliance_report.save()
+        compliance_report.status.save()
 
     class Meta:
         model = ComplianceReport
