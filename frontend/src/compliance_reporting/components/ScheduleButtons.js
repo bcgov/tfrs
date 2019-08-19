@@ -139,7 +139,7 @@ const ScheduleButtons = props => (
       props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGER_RECOMMEND_ACCEPTANCE) &&
         <button
           className="btn btn-primary"
-          data-target="#confirManagerRecommendAcceptance"
+          data-target="#confirmManagerRecommendAcceptance"
           data-toggle="modal"
           key="btn-manager-recommend-acceptance"
           type="button"
@@ -163,8 +163,8 @@ ScheduleButtons.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  managerRecommend: false,
-  recommend: false,
+  managerRecommend: PropTypes.bool,
+  recommend: PropTypes.bool,
   submit: PropTypes.bool,
   saving: PropTypes.bool.isRequired,
   validating: PropTypes.bool,
