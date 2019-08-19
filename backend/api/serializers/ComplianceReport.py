@@ -41,6 +41,8 @@ from api.serializers.ComplianceReportSchedules import \
     ScheduleSummaryDetailSerializer
 from api.serializers.constants import ComplianceReportValidation
 
+from decimal import *
+
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
     """
@@ -94,25 +96,74 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     summary = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
-        total_petroleum_diesel = 0
-        total_petroleum_gasoline = 0
-        total_renewable_diesel = 0
-        total_renewable_gasoline = 0
-        net_gasoline_class_transferred = None
-        net_diesel_class_transferred = None
+        total_petroleum_diesel = Decimal(0)
+        total_petroleum_gasoline = Decimal(0)
+        total_renewable_diesel = Decimal(0)
+        total_renewable_gasoline = Decimal(0)
+        total_credits = Decimal(0)
+        total_debits = Decimal(0)
+        net_gasoline_class_transferred = Decimal(0)
+        net_diesel_class_transferred = Decimal(0)
+
+        lines = {}
+
+        if obj.summary is not None:
+            lines['6'] = obj.summary.gasoline_class_retained if obj.summary.gasoline_class_retained is not None else Decimal(0)
+            lines['8'] = obj.summary.gasoline_class_deferred if obj.summary.gasoline_class_deferred is not None else Decimal(0)
+            lines['17'] = obj.summary.diesel_class_retained if obj.summary.diesel_class_retained is not None else Decimal(0)
+            lines['19'] = obj.summary.diesel_class_deferred if obj.summary.diesel_class_deferred is not None else Decimal(0)
+            lines['26'] = obj.summary.credits_offset if obj.summary.credits_offset is not None else Decimal(0)
+        else:
+            lines['6'] = Decimal(0)
+            lines['8'] = Decimal(0)
+            lines['17'] = Decimal(0)
+            lines['19'] = Decimal(0)
+            lines['26'] = Decimal(0)
 
         if obj.schedule_a:
-            net_gasoline_class_transferred = obj.schedule_a.net_gasoline_class_transferred
-            net_diesel_class_transferred = obj.schedule_a.net_diesel_class_transferred
+            net_gasoline_class_transferred += obj.schedule_a.net_gasoline_class_transferred
+            net_diesel_class_transferred += obj.schedule_a.net_diesel_class_transferred
+
+        lines['5'] = net_gasoline_class_transferred
+        lines['16'] = net_diesel_class_transferred
 
         if obj.schedule_b:
             total_petroleum_diesel += obj.schedule_b.total_petroleum_diesel
             total_petroleum_gasoline += obj.schedule_b.total_petroleum_gasoline
             total_renewable_diesel += obj.schedule_b.total_renewable_diesel
             total_renewable_gasoline += obj.schedule_b.total_renewable_gasoline
+            total_credits += obj.schedule_b.total_credits
+            total_debits += obj.schedule_b.total_debits
 
         if obj.schedule_c:
             total_petroleum_diesel += obj.schedule_c.total_petroleum_diesel
+
+        lines['1'] = total_petroleum_gasoline
+        lines['2'] = total_renewable_gasoline
+        lines['3'] = lines['1'] + lines['2']
+        lines['4'] = (lines['3'] * Decimal('0.05')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)  # hardcoded 5% renewable requirement
+        lines['7'] = Decimal(0)
+        lines['9'] = Decimal(0)
+        lines['10'] = lines['2'] + lines['5'] - lines['6'] + lines['7'] + lines['8'] - lines['9']
+        lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
+
+        lines['12'] = total_petroleum_diesel
+        lines['13'] = total_renewable_diesel
+        lines['14'] = lines['12'] + lines['13']
+        lines['15'] = (lines['14'] * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)  # hardcoded 4% renewable requirement
+        lines['18'] = Decimal(0)
+        lines['20'] = Decimal(0)
+        lines['21'] = lines['13'] + lines['16'] - lines['17'] + lines['18'] + lines['19'] - lines['20']
+        lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
+
+        lines['23'] = total_credits
+        lines['24'] = total_debits
+        lines['25'] = lines['23'] - lines['24']
+        lines['27'] = lines['25'] + lines['26']
+
+        lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
+
+        total_payable = lines['11'] + lines['22'] + lines['28']
 
         synthetic_totals = {
             "total_petroleum_diesel": total_petroleum_diesel,
@@ -120,7 +171,9 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             "total_renewable_diesel": total_renewable_diesel,
             "total_renewable_gasoline": total_renewable_gasoline,
             "net_diesel_class_transferred": net_diesel_class_transferred,
-            "net_gasoline_class_transferred": net_gasoline_class_transferred
+            "net_gasoline_class_transferred": net_gasoline_class_transferred,
+            "lines": lines,
+            "total_payable": total_payable
         }
 
         if obj.summary is not None:
@@ -136,12 +189,6 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'has_snapshot']
 
-
-class ComplianceReportValidator:
-    """
-    Validation method mixin used for validate and update serializers to check business rules for
-    schedule validation (like preventing duplicate rows)
-    """
 
 class ComplianceReportValidator:
     """
@@ -202,7 +249,7 @@ class ComplianceReportValidator:
 
         for (i, record) in enumerate(data['records']):
             fc = record['fuel_code'] if 'fuel_code' in record else None
-            sdi = record['schedule_d_sheet_index']if 'schedule_d_sheet_index' in record else None
+            sdi = record['schedule_d_sheet_index'] if 'schedule_d_sheet_index' in record else None
             prov = None
 
             if ('fuel_type' in record and record['fuel_type'] is not None) and \
@@ -599,8 +646,6 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
             instance.save()
 
-
-
         # all other fields are read-only
         return instance
 
@@ -644,7 +689,7 @@ class ComplianceReportSnapshotSerializer(serializers.ModelSerializer):
     """
     Serialize snapshots
     """
+
     class Meta:
         model = ComplianceReportSnapshot
         fields = '__all__'
-
