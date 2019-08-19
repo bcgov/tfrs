@@ -16,6 +16,7 @@ import history from '../app/History';
 
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import SnapshotDisplay from "./components/SnapshotDisplay";
+import CONFIG from "../config";
 
 class SnapshotContainer extends Component {
 
@@ -43,6 +44,7 @@ class SnapshotContainer extends Component {
 
     return (
       <div>
+        {CONFIG.DEBUG.ENABLED &&
         <div>
           <ul className="nav nav-tabs">
             <li className="nav-item">
@@ -56,27 +58,28 @@ class SnapshotContainer extends Component {
             </li>
             <li className="nav-item">
               <a
-                className={`nav-link ${this.state.active === 'debug' ? 'active' : ''}`}
+                className={`nav-link ${this.state.active === 'rawjson' ? 'active' : ''}`}
                 href="#"
                 onClick={() => {
-                  this.setState({active: 'debug'});
+                  this.setState({active: 'rawjson'});
                 }}
               >Raw JSON</a>
             </li>
           </ul>
         </div>
-        {this.state.active === 'debug' &&
+        }
+        {(CONFIG.DEBUG.ENABLED && this.state.active === 'rawjson') &&
         <div>
           <h1>Data Snapshot</h1>
           < p> A record of the contents of the report at the moment it was submitted</p>,
           <hr/>
           <ReactJson
             src={this.props.snapshot}
-            // theme='monokai'
+            theme='monokai'
             iconStyle='triangle'
             style={{
-              'fontFamily': ['Hack', 'Source Code Pro', 'monospace'],
-              'fontSize': '18px'
+              'fontFamily': ['Source Code Pro', 'monospace'],
+              'fontSize': '16px'
             }}
             displayDataTypes={false}
             enableClipboard={false}
