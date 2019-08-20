@@ -207,7 +207,7 @@ class ScheduleBContainer extends Component {
       }
     }
 
-    //zero any remaining rows
+    // zero any remaining rows
     for (let row = nextProps.scheduleState.scheduleB.records.length + 2; row < grid.length; row += 1) {
       grid[row][SCHEDULE_B.FUEL_TYPE].value = null;
       grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
