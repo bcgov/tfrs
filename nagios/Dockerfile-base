@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:buster
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install nagios3 monitoring-plugins-standard monitoring-plugins-basic supervisor vim net-tools curl git jq exim4 tzdata check-postgres -y
 RUN ln -fs /usr/share/zoneinfo/Canada/Pacific /etc/localtime \
