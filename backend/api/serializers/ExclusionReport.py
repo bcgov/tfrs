@@ -32,7 +32,8 @@ from api.models.ComplianceReport import \
 from api.models.ExclusionReportAgreement import \
     ExclusionAgreement, ExclusionAgreementRecord
 from api.models.TransactionType import TransactionType
-from api.serializers.ComplianceReport import ComplianceReportValidator
+from api.serializers.ComplianceReport import \
+    ComplianceReportStatusSerializer, ComplianceReportTypeSerializer
 from api.serializers import \
     OrganizationMinSerializer, CompliancePeriodSerializer
 
@@ -57,6 +58,37 @@ class ExclusionAgreementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExclusionAgreement
         fields = ('records',)
+
+
+class ExclusionReportDetailSerializer(serializers.ModelSerializer):
+    """
+    Detail Serializer for the Exclusion Report
+    """
+    status = ComplianceReportStatusSerializer(read_only=True)
+    type = ComplianceReportTypeSerializer(read_only=True)
+    organization = OrganizationMinSerializer(read_only=True)
+    compliance_period = CompliancePeriodSerializer(read_only=True)
+    exclusion_agreement = ExclusionAgreementSerializer(read_only=True)
+    history = serializers.SerializerMethodField()
+
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the credit trade
+        """
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+
+        history = obj.get_history(["Submitted"])
+
+        serializer = ComplianceReportHistorySerializer(
+            history, many=True
+        )
+
+        return serializer.data
+
+    class Meta:
+        model = ComplianceReport
+        fields = ['id', 'status', 'type', 'organization', 'compliance_period',
+                  'exclusion_agreement', 'read_only', 'history']
 
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
@@ -112,34 +144,6 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
                     exclusion_agreement.save()
 
             instance.save()
-
-        # if 'schedule_a' in validated_data:
-        #     schedule_a_data = validated_data.pop('schedule_a')
-
-        #     if instance.schedule_a:
-        #         ScheduleARecord.objects.filter(
-        #             schedule=instance.schedule_a
-        #         ).delete()
-        #         ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
-
-        #     if 'records' in schedule_a_data:
-        #         records_data = schedule_a_data.pop('records')
-
-        #         schedule_a = ScheduleA.objects.create(
-        #             **schedule_a_data,
-        #             compliance_report=instance
-        #         )
-        #         instance.schedule_a = schedule_a
-
-        #         for record_data in records_data:
-        #             record = ScheduleARecord.objects.create(
-        #                 **record_data,
-        #                 schedule=schedule_a
-        #             )
-        #             schedule_a.records.add(record)
-        #             schedule_a.save()
-
-        #     instance.save()
 
         status = validated_data.get('status', None)
 

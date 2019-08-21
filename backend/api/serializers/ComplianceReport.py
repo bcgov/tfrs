@@ -132,7 +132,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
     def get_history(self, obj):
         """
-        Returns all the previous status changes for the credit trade
+        Returns all the previous status changes for the compliance report
         """
         from .ComplianceReportHistory import ComplianceReportHistorySerializer
 
