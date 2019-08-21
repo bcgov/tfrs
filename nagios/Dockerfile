@@ -17,6 +17,10 @@ ADD nagios3 /etc/nagios3
 RUN chown -R nagios.nagios /etc/nagios3
 ARG NAGIOS_USER
 ARG NAGIOS_PASSWORD
+ARG ENV_NAME
+RUN if ["$ENV_NAME"="dev"]; then rm -f /etc/nagios3/conf.d/*-test.cfg ; rm -f /etc/nagios3/conf.d/*-prod.cfg; fi
+RUN if ["$ENV_NAME"="test"]; then rm -f /etc/nagios3/conf.d/*-dev.cfg ; rm -f /etc/nagios3/conf.d/*-prod.cfg; fi
+RUN if ["$ENV_NAME"="prod"]; then rm -f /etc/nagios3/conf.d/*-dev.cfg ; rm -f /etc/nagios3/conf.d/*-test.cfg; fi
 RUN echo $NAGIOS_USER \
     && htpasswd -bc /etc/nagios3/htpasswd.users $NAGIOS_USER $NAGIOS_PASSWORD
 ADD .kube /var/lib/nagios/.kube
