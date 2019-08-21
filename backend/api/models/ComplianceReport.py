@@ -8,6 +8,7 @@ from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReportHistory import ComplianceReportHistory
 from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, \
     ScheduleB, ScheduleA, ScheduleSummary
+from api.models.ExclusionReportAgreement import ExclusionAgreement
 from api.models.Organization import Organization
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -134,6 +135,13 @@ class ComplianceReport(Auditable):
 
     summary = models.OneToOneField(
         ScheduleSummary,
+        related_name='compliance_report',
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    exclusion_agreement = models.OneToOneField(
+        ExclusionAgreement,
         related_name='compliance_report',
         on_delete=models.SET_NULL,
         null=True

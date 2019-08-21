@@ -157,12 +157,6 @@ class ComplianceReportValidator:
     schedule validation (like preventing duplicate rows)
     """
 
-class ComplianceReportValidator:
-    """
-    Validation method mixin used for validate and update serializers to check business rules for
-    schedule validation (like preventing duplicate rows)
-    """
-
     def validate_schedule_a(self, data):
         if 'records' not in data:
             return data
@@ -416,6 +410,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
         request = self.context['request']
         self.instance.create_user = request.user
+        self.instance.update_user = request.user
         self.instance.save()
 
     class Meta:
@@ -451,6 +446,10 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
         if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
+        
+        # if 'agreement' in validated_data:
+        #     agreement_data = validated_data.pop('agreement')
+
 
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')

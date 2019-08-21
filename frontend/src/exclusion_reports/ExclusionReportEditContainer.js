@@ -7,15 +7,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { exclusionReports } from '../actions/exclusionReports';
+import history from '../app/History';
+import Loading from '../app/components/Loading';
+import Modal from '../app/components/Modal';
+import ExclusionReportButtons from './components/ExclusionReportButtons';
+import ExclusionReportTabs from './components/ExclusionReportTabs';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
-import Loading from '../app/components/Loading';
-import ExclusionReportButtons from './components/ExclusionReportButtons';
-import ExclusionReportTabs from './components/ExclusionReportTabs';
-import Modal from '../app/components/Modal';
-import history from '../app/History';
 import autosaved from '../utils/autosave_support';
 
 class ExclusionReportEditContainer extends Component {
@@ -46,8 +47,8 @@ class ExclusionReportEditContainer extends Component {
     this.loadData = this.loadData.bind(this);
 
     this.state = {
-      schedules: {},
-      autosaveState: {}
+      autosaveState: {},
+      exclusionAgreement: {}
     };
   }
 
@@ -66,11 +67,11 @@ class ExclusionReportEditContainer extends Component {
   }
 
   _updateScheduleState (mergedState) {
-    const { schedules } = this.state;
+    const { exclusionAgreement } = this.state;
 
     this.setState({
-      schedules: {
-        ...schedules,
+      exclusionAgreement: {
+        ...exclusionAgreement,
         ...mergedState
       }
     });
@@ -81,7 +82,20 @@ class ExclusionReportEditContainer extends Component {
     this.props.invalidateAutosaved();
   }
 
-  _handleSubmit () {
+  _handleSubmit (event, status = 'Draft') {
+    // patch existing
+    const payload = {
+      status,
+      ...this.state.exclusionAgreement
+    };
+
+    this.status = status;
+
+    this.props.updateExclusionReport({
+      id: this.props.match.params.id,
+      state: payload,
+      patch: true
+    });
   }
 
   loadData () {
@@ -189,11 +203,13 @@ ExclusionReportEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   saving: PropTypes.bool.isRequired,
+  updateExclusionReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired
 };
 
 const
   mapDispatchToProps = {
+    updateExclusionReport: exclusionReports.update
   };
 
 const

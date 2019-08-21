@@ -25,6 +25,7 @@ import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 import { complianceReporting } from '../actions/complianceReporting';
+import { exclusionReports } from '../actions/exclusionReports';
 import { transactionTypes } from '../actions/transactionTypes';
 import creditCalculation from './creditCalculationReducer';
 
@@ -62,6 +63,7 @@ const rootReducer = combineReducers({
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
   expectedUses: expectedUses.reducer(),
   complianceReporting: complianceReporting.reducer(),
+  exclusionReports: exclusionReports.reducer(),
   fuelClasses: fuelClasses.reducer(),
   notionalTransferTypes: notionalTransferTypes.reducer(),
   petroleumCarbonIntensities: petroleumCarbonIntensities.reducer(),

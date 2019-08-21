@@ -43,7 +43,7 @@ class ComplianceReportService(object):
         """
         user = (
             compliance_report.create_user
-            if is_new
+            if is_new or compliance_report.update_user is None
             else compliance_report.update_user)
 
         role_id = None

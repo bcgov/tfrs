@@ -154,6 +154,37 @@ class ExclusionAgreementContainer extends Component {
     });
   }
 
+  _gridStateToPayload (state) {
+    const startingRow = 1;
+
+    const records = [];
+
+    for (let i = startingRow; i < state.grid.length; i += 1) {
+      const row = state.grid[i];
+      const record = {
+        transactionType: row[EXCLUSION_AGREEMENT.TRANSACTION_TYPE].value,
+        fuelType: row[EXCLUSION_AGREEMENT.FUEL_TYPE].value,
+        legalName: row[EXCLUSION_AGREEMENT.LEGAL_NAME].value,
+        address: row[EXCLUSION_AGREEMENT.ADDRESS].value,
+        quantity: row[EXCLUSION_AGREEMENT.QUANTITY].value,
+        quantityNotSold: row[EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD].value
+      };
+
+      const rowIsEmpty = !(record.transactionType || record.fuelType || record.legalName ||
+        record.address || record.quantity || record.quantityNotSold);
+
+      if (!rowIsEmpty) {
+        records.push(record);
+      }
+    }
+
+    this.props.updateScheduleState({
+      exclusionAgreement: {
+        records
+      }
+    });
+  }
+
   _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
@@ -203,6 +234,10 @@ class ExclusionAgreementContainer extends Component {
     this.setState({
       grid
     });
+
+    this._gridStateToPayload({
+      grid
+    });
   }
 
   render () {
@@ -241,7 +276,8 @@ ExclusionAgreementContainer.propTypes = {
   transactionTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired
+  }).isRequired,
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
