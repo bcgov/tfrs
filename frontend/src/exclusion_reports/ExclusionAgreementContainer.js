@@ -117,6 +117,15 @@ class ExclusionAgreementContainer extends Component {
         ...grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD],
         value: record.quantityNotSold
       };
+
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === record.fuelType);
+
+      grid[index][EXCLUSION_AGREEMENT.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : '';
+
+      grid[index][EXCLUSION_AGREEMENT.NOT_SOLD_UNITS].value = (selectedFuel &&
+        selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
     });
 
     this.setState({
