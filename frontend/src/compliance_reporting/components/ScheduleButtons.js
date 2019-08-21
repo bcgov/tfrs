@@ -84,7 +84,7 @@ const ScheduleButtons = props => (
           key="btn-submit"
           title={
             !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)
-              ? 'You must be assigned the Signing Authority role in order to sign Compliance Report'
+              ? 'You must have the Signing Authority role to submit a Compliance Report to the Government of British Columbia.'
               : ''
           }
         >

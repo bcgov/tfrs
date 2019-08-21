@@ -6,6 +6,7 @@ import Loading from '../../app/components/Loading';
 import history from '../../app/History';
 import CONFIG from '../../config';
 import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportingTable from './ComplianceReportingTable';
 
@@ -16,6 +17,7 @@ const ComplianceReportingPage = (props) => {
   return (
     <div className="page-compliance-reporting">
       <h1>{props.title}</h1>
+      {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
       <div className="right-toolbar-container">
         <div className="actions-container">
           <div className="btn-group">
@@ -86,6 +88,7 @@ const ComplianceReportingPage = (props) => {
           }
         </div>
       </div>
+      }
       {isFetching && <Loading />}
       {!isFetching &&
       <ComplianceReportingTable

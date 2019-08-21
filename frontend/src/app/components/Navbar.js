@@ -153,7 +153,7 @@ class Navbar extends Component {
           }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
-          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
           <NavLink
             activeClassName="active"
             id="navbar-compliance-reporting"
@@ -311,6 +311,8 @@ class Navbar extends Component {
             </NavLink>
           </li>
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
           <li>
             <NavLink
               activeClassName="active"
