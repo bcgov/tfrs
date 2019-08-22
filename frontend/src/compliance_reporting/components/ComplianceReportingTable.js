@@ -9,6 +9,7 @@ import moment from 'moment';
 import ReactTable from '../../app/components/StateSavingReactTable';
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 
 const ComplianceReportingTable = (props) => {
   const columns = [{
@@ -72,8 +73,13 @@ const ComplianceReportingTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id)
+              let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id)
                 .replace(':tab', 'intro');
+
+              if (row.original.type === 'Exclusion Report') {
+                viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
+                  .replace(':tab', 'intro');
+              }
 
               history.push(viewUrl);
             },
