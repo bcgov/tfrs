@@ -22,11 +22,9 @@
 """
 
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
-from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import \
     ComplianceReport, ComplianceReportStatus
 from api.models.ExclusionReportAgreement import \

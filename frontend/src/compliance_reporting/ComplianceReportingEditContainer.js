@@ -266,6 +266,7 @@ class ComplianceReportingEditContainer extends Component {
         active={tab}
         compliancePeriod={period}
         edit={this.edit}
+        hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
         id={id}
         key="nav"
       />,
@@ -310,7 +311,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
-        tooltipMessage="All declarations need to be accepted."
+        tooltipMessage="Please complete the Signing Authority declaration."
       >
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
