@@ -217,6 +217,11 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'summary', 'read_only', 'history', 'has_snapshot']
 
 
+class ComplianceReportValidator:
+    """
+    Validation method mixin used for validate and update serializers to check business rules for
+    schedule validation (like preventing duplicate rows)
+    """
     def validate_schedule_a(self, data):
         if 'records' not in data:
             return data
