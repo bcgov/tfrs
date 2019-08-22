@@ -148,7 +148,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0169_add_view_compliance_report_permission'),
+        ('api', '0170_auto_20190819_0126'),
     ]
 
     operations = [

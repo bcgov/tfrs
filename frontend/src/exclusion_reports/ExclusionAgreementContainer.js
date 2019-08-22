@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { transactionTypes } from '../actions/transactionTypes';
+import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import ExclusionAgreementPage from './components/ExclusionAgreementPage';
@@ -103,24 +104,46 @@ class ExclusionAgreementContainer extends Component {
           key: 'id',
           value: 'name'
         }
-      }, {
+      }, { // legal name
         attributes: {},
         className: 'text',
         dataEditor: OrganizationAutocomplete
-      }, {
+      }, { // address
         className: 'text'
-      }, {
+      }, { // quantity
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '20',
+          step: '1'
+        },
+        className: 'number',
+        dataEditor: Input,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+        }
+      }, { // units
         attributes: {},
-        className: 'text'
-      }, {
+        className: 'units',
+        readOnly: true
+      }, { // quantity
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '20',
+          step: '1'
+        },
+        className: 'number',
+        dataEditor: Input,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+        }
+      }, { // units
         attributes: {},
-        className: 'text'
-      }, {
-        attributes: {},
-        className: 'text'
-      }, {
-        attributes: {},
-        className: 'text'
+        className: 'units',
+        readOnly: true
       }]);
 
       this.rowNumber += 1;
@@ -148,6 +171,17 @@ class ExclusionAgreementContainer extends Component {
         value
       };
 
+      if (col === EXCLUSION_AGREEMENT.FUEL_TYPE) {
+        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+          fuel.name === value);
+
+        grid[row][EXCLUSION_AGREEMENT.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+          ? selectedFuel.unitOfMeasure.name : '';
+
+        grid[row][EXCLUSION_AGREEMENT.NOT_SOLD_UNITS].value = (selectedFuel &&
+          selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
+      }
+
       if (col === EXCLUSION_AGREEMENT.LEGAL_NAME) {
         if (cell.attributes.address) {
           grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
@@ -155,6 +189,14 @@ class ExclusionAgreementContainer extends Component {
             value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
           };
         }
+      }
+
+      if (col === EXCLUSION_AGREEMENT.QUANTITY || col === EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD) {
+        const cleanedValue = Number(value.replace(/,/g, ''));
+        grid[row][col] = {
+          ...grid[row][col],
+          value: Number.isNaN(cleanedValue) ? '' : cleanedValue
+        };
       }
     });
 

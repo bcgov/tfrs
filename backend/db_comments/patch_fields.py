@@ -23,6 +23,7 @@
 
 import logging
 
+from django.contrib.postgres.fields import JSONField
 from django.db.models import CharField, Field, EmailField, ForeignKey, \
     DateField, UUIDField, BooleanField, IntegerField, BigIntegerField, \
     AutoField, DecimalField, BinaryField, TextField, DateTimeField
@@ -93,6 +94,7 @@ def patch_fields():
         BigIntegerField,
         DecimalField,
         AutoField,
+        JSONField,
         ForeignKey,
         BinaryField,
         TextField

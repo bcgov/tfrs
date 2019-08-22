@@ -188,13 +188,15 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
             'energy_density', 'eer', 'ci_limit', 'energy_content',
             'effective_carbon_intensity', 'credits', 'debits',
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
-            'renewable_diesel_volume', 'renewable_gasoline_volume'
+            'renewable_diesel_volume', 'renewable_gasoline_volume',
+            'unit_of_measure'
         )
         read_only_fields = (
             'energy_density', 'eer', 'ci_limit', 'energy_content',
             'effective_carbon_intensity', 'credits', 'debits',
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
-            'renewable_diesel_volume', 'renewable_gasoline_volume'
+            'renewable_diesel_volume', 'renewable_gasoline_volume',
+            'unit_of_measure'
         )
 
 
