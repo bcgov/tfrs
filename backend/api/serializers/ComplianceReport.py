@@ -446,10 +446,6 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
 
         if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
-        
-        # if 'agreement' in validated_data:
-        #     agreement_data = validated_data.pop('agreement')
-
 
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
