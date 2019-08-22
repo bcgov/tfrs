@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Link} from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
+import history from '../../app/History';
 
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
@@ -11,7 +14,8 @@ const ScheduleTabs = (props) => {
     scheduleB: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-b'),
     scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
     scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d'),
-    ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary')
+    ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary'),
+    snapshot: COMPLIANCE_REPORTING.SNAPSHOT.replace(':id', props.id)
   };
 
   return (
@@ -64,7 +68,21 @@ const ScheduleTabs = (props) => {
           Summary &amp; Declaration
         </Link>
       </li>
+      {props.hasSnapshot &&
+      <li>
+        <button
+          className="btn btn-default"
+          type="button"
+          onClick={() => {
+            history.push(urls.snapshot)
+          }}
+        >
+          <FontAwesomeIcon icon="camera"/> Submission Snapshot
+        </button>
+      </li>
+      }
     </ul>
+
   );
 };
 
@@ -76,7 +94,8 @@ ScheduleTabs.defaultProps = {
 ScheduleTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
-  id: PropTypes.string
+  id: PropTypes.string,
+  hasSnapshot: PropTypes.bool.isRequired
 };
 
 export default ScheduleTabs;

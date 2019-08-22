@@ -1,0 +1,31 @@
+.spreadsheet {
+  min-width: 100%;
+  table-layout: auto;
+  overflow-x: auto;
+
+  td.cell {
+    padding: 4px 6px;
+  }
+
+  td.header {
+    font-weight: bold;
+    text-align: center !important;
+    background: #eeeeee !important;
+  }
+
+  .strong {
+    font-weight: bold;
+  }
+
+  td.underlined {
+    border-bottom: 2px solid #000 !important;
+  }
+
+  margin-bottom: 2em;
+
+  .read-only {
+    background: #fff !important;
+    color: #000 !important;
+    text-align: right !important;
+  }
+}

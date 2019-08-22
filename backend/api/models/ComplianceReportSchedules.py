@@ -299,6 +299,13 @@ class ScheduleBRecord(Commentable):
         return obj.density
 
     @property
+    def unit_of_measure(self):
+        if self.fuel_type is None:
+            return None
+
+        return self.fuel_type.unit_of_measure.name
+
+    @property
     def energy_density(self):
         period = self.schedule.compliance_report.compliance_period
         obj = CreditCalculationService.get(
