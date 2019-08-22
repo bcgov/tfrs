@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0168_signingauthorityconfirmation_title'),
+        ('api', '0170_auto_20190819_0126'),
     ]
 
     operations = [

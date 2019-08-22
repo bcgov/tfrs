@@ -96,22 +96,27 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         use the default.
         """
         instance = self.get_object()
-        if instance.type.the_type != 'Exclusion Report':
-            return super().update(self, request, *args, **kwargs)
 
         if request.method == 'PATCH':
             partial = kwargs.pop('partial', True)
         else:
             partial = kwargs.pop('partial', False)
 
+        if instance.type.the_type != 'Exclusion Report':
+            serializer = self.get_serializer(
+                instance,
+                data=request.data,
+                partial=partial
+            )
+        else:
+            serializer = ExclusionReportUpdateSerializer(
+                instance,
+                data=request.data,
+                partial=partial
+            )
+
         user = request.user
         request.data.update({'update_user': user.id})
-
-        serializer = ExclusionReportUpdateSerializer(
-            instance,
-            data=request.data,
-            partial=partial
-        )
 
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

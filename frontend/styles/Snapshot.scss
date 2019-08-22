@@ -21,11 +21,13 @@
     border-bottom: 2px solid #000 !important;
   }
 
-  margin-bottom: 2em;
-
   .read-only {
     background: #fff !important;
     color: #000 !important;
     text-align: right !important;
+  }
+
+  &.snapshot_a, &.snapshot_b, &.snapshot_c, &.snapshot_d, &.snapshot_summary {
+    margin-bottom: 2rem;
   }
 }
