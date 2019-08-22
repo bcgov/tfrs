@@ -50,6 +50,6 @@ class SigningAuthorityAssertionViewSet(AuditableMixin, mixins.ListModelMixin,
         module = self.request.query_params.get('module', 'credit_trade')
 
         return SigningAuthorityAssertion.objects.get_active_as_of_date(
-            datetime.today(),
-            module
+            as_of=datetime.today(),
+            module=module
         )
