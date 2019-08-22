@@ -75,7 +75,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "mem-tfrs-tools",
+                                "namespace": "mem-tfrs-${ENV_NAME}",
                                 "name": "nagios:${ENV_NAME}"
                             }
                         }
@@ -196,7 +196,7 @@
                 }
             },
             "spec": {
-                "host": "monitoring-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "host": "nagios-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
                 "path": "/",
                 "to": {
                     "kind": "Service",
