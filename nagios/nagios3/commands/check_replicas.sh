@@ -9,8 +9,8 @@ if ! (oc project -q $PROJECT_NAME > /dev/null); then
     exit 2
 fi
 
-if ($DEPLOYMENT=="rabbitmq"); then
-        availableReplicas=$(oc get -o json StatefulSet $DEPLOYMENT| jq '.status.availableReplicas')
+if [ ${DEPLOYMENT} == "rabbitmq" ]; then
+        availableReplicas=$(oc get -o json StatefulSet rabbitmq | jq '.status.currentReplicas')
     else
         availableReplicas=$(oc get -o json dc $DEPLOYMENT| jq '.status.availableReplicas')
 fi
