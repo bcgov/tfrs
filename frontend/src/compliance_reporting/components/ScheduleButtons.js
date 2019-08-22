@@ -99,12 +99,62 @@ const ScheduleButtons = props => (
           </button>
         </TooltipWhenDisabled>
       ]}
+      {props.recommend &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.ANALYST_RECOMMEND_REJECTION) &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmAnalystRecommendRejection"
+          data-toggle="modal"
+          key="btn-analyst-recommend-rejection"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        </button>
+      }
+      {props.recommend &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.ANALYST_RECOMMEND_ACCEPTANCE) &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmAnalystRecommendAcceptance"
+          data-toggle="modal"
+          key="btn-analyst-recommend-acceptance"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
+      {props.managerRecommend &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGER_RECOMMEND_REJECTION) &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmManagerRecommendRejection"
+          data-toggle="modal"
+          key="btn-manager-recommend-rejection"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        </button>
+      }
+      {props.managerRecommend &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGER_RECOMMEND_ACCEPTANCE) &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmManagerRecommendAcceptance"
+          data-toggle="modal"
+          key="btn-manager-recommend-acceptance"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
     </div>
   </div>
 );
 
 ScheduleButtons.defaultProps = {
   delete: false,
+  managerRecommend: false,
+  recommend: false,
   submit: false
 };
 
@@ -113,6 +163,8 @@ ScheduleButtons.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
+  managerRecommend: PropTypes.bool,
+  recommend: PropTypes.bool,
   submit: PropTypes.bool,
   saving: PropTypes.bool.isRequired,
   validating: PropTypes.bool,
