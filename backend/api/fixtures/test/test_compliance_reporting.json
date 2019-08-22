@@ -88,5 +88,68 @@
     },
     "model": "api.provisionoftheact",
     "pk": 2
+  },
+  {
+    "fields": {
+      "the_type": "Carbon Intensity",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.carbonintensitydeterminationtype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "the_type": "Fuel Code",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.carbonintensitydeterminationtype",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "the_type": "Default Carbon Intensity",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.carbonintensitydeterminationtype",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "the_type": "GHGenius",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.carbonintensitydeterminationtype",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "the_type": "Alternative",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.carbonintensitydeterminationtype",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "determination_type": ["Carbon Intensity"],
+      "provision_act": 1,
+      "fuel": ["CNG"]
+    },
+    "model": "api.approvedfuelprovision",
+    "pk": 500
+  },
+  {
+    "fields": {
+      "determination_type": ["Carbon Intensity"],
+      "provision_act": 1,
+      "fuel": ["LNG"]
+    },
+    "model": "api.approvedfuelprovision",
+    "pk": 500
   }
 ]

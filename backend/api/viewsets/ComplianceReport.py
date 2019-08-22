@@ -5,12 +5,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.models.ComplianceReport import ComplianceReport, ComplianceReportType
+from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
-    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
-    ComplianceReportValidationSerializer
+    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, ComplianceReportValidationSerializer, \
+    ComplianceReportSnapshotSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -85,6 +86,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer.is_valid()
 
         return Response(serializer.errors)
+
+    @detail_route(methods=['GET'])
+    def snapshot(self, request, pk=None):
+        obj = self.get_object()
+
+        # failure to find an object will trigger an exception that is
+        # translated into a 404
+        snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
+
+        return Response(snapshot.snapshot)
 
     @detail_route(methods=['patch'])
     def compute_totals(self, request, pk=None):
