@@ -14,11 +14,15 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
 
     this.recomputeHandler = this.recomputeHandler.bind(this);
     this.doRecompute = this.doRecompute.bind(this);
+
+    this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
+    this.doGetSnapshot = this.doGetSnapshot.bind(this);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getCustomIdentityActions () {
-    return ['VALIDATE', 'VALIDATE_SUCCESS', 'RECOMPUTE', 'RECOMPUTE_SUCCESS'];
+  getCustomIdentityActions() {
+    return ['VALIDATE', 'VALIDATE_SUCCESS',
+            'RECOMPUTE', 'RECOMPUTE_SUCCESS',
+            'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS']
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -28,8 +32,10 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       validationMessages: {},
       validationPassed: null,
       isRecomputing: false,
-      recomputeResult: {}
-    };
+      isGettingSnapshot: false,
+      snapshotItem: null,
+      recomputeResult: {},
+    }
   }
 
   getCustomReducerMap () {
@@ -58,7 +64,18 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         ...state,
         isRecomputing: false,
         recomputeState: null,
-        recomputeResult: action.payload
+        recomputeResult: action.payload,
+      })],
+      [this.getSnapshot, (state, action) => ({
+        ...state,
+        id: action.payload.id || action.payload,
+        isGettingSnapshot: true,
+        snapshotItem: null,
+      })],
+      [this.getSnapshotSuccess, (state, action) => ({
+        ...state,
+        isGettingSnapshot: false,
+        snapshotItem: action.payload,
       })]
     ];
   }
@@ -111,11 +128,29 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-  getCustomSagas () {
+  doGetSnapshot(data = null) {
+    const id = data;
+    return axios.get(`${this.baseUrl}/${id}/snapshot`);
+  }
+
+  * getSnapshotHandler() {
+    const data = yield (select(this.idSelector()));
+
+    try {
+      const response = yield call(this.doGetSnapshot, data);
+      yield put(this.getSnapshotSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  getCustomSagas() {
     return [
       takeLatest(this.validate, this.validateHandler),
-      takeLatest(this.recompute, this.recomputeHandler)
-    ];
+      takeLatest(this.recompute, this.recomputeHandler),
+      takeLatest(this.getSnapshot, this.getSnapshotHandler),
+
+    ]
   }
 }
 

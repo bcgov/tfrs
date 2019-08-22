@@ -36,7 +36,13 @@ class TestComplianceReporting(BaseTestCase):
     """Tests for the compliance reporting endpoint"""
     extra_fixtures = [
         'test/test_compliance_reporting.json',
-        'test/test_fuel_codes.json'
+        'test/test_fuel_codes.json',
+        'test/test_unit_of_measures.json',
+        'test/test_carbon_intensity_limits.json',
+        'test/test_default_carbon_intensities.json',
+        'test/test_energy_densities.json',
+        'test/test_energy_effectiveness_ratio.json',
+        'test/test_petroleum_carbon_intensities.json'
     ]
 
     def _create_draft_trade(self):
@@ -114,7 +120,7 @@ class TestComplianceReporting(BaseTestCase):
             'scheduleB': {
                 'records': [
                     {
-                        'fuelType': 'LNG',
+                        'fuelType': 'CNG',
                         'fuelClass': 'Diesel',
                         'quantity': 10,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
@@ -122,11 +128,12 @@ class TestComplianceReporting(BaseTestCase):
                         'intensity': 12
                     },
                     {
-                        'fuelType': 'LNG',
+                        'fuelType': 'CNG',
                         'fuelClass': 'Diesel',
                         'quantity': 5,
-                        'provisionOfTheAct': 'Section 6 (5) (c)',
-                        'fuelCode': 1
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'fuelCode': None,
+                        'intensity': 13
                     }
                 ]
             },
@@ -705,8 +712,8 @@ class TestComplianceReporting(BaseTestCase):
                         'fuelType': 'LNG',
                         'fuelClass': 'Diesel',
                         'quantity': 44,
-                        'provisionOfTheAct': 'Section 6 (5) (c)',
-                        'fuelCode': 1
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 77.6,
                     }
                 ]
             },

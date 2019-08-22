@@ -32,13 +32,16 @@ from api.models.ComplianceReportSchedules import \
     ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
+from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.serializers import \
-    OrganizationMinSerializer, CompliancePeriodSerializer
+    OrganizationMinSerializer, CompliancePeriodSerializer, datetime
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
     ScheduleSummaryDetailSerializer
 from api.serializers.constants import ComplianceReportValidation
+
+from decimal import *
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -98,7 +101,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
-                  'update_timestamp')
+                  'update_timestamp', 'has_snapshot', 'read_only')
 
 
 class ComplianceReportDetailSerializer(serializers.ModelSerializer):
@@ -117,25 +120,86 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     history = serializers.SerializerMethodField()
 
     def get_summary(self, obj):
-        total_petroleum_diesel = 0
-        total_petroleum_gasoline = 0
-        total_renewable_diesel = 0
-        total_renewable_gasoline = 0
-        net_gasoline_class_transferred = None
-        net_diesel_class_transferred = None
+        total_petroleum_diesel = Decimal(0)
+        total_petroleum_gasoline = Decimal(0)
+        total_renewable_diesel = Decimal(0)
+        total_renewable_gasoline = Decimal(0)
+        total_credits = Decimal(0)
+        total_debits = Decimal(0)
+        net_gasoline_class_transferred = Decimal(0)
+        net_diesel_class_transferred = Decimal(0)
+
+        lines = {}
+
+        if obj.summary is not None:
+            lines[
+                '6'] = obj.summary.gasoline_class_retained if obj.summary.gasoline_class_retained is not None else Decimal(
+                0)
+            lines[
+                '8'] = obj.summary.gasoline_class_deferred if obj.summary.gasoline_class_deferred is not None else Decimal(
+                0)
+            lines[
+                '17'] = obj.summary.diesel_class_retained if obj.summary.diesel_class_retained is not None else Decimal(
+                0)
+            lines[
+                '19'] = obj.summary.diesel_class_deferred if obj.summary.diesel_class_deferred is not None else Decimal(
+                0)
+            lines['26'] = obj.summary.credits_offset if obj.summary.credits_offset is not None else Decimal(0)
+        else:
+            lines['6'] = Decimal(0)
+            lines['8'] = Decimal(0)
+            lines['17'] = Decimal(0)
+            lines['19'] = Decimal(0)
+            lines['26'] = Decimal(0)
 
         if obj.schedule_a:
-            net_gasoline_class_transferred = obj.schedule_a.net_gasoline_class_transferred
-            net_diesel_class_transferred = obj.schedule_a.net_diesel_class_transferred
+            net_gasoline_class_transferred += obj.schedule_a.net_gasoline_class_transferred
+            net_diesel_class_transferred += obj.schedule_a.net_diesel_class_transferred
+
+        lines['5'] = net_gasoline_class_transferred
+        lines['16'] = net_diesel_class_transferred
 
         if obj.schedule_b:
             total_petroleum_diesel += obj.schedule_b.total_petroleum_diesel
             total_petroleum_gasoline += obj.schedule_b.total_petroleum_gasoline
             total_renewable_diesel += obj.schedule_b.total_renewable_diesel
             total_renewable_gasoline += obj.schedule_b.total_renewable_gasoline
+            total_credits += obj.schedule_b.total_credits
+            total_debits += obj.schedule_b.total_debits
 
         if obj.schedule_c:
             total_petroleum_diesel += obj.schedule_c.total_petroleum_diesel
+
+        lines['1'] = total_petroleum_gasoline
+        lines['2'] = total_renewable_gasoline
+        lines['3'] = lines['1'] + lines['2']
+        lines['4'] = (lines['3'] * Decimal('0.05')).quantize(Decimal('1.'),
+                                                             rounding=ROUND_HALF_UP)  # hardcoded 5% renewable requirement
+        lines['7'] = Decimal(0)
+        lines['9'] = Decimal(0)
+        lines['10'] = lines['2'] + lines['5'] - lines['6'] + lines['7'] + lines['8'] - lines['9']
+        lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(Decimal(0)).quantize(Decimal('.01'),
+                                                                                              rounding=ROUND_HALF_UP)
+
+        lines['12'] = total_petroleum_diesel
+        lines['13'] = total_renewable_diesel
+        lines['14'] = lines['12'] + lines['13']
+        lines['15'] = (lines['14'] * Decimal('0.04')).quantize(Decimal('1.'),
+                                                               rounding=ROUND_HALF_UP)  # hardcoded 4% renewable requirement
+        lines['18'] = Decimal(0)
+        lines['20'] = Decimal(0)
+        lines['21'] = lines['13'] + lines['16'] - lines['17'] + lines['18'] + lines['19'] - lines['20']
+        lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(Decimal(0)).quantize(Decimal('.01'),
+                                                                                               rounding=ROUND_HALF_UP)
+
+        lines['23'] = total_credits
+        lines['24'] = total_debits
+        lines['25'] = lines['23'] - lines['24']
+        lines['27'] = lines['25'] + lines['26']
+
+        lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
+
+        total_payable = lines['11'] + lines['22'] + lines['28']
 
         synthetic_totals = {
             "total_petroleum_diesel": total_petroleum_diesel,
@@ -143,7 +207,9 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             "total_renewable_diesel": total_renewable_diesel,
             "total_renewable_gasoline": total_renewable_gasoline,
             "net_diesel_class_transferred": net_diesel_class_transferred,
-            "net_gasoline_class_transferred": net_gasoline_class_transferred
+            "net_gasoline_class_transferred": net_gasoline_class_transferred,
+            "lines": lines,
+            "total_payable": total_payable
         }
 
         if obj.summary is not None:
@@ -171,14 +237,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'history']
-
-
-class ComplianceReportValidator:
-    """
-    Validation method mixin used for validate and update serializers to check business rules for
-    schedule validation (like preventing duplicate rows)
-    """
+                  'summary', 'read_only', 'history', 'has_snapshot']
 
 
 class ComplianceReportValidator:
@@ -459,7 +518,9 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceReportValidator):
+class ComplianceReportUpdateSerializer(
+        serializers.ModelSerializer, ComplianceReportValidator
+    ):
     """
     Update Serializer for the Compliance Report
     """
@@ -479,7 +540,6 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
     disregard_status = False
 
     def update(self, instance, validated_data):
-
         if instance.read_only and not self.disregard_status:
             raise PermissionDenied('Cannot modify this compliance report')
 
@@ -491,155 +551,169 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 
-            if instance.schedule_d:
-                ScheduleDSheetInput.objects.filter(
-                    sheet__schedule=instance.schedule_d
-                ).delete()
-                ScheduleDSheetOutput.objects.filter(
-                    sheet__schedule=instance.schedule_d
-                ).delete()
-                ScheduleDSheet.objects.filter(
-                    schedule=instance.schedule_d
-                ).delete()
-                ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
+                if instance.schedule_d:
+                    ScheduleDSheetInput.objects.filter(
+                        sheet__schedule=instance.schedule_d
+                    ).delete()
+                    ScheduleDSheetOutput.objects.filter(
+                        sheet__schedule=instance.schedule_d
+                    ).delete()
+                    ScheduleDSheet.objects.filter(
+                        schedule=instance.schedule_d
+                    ).delete()
+                    ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
 
-            sheets_data = schedule_d_data.pop('sheets')
-            schedule_d = ScheduleD.objects.create(
-                **schedule_d_data,
-                compliance_report=instance
-            )
-            instance.schedule_d = schedule_d
-            for sheet_data in sheets_data:
-                inputs_data = sheet_data.pop('inputs')
-                outputs_data = sheet_data.pop('outputs')
-                sheet = ScheduleDSheet.objects.create(
-                    **sheet_data,
-                    schedule=schedule_d
-                )
-
-                for input_data in inputs_data:
-                    input = ScheduleDSheetInput.objects.create(
-                        **input_data,
-                        sheet=sheet
-                    )
-                    sheet.inputs.add(input)
-                    sheet.save()
-
-                for output_data in outputs_data:
-                    output = ScheduleDSheetOutput.objects.create(
-                        **output_data,
-                        sheet=sheet
-                    )
-                    sheet.outputs.add(output)
-                    sheet.save()
-
-                schedule_d.sheets.add(sheet)
-                schedule_d.save()
-
-            instance.save()
-
-        if 'schedule_c' in validated_data:
-            schedule_c_data = validated_data.pop('schedule_c')
-
-            if instance.schedule_c:
-                ScheduleCRecord.objects.filter(
-                    schedule=instance.schedule_c
-                ).delete()
-                ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
-
-            if 'records' in schedule_c_data:
-                records_data = schedule_c_data.pop('records')
-
-                schedule_c = ScheduleC.objects.create(
-                    **schedule_c_data,
+                sheets_data = schedule_d_data.pop('sheets')
+                schedule_d = ScheduleD.objects.create(
+                    **schedule_d_data,
                     compliance_report=instance
                 )
-                instance.schedule_c = schedule_c
-
-                for record_data in records_data:
-                    record = ScheduleCRecord.objects.create(
-                        **record_data,
-                        schedule=schedule_c
+                instance.schedule_d = schedule_d
+                for sheet_data in sheets_data:
+                    inputs_data = sheet_data.pop('inputs')
+                    outputs_data = sheet_data.pop('outputs')
+                    sheet = ScheduleDSheet.objects.create(
+                        **sheet_data,
+                        schedule=schedule_d
                     )
-                    schedule_c.records.add(record)
-                    schedule_c.save()
 
-            instance.save()
+                    for input_data in inputs_data:
+                        input = ScheduleDSheetInput.objects.create(
+                            **input_data,
+                            sheet=sheet
+                        )
+                        sheet.inputs.add(input)
+                        sheet.save()
 
-        if 'schedule_b' in validated_data:
-            schedule_b_data = validated_data.pop('schedule_b')
+                    for output_data in outputs_data:
+                        output = ScheduleDSheetOutput.objects.create(
+                            **output_data,
+                            sheet=sheet
+                        )
+                        sheet.outputs.add(output)
+                        sheet.save()
 
-            if instance.schedule_b:
-                ScheduleBRecord.objects.filter(
-                    schedule=instance.schedule_b
-                ).delete()
-                ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
+                    schedule_d.sheets.add(sheet)
+                    schedule_d.save()
 
-            if 'records' in schedule_b_data:
-                records_data = schedule_b_data.pop('records')
+                instance.save()
 
-                schedule_b = ScheduleB.objects.create(
-                    **schedule_b_data,
+            if 'schedule_c' in validated_data:
+                schedule_c_data = validated_data.pop('schedule_c')
+
+                if instance.schedule_c:
+                    ScheduleCRecord.objects.filter(
+                        schedule=instance.schedule_c
+                    ).delete()
+                    ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
+
+                if 'records' in schedule_c_data:
+                    records_data = schedule_c_data.pop('records')
+
+                    schedule_c = ScheduleC.objects.create(
+                        **schedule_c_data,
+                        compliance_report=instance
+                    )
+                    instance.schedule_c = schedule_c
+
+                    for record_data in records_data:
+                        record = ScheduleCRecord.objects.create(
+                            **record_data,
+                            schedule=schedule_c
+                        )
+                        schedule_c.records.add(record)
+                        schedule_c.save()
+
+                instance.save()
+
+            if 'schedule_b' in validated_data:
+                schedule_b_data = validated_data.pop('schedule_b')
+
+                if instance.schedule_b:
+                    ScheduleBRecord.objects.filter(
+                        schedule=instance.schedule_b
+                    ).delete()
+                    ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
+
+                if 'records' in schedule_b_data:
+                    records_data = schedule_b_data.pop('records')
+
+                    schedule_b = ScheduleB.objects.create(
+                        **schedule_b_data,
+                        compliance_report=instance
+                    )
+                    instance.schedule_b = schedule_b
+
+                    for record_data in records_data:
+                        record = ScheduleBRecord.objects.create(
+                            **record_data,
+                            schedule=schedule_b
+                        )
+                        schedule_b.records.add(record)
+                        schedule_b.save()
+
+                instance.save()
+
+            if 'schedule_a' in validated_data:
+                schedule_a_data = validated_data.pop('schedule_a')
+
+                if instance.schedule_a:
+                    ScheduleARecord.objects.filter(
+                        schedule=instance.schedule_a
+                    ).delete()
+                    ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
+
+                if 'records' in schedule_a_data:
+                    records_data = schedule_a_data.pop('records')
+
+                    schedule_a = ScheduleA.objects.create(
+                        **schedule_a_data,
+                        compliance_report=instance
+                    )
+                    instance.schedule_a = schedule_a
+
+                    for record_data in records_data:
+                        record = ScheduleARecord.objects.create(
+                            **record_data,
+                            schedule=schedule_a
+                        )
+                        schedule_a.records.add(record)
+                        schedule_a.save()
+
+                instance.save()
+
+            if 'summary' in validated_data and not self.strip_summary:
+                summary_data = validated_data.pop('summary')
+
+                if instance.summary:
+                    ScheduleSummary.objects.filter(id=instance.summary.id).delete()
+
+                summary = ScheduleSummary.objects.create(
+                    **summary_data,
                     compliance_report=instance
                 )
-                instance.schedule_b = schedule_b
+                instance.summary = summary
 
-                for record_data in records_data:
-                    record = ScheduleBRecord.objects.create(
-                        **record_data,
-                        schedule=schedule_b
-                    )
-                    schedule_b.records.add(record)
-                    schedule_b.save()
-
-            instance.save()
-
-        if 'schedule_a' in validated_data:
-            schedule_a_data = validated_data.pop('schedule_a')
-
-            if instance.schedule_a:
-                ScheduleARecord.objects.filter(
-                    schedule=instance.schedule_a
-                ).delete()
-                ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
-
-            if 'records' in schedule_a_data:
-                records_data = schedule_a_data.pop('records')
-
-                schedule_a = ScheduleA.objects.create(
-                    **schedule_a_data,
-                    compliance_report=instance
-                )
-                instance.schedule_a = schedule_a
-
-                for record_data in records_data:
-                    record = ScheduleARecord.objects.create(
-                        **record_data,
-                        schedule=schedule_a
-                    )
-                    schedule_a.records.add(record)
-                    schedule_a.save()
-
-            instance.save()
-
-        if 'summary' in validated_data and not self.strip_summary:
-            summary_data = validated_data.pop('summary')
-
-            if instance.summary:
-                ScheduleSummary.objects.filter(id=instance.summary.id).delete()
-
-            summary = ScheduleSummary.objects.create(
-                **summary_data,
-                compliance_report=instance
-            )
-            instance.summary = summary
-
-            instance.save()
+                instance.save()
 
         status = validated_data.get('status', None)
 
         if status:
             instance.status.fuel_supplier_status = status
+            if (status.fuel_supplier_status in ['Submitted']):
+                # Create a snapshot
+                request = self.context.get('request')
+                snap = dict(ComplianceReportDetailSerializer(instance).data)
+                snap['version'] = 1  # to track deserialization version
+                snap['timestamp'] = datetime.now()
+
+                ComplianceReportSnapshot.objects.filter(compliance_report=instance).delete()
+                ComplianceReportSnapshot.objects.create(
+                    compliance_report=instance,
+                    create_user=request.user,
+                    create_timestamp=datetime.now(),
+                    snapshot=snap
+                )
 
         request = self.context.get('request')
         if request:
@@ -653,8 +727,9 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer, ComplianceRe
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only')
-        read_only_fields = ('compliance_period', 'read_only', 'organization')
+                  'summary', 'read_only', 'has_snapshot')
+        read_only_fields = ('compliance_period', 'read_only',
+                            'has_snapshot', 'organization')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
@@ -681,4 +756,14 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReport
+        fields = '__all__'
+
+
+class ComplianceReportSnapshotSerializer(serializers.ModelSerializer):
+    """
+    Serialize snapshots
+    """
+
+    class Meta:
+        model = ComplianceReportSnapshot
         fields = '__all__'

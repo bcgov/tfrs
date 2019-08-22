@@ -268,6 +268,7 @@ class ComplianceReportingEditContainer extends Component {
         active={tab}
         compliancePeriod={period}
         edit={this.edit}
+        hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
         id={id}
         key="nav"
       />,
@@ -292,12 +293,42 @@ class ComplianceReportingEditContainer extends Component {
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
+        managerRecommend={this.props.complianceReporting.item.status && ['Analyst Accepted', 'Analyst Rejected'].indexOf(this.props.complianceReporting.item.status.status) >= 0}
+        recommend={this.props.complianceReporting.item.status && this.props.complianceReporting.item.status.status === 'Submitted'}
         saving={this.props.saving}
         submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Analyst Accepted')}
+        id="confirmAnalystRecommendAcceptance"
+        key="confirmAnalystRecommendAcceptance"
+      >
+        Are you sure you want to recommend acceptance of the compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Analyst Rejected')}
+        id="confirmAnalystRecommendRejection"
+        key="confirmAnalystRecommendRejection"
+      >
+        Are you sure you want to recommend rejection of the compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Manager Accepted')}
+        id="confirmManagerRecommendAcceptance"
+        key="confirmManagerRecommendAcceptance"
+      >
+        Are you sure you want to recommend acceptance of the compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, 'Manager Rejected')}
+        id="confirmManagerRecommendRejection"
+        key="confirmManagerRecommendRejection"
+      >
+        Are you sure you want to recommend rejection of the compliance report?
+      </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSave"
@@ -312,7 +343,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
-        tooltipMessage="All declarations need to be accepted."
+        tooltipMessage="Please complete the Signing Authority declaration."
       >
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
@@ -371,7 +402,8 @@ ComplianceReportingEditContainer.propTypes = {
         }),
         PropTypes.string
       ]),
-      readOnly: PropTypes.bool
+      readOnly: PropTypes.bool,
+      status: PropTypes.shape()
     }),
     isRecomputing: PropTypes.bool,
     recomputeResult: PropTypes.object,

@@ -28,7 +28,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         """Check permissions When an object does not yet exist (POST)"""
 
-        if request.user.is_government_user and request.method != 'POST':
+        if request.user.is_government_user:
             return True
 
         return request.user.has_perm('COMPLIANCE_REPORT_MANAGE')
@@ -40,9 +40,21 @@ class ComplianceReportPermissions(permissions.BasePermission):
         if obj.organization == request.user.organization:
             return True
 
-        # Government users can see compliance reports
-        if request.user.is_government_user and \
-                request.method in permissions.SAFE_METHODS:
-            return True
+        if request.user.is_government_user:
+            # Government users can see compliance reports
+            if request.method in permissions.SAFE_METHODS:
+                return True
+
+            # Government users can manage compliance report statuses
+            if request.user.has_perm(
+                    'ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
+            ) or request.user.has_perm(
+                'ANALYST_RECOMMEND_REJECTION_COMPLIANCE_REPORT'
+            ) or request.user.has_perm(
+                'MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
+            ) or request.user.has_perm(
+                'MANAGER_RECOMMEND_REJECTION_COMPLIANCE_REPORT'
+            ):
+                return True
 
         return False

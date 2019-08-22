@@ -37,6 +37,7 @@ const SCHEDULE_B_ERROR_KEYS = {
   fuelClass: 2,
   provisionOfTheAct: 3,
   fuelCode: 4,
+  scheduleD_sheetIndex: 4,
   quantity: 5,
   intensity: 8
 };
