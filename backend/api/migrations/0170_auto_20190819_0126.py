@@ -13,7 +13,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0168_signingauthorityconfirmation_title'),
+        ('api', '0169_add_view_compliance_report_permission'),
     ]
 
     operations = [
