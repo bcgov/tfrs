@@ -1060,7 +1060,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_create_draft_exclusion_report_authorized(self):
         payload = {
-            'status': 'Draft',
+            'status': {'fuelSupplierStatus': 'Draft'},
             'type': 'Exclusion Report',
             'compliance_period': '2019'
         }

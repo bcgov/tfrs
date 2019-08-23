@@ -22,21 +22,26 @@
 """
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.ComplianceReport import \
-    ComplianceReport, ComplianceReportStatus
+    ComplianceReport
 from api.models.ExclusionReportAgreement import \
     ExclusionAgreement, ExclusionAgreementRecord
 from api.models.TransactionType import TransactionType
 from api.serializers.ComplianceReport import \
-    ComplianceReportStatusSerializer, ComplianceReportTypeSerializer
+    ComplianceReportTypeSerializer, ComplianceReportWorkflowStateSerializer
+from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
     OrganizationMinSerializer, CompliancePeriodSerializer
 
 
 class ExclusionAgreementRecordSerializer(serializers.ModelSerializer):
+    """
+    Default Serializer for the Exclusion Agreement rows
+    """
     transaction_type = SlugRelatedField(
         slug_field='the_type', queryset=TransactionType.objects.all())
     fuel_type = SlugRelatedField(
@@ -51,6 +56,9 @@ class ExclusionAgreementRecordSerializer(serializers.ModelSerializer):
 
 
 class ExclusionAgreementSerializer(serializers.ModelSerializer):
+    """
+    Default Serializer for Exclusion Agreement
+    """
     records = ExclusionAgreementRecordSerializer(many=True, required=False)
 
     class Meta:
@@ -62,7 +70,7 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     """
     Detail Serializer for the Exclusion Report
     """
-    status = ComplianceReportStatusSerializer(read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
     type = ComplianceReportTypeSerializer(read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
@@ -93,12 +101,7 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
     """
     Update Serializer for the Compliance Report
     """
-    status = SlugRelatedField(
-        slug_field='status',
-        queryset=ComplianceReportStatus.objects.filter(
-            status__in=['Draft', 'Submitted']
-        )
-    )
+    status = ComplianceReportWorkflowStateSerializer(required=False)
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     compliance_period = SlugRelatedField(
         slug_field='description',
@@ -113,6 +116,41 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+
+        if 'status' in validated_data:
+            status_data = validated_data.pop('status')
+            can_change = ComplianceReportPermissions.user_can_change_status(
+                request.user,
+                instance,
+                new_fuel_supplier_status=status_data[
+                    'fuel_supplier_status'].status
+                if 'fuel_supplier_status' in status_data else None,
+                new_analyst_status=status_data['analyst_status'].status
+                if 'analyst_status' in status_data else None,
+                new_director_status=status_data['director_status'].status
+                if 'director_status' in status_data else None,
+                new_manager_status=status_data['manager_status'].status
+                if 'manager_status' in status_data else None
+            )
+            if not can_change:
+                raise PermissionDenied('Invalid status change')
+
+            if 'fuel_supplier_status' in status_data:
+                instance.status.fuel_supplier_status = status_data[
+                    'fuel_supplier_status']
+            if 'analyst_status' in status_data:
+                instance.status.analyst_status = status_data[
+                    'analyst_status']
+            if 'manager_status' in status_data:
+                instance.status.manager_status = status_data[
+                    'manager_status']
+            if 'director_status' in status_data:
+                instance.status.director_status = status_data[
+                    'director_status']
+
+            instance.status.save()
+
         if 'exclusion_agreement' in validated_data:
             agreement_data = validated_data.pop('exclusion_agreement')
 
@@ -143,12 +181,6 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
 
             instance.save()
 
-        status = validated_data.get('status', None)
-
-        if status:
-            instance.status = status
-
-        request = self.context.get('request')
         if request:
             instance.update_user = request.user
             instance.save()
