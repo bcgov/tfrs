@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0170_add_compliance_report_new_statuses'),
+        ('api', '0172_add_compliance_report_new_statuses'),
     ]
 
     operations = [
