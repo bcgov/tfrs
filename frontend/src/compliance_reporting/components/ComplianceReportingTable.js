@@ -32,7 +32,7 @@ const ComplianceReportingTable = (props) => {
     id: 'type',
     minWidth: 75
   }, {
-    accessor: item => (item.status),
+    accessor: item => (item.status.fuelSupplierStatus),
     className: 'col-status',
     Header: 'Status',
     id: 'status',
@@ -101,7 +101,7 @@ ComplianceReportingTable.propTypes = {
     organization: PropTypes.shape({
       name: PropTypes.string
     }),
-    status: PropTypes.string,
+    status: PropTypes.object,
     type: PropTypes.string
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,

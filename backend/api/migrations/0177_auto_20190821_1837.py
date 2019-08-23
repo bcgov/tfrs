@@ -10,7 +10,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0171_add_idir_compliance_report_permissions'),
+        ('api', '0176_auto_20190823_0131'),
     ]
 
     operations = [

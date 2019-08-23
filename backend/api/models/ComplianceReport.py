@@ -36,7 +36,7 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
         Allows type 'status' to be used to identify
         a row in the table
         """
-        return (self.status,)
+        return self.status
 
     class Meta:
         db_table = 'compliance_report_status'
@@ -45,9 +45,41 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
                        "(Draft, Submitted, Received, etc.)"
 
 
+class ComplianceReportWorkflowState(Auditable):
+    fuel_supplier_status = models.ForeignKey(ComplianceReportStatus,
+                                             null=False,
+                                             #limit_choices_to=['Draft', 'Submitted', 'Deleted'],
+                                             related_name='+',
+                                             to_field='status',
+                                             default='Draft')
+
+    analyst_status = models.ForeignKey(ComplianceReportStatus,
+                                       null=False,
+                                       #limit_choices_to=['Unreviewed', 'Recommended', 'Not Recommended'],
+                                       related_name='+',
+                                       to_field='status',
+                                       default='Unreviewed')
+
+    manager_status = models.ForeignKey(ComplianceReportStatus,
+                                       null=False,
+                                       #limit_choices_to=['Unreviewed', 'Recommended', 'Not Recommended', 'Returned'],
+                                       related_name='+',
+                                       to_field='status',
+                                       default='Unreviewed')
+
+    director_status = models.ForeignKey(ComplianceReportStatus,
+                                        null=False,
+                                        #limit_choices_to=['Unreviewed', 'Accepted', 'Rejected', 'Returned'],
+                                        related_name='+',
+                                        to_field='status',
+                                        default='Unreviewed')
+
+    class Meta:
+        db_table = 'compliance_report_workflow_state'
+
 class ComplianceReportType(DisplayOrder):
     """
-    List of Possible statuses for compliance reports.
+    List of Possible types for compliance reports.
     """
     the_type = models.CharField(
         max_length=100,
@@ -82,8 +114,9 @@ class ComplianceReport(Auditable):
     """
     Compliance Report records
     """
-    status = models.ForeignKey(
-        ComplianceReportStatus,
+    status = models.OneToOneField(
+        ComplianceReportWorkflowState,
+        related_name='compliance_report',
         on_delete=models.PROTECT,
         null=False
     )
@@ -155,7 +188,7 @@ class ComplianceReport(Auditable):
         we'd like to show.
         """
         history = ComplianceReportHistory.objects.filter(
-            status__status__in=statuses,
+            status__fuel_supplier_status__status__in=statuses,
             compliance_report_id=self.id
         ).order_by('create_timestamp')
 
@@ -163,7 +196,7 @@ class ComplianceReport(Auditable):
 
     @property
     def read_only(self):
-        return self.status.status not in ['Draft']
+        return self.status.fuel_supplier_status.status not in ['Draft']
 
     @property
     def has_snapshot(self):

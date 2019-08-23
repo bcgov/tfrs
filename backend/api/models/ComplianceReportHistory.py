@@ -14,10 +14,10 @@ class ComplianceReportHistory(Auditable):
         related_name='compliance_reports'
     )
     status = models.ForeignKey(
-        'ComplianceReportStatus',
+        'ComplianceReportWorkflowState',
         on_delete=models.PROTECT,
         null=False,
-        related_name='compliance_reports'
+        related_name='history_records'
     )
     user_role = models.ForeignKey(
         'Role',

@@ -26,7 +26,8 @@ import json
 from rest_framework import status
 
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus, ComplianceReportType
+from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus, ComplianceReportType, \
+    ComplianceReportWorkflowState
 from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 
@@ -47,7 +48,9 @@ class TestComplianceReporting(BaseTestCase):
 
     def _create_draft_trade(self, report_type="Compliance Report"):
         report = ComplianceReport()
-        report.status = ComplianceReportStatus.objects.get_by_natural_key('Draft')
+        report.status = ComplianceReportWorkflowState.objects.create(
+            fuel_supplier_status=ComplianceReportStatus.objects.get_by_natural_key('Draft')
+        )
         report.organization = Organization.objects.get_by_natural_key(
             "Test Org 1")
         report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
@@ -94,7 +97,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_create_draft_compliance_report_authorized(self):
         payload = {
-            'status': 'Draft',
+            'status': {'fuelSupplierStatus': 'Draft'},
             'type': 'Compliance Report',
             'compliance_period': '2017'
         }
@@ -636,7 +639,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_create_submitted_compliance_report_authorized(self):
         payload = {
-            'status': 'Submitted',
+            'status': {'fuelSupplierStatus': 'Submitted'},
             'type': 'Compliance Report',
             'compliancePeriod': '2019'
         }
@@ -853,7 +856,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_update_draft_compliance_report_authorized(self):
         payload = {
-            'status': 'Submitted'
+            'status': {'fuelSupplierStatus': 'Submitted'},
         }
         rid = self._create_draft_trade()
 
@@ -867,7 +870,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_revert_submitted_compliance_report_fails(self):
         payload = {
-            'status': 'Submitted'
+            'status': {'fuelSupplierStatus': 'Submitted'},
         }
 
         rid = self._create_draft_trade()
@@ -881,7 +884,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         payload = {
-            'status': 'Draft'
+            'status': {'fuelSupplierStatus': 'Draft'},
         }
 
         response = self.clients['fs_user_1'].patch(
@@ -894,7 +897,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_patch_submitted_fails(self):
         payload = {
-            'status': 'Submitted'
+            'status': {'fuelSupplierStatus': 'Submitted'},
         }
 
         rid = self._create_draft_trade()
@@ -956,7 +959,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_create_draft_compliance_report_unauthorized(self):
         payload = {
-            'status': 'Draft',
+            'status': {'fuelSupplierStatus': 'Draft'},
             'type': 'Compliance Report',
             'compliance_period': '2019'
         }
@@ -971,7 +974,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_create_draft_compliance_report_gov_unauthorized(self):
         payload = {
-            'status': 'Draft',
+            'status': {'fuelSupplierStatus': 'Draft'},
             'type': 'Compliance Report',
             'compliance_period': '2019'
         }
@@ -983,6 +986,77 @@ class TestComplianceReporting(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_happy_signing_path(self):
+        rid = self._create_draft_trade()
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'analystStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'managerStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_manager'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'directorStatus': 'Accepted'
+            }
+        }
+
+        response = self.clients['gov_director'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=rid)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_draft_exclusion_report_authorized(self):
         payload = {
@@ -1004,7 +1078,6 @@ class TestComplianceReporting(BaseTestCase):
 
         compliance_reports = response.json()
         self.assertEqual(len(compliance_reports), 4)
-
 
     def test_patch_exclusion_report(self):
         payload = {
