@@ -112,6 +112,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             serializer = ExclusionReportUpdateSerializer(
                 instance,
                 data=request.data,
+                context={
+                    'request': request
+                },
                 partial=partial
             )
 

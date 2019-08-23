@@ -179,11 +179,10 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
                     exclusion_agreement.records.add(record)
                     exclusion_agreement.save()
 
-            instance.save()
-
         if request:
             instance.update_user = request.user
-            instance.save()
+
+        instance.save()
 
         # all other fields are read-only
         return instance

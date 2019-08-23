@@ -41,7 +41,9 @@ class ExclusionReportEditContainer extends Component {
     this.tabComponent = Loading;
     const { tab } = props.match.params;
     this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
-    this.status = 'Draft';
+    this.status = {
+      fuelSupplierStatus: 'Draft'
+    };
 
     this.edit = document.location.pathname.indexOf('/edit/') >= 0;
     this._updateScheduleState = this._updateScheduleState.bind(this);
@@ -67,7 +69,7 @@ class ExclusionReportEditContainer extends Component {
 
     if (this.props.exclusionReports.isUpdating && !nextProps.exclusionReports.isUpdating) {
       if (nextProps.exclusionReports.success) {
-        toastr.exclusionReports(this.status);
+        toastr.exclusionReports(this.status.fuelSupplierStatus);
         this.props.invalidateAutosaved();
       }
     }
@@ -89,7 +91,7 @@ class ExclusionReportEditContainer extends Component {
     this.props.invalidateAutosaved();
   }
 
-  _handleSubmit (event, status = 'Draft') {
+  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
     // patch existing
     const payload = {
       status,
