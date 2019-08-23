@@ -25,13 +25,13 @@ from rest_framework.fields import SerializerMethodField
 
 from api.models.ComplianceReportHistory import ComplianceReportHistory
 from api.serializers import UserMinSerializer
-from api.serializers.ComplianceReport import ComplianceReportStatusSerializer
+from api.serializers.ComplianceReport import ComplianceReportStatusSerializer, ComplianceReportWorkflowStateSerializer
 
 
 class ComplianceReportHistorySerializer(serializers.ModelSerializer):
     from .Role import RoleMinSerializer
 
-    status = ComplianceReportStatusSerializer(read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
     user = SerializerMethodField()
     user_role = RoleMinSerializer(read_only=True)
 

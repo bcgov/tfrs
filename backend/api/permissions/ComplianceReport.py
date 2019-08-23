@@ -76,8 +76,6 @@ class ComplianceReportPermissions(permissions.BasePermission):
                               or user.has_perm('DECLINE_CREDIT_TRANSFER')):
             relationship = ComplianceReportPermissions._Relationship.GovernmentDirector
 
-        print('relationship: {}'.format(relationship))
-
         if relationship == ComplianceReportPermissions._Relationship.FuelSupplier:
             if oldstatus.fuel_supplier_status.status == 'Draft':
                 return new_fuel_supplier_status in ['Deleted', 'Submitted']
@@ -94,18 +92,13 @@ class ComplianceReportPermissions(permissions.BasePermission):
 
         if relationship == ComplianceReportPermissions._Relationship.GovernmentComplianceManager:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
-                print('false1')
                 return False  # Not submitted
             if oldstatus.director_status.status not in ['Unreviewed', 'Returned']:
-                print('false2')
                 return False  # Director has reviewed it
             if oldstatus.analyst_status.status in ['Unreviewed']:
-                print('false3')
                 return False  # Analyst hasn't reviewed
             if oldstatus.manager_status.status not in ['Unreviewed']:
-                print('false5')
                 return False  # Already reviewed
-            print('test6')
             return new_manager_status in ['Recommended', 'Not Recommended', 'Returned']
 
         if relationship == ComplianceReportPermissions._Relationship.GovernmentDirector:

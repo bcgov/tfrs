@@ -179,7 +179,7 @@ class ComplianceReport(Auditable):
         we'd like to show.
         """
         history = ComplianceReportHistory.objects.filter(
-            status__status__in=statuses,
+            status__fuel_supplier_status__status__in=statuses,
             compliance_report_id=self.id
         ).order_by('create_timestamp')
 

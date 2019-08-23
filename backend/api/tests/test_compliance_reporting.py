@@ -1056,3 +1056,4 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
