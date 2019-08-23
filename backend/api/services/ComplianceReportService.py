@@ -48,12 +48,13 @@ class ComplianceReportService(object):
 
         role_id = None
 
-        if user.roles.filter(name="GovDirector").exists():
-            role_id = user.roles.get(name="GovDirector").id
-        elif user.roles.filter(name="GovDeputyDirector").exists():
-            role_id = user.roles.get(name="GovDeputyDirector").id
-        else:
-            role_id = user.roles.first().id
+        if user:
+            if user.roles.filter(name="GovDirector").exists():
+                role_id = user.roles.get(name="GovDirector").id
+            elif user.roles.filter(name="GovDeputyDirector").exists():
+                role_id = user.roles.get(name="GovDeputyDirector").id
+            else:
+                role_id = user.roles.first().id
 
         history = ComplianceReportHistory(
             compliance_report_id=compliance_report.id,

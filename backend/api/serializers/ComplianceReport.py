@@ -470,6 +470,14 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     )
     organization = OrganizationMinSerializer(read_only=True)
 
+    def validate(self, data):
+        request = self.context.get('request')
+
+        if not request.user.has_perm('COMPLIANCE_REPORT_MANAGE'):
+            raise PermissionDenied(
+                'You do not have permission to create a report')
+        return data
+
     def save(self, **kwargs):
         super().save(**kwargs)
 
