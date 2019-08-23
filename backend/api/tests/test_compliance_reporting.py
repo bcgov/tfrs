@@ -42,10 +42,11 @@ class TestComplianceReporting(BaseTestCase):
         'test/test_default_carbon_intensities.json',
         'test/test_energy_densities.json',
         'test/test_energy_effectiveness_ratio.json',
-        'test/test_petroleum_carbon_intensities.json'
+        'test/test_petroleum_carbon_intensities.json',
+        'test/test_transaction_types.json'
     ]
 
-    def _create_draft_trade(self):
+    def _create_draft_trade(self, report_type="Compliance Report"):
         report = ComplianceReport()
         report.status = ComplianceReportWorkflowState.objects.create(
             fuel_supplier_status=ComplianceReportStatus.objects.get_by_natural_key('Draft')
@@ -53,7 +54,7 @@ class TestComplianceReporting(BaseTestCase):
         report.organization = Organization.objects.get_by_natural_key(
             "Test Org 1")
         report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
-        report.type = ComplianceReportType.objects.get_by_natural_key('Compliance Report')
+        report.type = ComplianceReportType.objects.get_by_natural_key(report_type)
         report.save()
         report.refresh_from_db()
         return report.id
@@ -1057,3 +1058,97 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_create_draft_exclusion_report_authorized(self):
+        payload = {
+            'status': {'fuelSupplierStatus': 'Draft'},
+            'type': 'Exclusion Report',
+            'compliance_period': '2019'
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.clients['fs_user_1'].get('/api/compliance_reports')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        compliance_reports = response.json()
+        self.assertEqual(len(compliance_reports), 4)
+
+    def test_patch_exclusion_report(self):
+        payload = {
+            'exclusionAgreement': {
+                'records': [{
+                    'fuelType': "LNG",
+                    'postalAddress':
+                    "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
+                    'quantity': 1000,
+                    'quantityNotSold': 500,
+                    'transactionPartner': "Burden Propane Inc.",
+                    'transactionType': "Purchased"
+                }]
+            }
+        }
+        compliance_report_id = self._create_draft_trade("Exclusion Report")
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=compliance_report_id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertIsNotNone(response_data['exclusionAgreement'])
+        self.assertEqual(len(response_data['exclusionAgreement']['records']), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'exclusionAgreement': {
+                'records': [{
+                    'fuelType': "LNG",
+                    'postalAddress':
+                    "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
+                    'quantity': 1000,
+                    'quantityNotSold': 500,
+                    'transactionPartner': "Burden Propane Inc.",
+                    'transactionType': "Purchased"
+                }, {
+                    'fuelType': "Ethanol",
+                    'postalAddress':
+                    "1375 Hastings Street   Victoria, BC V8Z 2W5",
+                    'quantity': 2000,
+                    'quantityNotSold': 750,
+                    'transactionPartner': "Vancouver Island Propane Services Ltd.",
+                    'transactionType': "Sold"
+                }]
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=compliance_report_id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertIsNotNone(response_data['exclusionAgreement'])
+        self.assertEqual(len(response_data['exclusionAgreement']['records']), 2)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=compliance_report_id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertIsNotNone(response_data['exclusionAgreement'])
+        self.assertEqual(len(response_data['exclusionAgreement']['records']), 2)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -101,6 +101,10 @@ class TestUsersAPI(BaseAPISecurityTestCase):
             'status': status.HTTP_200_OK,
             'reason': 'Multi-role should have read access to users'}
 
+        expected_results[('gov_manager',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Government Manager should have read access to users'}
+
         for user in all_users:
             with self.subTest(
                     user=user,

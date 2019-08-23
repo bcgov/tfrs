@@ -7,16 +7,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { exclusionReports } from '../actions/exclusionReports';
+import history from '../app/History';
+import Loading from '../app/components/Loading';
+import Modal from '../app/components/Modal';
+import ExclusionReportButtons from './components/ExclusionReportButtons';
+import ExclusionReportTabs from './components/ExclusionReportTabs';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
-import Loading from '../app/components/Loading';
-import ExclusionReportButtons from './components/ExclusionReportButtons';
-import ExclusionReportTabs from './components/ExclusionReportTabs';
-import Modal from '../app/components/Modal';
-import history from '../app/History';
 import autosaved from '../utils/autosave_support';
+import toastr from '../utils/toastr';
 
 class ExclusionReportEditContainer extends Component {
   static componentForTabName (tab) {
@@ -39,6 +41,9 @@ class ExclusionReportEditContainer extends Component {
     this.tabComponent = Loading;
     const { tab } = props.match.params;
     this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
+    this.status = {
+      fuelSupplierStatus: 'Draft'
+    };
 
     this.edit = document.location.pathname.indexOf('/edit/') >= 0;
     this._updateScheduleState = this._updateScheduleState.bind(this);
@@ -46,15 +51,13 @@ class ExclusionReportEditContainer extends Component {
     this.loadData = this.loadData.bind(this);
 
     this.state = {
-      schedules: {},
-      autosaveState: {}
+      autosaveState: {},
+      exclusionAgreement: {}
     };
   }
 
   componentDidMount () {
-    if (this.edit) {
-      this.loadData();
-    }
+    this.loadData();
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
@@ -63,14 +66,21 @@ class ExclusionReportEditContainer extends Component {
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
     }
+
+    if (this.props.exclusionReports.isUpdating && !nextProps.exclusionReports.isUpdating) {
+      if (nextProps.exclusionReports.success) {
+        toastr.exclusionReports(this.status.fuelSupplierStatus);
+        this.props.invalidateAutosaved();
+      }
+    }
   }
 
   _updateScheduleState (mergedState) {
-    const { schedules } = this.state;
+    const { exclusionAgreement } = this.state;
 
     this.setState({
-      schedules: {
-        ...schedules,
+      exclusionAgreement: {
+        ...exclusionAgreement,
         ...mergedState
       }
     });
@@ -81,10 +91,24 @@ class ExclusionReportEditContainer extends Component {
     this.props.invalidateAutosaved();
   }
 
-  _handleSubmit () {
+  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
+    // patch existing
+    const payload = {
+      status,
+      ...this.state.exclusionAgreement
+    };
+
+    this.status = status;
+
+    this.props.updateExclusionReport({
+      id: this.props.match.params.id,
+      state: payload,
+      patch: true
+    });
   }
 
   loadData () {
+    this.props.getExclusionReport(this.props.match.params.id);
   }
 
   _updateAutosaveState (tab, state) {
@@ -109,6 +133,10 @@ class ExclusionReportEditContainer extends Component {
       period = `${new Date().getFullYear() - 1}`;
     }
 
+    if (this.props.exclusionReports.isGetting) {
+      return (<Loading />);
+    }
+
     return ([
       <ExclusionReportTabs
         active={tab}
@@ -122,7 +150,7 @@ class ExclusionReportEditContainer extends Component {
         period={period}
         id={id}
         create={!this.edit}
-        exclusionReport={this.props.exclusionReport.item}
+        exclusionReport={this.props.exclusionReports.item}
         loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
         updateScheduleState={this._updateScheduleState}
@@ -156,7 +184,7 @@ class ExclusionReportEditContainer extends Component {
 }
 
 ExclusionReportEditContainer.defaultProps = {
-  exclusionReport: {
+  exclusionReports: {
     isCreating: false,
     success: false
   },
@@ -164,7 +192,7 @@ ExclusionReportEditContainer.defaultProps = {
 };
 
 ExclusionReportEditContainer.propTypes = {
-  exclusionReport: PropTypes.shape({
+  exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
     isUpdating: PropTypes.bool,
@@ -178,6 +206,7 @@ ExclusionReportEditContainer.propTypes = {
     }),
     success: PropTypes.bool
   }),
+  getExclusionReport: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
@@ -189,15 +218,29 @@ ExclusionReportEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   saving: PropTypes.bool.isRequired,
+  updateExclusionReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired
 };
 
 const
   mapDispatchToProps = {
+    getExclusionReport: exclusionReports.get,
+    updateExclusionReport: exclusionReports.update
   };
 
 const
   mapStateToProps = state => ({
+    exclusionReports: {
+      errorMessage: state.rootReducer.exclusionReports.errorMessage,
+      isFinding: state.rootReducer.exclusionReports.isFinding,
+      isGetting: state.rootReducer.exclusionReports.isGetting,
+      isUpdating: state.rootReducer.exclusionReports.isUpdating,
+      item: state.rootReducer.exclusionReports.item,
+      success: state.rootReducer.exclusionReports.success,
+      valid: state.rootReducer.exclusionReports.validationPassed,
+      validating: state.rootReducer.exclusionReports.isValidating,
+      validationMessages: state.rootReducer.exclusionReports.validationMessages
+    },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,

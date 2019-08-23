@@ -1,0 +1,17 @@
+[{
+  "fields": {
+    "effective_date": "2017-01-01",
+    "the_type": "Purchased",
+    "display_order": "1"
+  },
+  "model": "api.transactiontype",
+  "pk": null
+}, {
+  "fields": {
+    "effective_date": "2017-01-01",
+    "the_type": "Sold",
+    "display_order": "2"
+  },
+  "model": "api.transactiontype",
+  "pk": null
+}]
