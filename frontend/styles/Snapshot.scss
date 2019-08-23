@@ -1,4 +1,9 @@
-.spreadsheet {
+.spreadsheet.snapshot_a,
+.spreadsheet.snapshot_b,
+.spreadsheet.snapshot_c,
+.spreadsheet.snapshot_d,
+.spreadsheet.snapshot_summary {
+  margin-bottom: 2rem;
   min-width: 100%;
   table-layout: auto;
   overflow-x: auto;
@@ -25,9 +30,5 @@
     background: #fff !important;
     color: #000 !important;
     text-align: right !important;
-  }
-
-  &.snapshot_a, &.snapshot_b, &.snapshot_c, &.snapshot_d, &.snapshot_summary {
-    margin-bottom: 2rem;
   }
 }
