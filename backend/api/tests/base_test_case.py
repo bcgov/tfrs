@@ -61,6 +61,7 @@ class BaseTestCase(TestCase):
         'fs_user_3',
         'gov_director',
         'gov_analyst',
+        'gov_manager',
         'gov_admin',
         'gov_multi_role'
     ]

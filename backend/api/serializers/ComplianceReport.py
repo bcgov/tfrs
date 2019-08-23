@@ -33,6 +33,7 @@ from api.models.ComplianceReportSchedules import \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
+from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
     OrganizationMinSerializer, CompliancePeriodSerializer, datetime
 from api.serializers.ComplianceReportSchedules import \
@@ -55,22 +56,48 @@ class ComplianceReportTypeSerializer(serializers.ModelSerializer):
         read_only_fields = ('the_type', 'description')
 
 
+class SelectiveVisibilitySlugField(serializers.SlugRelatedField):
+    """ Calls should_show() on parent serializer to decide if
+        it should return or censor a value
+    """
+
+    def to_representation(self, value):
+        visible = getattr(self.parent, 'should_show')
+
+        if visible(self.field_name, value):
+            return super().to_representation(value)
+
+        return None
+
+
 class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
     """
     Default serializer for the Compliance Report Status
     """
     fuel_supplier_status = SlugRelatedField(slug_field='status',
-                                            queryset=ComplianceReportStatus.objects.all(), # TODO filter
+                                            queryset=ComplianceReportStatus.objects.all(),
                                             required=False)
-    director_status = SlugRelatedField(slug_field='status',
-                                       queryset=ComplianceReportStatus.objects.all(), # TODO filter
-                                       required=False)
-    analyst_status = SlugRelatedField(slug_field='status',
-                                      queryset=ComplianceReportStatus.objects.all(), # TODO filter
-                                      required=False)
-    manager_status = SlugRelatedField(slug_field='status',
-                                      queryset=ComplianceReportStatus.objects.all(), # TODO filter
-                                      required=False)
+    director_status = SelectiveVisibilitySlugField(slug_field='status',
+                                                   queryset=ComplianceReportStatus.objects.all(),
+                                                   required=False)
+    analyst_status = SelectiveVisibilitySlugField(slug_field='status',
+                                                  queryset=ComplianceReportStatus.objects.all(),
+                                                  required=False)
+    manager_status = SelectiveVisibilitySlugField(slug_field='status',
+                                                  queryset=ComplianceReportStatus.objects.all(),
+                                                  required=False)
+
+    def should_show(self, field_name, value):
+        user = self.context['request'].user if 'request' in self.context else None
+
+        # Show director_status 'Accepted' to everyone
+        if value.status in ['Accepted'] and field_name in 'director_status':
+            return True
+
+        if user and user.is_government_user:
+            return True
+
+        return False
 
     class Meta:
         model = ComplianceReportWorkflowState
@@ -495,6 +522,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     def validate_status(self, value):
         if value['fuel_supplier_status'].status not in ['Draft']:
             raise serializers.ValidationError('Value must be Draft')
+        if 'analyst_status' in value:
+            raise serializers.ValidationError('Cannot set this value')
+        if 'manager_status' in value:
+            raise serializers.ValidationError('Cannot set this value')
+        if 'director_status' in value:
+            raise serializers.ValidationError('Cannot set this value')
+
         return value
 
     def create(self, validated_data):
@@ -519,8 +553,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ComplianceReportUpdateSerializer(
-        serializers.ModelSerializer, ComplianceReportValidator
-    ):
+    serializers.ModelSerializer, ComplianceReportValidator
+):
     """
     Update Serializer for the Compliance Report
     """
@@ -540,185 +574,201 @@ class ComplianceReportUpdateSerializer(
     disregard_status = False
 
     def update(self, instance, validated_data):
-        if instance.read_only and not self.disregard_status:
+        request = self.context.get('request')
+
+        if instance.read_only and not self.disregard_status and not request.user.organization.id == 1:
             raise PermissionDenied('Cannot modify this compliance report')
 
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
-            instance.status.fuel_supplier_status = status_data['fuel_supplier_status']
+            can_change = ComplianceReportPermissions.user_can_change_status(
+                request.user,
+                instance,
+                new_fuel_supplier_status=status_data[
+                    'fuel_supplier_status'].status if 'fuel_supplier_status' in status_data else None,
+                new_analyst_status=status_data['analyst_status'].status if 'analyst_status' in status_data else None,
+                new_director_status=status_data['director_status'].status if 'director_status' in status_data else None,
+                new_manager_status=status_data['manager_status'].status if 'manager_status' in status_data else None
+            )
+            if not can_change:
+                raise PermissionDenied('Invalid status change')
+
+            if 'fuel_supplier_status' in status_data:
+                instance.status.fuel_supplier_status = status_data['fuel_supplier_status']
+            if 'analyst_status' in status_data:
+                instance.status.analyst_status = status_data['analyst_status']
+            if 'manager_status' in status_data:
+                instance.status.manager_status = status_data['manager_status']
+            if 'director_status' in status_data:
+                instance.status.director_status = status_data['director_status']
+
             instance.status.save()
 
         if 'schedule_d' in validated_data:
             schedule_d_data = validated_data.pop('schedule_d')
 
-                if instance.schedule_d:
-                    ScheduleDSheetInput.objects.filter(
-                        sheet__schedule=instance.schedule_d
-                    ).delete()
-                    ScheduleDSheetOutput.objects.filter(
-                        sheet__schedule=instance.schedule_d
-                    ).delete()
-                    ScheduleDSheet.objects.filter(
-                        schedule=instance.schedule_d
-                    ).delete()
-                    ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
+            if instance.schedule_d:
+                ScheduleDSheetInput.objects.filter(
+                    sheet__schedule=instance.schedule_d
+                ).delete()
+                ScheduleDSheetOutput.objects.filter(
+                    sheet__schedule=instance.schedule_d
+                ).delete()
+                ScheduleDSheet.objects.filter(
+                    schedule=instance.schedule_d
+                ).delete()
+                ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
 
-                sheets_data = schedule_d_data.pop('sheets')
-                schedule_d = ScheduleD.objects.create(
-                    **schedule_d_data,
-                    compliance_report=instance
-                )
-                instance.schedule_d = schedule_d
-                for sheet_data in sheets_data:
-                    inputs_data = sheet_data.pop('inputs')
-                    outputs_data = sheet_data.pop('outputs')
-                    sheet = ScheduleDSheet.objects.create(
-                        **sheet_data,
-                        schedule=schedule_d
-                    )
-
-                    for input_data in inputs_data:
-                        input = ScheduleDSheetInput.objects.create(
-                            **input_data,
-                            sheet=sheet
-                        )
-                        sheet.inputs.add(input)
-                        sheet.save()
-
-                    for output_data in outputs_data:
-                        output = ScheduleDSheetOutput.objects.create(
-                            **output_data,
-                            sheet=sheet
-                        )
-                        sheet.outputs.add(output)
-                        sheet.save()
-
-                    schedule_d.sheets.add(sheet)
-                    schedule_d.save()
-
-                instance.save()
-
-            if 'schedule_c' in validated_data:
-                schedule_c_data = validated_data.pop('schedule_c')
-
-                if instance.schedule_c:
-                    ScheduleCRecord.objects.filter(
-                        schedule=instance.schedule_c
-                    ).delete()
-                    ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
-
-                if 'records' in schedule_c_data:
-                    records_data = schedule_c_data.pop('records')
-
-                    schedule_c = ScheduleC.objects.create(
-                        **schedule_c_data,
-                        compliance_report=instance
-                    )
-                    instance.schedule_c = schedule_c
-
-                    for record_data in records_data:
-                        record = ScheduleCRecord.objects.create(
-                            **record_data,
-                            schedule=schedule_c
-                        )
-                        schedule_c.records.add(record)
-                        schedule_c.save()
-
-                instance.save()
-
-            if 'schedule_b' in validated_data:
-                schedule_b_data = validated_data.pop('schedule_b')
-
-                if instance.schedule_b:
-                    ScheduleBRecord.objects.filter(
-                        schedule=instance.schedule_b
-                    ).delete()
-                    ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
-
-                if 'records' in schedule_b_data:
-                    records_data = schedule_b_data.pop('records')
-
-                    schedule_b = ScheduleB.objects.create(
-                        **schedule_b_data,
-                        compliance_report=instance
-                    )
-                    instance.schedule_b = schedule_b
-
-                    for record_data in records_data:
-                        record = ScheduleBRecord.objects.create(
-                            **record_data,
-                            schedule=schedule_b
-                        )
-                        schedule_b.records.add(record)
-                        schedule_b.save()
-
-                instance.save()
-
-            if 'schedule_a' in validated_data:
-                schedule_a_data = validated_data.pop('schedule_a')
-
-                if instance.schedule_a:
-                    ScheduleARecord.objects.filter(
-                        schedule=instance.schedule_a
-                    ).delete()
-                    ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
-
-                if 'records' in schedule_a_data:
-                    records_data = schedule_a_data.pop('records')
-
-                    schedule_a = ScheduleA.objects.create(
-                        **schedule_a_data,
-                        compliance_report=instance
-                    )
-                    instance.schedule_a = schedule_a
-
-                    for record_data in records_data:
-                        record = ScheduleARecord.objects.create(
-                            **record_data,
-                            schedule=schedule_a
-                        )
-                        schedule_a.records.add(record)
-                        schedule_a.save()
-
-                instance.save()
-
-            if 'summary' in validated_data and not self.strip_summary:
-                summary_data = validated_data.pop('summary')
-
-                if instance.summary:
-                    ScheduleSummary.objects.filter(id=instance.summary.id).delete()
-
-                summary = ScheduleSummary.objects.create(
-                    **summary_data,
-                    compliance_report=instance
-                )
-                instance.summary = summary
-
-                instance.save()
-
-        status = validated_data.get('status', None)
-
-        if status:
-            instance.status.fuel_supplier_status = status
-            if (status.fuel_supplier_status in ['Submitted']):
-                # Create a snapshot
-                request = self.context.get('request')
-                snap = dict(ComplianceReportDetailSerializer(instance).data)
-                snap['version'] = 1  # to track deserialization version
-                snap['timestamp'] = datetime.now()
-
-                ComplianceReportSnapshot.objects.filter(compliance_report=instance).delete()
-                ComplianceReportSnapshot.objects.create(
-                    compliance_report=instance,
-                    create_user=request.user,
-                    create_timestamp=datetime.now(),
-                    snapshot=snap
+            sheets_data = schedule_d_data.pop('sheets')
+            schedule_d = ScheduleD.objects.create(
+                **schedule_d_data,
+                compliance_report=instance
+            )
+            instance.schedule_d = schedule_d
+            for sheet_data in sheets_data:
+                inputs_data = sheet_data.pop('inputs')
+                outputs_data = sheet_data.pop('outputs')
+                sheet = ScheduleDSheet.objects.create(
+                    **sheet_data,
+                    schedule=schedule_d
                 )
 
-        request = self.context.get('request')
-        if request:
-            instance.update_user = request.user
+                for input_data in inputs_data:
+                    input = ScheduleDSheetInput.objects.create(
+                        **input_data,
+                        sheet=sheet
+                    )
+                    sheet.inputs.add(input)
+                    sheet.save()
+
+                for output_data in outputs_data:
+                    output = ScheduleDSheetOutput.objects.create(
+                        **output_data,
+                        sheet=sheet
+                    )
+                    sheet.outputs.add(output)
+                    sheet.save()
+
+                schedule_d.sheets.add(sheet)
+                schedule_d.save()
+
             instance.save()
+
+        if 'schedule_c' in validated_data:
+            schedule_c_data = validated_data.pop('schedule_c')
+
+            if instance.schedule_c:
+                ScheduleCRecord.objects.filter(
+                    schedule=instance.schedule_c
+                ).delete()
+                ScheduleC.objects.filter(id=instance.schedule_c.id).delete()
+
+            if 'records' in schedule_c_data:
+                records_data = schedule_c_data.pop('records')
+
+                schedule_c = ScheduleC.objects.create(
+                    **schedule_c_data,
+                    compliance_report=instance
+                )
+                instance.schedule_c = schedule_c
+
+                for record_data in records_data:
+                    record = ScheduleCRecord.objects.create(
+                        **record_data,
+                        schedule=schedule_c
+                    )
+                    schedule_c.records.add(record)
+                    schedule_c.save()
+
+            instance.save()
+
+        if 'schedule_b' in validated_data:
+            schedule_b_data = validated_data.pop('schedule_b')
+
+            if instance.schedule_b:
+                ScheduleBRecord.objects.filter(
+                    schedule=instance.schedule_b
+                ).delete()
+                ScheduleB.objects.filter(id=instance.schedule_b.id).delete()
+
+            if 'records' in schedule_b_data:
+                records_data = schedule_b_data.pop('records')
+
+                schedule_b = ScheduleB.objects.create(
+                    **schedule_b_data,
+                    compliance_report=instance
+                )
+                instance.schedule_b = schedule_b
+
+                for record_data in records_data:
+                    record = ScheduleBRecord.objects.create(
+                        **record_data,
+                        schedule=schedule_b
+                    )
+                    schedule_b.records.add(record)
+                    schedule_b.save()
+
+            instance.save()
+
+        if 'schedule_a' in validated_data:
+            schedule_a_data = validated_data.pop('schedule_a')
+
+            if instance.schedule_a:
+                ScheduleARecord.objects.filter(
+                    schedule=instance.schedule_a
+                ).delete()
+                ScheduleA.objects.filter(id=instance.schedule_a.id).delete()
+
+            if 'records' in schedule_a_data:
+                records_data = schedule_a_data.pop('records')
+
+                schedule_a = ScheduleA.objects.create(
+                    **schedule_a_data,
+                    compliance_report=instance
+                )
+                instance.schedule_a = schedule_a
+
+                for record_data in records_data:
+                    record = ScheduleARecord.objects.create(
+                        **record_data,
+                        schedule=schedule_a
+                    )
+                    schedule_a.records.add(record)
+                    schedule_a.save()
+
+            instance.save()
+
+        if 'summary' in validated_data and not self.strip_summary:
+            summary_data = validated_data.pop('summary')
+
+            if instance.summary:
+                ScheduleSummary.objects.filter(id=instance.summary.id).delete()
+
+            summary = ScheduleSummary.objects.create(
+                **summary_data,
+                compliance_report=instance
+            )
+            instance.summary = summary
+
+            instance.save()
+
+        if instance.status.fuel_supplier_status.status in ['Submitted'] and not instance.has_snapshot:
+            # Create a snapshot
+            request = self.context.get('request')
+            snap = dict(ComplianceReportDetailSerializer(instance).data)
+            snap['version'] = 1  # to track deserialization version
+            snap['timestamp'] = datetime.now()
+
+            ComplianceReportSnapshot.objects.filter(compliance_report=instance).delete()
+            ComplianceReportSnapshot.objects.create(
+                compliance_report=instance,
+                create_user=request.user,
+                create_timestamp=datetime.now(),
+                snapshot=snap
+            )
+
+        instance.update_user = request.user
+        instance.save()
 
         # all other fields are read-only
         return instance

@@ -985,3 +985,74 @@ class TestComplianceReporting(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_happy_signing_path(self):
+        rid = self._create_draft_trade()
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'analystStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'managerStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_manager'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'directorStatus': 'Accepted'
+            }
+        }
+
+        response = self.clients['gov_director'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=rid)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

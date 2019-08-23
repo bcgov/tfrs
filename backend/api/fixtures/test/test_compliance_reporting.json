@@ -11,7 +11,7 @@
   },
   {
     "fields": {
-      "fuel_supplier_status": "Draft",
+      "fuel_supplier_status": "Submitted",
       "analyst_status": "Unreviewed",
       "director_status": "Unreviewed",
       "manager_status": "Unreviewed"
