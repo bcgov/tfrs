@@ -1,7 +1,8 @@
+import os
 import requests
 
 KEYCLOAK = {
-        'REALM': os.getenv('KEYCLOAK_REALM_URL', 'http://localhost:8888/auth/realms/tfrs'),
+        'REALM': os.getenv('KEYCLOAK_REALM', 'http://localhost:8888/auth/realms/tfrs'),
         'CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID', 'tfrs-app'),
         'SERVICE_ACCOUNT_REALM': os.getenv('KEYCLOAK_SA_REALM', 'tfrs'),
         'SERVICE_ACCOUNT_CLIENT_ID': os.getenv('KEYCLOAK_SA_CLIENT_ID', 'tfrs'),
