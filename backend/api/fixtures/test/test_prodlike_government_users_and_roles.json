@@ -53,6 +53,32 @@
   },
   {
     "fields": {
+      "email": "gov_manager@test.com",
+      "username": "gov_manager",
+      "_display_name": "Gov Manager",
+      "first_name": "Gov",
+      "last_name": "Gov",
+      "organization": [
+        "Government of British Columbia"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "GovComplianceManager"
+      ],
+      "user": [
+        "gov_manager"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
       "email": "gov_admin@test.com",
       "username": "gov_admin",
       "_display_name": "Gov Admin",
