@@ -70,7 +70,7 @@ class ComplianceReportingEditContainer extends Component {
     const { tab } = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     this.status = {
-      'fuelSupplierStatus': 'Draft'
+      fuelSupplierStatus: 'Draft'
     };
 
     this._updateScheduleState = this._updateScheduleState.bind(this);
@@ -200,7 +200,7 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleSubmit (event, status = {'fuelSupplierStatus': 'Draft'}) {
+  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
     // patch existing
     const payload = {
       status,

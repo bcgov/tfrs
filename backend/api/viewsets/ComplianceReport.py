@@ -10,8 +10,10 @@ from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
-    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, ComplianceReportValidationSerializer, \
-    ComplianceReportSnapshotSerializer
+    ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
+    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer
+from api.serializers.ExclusionReport import \
+    ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -67,6 +69,65 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         compliance_report = serializer.save()
         ComplianceReportService.create_history(compliance_report, False)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Override the base retrieve method.
+        If the instance is exclusion report, then load the proper serializer.
+        Otherwise, call the default function
+        """
+        instance = self.get_object()
+
+        if instance.type.the_type != 'Exclusion Report':
+            return super().retrieve(self, request, *args, **kwargs)
+
+        serializer = ExclusionReportDetailSerializer(
+            instance,
+            read_only=True
+        )
+
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Copied from auditable.
+        This checks if the instance is an Exclusion Report.
+        If it is, use the appropriate serializer. Otherwise,
+        use the default.
+        """
+        instance = self.get_object()
+
+        if request.method == 'PATCH':
+            partial = kwargs.pop('partial', True)
+        else:
+            partial = kwargs.pop('partial', False)
+
+        if instance.type.the_type != 'Exclusion Report':
+            serializer = self.get_serializer(
+                instance,
+                data=request.data,
+                partial=partial
+            )
+        else:
+            serializer = ExclusionReportUpdateSerializer(
+                instance,
+                data=request.data,
+                context={
+                    'request': request
+                },
+                partial=partial
+            )
+
+        user = request.user
+        request.data.update({'update_user': user.id})
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def types(self, request):
