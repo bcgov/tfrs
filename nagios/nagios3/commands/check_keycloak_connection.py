@@ -41,8 +41,10 @@ headers = {'Authorization': 'Bearer {}'.format(token)}
 response = requests.get(users_url,
                         headers=headers)
 
+i=0
 all_users = response.json()
 for user in all_users:
+    i=i+1
     users_detail_url = '{keycloak}/auth/admin/realms/{realm}/users/{user_id}/federated-identity'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'],
@@ -50,7 +52,11 @@ for user in all_users:
 
     response = requests.get(users_detail_url,
                             headers=headers)
+    if i>=1:
+        break
 
-print('OK - KeyCloak connection checking passed')
-if response.status_code != 200:
+
+if response.status_code == 200:
+    print('OK - KeyCloak connection checking passed')
+else:
     print('CRITICAL - KeyCloak connection checking passed')
