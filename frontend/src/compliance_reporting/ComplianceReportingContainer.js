@@ -47,7 +47,9 @@ class ComplianceReportingContainer extends Component {
 
   createComplianceReport(compliancePeriodDescription) {
     const payload = {
-      status: 'Draft',
+      status: {
+        'fuelSupplierStatus': 'Draft'
+      },
       type: 'Compliance Report',
       compliancePeriod: compliancePeriodDescription
     };

@@ -69,7 +69,9 @@ class ComplianceReportingEditContainer extends Component {
     this.tabComponent = Loading;
     const { tab } = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
-    this.status = 'Draft';
+    this.status = {
+      'fuelSupplierStatus': 'Draft'
+    };
 
     this._updateScheduleState = this._updateScheduleState.bind(this);
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
@@ -126,10 +128,10 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
-        toastr.complianceReporting(this.status);
+        toastr.complianceReporting(this.status.fuelSupplierStatus);
         this.props.invalidateAutosaved();
 
-        if (this.status === 'Submitted') {
+        if (this.status.fuelSupplierStatus === 'Submitted') {
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
@@ -198,7 +200,7 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleSubmit (event, status = 'Draft') {
+  _handleSubmit (event, status = {'fuelSupplierStatus': 'Draft'}) {
     // patch existing
     const payload = {
       status,
@@ -337,7 +339,7 @@ class ComplianceReportingEditContainer extends Component {
       <Modal
         disabled={this.state.terms.findIndex(term => term.value === false) >= 0 ||
           this.state.terms.length === 0}
-        handleSubmit={event => this._handleSubmit(event, 'Submitted')}
+        handleSubmit={event => this._handleSubmit(event, {'fuelSupplierStatus': 'Submitted'})}
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
