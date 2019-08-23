@@ -1,23 +1,16 @@
 import os
-import sys
-
-
 import pika
-from pika.exceptions import AMQPError
-from django.apps import AppConfig
-from django.db.models.signals import post_migrate
-from minio import Minio
-from minio.error import MinioError, ResponseError
-
-from api.services.KeycloakAPI import list_users, get_token
-from db_comments.db_actions import create_db_comments, \
-    create_db_comments_from_models
-from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, \
-    KEYCLOAK, EMAIL, TESTING, RUNSERVER
-
 from pika import ConnectionParameters, PlainCredentials
+from pika.exceptions import AMQPError
 
-print('Checking AMQP connection')
+AMQP = {
+   'ENGINE': 'rabbitmq',
+   'VHOST': os.getenv('AMQP_VHOST', '/'),
+   'USER': os.getenv('AMQP_USER', 'guest'),
+   'PASSWORD': os.getenv('AMQP_PASSWORD', 'guest'),
+   'HOST': os.getenv('AMQP_HOST', 'localhost'),
+   'PORT': os.getenv('AMQP_PORT', '5672')
+}
 
 AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
     host=AMQP['HOST'],
@@ -31,5 +24,6 @@ try:
     connection = pika.BlockingConnection(parameters)
     connection.channel()
     connection.close()
+    print('OK - Rabbitmq connection checking passed')
 except AMQPError as _error:
-    raise RuntimeError('AMQP connection failed')
+    print('CRITICAL - Rabbitmq connection checking failed')

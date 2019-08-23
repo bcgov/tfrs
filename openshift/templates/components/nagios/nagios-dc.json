@@ -115,7 +115,33 @@
                             {
                                 "name": "nagios",
                                 "image": "",
-                                "env": [],
+                                "env": [
+                                    {
+                                        "name": "AMQP_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                    },
+                                    {
+                                        "name": "AMQP_PORT",
+                                        "value": "5672"
+                                    },
+                                    {
+                                        "name": "AMQP_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
+                                    }
+                                ],
                                 "resources": {
                                     "limits": {
                                         "cpu": "125m",
