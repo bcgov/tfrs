@@ -21,6 +21,6 @@ try:
                     secure=MINIO['USE_SSL'])
 
     _objects = minio.list_buckets()
-    print('OK - Miniop connection checking passed')
+    print('OK - Minio connection checking passed')
 except MinioError as _error:
-    print('CRITICAL - Rabbitmq connection checking failed')
+    print('CRITICAL - Minio connection checking failed')

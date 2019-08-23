@@ -140,6 +140,32 @@
                                                 "key": "TFRS_PASSWORD"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "MINIO_ENDPOINT",
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                                    },
+                                    {
+                                        "name": "MINIO_USE_SSL",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
+                                            }
+                                        }
                                     }
                                 ],
                                 "resources": {
