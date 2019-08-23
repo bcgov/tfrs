@@ -43,17 +43,18 @@ class ComplianceReportService(object):
         """
         user = (
             compliance_report.create_user
-            if is_new
+            if is_new or compliance_report.update_user is None
             else compliance_report.update_user)
 
         role_id = None
 
-        if user.roles.filter(name="GovDirector").exists():
-            role_id = user.roles.get(name="GovDirector").id
-        elif user.roles.filter(name="GovDeputyDirector").exists():
-            role_id = user.roles.get(name="GovDeputyDirector").id
-        else:
-            role_id = user.roles.first().id
+        if user:
+            if user.roles.filter(name="GovDirector").exists():
+                role_id = user.roles.get(name="GovDirector").id
+            elif user.roles.filter(name="GovDeputyDirector").exists():
+                role_id = user.roles.get(name="GovDeputyDirector").id
+            else:
+                role_id = user.roles.first().id
 
         created_status = ComplianceReportWorkflowState.objects.create(
             fuel_supplier_status=compliance_report.status.fuel_supplier_status,

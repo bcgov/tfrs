@@ -72,11 +72,14 @@ const ComplianceReportingPage = (props) => {
                 <li key={compliancePeriod.description}>
                   <button
                     onClick={() => {
-                      const route = EXCLUSION_REPORTS.ADD.replace(':period', compliancePeriod.description)
-                        .replace(':tab', 'intro');
-
-                      history.push(route);
+                      props.createExclusionReport(compliancePeriod.description);
                     }}
+                    // onClick={() => {
+                    //   const route = EXCLUSION_REPORTS.ADD.replace(':period', compliancePeriod.description)
+                    //     .replace(':tab', 'intro');
+
+                    //   history.push(route);
+                    // }}
                     type="button"
                   >
                     {compliancePeriod.description}
@@ -107,6 +110,7 @@ ComplianceReportingPage.defaultProps = {
 
 ComplianceReportingPage.propTypes = {
   createComplianceReport: PropTypes.func.isRequired,
+  createExclusionReport: PropTypes.func.isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,

@@ -71,11 +71,66 @@ class ExclusionAgreementContainer extends Component {
 
   componentDidMount () {
     this.props.loadTransactionTypes();
-    this._addRow(5);
+
+    if (this.props.exclusionReport.exclusionAgreement &&
+      this.props.exclusionReport.exclusionAgreement.records &&
+      this.props.exclusionReport.exclusionAgreement.records.length >= 0) {
+      this.loadData();
+    } else {
+      this._addRow(5);
+    }
   }
 
   loadData () {
-    this.rowNumber = 1;
+    const { grid } = this.state;
+    this._addRow(this.props.exclusionReport.exclusionAgreement.records.length);
+
+    this.props.exclusionReport.exclusionAgreement.records.forEach((record, recordIndex) => {
+      const index = recordIndex + 1;
+
+      grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE] = {
+        ...grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE],
+        value: record.transactionType
+      };
+
+      grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE] = {
+        ...grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE],
+        value: record.fuelType
+      };
+
+      grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME] = {
+        ...grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME],
+        value: record.transactionPartner
+      };
+
+      grid[index][EXCLUSION_AGREEMENT.ADDRESS] = {
+        ...grid[index][EXCLUSION_AGREEMENT.ADDRESS],
+        value: record.postalAddress
+      };
+
+      grid[index][EXCLUSION_AGREEMENT.QUANTITY] = {
+        ...grid[index][EXCLUSION_AGREEMENT.QUANTITY],
+        value: record.quantity
+      };
+
+      grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD] = {
+        ...grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD],
+        value: record.quantityNotSold
+      };
+
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === record.fuelType);
+
+      grid[index][EXCLUSION_AGREEMENT.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : '';
+
+      grid[index][EXCLUSION_AGREEMENT.NOT_SOLD_UNITS].value = (selectedFuel &&
+        selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
+    });
+
+    this.setState({
+      grid
+    });
   }
 
   _addRow (numberOfRows = 1) {
@@ -104,7 +159,7 @@ class ExclusionAgreementContainer extends Component {
           key: 'id',
           value: 'name'
         }
-      }, { // legal name
+      }, { // legal name of transaction partner
         attributes: {},
         className: 'text',
         dataEditor: OrganizationAutocomplete
@@ -151,6 +206,37 @@ class ExclusionAgreementContainer extends Component {
 
     this.setState({
       grid
+    });
+  }
+
+  _gridStateToPayload (state) {
+    const startingRow = 1;
+
+    const records = [];
+
+    for (let i = startingRow; i < state.grid.length; i += 1) {
+      const row = state.grid[i];
+      const record = {
+        fuelType: row[EXCLUSION_AGREEMENT.FUEL_TYPE].value,
+        postalAddress: row[EXCLUSION_AGREEMENT.ADDRESS].value,
+        quantity: row[EXCLUSION_AGREEMENT.QUANTITY].value,
+        quantityNotSold: row[EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD].value,
+        transactionPartner: row[EXCLUSION_AGREEMENT.LEGAL_NAME].value,
+        transactionType: row[EXCLUSION_AGREEMENT.TRANSACTION_TYPE].value
+      };
+
+      const rowIsEmpty = !(record.transactionType || record.fuelType || record.legalName ||
+        record.address || record.quantity || record.quantityNotSold);
+
+      if (!rowIsEmpty) {
+        records.push(record);
+      }
+    }
+
+    this.props.updateScheduleState({
+      exclusionAgreement: {
+        records
+      }
     });
   }
 
@@ -203,6 +289,10 @@ class ExclusionAgreementContainer extends Component {
     this.setState({
       grid
     });
+
+    this._gridStateToPayload({
+      grid
+    });
   }
 
   render () {
@@ -231,6 +321,11 @@ ExclusionAgreementContainer.defaultProps = {
 
 ExclusionAgreementContainer.propTypes = {
   create: PropTypes.bool.isRequired,
+  exclusionReport: PropTypes.shape({
+    exclusionAgreement: PropTypes.shape({
+      records: PropTypes.arrayOf()
+    })
+  }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   loadedState: PropTypes.any,
   loadTransactionTypes: PropTypes.func.isRequired,
@@ -241,7 +336,8 @@ ExclusionAgreementContainer.propTypes = {
   transactionTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired
+  }).isRequired,
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

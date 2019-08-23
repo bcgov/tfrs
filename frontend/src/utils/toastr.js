@@ -100,6 +100,29 @@ const toastr = {
         reduxToastr.success('Success!', 'File uploaded.');
     }
   },
+  exclusionReports: (status, message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    switch (status) {
+      case 'Cancelled':
+        reduxToastr.success('Success!', 'Draft deleted.');
+        break;
+      case 'Draft':
+        reduxToastr.success('Success!', 'Draft saved.');
+        break;
+      case 'Created':
+        reduxToastr.success('Success!', 'New Exclusion Report Created');
+        break;
+      case 'Submitted':
+        reduxToastr.success('Success!', 'Exclusion Report submitted.');
+        break;
+      default:
+        reduxToastr.success('Success!', 'Exclusion Report saved.');
+    }
+  },
   fuelCodeSuccess: (status, message = '') => {
     if (message !== '') { // message is only used to override
       reduxToastr.success('Success!', message);

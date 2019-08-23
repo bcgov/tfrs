@@ -157,8 +157,7 @@ class ComplianceReportingService {
 
     const fuel = response.find(e => e.name === fuelType);
     const filteredScheduleDFuels = availableScheduleDFuels.filter(f =>
-      (f.fuelType === fuel.name) &&
-      (fuel.fuelClasses.some(fc => f.fuelClass === fc.fuelClass))
+      (f.fuelType === fuel.name && f.fuelClass === fuelClass)
     );
 
     let result = {

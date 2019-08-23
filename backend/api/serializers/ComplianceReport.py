@@ -248,7 +248,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
     def get_history(self, obj):
         """
-        Returns all the previous status changes for the credit trade
+        Returns all the previous status changes for the compliance report
         """
         user = self.context['request'].user if 'request' in self.context else None
 
@@ -277,7 +277,6 @@ class ComplianceReportValidator:
     Validation method mixin used for validate and update serializers to check business rules for
     schedule validation (like preventing duplicate rows)
     """
-
     def validate_schedule_a(self, data):
         if 'records' not in data:
             return data
@@ -524,6 +523,14 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     )
     organization = OrganizationMinSerializer(read_only=True)
 
+    def validate(self, data):
+        request = self.context.get('request')
+
+        if not request.user.has_perm('COMPLIANCE_REPORT_MANAGE'):
+            raise PermissionDenied(
+                'You do not have permission to create a report')
+        return data
+
     def validate_status(self, value):
         if value['fuel_supplier_status'].status not in ['Draft']:
             raise serializers.ValidationError('Value must be Draft')
@@ -548,6 +555,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
         request = self.context['request']
         self.instance.create_user = request.user
+        self.instance.update_user = request.user
         self.instance.save()
 
     class Meta:
