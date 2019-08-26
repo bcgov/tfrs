@@ -512,9 +512,9 @@ class ScheduleSummaryContainer extends Component {
     let totalCredits = 0;
     let totalDebits = 0;
     if (this.props.recomputedTotals.scheduleB) {
-      ({ totalCredits } = this.props.recomputedTotals.scheduleB);
-      ({ totalDebits } = this.props.recomputedTotals.scheduleB.totalDebits);
+      ({ totalCredits, totalDebits } = this.props.recomputedTotals.scheduleB);
     }
+
     if (summary.creditsOffset) {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
     }
