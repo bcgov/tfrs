@@ -16,11 +16,26 @@ import {
   SCHEDULE_D_INPUT,
   SCHEDULE_D_INPUT_ERROR_KEYS
 } from '../constants/schedules/scheduleColumns';
-import { numericInput } from './components/Columns';
 
 import ValidationMessages from './components/ValidationMessages';
 
 class ScheduleDContainer extends Component {
+  static clearErrorOutput (_output) {
+    const output = _output;
+    output.forEach((row, index) => {
+      const { className } = row[1];
+
+      if (className && className.indexOf('error') >= 0) {
+        output[index][1] = {
+          ...row[1],
+          className: className.replace(/error/g, '')
+        };
+      }
+    });
+
+    return output;
+  }
+
   constructor (props) {
     super(props);
 
@@ -115,7 +130,7 @@ class ScheduleDContainer extends Component {
             x[0].value === sheet.outputs[j].description);
           if (rowIndex !== -1) {
             sheets[i].output[rowIndex][1] = {
-              ...numericInput,
+              ...sheets[i].output[rowIndex][1],
               readOnly: nextProps.readOnly,
               value: sheet.outputs[j].intensity
             };
@@ -344,7 +359,7 @@ class ScheduleDContainer extends Component {
       this.props.valid ||
       (this.props.validationMessages && !this.props.validationMessages.scheduleD)
     ) {
-      // row = ScheduleDContainer.clearErrorColumns(row);
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleD &&
@@ -352,6 +367,8 @@ class ScheduleDContainer extends Component {
       this.props.validationMessages.scheduleD.sheets.length > (sheetIndex)) {
       const errors = Object.keys(this.props.validationMessages.scheduleD.sheets[sheetIndex]);
       const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS);
+
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
 
       errorKeys.forEach((errorKey) => {
         const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
