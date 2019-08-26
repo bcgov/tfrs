@@ -39,6 +39,13 @@
             "displayName": "KEYCLOAK_REALM",
             "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
             "required": true
+        },
+        {
+            "name": "SMTP_SERVER_HOST",
+            "displayName": "SMTP_SERVER_HOST",
+            "description": "All environment use same email server",
+            "value": "apps.smtp.gov.bc.ca",
+            "required": true
         }
     ],
     "objects": [
