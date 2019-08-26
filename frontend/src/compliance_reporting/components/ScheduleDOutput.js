@@ -19,9 +19,16 @@ const numericInput = readOnly => ({
       return '';
     }
 
+    const parts = value.split('.');
+    const wholeNumber = parts[0];
+    let decimal = '';
+    if (parts.length > 1) {
+      ({ 1: decimal } = parts);
+    }
+
     return (
       <span>
-        {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+        {Number(value) ? Number(wholeNumber).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}{decimal !== '' ? `.${decimal}` : ''}
       </span>
     );
   }

@@ -115,7 +115,7 @@ class ScheduleDContainer extends Component {
             x[0].value === sheet.outputs[j].description);
           if (rowIndex !== -1) {
             sheets[i].output[rowIndex][1] = {
-              ...numericInput,
+              ...sheets[i].output[rowIndex][1],
               readOnly: nextProps.readOnly,
               value: sheet.outputs[j].intensity
             };
