@@ -359,6 +359,13 @@ const Router = routerProps => (
             exact={false}
             strict={false}
             component={withRouter(ExclusionReportEditContainer)}
+          />,
+          <Route
+            key="exclusion_reports_edit"
+            path={EXCLUSION_REPORTS.EDIT}
+            exact={false}
+            strict={false}
+            component={withRouter(ExclusionReportEditContainer)}
           />
         ]}
         <Route component={NotFound} />

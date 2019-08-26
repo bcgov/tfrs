@@ -1023,7 +1023,7 @@ class SnapshotDisplay extends Component {
             <h1 className="schedule-header">Summary</h1>
             <hr/>
             < ReactDataSheet
-              className={`spreadsheet summary`}
+              className={`spreadsheet summary snapshot_summary`}
               data={SnapshotDisplay._build_summary_grid(snapshot)}
               valueRenderer={cell => cell.value}
             />

@@ -32,6 +32,7 @@ import { transactionTypes } from '../actions/transactionTypes';
 import { roles } from '../actions/roleActions';
 import autosaveSaga from './autosaveStore';
 import { complianceReporting } from '../actions/complianceReporting';
+import { exclusionReports } from '../actions/exclusionReports';
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -78,6 +79,7 @@ sagaMiddleware.run(autosaveSaga);
 
 sagaMiddleware.run(roles.saga);
 sagaMiddleware.run(complianceReporting.saga);
+sagaMiddleware.run(exclusionReports.saga);
 sagaMiddleware.run(carbonIntensities.saga);
 sagaMiddleware.run(defaultCarbonIntensities.saga);
 sagaMiddleware.run(energyDensities.saga);
