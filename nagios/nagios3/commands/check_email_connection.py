@@ -2,7 +2,7 @@ import os
 
 import smtplib
 
-EMAIL {
+EMAIL = {
     'SMTP_SERVER_HOST': os.getenv('SMTP_SERVER_HOST', 'apps.smtp.gov.bc.ca'),
     'SMTP_SERVER_PORT': int(os.getenv('SMTP_SERVER_PORT', 25))
 }

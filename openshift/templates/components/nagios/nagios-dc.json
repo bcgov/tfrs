@@ -232,6 +232,10 @@
                                     {
                                         "name": "KEYCLOAK_REALM",
                                         "value": "${KEYCLOAK_REALM}"
+                                    },
+                                    {
+                                        "name": "SMTP_SERVER_HOST",
+                                        "value": "${SMTP_SERVER_HOST}"
                                     }
                                 ],
                                 "resources": {
