@@ -43,6 +43,8 @@ RUN chown -R nagios.nagios /var/lib/nagios/.kube \
     && chmod -R g+w /var/lib/nagios3 \
     && chgrp -R root /var/log/nagios3 \
     && chmod -R g+w /var/log/nagios3 \
+    && mkdir /var/log/nagios3/archives \
+    && chmod -R g+w /var/log/nagios3/archives \
     && mkdir /.kube \
     && chgrp -R root /.kube \
     && chmod -R g+w /.kube
