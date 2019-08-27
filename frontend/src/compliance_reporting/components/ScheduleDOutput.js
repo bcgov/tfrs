@@ -13,15 +13,24 @@ const numericInput = readOnly => ({
   readOnly,
   dataEditor: Input,
   valueViewer: (cell) => {
-    const { value } = cell;
+    let { value } = cell;
 
     if (!value) {
       return '';
     }
 
+    value = Number(value);
+
+    const parts = String(value).split('.');
+    const wholeNumber = parts[0];
+    let decimal = '';
+    if (parts.length > 1) {
+      ({ 1: decimal } = parts);
+    }
+
     return (
       <span>
-        {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
+        {Number(value) ? Number(wholeNumber).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}{decimal !== '' && decimal > 0 ? `.${decimal}` : ''}
       </span>
     );
   }
