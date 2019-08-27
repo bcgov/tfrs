@@ -169,6 +169,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         deserializer = ComplianceReportUpdateSerializer(
             obj,
             data=request.data,
+            context={
+                'request': request
+            },
             partial=True
         )
         deserializer.strip_summary = True
