@@ -22,6 +22,8 @@ RUN /etc/nagios3/cleanup-cfg.sh $ENV_NAME
 RUN echo $NAGIOS_USER \
     && htpasswd -bc /etc/nagios3/htpasswd.users $NAGIOS_USER $NAGIOS_PASSWORD
 ADD .kube /var/lib/nagios/.kube
+RUN ls -l /var/log/nagios3
+RUN mkdir /var/log/nagios3/archives
 RUN chown -R nagios.nagios /var/lib/nagios/.kube \
     && chgrp -R root /var/log/supervisor \
     && chmod -R g+w /var/log/supervisor \
@@ -43,8 +45,6 @@ RUN chown -R nagios.nagios /var/lib/nagios/.kube \
     && chmod -R g+w /var/lib/nagios3 \
     && chgrp -R root /var/log/nagios3 \
     && chmod -R g+w /var/log/nagios3 \
-    && mkdir /var/log/nagios3/archives \
-    && chmod -R g+w /var/log/nagios3/archives \
     && mkdir /.kube \
     && chgrp -R root /.kube \
     && chmod -R g+w /.kube
