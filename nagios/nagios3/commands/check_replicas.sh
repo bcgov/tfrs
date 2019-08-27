@@ -4,12 +4,11 @@ PROJECT_NAME=$1
 DEPLOYMENT=$2
 MIN_REPLICAS=$3
 
-if ! (oc project -q $PROJECT_NAME > /dev/null); then
-    echo "Could not select project $PROJECT_NAME"
-    exit 2
+if [ ${DEPLOYMENT} == "rabbitmq" ]; then
+        availableReplicas=$(oc get -o json StatefulSet rabbitmq -n $PROJECT_NAME | jq '.status.currentReplicas')
+    else
+        availableReplicas=$(oc get -o json dc $DEPLOYMENT -n $PROJECT_NAME | jq '.status.availableReplicas')
 fi
-
-availableReplicas=$(oc get -o json dc $DEPLOYMENT| jq '.status.availableReplicas')
 
 if (($availableReplicas>=$MIN_REPLICAS)); then
                 echo "OK - $1:$2 has $availableReplicas replicas available"
