@@ -189,8 +189,8 @@ h1 {
 
 .btn-container {
   .btn + .btn, .btn + div, div + div, div + .btn {
-    margin-left: 0.5rem;
-    margin-right: 0.3rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
   }
 
   .btn:last-child, div:last-child {
@@ -267,7 +267,11 @@ table {
   .modal-footer {
     .btn, .overlay-trigger {
       margin: 0 0.4rem;
-    } 
+    }
+
+    .overlay-trigger .btn {
+      margin: 0;
+    }
   }
 }
 

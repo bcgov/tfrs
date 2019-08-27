@@ -12,11 +12,17 @@ const toastr = {
       case 'Cancelled':
         reduxToastr.success('Success!', 'Draft deleted.');
         break;
+      case 'Created':
+        reduxToastr.success('Success!', 'New Compliance Report Created');
+        break;
       case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
         break;
-      case 'Created':
-        reduxToastr.success('Success!', 'New Compliance Report Created');
+      case 'Not Recommended':
+        reduxToastr.success('Success!', 'Rejection Recommended.');
+        break;
+      case 'Recommended':
+        reduxToastr.success('Success!', 'Acceptance Recommended.');
         break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Compliance Report submitted.');

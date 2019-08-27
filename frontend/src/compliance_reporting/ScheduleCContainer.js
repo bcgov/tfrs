@@ -168,7 +168,6 @@ class ScheduleCContainer extends Component {
           grid[row] = this._validate(grid[row], row);
         }
       }
-
     }
 
     this.setState({
