@@ -17,6 +17,8 @@ ADD nagios3 /etc/nagios3
 RUN chown -R nagios.nagios /etc/nagios3
 ARG NAGIOS_USER
 ARG NAGIOS_PASSWORD
+ARG ENV_NAME
+RUN /etc/nagios3/cleanup-cfg.sh $ENV_NAME
 RUN echo $NAGIOS_USER \
     && htpasswd -bc /etc/nagios3/htpasswd.users $NAGIOS_USER $NAGIOS_PASSWORD
 ADD .kube /var/lib/nagios/.kube
