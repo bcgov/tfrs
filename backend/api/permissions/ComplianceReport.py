@@ -19,7 +19,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from collections import defaultdict
+import re
+from collections import defaultdict, namedtuple
 from enum import Enum
 
 from rest_framework import permissions
@@ -29,12 +30,75 @@ class ComplianceReportPermissions(permissions.BasePermission):
     """Used by Viewset to check permissions for API requests"""
 
     class _Relationship(Enum):
-        FuelSupplier = 1
-        GovernmentAnalyst = 2
-        GovernmentComplianceManager = 3
-        GovernmentDirector = 4
+        FuelSupplier = "FUEL_SUPPLIER"
+        GovernmentAnalyst = "ANALYST"
+        GovernmentComplianceManager = "MANAGER"
+        GovernmentDirector = "DIRECTOR"
 
-    # Key (Relationship, Status, Rescinded?, Privileged?)
+    actions = []
+    ActionMap = namedtuple('ActionMap', ['relationship',
+                                         'fuel_supplier_status_regex',
+                                         'analyst_status_regex',
+                                         'manager_status_regex',
+                                         'director_status_regex',
+                                         'resulting_actions'])
+
+    actions.append(ActionMap(_Relationship.FuelSupplier, 'Draft', '.*', '.*', '.*',
+                             ['SUBMIT', 'DELETE']))
+
+    actions.append(ActionMap(_Relationship.GovernmentAnalyst, 'Submitted',
+                             '(Unreviewed|Returned|Retracted)', '.*', 'Unreviewed', ['RECOMMEND', 'DISCOMMEND']))
+
+    actions.append(ActionMap(_Relationship.GovernmentAnalyst, 'Submitted',
+                             '(Recommended|Not Recommended)', 'Unreviewed', 'Unreviewed', ['RETRACT']))
+
+    actions.append(ActionMap(_Relationship.GovernmentComplianceManager, 'Submitted',
+                             '(Recommended|Not Recommended)', '(Unreviewed|Returned|Retracted)', 'Unreviewed',
+                             ['RECOMMEND', 'DISCOMMEND', 'RETURN']))
+
+    actions.append(ActionMap(_Relationship.GovernmentComplianceManager, 'Submitted',
+                             '(Recommended|Not Recommended)', '(Recommended|Not Recommended)', 'Unreviewed',
+                             ['RETRACT']))
+
+    actions.append(ActionMap(_Relationship.GovernmentDirector, 'Submitted',
+                             '(Recommended|Not Recommended)', '(Recommended|Not Recommended)', 'Unreviewed',
+                             ['ACCEPT', 'REJECT', 'RETURN']))
+
+
+    @staticmethod
+    def get_relationship(compliance_report, user):
+        is_government = user.organization.id == 1
+
+        if compliance_report.organization.id == user.organization.id:
+            return ComplianceReportPermissions._Relationship.FuelSupplier
+        if is_government and user.has_perm('ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
+            return ComplianceReportPermissions._Relationship.GovernmentAnalyst
+        if is_government and user.has_perm('MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
+            return ComplianceReportPermissions._Relationship.GovernmentComplianceManager
+        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER')
+                              or user.has_perm('DECLINE_CREDIT_TRANSFER')):
+            return ComplianceReportPermissions._Relationship.GovernmentDirector
+
+        return None
+
+    @staticmethod
+    def get_available_actions(compliance_report, relationship):
+
+        for action in ComplianceReportPermissions.actions:
+            if action.relationship != relationship:
+                continue
+            if not re.match(action.fuel_supplier_status_regex, compliance_report.status.fuel_supplier_status.status):
+                continue
+            if not re.match(action.analyst_status_regex, compliance_report.status.analyst_status.status):
+                continue
+            if not re.match(action.manager_status_regex, compliance_report.status.manager_status.status):
+                continue
+            if not re.match(action.director_status_regex, compliance_report.status.director_status.status):
+                continue
+            return action.resulting_actions
+
+        return []
+
     @staticmethod
     def user_can_change_status(user, compliance_report,
                                new_fuel_supplier_status=None,
@@ -45,7 +109,6 @@ class ComplianceReportPermissions(permissions.BasePermission):
         Check if a status change is possible.
         User by update serializer
         """
-        is_government = user.organization.id == 1
         oldstatus = compliance_report.status
 
         total_changes = 0
@@ -64,17 +127,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
         if total_changes == 0:
             return True  # Nothing changed
 
-        relationship = None
-
-        if compliance_report.organization.id == user.organization.id:
-            relationship = ComplianceReportPermissions._Relationship.FuelSupplier
-        if is_government and user.has_perm('ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
-            relationship = ComplianceReportPermissions._Relationship.GovernmentAnalyst
-        if is_government and user.has_perm('MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
-            relationship = ComplianceReportPermissions._Relationship.GovernmentComplianceManager
-        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER')
-                              or user.has_perm('DECLINE_CREDIT_TRANSFER')):
-            relationship = ComplianceReportPermissions._Relationship.GovernmentDirector
+        relationship = ComplianceReportPermissions.get_relationship(compliance_report, user)
 
         if relationship == ComplianceReportPermissions._Relationship.FuelSupplier:
             if oldstatus.fuel_supplier_status.status == 'Draft':
@@ -136,7 +189,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
 
             # Government users can manage compliance report statuses
             if request.user.has_perm(
-                'ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
+                    'ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
             ) or request.user.has_perm(
                 'ANALYST_RECOMMEND_REJECTION_COMPLIANCE_REPORT'
             ) or request.user.has_perm(
@@ -146,7 +199,6 @@ class ComplianceReportPermissions(permissions.BasePermission):
             ) or request.user.has_perm(
                 'APPROVE_CREDIT_TRANSFER'  # Director
             ):
-
                 return True
 
         return False
