@@ -23,7 +23,7 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
     status = models.CharField(
         max_length=25,
         blank=True,
-        null=True,
+        null=False,
         unique=True,
         db_comment="Contains an enumerated value to describe the compliance "
                    "report status. This is a unique natural key."
@@ -55,27 +55,27 @@ class ComplianceReportWorkflowState(Auditable):
 
     analyst_status = models.ForeignKey(ComplianceReportStatus,
                                        null=False,
-                                       #limit_choices_to=['Unreviewed', 'Recommended', 'Not Recommended'],
                                        related_name='+',
                                        to_field='status',
                                        default='Unreviewed')
 
     manager_status = models.ForeignKey(ComplianceReportStatus,
                                        null=False,
-                                       #limit_choices_to=['Unreviewed', 'Recommended', 'Not Recommended', 'Returned'],
                                        related_name='+',
                                        to_field='status',
                                        default='Unreviewed')
 
     director_status = models.ForeignKey(ComplianceReportStatus,
                                         null=False,
-                                        #limit_choices_to=['Unreviewed', 'Accepted', 'Rejected', 'Returned'],
                                         related_name='+',
                                         to_field='status',
                                         default='Unreviewed')
 
     class Meta:
         db_table = 'compliance_report_workflow_state'
+
+    db_table_comment = 'Track the workflow state for each of the four parties (fuel supplier, analyst, manager,' \
+                       'and director) who can effect state changes on a compliance report.'
 
 class ComplianceReportType(DisplayOrder):
     """
