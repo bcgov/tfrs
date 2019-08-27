@@ -83,7 +83,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         serializer = ExclusionReportDetailSerializer(
             instance,
-            read_only=True
+            read_only=True,
+            context={'request': request}
         )
 
         return Response(serializer.data)
@@ -112,21 +113,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             serializer = ExclusionReportUpdateSerializer(
                 instance,
                 data=request.data,
-                context={
-                    'request': request
-                },
+                context={'request': request},
                 partial=partial
             )
 
         user = request.user
         request.data.update({'update_user': user.id})
-
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            instance._prefetched_objects_cache = {}
-
         return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
@@ -169,10 +163,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         deserializer = ComplianceReportUpdateSerializer(
             obj,
             data=request.data,
-            context={
-                'request': request
-            },
-            partial=True
+            partial=True,
+            context={'request': request}
         )
         deserializer.strip_summary = True
         deserializer.disregard_status = True
@@ -182,7 +174,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             return Response(deserializer.errors)
 
         patched_obj = deserializer.save()
-        serializer = ComplianceReportDetailSerializer(patched_obj)
+        serializer = ComplianceReportDetailSerializer(patched_obj, context={'request': request})
+
         result = serializer.data
         transaction.savepoint_rollback(sid)
 

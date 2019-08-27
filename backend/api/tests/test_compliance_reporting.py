@@ -46,7 +46,7 @@ class TestComplianceReporting(BaseTestCase):
         'test/test_transaction_types.json'
     ]
 
-    def _create_draft_trade(self, report_type="Compliance Report"):
+    def _create_compliance_report(self, report_type="Compliance Report"):
         report = ComplianceReport()
         report.status = ComplianceReportWorkflowState.objects.create(
             fuel_supplier_status=ComplianceReportStatus.objects.get_by_natural_key('Draft')
@@ -78,12 +78,12 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(compliance_reports), 1)
 
     def test_get_compliance_report_details_authorized(self):
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_compliance_report_details_unauthorized(self):
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
         response = self.clients['fs_user_2'].get('/api/compliance_reports/{id}'.format(id=rid))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -303,7 +303,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -355,7 +355,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -382,7 +382,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -406,7 +406,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -430,7 +430,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             }
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -526,7 +526,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -628,7 +628,7 @@ class TestComplianceReporting(BaseTestCase):
                 ]
             },
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -672,7 +672,7 @@ class TestComplianceReporting(BaseTestCase):
                 'gasolineClassDeferred': '400'
             }
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -858,7 +858,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -873,7 +873,7 @@ class TestComplianceReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
 
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -900,7 +900,7 @@ class TestComplianceReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
 
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=rid),
@@ -988,7 +988,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_happy_signing_path(self):
-        rid = self._create_draft_trade()
+        rid = self._create_compliance_report()
 
         payload = {
             'status': {
@@ -1055,6 +1055,8 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
         self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
         self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
+        self.assertListEqual(response_data['actions'], [])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -1085,7 +1087,7 @@ class TestComplianceReporting(BaseTestCase):
                 'records': [{
                     'fuelType': "LNG",
                     'postalAddress':
-                    "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
+                        "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
                     'quantity': 1000,
                     'quantityNotSold': 500,
                     'transactionPartner': "Burden Propane Inc.",
@@ -1093,7 +1095,7 @@ class TestComplianceReporting(BaseTestCase):
                 }]
             }
         }
-        compliance_report_id = self._create_draft_trade("Exclusion Report")
+        compliance_report_id = self._create_compliance_report("Exclusion Report")
 
         response = self.clients['fs_user_1'].patch(
             '/api/compliance_reports/{id}'.format(id=compliance_report_id),
@@ -1112,7 +1114,7 @@ class TestComplianceReporting(BaseTestCase):
                 'records': [{
                     'fuelType': "LNG",
                     'postalAddress':
-                    "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
+                        "P.O. Box 294   Harrison Hot Springs, BC V0M 1K0",
                     'quantity': 1000,
                     'quantityNotSold': 500,
                     'transactionPartner': "Burden Propane Inc.",
@@ -1120,7 +1122,7 @@ class TestComplianceReporting(BaseTestCase):
                 }, {
                     'fuelType': "Ethanol",
                     'postalAddress':
-                    "1375 Hastings Street   Victoria, BC V8Z 2W5",
+                        "1375 Hastings Street   Victoria, BC V8Z 2W5",
                     'quantity': 2000,
                     'quantityNotSold': 750,
                     'transactionPartner': "Vancouver Island Propane Services Ltd.",
@@ -1152,3 +1154,178 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(len(response_data['exclusionAgreement']['records']), 2)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_actions(self):
+        compliance_report_id = self._create_compliance_report()
+
+        reports_to_check = {
+            'Draft': compliance_report_id
+        }
+
+        compliance_report_id = self._create_compliance_report()
+        report = ComplianceReport.objects.get(id=compliance_report_id)
+        report.status.fuel_supplier_status = ComplianceReportStatus.objects.get_by_natural_key('Deleted')
+        report.status.save()
+        reports_to_check['Deleted'] = compliance_report_id
+
+        compliance_report_id = self._create_compliance_report()
+        report = ComplianceReport.objects.get(id=compliance_report_id)
+        report.status.fuel_supplier_status = ComplianceReportStatus.objects.get_by_natural_key('Submitted')
+        report.status.save()
+        reports_to_check['Submitted'] = compliance_report_id
+
+        compliance_report_id = self._create_compliance_report()
+        report = ComplianceReport.objects.get(id=compliance_report_id)
+        report.status.fuel_supplier_status = ComplianceReportStatus.objects.get_by_natural_key('Submitted')
+        report.status.analyst_status = ComplianceReportStatus.objects.get_by_natural_key('Recommended')
+        report.status.save()
+        reports_to_check['Approved1'] = compliance_report_id
+
+        compliance_report_id = self._create_compliance_report()
+        report = ComplianceReport.objects.get(id=compliance_report_id)
+        report.status.fuel_supplier_status = ComplianceReportStatus.objects.get_by_natural_key('Submitted')
+        report.status.analyst_status = ComplianceReportStatus.objects.get_by_natural_key('Recommended')
+        report.status.manager_status = ComplianceReportStatus.objects.get_by_natural_key('Recommended')
+        report.status.save()
+        reports_to_check['Approved2'] = compliance_report_id
+
+        compliance_report_id = self._create_compliance_report()
+        report = ComplianceReport.objects.get(id=compliance_report_id)
+        report.status.fuel_supplier_status = ComplianceReportStatus.objects.get_by_natural_key('Submitted')
+        report.status.analyst_status = ComplianceReportStatus.objects.get_by_natural_key('Recommended')
+        report.status.manager_status = ComplianceReportStatus.objects.get_by_natural_key('Recommended')
+        report.status.director_status = ComplianceReportStatus.objects.get_by_natural_key('Accepted')
+        report.status.save()
+        reports_to_check['ApprovedFinal'] = compliance_report_id
+
+        expected_actions = {
+            'Draft': {
+                'fs_user_1': {
+                    'status': 200,
+                    'actor': 'FUEL_SUPPLIER',
+                    'actions': ['SUBMIT', 'DELETE']
+                },
+                'gov_analyst': {
+                    'status': 404,
+                },
+                'gov_manager': {
+                    'status': 404,
+                },
+                'gov_director': {
+                    'status': 404,
+                }
+            },
+            'Deleted': {
+                'fs_user_1': {
+                    'status': 404,
+                },
+                'gov_analyst': {
+                    'status': 404,
+                },
+                'gov_manager': {
+                    'status': 404,
+                },
+                'gov_director': {
+                    'status': 404,
+                }
+            },
+            'Submitted': {
+                'fs_user_1': {
+                    'status': 200,
+                    'actor': 'FUEL_SUPPLIER',
+                    'actions': []
+                },
+                'gov_analyst': {
+                    'status': 200,
+                    'actor': 'ANALYST',
+                    'actions': ['RECOMMEND', 'DISCOMMEND']
+                },
+                'gov_manager': {
+                    'status': 200,
+                    'actor': 'MANAGER',
+                    'actions': []
+                },
+                'gov_director': {
+                    'status': 200,
+                    'actor': 'DIRECTOR',
+                    'actions': []
+                }
+            },
+            'Approved1': {
+                'fs_user_1': {
+                    'status': 200,
+                    'actor': 'FUEL_SUPPLIER',
+                    'actions': []
+                },
+                'gov_analyst': {
+                    'status': 200,
+                    'actor': 'ANALYST',
+                    'actions': ['RETRACT']
+                },
+                'gov_manager': {
+                    'status': 200,
+                    'actor': 'MANAGER',
+                    'actions': ['RECOMMEND', 'DISCOMMEND', 'RETURN']
+                },
+                'gov_director': {
+                    'status': 200,
+                    'actor': 'DIRECTOR',
+                    'actions': []
+                }
+            },
+            'Approved2': {
+                'fs_user_1': {
+                    'status': 200,
+                    'actor': 'FUEL_SUPPLIER',
+                    'actions': []
+                },
+                'gov_analyst': {
+                    'status': 200,
+                    'actor': 'ANALYST',
+                    'actions': []
+                },
+                'gov_manager': {
+                    'status': 200,
+                    'actor': 'MANAGER',
+                    'actions': ['RETRACT']
+                },
+                'gov_director': {
+                    'status': 200,
+                    'actor': 'DIRECTOR',
+                    'actions': ['ACCEPT', 'REJECT', 'RETURN']
+                }
+            },
+            'ApprovedFinal': {
+                'fs_user_1': {
+                    'status': 200,
+                    'actor': 'FUEL_SUPPLIER',
+                    'actions': []
+                },
+                'gov_analyst': {
+                    'status': 200,
+                    'actor': 'ANALYST',
+                    'actions': []
+                },
+                'gov_manager': {
+                    'status': 200,
+                    'actor': 'MANAGER',
+                    'actions': []
+                },
+                'gov_director': {
+                    'status': 200,
+                    'actor': 'DIRECTOR',
+                    'actions': []
+                }
+            },
+        }
+
+        for state, report_id in reports_to_check.items():
+            users_to_check = expected_actions[state]
+            for user, expected_result in users_to_check.items():
+                with self.subTest("Check actions for report in state {} with client {}".format(state,user)):
+                    response = self.clients[user].get('/api/compliance_reports/{id}'.format(id=report_id))
+                    response_data = json.loads(response.content.decode("utf-8"))
+                    self.assertEqual(response.status_code, expected_result['status'])
+                    if response.status_code == 200:
+                        self.assertEqual(response_data['actor'], expected_result['actor'])
+                        self.assertListEqual(response_data['actions'], expected_result['actions'])
