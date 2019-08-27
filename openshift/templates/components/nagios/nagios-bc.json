@@ -69,7 +69,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "ref":"devops-nagios-update-regroup2",
+                        "ref":"master",
                         "uri": "https://github.com/bcgov/tfrs.git"
                     },
                     "contextDir": "nagios"
