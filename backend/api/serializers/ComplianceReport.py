@@ -88,16 +88,16 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
                                                   required=False)
 
     def should_show(self, field_name, value):
-        user = self.context['request'].user if 'request' in self.context else None
+        # user = self.context['request'].user if 'request' in self.context else None
+        # 
+        # # Show director_status 'Accepted' to everyone
+        # if value.status in ['Accepted'] and field_name in 'director_status':
+        #     return True
+        # 
+        # if user and user.is_government_user:
+        #     return True
 
-        # Show director_status 'Accepted' to everyone
-        if value.status in ['Accepted'] and field_name in 'director_status':
-            return True
-
-        if user and user.is_government_user:
-            return True
-
-        return False
+        return True
 
     class Meta:
         model = ComplianceReportWorkflowState
