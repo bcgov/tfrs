@@ -182,7 +182,7 @@ class ComplianceReport(Auditable):
         null=True
     )
 
-    def get_history(self, statuses: List, include_government_statuses=False):
+    def get_history(self, include_government_statuses=False):
         """
         Fetch the compliance report status changes.
         The parameter needed here would be the statuses that
@@ -190,17 +190,26 @@ class ComplianceReport(Auditable):
         """
         if include_government_statuses:
             history = ComplianceReportHistory.objects.filter(
-                Q(status__fuel_supplier_status__status__in=statuses) |
-                Q(status__analyst_status__status__in=statuses) |
-                Q(status__director_status__status__in=statuses) |
-                Q(status__manager_status__status__in=statuses),
+                Q(status__fuel_supplier_status__status__in=["Submitted"]) |
+                Q(status__analyst_status__status__in=[
+                    "Recommended", "Not Recommended"
+                ]) |
+                Q(status__director_status__status__in=[
+                    "Accepted", "Rejected"
+                ]) |
+                Q(status__manager_status__status__in=[
+                    "Recommended", "Not Recommended"
+                ]),
                 compliance_report_id=self.id
             ).order_by('create_timestamp')
         else:
             history = ComplianceReportHistory.objects.filter(
-                Q(status__fuel_supplier_status__status__in=statuses),
-                compliance_report_id=self.id,
-                user_role__is_government_role=False
+                Q(Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                  Q(user_role__is_government_role=False)) |
+                Q(status__director_status__status__in=[
+                    "Accepted", "Rejected"
+                ]),
+                compliance_report_id=self.id
             ).order_by('create_timestamp')
 
         return history

@@ -15,7 +15,7 @@ const numericInput = readOnly => ({
   valueViewer: (cell) => {
     let { value } = cell;
 
-    if (!value) {
+    if (value === '') {
       return '';
     }
 
@@ -30,7 +30,7 @@ const numericInput = readOnly => ({
 
     return (
       <span>
-        {Number(value) ? Number(wholeNumber).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}{decimal !== '' && decimal > 0 ? `.${decimal}` : ''}
+        {Number(wholeNumber).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}{decimal !== '' && decimal > 0 ? `.${decimal}` : ''}
       </span>
     );
   }

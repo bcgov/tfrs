@@ -331,7 +331,8 @@ class ScheduleDContainer extends Component {
             description: sheet.output[j][0].value,
             intensity: Number.isNaN(Number(sheet.output[j][1].value)) ? 0 : sheet.output[j][1].value
           };
-          if (outputRecord.intensity) {
+
+          if (outputRecord.intensity !== '') {
             sheetRecord.outputs.push(outputRecord);
           }
         }

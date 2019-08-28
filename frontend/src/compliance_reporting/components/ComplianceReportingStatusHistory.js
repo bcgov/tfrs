@@ -6,11 +6,29 @@ import moment from 'moment';
 
 class ComplianceReportingStatusHistory extends Component {
   static renderHistory (history) {
-    if (history.status.managerStatus === 'Recommended' || history.status.analystStatus === 'Recommended') {
+    if (history.status.directorStatus === 'Accepted') {
+      return <strong>Accepted</strong>;
+    }
+
+    if (history.status.directorStatus === 'Rejected') {
+      return <strong>Rejected</strong>;
+    }
+
+    // please do not combine this with the bottom check
+    // they output the same, but the order of condition is important
+    if (history.status.managerStatus === 'Recommended') {
       return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong></span>;
     }
 
-    if (history.status.managerStatus === 'Not Recommended' || history.status.analystStatus === 'Not Recommended') {
+    if (history.status.managerStatus === 'Not Recommended') {
+      return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong></span>;
+    }
+
+    if (history.status.analystStatus === 'Recommended') {
+      return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong></span>;
+    }
+
+    if (history.status.analystStatus === 'Not Recommended') {
       return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong></span>;
     }
 
@@ -51,11 +69,15 @@ class ComplianceReportingStatusHistory extends Component {
             <button
               aria-controls="collapse-messages"
               aria-expanded="true"
+              className="text"
               onClick={this._toggleStatusHistory}
               type="button"
             >
               <FontAwesomeIcon icon="history" /> Compliance Report for
-              {` ${this.props.complianceReport.compliancePeriod.description}, `}
+              {` ${typeof this.props.complianceReport.compliancePeriod === 'string'
+                ? this.props.complianceReport.compliancePeriod
+                : this.props.complianceReport.compliancePeriod.description
+              }, `}
               {` ${this.props.complianceReport.organization.name} `}
               &mdash; Report Status &amp; History
             </button>
@@ -114,9 +136,12 @@ ComplianceReportingStatusHistory.defaultProps = {
 
 ComplianceReportingStatusHistory.propTypes = {
   complianceReport: PropTypes.shape({
-    compliancePeriod: PropTypes.shape({
-      description: PropTypes.string
-    }),
+    compliancePeriod: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        description: PropTypes.string
+      })
+    ]),
     history: PropTypes.arrayOf(PropTypes.shape({
       creditTradeUpdateTime: PropTypes.string,
       isRescinded: PropTypes.bool,

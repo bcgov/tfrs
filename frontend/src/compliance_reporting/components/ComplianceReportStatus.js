@@ -1,6 +1,14 @@
 import PropTypes from 'prop-types';
 
 const ComplianceReportStatus = (props) => {
+  if (props.status.directorStatus === 'Accepted') {
+    return 'Accepted';
+  }
+
+  if (props.status.directorStatus === 'Rejected') {
+    return 'Rejected';
+  }
+
   if (props.status.managerStatus === 'Recommended') {
     return 'Recommended Acceptance - Manager';
   }
