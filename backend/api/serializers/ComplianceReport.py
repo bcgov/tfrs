@@ -818,12 +818,12 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     """
     Delete serializer for Compliance Reports
     """
-
     def destroy(self):
         """
         Delete function to mark the compliance report as deleted.
         """
         compliance_report = self.instance
+
         if compliance_report.status.fuel_supplier_status not in ComplianceReportStatus.objects. \
                 filter(status__in=["Draft"]):
             raise serializers.ValidationError({
@@ -831,7 +831,7 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
                             "draft."
             })
 
-        compliance_report.fuel_supplier_status = ComplianceReportStatus.objects.get(
+        compliance_report.status.fuel_supplier_status = ComplianceReportStatus.objects.get(
             status="Deleted"
         )
         compliance_report.status.save()
