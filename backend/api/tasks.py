@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from api.services.AutosaveService import AutosaveService
 from api.services.DocumentService import DocumentService
+from api.services.SecurityScan import SecurityScan
 from tfrs.celery import app as celery_app
 
 
@@ -9,6 +10,12 @@ from tfrs.celery import app as celery_app
 def remove_orphans():
     print('starting orphan removal')
     DocumentService.remove_orphans()
+
+
+@celery_app.task
+def resubmit_stalled_scans():
+    print('starting scan resubmission service')
+    SecurityScan.resubmit_stalled_scans()
 
 
 @celery_app.task
