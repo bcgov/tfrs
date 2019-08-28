@@ -44,6 +44,10 @@
     color: $red;
   }
 
+  &.panel-default {
+    border-radius: 0.5rem;
+  }
+
   &.panel-success {
     border-color: $green;
     border-radius: 0.5rem;
