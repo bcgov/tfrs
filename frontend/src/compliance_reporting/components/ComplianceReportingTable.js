@@ -8,6 +8,7 @@ import moment from 'moment';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
 import history from '../../app/History';
+import ComplianceReportStatus from './ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 
@@ -32,7 +33,7 @@ const ComplianceReportingTable = (props) => {
     id: 'type',
     minWidth: 75
   }, {
-    accessor: item => (item.status.fuelSupplierStatus),
+    accessor: item => <ComplianceReportStatus status={item.status} />,
     className: 'col-status',
     Header: 'Status',
     id: 'status',
