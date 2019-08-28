@@ -28,6 +28,10 @@ app.conf.update({
         'remove-expired-autosave-entries': {
             'task': 'api.tasks.reap_autosave',
             'schedule': 3600.0
+        },
+        'resubmit-stalled-scans': {
+            'task': 'api.tasks.resubmit_stalled_scans',
+            'schedule': 900.0
         }
     }
 })
