@@ -53,7 +53,7 @@ const ScheduleButtons = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
-      {props.delete &&
+      {props.actions.includes('DELETE') &&
       <button
         className="btn btn-danger"
         data-target="#confirmDelete"
@@ -63,7 +63,7 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
-      {props.submit && [
+      {props.actions.includes('SUBMIT') && [
         <TooltipWhenDisabled
           disabled={props.validating || !props.valid}
           key="btn-save"
@@ -99,8 +99,8 @@ const ScheduleButtons = props => (
           </button>
         </TooltipWhenDisabled>
       ]}
-      {props.recommend &&
-      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.ANALYST_RECOMMEND_REJECTION) &&
+      {props.actor === 'ANALYST' &&
+      props.actions.includes('DISCOMMEND') &&
         <button
           className="btn btn-danger"
           data-target="#confirmAnalystRecommendRejection"
@@ -111,8 +111,8 @@ const ScheduleButtons = props => (
           <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
         </button>
       }
-      {props.recommend &&
-      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.ANALYST_RECOMMEND_ACCEPTANCE) &&
+      {props.actor === 'ANALYST' &&
+      props.actions.includes('RECOMMEND') &&
         <button
           className="btn btn-primary"
           data-target="#confirmAnalystRecommendAcceptance"
@@ -123,8 +123,8 @@ const ScheduleButtons = props => (
           <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
         </button>
       }
-      {props.managerRecommend &&
-      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGER_RECOMMEND_REJECTION) &&
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('DISCOMMEND') &&
         <button
           className="btn btn-danger"
           data-target="#confirmManagerRecommendRejection"
@@ -135,8 +135,8 @@ const ScheduleButtons = props => (
           <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
         </button>
       }
-      {props.managerRecommend &&
-      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGER_RECOMMEND_ACCEPTANCE) &&
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('RECOMMEND') &&
         <button
           className="btn btn-primary"
           data-target="#confirmManagerRecommendAcceptance"
@@ -152,20 +152,17 @@ const ScheduleButtons = props => (
 );
 
 ScheduleButtons.defaultProps = {
-  delete: false,
-  managerRecommend: false,
-  recommend: false,
-  submit: false
+  validating: false,
+  valid: true,
+  validationMessages: {}
 };
 
 ScheduleButtons.propTypes = {
-  delete: PropTypes.bool,
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  actor: PropTypes.string.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  managerRecommend: PropTypes.bool,
-  recommend: PropTypes.bool,
-  submit: PropTypes.bool,
   saving: PropTypes.bool.isRequired,
   validating: PropTypes.bool,
   valid: PropTypes.bool,

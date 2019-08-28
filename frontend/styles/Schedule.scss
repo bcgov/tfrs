@@ -296,7 +296,11 @@
   &.btn-container {
     .btn, .overlay-trigger {
       margin: 0 0.4rem;
-    }  
+    }
+
+    .overlay-trigger .btn {
+      margin: 0;
+    }
   }
 }
 
