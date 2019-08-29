@@ -7,18 +7,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
 import history from '../app/History';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import ExclusionReportButtons from './components/ExclusionReportButtons';
 import ExclusionReportTabs from './components/ExclusionReportTabs';
-import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 
 class ExclusionReportEditContainer extends Component {
   static componentForTabName (tab) {
@@ -87,7 +88,11 @@ class ExclusionReportEditContainer extends Component {
   }
 
   _handleDelete () {
-    history.push(EXCLUSION_REPORTS.LIST);
+    this.props.deleteComplianceReport({ id: this.props.match.params.id });
+
+    this.props.getComplianceReports();
+    history.push(COMPLIANCE_REPORTING.LIST);
+    toastr.complianceReporting('Cancelled');
     this.props.invalidateAutosaved();
   }
 
@@ -192,6 +197,8 @@ ExclusionReportEditContainer.defaultProps = {
 };
 
 ExclusionReportEditContainer.propTypes = {
+  deleteComplianceReport: PropTypes.func.isRequired,
+  getComplianceReports: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
@@ -224,6 +231,8 @@ ExclusionReportEditContainer.propTypes = {
 
 const
   mapDispatchToProps = {
+    deleteComplianceReport: complianceReporting.remove,
+    getComplianceReports: complianceReporting.find,
     getExclusionReport: exclusionReports.get,
     updateExclusionReport: exclusionReports.update
   };
