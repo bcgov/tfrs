@@ -70,12 +70,29 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     """
     Detail Serializer for the Exclusion Report
     """
-    status = ComplianceReportWorkflowStateSerializer(read_only=True)
-    type = ComplianceReportTypeSerializer(read_only=True)
-    organization = OrganizationMinSerializer(read_only=True)
+    actions = serializers.SerializerMethodField()
+    actor = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     exclusion_agreement = ExclusionAgreementSerializer(read_only=True)
     history = serializers.SerializerMethodField()
+    organization = OrganizationMinSerializer(read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
+    type = ComplianceReportTypeSerializer(read_only=True)
+
+    def get_actor(self, obj):
+        return ComplianceReportPermissions.get_relationship(
+            obj, self.context['request'].user
+        ).value
+
+    def get_actions(self, obj):
+        relationship = ComplianceReportPermissions.get_relationship(
+            obj, self.context['request'].user
+        )
+
+        return ComplianceReportPermissions.get_available_actions(
+            obj,
+            relationship
+        )
 
     def get_history(self, obj):
         """
@@ -94,7 +111,8 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
-                  'exclusion_agreement', 'read_only', 'history']
+                  'exclusion_agreement', 'read_only', 'history', 'actions',
+                  'actor']
 
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
