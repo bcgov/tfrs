@@ -5,14 +5,19 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
+import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import { exclusionReports } from '../actions/exclusionReports';
+import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
+import CheckBox from '../app/components/CheckBox';
 import history from '../app/History';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import ExclusionReportButtons from './components/ExclusionReportButtons';
 import ExclusionReportTabs from './components/ExclusionReportTabs';
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
@@ -52,11 +57,19 @@ class ExclusionReportEditContainer extends Component {
 
     this.state = {
       autosaveState: {},
-      exclusionAgreement: {}
+      exclusionAgreement: {},
+      terms: []
     };
+
+    this._addToFields = this._addToFields.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
+    this.props.getSigningAuthorityAssertions({
+      module: 'exclusion_report'
+    });
+
     this.loadData();
   }
 
@@ -71,18 +84,29 @@ class ExclusionReportEditContainer extends Component {
       if (nextProps.exclusionReports.success) {
         toastr.exclusionReports(this.status.fuelSupplierStatus);
         this.props.invalidateAutosaved();
+
+        if (this.status.fuelSupplierStatus !== 'Draft') {
+          history.push(COMPLIANCE_REPORTING.LIST);
+        }
       }
     }
   }
 
-  _updateScheduleState (mergedState) {
-    const { exclusionAgreement } = this.state;
+  loadData () {
+    this.props.getExclusionReport(this.props.match.params.id);
+  }
+
+  _addToFields (value) {
+    const { terms } = this.state;
+
+    const found = terms.find(term => term.id === value.id);
+
+    if (!found) {
+      terms.push(value);
+    }
 
     this.setState({
-      exclusionAgreement: {
-        ...exclusionAgreement,
-        ...mergedState
-      }
+      terms
     });
   }
 
@@ -105,10 +129,31 @@ class ExclusionReportEditContainer extends Component {
       state: payload,
       patch: true
     });
+
+    const data = [];
+    this.state.terms.forEach((term) => {
+      if (term.value) {
+        data.push({
+          complianceReport: this.props.match.params.id,
+          hasAccepted: term.value,
+          signingAuthorityAssertion: term.id
+        });
+      }
+    });
+
+    if (data.length > 0) {
+      this.props.addSigningAuthorityConfirmation(data);
+    }
   }
 
-  loadData () {
-    this.props.getExclusionReport(this.props.match.params.id);
+  _toggleCheck (key) {
+    const { terms } = this.state;
+    const index = terms.findIndex(term => term.id === key);
+    terms[index].value = !terms[index].value;
+
+    this.setState({
+      terms
+    });
   }
 
   _updateAutosaveState (tab, state) {
@@ -123,6 +168,17 @@ class ExclusionReportEditContainer extends Component {
     this.props.updateStateToSave(autosaveState);
   }
 
+  _updateScheduleState (mergedState) {
+    const { exclusionAgreement } = this.state;
+
+    this.setState({
+      exclusionAgreement: {
+        ...exclusionAgreement,
+        ...mergedState
+      }
+    });
+  }
+
   render () {
     const TabComponent = this.tabComponent;
 
@@ -133,7 +189,7 @@ class ExclusionReportEditContainer extends Component {
       period = `${new Date().getFullYear() - 1}`;
     }
 
-    if (this.props.exclusionReports.isGetting) {
+    if (this.props.exclusionReports.isGetting || !this.props.exclusionReports.item) {
       return (<Loading />);
     }
 
@@ -159,16 +215,51 @@ class ExclusionReportEditContainer extends Component {
         }}
       />,
       <ExclusionReportButtons
+        actions={this.props.exclusionReports.item.actions}
+        actor={this.props.exclusionReports.item.actor}
         edit={this.edit}
         key="exclusionReportButtons"
-        submit
-        delete
+        loggedInUser={this.props.loggedInUser}
         saving={this.props.saving}
       />,
       <Modal
-        handleSubmit={event => this._handleSubmit(event)}
+        disabled={this.state.terms.findIndex(term => term.value === false) >= 0 ||
+          this.state.terms.length === 0}
+        handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
+        title="Signing Authority Declaration"
+        tooltipMessage="Please complete the Signing Authority declaration."
+      >
+        <div id="signing-assertions">
+          <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
+
+          {!this.props.signingAuthorityAssertions.isFetching &&
+          this.props.signingAuthorityAssertions.items.map(assertion => (
+            <div className="assertion" key={assertion.id}>
+              <div className="check">
+                <CheckBox
+                  addToFields={this._addToFields}
+                  fields={this.state.terms}
+                  id={assertion.id}
+                  toggleCheck={this._toggleCheck}
+                />
+              </div>
+              <div>
+                <ReactMarkdown
+                  source={assertion.description.substr(1)}
+                />
+              </div>
+            </div>
+          ))}
+          Are you sure you want to submit this Compliance Report to the
+          Government of British Columbia?
+        </div>
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event)}
+        id="confirmSave"
+        key="confirmSave"
       >
         Are you sure you want to save this exclusion report?
       </Modal>,
@@ -192,11 +283,14 @@ ExclusionReportEditContainer.defaultProps = {
 };
 
 ExclusionReportEditContainer.propTypes = {
+  addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
+      actions: PropTypes.arrayOf(PropTypes.string),
+      actor: PropTypes.string,
       compliancePeriod: PropTypes.oneOfType([
         PropTypes.shape({
           description: PropTypes.string
@@ -207,6 +301,7 @@ ExclusionReportEditContainer.propTypes = {
     success: PropTypes.bool
   }),
   getExclusionReport: PropTypes.func.isRequired,
+  getSigningAuthorityAssertions: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
@@ -218,13 +313,19 @@ ExclusionReportEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   saving: PropTypes.bool.isRequired,
+  signingAuthorityAssertions: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    isFetching: PropTypes.bool
+  }).isRequired,
   updateExclusionReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired
 };
 
 const
   mapDispatchToProps = {
+    addSigningAuthorityConfirmation,
     getExclusionReport: exclusionReports.get,
+    getSigningAuthorityAssertions,
     updateExclusionReport: exclusionReports.update
   };
 
@@ -245,6 +346,10 @@ const
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
       isFetching: state.rootReducer.referenceData.isFetching
+    },
+    signingAuthorityAssertions: {
+      items: state.rootReducer.signingAuthorityAssertions.items,
+      isFetching: state.rootReducer.signingAuthorityAssertions.isFetching
     }
   });
 
