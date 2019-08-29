@@ -1,5 +1,5 @@
 from django.db import transaction
-from rest_framework import viewsets, mixins, filters
+from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -21,7 +21,6 @@ from auditable.views import AuditableMixin
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
                               mixins.UpdateModelMixin,
-                              mixins.DestroyModelMixin,
                               mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -60,6 +59,20 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             return self.serializer_classes[self.action]
 
         return self.serializer_classes['default']
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Override the base destroy method.
+        This is to explicitly call the destroy function in the serializer.
+
+        """
+        instance = self.get_object()
+
+        serializer = self.get_serializer(
+            instance)
+        serializer.destroy()
+
+        return Response(None, status=status.HTTP_200_OK)
 
     def perform_create(self, serializer):
         _compliance_report = serializer.save(
