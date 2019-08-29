@@ -21,7 +21,8 @@
     limitations under the License.
 """
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 import pika
 from pika.exceptions import AMQPError
@@ -75,6 +76,28 @@ class SecurityScan:
             attachment.document.save()
 
         DocumentService.send_notification(attachment.document, user)
+
+    @staticmethod
+    def resubmit_stalled_scans():
+        """
+        Method to find documents that have been scanning for a
+         long time and resubmit them
+        """
+
+        print('filtering for stalled scans')
+        horizon = timezone.now() - timedelta(minutes=30)
+
+        attachments = DocumentFileAttachment.objects.filter(update_timestamp__lte=horizon,
+                                                           security_scan_status__in=['IN PROGRESS', 'NOT RUN'],
+                                                           scan_resubmit_ttl__gt=0)
+
+        for attachment in attachments:
+            attachment.update_timestamp = datetime.now()
+            attachment.scan_resubmit_ttl = attachment.scan_resubmit_ttl - 1
+            attachment.save()
+            print('Resubmitting stalled document id {}, TTL {}'.format(attachment.id, attachment.scan_resubmit_ttl))
+
+            SecurityScan.send_scan_request(attachment)
 
     @staticmethod
     def handle_scan_response(body):
