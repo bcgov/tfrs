@@ -9,34 +9,20 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import AutosaveNotifier from './AutosaveNotifier';
 
-const prettyPrint = (messages, validationInProgress) => {
-  const result = [];
-
-  if (validationInProgress) {
-    result.push('Validation in progress');
-    return result;
+const getValidationMessages = (props) => {
+  if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
+    return 'You must have the Signing Authority role to submit a Compliance Report to the Government of British Columbia.';
   }
 
-  if (messages == null || Object.keys(messages).length === 0) {
-    result.push('No changes to save');
-    return result;
+  if (!props.valid) {
+    return 'Please fix validation errors before saving.';
   }
 
-  result.push('Validation errors prevent saving');
+  if (props.validating) {
+    return 'Validating...';
+  }
 
-  const mapToResult = (m, prefix) => {
-    Object.keys(m).map((el) => {
-      if (typeof m[el] === 'string') {
-        result.push(`${prefix} - ${m[el]}`);
-      } else {
-        mapToResult(m[el], `${prefix}.${el}`);
-      }
-    });
-  };
-
-  mapToResult(messages, '');
-
-  return result;
+  return '';
 };
 
 const ScheduleButtons = props => (
@@ -67,7 +53,7 @@ const ScheduleButtons = props => (
         <TooltipWhenDisabled
           disabled={props.validating || !props.valid}
           key="btn-save"
-          title={prettyPrint(props.validationMessages, props.validating)}
+          title="Please fix validation errors before saving."
         >
           <button
             className="btn btn-primary"
@@ -80,19 +66,23 @@ const ScheduleButtons = props => (
           </button>
         </TooltipWhenDisabled>,
         <TooltipWhenDisabled
-          disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
-          key="btn-submit"
-          title={
-            !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)
-              ? 'You must have the Signing Authority role to submit a Compliance Report to the Government of British Columbia.'
-              : ''
+          disabled={
+            !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN) ||
+            props.validating ||
+            !props.valid
           }
+          key="btn-submit"
+          title={getValidationMessages(props)}
         >
           <button
             className="btn btn-primary"
             data-target="#confirmSubmit"
             data-toggle="modal"
-            disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
+            disabled={
+              !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN) ||
+              props.validating ||
+              !props.valid
+            }
             type="button"
           >
             <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
@@ -166,7 +156,7 @@ ScheduleButtons.propTypes = {
   saving: PropTypes.bool.isRequired,
   validating: PropTypes.bool,
   valid: PropTypes.bool,
-  validationMessages: PropTypes.object
+  validationMessages: PropTypes.shape()
 };
 
 export default ScheduleButtons;
