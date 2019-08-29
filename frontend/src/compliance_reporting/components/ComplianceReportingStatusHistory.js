@@ -5,15 +5,41 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 class ComplianceReportingStatusHistory extends Component {
-  static renderHistory (history) {
-    if (history.status.directorStatus === 'Accepted') {
-      return <strong>Accepted</strong>;
-    }
+  static renderDirectorStatus (history) {
+    let action = <strong>Accepted</strong>;
 
     if (history.status.directorStatus === 'Rejected') {
-      return <strong>Rejected</strong>;
+      action = <strong>Rejected</strong>;
     }
 
+    let roleDisplay = null;
+
+    if (history.userRole) {
+      roleDisplay = history.userRole.description;
+
+      if (history.userRole.name === 'GovDeputyDirector' ||
+          history.userRole.name === 'GovDirector') {
+        roleDisplay = roleDisplay.replace('Government ', '');
+      }
+    }
+
+    return (
+      <li key={history.id}>
+        {action} <span> on </span>
+        {moment(history.createTimestamp).format('LL')}
+        <span> by </span>
+        <strong> {history.user.firstName} {history.user.lastName}</strong>
+        {roleDisplay &&
+          <span>
+            <strong>, {roleDisplay} </strong> under the
+          </span>
+        }
+        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+      </li>
+    );
+  }
+
+  static renderHistory (history) {
     // please do not combine this with the bottom check
     // they output the same, but the order of condition is important
     if (history.status.managerStatus === 'Recommended') {
@@ -102,6 +128,10 @@ class ComplianceReportingStatusHistory extends Component {
                 {this.props.complianceReport.history.length > 0 &&
                   this.props.complianceReport.history.map((history, index, arr) => {
                     const action = ComplianceReportingStatusHistory.renderHistory(history);
+
+                    if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
+                      return ComplianceReportingStatusHistory.renderDirectorStatus(history);
+                    }
 
                     return (
                       <li key={history.id}>
