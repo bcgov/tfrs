@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0177_auto_20190821_1837'),
+        ('api', '0179_db_column_adjustments_for_compliance_reporting'),
     ]
 
     operations = [
