@@ -9,9 +9,67 @@
         {
             "name": "ENV_NAME",
             "required": true
+        },
+        {
+            "name": "KEYCLOAK_CLIENT_ID",
+            "displayName": "KEYCLOAK_CLIENT_ID",
+            "description": "Valid values: tfrs-dev, tfrs, tfrs",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_REALM",
+            "displayName": "KEYCLOAK_SA_REALM",
+            "description": "Valid values: tfrs-dev, tfrs, tfrs",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_CLIENT_ID",
+            "displayName": "KEYCLOAK_SA_CLIENT_ID",
+            "description": "Valid values: tfrs-dev-django-sa, tfrs-django-sa, tfrs-django-sa",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_BASEURL",
+            "displayName": "KEYCLOAK_SA_BASEURL",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca, https://sso-test.pathfinder.gov.bc.ca, https://sso.pathfinder.gov.bc.ca",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_REALM",
+            "displayName": "KEYCLOAK_REALM",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+            "required": true
+        },
+        {
+            "name": "SMTP_SERVER_HOST",
+            "displayName": "SMTP_SERVER_HOST",
+            "description": "All environment use same email server",
+            "value": "apps.smtp.gov.bc.ca",
+            "required": true
         }
     ],
     "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "PersistentVolumeClaim",
+            "metadata": {
+                "name": "nagios",
+                "annotations":{
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "template.openshift.io.bcgov/create": "true"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "5Gi"
+                    }
+                }
+            }
+        },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
@@ -54,7 +112,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "mem-tfrs-tools",
+                                "namespace": "mem-tfrs-${ENV_NAME}",
                                 "name": "nagios:${ENV_NAME}"
                             }
                         }
@@ -82,17 +140,116 @@
                         }
                     },
                     "spec": {
+                        "volumes": [
+                            {
+                                "name": "nagios-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "nagios"
+                                }
+                            }
+                        ],
                         "containers": [
                             {
                                 "name": "nagios",
                                 "image": "",
-                                "env": [],
+                                "env": [
+                                    {
+                                        "name": "AMQP_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                    },
+                                    {
+                                        "name": "AMQP_PORT",
+                                        "value": "5672"
+                                    },
+                                    {
+                                        "name": "AMQP_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_ENDPOINT",
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                                    },
+                                    {
+                                        "name": "MINIO_USE_SSL",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_SECRET",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "keycloak-sa-client-secret",
+                                                "key": "KEYCLOAK_SA_CLIENT_SECRET"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CLIENT_ID",
+                                        "value": "${KEYCLOAK_CLIENT_ID}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_REALM",
+                                        "value": "${KEYCLOAK_SA_REALM}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_ID",
+                                        "value": "${KEYCLOAK_SA_CLIENT_ID}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_BASEURL",
+                                        "value": "${KEYCLOAK_SA_BASEURL}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_REALM",
+                                        "value": "${KEYCLOAK_REALM}"
+                                    },
+                                    {
+                                        "name": "SMTP_SERVER_HOST",
+                                        "value": "${SMTP_SERVER_HOST}"
+                                    }
+                                ],
                                 "resources": {
                                     "limits": {
                                         "cpu": "125m",
                                         "memory": "3Gi"
                                     }
                                 },
+                                "volumeMounts": [
+                                    {
+                                        "name": "nagios-data",
+                                        "mountPath": "/var/log/nagios3"
+                                    }
+                                ],
                                 "terminationMessagePath": "/dev/termination-log",
                                 "imagePullPolicy": "Always"
                             }
@@ -161,7 +318,7 @@
                 }
             },
             "spec": {
-                "host": "monitoring-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "host": "nagios-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
                 "path": "/",
                 "to": {
                     "kind": "Service",

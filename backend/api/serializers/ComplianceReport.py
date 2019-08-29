@@ -143,8 +143,17 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_b = ScheduleBDetailSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(read_only=True)
     schedule_d = ScheduleDDetailSerializer(read_only=True)
+    actions = serializers.SerializerMethodField()
+    actor = serializers.SerializerMethodField()
     summary = serializers.SerializerMethodField()
     history = serializers.SerializerMethodField()
+
+    def get_actor(self, obj):
+        return  ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
+
+    def get_actions(self, obj):
+        relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
+        return ComplianceReportPermissions.get_available_actions(obj, relationship)
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -269,7 +278,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'history', 'has_snapshot']
+                  'summary', 'read_only', 'history', 'has_snapshot', 'actions',
+                  'actor']
 
 
 class ComplianceReportValidator:
@@ -583,8 +593,17 @@ class ComplianceReportUpdateSerializer(
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
+    actions = serializers.SerializerMethodField()
+    actor = serializers.SerializerMethodField()
     strip_summary = False
     disregard_status = False
+
+    def get_actor(self, obj):
+        return  ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
+
+    def get_actions(self, obj):
+        relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
+        return ComplianceReportPermissions.get_available_actions(obj, relationship)
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
@@ -768,7 +787,7 @@ class ComplianceReportUpdateSerializer(
         if instance.status.fuel_supplier_status.status in ['Submitted'] and not instance.has_snapshot:
             # Create a snapshot
             request = self.context.get('request')
-            snap = dict(ComplianceReportDetailSerializer(instance).data)
+            snap = dict(ComplianceReportDetailSerializer(instance, context=self.context).data)
             snap['version'] = 1  # to track deserialization version
             snap['timestamp'] = datetime.now()
 
@@ -790,21 +809,21 @@ class ComplianceReportUpdateSerializer(
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot')
-        read_only_fields = ('compliance_period', 'read_only',
-                            'has_snapshot', 'organization')
+                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor')
+        read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
+                            'organization', 'actions', 'actor')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     """
     Delete serializer for Compliance Reports
     """
-
     def destroy(self):
         """
         Delete function to mark the compliance report as deleted.
         """
         compliance_report = self.instance
+
         if compliance_report.status.fuel_supplier_status not in ComplianceReportStatus.objects. \
                 filter(status__in=["Draft"]):
             raise serializers.ValidationError({
@@ -812,7 +831,7 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
                             "draft."
             })
 
-        compliance_report.fuel_supplier_status = ComplianceReportStatus.objects.get(
+        compliance_report.status.fuel_supplier_status = ComplianceReportStatus.objects.get(
             status="Deleted"
         )
         compliance_report.status.save()

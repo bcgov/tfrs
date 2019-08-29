@@ -30,6 +30,11 @@ class AttachmentData(models.Model):
                    "PASS - file is good"
                    "FAIL - file contains something suspicious"
     )
+    scan_resubmit_ttl = models.IntegerField(
+        default=200,
+        null=False,
+        db_comment='Maximum resubmission attempts for scan'
+    )
     is_removed = models.BooleanField(
         default=False,
         db_comment="Whether it was marked as deleted"

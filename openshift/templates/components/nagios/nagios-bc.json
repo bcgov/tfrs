@@ -7,6 +7,10 @@
     },
     "parameters": [
         {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
             "name": "NAGIOS_PASSWORD",
             "description": "Password for Nagios user.",
             "from": "[a-zA-Z0-9]{16}",
@@ -91,6 +95,10 @@
                                         "key": "NAGIOS_PASSWORD"
                                     }
                                 }
+                            },
+                            {
+                                "name": "ENV_NAME",
+                                "value": "${ENV_NAME}"
                             }
                         ],
                         "forcePull": true,

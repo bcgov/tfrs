@@ -113,7 +113,6 @@ class ComplianceReportingEditContainer extends Component {
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
       const { id } = this.props.match.params;
-      // const period = nextProps.complianceReporting.item.compliancePeriod.description;
 
       this.props.validateComplianceReport({
         id,
@@ -128,10 +127,19 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
-        toastr.complianceReporting(this.status.fuelSupplierStatus);
+        if (this.status.fuelSupplierStatus) {
+          toastr.complianceReporting(this.status.fuelSupplierStatus);
+        } else if (this.status.analystStatus && this.status.analystStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.analystStatus);
+        } else if (this.status.managerStatus && this.status.managerStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.managerStatus);
+        } else {
+          toastr.complianceReporting(this.status);
+        }
+
         this.props.invalidateAutosaved();
 
-        if (this.status.fuelSupplierStatus === 'Submitted') {
+        if (this.status.fuelSupplierStatus !== 'Draft') {
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
@@ -289,41 +297,39 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <ScheduleButtons
-        delete={!this.props.complianceReporting.item.readOnly}
+        actions={this.props.complianceReporting.item.actions}
+        actor={this.props.complianceReporting.item.actor}
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
-        managerRecommend={this.props.complianceReporting.item.status && ['Analyst Accepted', 'Analyst Rejected'].indexOf(this.props.complianceReporting.item.status.status) >= 0}
-        recommend={this.props.complianceReporting.item.status && this.props.complianceReporting.item.status.status === 'Submitted'}
         saving={this.props.saving}
-        submit={!this.props.complianceReporting.item.readOnly}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, 'Analyst Accepted')}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, 'Analyst Rejected')}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Not Recommended' })}
         id="confirmAnalystRecommendRejection"
         key="confirmAnalystRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, 'Manager Accepted')}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
         id="confirmManagerRecommendAcceptance"
         key="confirmManagerRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, 'Manager Rejected')}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Not Recommended' })}
         id="confirmManagerRecommendRejection"
         key="confirmManagerRecommendRejection"
       >
@@ -339,7 +345,7 @@ class ComplianceReportingEditContainer extends Component {
       <Modal
         disabled={this.state.terms.findIndex(term => term.value === false) >= 0 ||
           this.state.terms.length === 0}
-        handleSubmit={event => this._handleSubmit(event, {'fuelSupplierStatus': 'Submitted'})}
+        handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
@@ -396,12 +402,15 @@ ComplianceReportingEditContainer.propTypes = {
     isGetting: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
+      actions: PropTypes.arrayOf(PropTypes.string),
+      actor: PropTypes.string,
       compliancePeriod: PropTypes.oneOfType([
         PropTypes.shape({
           description: PropTypes.string
         }),
         PropTypes.string
       ]),
+      hasSnapshot: PropTypes.bool,
       readOnly: PropTypes.bool,
       status: PropTypes.shape()
     }),
