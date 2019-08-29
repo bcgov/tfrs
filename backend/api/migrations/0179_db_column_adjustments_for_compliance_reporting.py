@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0177_auto_20190821_1837'),
+        ('api', '0178_documentfileattachment_scan_resubmit_ttl'),
     ]
 
     operations = [
