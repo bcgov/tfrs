@@ -1,5 +1,6 @@
 from typing import List
 from django.db import models
+from django.db.models import Q
 
 from api.managers.ComplianceReportStatusManager import \
     ComplianceReportStatusManager
@@ -181,16 +182,35 @@ class ComplianceReport(Auditable):
         null=True
     )
 
-    def get_history(self, statuses: List):
+    def get_history(self, include_government_statuses=False):
         """
         Fetch the compliance report status changes.
         The parameter needed here would be the statuses that
         we'd like to show.
         """
-        history = ComplianceReportHistory.objects.filter(
-            status__fuel_supplier_status__status__in=statuses,
-            compliance_report_id=self.id
-        ).order_by('create_timestamp')
+        if include_government_statuses:
+            history = ComplianceReportHistory.objects.filter(
+                Q(status__fuel_supplier_status__status__in=["Submitted"]) |
+                Q(status__analyst_status__status__in=[
+                    "Recommended", "Not Recommended"
+                ]) |
+                Q(status__director_status__status__in=[
+                    "Accepted", "Rejected"
+                ]) |
+                Q(status__manager_status__status__in=[
+                    "Recommended", "Not Recommended"
+                ]),
+                compliance_report_id=self.id
+            ).order_by('create_timestamp')
+        else:
+            history = ComplianceReportHistory.objects.filter(
+                Q(Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                  Q(user_role__is_government_role=False)) |
+                Q(status__director_status__status__in=[
+                    "Accepted", "Rejected"
+                ]),
+                compliance_report_id=self.id
+            ).order_by('create_timestamp')
 
         return history
 
