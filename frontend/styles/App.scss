@@ -44,6 +44,10 @@
     color: $red;
   }
 
+  &.panel-default {
+    border-radius: 0.5rem;
+  }
+
   &.panel-success {
     border-color: $green;
     border-radius: 0.5rem;
@@ -77,6 +81,11 @@
       margin: 0;
       padding: 0;
       vertical-align: middle;
+
+      &.text {
+        text-align: left;
+        width: 100%;
+      }
 
       &.toggle {
         padding: 0 0.5rem;
