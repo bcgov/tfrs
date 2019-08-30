@@ -27,6 +27,7 @@ export const BTN_PROPOSE = 'Propose';
 export const BTN_PULL_BACK = 'Recall as Draft';
 export const BTN_RECEIVED = 'Received';
 export const BTN_REFUSE = 'Refuse';
+export const BTN_REJECT = 'Reject';
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection';

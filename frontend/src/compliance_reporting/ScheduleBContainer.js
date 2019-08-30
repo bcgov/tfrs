@@ -751,6 +751,7 @@ class ScheduleBContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         addRowEnabled={!this.props.readOnly}
+        complianceReport={this.props.complianceReport}
         data={grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"

@@ -100,6 +100,11 @@ class ScheduleDSheet extends Component {
       }
 
       if (gridType === 'output') {
+        grid[row][col] = {
+          ...grid[row][col],
+          value: value !== '' ? Number(String(value).replace(/,/g, '')) : ''
+        };
+
         grid = ScheduleDSheet.calculateTotal(grid);
       }
     });

@@ -440,6 +440,7 @@ class ScheduleAContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         addRowEnabled={!this.props.readOnly}
+        complianceReport={this.props.complianceReport}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"

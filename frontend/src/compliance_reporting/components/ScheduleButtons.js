@@ -147,6 +147,30 @@ const ScheduleButtons = props => (
           <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
         </button>
       }
+      {props.actor === 'DIRECTOR' &&
+      props.actions.includes('REJECT') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmDirectorReject"
+          data-toggle="modal"
+          key="btn-director-reject"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_REJECT}
+        </button>
+      }
+      {props.actor === 'DIRECTOR' &&
+      props.actions.includes('ACCEPT') &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmDirectorAccept"
+          data-toggle="modal"
+          key="btn-director-accept"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
+        </button>
+      }
     </div>
   </div>
 );
