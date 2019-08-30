@@ -59,4 +59,4 @@ for user in all_users:
 if response.status_code == 200:
     print('OK - Keycloak connection checking passed')
 else:
-    print('CRITICAL - Keycloak connection checking passed')
+    print('CRITICAL - Keycloak connection checking failed')
