@@ -133,6 +133,8 @@ class ComplianceReportingEditContainer extends Component {
           toastr.complianceReporting(this.status.analystStatus);
         } else if (this.status.managerStatus && this.status.managerStatus !== 'Unreviewed') {
           toastr.complianceReporting(this.status.managerStatus);
+        } else if (this.status.directorStatus && this.status.directorStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.directorStatus);
         } else {
           toastr.complianceReporting(this.status);
         }
@@ -143,6 +145,12 @@ class ComplianceReportingEditContainer extends Component {
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
+    }
+
+    if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
+      history.push(COMPLIANCE_REPORTING.LIST);
+      toastr.complianceReporting('Cancelled');
+      this.props.invalidateAutosaved();
     }
   }
 
@@ -177,11 +185,6 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.match.params.id });
-
-    this.props.getComplianceReports();
-    history.push(COMPLIANCE_REPORTING.LIST);
-    toastr.complianceReporting('Cancelled');
-    this.props.invalidateAutosaved();
   }
 
   _addToFields (value) {
@@ -414,6 +417,7 @@ ComplianceReportingEditContainer.propTypes = {
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
+    isRemoving: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
       actions: PropTypes.arrayOf(PropTypes.string),
@@ -480,6 +484,7 @@ const
   mapStateToProps = state => ({
     complianceReporting: {
       errorMessage: state.rootReducer.complianceReporting.errorMessage,
+      isRemoving: state.rootReducer.complianceReporting.isRemoving,
       isFinding: state.rootReducer.complianceReporting.isFinding,
       isGetting: state.rootReducer.complianceReporting.isGetting,
       isRecomputing: state.rootReducer.complianceReporting.isRecomputing,
