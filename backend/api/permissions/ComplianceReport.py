@@ -64,7 +64,6 @@ class ComplianceReportPermissions(permissions.BasePermission):
                              '(Recommended|Not Recommended)', '(Recommended|Not Recommended)', 'Unreviewed',
                              ['ACCEPT', 'REJECT', 'RETURN']))
 
-
     @staticmethod
     def get_relationship(compliance_report, user):
         is_government = user.organization.id == 1
@@ -75,8 +74,8 @@ class ComplianceReportPermissions(permissions.BasePermission):
             return ComplianceReportPermissions._Relationship.GovernmentAnalyst
         if is_government and user.has_perm('MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
             return ComplianceReportPermissions._Relationship.GovernmentComplianceManager
-        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER')
-                              or user.has_perm('DECLINE_CREDIT_TRANSFER')):
+        if is_government and (user.has_perm('APPROVE_COMPLIANCE_REPORT')
+                              or user.has_perm('REJECT_COMPLIANCE_REPORT')):
             return ComplianceReportPermissions._Relationship.GovernmentDirector
 
         return None

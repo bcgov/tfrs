@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import CONFIG from '../../config';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportingTable from './ComplianceReportingTable';
 
 const ComplianceReportingPage = (props) => {
@@ -74,12 +72,6 @@ const ComplianceReportingPage = (props) => {
                     onClick={() => {
                       props.createExclusionReport(compliancePeriod.description);
                     }}
-                    // onClick={() => {
-                    //   const route = EXCLUSION_REPORTS.ADD.replace(':period', compliancePeriod.description)
-                    //     .replace(':tab', 'intro');
-
-                    //   history.push(route);
-                    // }}
                     type="button"
                   >
                     {compliancePeriod.description}

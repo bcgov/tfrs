@@ -142,7 +142,7 @@ class ScheduleAContainer extends Component {
         }
       }
 
-      //zero remaining rows
+      // zero remaining rows
       for (let row = nextProps.scheduleState.scheduleA.records.length + 1; row < grid.length; row += 1) {
         grid[row][SCHEDULE_A.LEGAL_NAME].value = null;
         grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null;
@@ -440,6 +440,7 @@ class ScheduleAContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         addRowEnabled={!this.props.readOnly}
+        complianceReport={this.props.complianceReport}
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"

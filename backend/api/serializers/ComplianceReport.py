@@ -91,7 +91,8 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
         user = self.context['request'].user if 'request' in self.context else None
 
         # Show director_status 'Accepted' to everyone
-        if value.status in ['Accepted'] and field_name in 'director_status':
+        if value.status in ['Accepted', 'Rejected'] and \
+                field_name in 'director_status':
             return True
 
         if user and user.is_government_user:
@@ -259,15 +260,22 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         """
         Returns all the previous status changes for the compliance report
         """
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
         user = self.context['request'].user if 'request' in self.context else None
 
         if user and user.is_government_user:
-            from .ComplianceReportHistory import ComplianceReportHistorySerializer
-
-            history = obj.get_history(["Submitted"])
+            history = obj.get_history(include_government_statuses=True)
 
             serializer = ComplianceReportHistorySerializer(
-                history, many=True
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        elif user and not user.is_government_user:
+            history = obj.get_history()
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
             )
 
             return serializer.data

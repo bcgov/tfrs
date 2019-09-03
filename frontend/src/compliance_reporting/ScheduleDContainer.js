@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import ComplianceReportingStatusHistory from './components/ComplianceReportingStatusHistory';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
@@ -330,7 +331,8 @@ class ScheduleDContainer extends Component {
             description: sheet.output[j][0].value,
             intensity: Number.isNaN(Number(sheet.output[j][1].value)) ? 0 : sheet.output[j][1].value
           };
-          if (outputRecord.intensity) {
+
+          if (outputRecord.intensity !== '') {
             sheetRecord.outputs.push(outputRecord);
           }
         }
@@ -427,6 +429,11 @@ class ScheduleDContainer extends Component {
     return (
       <div className="page_schedule spreadsheet-component" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
+
+        <ComplianceReportingStatusHistory
+          complianceReport={this.props.complianceReport}
+          key="history"
+        />
 
         {!this.props.readOnly &&
         <ValidationMessages

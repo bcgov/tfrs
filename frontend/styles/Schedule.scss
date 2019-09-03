@@ -1,4 +1,9 @@
 .page_schedule, .schedule-summary {
+  #transaction-history-header {
+    color: $blue;
+    padding-left: 1.5rem;
+  }
+
   .inactive {
     display: none;
   }

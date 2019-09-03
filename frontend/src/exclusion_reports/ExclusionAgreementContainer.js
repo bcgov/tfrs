@@ -300,6 +300,7 @@ class ExclusionAgreementContainer extends Component {
       <ExclusionAgreementPage
         addRow={this._addRow}
         data={this.state.grid}
+        exclusionReport={this.props.exclusionReport}
         handleCellsChanged={this._handleCellsChanged}
         key="spreadsheet"
         title="Exclusion Report"
