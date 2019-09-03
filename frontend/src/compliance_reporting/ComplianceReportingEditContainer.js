@@ -336,6 +336,20 @@ class ComplianceReportingEditContainer extends Component {
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Rejected' })}
+        id="confirmDirectorReject"
+        key="confirmDirectorReject"
+      >
+        Are you sure you want to reject this compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Accepted' })}
+        id="confirmDirectorAccept"
+        key="confirmDirectorAccept"
+      >
+        Are you sure you want to accept this compliance report?
+      </Modal>,
+      <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSave"
         key="confirmSave"

@@ -4,12 +4,19 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import ComplianceReportingStatusHistory from '../../compliance_reporting/components/ComplianceReportingStatusHistory';
+
 const ExclusionAgreementPage = props => (
   <div className="spreadsheet-component">
     <div className="draggable-bounds">
       <h1>{props.title}</h1>
 
       {props.children}
+
+      <ComplianceReportingStatusHistory
+        complianceReport={props.exclusionReport}
+        key="history"
+      />
 
       <div className="scrollable">
         <ReactDataSheet
@@ -67,6 +74,7 @@ ExclusionAgreementPage.propTypes = {
     PropTypes.node
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
+  exclusionReport: PropTypes.shape().isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   totals: PropTypes.shape()
