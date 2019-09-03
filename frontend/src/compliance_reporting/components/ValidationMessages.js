@@ -271,6 +271,7 @@ class ValidationMessages extends Component {
             <button
               aria-controls="collapse-messages"
               aria-expanded={!this.state.collapsed}
+              className="text"
               onClick={this._toggleErrorMessages}
               type="button"
             >

@@ -4,6 +4,7 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
 import ScheduleATotals from './ScheduleATotals';
 import ScheduleBTotals from './ScheduleBTotals';
 import ValidationMessages from './ValidationMessages';
@@ -14,6 +15,11 @@ const SchedulesPage = props => (
       <h1>{props.title}</h1>
 
       {props.children}
+
+      <ComplianceReportingStatusHistory
+        complianceReport={props.complianceReport}
+        key="history"
+      />
 
       {!props.readOnly &&
       <ValidationMessages
@@ -100,6 +106,7 @@ SchedulesPage.defaultProps = {
 SchedulesPage.propTypes = {
   addRow: PropTypes.func.isRequired,
   addRowEnabled: PropTypes.bool,
+  complianceReport: PropTypes.shape().isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

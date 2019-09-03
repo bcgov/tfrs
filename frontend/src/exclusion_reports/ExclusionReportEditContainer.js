@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
 import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
+import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import CheckBox from '../app/components/CheckBox';
@@ -18,7 +19,6 @@ import Modal from '../app/components/Modal';
 import ExclusionReportButtons from './components/ExclusionReportButtons';
 import ExclusionReportTabs from './components/ExclusionReportTabs';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
@@ -111,7 +111,11 @@ class ExclusionReportEditContainer extends Component {
   }
 
   _handleDelete () {
-    history.push(EXCLUSION_REPORTS.LIST);
+    this.props.deleteComplianceReport({ id: this.props.match.params.id });
+
+    this.props.getComplianceReports();
+    history.push(COMPLIANCE_REPORTING.LIST);
+    toastr.complianceReporting('Cancelled');
     this.props.invalidateAutosaved();
   }
 
@@ -284,6 +288,8 @@ ExclusionReportEditContainer.defaultProps = {
 
 ExclusionReportEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
+  deleteComplianceReport: PropTypes.func.isRequired,
+  getComplianceReports: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
@@ -324,6 +330,8 @@ ExclusionReportEditContainer.propTypes = {
 const
   mapDispatchToProps = {
     addSigningAuthorityConfirmation,
+    deleteComplianceReport: complianceReporting.remove,
+    getComplianceReports: complianceReporting.find,
     getExclusionReport: exclusionReports.get,
     getSigningAuthorityAssertions,
     updateExclusionReport: exclusionReports.update

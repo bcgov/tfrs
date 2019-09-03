@@ -1,19 +1,27 @@
 import PropTypes from 'prop-types';
 
 const ComplianceReportStatus = (props) => {
-  if (props.status.managerStatus && props.status.managerStatus === 'Recommended') {
+  if (props.status.directorStatus === 'Accepted') {
+    return 'Accepted';
+  }
+
+  if (props.status.directorStatus === 'Rejected') {
+    return 'Rejected';
+  }
+
+  if (props.status.managerStatus === 'Recommended') {
     return 'Recommended Acceptance - Manager';
   }
 
-  if (props.status.managerStatus && props.status.managerStatus === 'Not Recommended') {
+  if (props.status.managerStatus === 'Not Recommended') {
     return 'Recommended Rejection - Manager';
   }
 
-  if (props.status.analystStatus && props.status.analystStatus === 'Recommended') {
+  if (props.status.analystStatus === 'Recommended') {
     return 'Recommended Acceptance - Analyst';
   }
 
-  if (props.status.analystStatus && props.status.analystStatus === 'Not Recommended') {
+  if (props.status.analystStatus === 'Not Recommended') {
     return 'Recommended Rejection - Analyst';
   }
 
