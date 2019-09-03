@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
@@ -38,16 +39,22 @@ const ExclusionReportButtons = props => (
         >
           <FontAwesomeIcon icon="save" /> Save
         </button>,
-        <button
-          className="btn btn-primary"
-          data-target="#confirmSubmit"
-          data-toggle="modal"
+        <TooltipWhenDisabled
           disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
           key="btn-submit"
-          type="button"
+          title="You must have the Signing Authority role to submit a Exclusion Report to the Government of British Columbia."
         >
-          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
-        </button>
+          <button
+            className="btn btn-primary"
+            data-target="#confirmSubmit"
+            data-toggle="modal"
+            disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
+            key="btn-submit"
+            type="button"
+          >
+            <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
+          </button>
+        </TooltipWhenDisabled>
       ]}
     </div>
   </div>
