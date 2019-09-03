@@ -85,36 +85,44 @@ class ExclusionAgreementContainer extends Component {
     const { grid } = this.state;
     this._addRow(this.props.exclusionReport.exclusionAgreement.records.length);
 
+    const readOnly = this.props.exclusionReport.readOnly === true;
+
     this.props.exclusionReport.exclusionAgreement.records.forEach((record, recordIndex) => {
       const index = recordIndex + 1;
 
       grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE] = {
         ...grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE],
+        readOnly,
         value: record.transactionType
       };
 
       grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE] = {
         ...grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE],
+        readOnly,
         value: record.fuelType
       };
 
       grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME] = {
         ...grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME],
+        readOnly,
         value: record.transactionPartner
       };
 
       grid[index][EXCLUSION_AGREEMENT.ADDRESS] = {
         ...grid[index][EXCLUSION_AGREEMENT.ADDRESS],
+        readOnly,
         value: record.postalAddress
       };
 
       grid[index][EXCLUSION_AGREEMENT.QUANTITY] = {
         ...grid[index][EXCLUSION_AGREEMENT.QUANTITY],
+        readOnly,
         value: record.quantity
       };
 
       grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD] = {
         ...grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD],
+        readOnly,
         value: record.quantityNotSold
       };
 
@@ -324,15 +332,16 @@ ExclusionAgreementContainer.propTypes = {
   create: PropTypes.bool.isRequired,
   exclusionReport: PropTypes.shape({
     exclusionAgreement: PropTypes.shape({
-      records: PropTypes.arrayOf()
-    })
+      records: PropTypes.arrayOf(PropTypes.shape())
+    }),
+    readOnly: PropTypes.bool
   }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   loadedState: PropTypes.any,
   loadTransactionTypes: PropTypes.func.isRequired,
   period: PropTypes.string.isRequired,
   referenceData: PropTypes.shape({
-    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   transactionTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
