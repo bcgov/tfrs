@@ -2,19 +2,18 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import { complianceReporting } from '../actions/complianceReporting';
 import Loading from '../app/components/Loading';
 import history from '../app/History';
-import SnapshotDisplay from './components/SnapshotDisplay';
+import ExclusionReportSnapshotDisplay from './components/ExclusionReportSnapshopDisplay';
 import CONFIG from '../config';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 
 class SnapshotContainer extends Component {
   constructor (props) {
@@ -41,7 +40,6 @@ class SnapshotContainer extends Component {
             <li className="nav-item">
               <button
                 className={`nav-link ${this.state.active === 'tables' ? 'active' : ''}`}
-                href="#"
                 onClick={() => {
                   this.setState({ active: 'tables' });
                 }}
@@ -57,7 +55,8 @@ class SnapshotContainer extends Component {
                   this.setState({ active: 'rawjson' });
                 }}
                 type="button"
-              >Raw JSON
+              >
+                Raw JSON
               </button>
             </li>
           </ul>
@@ -83,16 +82,14 @@ class SnapshotContainer extends Component {
         </div>
         }
         {this.state.active === 'tables' &&
-        <div>
-          <SnapshotDisplay snapshot={this.props.snapshot} />
-        </div>
+        <ExclusionReportSnapshotDisplay snapshot={this.props.snapshot} />
         }
         <div className="snapshot-buttons">
           <button
             className="btn btn-default"
             type="button"
             onClick={() => {
-              const url = COMPLIANCE_REPORTING.EDIT
+              const url = EXCLUSION_REPORTS.EDIT
                 .replace(':id', this.props.match.params.id)
                 .replace(':tab', 'intro');
 

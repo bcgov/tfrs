@@ -6,6 +6,7 @@ const EXCLUSION_REPORTS = {
   ADD: `${BASE_PATH}/add/:period/:tab`,
   EDIT: `${BASE_PATH}/edit/:id/:tab`,
   LIST: BASE_PATH,
+  SNAPSHOT: `${BASE_PATH}/snapshot/:id`,
   TRANSACTION_TYPES: `${BASE_PATH}/transaction_types`
 };
 

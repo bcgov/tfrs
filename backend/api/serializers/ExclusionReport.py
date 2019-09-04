@@ -20,14 +20,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
-from api.models.ComplianceReport import \
-    ComplianceReport
+from api.models.ComplianceReport import ComplianceReport
+from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.models.ExclusionReportAgreement import \
     ExclusionAgreement, ExclusionAgreementRecord
 from api.models.TransactionType import TransactionType
@@ -35,7 +34,7 @@ from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportWorkflowStateSerializer
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
-    OrganizationMinSerializer, CompliancePeriodSerializer
+    datetime, OrganizationMinSerializer, CompliancePeriodSerializer
 
 
 class ExclusionAgreementRecordSerializer(serializers.ModelSerializer):
@@ -46,12 +45,24 @@ class ExclusionAgreementRecordSerializer(serializers.ModelSerializer):
         slug_field='the_type', queryset=TransactionType.objects.all())
     fuel_type = SlugRelatedField(
         slug_field='name', queryset=ApprovedFuel.objects.all())
+    unit_of_measure = serializers.SerializerMethodField()
+
+    def get_unit_of_measure(self, obj):
+        """
+        Get the unit of measure based on the fuel type that was
+        saved into the Exclusion Agreement
+        """
+        if obj.fuel_type:
+            return obj.fuel_type.unit_of_measure.name
+
+        return None
 
     class Meta:
         model = ExclusionAgreementRecord
         fields = (
-            'transaction_partner', 'postal_address', 'quantity', 'quantity',
-            'quantity_not_sold', 'transaction_type', 'fuel_type'
+            'transaction_partner', 'postal_address', 'quantity',
+            'quantity_not_sold', 'transaction_type', 'fuel_type',
+            'unit_of_measure'
         )
 
 
@@ -112,7 +123,7 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'exclusion_agreement', 'read_only', 'history', 'actions',
-                  'actor']
+                  'actor', 'has_snapshot']
 
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
@@ -196,6 +207,25 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
                     )
                     exclusion_agreement.records.add(record)
                     exclusion_agreement.save()
+
+        if instance.status.fuel_supplier_status.status in ['Submitted'] and \
+                not instance.has_snapshot:
+            # Create a snapshot
+            request = self.context.get('request')
+            snap = dict(ExclusionReportDetailSerializer(
+                instance,
+                context=self.context
+            ).data)
+            snap['version'] = 1  # to track deserialization version
+            snap['timestamp'] = datetime.now()
+
+            ComplianceReportSnapshot.objects.filter(compliance_report=instance).delete()
+            ComplianceReportSnapshot.objects.create(
+                compliance_report=instance,
+                create_user=request.user,
+                create_timestamp=datetime.now(),
+                snapshot=snap
+            )
 
         if request:
             instance.update_user = request.user
