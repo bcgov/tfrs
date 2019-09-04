@@ -43,6 +43,7 @@ class SigningAuthorityAssertion(Auditable, DisplayOrder, EffectiveDates):
         """
         CREDIT_TRADE = "credit_trade"
         COMPLIANCE_REPORTING = "compliance_report"
+        EXCLUSION_REPORTS = "exclusion_report"
 
     description = models.CharField(
         max_length=4000,
