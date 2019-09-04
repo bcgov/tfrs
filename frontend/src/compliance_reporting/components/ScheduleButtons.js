@@ -15,7 +15,7 @@ const getValidationMessages = (props) => {
   }
 
   if (!props.valid) {
-    return 'Please fix validation errors before saving.';
+    return 'Please fix validation errors before submitting.';
   }
 
   if (props.validating) {
