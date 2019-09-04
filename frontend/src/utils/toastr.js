@@ -9,6 +9,9 @@ const toastr = {
     }
 
     switch (status) {
+      case 'Accepted':
+        reduxToastr.success('Success!', 'Compliance Report Accepted.');
+        break;
       case 'Cancelled':
         reduxToastr.success('Success!', 'Draft deleted.');
         break;
@@ -23,6 +26,9 @@ const toastr = {
         break;
       case 'Recommended':
         reduxToastr.success('Success!', 'Acceptance Recommended.');
+        break;
+      case 'Rejected':
+        reduxToastr.success('Success!', 'Compliance Report Rejected.');
         break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Compliance Report submitted.');
