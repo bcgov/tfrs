@@ -164,10 +164,18 @@ class ScheduleSummaryContainer extends Component {
 
   static calculatePart3Payable (part3) {
     const grid = part3;
-    const credits = grid[SCHEDULE_SUMMARY.LINE_26][2].value;
+    let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value);
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
-    let outstandingBalance = balance + Number(credits);
-    let payable = outstandingBalance * -200; // negative symbol so that the product is positive
+
+    let outstandingBalance = 0;
+    let payable = 0;
+
+    if (Number.isNaN(credits)) {
+      credits = 0;
+    }
+
+    outstandingBalance = balance + Number(credits);
+    payable = outstandingBalance * -200; // negative symbol so that the product is positive
 
     if (balance > 0) {
       outstandingBalance = '';
@@ -216,8 +224,6 @@ class ScheduleSummaryContainer extends Component {
     if (!this.props.scheduleState.summary) {
       this.loadInitialState();
     }
-
-    // this.componentWillReceiveProps(this.props);
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
@@ -231,7 +237,8 @@ class ScheduleSummaryContainer extends Component {
 
     this.populateSchedules();
 
-    const { diesel, gasoline, part3 } = this.state;
+    const { diesel, gasoline } = this.state;
+    let { part3, penalty } = this.state;
     const { summary } = nextProps.scheduleState;
 
     diesel[SCHEDULE_SUMMARY.LINE_6][2].value = summary.dieselClassRetained;
@@ -240,10 +247,14 @@ class ScheduleSummaryContainer extends Component {
     gasoline[SCHEDULE_SUMMARY.LINE_19][2].value = summary.gasolineClassDeferred;
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
 
+    part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
+    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+
     this.setState({
       diesel,
       gasoline,
-      part3
+      part3,
+      penalty
     });
   }
 
@@ -581,14 +592,13 @@ class ScheduleSummaryContainer extends Component {
       return;
     }
 
-    const { summary } = this.props.scheduleState;
-
     let {
       diesel,
       gasoline,
-      part3,
-      penalty
+      part3
     } = this.state;
+
+    const { penalty } = this.state;
 
     diesel = this._calculateDiesel();
     gasoline = this._calculateGasoline();
@@ -608,8 +618,6 @@ class ScheduleSummaryContainer extends Component {
       ...penalty[SCHEDULE_PENALTY.LINE_28][2],
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     };
-
-    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
     this.setState({
       ...this.state,
@@ -762,16 +770,6 @@ class ScheduleSummaryContainer extends Component {
     if (this.props.recomputing ||
       Object.keys(this.props.recomputedTotals).length === 0) {
       return (<Loading />);
-    }
-
-    if (!this.props.valid || this.props.validating) {
-      return (
-        <div>
-          Validation errors in schedule entries must be fixed
-          before summary computation is possible. Fix the errors
-          and return to this tab to see summary values.
-        </div>
-      );
     }
 
     return ([
