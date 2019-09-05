@@ -361,6 +361,15 @@ class ScheduleDContainer extends Component {
       this.props.valid ||
       (this.props.validationMessages && !this.props.validationMessages.scheduleD)
     ) {
+      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS);
+
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
+
+      errorKeys.forEach((errorKey) => {
+        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
+
+        sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '');
+      });
       sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
     } else if (
       this.props.validationMessages &&
