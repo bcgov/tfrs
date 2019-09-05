@@ -14,6 +14,7 @@ import Loading from '../app/components/Loading';
 import history from '../app/History';
 import SnapshotDisplay from './components/SnapshotDisplay';
 import CONFIG from '../config';
+import * as Lang from '../constants/langEnUs';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 
 class SnapshotContainer extends Component {
@@ -99,7 +100,7 @@ class SnapshotContainer extends Component {
               history.push(url);
             }}
           >
-            <FontAwesomeIcon icon="arrow-circle-left" /> Back
+            <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
           </button>
         </div>
       </div>
