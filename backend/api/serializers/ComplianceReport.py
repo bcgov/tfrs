@@ -584,7 +584,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ComplianceReportUpdateSerializer(
-    serializers.ModelSerializer, ComplianceReportValidator
+        serializers.ModelSerializer, ComplianceReportValidator
 ):
     """
     Update Serializer for the Compliance Report

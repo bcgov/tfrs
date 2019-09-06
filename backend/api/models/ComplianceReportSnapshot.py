@@ -1,22 +1,21 @@
 from django.contrib.postgres.fields import JSONField
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
 from auditable.models import Auditable
-
-from django.core.serializers.json import DjangoJSONEncoder
 
 
 class ComplianceReportSnapshot(Auditable):
     """
     List of Possible statuses for compliance reports.
     """
-
     snapshot = JSONField(
         null=True,
         encoder=DjangoJSONEncoder,
-        db_comment='Holds a JSON-serialized snapshot of the state of a compliance report'
-                    ' at the time of submission. NULL before submission. $.version is a'
-                   ' version code and $.timestamp is time the snapshot was generated.'
+        db_comment="Holds a JSON-serialized snapshot of the state of a "
+                   "compliance report at the time of submission. NULL before "
+                   "submission. $.version is a version code and $.timestamp "
+                   "is time the snapshot was generated."
     )
 
     compliance_report = models.OneToOneField(

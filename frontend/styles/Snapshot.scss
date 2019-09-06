@@ -1,3 +1,27 @@
+.react-json-view {
+  margin-bottom: 2rem;
+}
+
+.snapshot {
+  h1, h3 {
+    margin: 1rem 0;
+    padding: 0;
+  }
+
+  hr {
+    margin: 2rem 0;
+  }
+}
+
+.snapshot-buttons {
+  text-align: right;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.snapshot .spreadsheet,
 .spreadsheet.snapshot_a,
 .spreadsheet.snapshot_b,
 .spreadsheet.snapshot_c,
@@ -5,30 +29,38 @@
 .spreadsheet.snapshot_summary {
   margin-bottom: 2rem;
   min-width: 100%;
-  table-layout: auto;
   overflow-x: auto;
+  table-layout: auto;
 
   td.cell {
     padding: 4px 6px;
-  }
 
-  td.header {
-    font-weight: bold;
-    text-align: center !important;
-    background: #eeeeee !important;
+    &.header {
+      background: $background-grey;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    &.read-only {
+      background: $white;
+      color: $black;
+      text-align: right;
+
+      &.center {
+        text-align: center;
+      }
+
+      &.left {
+        text-align: left;
+      }
+    }
+
+    &.underlined {
+      border-bottom: 2px solid $black;
+    }
   }
 
   .strong {
     font-weight: bold;
-  }
-
-  td.underlined {
-    border-bottom: 2px solid #000 !important;
-  }
-
-  .read-only {
-    background: #fff !important;
-    color: #000 !important;
-    text-align: right !important;
   }
 }
