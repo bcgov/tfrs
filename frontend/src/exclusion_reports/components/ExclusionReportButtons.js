@@ -56,6 +56,78 @@ const ExclusionReportButtons = props => (
           </button>
         </TooltipWhenDisabled>
       ]}
+      {props.actor === 'ANALYST' &&
+      props.actions.includes('DISCOMMEND') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmAnalystRecommendRejection"
+          data-toggle="modal"
+          key="btn-analyst-recommend-rejection"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        </button>
+      }
+      {props.actor === 'ANALYST' &&
+      props.actions.includes('RECOMMEND') &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmAnalystRecommendAcceptance"
+          data-toggle="modal"
+          key="btn-analyst-recommend-acceptance"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('DISCOMMEND') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmManagerRecommendRejection"
+          data-toggle="modal"
+          key="btn-manager-recommend-rejection"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        </button>
+      }
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('RECOMMEND') &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmManagerRecommendAcceptance"
+          data-toggle="modal"
+          key="btn-manager-recommend-acceptance"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
+      {props.actor === 'DIRECTOR' &&
+      props.actions.includes('REJECT') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmDirectorReject"
+          data-toggle="modal"
+          key="btn-director-reject"
+          type="button"
+        >
+          <FontAwesomeIcon icon="times" /> {Lang.BTN_REJECT}
+        </button>
+      }
+      {props.actor === 'DIRECTOR' &&
+      props.actions.includes('ACCEPT') &&
+        <button
+          className="btn btn-primary"
+          data-target="#confirmDirectorAccept"
+          data-toggle="modal"
+          key="btn-director-accept"
+          type="button"
+        >
+          <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
+        </button>
+      }
     </div>
   </div>
 );

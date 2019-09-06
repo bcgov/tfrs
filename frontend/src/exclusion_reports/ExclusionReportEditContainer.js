@@ -82,13 +82,30 @@ class ExclusionReportEditContainer extends Component {
 
     if (this.props.exclusionReports.isUpdating && !nextProps.exclusionReports.isUpdating) {
       if (nextProps.exclusionReports.success) {
-        toastr.exclusionReports(this.status.fuelSupplierStatus);
+        if (this.status.fuelSupplierStatus) {
+          toastr.complianceReporting(this.status.fuelSupplierStatus);
+        } else if (this.status.analystStatus && this.status.analystStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.analystStatus);
+        } else if (this.status.managerStatus && this.status.managerStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.managerStatus);
+        } else if (this.status.directorStatus && this.status.directorStatus !== 'Unreviewed') {
+          toastr.complianceReporting(this.status.directorStatus);
+        } else {
+          toastr.complianceReporting(this.status);
+        }
+
         this.props.invalidateAutosaved();
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
+    }
+
+    if (this.props.exclusionReports.isRemoving && !nextProps.exclusionReports.isRemoving) {
+      history.push(COMPLIANCE_REPORTING.LIST);
+      toastr.complianceReporting('Cancelled');
+      this.props.invalidateAutosaved();
     }
   }
 
@@ -112,11 +129,6 @@ class ExclusionReportEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.match.params.id });
-
-    this.props.getComplianceReports();
-    history.push(COMPLIANCE_REPORTING.LIST);
-    toastr.complianceReporting('Cancelled');
-    this.props.invalidateAutosaved();
   }
 
   _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
@@ -274,6 +286,48 @@ class ExclusionReportEditContainer extends Component {
         key="confirmDelete"
       >
         Are you sure you want to delete this draft?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
+        id="confirmAnalystRecommendAcceptance"
+        key="confirmAnalystRecommendAcceptance"
+      >
+        Are you sure you want to recommend acceptance of the exclusion report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Not Recommended' })}
+        id="confirmAnalystRecommendRejection"
+        key="confirmAnalystRecommendRejection"
+      >
+        Are you sure you want to recommend rejection of the exclusion report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
+        id="confirmManagerRecommendAcceptance"
+        key="confirmManagerRecommendAcceptance"
+      >
+        Are you sure you want to recommend acceptance of the exclusion report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Not Recommended' })}
+        id="confirmManagerRecommendRejection"
+        key="confirmManagerRecommendRejection"
+      >
+        Are you sure you want to recommend rejection of the exclusion report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Rejected' })}
+        id="confirmDirectorReject"
+        key="confirmDirectorReject"
+      >
+        Are you sure you want to reject this exclusion report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Accepted' })}
+        id="confirmDirectorAccept"
+        key="confirmDirectorAccept"
+      >
+        Are you sure you want to accept this exclusion report?
       </Modal>
     ]);
   }
@@ -294,6 +348,7 @@ ExclusionReportEditContainer.propTypes = {
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
+    isRemoving: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
       actions: PropTypes.arrayOf(PropTypes.string),
@@ -332,7 +387,7 @@ ExclusionReportEditContainer.propTypes = {
 const
   mapDispatchToProps = {
     addSigningAuthorityConfirmation,
-    deleteComplianceReport: complianceReporting.remove,
+    deleteComplianceReport: exclusionReports.remove,
     getComplianceReports: complianceReporting.find,
     getExclusionReport: exclusionReports.get,
     getSigningAuthorityAssertions,
@@ -345,6 +400,7 @@ const
       errorMessage: state.rootReducer.exclusionReports.errorMessage,
       isFinding: state.rootReducer.exclusionReports.isFinding,
       isGetting: state.rootReducer.exclusionReports.isGetting,
+      isRemoving: state.rootReducer.exclusionReports.isRemoving,
       isUpdating: state.rootReducer.exclusionReports.isUpdating,
       item: state.rootReducer.exclusionReports.item,
       success: state.rootReducer.exclusionReports.success,
