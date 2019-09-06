@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import history from '../../app/History';
@@ -74,10 +74,10 @@ const ScheduleTabs = (props) => {
           className="btn btn-default"
           type="button"
           onClick={() => {
-            history.push(urls.snapshot)
+            history.push(urls.snapshot);
           }}
         >
-          <FontAwesomeIcon icon="camera"/> Submission Snapshot
+          <FontAwesomeIcon icon="camera" /> Submission Snapshot
         </button>
       </li>
       }
