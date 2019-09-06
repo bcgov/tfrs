@@ -110,14 +110,27 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
         Returns all the previous status changes for the credit trade
         """
         from .ComplianceReportHistory import ComplianceReportHistorySerializer
+        user = self.context['request'].user \
+            if 'request' in self.context else None
 
-        history = obj.get_history(["Submitted"])
+        if user and user.is_government_user:
+            history = obj.get_history(include_government_statuses=True)
 
-        serializer = ComplianceReportHistorySerializer(
-            history, many=True
-        )
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
 
-        return serializer.data
+            return serializer.data
+        elif user and not user.is_government_user:
+            history = obj.get_history()
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        else:
+            return None
 
     class Meta:
         model = ComplianceReport
