@@ -210,14 +210,14 @@ class InputWithTooltip extends Component {
         />
         <Overlay
           container={this}
-          placement="top"
+          placement={this.props.placement}
           show={this.state.showTooltip}
           target={this.target}
         >
           <Tooltip
             className={`in ${!this.state.showTooltip ? 'hidden' : ''}`}
             id="tooltip-right"
-            placement="top"
+            placement={this.props.placement}
           >
             {this.state.tooltipMessage}
             {this.props.additionalTooltip !== '' &&
@@ -243,6 +243,7 @@ InputWithTooltip.defaultProps = {
   maxValue: null,
   min: null,
   placeholder: '',
+  placement: 'top',
   required: false,
   showDollarSymbol: false,
   step: null,
@@ -264,6 +265,7 @@ InputWithTooltip.propTypes = {
   min: PropTypes.string,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  placement: PropTypes.string,
   required: PropTypes.bool,
   showDollarSymbol: PropTypes.bool,
   step: PropTypes.string,
