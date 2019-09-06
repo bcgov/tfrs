@@ -202,6 +202,7 @@ class ExclusionReportEditContainer extends Component {
         active={tab}
         compliancePeriod={period}
         edit={this.edit}
+        hasSnapshot={this.props.exclusionReports.item.hasSnapshot}
         id={id}
         key="nav"
       />,
@@ -302,7 +303,8 @@ ExclusionReportEditContainer.propTypes = {
           description: PropTypes.string
         }),
         PropTypes.string
-      ])
+      ]),
+      hasSnapshot: PropTypes.bool
     }),
     success: PropTypes.bool
   }),

@@ -246,6 +246,30 @@
 .schedule-tabs {
   margin: 0 -3rem 2rem;
   padding: 0 3rem;
+
+  .nav-item button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: $font;
+    margin-right: 2px;
+    padding: 10px 15px;
+
+    &:hover {
+      background-color: $background-grey;
+      border-bottom-color: $nav-tabs-grey;
+    }
+
+    &.active {
+      background-color: $white;
+      border: 1px solid $nav-tabs-grey;
+      border-bottom-color: transparent;
+    }
+  }
+
+  .snapshot-button {
+    margin-left: 1rem;
+  }
 }
 
 .schedule-d-tabs {
