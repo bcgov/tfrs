@@ -9,6 +9,7 @@ from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReportHistory import ComplianceReportHistory
 from api.models.ComplianceReportSchedules import ScheduleD, ScheduleC, \
     ScheduleB, ScheduleA, ScheduleSummary
+from api.models.CreditTrade import CreditTrade
 from api.models.ExclusionReportAgreement import ExclusionAgreement
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.models.Organization import Organization
@@ -134,6 +135,15 @@ class ComplianceReport(Auditable):
         null=False
     )
 
+    credit_transaction = models.OneToOneField(
+        CreditTrade,
+        on_delete=models.DO_NOTHING,
+        related_name='compliance_report',
+        null=True,
+        db_comment='FK for validations or reductions awarded as a result of accepting '
+                   'this compliance report'
+    )
+
     compliance_period = models.ForeignKey(
         CompliancePeriod,
         on_delete=models.DO_NOTHING,
@@ -222,6 +232,10 @@ class ComplianceReport(Auditable):
     def has_snapshot(self):
         return ComplianceReportSnapshot.objects. \
                    filter(compliance_report=self).count() > 0
+
+    @property
+    def snapshot(self):
+        return ComplianceReportSnapshot.objects.filter(compliance_report=self).first().snapshot
 
     class Meta:
         db_table = 'compliance_report'
