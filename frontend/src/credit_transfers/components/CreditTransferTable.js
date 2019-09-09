@@ -10,104 +10,112 @@ import numeral from 'numeral';
 import history from '../../app/History';
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import {CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES} from '../../constants/values';
+import {getCreditTransferType} from '../../actions/creditTransfersActions';
 import filterNumber from '../../utils/filters';
 import ReactTable from '../../app/components/StateSavingReactTable';
+import COMPLIANCE_REPORTING from "../../constants/routes/ComplianceReporting";
 
 const CreditTransferTable = (props) => {
-  const columns = [{
-    accessor: 'id',
-    className: 'col-id',
-    Header: 'ID',
-    resizable: false,
-    width: 45
-  }, {
-    accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
-    className: 'col-compliance-period',
-    Header: 'Compliance Period',
-    id: 'compliancePeriod',
-    minWidth: 45
-  }, {
-    accessor: item => getCreditTransferType(item.type.id),
-    className: 'col-transfer-type',
-    Header: 'Type',
-    id: 'transactionType',
-    minWidth: 110
-  }, {
-    accessor: item => ([
-      CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
-    ].includes(item.type.id) ? '' : item.creditsFrom.name),
-    Cell: (row) => {
-      if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return (
-          <div className="greyed-out">N/A</div>
-        );
-      }
-
-      return row.value;
+  const columns = [
+    {
+      accessor: 'complianceReport',
+      className: 'col-compliance-report',
+      Header: 'Compliance Report',
+      show: false
     },
-    Header: 'Credits From',
-    id: 'creditsFrom',
-    minWidth: 190
-  }, {
-    accessor: item => ((item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) ? '' : item.creditsTo.name),
-    Cell: (row) => {
-      if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
-        return (
-          <div className="greyed-out">N/A</div>
-        );
-      }
+    {
+      accessor: 'id',
+      className: 'col-id',
+      Header: 'ID',
+      resizable: false,
+      width: 45
+    }, {
+      accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
+      className: 'col-compliance-period',
+      Header: 'Compliance Period',
+      id: 'compliancePeriod',
+      minWidth: 45
+    }, {
+      accessor: item => getCreditTransferType(item.type.id),
+      className: 'col-transfer-type',
+      Header: 'Type',
+      id: 'transactionType',
+      minWidth: 110
+    }, {
+      accessor: item => ([
+        CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
+      ].includes(item.type.id) ? '' : item.creditsFrom.name),
+      Cell: (row) => {
+        if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+          row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+          return (
+            <div className="greyed-out">N/A</div>
+          );
+        }
 
-      return row.value;
-    },
-    Header: 'Credits To',
-    id: 'creditsTo',
-    minWidth: 190
-  }, {
-    accessor: item => item.numberOfCredits,
-    className: 'col-credits',
-    Cell: row => numeral(row.value).format(NumberFormat.INT),
-    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Quantity of Credits',
-    id: 'numberOfCredits',
-    minWidth: 75
-  }, {
-    accessor: (item) => {
-      if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
-        item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return -1; // this is to fix sorting (value can't be negative)
-      }
+        return row.value;
+      },
+      Header: 'Credits From',
+      id: 'creditsFrom',
+      minWidth: 190
+    }, {
+      accessor: item => ((item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) ? '' : item.creditsTo.name),
+      Cell: (row) => {
+        if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
+          return (
+            <div className="greyed-out">N/A</div>
+          );
+        }
 
-      return parseFloat(item.fairMarketValuePerCredit);
-    },
-    Cell: row => (
-      (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
-    ),
-    className: 'col-price',
-    filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Credit',
-    id: 'fairMarketValuePerCredit',
-    minWidth: 65
-  }, {
-    accessor: item => (item.isRescinded
-      ? CREDIT_TRANSFER_STATUS.rescinded.description
-      : (
-        Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-      ).description),
-    className: 'col-status',
-    Header: 'Status',
-    id: 'status',
-    minWidth: 80
-  }, {
-    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
-    className: 'col-date',
-    Header: 'Last Updated On',
-    id: 'updateTimestamp',
-    minWidth: 95
-  }];
+        return row.value;
+      },
+      Header: 'Credits To',
+      id: 'creditsTo',
+      minWidth: 190
+    }, {
+      accessor: item => item.numberOfCredits,
+      className: 'col-credits',
+      Cell: row => numeral(row.value).format(NumberFormat.INT),
+      filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
+      Header: 'Quantity of Credits',
+      id: 'numberOfCredits',
+      minWidth: 75
+    }, {
+      accessor: (item) => {
+        if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+          item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
+          item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+          return -1; // this is to fix sorting (value can't be negative)
+        }
+
+        return parseFloat(item.fairMarketValuePerCredit);
+      },
+      Cell: row => (
+        (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
+      ),
+      className: 'col-price',
+      filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
+      Header: 'Value Per Credit',
+      id: 'fairMarketValuePerCredit',
+      minWidth: 65
+    }, {
+      accessor: item => (item.isRescinded
+        ? CREDIT_TRANSFER_STATUS.rescinded.description
+        : (
+          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
+        ).description),
+      className: 'col-status',
+      Header: 'Status',
+      id: 'status',
+      minWidth: 80
+    }, {
+      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+      className: 'col-date',
+      Header: 'Last Updated On',
+      id: 'updateTimestamp',
+      minWidth: 95
+    }];
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id;
@@ -133,8 +141,14 @@ const CreditTransferTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
-
+              let viewUrl;
+              if (row.original.complianceReport) {
+                viewUrl = COMPLIANCE_REPORTING.EDIT
+                  .replace(':id', row.original.complianceReport)
+                  .replace(':tab', 'intro');
+              } else {
+                viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
+              }
               history.push(viewUrl);
             },
             className: `clickable ${(row && row.original.id.toString() === props.highlight) && 'highlight'}`

@@ -193,6 +193,14 @@
   },
   {
     "fields": {
+      "determination_type": ["GHGenius"],
+      "provision_act": 3,
+      "fuel": ["LNG"]
+    },
+    "model": "api.approvedfuelprovision"
+  },
+  {
+    "fields": {
       "determination_type": ["Carbon Intensity"],
       "provision_act": 1,
       "fuel": ["LNG"]
