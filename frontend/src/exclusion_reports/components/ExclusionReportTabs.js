@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
+import history from '../../app/History';
 
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 
@@ -13,7 +16,8 @@ const ExclusionReportTabs = (props) => {
   if (props.edit) {
     urls = {
       intro: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'intro'),
-      exclusionAgreement: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'exclusion-agreement')
+      exclusionAgreement: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'exclusion-agreement'),
+      snapshot: EXCLUSION_REPORTS.SNAPSHOT.replace(':id', props.id)
     };
   }
 
@@ -35,6 +39,19 @@ const ExclusionReportTabs = (props) => {
           Exclusion Agreement
         </Link>
       </li>
+      {props.hasSnapshot &&
+      <li className="snapshot-button">
+        <button
+          className="btn btn-default"
+          type="button"
+          onClick={() => {
+            history.push(urls.snapshot);
+          }}
+        >
+          <FontAwesomeIcon icon="camera" /> Submission Snapshot
+        </button>
+      </li>
+      }
     </ul>
   );
 };
@@ -48,6 +65,7 @@ ExclusionReportTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
   edit: PropTypes.bool.isRequired,
+  hasSnapshot: PropTypes.bool.isRequired,
   id: PropTypes.string
 };
 

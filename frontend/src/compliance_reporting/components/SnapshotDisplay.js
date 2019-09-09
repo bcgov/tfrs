@@ -3,25 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import moment from 'moment';
 
 class SnapshotDisplay extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  static _decimalViewer(digits = 2) {
-    return (cell) => Number(cell.value).toFixed(digits)
+  static decimalViewer (digits = 2) {
+    return cell => Number(cell.value).toFixed(digits)
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
-  static _build_schedule_a_grid(snapshot) {
-    let grid = [
+  static buildScheduleAGrid (snapshot) {
+    const grid = [
       [{
         value: 'Legal Name of Trading Partner',
         className: 'header underlined',
@@ -46,935 +41,832 @@ class SnapshotDisplay extends Component {
     ];
 
     if (snapshot.scheduleA) {
-      snapshot.scheduleA.records.forEach(r => {
-        grid.push(
-          [
-            {value: r.tradingPartner, readOnly: true},
-            {value: r.postalAddress, readOnly: true},
-            {value: r.fuelClass, readOnly: true},
-            {value: r.transferType, readOnly: true},
-            {
-              value: r.quantity,
-              readOnly: true,
-              valueViewer: SnapshotDisplay._decimalViewer(0)
-            }
-          ]
-        )
-      })
+      snapshot.scheduleA.records.forEach(row => (
+        grid.push([{
+          className: 'left',
+          readOnly: true,
+          value: row.tradingPartner
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.postalAddress
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.fuelClass
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.transferType
+        }, {
+          readOnly: true,
+          value: row.quantity,
+          valueViewer: SnapshotDisplay.decimalViewer(0)
+        }])
+      ));
     }
+
     return grid;
   }
 
-  static _build_schedule_b_grid(snapshot) {
-    let grid = [
+  static buildScheduleBGrid (snapshot) {
+    const grid = [
       [{
-        value: 'Fuel Type',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Fuel Type'
       }, {
-        value: 'Fuel Class',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Fuel Class'
       }, {
-        value: 'Provision Of The Act',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Provision Of The Act'
       }, {
-        value: 'Fuel Code',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Fuel Code'
       }, {
-        value: 'Quantity Supplied',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Quantity Supplied'
       }, {
-        value: 'Units',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Units'
       }, {
-        value: 'CI Limit',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'CI Limit'
       }, {
-        value: 'CI Fuel',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'CI Fuel'
       }, {
-        value: 'Energy Density',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Energy Density'
       }, {
-        value: 'EER',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'EER'
       }, {
-        value: 'Energy',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Energy'
       }, {
-        value: 'Credits',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Credits'
       }, {
-        value: 'Debits',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Debits'
       }]
     ];
 
     if (snapshot.scheduleB) {
-      snapshot.scheduleB.records.forEach(r => {
-        grid.push(
-          [
-            {value: r.fuelType, readOnly: true},
-            {value: r.fuelClass, readOnly: true},
-            {value: r.provisionOfTheAct, readOnly: true},
-            {value: r.fuelCode, readOnly: true},
-            {value: r.quantity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(0)},
-            {value: r.units, readOnly: true},
-            {value: r.ciLimit, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
-            {value: r.effectiveCarbonIntensity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
-            {value: r.energyDensity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
-            {value: r.eer, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
-            {value: r.energyContent, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer()},
-            {value: r.credits, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(2)},
-            {value: r.debits, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(2)}
-          ]
-        )
-      })
-      grid.push(
-        [
-          {
-            value: 'Totals',
-            className: 'strong',
-            colSpan: 11,
-            readOnly: true
-          },
-          {
-            value: snapshot.scheduleB.totalCredits,
-            readOnly: true,
-            valueViewer: SnapshotDisplay._decimalViewer(0)
-          },
-          {
-            value: snapshot.scheduleB.totalDebits,
-            readOnly: true,
-            valueViewer: SnapshotDisplay._decimalViewer(0)
-          },
-        ]
-      )
+      snapshot.scheduleB.records.forEach(row => (
+        grid.push([{
+          className: 'left',
+          readOnly: true,
+          value: row.fuelType
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.fuelClass
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.provisionOfTheAct
+        }, {
+          readOnly: true,
+          value: row.fuelCode
+        }, {
+          readOnly: true,
+          value: row.quantity,
+          valueViewer: SnapshotDisplay.decimalViewer(0)
+        }, {
+          readOnly: true,
+          value: row.units
+        }, {
+          readOnly: true,
+          value: row.ciLimit,
+          valueViewer: SnapshotDisplay.decimalViewer()
+        }, {
+          readOnly: true,
+          value: row.effectiveCarbonIntensity,
+          valueViewer: SnapshotDisplay.decimalViewer()
+        }, {
+          readOnly: true,
+          value: row.energyDensity,
+          valueViewer: SnapshotDisplay.decimalViewer()
+        }, {
+          readOnly: true,
+          value: row.eer,
+          valueViewer: SnapshotDisplay.decimalViewer()
+        }, {
+          readOnly: true,
+          value: row.energyContent,
+          valueViewer: SnapshotDisplay.decimalViewer()
+        }, {
+          readOnly: true,
+          value: row.credits,
+          valueViewer: SnapshotDisplay.decimalViewer(2)
+        }, {
+          readOnly: true,
+          value: row.debits,
+          valueViewer: SnapshotDisplay.decimalViewer(2)
+        }])
+      ));
+
+      grid.push([{
+        className: 'strong',
+        colSpan: 11,
+        readOnly: true,
+        value: 'Totals'
+      }, {
+        readOnly: true,
+        value: snapshot.scheduleB.totalCredits,
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: snapshot.scheduleB.totalDebits,
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }]);
     }
 
     return grid;
   }
 
-  static _build_schedule_c_grid(snapshot) {
-    let grid = [
+  static buildScheduleCGrid (snapshot) {
+    const grid = [
       [{
-        value: 'Fuel Type',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Fuel Type'
       }, {
-        value: 'Fuel Class',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Fuel Class'
       }, {
-        value: 'Quantity',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Quantity'
       }, {
-        value: 'Expected Use',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Expected Use'
       }, {
-        value: 'Rationale',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Rationale'
       }]
     ];
 
     if (snapshot.scheduleC) {
-      snapshot.scheduleC.records.forEach(r => {
-        grid.push(
-          [
-            {value: r.fuelType, readOnly: true},
-            {value: r.fuelClass, readOnly: true},
-            {value: r.quantity, readOnly: true, valueViewer: SnapshotDisplay._decimalViewer(0)},
-            {value: r.expectedUse, readOnly: true},
-            {value: r.rationale, readOnly: true}
-          ]
-        )
-      })
+      snapshot.scheduleC.records.forEach(row => (
+        grid.push([{
+          className: 'left',
+          readOnly: true,
+          value: row.fuelType
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.fuelClass
+        }, {
+          readOnly: true,
+          value: row.quantity,
+          valueViewer: SnapshotDisplay.decimalViewer(0)
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.expectedUse
+        }, {
+          className: 'left',
+          readOnly: true,
+          value: row.rationale
+        }])
+      ));
     }
 
     return grid;
   }
 
-  static _build_schedule_d_grid(snapshot, i) {
-    let grid = [];
+  static buildScheduleDGrid (snapshot, i) {
+    const grid = [];
     const sheet = snapshot.scheduleD.sheets[i];
-    grid.push(
-      [
-        {
-          value: 'Parameters',
-          disableEvents: true,
-          colSpan: 5,
-          className: 'header underlined'
-        }
-      ]
-    );
-    grid.push(
-      [
-        {
-          value: 'Fuel Class',
-          disableEvents: true,
-          colSpan: 3,
-          className: 'strong'
-        },
-        {
-          value: sheet.fuelClass,
-          colSpan: 2,
-          readOnly: true,
-        }
-      ],
-      [
-        {
-          value: 'Fuel Type',
-          disableEvents: true,
-          colSpan: 3,
-          className: 'strong'
-        },
-        {
-          value: sheet.fuelType,
-          colSpan: 2,
-          readOnly: true,
-        }
-      ]
-      , [
-        {
-          value: 'Feedstock',
-          disableEvents: true,
-          colSpan: 3,
-          className: 'strong'
-        },
-        {
-          value: sheet.feedstock,
-          colSpan: 2,
-          readOnly: true,
-        }
-      ]
-    );
 
-    grid.push(
-      [
-        {
-          value: 'Inputs',
-          disableEvents: true,
-          colSpan: 5,
-          className: 'header'
-        }
-      ]
-      ,
-      [{
-        value: 'Worksheet',
-        disableEvents: true,
-        className: 'header underlined', readOnly: true
-      }, {
-        value: 'Cell',
-        disableEvents: true,
-        className: 'header underlined', readOnly: true
-      }, {
-        value: 'Value',
-        disableEvents: true,
-        className: 'header underlined', readOnly: true
-      }, {
-        value: 'Units',
-        disableEvents: true,
-        className: 'header underlined', readOnly: true
-      }, {
-        value: 'Description',
-        disableEvents: true,
-        className: 'header underlined', readOnly: true
-      }]
-    );
+    grid.push([{
+      className: 'header underlined',
+      colSpan: 5,
+      disableEvents: true,
+      value: 'Parameters'
+    }]);
 
-    sheet.inputs.forEach(r => {
-      grid.push(
-        [
-          {value: r.worksheetName, readOnly: true},
-          {value: r.cell, readOnly: true},
-          {value: r.value, readOnly: true},
-          {value: r.units, readOnly: true},
-          {value: r.description, readOnly: true}
-        ]
-      )
-    });
+    grid.push([{
+      className: 'strong left',
+      colSpan: 3,
+      disableEvents: true,
+      readOnly: true,
+      value: 'Fuel Class'
+    }, {
+      className: 'left',
+      colSpan: 2,
+      readOnly: true,
+      value: sheet.fuelClass
+    }], [{
+      className: 'strong left',
+      colSpan: 3,
+      disableEvents: true,
+      readOnly: true,
+      value: 'Fuel Type'
+    }, {
+      className: 'left',
+      colSpan: 2,
+      readOnly: true,
+      value: sheet.fuelType
+    }], [{
+      className: 'strong left',
+      colSpan: 3,
+      disableEvents: true,
+      readOnly: true,
+      value: 'Feedstock'
+    }, {
+      className: 'left',
+      colSpan: 2,
+      readOnly: true,
+      value: sheet.feedstock
+    }]);
 
-    grid.push(
-      [
-        {
-          value: 'Outputs',
-          disableEvents: true,
-          colSpan: 5,
-          className: 'header'
-        }
-      ]
-      ,
-      [{
-        value: 'Output',
-        disableEvents: true,
-        className: 'header underlined',
-        colSpan: 3
+    grid.push([{
+      className: 'header',
+      colSpan: 5,
+      disableEvents: true,
+      value: 'Inputs'
+    }], [{
+      className: 'header center underlined',
+      disableEvents: true,
+      readOnly: true,
+      value: 'Worksheet'
+    }, {
+      className: 'header center underlined',
+      disableEvents: true,
+      readOnly: true,
+      value: 'Cell'
+    }, {
+      className: 'header center underlined',
+      disableEvents: true,
+      readOnly: true,
+      value: 'Value'
+    }, {
+      className: 'header center underlined',
+      disableEvents: true,
+      readOnly: true,
+      value: 'Units'
+    }, {
+      className: 'header center underlined',
+      disableEvents: true,
+      readOnly: true,
+      value: 'Description'
+    }]);
+
+    sheet.inputs.forEach(row => (
+      grid.push([{
+        className: 'left',
+        readOnly: true,
+        value: row.worksheetName
       }, {
-        value: 'Value',
-        disableEvents: true,
-        className: 'header underlined',
-        colSpan: 2
-      }]
-    );
-    sheet.outputs.forEach(r => {
-      grid.push(
-        [
-          {
-            value: r.description,
-            readOnly: true,
-            className: 'strong',
-            colSpan: 3
-          },
-          {
-            value: r.intensity,
-            readOnly: true,
-            colSpan: 2,
-            valueViewer: SnapshotDisplay._decimalViewer(2)
-          }
-        ]
-      )
-    });
+        className: 'left',
+        readOnly: true,
+        value: row.cell
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: row.value
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: row.units
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: row.description
+      }])
+    ));
+
+    grid.push([{
+      className: 'header',
+      colSpan: 5,
+      disableEvents: true,
+      value: 'Outputs'
+    }], [{
+      className: 'header underlined',
+      colSpan: 3,
+      disableEvents: true,
+      value: 'Output'
+    }, {
+      className: 'header underlined',
+      colSpan: 2,
+      disableEvents: true,
+      value: 'Value'
+    }]);
+
+    sheet.outputs.forEach(row => (
+      grid.push([{
+        className: 'strong left',
+        colSpan: 3,
+        readOnly: true,
+        value: row.description
+      }, {
+        colSpan: 2,
+        readOnly: true,
+        value: row.intensity,
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }])
+    ));
 
     return grid;
   }
 
-  static _build_summary_grid(snapshot) {
-    let grid = [
-      //p2 gasoline
-      [{
-        value: 'Part 2 - Gasoline',
+  static buildSummaryGrid (snapshot) {
+    const grid = [
+      [{ // p2 gasoline
+        className: 'header',
         colSpan: 3,
-        className: 'header'
-      }],
-      [{
-        value: 'Line',
+        value: 'Part 2 - Gasoline'
+      }], [{
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Line'
       }, {
-        value: 'Information',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Information'
       }, {
-        value: 'Value',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
-      }],
-
-      [
-        {
-          value: 'Line 1',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of petroleum-based gasoline supplied',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['1'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 2',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of gasoline class renewable fuel supplied',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['2'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 3',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Total volume of gasoline class fuel supplied (Line 1 + Line 2)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['3'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 4',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of Part 2 gasoline class renewable fuel required (5% of Line 3)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['4'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 5',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['5'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 6',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable fuel retained (up to 5% of Line 4)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['6'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 7',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable fuel previously retained (from Line 6 of previous compliance period)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['7'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 8',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable obligation deferred (up to 5% of Line 4)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['8'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 9',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable obligation added (from Line 8 of previous compliance period)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['9'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 10',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 2 + Line 5 - Line 6 + Line 7 + Line 8 - Line 9)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['10'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 11',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Gasoline class non-compliance payable (Line 4 - Line 10) x $0.30/L',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['11'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      // p2 diesel
-      [{
-        value: 'Part 2 - Diesel',
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 1'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of petroleum-based gasoline supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['1'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 2'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of gasoline class renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['2'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 3'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total volume of gasoline class fuel supplied (Line 1 + Line 2)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['3'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 4'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of Part 2 gasoline class renewable fuel required (5% of Line 3)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['4'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 5'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['5'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 6'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel retained (up to 5% of Line 4)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['6'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 7'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel previously retained (from Line 6 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['7'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 8'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation deferred (up to 5% of Line 4)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['8'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 9'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation added (from Line 8 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['9'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 10'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 2 + Line 5 - Line 6 + Line 7 + Line 8 - Line 9)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['10'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 11'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Gasoline class non-compliance payable (Line 4 - Line 10) x $0.30/L'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['11'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{ // p2 diesel
+        className: 'header',
         colSpan: 3,
-        className: 'header'
-      }],
-
-      [{
-        value: 'Line',
+        value: 'Part 2 - Diesel'
+      }], [{
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Line'
       }, {
-        value: 'Information',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Information'
       }, {
-        value: 'Value',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
-      }],
-      [
-        {
-          value: 'Line 12',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of petroleum-based diesel supplied',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['12'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 13',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of diesel class renewable fuel supplied',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['13'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 14',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Total volume of diesel class fuel supplied (Line 12 + Line 13)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['14'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 15',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of Part 2 diesel class renewable fuel required (4% of Line 14)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['15'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 16',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['16'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 17',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable fuel retained (up to 5% of Line 15)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['17'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 18',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable credit (from Line 17 of previous compliance report)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['18'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 19',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable obligation deferred (up to 5% of Line 15)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['19'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 20',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Volume of renewable fuel previously retained (from Line 19 of previous compliance period)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['20'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 21',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 13 + Line 16 - Line 17 + Line 18 + Line 19 - Line 20)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['21'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 22',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Diesel class non-compliance payable (Line 15 - Line 21) x $0.45/L',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['22'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      // p3
-      [{
-        value: 'Part 3 - Low Carbon Fuel Requirement Summary',
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 12'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of petroleum-based diesel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['12'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 13'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of diesel class renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['13'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 14'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total volume of diesel class fuel supplied (Line 12 + Line 13)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['14'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 15'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of Part 2 diesel class renewable fuel required (4% of Line 14)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['15'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 16'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['16'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 17'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel retained (up to 5% of Line 15)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['17'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 18'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable credit (from Line 17 of previous compliance report)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['18'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 19'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation deferred (up to 5% of Line 15)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['19'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 20'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel previously retained (from Line 19 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['20'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 21'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 13 + Line 16 - Line 17 + Line 18 + Line 19 - Line 20)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['21'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 22'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Diesel class non-compliance payable (Line 15 - Line 21) x $0.45/L'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['22'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{ // p3
+        className: 'header',
         colSpan: 3,
-        className: 'header'
-      }],
-
-      [{
-        value: 'Line',
+        value: 'Part 3 - Low Carbon Fuel Requirement Summary'
+      }], [{
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Line'
       }, {
-        value: 'Information',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Information'
       }, {
-        value: 'Value',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
-      }],
-
-      [
-        {
-          value: 'Line 23',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Total credits from fuel supplied (from Schedule B)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['23'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 24',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Total debits from fuel supplied (from Schedule B)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['24'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 25',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Net credit or debit balance for compliance period',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['25'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 26',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Credits used to offset debits (if applicable)',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['26'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 27',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Outstanding Debit Balance',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['27'],
-          valueViewer: SnapshotDisplay._decimalViewer(0),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 28',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Part 3 non-compliance penalty payable',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['28'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      // penalty
-      [{
-        value: 'Part 2 and Part 3 Non-compliance Penalty Payable Summary',
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 23'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total credits from fuel supplied (from Schedule B)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['23'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 24'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total debits from fuel supplied (from Schedule B)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['24'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 25'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net credit or debit balance for compliance period'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['25'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 26'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Credits used to offset debits (if applicable)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['26'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 27'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Outstanding Debit Balance'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['27'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 28'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 3 non-compliance penalty payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['28'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{ // penalty
+        className: 'header',
         colSpan: 3,
-        className: 'header'
-      }],
-      [{
-        value: 'Line',
+        value: 'Part 2 and Part 3 Non-compliance Penalty Payable Summary'
+      }], [{
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Line'
       }, {
-        value: 'Information',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
+        value: 'Information'
       }, {
-        value: 'Value',
+        className: 'header underlined',
         disableEvents: true,
-        className: 'header underlined'
-      }],
-      [
-        {
-          value: 'Line 11',
-          readOnly: true,
-          className: 'strong',
-        },
-        {
-          value: 'Part 2 Gasoline class non-compliance payable',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['11'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 22',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Part 2 Diesel class non-compliance payable',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['22'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Line 28',
-          readOnly: true,
-          className: 'strong'
-        },
-        {
-          value: 'Part 3 non-compliance penalty payable',
-          readOnly: true
-        },
-        {
-          value: snapshot.summary.lines['28'],
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
-      [
-        {
-          value: 'Total non-compliance penalty payable (Line 11 + Line 22 + Line 28)',
-          readOnly: true,
-          className: 'strong',
-          colSpan: 2
-        },
-        {
-          value: snapshot.summary.totalPayable,
-          valueViewer: SnapshotDisplay._decimalViewer(2),
-          readOnly: true
-        },
-      ],
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 11'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 2 Gasoline class non-compliance payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['11'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 22'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 2 Diesel class non-compliance payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['22'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 28'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 3 non-compliance penalty payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['28'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong',
+        colSpan: 2,
+        readOnly: true,
+        value: 'Total non-compliance penalty payable (Line 11 + Line 22 + Line 28)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.totalPayable,
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }]
     ];
 
-
     return grid;
   }
 
-  render() {
-    const {snapshot} = this.props;
+  render () {
+    const { snapshot } = this.props;
 
     if (!snapshot) {
       return (<p>???</p>);
     }
 
     return (
-
-      [<div key="headers">
-        <h1>Compliance Report for {this.props.snapshot.compliancePeriod.description}</h1>
-        <h3>{this.props.snapshot.organization.name}</h3>
-        <h3>Submitted: {moment(this.props.snapshot.timestamp).format('YYYY-MM-DD')}</h3>
-        <hr/>
-      </div>,
-        <div key="tables">
+      <div className="snapshot">
+        <div>
+          <h1>Compliance Report for {this.props.snapshot.compliancePeriod.description}</h1>
+          <h3>{this.props.snapshot.organization.name}</h3>
+          <h3>Submitted: {moment(this.props.snapshot.timestamp).format('YYYY-MM-DD')}</h3>
+          <hr />
+        </div>
+        <div>
           {snapshot.scheduleA &&
-          <div key="snapshot-a"
-          >
+          <div>
             <h1 className="schedule-header">Schedule A</h1>
-            <hr/>
-            < ReactDataSheet
+            <hr />
+            <ReactDataSheet
               key="snapshot-a"
-              className={`spreadsheet snapshot_a`}
-              data={SnapshotDisplay._build_schedule_a_grid(snapshot)}
+              className="spreadsheet snapshot_a"
+              data={SnapshotDisplay.buildScheduleAGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>
@@ -982,10 +874,10 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleB &&
           <div key="snapshot-b">
             <h1 className="schedule-header">Schedule B</h1>
-            <hr/>
-            < ReactDataSheet
-              className={`spreadsheet snapshot_b`}
-              data={SnapshotDisplay._build_schedule_b_grid(snapshot)}
+            <hr />
+            <ReactDataSheet
+              className="spreadsheet snapshot_b"
+              data={SnapshotDisplay.buildScheduleBGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>
@@ -993,10 +885,10 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleC &&
           <div key="snapshot-c">
             <h1 className="schedule-header">Schedule C</h1>
-            <hr/>
-            < ReactDataSheet
-              className={`spreadsheet snapshot_c`}
-              data={SnapshotDisplay._build_schedule_c_grid(snapshot)}
+            <hr />
+            <ReactDataSheet
+              className="spreadsheet snapshot_c"
+              data={SnapshotDisplay.buildScheduleCGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>
@@ -1004,13 +896,14 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleD &&
           <div key="snapshot-d">
             <h1 className="schedule-header">Schedule D</h1>
-            <hr/>
+            <hr />
             {snapshot.scheduleD.sheets.map((s, i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <div key={`snapshot-d-${i}`}>
                 <h2>Fuel {i + 1}</h2>
                 <ReactDataSheet
-                  className={`spreadsheet snapshot_d`}
-                  data={SnapshotDisplay._build_schedule_d_grid(snapshot, i)}
+                  className="spreadsheet snapshot_d"
+                  data={SnapshotDisplay.buildScheduleDGrid(snapshot, i)}
                   valueRenderer={cell => cell.value}
                 />
               </div>
@@ -1021,27 +914,26 @@ class SnapshotDisplay extends Component {
           {(snapshot.summary && snapshot.summary.lines) &&
           <div key="snapshot-summary">
             <h1 className="schedule-header">Summary</h1>
-            <hr/>
-            < ReactDataSheet
-              className={`spreadsheet summary snapshot_summary`}
-              data={SnapshotDisplay._build_summary_grid(snapshot)}
+            <hr />
+            <ReactDataSheet
+              className="spreadsheet summary snapshot_summary"
+              data={SnapshotDisplay.buildSummaryGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>
           }
         </div>
-      ]
-    )
-
+      </div>
+    );
   }
 }
 
 SnapshotDisplay.defaultProps = {
-  snapshot: null,
+  snapshot: null
 };
 
 SnapshotDisplay.propTypes = {
-  snapshot: PropTypes.object
+  snapshot: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({});
