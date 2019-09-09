@@ -41,7 +41,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "ref":"stretch-slim-OpenShift-stable",
+                        "ref":"clamav-0.101.2-on-buster",
                         "uri": "https://github.com/bcgov/docker-clamav.git"
                     }
                 },
