@@ -1,8 +1,15 @@
+import json
+from decimal import Decimal
+
 from django.db.models import Q
 
-from api.models.ComplianceReport import ComplianceReport, ComplianceReportWorkflowState
+from api.models.ComplianceReport import ComplianceReport, ComplianceReportWorkflowState, ComplianceReportStatus
 from api.models.ComplianceReportHistory import ComplianceReportHistory
+from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.CreditTradeType import CreditTradeType
 from api.models.Organization import Organization
+from api.services.CreditTradeService import CreditTradeService
 
 
 class ComplianceReportService(object):
@@ -72,3 +79,72 @@ class ComplianceReportService(object):
         )
 
         history.save()
+
+    @staticmethod
+    def create_director_transactions(compliance_report, creating_user):
+        """
+        Validate or Reduce credits when the director accepts a compliance report
+
+        Always use the snapshot as the basis for calculation, so we don't
+        recompute anything and possibly alter the values
+
+        :param compliance_report:
+        :return:
+        """
+        if compliance_report.snapshot is None:
+            raise InvalidStateException()
+
+        snapshot = compliance_report.snapshot
+
+        if 'summary' not in snapshot:
+            raise InvalidStateException()
+        if 'lines' not in snapshot['summary']:
+            raise InvalidStateException()
+
+        lines = snapshot['summary']['lines']
+
+        if Decimal(lines['25']) > Decimal(0):
+            # do validation for Decimal(lines['25'])
+            credit_transaction = CreditTrade(
+                initiator=Organization.objects.get(id=1),
+                respondent=compliance_report.organization,
+                status=CreditTradeStatus.objects.get(status='Draft'),
+                type=CreditTradeType.objects.get(the_type='Credit Validation'),
+                number_of_credits=Decimal(lines['25']),
+                compliance_period=compliance_report.compliance_period,
+                create_user=creating_user,
+                update_user=creating_user
+            )
+            credit_transaction.save()
+            credit_transaction.refresh_from_db()
+            CreditTradeService.approve(credit_transaction)
+            compliance_report.credit_transaction = credit_transaction
+            compliance_report.save()
+            CreditTradeService.pvr_notification(None, credit_transaction)
+        else:
+            if Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
+                # do_reduction for Decimal(lines['26'])
+                credit_transaction = CreditTrade(
+                    initiator=Organization.objects.get(id=1),
+                    respondent=compliance_report.organization,
+                    status=CreditTradeStatus.objects.get(status='Draft'),
+                    type=CreditTradeType.objects.get(the_type='Credit Reduction'),
+                    number_of_credits=Decimal(lines['26']),
+                    compliance_period=compliance_report.compliance_period,
+                    create_user=creating_user,
+                    update_user=creating_user
+                )
+                credit_transaction.save()
+                credit_transaction.refresh_from_db()
+                CreditTradeService.approve(credit_transaction)
+                compliance_report.credit_transaction = credit_transaction
+                compliance_report.save()
+                CreditTradeService.pvr_notification(None, credit_transaction)
+
+
+class InvalidStateException(Exception):
+    """
+    Used to indicate that the compliance report is not in a state we can
+    generate a PVR from (missing data, wrong version, etc.)
+    """
+    pass
