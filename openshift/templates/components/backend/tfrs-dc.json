@@ -213,7 +213,7 @@
                                     },
                                     {
                                         "name": "EMAIL_FROM_ADDRESS",
-                                        "value": "donotreply@gov.bc.ca"
+                                        "value": "tfrs@gov.bc.ca"
                                     },
                                     {
                                         "name": "EMAIL_SENDING_ENABLED",

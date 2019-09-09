@@ -28,6 +28,9 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //===== deploy on prod =====
         //Please confirm to continue the deployment on Prod
         prepareOtherStages.confirmStage("Please confirm to continue the deployment on Prod").call()
+
+        //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
+        prepareOtherStages.checkBackupSpace("mem-tfrs-prod").call()        
         
         //Bring up Maintenance Page
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-prod").call()
@@ -37,7 +40,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("prod").call()
+        prepareDCStages.backendDCStage("prod").call()
         //prepareDCStages.celeryDCStage("prod").call()
         //prepareDCStages.scanCoordinatorDCStage("prod").call()
         //prepareDCStages.scanHandlerDCStage("prod").call()
