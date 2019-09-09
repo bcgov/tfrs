@@ -32,7 +32,7 @@ class ScheduleA(Commentable):
         total = 0
         for record in records:
             if record.fuel_class.fuel_class == 'Diesel':
-             total += record.net_transferred
+                total += record.net_transferred
         return total
 
     @property
@@ -43,6 +43,7 @@ class ScheduleA(Commentable):
             if record.fuel_class.fuel_class == 'Gasoline':
                 total += record.net_transferred
         return total
+
 
 class ScheduleARecord(Commentable):
     """
@@ -247,8 +248,9 @@ class ScheduleBRecord(Commentable):
     schedule_d_sheet_index = models.IntegerField(
         default=None,
         null=True,
-        db_comment='An zero-based index into id-sorted schedule D sheets for the case where '
-                   'intensity was computed via the GHGenius provision'
+        db_comment="An zero-based index into id-sorted schedule D sheets for "
+                   "the case where intensity was computed via the GHGenius "
+                   "provision"
     )
 
     @property
@@ -296,6 +298,10 @@ class ScheduleBRecord(Commentable):
             fuel_class__fuel_class=self.fuel_class.fuel_class,
             model_name="CarbonIntensityLimit"
         )
+
+        if obj is None:
+            return None
+
         return obj.density
 
     @property
@@ -314,6 +320,9 @@ class ScheduleBRecord(Commentable):
             model_name="EnergyDensity"
         )
 
+        if obj is None:
+            return None
+
         return obj.density
 
     @property
@@ -325,6 +334,10 @@ class ScheduleBRecord(Commentable):
             fuel_class__fuel_class=self.fuel_class.fuel_class,
             model_name="EnergyEffectivenessRatio"
         )
+
+        if obj is None:
+            return None
+
         return obj.ratio
 
     @property
