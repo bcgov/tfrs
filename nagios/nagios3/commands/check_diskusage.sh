@@ -18,5 +18,5 @@ if [ ${diskusageAlarm} = true ]; then
         echo "CRITICAL - $1 Posgresql liveness checking failed"
         exit 2
 fi
-echo "OK - $1 Posgresql liveness checking passed successfully"
+echo "OK - $1 Posgresql liveness checking passed"
 exit 0
