@@ -22,7 +22,7 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
     List of Possible statuses for compliance reports.
     """
     status = models.CharField(
-        max_length=25,
+        max_length=50,
         blank=True,
         null=False,
         unique=True,
@@ -47,36 +47,46 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
 
 
 class ComplianceReportWorkflowState(Auditable):
-    fuel_supplier_status = models.ForeignKey(ComplianceReportStatus,
-                                             null=False,
-                                             #limit_choices_to=['Draft', 'Submitted', 'Deleted'],
-                                             related_name='+',
-                                             to_field='status',
-                                             default='Draft')
+    fuel_supplier_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        # limit_choices_to=['Draft', 'Submitted', 'Deleted'],
+        related_name='+',
+        to_field='status',
+        default='Draft')
 
-    analyst_status = models.ForeignKey(ComplianceReportStatus,
-                                       null=False,
-                                       related_name='+',
-                                       to_field='status',
-                                       default='Unreviewed')
+    analyst_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
-    manager_status = models.ForeignKey(ComplianceReportStatus,
-                                       null=False,
-                                       related_name='+',
-                                       to_field='status',
-                                       default='Unreviewed')
+    manager_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
-    director_status = models.ForeignKey(ComplianceReportStatus,
-                                        null=False,
-                                        related_name='+',
-                                        to_field='status',
-                                        default='Unreviewed')
+    director_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
     class Meta:
         db_table = 'compliance_report_workflow_state'
 
-    db_table_comment = 'Track the workflow state for each of the four parties (fuel supplier, analyst, manager,' \
-                       'and director) who can effect state changes on a compliance report.'
+    db_table_comment = "Track the workflow state for each of the four " \
+                       "parties (fuel supplier, analyst, manager, and " \
+                       "director) who can effect state changes on a " \
+                       "compliance report."
+
 
 class ComplianceReportType(DisplayOrder):
     """

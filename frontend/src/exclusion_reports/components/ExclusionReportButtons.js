@@ -57,6 +57,18 @@ const ExclusionReportButtons = props => (
         </TooltipWhenDisabled>
       ]}
       {props.actor === 'ANALYST' &&
+      props.actions.includes('REQUEST_SUPPLEMENTAL') &&
+        <button
+          className="btn btn-info"
+          data-target="#confirmAnalystRequestSupplemental"
+          data-toggle="modal"
+          key="btn-analyst-request-supplemental"
+          type="button"
+        >
+          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_FOR_SUPPLEMENTAL_REPORT}
+        </button>
+      }
+      {props.actor === 'ANALYST' &&
       props.actions.includes('DISCOMMEND') &&
         <button
           className="btn btn-danger"

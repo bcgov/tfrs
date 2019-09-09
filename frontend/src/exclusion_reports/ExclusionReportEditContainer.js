@@ -288,6 +288,13 @@ class ExclusionReportEditContainer extends Component {
         Are you sure you want to delete this draft?
       </Modal>,
       <Modal
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental Report' })}
+        id="confirmAnalystRequestSupplemental"
+        key="confirmAnalystRequestSupplemental"
+      >
+        Are you sure you want to request a supplemental compliance report?
+      </Modal>,
+      <Modal
         handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
