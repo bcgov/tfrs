@@ -4,6 +4,35 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class ValidationMessages extends Component {
+  static getOtherSchedulesErrorMessage (validationMessages) {
+    let message = 'Errors found in schedule ';
+    if (validationMessages.scheduleA) {
+      message += 'A, ';
+    }
+
+    if (validationMessages.scheduleB) {
+      message += 'B, ';
+    }
+
+    if (validationMessages.scheduleC) {
+      message += 'C, ';
+    }
+
+    if (validationMessages.scheduleD) {
+      message += 'D, ';
+    }
+
+    // find the last comma and get rid of it
+    // (this enables us not to get into a really complicated if else condition
+    // as we'll always get a comma at the end)
+    const lastComma = message.lastIndexOf(', ');
+    message = message.substring(0, lastComma);
+
+    message = message.replace(/,([^,]*)$/, ' and$1'); // replace last comma with "and"
+
+    return message;
+  }
+
   constructor (props) {
     super(props);
 
@@ -45,7 +74,9 @@ class ValidationMessages extends Component {
     if (!this.props.valid &&
       this.props.validationMessages &&
       !this.props.validationMessages.scheduleA) {
-      errorMessages.push('Errors found in other schedules');
+      const { validationMessages } = this.props;
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
+      errorMessages.push(message);
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleA &&
@@ -98,7 +129,9 @@ class ValidationMessages extends Component {
     if (!this.props.valid &&
       this.props.validationMessages &&
       !this.props.validationMessages.scheduleB) {
-      errorMessages.push('Errors found in other schedules');
+      const { validationMessages } = this.props;
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
+      errorMessages.push(message);
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleB &&
@@ -161,7 +194,9 @@ class ValidationMessages extends Component {
     if (!this.props.valid &&
       this.props.validationMessages &&
       !this.props.validationMessages.scheduleC) {
-      errorMessages.push('Errors found in other schedules');
+      const { validationMessages } = this.props;
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
+      errorMessages.push(message);
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleC &&
@@ -214,7 +249,9 @@ class ValidationMessages extends Component {
     if (!this.props.valid &&
       this.props.validationMessages &&
       !this.props.validationMessages.scheduleD) {
-      errorMessages.push('Errors found in other schedules');
+      const { validationMessages } = this.props;
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
+      errorMessages.push(message);
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleD &&
