@@ -149,4 +149,10 @@
       float: left;
     }
   }
+
+  .tooltip-large {
+    .tooltip-inner {
+      min-width: 16rem;
+    }  
+  }
 }
