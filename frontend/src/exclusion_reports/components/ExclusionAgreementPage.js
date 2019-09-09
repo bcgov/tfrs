@@ -27,6 +27,7 @@ const ExclusionAgreementPage = props => (
         />
       </div>
 
+      {!props.exclusionReport.readOnly &&
       <div className="sheet-buttons">
         <div className="btn-group">
           <button
@@ -58,6 +59,7 @@ const ExclusionAgreementPage = props => (
           </ul>
         </div>
       </div>
+      }
     </div>
   </div>
 );
@@ -74,7 +76,9 @@ ExclusionAgreementPage.propTypes = {
     PropTypes.node
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  exclusionReport: PropTypes.shape().isRequired,
+  exclusionReport: PropTypes.shape({
+    readOnly: PropTypes.bool
+  }).isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   totals: PropTypes.shape()
