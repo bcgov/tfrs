@@ -25,9 +25,11 @@ import json
 
 from rest_framework import status
 
+from api.models import OrganizationBalance
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus, ComplianceReportType, \
     ComplianceReportWorkflowState
+from api.models.NotificationMessage import NotificationMessage
 from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 
@@ -987,12 +989,28 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_happy_signing_path(self):
+    def test_happy_signing_path_results_in_reduction(self):
+        initial_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
         rid = self._create_compliance_report()
 
         payload = {
             'status': {
                 'fuelSupplierStatus': 'Submitted'
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10000,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 100,
+                    },
+                ]
+            },
+            'summary': {
+                'creditsOffset': 3,
             }
         }
 
@@ -1059,6 +1077,142 @@ class TestComplianceReporting(BaseTestCase):
         self.assertListEqual(response_data['actions'], [])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
+        self.assertLess(final_balance, initial_balance)
+
+    def test_happy_signing_path_results_in_validation(self):
+        initial_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
+        rid = self._create_compliance_report()
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 1000000,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': 0
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
+                    }
+                ]
+            },
+            'summary': {
+                'creditsOffset': 0,
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'analystStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'managerStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_manager'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'directorStatus': 'Accepted'
+            }
+        }
+
+        response = self.clients['gov_director'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=rid)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
+        self.assertListEqual(response_data['actions'], [])
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
+        self.assertGreater(final_balance, initial_balance)
 
     def test_create_draft_exclusion_report_authorized(self):
         payload = {
@@ -1322,7 +1476,7 @@ class TestComplianceReporting(BaseTestCase):
         for state, report_id in reports_to_check.items():
             users_to_check = expected_actions[state]
             for user, expected_result in users_to_check.items():
-                with self.subTest("Check actions for report in state {} with client {}".format(state,user)):
+                with self.subTest("Check actions for report in state {} with client {}".format(state, user)):
                     response = self.clients[user].get('/api/compliance_reports/{id}'.format(id=report_id))
                     response_data = json.loads(response.content.decode("utf-8"))
                     self.assertEqual(response.status_code, expected_result['status'])

@@ -240,6 +240,7 @@ class CreditTradeListSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
+    compliance_report = PrimaryKeyRelatedField(read_only=True)
 
     def get_status(self, obj):
         """
@@ -271,7 +272,7 @@ class CreditTradeListSerializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'initiator',
                   'is_rescinded', 'number_of_credits', 'respondent',
                   'status', 'total_value', 'trade_effective_date', 'type',
-                  'update_timestamp', 'zero_reason')
+                  'update_timestamp', 'zero_reason', 'compliance_report')
 
 
 class CreditTradeUpdateSerializer(serializers.ModelSerializer):
@@ -737,9 +738,10 @@ class CreditTradeMinSerializer(serializers.ModelSerializer):
     initiator = OrganizationMinSerializer(read_only=True)
     respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
+    compliance_report = PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = CreditTrade
         fields = ('id', 'status', 'initiator', 'respondent', 'type',
                   'number_of_credits', 'fair_market_value_per_credit',
-                  'is_rescinded')
+                  'is_rescinded', 'compliance_report')
