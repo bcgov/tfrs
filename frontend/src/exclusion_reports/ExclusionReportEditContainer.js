@@ -269,7 +269,7 @@ class ExclusionReportEditContainer extends Component {
               </div>
             </div>
           ))}
-          Are you sure you want to submit this Compliance Report to the
+          Are you sure you want to submit this Exclusion Report to the
           Government of British Columbia?
         </div>
       </Modal>,
