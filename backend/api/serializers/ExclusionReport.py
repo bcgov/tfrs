@@ -117,9 +117,10 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
     """
-    Update Serializer for the Compliance Report
+    Update Serializer for the Exclusion Report
     """
     actions = serializers.SerializerMethodField()
+    actor = serializers.SerializerMethodField()
     compliance_period = SlugRelatedField(
         slug_field='description',
         read_only=True
@@ -140,6 +141,11 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
             obj,
             relationship
         )
+
+    def get_actor(self, obj):
+        return ComplianceReportPermissions.get_relationship(
+            obj, self.context['request'].user
+        ).value
 
     def validate_exclusion_agreement(self, data):
         return data
@@ -220,8 +226,9 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = (
             'status', 'type', 'compliance_period', 'organization',
-            'exclusion_agreement', 'read_only', 'actions'
+            'exclusion_agreement', 'read_only', 'actions', 'actor'
         )
         read_only_fields = (
-            'compliance_period', 'read_only', 'organization', 'actions'
+            'compliance_period', 'read_only', 'organization', 'actions',
+            'actor'
         )
