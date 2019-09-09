@@ -45,7 +45,7 @@ def checkBackupSpace (String projectName) {
     return {
         stage('Datebase Backup Space Sheck') {
             postgresql_pod_name = sh (script: "oc get pods -n ${projectName} | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
-            check_result = sh (script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash df -k | grep "/postgresql-backup" | awk '{print \$5}'", returnStdout: true).trim()
+            check_result = sh (script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash df -k | grep \"/postgresql-backup\" | awk \'{print \$5}\'", returnStdout: true).trim()
             if(check_result.startsWith("CRITICAL")) {
                 input "Please check if postgresql-backup space is enough for database backup, make sure it is less than 70% full."
             } else {
