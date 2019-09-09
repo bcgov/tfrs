@@ -323,6 +323,8 @@ class ScheduleDContainer extends Component {
         }
       }
 
+      let outputHasContent = false;
+
       for (let j = 0; j < sheet.output.length; j += 1) {
         const isTotalField = sheet.output[j][1].readOnly;
 
@@ -335,17 +337,30 @@ class ScheduleDContainer extends Component {
           if (outputRecord.intensity !== '') {
             sheetRecord.outputs.push(outputRecord);
           }
+
+          if (outputRecord.intensity !== 0) {
+            outputHasContent = true;
+          }
         }
       }
 
-      sheets.push(sheetRecord);
+      if (sheetRecord.fuelClass || sheetRecord.feedstock ||
+        sheetRecord.fuelType || sheetRecord.inputs.length > 0 || outputHasContent) {
+        sheets.push(sheetRecord);
+      }
     }
 
-    this.props.updateScheduleState({
-      scheduleD: {
-        sheets
-      }
-    });
+    if (sheets.length > 0) {
+      this.props.updateScheduleState({
+        scheduleD: {
+          sheets
+        }
+      });
+    } else {
+      this.props.updateScheduleState({
+        scheduleD: null
+      });
+    }
   }
 
   _setActiveSheet (id) {
@@ -361,6 +376,15 @@ class ScheduleDContainer extends Component {
       this.props.valid ||
       (this.props.validationMessages && !this.props.validationMessages.scheduleD)
     ) {
+      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS);
+
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
+
+      errorKeys.forEach((errorKey) => {
+        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
+
+        sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '');
+      });
       sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
     } else if (
       this.props.validationMessages &&
