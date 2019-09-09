@@ -47,8 +47,8 @@ def checkBackupSpace (String projectName) {
             postgresql_pod_name = sh (script: "oc get pods -n ${projectName} | grep postgresql96 | awk \'{print \$1}\'", returnStdout: true).trim()
             check_result = sh (script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- df -k | grep \"/postgresql-backup\" | awk \'{print \$5}\'", returnStdout: true).trim()
             int usedPercentage = check_result.trim().replace("%","").toInteger()
-            if(usedPercentage>=70) {
-                input "Please check if postgresql-backup space is enough for database backup, make sure it is less than 70% full."
+            if(usedPercentage>=80) {
+                input "Please check if postgresql-backup space is enough for database backup, make sure it is less than 80% full."
             } else {
                 echo "postgresql-backup space is ${check_result} full."
             }
