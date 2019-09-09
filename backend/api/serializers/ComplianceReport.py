@@ -44,6 +44,8 @@ from api.serializers.constants import ComplianceReportValidation
 
 from decimal import *
 
+from api.services.ComplianceReportService import ComplianceReportService
+
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
     """
@@ -150,7 +152,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     history = serializers.SerializerMethodField()
 
     def get_actor(self, obj):
-        return  ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
+        return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
 
     def get_actions(self, obj):
         relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
@@ -295,6 +297,7 @@ class ComplianceReportValidator:
     Validation method mixin used for validate and update serializers to check business rules for
     schedule validation (like preventing duplicate rows)
     """
+
     def validate_schedule_a(self, data):
         if 'records' not in data:
             return data
@@ -584,7 +587,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ComplianceReportUpdateSerializer(
-        serializers.ModelSerializer, ComplianceReportValidator
+    serializers.ModelSerializer, ComplianceReportValidator
 ):
     """
     Update Serializer for the Compliance Report
@@ -607,7 +610,7 @@ class ComplianceReportUpdateSerializer(
     disregard_status = False
 
     def get_actor(self, obj):
-        return  ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
+        return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
 
     def get_actions(self, obj):
         relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
@@ -618,6 +621,8 @@ class ComplianceReportUpdateSerializer(
 
         if instance.read_only and not self.disregard_status and not request.user.organization.id == 1:
             raise PermissionDenied('Cannot modify this compliance report')
+
+        previous_director_status = instance.status.director_status.status
 
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
@@ -807,6 +812,11 @@ class ComplianceReportUpdateSerializer(
                 snapshot=snap
             )
 
+        if previous_director_status not in ['Accepted'] and \
+                instance.status.director_status.status in ['Accepted']:
+            # should create a PVR
+            ComplianceReportService.create_director_transactions(instance, request.user)
+
         instance.update_user = request.user
         instance.save()
 
@@ -826,6 +836,7 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
     """
     Delete serializer for Compliance Reports
     """
+
     def destroy(self):
         """
         Delete function to mark the compliance report as deleted.
