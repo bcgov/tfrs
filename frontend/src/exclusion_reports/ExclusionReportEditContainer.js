@@ -209,6 +209,12 @@ class ExclusionReportEditContainer extends Component {
       return (<Loading />);
     }
 
+    if (typeof (this.props.exclusionReports.item.compliancePeriod) === 'string') {
+      period = this.props.exclusionReports.item.compliancePeriod;
+    } else {
+      period = this.props.exclusionReports.item.compliancePeriod.description;
+    }
+
     return ([
       <ExclusionReportTabs
         active={tab}
