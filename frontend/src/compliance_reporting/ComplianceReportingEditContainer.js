@@ -121,6 +121,10 @@ class ComplianceReportingEditContainer extends Component {
           ...this.state.schedules
         }
       });
+
+      if (nextProps.complianceReporting.item.hasSnapshot) {
+        this.props.getSnapshotRequest(id);
+      }
     }
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
@@ -267,6 +271,10 @@ class ComplianceReportingEditContainer extends Component {
       return (<Loading />);
     }
 
+    if (this.props.complianceReporting.snapshotIsLoading) {
+      return (<Loading />);
+    }
+
     let period = null;
     if (typeof (this.props.complianceReporting.item.compliancePeriod) === 'string') {
       period = this.props.complianceReporting.item.compliancePeriod;
@@ -294,6 +302,7 @@ class ComplianceReportingEditContainer extends Component {
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
         scheduleState={this.state.schedules}
+        snapshot={this.props.complianceReporting.snapshot}
         updateScheduleState={this._updateScheduleState}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
@@ -437,11 +446,14 @@ ComplianceReportingEditContainer.propTypes = {
     success: PropTypes.bool,
     valid: PropTypes.bool,
     validating: PropTypes.bool,
-    validationMessages: PropTypes.object
+    validationMessages: PropTypes.object,
+    snapshot: PropTypes.shape(),
+    snapshotIsLoading: PropTypes.bool.isRequired,
   }),
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
+  getSnapshotRequest: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
@@ -475,6 +487,7 @@ const
     getComplianceReport: complianceReporting.get,
     getComplianceReports: complianceReporting.find,
     getSigningAuthorityAssertions,
+    getSnapshotRequest: complianceReporting.getSnapshot,
     recomputeTotals: complianceReporting.recompute,
     updateComplianceReport: complianceReporting.update,
     validateComplianceReport: complianceReporting.validate
@@ -494,7 +507,9 @@ const
       success: state.rootReducer.complianceReporting.success,
       valid: state.rootReducer.complianceReporting.validationPassed,
       validating: state.rootReducer.complianceReporting.isValidating,
-      validationMessages: state.rootReducer.complianceReporting.validationMessages
+      validationMessages: state.rootReducer.complianceReporting.validationMessages,
+      snapshot: state.rootReducer.complianceReporting.snapshotItem,
+      snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
