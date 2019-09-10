@@ -86,7 +86,7 @@ class ValidationMessages extends Component {
         let errorCount = Object.keys(record).length;
 
         if ('quantity' in record) {
-          const message = 'The Quantity of Fuel Supplied cannot contain a zero, negative or decimal value.';
+          const message = 'The quantity of fuel cannot be zero, negative, or contain a decimal value.';
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
             errorMessages.push(message);
@@ -113,7 +113,7 @@ class ValidationMessages extends Component {
       this.props.validationMessages.scheduleA &&
       Array.isArray(this.props.validationMessages.scheduleA)
     ) {
-      const message = 'There are duplicate trade records, please combine the Quantity into a single value on one row.';
+      const message = 'There are duplicate entries, please combine the quantity into a single value on one row.';
 
       if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
         errorMessages.push(message);
@@ -141,7 +141,7 @@ class ValidationMessages extends Component {
         let errorCount = Object.keys(record).length;
 
         if ('quantity' in record) {
-          const message = 'The Quantity of Fuel Supplied cannot contain a zero, negative or decimal value.';
+          const message = 'The quantity of fuel cannot be zero, negative, or contain a decimal value.';
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
             errorMessages.push(message);
@@ -151,7 +151,7 @@ class ValidationMessages extends Component {
         }
 
         if ('scheduleD_index' in record) {
-          const message = 'A GHGenius Fuel Code was not found, please create a record in Schedule D.';
+          const message = 'A GHGenius Modelled entry was not found, please create a record in Schedule D.';
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
             errorMessages.push(message);
@@ -178,7 +178,7 @@ class ValidationMessages extends Component {
       this.props.validationMessages.scheduleB &&
       Array.isArray(this.props.validationMessages.scheduleB)
     ) {
-      const message = 'There are duplicate trade records, please combine the Quantity into a single value on one row.';
+      const message = 'There are duplicate entries, please combine the quantity into a single value on one row.';
 
       if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
         errorMessages.push(message);
@@ -206,7 +206,7 @@ class ValidationMessages extends Component {
         let errorCount = Object.keys(record).length;
 
         if ('quantity' in record) {
-          const message = 'The Quantity of Fuel Supplied cannot contain a zero, negative or decimal value.';
+          const message = 'The quantity of fuel cannot be zero, negative, or contain a decimal value.';
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
             errorMessages.push(message);
@@ -233,7 +233,7 @@ class ValidationMessages extends Component {
       this.props.validationMessages.scheduleC &&
       Array.isArray(this.props.validationMessages.scheduleC)
     ) {
-      const message = 'There are duplicate trade records, please combine the Quantity into a single value on one row.';
+      const message = 'There are duplicate entries, please combine the quantity into a single value on one row.';
 
       if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
         errorMessages.push(message);
