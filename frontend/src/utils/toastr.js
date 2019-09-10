@@ -10,25 +10,25 @@ const toastr = {
 
     switch (status) {
       case 'Accepted':
-        reduxToastr.success('Success!', 'Compliance Report Accepted.');
+        reduxToastr.success('Success!', 'Compliance Report accepted.');
         break;
       case 'Cancelled':
         reduxToastr.success('Success!', 'Draft deleted.');
         break;
       case 'Created':
-        reduxToastr.success('Success!', 'New Compliance Report Created');
+        reduxToastr.success('Success!', 'New Compliance Report created');
         break;
       case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
         break;
       case 'Not Recommended':
-        reduxToastr.success('Success!', 'Rejection Recommended.');
+        reduxToastr.success('Success!', 'Rejection recommended.');
         break;
       case 'Recommended':
-        reduxToastr.success('Success!', 'Acceptance Recommended.');
+        reduxToastr.success('Success!', 'Acceptance recommended.');
         break;
       case 'Rejected':
-        reduxToastr.success('Success!', 'Compliance Report Rejected.');
+        reduxToastr.success('Success!', 'Compliance Report rejected.');
         break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Compliance Report submitted.');
@@ -119,6 +119,9 @@ const toastr = {
     }
 
     switch (status) {
+      case 'Accepted':
+        reduxToastr.success('Success!', 'Exclusion Report accepted.');
+        break;
       case 'Cancelled':
         reduxToastr.success('Success!', 'Draft deleted.');
         break;
@@ -126,7 +129,16 @@ const toastr = {
         reduxToastr.success('Success!', 'Draft saved.');
         break;
       case 'Created':
-        reduxToastr.success('Success!', 'New Exclusion Report Created');
+        reduxToastr.success('Success!', 'New Exclusion Report created');
+        break;
+      case 'Not Recommended':
+        reduxToastr.success('Success!', 'Rejection recommended.');
+        break;
+      case 'Recommended':
+        reduxToastr.success('Success!', 'Acceptance recommended.');
+        break;
+      case 'Rejected':
+        reduxToastr.success('Success!', 'Exclusion Report rejected.');
         break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Exclusion Report submitted.');
