@@ -23,7 +23,7 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
     List of Possible statuses for compliance reports.
     """
     status = models.CharField(
-        max_length=50,
+        max_length=25,
         blank=True,
         null=False,
         unique=True,

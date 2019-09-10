@@ -198,7 +198,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
                 return False  # Already reviewed
             return new_analyst_status in [
                 'Recommended', 'Not Recommended',
-                'Requested Supplemental Report'
+                'Requested Supplemental'
             ]
 
         if relationship == \
@@ -215,7 +215,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
                 return False  # Already reviewed
             return new_manager_status in [
                 'Recommended', 'Not Recommended', 'Returned',
-                'Requested Supplemental Report'
+                'Requested Supplemental'
             ]
 
         if relationship == \

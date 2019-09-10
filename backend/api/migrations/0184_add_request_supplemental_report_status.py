@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0183_compliancereport_credit_transaction'),
+        ('api', '0183_add_gov_analyst_view_compliance_report_permission'),
     ]
 
     operations = [

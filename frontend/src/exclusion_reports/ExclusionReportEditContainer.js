@@ -315,6 +315,13 @@ class ExclusionReportEditContainer extends Component {
         Are you sure you want to recommend rejection of the exclusion report?
       </Modal>,
       <Modal
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Requested Supplemental' })}
+        id="confirmManagerRequestSupplemental"
+        key="confirmManagerRequestSupplemental"
+      >
+        Are you sure you want to request a supplemental compliance report?
+      </Modal>,
+      <Modal
         handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
         id="confirmManagerRecommendAcceptance"
         key="confirmManagerRecommendAcceptance"

@@ -65,7 +65,7 @@ const ExclusionReportButtons = props => (
           key="btn-analyst-request-supplemental"
           type="button"
         >
-          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_FOR_SUPPLEMENTAL_REPORT}
+          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
         </button>
       }
       {props.actor === 'ANALYST' &&
@@ -90,6 +90,18 @@ const ExclusionReportButtons = props => (
           type="button"
         >
           <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('REQUEST_SUPPLEMENTAL') &&
+        <button
+          className="btn btn-info"
+          data-target="#confirmManagerRequestSupplemental"
+          data-toggle="modal"
+          key="btn-manager-request-supplemental"
+          type="button"
+        >
+          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
         </button>
       }
       {props.actor === 'MANAGER' &&
