@@ -13,10 +13,10 @@ EMAIL = {
 }
 
 msg = EmailMessage()
-msg.set_content(sys.argv[1])
+msg.set_content(sys.argv[2])
 
-msg['Subject'] = sys.argv[2]
-msg['From'] = "tfrs@gov.bc.ca"
+msg['Subject'] = sys.argv[1]
+msg['From'] = "noreply@gov.bc.ca"
 msg['To'] = sys.argv[3]
 
 with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
