@@ -79,6 +79,7 @@ const SchedulesPage = props => (
       </div>
       }
 
+      <div className="clear" />
       {props.scheduleType === 'schedule-a' &&
         <ScheduleATotals
           totals={props.totals}
@@ -90,8 +91,7 @@ const SchedulesPage = props => (
           totals={props.totals}
         />
       }
-
-      <div className={`spacer ${props.scheduleType}`} />
+      <div className="clear" />
     </div>
   </div>
 );
