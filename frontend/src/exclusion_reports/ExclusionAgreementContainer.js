@@ -278,9 +278,35 @@ class ExclusionAgreementContainer extends Component {
 
       if (col === EXCLUSION_AGREEMENT.LEGAL_NAME) {
         if (cell.attributes.address) {
+          let address = '';
+
+          if (cell.attributes.address.address_line_1) {
+            address += cell.attributes.address.address_line_1;
+          }
+
+          if (cell.attributes.address.address_line_2) {
+            address += ` ${cell.attributes.address.address_line_2}`;
+          }
+
+          if (cell.attributes.address.address_line_3) {
+            address += ` ${cell.attributes.address.address_line_3}`;
+          }
+
+          if (cell.attributes.address.city) {
+            address += ` ${cell.attributes.address.city}`;
+          }
+
+          if (cell.attributes.address.state) {
+            address += `, ${cell.attributes.address.state}`;
+          }
+
+          if (cell.attributes.address.postal_code) {
+            address += `, ${cell.attributes.address.postal_code}`;
+          }
+
           grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
             ...grid[row][EXCLUSION_AGREEMENT.ADDRESS],
-            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
+            value: address
           };
         }
       }

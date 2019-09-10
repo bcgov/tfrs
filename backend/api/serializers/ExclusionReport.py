@@ -141,18 +141,35 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
     """
-    Update Serializer for the Compliance Report
+    Update Serializer for the Exclusion Report
     """
-    status = ComplianceReportWorkflowStateSerializer(required=False)
-    type = SlugRelatedField(slug_field='the_type', read_only=True)
+    actions = serializers.SerializerMethodField()
+    actor = serializers.SerializerMethodField()
     compliance_period = SlugRelatedField(
         slug_field='description',
         read_only=True
     )
-    organization = OrganizationMinSerializer(read_only=True)
     exclusion_agreement = ExclusionAgreementSerializer(
         allow_null=True, required=False
     )
+    organization = OrganizationMinSerializer(read_only=True)
+    status = ComplianceReportWorkflowStateSerializer(required=False)
+    type = SlugRelatedField(slug_field='the_type', read_only=True)
+
+    def get_actions(self, obj):
+        relationship = ComplianceReportPermissions.get_relationship(
+            obj, self.context['request'].user
+        )
+
+        return ComplianceReportPermissions.get_available_actions(
+            obj,
+            relationship
+        )
+
+    def get_actor(self, obj):
+        return ComplianceReportPermissions.get_relationship(
+            obj, self.context['request'].user
+        ).value
 
     def validate_exclusion_agreement(self, data):
         return data
@@ -250,6 +267,11 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReport
-        fields = ('status', 'type', 'compliance_period', 'organization',
-                  'exclusion_agreement', 'read_only')
-        read_only_fields = ('compliance_period', 'read_only', 'organization')
+        fields = (
+            'status', 'type', 'compliance_period', 'organization',
+            'exclusion_agreement', 'read_only', 'actions', 'actor'
+        )
+        read_only_fields = (
+            'compliance_period', 'read_only', 'organization', 'actions',
+            'actor'
+        )

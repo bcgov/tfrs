@@ -8,17 +8,20 @@
     display: none;
   }
 
+  .clear {
+    clear: both;
+  }
+
   .schedule-totals {
     background-color: $background-grey;
     border-radius: 0.5rem;
     border: 1px solid $border-grey;
-    bottom: 0;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
     cursor: move;
+    float: right;
     font-size: 1.5rem;
+    margin-top: 2rem;
     padding: 1rem;
-    position: absolute;
-    right: 0;
     width: 30rem;
     z-index: 2000;
 
@@ -299,16 +302,17 @@
 }
 
 .schedule-buttons {
+  align-items: center;
   background-color: $background-grey;
-  border: 1px solid $border-grey;
   border-radius: 0.5rem;
+  border: 1px solid $border-grey;
+  display: flex;
   font-size: 1.5rem;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-top: 2rem;
   padding: 1rem;
   text-align: right;
-  margin-left: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
   .left {
     text-align: left;
