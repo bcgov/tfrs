@@ -76,18 +76,26 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
     """
     Default serializer for the Compliance Report Status
     """
-    fuel_supplier_status = SlugRelatedField(slug_field='status',
-                                            queryset=ComplianceReportStatus.objects.all(),
-                                            required=False)
-    director_status = SelectiveVisibilitySlugField(slug_field='status',
-                                                   queryset=ComplianceReportStatus.objects.all(),
-                                                   required=False)
-    analyst_status = SelectiveVisibilitySlugField(slug_field='status',
-                                                  queryset=ComplianceReportStatus.objects.all(),
-                                                  required=False)
-    manager_status = SelectiveVisibilitySlugField(slug_field='status',
-                                                  queryset=ComplianceReportStatus.objects.all(),
-                                                  required=False)
+    fuel_supplier_status = SlugRelatedField(
+        slug_field='status',
+        queryset=ComplianceReportStatus.objects.all(),
+        required=False
+    )
+    director_status = SelectiveVisibilitySlugField(
+        slug_field='status',
+        queryset=ComplianceReportStatus.objects.all(),
+        required=False
+    )
+    analyst_status = SelectiveVisibilitySlugField(
+        slug_field='status',
+        queryset=ComplianceReportStatus.objects.all(),
+        required=False
+    )
+    manager_status = SelectiveVisibilitySlugField(
+        slug_field='status',
+        queryset=ComplianceReportStatus.objects.all(),
+        required=False
+    )
 
     def should_show(self, field_name, value):
         user = self.context['request'].user if 'request' in self.context else None
@@ -95,6 +103,10 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
         # Show director_status 'Accepted' to everyone
         if value.status in ['Accepted', 'Rejected'] and \
                 field_name in 'director_status':
+            return True
+        
+        if value.status in ['Requested Supplemental'] and \
+                field_name in ['manager_status', 'analyst_status']:
             return True
 
         if user and user.is_government_user:

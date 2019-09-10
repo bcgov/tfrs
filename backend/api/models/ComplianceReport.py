@@ -212,22 +212,32 @@ class ComplianceReport(Auditable):
             history = ComplianceReportHistory.objects.filter(
                 Q(status__fuel_supplier_status__status__in=["Submitted"]) |
                 Q(status__analyst_status__status__in=[
-                    "Recommended", "Not Recommended"
+                    "Recommended", "Not Recommended",
+                    "Requested Supplemental"
                 ]) |
                 Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
                 ]) |
                 Q(status__manager_status__status__in=[
-                    "Recommended", "Not Recommended"
+                    "Recommended", "Not Recommended",
+                    "Requested Supplemental"
                 ]),
                 compliance_report_id=self.id
             ).order_by('create_timestamp')
         else:
             history = ComplianceReportHistory.objects.filter(
-                Q(Q(status__fuel_supplier_status__status__in=["Submitted"]) &
-                  Q(user_role__is_government_role=False)) |
+                Q(
+                    Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                    Q(user_role__is_government_role=False)
+                ) |
                 Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
+                ]) |
+                Q(status__analyst_status__status__in=[
+                    "Requested Supplemental"
+                ]) |
+                Q(status__manager_status__status__in=[
+                    "Requested Supplemental"
                 ]),
                 compliance_report_id=self.id
             ).order_by('create_timestamp')
