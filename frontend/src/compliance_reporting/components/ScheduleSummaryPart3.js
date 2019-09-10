@@ -92,7 +92,7 @@ class ScheduleSummaryPart3 {
       [{ // line 26
         className: 'text',
         readOnly: true,
-        value: 'Credits used to offset debits (if applicable)'
+        value: 'Banked credits used to offset outstanding debits (if applicable)'
       }, {
         readOnly: true,
         value: (
@@ -126,7 +126,7 @@ class ScheduleSummaryPart3 {
       [{ // line 27
         className: 'text total',
         readOnly: true,
-        value: 'Outstanding Debit Balance'
+        value: 'Outstanding debit balance'
       }, {
         className: 'total',
         readOnly: true,

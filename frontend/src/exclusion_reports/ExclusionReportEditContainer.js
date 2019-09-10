@@ -83,15 +83,15 @@ class ExclusionReportEditContainer extends Component {
     if (this.props.exclusionReports.isUpdating && !nextProps.exclusionReports.isUpdating) {
       if (nextProps.exclusionReports.success) {
         if (this.status.fuelSupplierStatus) {
-          toastr.complianceReporting(this.status.fuelSupplierStatus);
+          toastr.exclusionReports(this.status.fuelSupplierStatus);
         } else if (this.status.analystStatus && this.status.analystStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.analystStatus);
+          toastr.exclusionReports(this.status.analystStatus);
         } else if (this.status.managerStatus && this.status.managerStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.managerStatus);
+          toastr.exclusionReports(this.status.managerStatus);
         } else if (this.status.directorStatus && this.status.directorStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.directorStatus);
+          toastr.exclusionReports(this.status.directorStatus);
         } else {
-          toastr.complianceReporting(this.status);
+          toastr.exclusionReports(this.status);
         }
 
         this.props.invalidateAutosaved();
@@ -104,7 +104,7 @@ class ExclusionReportEditContainer extends Component {
 
     if (this.props.exclusionReports.isRemoving && !nextProps.exclusionReports.isRemoving) {
       history.push(COMPLIANCE_REPORTING.LIST);
-      toastr.complianceReporting('Cancelled');
+      toastr.exclusionReports('Cancelled');
       this.props.invalidateAutosaved();
     }
   }
@@ -209,6 +209,12 @@ class ExclusionReportEditContainer extends Component {
       return (<Loading />);
     }
 
+    if (typeof (this.props.exclusionReports.item.compliancePeriod) === 'string') {
+      period = this.props.exclusionReports.item.compliancePeriod;
+    } else {
+      period = this.props.exclusionReports.item.compliancePeriod.description;
+    }
+
     return ([
       <ExclusionReportTabs
         active={tab}
@@ -269,7 +275,7 @@ class ExclusionReportEditContainer extends Component {
               </div>
             </div>
           ))}
-          Are you sure you want to submit this Compliance Report to the
+          Are you sure you want to submit this Exclusion Report to the
           Government of British Columbia?
         </div>
       </Modal>,

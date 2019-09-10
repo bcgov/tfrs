@@ -42,7 +42,7 @@ const ExclusionReportButtons = props => (
         <TooltipWhenDisabled
           disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
           key="btn-submit"
-          title="You must have the Signing Authority role to submit a Exclusion Report to the Government of British Columbia."
+          title="You must have the Signing Authority role to submit an Exclusion Report to the Government of British Columbia."
         >
           <button
             className="btn btn-primary"

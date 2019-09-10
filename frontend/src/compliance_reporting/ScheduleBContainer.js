@@ -53,7 +53,7 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'fuel-code',
           readOnly: true,
-          value: 'Fuel Code (if applicable)'
+          value: <div>Fuel Code or Schedule D Entry<br />(if applicable)</div>
         }, {
           className: 'quantity',
           readOnly: true,

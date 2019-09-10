@@ -134,6 +134,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         request.data.update({'update_user': user.id})
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
         return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
