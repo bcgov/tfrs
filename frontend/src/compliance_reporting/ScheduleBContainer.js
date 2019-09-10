@@ -174,6 +174,10 @@ class ScheduleBContainer extends Component {
       // just use the snapshot
       const source = nextProps.snapshot.scheduleB;
 
+      if (!source || !source.records) {
+        return;
+      }
+
       if ((grid.length - 2) < source.records.length) {
         this._addRow(source.records.length - (grid.length - 2));
       }

@@ -130,6 +130,10 @@ class ScheduleCContainer extends Component {
     if (nextProps.snapshot) {
       const source = nextProps.snapshot.scheduleC;
 
+      if (!source || !source.records) {
+        return;
+      }
+
       if ((grid.length - 2) < source.records.length) {
         this._addRow(source.records.length - (grid.length - 2));
       }
