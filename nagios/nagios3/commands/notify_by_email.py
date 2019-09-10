@@ -13,6 +13,7 @@ EMAIL = {
 }
 
 msg = EmailMessage()
+msg.set_default_type("text/plain")
 msg.set_content(sys.argv[2])
 
 msg['Subject'] = sys.argv[1]
