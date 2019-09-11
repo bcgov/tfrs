@@ -142,7 +142,8 @@ class SnapshotDisplay extends Component {
           value: row.provisionOfTheAct
         }, {
           readOnly: true,
-          value: row.fuelCode
+          value: row.fuelCode != null ? row.fuelCode :
+            (row.scheduleD_sheetIndex != null ? "From Schedule D" : "")
         }, {
           readOnly: true,
           value: row.quantity,

@@ -676,38 +676,42 @@ class ComplianceReportUpdateSerializer(
                 ).delete()
                 ScheduleD.objects.filter(id=instance.schedule_d.id).delete()
 
-            sheets_data = schedule_d_data.pop('sheets')
-            schedule_d = ScheduleD.objects.create(
-                **schedule_d_data,
-                compliance_report=instance
-            )
-            instance.schedule_d = schedule_d
-            for sheet_data in sheets_data:
-                inputs_data = sheet_data.pop('inputs')
-                outputs_data = sheet_data.pop('outputs')
-                sheet = ScheduleDSheet.objects.create(
-                    **sheet_data,
-                    schedule=schedule_d
+            if schedule_d_data is not None:
+
+                sheets_data = schedule_d_data.pop('sheets') if 'sheets' in schedule_d_data else []
+
+                schedule_d = ScheduleD.objects.create(
+                    **schedule_d_data,
+                    compliance_report=instance
                 )
+                instance.schedule_d = schedule_d
 
-                for input_data in inputs_data:
-                    input = ScheduleDSheetInput.objects.create(
-                        **input_data,
-                        sheet=sheet
+                for sheet_data in sheets_data:
+                    inputs_data = sheet_data.pop('inputs')
+                    outputs_data = sheet_data.pop('outputs')
+                    sheet = ScheduleDSheet.objects.create(
+                        **sheet_data,
+                        schedule=schedule_d
                     )
-                    sheet.inputs.add(input)
-                    sheet.save()
 
-                for output_data in outputs_data:
-                    output = ScheduleDSheetOutput.objects.create(
-                        **output_data,
-                        sheet=sheet
-                    )
-                    sheet.outputs.add(output)
-                    sheet.save()
+                    for input_data in inputs_data:
+                        input = ScheduleDSheetInput.objects.create(
+                            **input_data,
+                            sheet=sheet
+                        )
+                        sheet.inputs.add(input)
+                        sheet.save()
 
-                schedule_d.sheets.add(sheet)
-                schedule_d.save()
+                    for output_data in outputs_data:
+                        output = ScheduleDSheetOutput.objects.create(
+                            **output_data,
+                            sheet=sheet
+                        )
+                        sheet.outputs.add(output)
+                        sheet.save()
+
+                    schedule_d.sheets.add(sheet)
+                    schedule_d.save()
 
             instance.save()
 
