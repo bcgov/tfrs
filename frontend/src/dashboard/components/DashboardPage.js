@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Administration from './Administration';
 import Balance from './Balance';
@@ -30,15 +31,21 @@ const DashboardPage = props => (
 
       <Administration />
 
-      <UserSettings />
+      <UserSettings
+        loggedInUser={props.loggedInUser}
+        unreadNotificationsCount={props.unreadNotificationsCount}
+      />
     </div>
   </div>
 );
 
 DashboardPage.defaultProps = {
+  unreadNotificationsCount: 0
 };
 
 DashboardPage.propTypes = {
+  loggedInUser: PropTypes.shape().isRequired,
+  unreadNotificationsCount: PropTypes.number
 };
 
 export default DashboardPage;
