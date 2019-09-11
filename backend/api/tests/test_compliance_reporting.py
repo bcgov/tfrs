@@ -1392,7 +1392,7 @@ class TestComplianceReporting(BaseTestCase):
                 'gov_analyst': {
                     'status': 200,
                     'actor': 'ANALYST',
-                    'actions': ['RECOMMEND', 'DISCOMMEND']
+                    'actions': ['RECOMMEND', 'DISCOMMEND', 'REQUEST_SUPPLEMENTAL']
                 },
                 'gov_manager': {
                     'status': 200,
@@ -1419,7 +1419,7 @@ class TestComplianceReporting(BaseTestCase):
                 'gov_manager': {
                     'status': 200,
                     'actor': 'MANAGER',
-                    'actions': ['RECOMMEND', 'DISCOMMEND', 'RETURN']
+                    'actions': ['RECOMMEND', 'DISCOMMEND', 'RETURN', 'REQUEST_SUPPLEMENTAL']
                 },
                 'gov_director': {
                     'status': 200,

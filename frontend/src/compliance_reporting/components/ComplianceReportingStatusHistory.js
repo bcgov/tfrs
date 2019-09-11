@@ -43,19 +43,27 @@ class ComplianceReportingStatusHistory extends Component {
     // please do not combine this with the bottom check
     // they output the same, but the order of condition is important
     if (history.status.managerStatus === 'Recommended') {
-      return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong></span>;
+      return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>;
     }
 
     if (history.status.managerStatus === 'Not Recommended') {
-      return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong></span>;
+      return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>;
+    }
+
+    if (history.status.managerStatus === 'Requested Supplemental') {
+      return <strong>Requested Supplemental</strong>;
     }
 
     if (history.status.analystStatus === 'Recommended') {
-      return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong></span>;
+      return <span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>;
     }
 
     if (history.status.analystStatus === 'Not Recommended') {
-      return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong></span>;
+      return <span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>;
+    }
+
+    if (history.status.analystStatus === 'Requested Supplemental') {
+      return <strong>Requested Supplemental </strong>;
     }
 
     return (<strong>{history.status.fuelSupplierStatus} </strong>);

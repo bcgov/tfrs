@@ -25,7 +25,8 @@ from rest_framework.fields import SerializerMethodField
 
 from api.models.ComplianceReportHistory import ComplianceReportHistory
 from api.serializers import UserMinSerializer
-from api.serializers.ComplianceReport import ComplianceReportStatusSerializer, ComplianceReportWorkflowStateSerializer
+from api.serializers.ComplianceReport import \
+    ComplianceReportWorkflowStateSerializer
 
 
 class ComplianceReportHistorySerializer(serializers.ModelSerializer):

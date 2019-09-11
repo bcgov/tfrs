@@ -90,6 +90,18 @@ const ScheduleButtons = props => (
         </TooltipWhenDisabled>
       ]}
       {props.actor === 'ANALYST' &&
+      props.actions.includes('REQUEST_SUPPLEMENTAL') &&
+        <button
+          className="btn btn-info"
+          data-target="#confirmAnalystRequestSupplemental"
+          data-toggle="modal"
+          key="btn-analyst-request-supplemental"
+          type="button"
+        >
+          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
+        </button>
+      }
+      {props.actor === 'ANALYST' &&
       props.actions.includes('DISCOMMEND') &&
         <button
           className="btn btn-danger"
@@ -111,6 +123,18 @@ const ScheduleButtons = props => (
           type="button"
         >
           <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        </button>
+      }
+      {props.actor === 'MANAGER' &&
+      props.actions.includes('REQUEST_SUPPLEMENTAL') &&
+        <button
+          className="btn btn-info"
+          data-target="#confirmManagerRequestSupplemental"
+          data-toggle="modal"
+          key="btn-manager-request-supplemental"
+          type="button"
+        >
+          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
         </button>
       }
       {props.actor === 'MANAGER' &&
