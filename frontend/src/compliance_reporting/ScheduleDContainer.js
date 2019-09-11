@@ -57,7 +57,7 @@ class ScheduleDContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.scheduleState.scheduleD) {
+    if (this.props.scheduleState.scheduleD || this.props.snapshot) {
       // it's probably more elegant to use getDerivedStateFromProps,
       // but it is defined static and we need to access instance methods to set the headers
       this.componentWillReceiveProps(this.props);
@@ -72,13 +72,18 @@ class ScheduleDContainer extends Component {
   componentWillReceiveProps (nextProps, nextContext) {
     const { sheets } = this.state;
 
-    if (nextProps.scheduleState.scheduleD && nextProps.scheduleState.scheduleD.sheets) {
-      if ((sheets.length) < nextProps.scheduleState.scheduleD.sheets.length) {
-        this._addSheet(nextProps.scheduleState.scheduleD.sheets.length - (sheets.length));
+    let source = nextProps.scheduleState.scheduleD;
+    if (nextProps.snapshot) {
+      source = this.props.snapshot.scheduleD;
+    }
+
+    if (source && source.sheets) {
+      if ((sheets.length) < source.sheets.length) {
+        this._addSheet(source.sheets.length - (sheets.length));
       }
 
-      for (let i = 0; i < nextProps.scheduleState.scheduleD.sheets.length; i += 1) {
-        const sheet = nextProps.scheduleState.scheduleD.sheets[i];
+      for (let i = 0; i < source.sheets.length; i += 1) {
+        const sheet = source.sheets[i];
         if (sheets.length < i) {
           sheets.push(this._addHeaders(sheets.length));
         }
@@ -140,7 +145,7 @@ class ScheduleDContainer extends Component {
 
         sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output);
 
-        if (!this.props.validating) {
+        if (!this.props.snapshot && !this.props.validating) {
           sheets[i] = this._validate(sheets[i], i);
         }
       }
@@ -508,7 +513,8 @@ class ScheduleDContainer extends Component {
 ScheduleDContainer.defaultProps = {
   complianceReport: null,
   match: {},
-  validationMessages: null
+  validationMessages: null,
+  snapshot: null
 };
 
 ScheduleDContainer.propTypes = {
@@ -525,6 +531,11 @@ ScheduleDContainer.propTypes = {
       sheets: PropTypes.arrayOf(PropTypes.shape())
     })
   }).isRequired,
+  snapshot: PropTypes.shape({
+    scheduleD: PropTypes.shape({
+      sheets: PropTypes.arrayOf(PropTypes.shape())
+    })
+  }),
   updateScheduleState: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
