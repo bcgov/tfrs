@@ -177,7 +177,6 @@ class ScheduleCContainer extends Component {
 
   loadInitialState () {
     this.rowNumber = 1;
-    // this._addRow(this.props.complianceReport.scheduleC.records.length);
 
     const records = [];
 

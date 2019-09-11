@@ -311,6 +311,13 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental' })}
+        id="confirmAnalystRequestSupplemental"
+        key="confirmAnalystRequestSupplemental"
+      >
+        Are you sure you want to request a supplemental compliance report?
+      </Modal>,
+      <Modal
         handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
@@ -323,6 +330,13 @@ class ComplianceReportingEditContainer extends Component {
         key="confirmAnalystRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
+      </Modal>,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Requested Supplemental' })}
+        id="confirmManagerRequestSupplemental"
+        key="confirmManagerRequestSupplemental"
+      >
+        Are you sure you want to request a supplemental compliance report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
