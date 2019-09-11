@@ -30,6 +30,9 @@ const toastr = {
       case 'Rejected':
         reduxToastr.success('Success!', 'Compliance Report rejected.');
         break;
+      case 'Requested Supplemental':
+        reduxToastr.success('Success!', 'Supplemental Requested.');
+        break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Compliance Report submitted.');
         break;
@@ -139,6 +142,9 @@ const toastr = {
         break;
       case 'Rejected':
         reduxToastr.success('Success!', 'Exclusion Report rejected.');
+        break;
+      case 'Requested Supplemental':
+        reduxToastr.success('Success!', 'Supplemental Requested.');
         break;
       case 'Submitted':
         reduxToastr.success('Success!', 'Exclusion Report submitted.');

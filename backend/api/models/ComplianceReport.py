@@ -48,36 +48,46 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
 
 
 class ComplianceReportWorkflowState(Auditable):
-    fuel_supplier_status = models.ForeignKey(ComplianceReportStatus,
-                                             null=False,
-                                             #limit_choices_to=['Draft', 'Submitted', 'Deleted'],
-                                             related_name='+',
-                                             to_field='status',
-                                             default='Draft')
+    fuel_supplier_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        # limit_choices_to=['Draft', 'Submitted', 'Deleted'],
+        related_name='+',
+        to_field='status',
+        default='Draft')
 
-    analyst_status = models.ForeignKey(ComplianceReportStatus,
-                                       null=False,
-                                       related_name='+',
-                                       to_field='status',
-                                       default='Unreviewed')
+    analyst_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
-    manager_status = models.ForeignKey(ComplianceReportStatus,
-                                       null=False,
-                                       related_name='+',
-                                       to_field='status',
-                                       default='Unreviewed')
+    manager_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
-    director_status = models.ForeignKey(ComplianceReportStatus,
-                                        null=False,
-                                        related_name='+',
-                                        to_field='status',
-                                        default='Unreviewed')
+    director_status = models.ForeignKey(
+        ComplianceReportStatus,
+        null=False,
+        related_name='+',
+        to_field='status',
+        default='Unreviewed'
+    )
 
     class Meta:
         db_table = 'compliance_report_workflow_state'
 
-    db_table_comment = 'Track the workflow state for each of the four parties (fuel supplier, analyst, manager,' \
-                       'and director) who can effect state changes on a compliance report.'
+    db_table_comment = "Track the workflow state for each of the four " \
+                       "parties (fuel supplier, analyst, manager, and " \
+                       "director) who can effect state changes on a " \
+                       "compliance report."
+
 
 class ComplianceReportType(DisplayOrder):
     """
@@ -202,22 +212,32 @@ class ComplianceReport(Auditable):
             history = ComplianceReportHistory.objects.filter(
                 Q(status__fuel_supplier_status__status__in=["Submitted"]) |
                 Q(status__analyst_status__status__in=[
-                    "Recommended", "Not Recommended"
+                    "Recommended", "Not Recommended",
+                    "Requested Supplemental"
                 ]) |
                 Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
                 ]) |
                 Q(status__manager_status__status__in=[
-                    "Recommended", "Not Recommended"
+                    "Recommended", "Not Recommended",
+                    "Requested Supplemental"
                 ]),
                 compliance_report_id=self.id
             ).order_by('create_timestamp')
         else:
             history = ComplianceReportHistory.objects.filter(
-                Q(Q(status__fuel_supplier_status__status__in=["Submitted"]) &
-                  Q(user_role__is_government_role=False)) |
+                Q(
+                    Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                    Q(user_role__is_government_role=False)
+                ) |
                 Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
+                ]) |
+                Q(status__analyst_status__status__in=[
+                    "Requested Supplemental"
+                ]) |
+                Q(status__manager_status__status__in=[
+                    "Requested Supplemental"
                 ]),
                 compliance_report_id=self.id
             ).order_by('create_timestamp')

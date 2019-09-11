@@ -36,33 +36,53 @@ class ComplianceReportPermissions(permissions.BasePermission):
         GovernmentDirector = "DIRECTOR"
 
     actions = []
-    ActionMap = namedtuple('ActionMap', ['relationship',
-                                         'fuel_supplier_status_regex',
-                                         'analyst_status_regex',
-                                         'manager_status_regex',
-                                         'director_status_regex',
-                                         'resulting_actions'])
+    ActionMap = namedtuple('ActionMap', [
+        'relationship',
+        'fuel_supplier_status_regex',
+        'analyst_status_regex',
+        'manager_status_regex',
+        'director_status_regex',
+        'resulting_actions'
+    ])
 
-    actions.append(ActionMap(_Relationship.FuelSupplier, 'Draft', '.*', '.*', '.*',
-                             ['SUBMIT', 'DELETE']))
+    actions.append(ActionMap(
+        _Relationship.FuelSupplier,
+        'Draft', '.*', '.*', '.*',
+        ['SUBMIT', 'DELETE']
+    ))
 
-    actions.append(ActionMap(_Relationship.GovernmentAnalyst, 'Submitted',
-                             '(Unreviewed|Returned|Retracted)', '.*', 'Unreviewed', ['RECOMMEND', 'DISCOMMEND']))
+    actions.append(ActionMap(
+        _Relationship.GovernmentAnalyst, 'Submitted',
+        '(Unreviewed|Returned|Retracted)', '.*', 'Unreviewed',
+        ['RECOMMEND', 'DISCOMMEND', 'REQUEST_SUPPLEMENTAL']
+    ))
 
-    actions.append(ActionMap(_Relationship.GovernmentAnalyst, 'Submitted',
-                             '(Recommended|Not Recommended)', 'Unreviewed', 'Unreviewed', ['RETRACT']))
+    actions.append(ActionMap(
+        _Relationship.GovernmentAnalyst, 'Submitted',
+        '(Recommended|Not Recommended)', 'Unreviewed', 'Unreviewed',
+        ['RETRACT']
+    ))
 
-    actions.append(ActionMap(_Relationship.GovernmentComplianceManager, 'Submitted',
-                             '(Recommended|Not Recommended)', '(Unreviewed|Returned|Retracted)', 'Unreviewed',
-                             ['RECOMMEND', 'DISCOMMEND', 'RETURN']))
+    actions.append(ActionMap(
+        _Relationship.GovernmentComplianceManager, 'Submitted',
+        '(Recommended|Not Recommended)', '(Unreviewed|Returned|Retracted)',
+        'Unreviewed',
+        ['RECOMMEND', 'DISCOMMEND', 'RETURN', 'REQUEST_SUPPLEMENTAL']
+    ))
 
-    actions.append(ActionMap(_Relationship.GovernmentComplianceManager, 'Submitted',
-                             '(Recommended|Not Recommended)', '(Recommended|Not Recommended)', 'Unreviewed',
-                             ['RETRACT']))
+    actions.append(ActionMap(
+        _Relationship.GovernmentComplianceManager, 'Submitted',
+        '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
+        'Unreviewed',
+        ['RETRACT']
+    ))
 
-    actions.append(ActionMap(_Relationship.GovernmentDirector, 'Submitted',
-                             '(Recommended|Not Recommended)', '(Recommended|Not Recommended)', 'Unreviewed',
-                             ['ACCEPT', 'REJECT', 'RETURN']))
+    actions.append(ActionMap(
+        _Relationship.GovernmentDirector, 'Submitted',
+        '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
+        'Unreviewed',
+        ['ACCEPT', 'REJECT', 'RETURN']
+    ))
 
     @staticmethod
     def get_relationship(compliance_report, user):
@@ -70,40 +90,65 @@ class ComplianceReportPermissions(permissions.BasePermission):
 
         if compliance_report.organization.id == user.organization.id:
             return ComplianceReportPermissions._Relationship.FuelSupplier
-        if is_government and user.has_perm('ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
+        if is_government and user.has_perm(
+                'ANALYST_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
+        ):
             return ComplianceReportPermissions._Relationship.GovernmentAnalyst
-        if is_government and user.has_perm('MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'):
+        if is_government and user.has_perm(
+                'MANAGER_RECOMMEND_ACCEPTANCE_COMPLIANCE_REPORT'
+        ):
             return ComplianceReportPermissions._Relationship.GovernmentComplianceManager
-        if is_government and (user.has_perm('APPROVE_COMPLIANCE_REPORT')
-                              or user.has_perm('REJECT_COMPLIANCE_REPORT')):
+        if is_government and (
+                user.has_perm('APPROVE_COMPLIANCE_REPORT') or
+                user.has_perm('REJECT_COMPLIANCE_REPORT')
+        ):
             return ComplianceReportPermissions._Relationship.GovernmentDirector
 
         return None
 
     @staticmethod
     def get_available_actions(compliance_report, relationship):
-
         for action in ComplianceReportPermissions.actions:
             if action.relationship != relationship:
                 continue
-            if not re.match(action.fuel_supplier_status_regex, compliance_report.status.fuel_supplier_status.status):
+
+            if not re.match(
+                    action.fuel_supplier_status_regex,
+                    compliance_report.status.fuel_supplier_status.status
+            ):
                 continue
-            if not re.match(action.analyst_status_regex, compliance_report.status.analyst_status.status):
+
+            if not re.match(
+                    action.analyst_status_regex,
+                    compliance_report.status.analyst_status.status
+            ):
                 continue
-            if not re.match(action.manager_status_regex, compliance_report.status.manager_status.status):
+
+            if not re.match(
+                    action.manager_status_regex,
+                    compliance_report.status.manager_status.status
+            ):
                 continue
-            if not re.match(action.director_status_regex, compliance_report.status.director_status.status):
+
+            if not re.match(
+                    action.director_status_regex,
+                    compliance_report.status.director_status.status
+            ):
                 continue
+
             return action.resulting_actions
 
         return []
 
     @staticmethod
-    def user_can_change_status(user, compliance_report,
-                               new_fuel_supplier_status=None,
-                               new_analyst_status=None,
-                               new_manager_status=None,
-                               new_director_status=None):
+    def user_can_change_status(
+            user,
+            compliance_report,
+            new_fuel_supplier_status=None,
+            new_analyst_status=None,
+            new_manager_status=None,
+            new_director_status=None
+    ):
         """
         Check if a status change is possible.
         User by update serializer
@@ -111,13 +156,18 @@ class ComplianceReportPermissions(permissions.BasePermission):
         oldstatus = compliance_report.status
 
         total_changes = 0
-        if new_fuel_supplier_status is not None and oldstatus.fuel_supplier_status.status != new_fuel_supplier_status:
+        if new_fuel_supplier_status is not None and \
+                oldstatus.fuel_supplier_status.status != \
+                new_fuel_supplier_status:
             total_changes += 1
-        if new_analyst_status is not None and oldstatus.analyst_status.status != new_analyst_status:
+        if new_analyst_status is not None and \
+                oldstatus.analyst_status.status != new_analyst_status:
             total_changes += 1
-        if new_manager_status is not None and oldstatus.manager_status.status != new_manager_status:
+        if new_manager_status is not None and \
+                oldstatus.manager_status.status != new_manager_status:
             total_changes += 1
-        if new_director_status is not None and oldstatus.director_status.status != new_director_status:
+        if new_director_status is not None and \
+                oldstatus.director_status.status != new_director_status:
             total_changes += 1
 
         if total_changes > 1:
@@ -126,34 +176,50 @@ class ComplianceReportPermissions(permissions.BasePermission):
         if total_changes == 0:
             return True  # Nothing changed
 
-        relationship = ComplianceReportPermissions.get_relationship(compliance_report, user)
+        relationship = ComplianceReportPermissions.get_relationship(
+            compliance_report, user
+        )
 
-        if relationship == ComplianceReportPermissions._Relationship.FuelSupplier:
+        if relationship == \
+                ComplianceReportPermissions._Relationship.FuelSupplier:
             if oldstatus.fuel_supplier_status.status == 'Draft':
                 return new_fuel_supplier_status in ['Deleted', 'Submitted']
             return False
 
-        if relationship == ComplianceReportPermissions._Relationship.GovernmentAnalyst:
+        if relationship == \
+                ComplianceReportPermissions._Relationship.GovernmentAnalyst:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
                 return False  # Not submitted
-            if oldstatus.manager_status.status not in ['Unreviewed', 'Returned']:
+            if oldstatus.manager_status.status not in [
+                    'Unreviewed', 'Returned'
+            ]:
                 return False  # Manager has reviewed it
             if oldstatus.analyst_status.status not in ['Unreviewed']:
                 return False  # Already reviewed
-            return new_analyst_status in ['Recommended', 'Not Recommended']
+            return new_analyst_status in [
+                'Recommended', 'Not Recommended',
+                'Requested Supplemental'
+            ]
 
-        if relationship == ComplianceReportPermissions._Relationship.GovernmentComplianceManager:
+        if relationship == \
+                ComplianceReportPermissions._Relationship.GovernmentComplianceManager:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
                 return False  # Not submitted
-            if oldstatus.director_status.status not in ['Unreviewed', 'Returned']:
+            if oldstatus.director_status.status not in [
+                    'Unreviewed', 'Returned'
+            ]:
                 return False  # Director has reviewed it
             if oldstatus.analyst_status.status in ['Unreviewed']:
                 return False  # Analyst hasn't reviewed
             if oldstatus.manager_status.status not in ['Unreviewed']:
                 return False  # Already reviewed
-            return new_manager_status in ['Recommended', 'Not Recommended', 'Returned']
+            return new_manager_status in [
+                'Recommended', 'Not Recommended', 'Returned',
+                'Requested Supplemental'
+            ]
 
-        if relationship == ComplianceReportPermissions._Relationship.GovernmentDirector:
+        if relationship == \
+                ComplianceReportPermissions._Relationship.GovernmentDirector:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
                 return False  # Not submitted
             if oldstatus.analyst_status.status in ['Unreviewed']:

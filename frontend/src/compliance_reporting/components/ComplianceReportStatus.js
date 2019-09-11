@@ -17,12 +17,20 @@ const ComplianceReportStatus = (props) => {
     return 'Recommended Rejection - Manager';
   }
 
+  if (props.status.managerStatus === 'Requested Supplemental') {
+    return 'Requested Supplemental';
+  }
+
   if (props.status.analystStatus === 'Recommended') {
     return 'Recommended Acceptance - Analyst';
   }
 
   if (props.status.analystStatus === 'Not Recommended') {
     return 'Recommended Rejection - Analyst';
+  }
+
+  if (props.status.analystStatus === 'Requested Supplemental') {
+    return 'Requested Supplemental';
   }
 
   if (props.status.fuelSupplierStatus) {
