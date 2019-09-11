@@ -81,6 +81,10 @@
       margin: 0;
       padding: 0;
       vertical-align: middle;
+      
+      &:focus {
+        outline: none;
+      }
 
       &.text {
         text-align: left;

@@ -5,11 +5,11 @@ const ComplianceReports = props => (
     <h1>Compliance &amp; Exclusion Reports</h1>
     There are:
 
-    <div className="row">
-      <div className="col-xs-3 value">
+    <div>
+      <div className="value">
         5
       </div>
-      <div className="col-xs-9">
+      <div className="content">
         <h2>compliance reports in progress:</h2>
 
         <div><a href="">2 awaiting government analyst review</a></div>
@@ -18,11 +18,11 @@ const ComplianceReports = props => (
       </div>
     </div>
 
-    <div className="row">
-      <div className="col-xs-3 value">
+    <div>
+      <div className="value">
         6
       </div>
-      <div className="col-xs-9">
+      <div className="content">
         <h2>exclusion reports in progress:</h2>
 
         <div><a href="">3 awaiting government analyst review</a></div>
@@ -31,8 +31,8 @@ const ComplianceReports = props => (
       </div>
     </div>
 
-    <div className="row">
-      <div className="col-xs-9 col-xs-offset-3">
+    <div>
+      <div className="content offset-value">
         <h2>View all reports:</h2>
 
         <div><a href="">Current compliance period</a> | <a href="">All/historical</a></div>

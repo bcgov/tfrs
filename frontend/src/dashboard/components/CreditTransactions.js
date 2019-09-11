@@ -5,11 +5,12 @@ const CreditTransactions = props => (
     <h1>Credit Transactions</h1>
     There are:
 
-    <div className="row">
-      <div className="col-xs-3 value">
+    <div>
+      <div className="value">
         3
       </div>
-      <div className="col-xs-9">
+
+      <div className="content">
         <h2>credit transfers in progress:</h2>
 
         <div><a href="">2 awaiting government analyst review</a></div>
@@ -17,11 +18,12 @@ const CreditTransactions = props => (
       </div>
     </div>
 
-    <div className="row">
-      <div className="col-xs-3 value">
+    <div>
+      <div className="value">
         2
       </div>
-      <div className="col-xs-9">
+
+      <div className="content">
         <h2>Part 3 Awards in progress:</h2>
 
         <div><a href="">2 awaiting government analyst review</a></div>
@@ -29,8 +31,8 @@ const CreditTransactions = props => (
       </div>
     </div>
 
-    <div className="row">
-      <div className="col-xs-9 col-xs-offset-3">
+    <div>
+      <div className="content offset-value">
         <h2>View all credit transactions:</h2>
 
         <div><a href="">Current compliance period</a> | <a href="">All/historical</a></div>

@@ -5,7 +5,9 @@ const Balance = props => (
     <h2>All Organizations</h2>
     <h1>credit balance</h1>
     <div className="value">514,805</div>
-    Show transactions involving:
+
+    <div>Show transactions involving:</div>
+
     <select>
       <option>All Organizations</option>
     </select>
