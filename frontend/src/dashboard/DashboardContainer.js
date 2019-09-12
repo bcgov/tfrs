@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import DashboardPage from './components/DashboardPage';
 
@@ -25,6 +26,7 @@ class DashboardContainer extends Component {
   }
 
   componentDidMount () {
+    this._getCreditTransfers();
     this._getOrganizations();
     this._getUnreadNotificationCount();
   }
@@ -33,6 +35,10 @@ class DashboardContainer extends Component {
     if (nextProps.unreadNotificationsCount) {
       this._getUnreadNotificationCount(nextProps);
     }
+  }
+
+  _getCreditTransfers () {
+    this.props.getCreditTransfersIfNeeded();
   }
 
   _getOrganizations () {
@@ -76,6 +82,7 @@ class DashboardContainer extends Component {
   render () {
     return (
       <DashboardPage
+        creditTransfers={this.props.creditTransfers}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
         organizations={this.props.organizations.items}
@@ -92,6 +99,8 @@ DashboardContainer.defaultProps = {
 };
 
 DashboardContainer.propTypes = {
+  creditTransfers: PropTypes.shape().isRequired,
+  getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   getOrganizations: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
@@ -109,11 +118,18 @@ DashboardContainer.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
+  getCreditTransfersIfNeeded: () => {
+    dispatch(getCreditTransfersIfNeeded());
+  },
   getOrganization: bindActionCreators(getOrganization, dispatch),
   getOrganizations: () => { dispatch(getOrganizations()); }
 });
 
 const mapStateToProps = state => ({
+  creditTransfers: {
+    items: state.rootReducer.creditTransfers.items,
+    isFetching: state.rootReducer.creditTransfers.isFetching
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: state.rootReducer.organizationRequest.fuelSupplier,
   organizations: {

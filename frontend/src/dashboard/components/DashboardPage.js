@@ -24,7 +24,9 @@ const DashboardPage = props => (
     </div>
 
     <div className="col-md-5">
-      <CreditTransactions />
+      <CreditTransactions
+        creditTransfers={props.creditTransfers}
+      />
 
       <ComplianceReports />
 
@@ -51,6 +53,7 @@ DashboardPage.defaultProps = {
 };
 
 DashboardPage.propTypes = {
+  creditTransfers: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.oneOfType([
     PropTypes.shape(),
