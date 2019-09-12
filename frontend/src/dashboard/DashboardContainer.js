@@ -5,19 +5,27 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import DashboardPage from './components/DashboardPage';
 
 class DashboardContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
+      filterOrganization: -1,
       unreadNotificationsCount: 0
     };
+
+    this._selectOrganization = this._selectOrganization.bind(this);
+    this._selectedOrganization = this._selectedOrganization.bind(this);
   }
 
   componentDidMount () {
+    this._getOrganizations();
     this._getUnreadNotificationCount();
   }
 
@@ -25,6 +33,10 @@ class DashboardContainer extends Component {
     if (nextProps.unreadNotificationsCount) {
       this._getUnreadNotificationCount(nextProps);
     }
+  }
+
+  _getOrganizations () {
+    this.props.getOrganizations();
   }
 
   _getUnreadNotificationCount (nextProps = null) {
@@ -43,10 +55,31 @@ class DashboardContainer extends Component {
     });
   }
 
+  _selectedOrganization () {
+    if (this.state.filterOrganization === -1) {
+      return false;
+    }
+
+    return this.props.organization;
+  }
+
+  _selectOrganization (organizationId) {
+    if (organizationId !== -1) {
+      this.props.getOrganization(organizationId);
+    }
+
+    this.setState({
+      filterOrganization: organizationId
+    });
+  }
+
   render () {
     return (
       <DashboardPage
         loggedInUser={this.props.loggedInUser}
+        organization={this._selectedOrganization()}
+        organizations={this.props.organizations.items}
+        selectOrganization={this._selectOrganization}
         unreadNotificationsCount={this.state.unreadNotificationsCount}
       />
     );
@@ -54,18 +87,39 @@ class DashboardContainer extends Component {
 }
 
 DashboardContainer.defaultProps = {
+  organization: null,
   unreadNotificationsCount: null
 };
 
 DashboardContainer.propTypes = {
+  getOrganization: PropTypes.func.isRequired,
+  getOrganizations: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
+  organization: PropTypes.shape({
+    name: PropTypes.string,
+    organizationBalance: PropTypes.shape({
+      validatedCredits: PropTypes.number
+    })
+  }),
+  organizations: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    isFetching: PropTypes.bool.isRequired
+  }).isRequired,
   unreadNotificationsCount: PropTypes.number
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => ({
+  getOrganization: bindActionCreators(getOrganization, dispatch),
+  getOrganizations: () => { dispatch(getOrganizations()); }
+});
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  organization: state.rootReducer.organizationRequest.fuelSupplier,
+  organizations: {
+    items: state.rootReducer.organizations.items,
+    isFetching: state.rootReducer.organizations.isFetching
+  },
   unreadNotificationsCount: state.rootReducer.notifications.count.unreadCount
 });
 

@@ -13,7 +13,12 @@ import UserSettings from './UserSettings';
 const DashboardPage = props => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      <Balance />
+      <Balance
+        loggedInUser={props.loggedInUser}
+        organization={props.organization}
+        organizations={props.organizations}
+        selectOrganization={props.selectOrganization}
+      />
 
       <CreditTradingValue />
     </div>
@@ -40,11 +45,22 @@ const DashboardPage = props => (
 );
 
 DashboardPage.defaultProps = {
+  organization: {},
+  organizations: [],
   unreadNotificationsCount: 0
 };
 
 DashboardPage.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
+  organization: PropTypes.oneOfType([
+    PropTypes.shape(),
+    PropTypes.bool
+  ]),
+  organizations: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  })),
+  selectOrganization: PropTypes.func.isRequired,
   unreadNotificationsCount: PropTypes.number
 };
 
