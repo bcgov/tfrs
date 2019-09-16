@@ -31,6 +31,7 @@ export const BTN_REJECT = 'Reject';
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection';
+export const BTN_REQUEST_SUPPLEMENTAL = 'Request Supplemental';
 export const BTN_RESCIND = 'Rescind';
 export const BTN_RESCIND_AS_DRAFT = 'Rescind as Draft';
 export const BTN_RETURN_TO_DRAFT = 'Return to Analyst';
