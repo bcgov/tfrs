@@ -49,12 +49,20 @@ const ComplianceReportingTable = (props) => {
         return 'Recommended Rejection - Manager';
       }
 
+      if (item.status.managerStatus === 'Requested Supplemental') {
+        return 'Requested Supplemental';
+      }
+
       if (item.status.analystStatus === 'Recommended') {
         return 'Recommended Acceptance - Analyst';
       }
 
       if (item.status.analystStatus === 'Not Recommended') {
         return 'Recommended Rejection - Analyst';
+      }
+
+      if (item.status.analystStatus === 'Requested Supplemental') {
+        return 'Requested Supplemental';
       }
 
       if (item.status.fuelSupplierStatus) {

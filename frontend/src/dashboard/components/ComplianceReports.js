@@ -49,7 +49,8 @@ const ComplianceReports = (props) => {
     }
 
     if (item.type === 'Exclusion Report') {
-      if (item.status.status === 'Submitted') {
+      if (item.status.fuelSupplierStatus === 'Submitted' &&
+      item.status.analystStatus === 'Unreviewed') {
         awaitingReview.exclusionReports.analyst += 1;
         awaitingReview.exclusionReports.total += 1;
       }
