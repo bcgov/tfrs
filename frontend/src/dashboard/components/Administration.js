@@ -17,34 +17,40 @@ const Administration = props => (
       <div className="value">
         <FontAwesomeIcon icon="cog" />
       </div>
+    </div>
 
-      <div className="content administration">
-        <div>
-          <Link id="navbar-administration" to={USERS.LIST}>
-            Manage government users
-          </Link>
-        </div>
+    <div>
+      <div className="content">
+        <Link id="navbar-administration" to={USERS.LIST}>
+          Manage government users
+        </Link>
+      </div>
+    </div>
 
-        <div>
-          <Link
-            id="collapse-navbar-organization"
-            to={ORGANIZATIONS.LIST}
-          >
-            Add/Edit fuel suppliers
-          </Link>
-        </div>
+    <div>
+      <div className="content">
+        <Link
+          id="collapse-navbar-organization"
+          to={ORGANIZATIONS.LIST}
+        >
+          Add/Edit fuel suppliers
+        </Link>
+      </div>
+    </div>
 
-        <div>
-          <Link id="navbar-administration" to={CREDIT_TRANSACTIONS_HISTORY.LIST}>
-            User Activity
-          </Link>
-        </div>
+    <div>
+      <div className="content">
+        <Link id="navbar-administration" to={CREDIT_TRANSACTIONS_HISTORY.LIST}>
+          User Activity
+        </Link>
+      </div>
+    </div>
 
-        <div>
-          <Link to={HISTORICAL_DATA_ENTRY.LIST}>
-            Historical Data Entry
-          </Link>
-        </div>
+    <div>
+      <div className="content">
+        <Link to={HISTORICAL_DATA_ENTRY.LIST}>
+          Historical Data Entry
+        </Link>
       </div>
     </div>
   </div>

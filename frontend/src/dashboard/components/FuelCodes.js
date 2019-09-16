@@ -55,7 +55,7 @@ const FuelCodes = (props) => {
       </div>
 
       <div>
-        <div className="content offset-value">
+        <div className="content">
           <button
             onClick={() => {
               props.setFilter([{

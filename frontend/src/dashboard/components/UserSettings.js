@@ -41,35 +41,35 @@ class UserSettings extends Component {
           {this.props.loggedInUser.organization && ` ${this.props.loggedInUser.organization.name}`}
         </div>
 
-        <div className="user-settings">
-          <div className="content offset-value">
+        <div>
+          <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS_PROFILE}>
               User Profile
             </Link>
           </div>
         </div>
 
-        <div className="user-settings">
+        <div>
           <div className="value">
             {this.state.unreadCount}
           </div>
-          <div className="content offset-value">
+          <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS}>
               Notifications
             </Link>
           </div>
         </div>
 
-        <div className="user-settings">
-          <div className="content offset-value">
+        <div>
+          <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS}>
               Configure your notifications
             </Link>
           </div>
         </div>
 
-        <div className="user-settings">
-          <div className="content offset-value">
+        <div>
+          <div className="content">
             <a
               href="/assets/files/Transportation_Fuels_Reporting_System_-_IDIR_Manual_v1.0.pdf"
               rel="noopener noreferrer"

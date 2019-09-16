@@ -221,7 +221,7 @@ const ComplianceReports = (props) => {
       </div>
 
       <div>
-        <div className="content offset-value">
+        <div className="content">
           <h2>View all reports:</h2>
 
           <div>

@@ -145,7 +145,7 @@ const CreditTransactions = (props) => {
       </div>
 
       <div>
-        <div className="content offset-value">
+        <div className="content">
           <h2>View all credit transactions:</h2>
 
           <div>
