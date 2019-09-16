@@ -105,7 +105,8 @@ const CreditTransactions = (props) => {
               }}
               type="button"
             >
-              {awaitingReview.creditTransfers.director} awaiting Director review and statutory decision
+              {`${awaitingReview.creditTransfers.director} `}
+              awaiting Director review and statutory decision
             </button>
           </div>
         </div>

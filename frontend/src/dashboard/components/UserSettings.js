@@ -53,7 +53,7 @@ class UserSettings extends Component {
           <div className="value">
             {this.state.unreadCount}
           </div>
-          <div className="content">
+          <div className="content offset-value">
             <Link id="navbar-administration" to={Routes.SETTINGS}>
               Notifications
             </Link>
@@ -82,7 +82,7 @@ class UserSettings extends Component {
       </div>
     );
   }
-};
+}
 
 UserSettings.defaultProps = {
 };

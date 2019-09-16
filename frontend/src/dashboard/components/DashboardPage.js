@@ -41,7 +41,10 @@ const DashboardPage = props => (
     </div>
 
     <div className="col-md-4">
-      <FileSubmissions />
+      <FileSubmissions
+        documentUploads={props.documentUploads}
+        setFilter={props.setFilter}
+      />
 
       <Administration />
 
@@ -62,6 +65,7 @@ DashboardPage.defaultProps = {
 DashboardPage.propTypes = {
   complianceReports: PropTypes.shape().isRequired,
   creditTransfers: PropTypes.shape().isRequired,
+  documentUploads: PropTypes.shape().isRequired,
   fuelCodes: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.oneOfType([

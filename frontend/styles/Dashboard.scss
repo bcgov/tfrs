@@ -57,6 +57,7 @@
     margin: 0;
     outline: none;
     padding: 0;
+    text-align: left;
 
     &:hover, &:focus {
       color: $link-color-hover-dark;
@@ -91,13 +92,14 @@
     }
 
     &.offset-value {
-      margin-left: 5rem;
+      margin-left: 7rem;
     }
   }
 
   .user-settings {
+    position: relative;
+
     .content {
-      margin-bottom: 1rem;
       margin-top: 1rem;
       padding-bottom: 0;
       padding-top: 0;
@@ -105,8 +107,9 @@
     }
 
     .value {
-      font-size: 3rem;
       padding: 0;
+      position: absolute;
+      top: -0.25rem;
       vertical-align: middle;
     }
   }
@@ -117,6 +120,6 @@
     font-size: 3.6rem;
     text-align: center;
     vertical-align: top;
-    width: 5rem;
+    width: 7rem;
   }
 }
