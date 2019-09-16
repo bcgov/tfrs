@@ -54,8 +54,6 @@ const ComplianceReportingTable = (props) => {
       .includes(filter.value.toLowerCase()) : true;
   };
 
-  const filterable = true;
-
   return (
     <ReactTable
       stateKey="compliance-reporting"
@@ -69,7 +67,7 @@ const ComplianceReportingTable = (props) => {
         desc: true
       }]}
       loading={props.isFetching}
-      filterable={filterable}
+      filterable
       getTrProps={(state, row) => {
         if (row && row.original) {
           return {

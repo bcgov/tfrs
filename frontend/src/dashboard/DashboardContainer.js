@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
+import saveTableState from '../actions/stateSavingReactTableActions';
 import DashboardPage from './components/DashboardPage';
 
 class DashboardContainer extends Component {
@@ -23,6 +24,7 @@ class DashboardContainer extends Component {
 
     this._selectOrganization = this._selectOrganization.bind(this);
     this._selectedOrganization = this._selectedOrganization.bind(this);
+    this._setFilter = this._setFilter.bind(this);
   }
 
   componentDidMount () {
@@ -79,6 +81,14 @@ class DashboardContainer extends Component {
     });
   }
 
+  _setFilter (filtered, stateKey) {
+    this.props.saveTableState(stateKey, {
+      ...this.props.tableState,
+      filtered,
+      page: 0
+    });
+  }
+
   render () {
     return (
       <DashboardPage
@@ -87,6 +97,7 @@ class DashboardContainer extends Component {
         organization={this._selectedOrganization()}
         organizations={this.props.organizations.items}
         selectOrganization={this._selectOrganization}
+        setFilter={this._setFilter}
         unreadNotificationsCount={this.state.unreadNotificationsCount}
       />
     );
@@ -114,6 +125,8 @@ DashboardContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  saveTableState: PropTypes.func.isRequired,
+  tableState: PropTypes.shape().isRequired,
   unreadNotificationsCount: PropTypes.number
 };
 
@@ -122,10 +135,11 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getCreditTransfersIfNeeded());
   },
   getOrganization: bindActionCreators(getOrganization, dispatch),
-  getOrganizations: () => { dispatch(getOrganizations()); }
+  getOrganizations: () => { dispatch(getOrganizations()); },
+  saveTableState: bindActionCreators(saveTableState, dispatch)
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   creditTransfers: {
     items: state.rootReducer.creditTransfers.items,
     isFetching: state.rootReducer.creditTransfers.isFetching
@@ -136,6 +150,13 @@ const mapStateToProps = state => ({
     items: state.rootReducer.organizations.items,
     isFetching: state.rootReducer.organizations.isFetching
   },
+  tableState: ownProps.stateKey in state.rootReducer.tableState.savedState
+    ? state.rootReducer.tableState.savedState[ownProps.stateKey] : {
+      page: 0,
+      pageSize: ownProps.defaultPageSize,
+      sorted: ownProps.defaultSorted,
+      filtered: ownProps.defaultFiltered
+    },
   unreadNotificationsCount: state.rootReducer.notifications.count.unreadCount
 });
 

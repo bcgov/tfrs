@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
+import history from '../../app/History';
 import Loading from '../../app/components/Loading';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
 const CreditTransactions = (props) => {
   const { isFetching, items } = props.creditTransfers;
@@ -62,8 +66,48 @@ const CreditTransactions = (props) => {
         <div className="content">
           <h2>credit transfers in progress:</h2>
 
-          <div><a href="">{inProgress.creditTransfers.analyst} awaiting government analyst review</a></div>
-          <div><a href="">{inProgress.creditTransfers.director} awaiting Director review and statutory decision</a></div>
+          <div>
+            <button
+              onClick={() => {
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: ''
+                }, {
+                  id: 'transactionType',
+                  value: 'Credit Transfer'
+                }, {
+                  id: 'status',
+                  value: 'Signed 2/2'
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              {inProgress.creditTransfers.analyst} awaiting government analyst review
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: ''
+                }, {
+                  id: 'transactionType',
+                  value: 'Credit Transfer'
+                }, {
+                  id: 'status',
+                  value: 'Reviewed'
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              {inProgress.creditTransfers.director} awaiting Director review and statutory decision
+            </button>
+          </div>
         </div>
       </div>
 
@@ -75,8 +119,27 @@ const CreditTransactions = (props) => {
         <div className="content">
           <h2>Part 3 Awards in progress:</h2>
 
-          <div><a href="">{inProgress.part3Awards.analyst} awaiting government analyst review</a></div>
-          <div><a href="">{inProgress.part3Awards.director} awaiting Director review</a></div>
+          <div>
+            <button
+              onClick={() => {
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: ''
+                }, {
+                  id: 'transactionType',
+                  value: 'Part 3 Award'
+                }, {
+                  id: 'status',
+                  value: 'Reviewed'
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              {inProgress.part3Awards.director} awaiting Director review
+            </button>
+          </div>
         </div>
       </div>
 
@@ -84,9 +147,45 @@ const CreditTransactions = (props) => {
         <div className="content offset-value">
           <h2>View all credit transactions:</h2>
 
-          <div><a href="">Current compliance period</a> | <a href="">All/historical</a></div>
+          <div>
+            <button
+              onClick={() => {
+                const currentYear = new Date().getFullYear();
+
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: currentYear.toString()
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              Current compliance period
+            </button>
+            {` | `}
+            <button
+              onClick={() => {
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: ''
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              All/historical
+            </button>
+          </div>
           <div>&nbsp;</div>
-          <div><a href="">Fuel Supplier Organizations</a></div>
+          <div>
+            <Link
+              to={ORGANIZATIONS.LIST}
+            >
+              Fuel Supplier Organizations
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -100,7 +199,8 @@ CreditTransactions.propTypes = {
   creditTransfers: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired
+  }).isRequired,
+  setFilter: PropTypes.func.isRequired
 };
 
 export default CreditTransactions;

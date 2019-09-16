@@ -50,6 +50,24 @@
   padding: 2rem;
   position: relative;
 
+  button {
+    background-color: transparent;
+    border: none;
+    color: $link-color;
+    margin: 0;
+    outline: none;
+    padding: 0;
+
+    &:hover, &:focus {
+      color: $link-color-hover-dark;
+      text-decoration: underline;
+    }
+  }
+
+  > div:last-child > div.content {
+    padding-bottom: 0;
+  }
+
   h1 {
     background-color: $white; 
     color: $font;

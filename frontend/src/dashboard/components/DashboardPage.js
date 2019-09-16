@@ -26,6 +26,7 @@ const DashboardPage = props => (
     <div className="col-md-5">
       <CreditTransactions
         creditTransfers={props.creditTransfers}
+        setFilter={props.setFilter}
       />
 
       <ComplianceReports />
@@ -64,6 +65,7 @@ DashboardPage.propTypes = {
     name: PropTypes.string
   })),
   selectOrganization: PropTypes.func.isRequired,
+  setFilter: PropTypes.func.isRequired,
   unreadNotificationsCount: PropTypes.number
 };
 
