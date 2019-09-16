@@ -14,7 +14,7 @@ const CreditTransactions = (props) => {
     return <Loading />;
   }
 
-  const inProgress = {
+  const awaitingReview = {
     creditTransfers: {
       analyst: 0,
       director: 0,
@@ -30,25 +30,25 @@ const CreditTransactions = (props) => {
   items.forEach((item) => {
     if (['Credit Reduction', 'Credit Validation', 'Part 3 Award'].indexOf(item.type.theType) >= 0) {
       if (item.status.status === 'Submitted') {
-        inProgress.part3Awards.analyst += 1;
-        inProgress.part3Awards.total += 1;
+        awaitingReview.part3Awards.analyst += 1;
+        awaitingReview.part3Awards.total += 1;
       }
 
       if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-        inProgress.part3Awards.director += 1;
-        inProgress.part3Awards.total += 1;
+        awaitingReview.part3Awards.director += 1;
+        awaitingReview.part3Awards.total += 1;
       }
     }
 
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
       if (item.status.status === 'Submitted') {
-        inProgress.creditTransfers.analyst += 1;
-        inProgress.creditTransfers.total += 1;
+        awaitingReview.creditTransfers.analyst += 1;
+        awaitingReview.creditTransfers.total += 1;
       }
 
       if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-        inProgress.creditTransfers.director += 1;
-        inProgress.creditTransfers.total += 1;
+        awaitingReview.creditTransfers.director += 1;
+        awaitingReview.creditTransfers.total += 1;
       }
     }
   });
@@ -60,7 +60,7 @@ const CreditTransactions = (props) => {
 
       <div>
         <div className="value">
-          {inProgress.creditTransfers.total}
+          {awaitingReview.creditTransfers.total}
         </div>
 
         <div className="content">
@@ -84,7 +84,7 @@ const CreditTransactions = (props) => {
               }}
               type="button"
             >
-              {inProgress.creditTransfers.analyst} awaiting government analyst review
+              {awaitingReview.creditTransfers.analyst} awaiting government analyst review
             </button>
           </div>
           <div>
@@ -105,7 +105,7 @@ const CreditTransactions = (props) => {
               }}
               type="button"
             >
-              {inProgress.creditTransfers.director} awaiting Director review and statutory decision
+              {awaitingReview.creditTransfers.director} awaiting Director review and statutory decision
             </button>
           </div>
         </div>
@@ -113,7 +113,7 @@ const CreditTransactions = (props) => {
 
       <div>
         <div className="value">
-          {inProgress.part3Awards.total}
+          {awaitingReview.part3Awards.total}
         </div>
 
         <div className="content">
@@ -137,7 +137,7 @@ const CreditTransactions = (props) => {
               }}
               type="button"
             >
-              {inProgress.part3Awards.director} awaiting Director review
+              {awaitingReview.part3Awards.director} awaiting Director review
             </button>
           </div>
         </div>

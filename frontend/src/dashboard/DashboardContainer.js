@@ -5,9 +5,9 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import { complianceReporting } from '../actions/complianceReporting';
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
@@ -28,6 +28,7 @@ class DashboardContainer extends Component {
   }
 
   componentDidMount () {
+    this._getComplianceReports();
     this._getCreditTransfers();
     this._getOrganizations();
     this._getUnreadNotificationCount();
@@ -37,6 +38,10 @@ class DashboardContainer extends Component {
     if (nextProps.unreadNotificationsCount) {
       this._getUnreadNotificationCount(nextProps);
     }
+  }
+
+  _getComplianceReports () {
+    this.props.getComplianceReports();
   }
 
   _getCreditTransfers () {
@@ -92,6 +97,7 @@ class DashboardContainer extends Component {
   render () {
     return (
       <DashboardPage
+        complianceReports={this.props.complianceReports}
         creditTransfers={this.props.creditTransfers}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
@@ -110,7 +116,12 @@ DashboardContainer.defaultProps = {
 };
 
 DashboardContainer.propTypes = {
+  complianceReports: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFinding: PropTypes.bool
+  }).isRequired,
   creditTransfers: PropTypes.shape().isRequired,
+  getComplianceReports: PropTypes.func.isRequired,
   getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   getOrganizations: PropTypes.func.isRequired,
@@ -130,16 +141,16 @@ DashboardContainer.propTypes = {
   unreadNotificationsCount: PropTypes.number
 };
 
-const mapDispatchToProps = dispatch => ({
-  getCreditTransfersIfNeeded: () => {
-    dispatch(getCreditTransfersIfNeeded());
-  },
-  getOrganization: bindActionCreators(getOrganization, dispatch),
-  getOrganizations: () => { dispatch(getOrganizations()); },
-  saveTableState: bindActionCreators(saveTableState, dispatch)
+const mapDispatchToProps = ({
+  getComplianceReports: complianceReporting.find,
+  getCreditTransfersIfNeeded,
+  getOrganization,
+  getOrganizations,
+  saveTableState
 });
 
 const mapStateToProps = (state, ownProps) => ({
+  complianceReports: state.rootReducer.complianceReporting,
   creditTransfers: {
     items: state.rootReducer.creditTransfers.items,
     isFetching: state.rootReducer.creditTransfers.isFetching

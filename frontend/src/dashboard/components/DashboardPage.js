@@ -29,7 +29,10 @@ const DashboardPage = props => (
         setFilter={props.setFilter}
       />
 
-      <ComplianceReports />
+      <ComplianceReports
+        complianceReports={props.complianceReports}
+        setFilter={props.setFilter}
+      />
 
       <FuelCodes />
     </div>
@@ -54,6 +57,7 @@ DashboardPage.defaultProps = {
 };
 
 DashboardPage.propTypes = {
+  complianceReports: PropTypes.shape().isRequired,
   creditTransfers: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.oneOfType([
