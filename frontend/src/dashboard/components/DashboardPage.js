@@ -34,7 +34,10 @@ const DashboardPage = props => (
         setFilter={props.setFilter}
       />
 
-      <FuelCodes />
+      <FuelCodes
+        fuelCodes={props.fuelCodes}
+        setFilter={props.setFilter}
+      />
     </div>
 
     <div className="col-md-4">
@@ -59,6 +62,7 @@ DashboardPage.defaultProps = {
 DashboardPage.propTypes = {
   complianceReports: PropTypes.shape().isRequired,
   creditTransfers: PropTypes.shape().isRequired,
+  fuelCodes: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.oneOfType([
     PropTypes.shape(),

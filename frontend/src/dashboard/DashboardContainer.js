@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import { complianceReporting } from '../actions/complianceReporting';
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
+import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
 import DashboardPage from './components/DashboardPage';
@@ -30,6 +31,7 @@ class DashboardContainer extends Component {
   componentDidMount () {
     this._getComplianceReports();
     this._getCreditTransfers();
+    this._getFuelCodes();
     this._getOrganizations();
     this._getUnreadNotificationCount();
   }
@@ -46,6 +48,10 @@ class DashboardContainer extends Component {
 
   _getCreditTransfers () {
     this.props.getCreditTransfersIfNeeded();
+  }
+
+  _getFuelCodes () {
+    this.props.getFuelCodes();
   }
 
   _getOrganizations () {
@@ -99,6 +105,7 @@ class DashboardContainer extends Component {
       <DashboardPage
         complianceReports={this.props.complianceReports}
         creditTransfers={this.props.creditTransfers}
+        fuelCodes={this.props.fuelCodes}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
         organizations={this.props.organizations.items}
@@ -121,8 +128,13 @@ DashboardContainer.propTypes = {
     isFinding: PropTypes.bool
   }).isRequired,
   creditTransfers: PropTypes.shape().isRequired,
+  fuelCodes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   getCreditTransfersIfNeeded: PropTypes.func.isRequired,
+  getFuelCodes: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   getOrganizations: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
@@ -144,6 +156,7 @@ DashboardContainer.propTypes = {
 const mapDispatchToProps = ({
   getComplianceReports: complianceReporting.find,
   getCreditTransfersIfNeeded,
+  getFuelCodes,
   getOrganization,
   getOrganizations,
   saveTableState
@@ -154,6 +167,10 @@ const mapStateToProps = (state, ownProps) => ({
   creditTransfers: {
     items: state.rootReducer.creditTransfers.items,
     isFetching: state.rootReducer.creditTransfers.isFetching
+  },
+  fuelCodes: {
+    isFetching: state.rootReducer.fuelCodes.isFetching,
+    items: state.rootReducer.fuelCodes.items
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: state.rootReducer.organizationRequest.fuelSupplier,
