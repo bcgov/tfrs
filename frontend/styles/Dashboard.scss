@@ -88,6 +88,27 @@
     left: 2rem;
   }
 
+  &.administration {
+    .icon {
+      color: $dark-yellow;
+      font-size: 5rem;
+      left: 3rem;
+      position: absolute;
+      top: 3rem;
+    }
+  }
+
+  &.user-settings {
+    .icon {
+      position: absolute;
+      display: inline-block;
+      color: $dark-yellow;
+      font-size: 4rem;
+      top: 0;
+      right: 4rem;
+    }
+  }
+
   .content {
     margin-left: 7rem;
     padding: 1.5rem 1rem 1rem;

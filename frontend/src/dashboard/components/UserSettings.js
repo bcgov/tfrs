@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as Routes from '../../constants/routes';
 
@@ -33,7 +34,7 @@ class UserSettings extends Component {
 
   render () {
     return (
-      <div className="dashboard-fieldset">
+      <div className="dashboard-fieldset user-settings">
         <h1>User Settings</h1>
 
         <div>
@@ -58,6 +59,9 @@ class UserSettings extends Component {
               Notifications
             </Link>
           </div>
+          <span className="icon">
+            <FontAwesomeIcon icon={['far', 'bell']} />
+          </span>
         </div>
 
         <div>

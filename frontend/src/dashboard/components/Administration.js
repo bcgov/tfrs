@@ -10,14 +10,11 @@ import {
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 const Administration = props => (
-  <div className="dashboard-fieldset">
+  <div className="dashboard-fieldset administration">
     <h1>Administration</h1>
-
-    <div>
-      <div className="value">
-        <FontAwesomeIcon icon="cog" />
-      </div>
-    </div>
+    <span className="icon">
+      <FontAwesomeIcon icon="cog" />
+    </span>
 
     <div>
       <div className="content">

@@ -86,7 +86,7 @@ const Router = routerProps => (
         <Route
           exact
           path={Routes.HOME}
-          component={withRouter(CreditTransactionsContainer)
+          component={withRouter(DashboardContainer)
           }
         />
         <Route
