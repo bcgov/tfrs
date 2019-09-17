@@ -10,7 +10,8 @@ const ORGANIZATIONS = {
   LIST: BASE_PATH,
   MINE: `${BASE_PATH}/mine`,
   ADD: `${BASE_PATH}/add`,
-  ROLES: `${BASE_PATH}/roles`
+  ROLES: `${BASE_PATH}/roles`,
+  PART_3: `https://www2.gov.bc.ca/gov/content?id=053E5694562A4F538D73A427B3B43DEC`
 };
 
 export default ORGANIZATIONS;

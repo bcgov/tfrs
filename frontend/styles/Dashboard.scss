@@ -98,14 +98,45 @@
     }
   }
 
+  &.part-3-agreements {
+    .icon {
+      color: $dark-yellow;
+      display: inline-block;
+      font-size: 3.6rem;
+      position: absolute;
+      text-align: center;
+      vertical-align: top;
+      width: 7rem;
+
+      .icon-secure {
+        font-size: 1.5rem;
+        left: 0.5rem;
+        position: absolute;
+        top: 1rem;
+      }
+    }
+  }
+
   &.user-settings {
     .icon {
-      position: absolute;
-      display: inline-block;
       color: $dark-yellow;
+      display: inline-block;
       font-size: 4rem;
-      top: 0;
+      position: absolute;
       right: 4rem;
+      top: 0;
+    }
+  }
+
+  .add-button {
+    background-color: $white;
+    position: absolute;
+    bottom: -1.75rem;
+    padding: 0.5rem;
+    right: 1rem;
+
+    svg {
+      color: $dark-yellow;
     }
   }
 

@@ -77,7 +77,7 @@ class UserSettings extends Component {
         <div>
           <div className="content">
             <a
-              href="/assets/files/Transportation_Fuels_Reporting_System_-_IDIR_Manual_v1.0.pdf"
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >
