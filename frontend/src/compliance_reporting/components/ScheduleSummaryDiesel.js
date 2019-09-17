@@ -136,7 +136,7 @@ class ScheduleSummaryDiesel {
         )
       }, {
         ...numericInput,
-        readOnly: readOnly,
+        readOnly,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
@@ -185,7 +185,7 @@ class ScheduleSummaryDiesel {
         )
       }, {
         ...numericInput,
-        readOnly: readOnly,
+        readOnly,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
