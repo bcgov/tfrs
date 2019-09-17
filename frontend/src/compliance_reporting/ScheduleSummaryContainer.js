@@ -3,10 +3,10 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 import 'react-datasheet/lib/react-datasheet.css';
 
@@ -17,12 +17,12 @@ import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
-import {SCHEDULE_PENALTY, SCHEDULE_SUMMARY} from '../constants/schedules/scheduleColumns';
-import {formatNumeric} from '../utils/functions';
+import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
+import { formatNumeric } from '../utils/functions';
 import Loading from '../app/components/Loading';
 
 class ScheduleSummaryContainer extends Component {
-  static calculateDieselPayable(grid) {
+  static calculateDieselPayable (grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_15][2].value;
@@ -44,7 +44,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateDieselTotal(grid) {
+  static calculateDieselTotal (grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_13][2].value;
@@ -80,7 +80,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateNonCompliancePayable(penalty) {
+  static calculateNonCompliancePayable (penalty) {
     const grid = penalty;
     let total = 0;
 
@@ -104,7 +104,7 @@ class ScheduleSummaryContainer extends Component {
     return penalty;
   }
 
-  static calculateGasolinePayable(grid) {
+  static calculateGasolinePayable (grid) {
     let totals = 0;
 
     let payable = grid[SCHEDULE_SUMMARY.LINE_4][2].value;
@@ -126,7 +126,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateGasolineTotal(grid) {
+  static calculateGasolineTotal (grid) {
     let totals = 0;
 
     let volume = grid[SCHEDULE_SUMMARY.LINE_2][2].value;
@@ -162,7 +162,7 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculatePart3Payable(part3) {
+  static calculatePart3Payable (part3) {
     const grid = part3;
     let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value);
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
@@ -195,7 +195,7 @@ class ScheduleSummaryContainer extends Component {
     return grid;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -218,7 +218,7 @@ class ScheduleSummaryContainer extends Component {
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.snapshot) {
       this.componentWillReceiveProps(this.props);
     } else {
@@ -232,38 +232,36 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-
+  componentWillReceiveProps (nextProps, nextContext) {
     if (nextProps.snapshot) {
-      let {diesel, gasoline, part3, penalty} = this.state;
-      const {summary} = nextProps.snapshot;
+      const {
+        diesel, gasoline, part3, penalty
+      } = this.state;
+      const { summary } = nextProps.snapshot;
 
-      const cellFormatNumeric = (value) => (
-        {
-          value: value,
-          className: 'numeric',
-          readOnly: true,
-          valueViewer: (data) => {
-            const {value} = data;
-
-            if (value === '') {
-              return '';
-            }
-
-            if (Number(value) < 0) {
-              return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
-            }
-
-            return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
-          }
-        }
-      );
-
-      const cellFormatTotal = (value) => (
-        {
+      const cellFormatNumeric = cellValue => ({
+        cellValue,
         className: 'numeric',
         readOnly: true,
-        value: value,
+        valueViewer: (data) => {
+          const { value } = data;
+
+          if (value === '') {
+            return '';
+          }
+
+          if (Number(value) < 0) {
+            return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
+          }
+
+          return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+        }
+      });
+
+      const cellFormatTotal = cellValue => ({
+        className: 'numeric',
+        readOnly: true,
+        cellValue,
         valueViewer: (data) => {
           const { value } = data;
 
@@ -277,44 +275,43 @@ class ScheduleSummaryContainer extends Component {
 
           return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
-      })
-      ;
+      });
 
-      gasoline[SCHEDULE_SUMMARY.LINE_1][2] = cellFormatNumeric(summary.lines["1"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_2][2] = cellFormatNumeric(summary.lines["2"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_3][2] = cellFormatNumeric(summary.lines["3"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_4][2] = cellFormatNumeric(summary.lines["4"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_5][2] = cellFormatNumeric(summary.lines["5"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_6][2] = cellFormatNumeric(summary.lines["6"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_7][2] = cellFormatNumeric(summary.lines["7"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_8][2] = cellFormatNumeric(summary.lines["8"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_9][2] = cellFormatNumeric(summary.lines["9"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_10][2] = cellFormatNumeric(summary.lines["10"]);
-      gasoline[SCHEDULE_SUMMARY.LINE_11][2] = cellFormatTotal(summary.lines["11"]);
+      gasoline[SCHEDULE_SUMMARY.LINE_1][2] = cellFormatNumeric(summary.lines['1']);
+      gasoline[SCHEDULE_SUMMARY.LINE_2][2] = cellFormatNumeric(summary.lines['2']);
+      gasoline[SCHEDULE_SUMMARY.LINE_3][2] = cellFormatNumeric(summary.lines['3']);
+      gasoline[SCHEDULE_SUMMARY.LINE_4][2] = cellFormatNumeric(summary.lines['4']);
+      gasoline[SCHEDULE_SUMMARY.LINE_5][2] = cellFormatNumeric(summary.lines['5']);
+      gasoline[SCHEDULE_SUMMARY.LINE_6][2] = cellFormatNumeric(summary.lines['6']);
+      gasoline[SCHEDULE_SUMMARY.LINE_7][2] = cellFormatNumeric(summary.lines['7']);
+      gasoline[SCHEDULE_SUMMARY.LINE_8][2] = cellFormatNumeric(summary.lines['8']);
+      gasoline[SCHEDULE_SUMMARY.LINE_9][2] = cellFormatNumeric(summary.lines['9']);
+      gasoline[SCHEDULE_SUMMARY.LINE_10][2] = cellFormatNumeric(summary.lines['10']);
+      gasoline[SCHEDULE_SUMMARY.LINE_11][2] = cellFormatTotal(summary.lines['11']);
 
-      diesel[SCHEDULE_SUMMARY.LINE_12][2] = cellFormatNumeric(summary.lines["12"]);
-      diesel[SCHEDULE_SUMMARY.LINE_13][2] = cellFormatNumeric(summary.lines["13"]);
-      diesel[SCHEDULE_SUMMARY.LINE_14][2] = cellFormatNumeric(summary.lines["14"]);
-      diesel[SCHEDULE_SUMMARY.LINE_15][2] = cellFormatNumeric(summary.lines["15"]);
+      diesel[SCHEDULE_SUMMARY.LINE_12][2] = cellFormatNumeric(summary.lines['12']);
+      diesel[SCHEDULE_SUMMARY.LINE_13][2] = cellFormatNumeric(summary.lines['13']);
+      diesel[SCHEDULE_SUMMARY.LINE_14][2] = cellFormatNumeric(summary.lines['14']);
+      diesel[SCHEDULE_SUMMARY.LINE_15][2] = cellFormatNumeric(summary.lines['15']);
 
-      diesel[SCHEDULE_SUMMARY.LINE_16][2] = cellFormatNumeric(summary.lines["16"]);
-      diesel[SCHEDULE_SUMMARY.LINE_17][2] = cellFormatNumeric(summary.lines["17"]);
-      diesel[SCHEDULE_SUMMARY.LINE_18][2] = cellFormatNumeric(summary.lines["18"]);
-      diesel[SCHEDULE_SUMMARY.LINE_19][2] = cellFormatNumeric(summary.lines["19"]);
-      diesel[SCHEDULE_SUMMARY.LINE_20][2] = cellFormatNumeric(summary.lines["20"]);
-      diesel[SCHEDULE_SUMMARY.LINE_21][2] = cellFormatNumeric(summary.lines["21"]);
-      diesel[SCHEDULE_SUMMARY.LINE_22][2] = cellFormatTotal(summary.lines["22"]);
+      diesel[SCHEDULE_SUMMARY.LINE_16][2] = cellFormatNumeric(summary.lines['16']);
+      diesel[SCHEDULE_SUMMARY.LINE_17][2] = cellFormatNumeric(summary.lines['17']);
+      diesel[SCHEDULE_SUMMARY.LINE_18][2] = cellFormatNumeric(summary.lines['18']);
+      diesel[SCHEDULE_SUMMARY.LINE_19][2] = cellFormatNumeric(summary.lines['19']);
+      diesel[SCHEDULE_SUMMARY.LINE_20][2] = cellFormatNumeric(summary.lines['20']);
+      diesel[SCHEDULE_SUMMARY.LINE_21][2] = cellFormatNumeric(summary.lines['21']);
+      diesel[SCHEDULE_SUMMARY.LINE_22][2] = cellFormatTotal(summary.lines['22']);
 
-      part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines["23"]);
-      part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines["24"]);
-      part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines["25"]);
-      part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines["26"]);
-      part3[SCHEDULE_SUMMARY.LINE_27][2] = cellFormatNumeric(summary.lines["27"] < 0 ? summary.lines["27"] : 0);
-      part3[SCHEDULE_SUMMARY.LINE_28][2] = cellFormatTotal(summary.lines["28"]);
+      part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23']);
+      part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24']);
+      part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25']);
+      part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26']);
+      part3[SCHEDULE_SUMMARY.LINE_27][2] = cellFormatNumeric(summary.lines['27'] < 0 ? summary.lines['27'] : 0);
+      part3[SCHEDULE_SUMMARY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
 
-      penalty[SCHEDULE_PENALTY.LINE_11][2] = cellFormatTotal(summary.lines["11"]);
-      penalty[SCHEDULE_PENALTY.LINE_22][2] = cellFormatTotal(summary.lines["22"]);
-      penalty[SCHEDULE_PENALTY.LINE_28][2] = cellFormatTotal(summary.lines["28"]);
+      penalty[SCHEDULE_PENALTY.LINE_11][2] = cellFormatTotal(summary.lines['11']);
+      penalty[SCHEDULE_PENALTY.LINE_22][2] = cellFormatTotal(summary.lines['22']);
+      penalty[SCHEDULE_PENALTY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
       penalty[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = cellFormatTotal(summary.totalPayable);
 
       this.setState({
@@ -323,10 +320,8 @@ class ScheduleSummaryContainer extends Component {
         part3,
         penalty
       });
-
     } else {
-      //read-write
-
+      // read-write
       if (nextProps.validating || !nextProps.valid) {
         return;
       }
@@ -337,9 +332,9 @@ class ScheduleSummaryContainer extends Component {
 
       this.populateSchedules();
 
-      const {diesel, gasoline} = this.state;
-      let {part3, penalty} = this.state;
-      const {summary} = nextProps.scheduleState;
+      const { diesel, gasoline } = this.state;
+      let { part3, penalty } = this.state;
+      const { summary } = nextProps.scheduleState;
 
       diesel[SCHEDULE_SUMMARY.LINE_6][2].value = summary.dieselClassRetained;
       diesel[SCHEDULE_SUMMARY.LINE_8][2].value = summary.dieselClassDeferred;
@@ -356,11 +351,9 @@ class ScheduleSummaryContainer extends Component {
         penalty
       });
     }
-
-
   }
 
-  loadInitialState() {
+  loadInitialState () {
     if (this.props.complianceReport.summary) {
       const src = this.props.complianceReport.summary;
       const initialState = {
@@ -387,10 +380,10 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  _calculateDiesel() {
-    const {diesel} = this.state;
+  _calculateDiesel () {
+    const { diesel } = this.state;
 
-    const {summary} = this.props.scheduleState;
+    const { summary } = this.props.scheduleState;
 
     const totals = this.props.recomputedTotals;
 
@@ -399,7 +392,7 @@ class ScheduleSummaryContainer extends Component {
     let netDieselClassTransferred = 0;
 
     if (totals.summary) {
-      ({totalPetroleumDiesel, totalRenewableDiesel, netDieselClassTransferred} = totals.summary);
+      ({ totalPetroleumDiesel, totalRenewableDiesel, netDieselClassTransferred } = totals.summary);
     }
 
     let totalDiesel = 0;
@@ -437,7 +430,7 @@ class ScheduleSummaryContainer extends Component {
     const line17Value = line15Value * 0.05; // Line 15 x 5%
     let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
     if (line17Value > 0) {
-      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+      line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 0)} L)`);
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
@@ -457,7 +450,7 @@ class ScheduleSummaryContainer extends Component {
 
     let line19label = diesel[SCHEDULE_SUMMARY.LINE_19][0].value;
     if (line17Value > 0) {
-      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 2)} L)`);
+      line19label = line19label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 0)} L)`);
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
@@ -501,9 +494,9 @@ class ScheduleSummaryContainer extends Component {
     return diesel;
   }
 
-  _calculateGasoline() {
-    const {gasoline} = this.state;
-    const {summary} = this.props.scheduleState;
+  _calculateGasoline () {
+    const { gasoline } = this.state;
+    const { summary } = this.props.scheduleState;
 
     const totals = this.props.recomputedTotals;
 
@@ -554,7 +547,7 @@ class ScheduleSummaryContainer extends Component {
     const line6Value = line4Value * 0.05; // Line 4 x 5%
     let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
     if (line6Value > 0) {
-      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+      line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 0)} L)`);
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
@@ -574,7 +567,7 @@ class ScheduleSummaryContainer extends Component {
 
     let line8Label = gasoline[SCHEDULE_SUMMARY.LINE_8][0].value;
     if (line6Value > 0) {
-      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 2)} L)`);
+      line8Label = line8Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 0)} L)`);
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
@@ -617,15 +610,15 @@ class ScheduleSummaryContainer extends Component {
     return gasoline;
   }
 
-  _calculatePart3() {
-    const {part3} = this.state;
-    let {penalty} = this.state;
-    const {summary} = this.props.scheduleState;
+  _calculatePart3 () {
+    const { part3 } = this.state;
+    let { penalty } = this.state;
+    const { summary } = this.props.scheduleState;
 
     let totalCredits = 0;
     let totalDebits = 0;
     if (this.props.recomputedTotals.scheduleB) {
-      ({totalCredits, totalDebits} = this.props.recomputedTotals.scheduleB);
+      ({ totalCredits, totalDebits } = this.props.recomputedTotals.scheduleB);
     }
 
     if (summary.creditsOffset) {
@@ -652,7 +645,7 @@ class ScheduleSummaryContainer extends Component {
     let maxValue = '';
 
     if (netTotal < 0) {
-      const {organizationBalance} = this.props.loggedInUser.organization;
+      const { organizationBalance } = this.props.loggedInUser.organization;
       maxValue = Math.round(netTotal * -1);
 
       if (organizationBalance.validatedCredits < maxValue) {
@@ -685,8 +678,7 @@ class ScheduleSummaryContainer extends Component {
     return part3;
   }
 
-  populateSchedules() {
-
+  populateSchedules () {
     if (this.props.snapshot) {
       return;
     }
@@ -705,7 +697,7 @@ class ScheduleSummaryContainer extends Component {
       part3
     } = this.state;
 
-    const {penalty} = this.state;
+    const { penalty } = this.state;
 
     diesel = this._calculateDiesel();
     gasoline = this._calculateGasoline();
@@ -735,9 +727,9 @@ class ScheduleSummaryContainer extends Component {
     });
   }
 
-  _handleCellsChanged(gridName, changes, addition = null) {
+  _handleCellsChanged (gridName, changes, addition = null) {
     let grid = this.state[gridName].map(row => [...row]);
-    let {penalty} = this.state;
+    let { penalty } = this.state;
 
     changes.forEach((change) => {
       const {
@@ -826,19 +818,19 @@ class ScheduleSummaryContainer extends Component {
     });
   }
 
-  _handleDieselChanged(changes, addition = null) {
+  _handleDieselChanged (changes, addition = null) {
     this._handleCellsChanged('diesel', changes, addition);
   }
 
-  _handleGasolineChanged(changes, addition = null) {
+  _handleGasolineChanged (changes, addition = null) {
     this._handleCellsChanged('gasoline', changes, addition);
   }
 
-  _handlePart3Changed(changes, addition = null) {
+  _handlePart3Changed (changes, addition = null) {
     this._handleCellsChanged('part3', changes, addition);
   }
 
-  _gridStateToPayload(state) {
+  _gridStateToPayload (state) {
     let shouldUpdate = false;
     const compareOn = ['dieselClassDeferred', 'dieselClassRetained', 'gasolineClassDeferred', 'gasolineClassRetained', 'creditsOffset'];
 
@@ -856,6 +848,7 @@ class ScheduleSummaryContainer extends Component {
     if (prevState == null) {
       shouldUpdate = true;
     } else {
+      // eslint-disable-next-line no-restricted-syntax
       for (const field of compareOn) {
         if (prevState[field] !== nextState.summary[field]) {
           if (!(prevState[field] == null && typeof nextState.summary[field] === typeof undefined)) {
@@ -873,11 +866,11 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  render() {
+  render () {
     if (!this.props.snapshot &&
       (this.props.recomputing ||
         Object.keys(this.props.recomputedTotals).length === 0)) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     return ([
@@ -902,17 +895,19 @@ class ScheduleSummaryContainer extends Component {
 ScheduleSummaryContainer.defaultProps = {
   complianceReport: null,
   period: null,
+  recomputedTotals: {},
   snapshot: null
 };
 
 ScheduleSummaryContainer.propTypes = {
-  recomputedTotals: PropTypes.object,
+  recomputedTotals: PropTypes.shape(),
   recomputeRequest: PropTypes.func.isRequired,
   recomputing: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
     compliancePeriod: PropTypes.shape(),
+    hasSnapshot: PropTypes.bool,
     history: PropTypes.arrayOf(PropTypes.shape()),
     scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
