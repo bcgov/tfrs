@@ -1,0 +1,1 @@
+oc process -f ./postgresql-dup-prod-to-test.dc.json BACKUP_PVC_NAME=tfrs-postgresql-staging  -n mem-tfrs-test | oc create -f - -n mem-tfrs-test
