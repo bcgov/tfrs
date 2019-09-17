@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import history from '../../app/History';
@@ -56,14 +55,6 @@ Part3Agreements.defaultProps = {
 };
 
 Part3Agreements.propTypes = {
-  creditTransfers: PropTypes.shape({
-    isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired,
-  loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
-  }).isRequired,
-  setFilter: PropTypes.func.isRequired
 };
 
 export default Part3Agreements;

@@ -11,6 +11,7 @@ import ComplianceReports from './ComplianceReports';
 import ComplianceReportsBCEID from './ComplianceReportsBCEID';
 import FileSubmissions from './FileSubmissions';
 import FuelCodes from './FuelCodes';
+import OrganizationDetails from './OrganizationDetails';
 import Part3Agreements from './Part3Agreements';
 import UserSettings from './UserSettings';
 
@@ -41,6 +42,10 @@ const BCEIDDashboardPage = obj => (
     </div>
 
     <div className="col-md-4">
+      <OrganizationDetails
+        loggedInUser={obj.loggedInUser}
+      />
+
       <UserSettings
         loggedInUser={obj.loggedInUser}
         unreadNotificationsCount={obj.unreadNotificationsCount}

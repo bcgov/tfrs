@@ -98,6 +98,23 @@
     }
   }
 
+  &.organization-details {
+    .content {
+      margin-left: 0;
+      padding: 1.5rem 0 0;
+
+    }
+
+    .icon {
+      color: $dark-yellow;
+      display: inline-block;
+      font-size: 4rem;
+      position: absolute;
+      right: 2rem;
+      top: 15rem;
+    }
+  }
+
   &.part-3-agreements {
     .icon {
       color: $dark-yellow;
@@ -123,17 +140,19 @@
       display: inline-block;
       font-size: 4rem;
       position: absolute;
-      right: 4rem;
+      right: 2rem;
       top: 0;
     }
   }
 
   .add-button {
     background-color: $white;
-    position: absolute;
     bottom: -1.75rem;
     padding: 0.5rem;
+    position: absolute;
     right: 1rem;
+    text-align: right;
+    white-space: nowrap;
 
     svg {
       color: $dark-yellow;

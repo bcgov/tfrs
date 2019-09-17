@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 
 const ComplianceReportsBCEID = (props) => {
   const { isFetching, items } = props.complianceReports;
@@ -260,6 +262,20 @@ const ComplianceReportsBCEID = (props) => {
           </div>
         </div>
       </div>
+
+      {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
+      <div className="add-button">
+        <FontAwesomeIcon icon="play" />
+        {` Start a new `}
+        <button type="button">
+          compliance report
+        </button>
+        {` or `}
+        <button type="button">
+          exclusion report
+        </button>
+      </div>
+      }
     </div>
   );
 };
@@ -273,6 +289,7 @@ ComplianceReportsBCEID.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string
     })
