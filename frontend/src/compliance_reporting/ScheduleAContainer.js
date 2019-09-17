@@ -3,21 +3,22 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import {fuelClasses} from '../actions/fuelClasses';
-import {notionalTransferTypes} from '../actions/notionalTransferTypes';
+import { fuelClasses } from '../actions/fuelClasses';
+import { notionalTransferTypes } from '../actions/notionalTransferTypes';
+import AddressBuilder from '../app/components/AddressBuilder';
 import Input from '../app/components/Spreadsheet/Input';
 import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
-import {SCHEDULE_A, SCHEDULE_A_ERROR_KEYS} from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_A, SCHEDULE_A_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 
 class ScheduleAContainer extends Component {
-  static addHeaders() {
+  static addHeaders () {
     return {
       grid: [
         [{
@@ -58,11 +59,11 @@ class ScheduleAContainer extends Component {
     };
   }
 
-  static clearErrorColumns(_row) {
+  static clearErrorColumns (_row) {
     const row = _row;
 
     row.forEach((cell, col) => {
-      const {className} = cell;
+      const { className } = cell;
       if (className && className.indexOf('error') >= 0) {
         row[col] = {
           ...row[col],
@@ -83,7 +84,7 @@ class ScheduleAContainer extends Component {
         <div>
           {!hasContent && data.value}
           {hasContent &&
-          <FontAwesomeIcon icon="check"/>
+          <FontAwesomeIcon icon="check" />
           }
         </div>
       )
@@ -92,7 +93,7 @@ class ScheduleAContainer extends Component {
     return row;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = ScheduleAContainer.addHeaders();
@@ -105,7 +106,7 @@ class ScheduleAContainer extends Component {
     this.loadInitialState = this.loadInitialState.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadFuelClasses();
     this.props.loadNotionalTransferTypes();
 
@@ -118,8 +119,8 @@ class ScheduleAContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {grid} = this.state;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { grid } = this.state;
 
     let source = nextProps.scheduleState.scheduleA;
     if (nextProps.snapshot) {
@@ -167,23 +168,23 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  loadInitialState() {
+  loadInitialState () {
     this.rowNumber = 1;
 
     const records = [];
 
-      for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
-        records.push({...this.props.complianceReport.scheduleA.records[i]});
-        this.props.updateScheduleState({
-          scheduleA: {
-            records
-          }
-        });
+    for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
+      records.push({ ...this.props.complianceReport.scheduleA.records[i] });
+      this.props.updateScheduleState({
+        scheduleA: {
+          records
+        }
+      });
     }
   }
 
-  _addRow(numberOfRows = 1) {
-    const {grid} = this.state;
+  _addRow (numberOfRows = 1) {
+    const { grid } = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -229,7 +230,7 @@ class ScheduleAContainer extends Component {
         readOnly: this.props.readOnly,
         dataEditor: Input,
         valueViewer: (props) => {
-          const {value} = props;
+          const { value } = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }]);
@@ -242,7 +243,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _calculateTotal(grid) {
+  _calculateTotal (grid) {
     const totals = {
       diesel: {
         received: 0,
@@ -279,7 +280,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _handleCellsChanged(changes, addition = null) {
+  _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -303,13 +304,11 @@ class ScheduleAContainer extends Component {
         };
       }
 
-      if (col === SCHEDULE_A.LEGAL_NAME) {
-        if (cell.attributes.address) {
-          grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
-            ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],
-            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
-          };
-        }
+      if (col === SCHEDULE_A.LEGAL_NAME && cell.attributes.address) {
+        grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
+          ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],
+          value: AddressBuilder(cell.attributes.address)
+        };
       }
     });
 
@@ -322,7 +321,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _gridStateToPayload(state) {
+  _gridStateToPayload (state) {
     const startingRow = 1;
 
     const records = [];
@@ -352,7 +351,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _validate(_row, rowIndex) {
+  _validate (_row, rowIndex) {
     let row = _row;
 
     if (
@@ -386,14 +385,14 @@ class ScheduleAContainer extends Component {
         ...row[SCHEDULE_A.ROW_NUMBER],
         className: rowNumberClassName,
         valueViewer: data => (
-          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'}/></div>
+          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
         )
       };
 
       errorCells.forEach((errorKey) => {
         if (errorKey in SCHEDULE_A_ERROR_KEYS) {
           const col = SCHEDULE_A_ERROR_KEYS[errorKey];
-          let {className} = row[col];
+          let { className } = row[col];
 
           if (row[col].className.indexOf('error') < 0) {
             className += ' error';
@@ -417,7 +416,7 @@ class ScheduleAContainer extends Component {
           const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '');
 
           if (Number(rowIndex) === Number(duplicateRowIndex)) {
-            let {className} = row[SCHEDULE_A.ROW_NUMBER];
+            let { className } = row[SCHEDULE_A.ROW_NUMBER];
 
             if (!className) {
               className = 'error';
@@ -429,7 +428,7 @@ class ScheduleAContainer extends Component {
               ...row[SCHEDULE_A.ROW_NUMBER],
               className,
               valueViewer: data => (
-                <div><FontAwesomeIcon icon="exclamation-triangle"/></div>
+                <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
               )
             };
           }
@@ -440,7 +439,7 @@ class ScheduleAContainer extends Component {
     return row;
   }
 
-  render() {
+  render () {
     return ([
       <SchedulesPage
         addRow={this._addRow}
