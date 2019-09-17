@@ -152,3 +152,17 @@
     padding: 0 3rem;
   }
 }
+
+table.supplementalTable {
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  th {
+    text-align: center;
+    font-size: 120%;
+  }
+  td {
+    font-size: 120%;
+  }
+}

@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Count
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
@@ -97,6 +98,24 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = ExclusionReportDetailSerializer(
             instance,
             read_only=True,
+            context={'request': request}
+        )
+
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        """
+        Override the base list method.
+        Filter supplemental reports from the list
+        """
+        serializer = ComplianceReportListSerializer(
+            self.get_queryset()
+                .annotate(Count('supplements'))
+                .filter(supplements__count=0)
+                .order_by('update_timestamp')
+                .all(),
+            read_only=True,
+            many=True,
             context={'request': request}
         )
 

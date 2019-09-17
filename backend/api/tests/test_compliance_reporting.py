@@ -1074,7 +1074,7 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
         self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
         self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
-        self.assertListEqual(response_data['actions'], [])
+        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -1206,13 +1206,155 @@ class TestComplianceReporting(BaseTestCase):
         self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
         self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
         self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
-        self.assertListEqual(response_data['actions'], [])
+        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
 
         self.assertGreater(final_balance, initial_balance)
+
+    def test_create_supplemental(self):
+        rid = self._create_compliance_report()
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            },
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 10,
+                        'expectedUse': 'Other',
+                        'rationale': 'Test rationale 1'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 20,
+                        'expectedUse': 'Other',
+                        'rationale': 'Test rationale 2 '
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 30,
+                        'expectedUse': 'Other',
+                        'rationale': 'Test rationale 3'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 40,
+                        'expectedUse': 'Other',
+                        'rationale': 'Test rationale 4 '
+                    }
+                ]
+            },
+            'scheduleA': {
+                'records': [
+                    {
+                        'tradingPartner': 'CD',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98
+                    },
+                    {
+                        'tradingPartner': 'AB',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 99
+                    },
+                    {
+                        'tradingPartner': 'EF',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 100
+                    }
+                ]
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 1000000,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': 0
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
+                    }
+                ]
+            },
+            'summary': {
+                'creditsOffset': 0,
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'supplements': rid,
+            'status': {'fuelSupplierStatus': 'Draft'},
+            'type': 'Compliance Report',
+            'compliancePeriod': '2019'
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_draft_exclusion_report_authorized(self):
         payload = {
@@ -1387,7 +1529,7 @@ class TestComplianceReporting(BaseTestCase):
                 'fs_user_1': {
                     'status': 200,
                     'actor': 'FUEL_SUPPLIER',
-                    'actions': []
+                    'actions': ['CREATE_SUPPLEMENTAL']
                 },
                 'gov_analyst': {
                     'status': 200,
@@ -1409,7 +1551,7 @@ class TestComplianceReporting(BaseTestCase):
                 'fs_user_1': {
                     'status': 200,
                     'actor': 'FUEL_SUPPLIER',
-                    'actions': []
+                    'actions': ['CREATE_SUPPLEMENTAL']
                 },
                 'gov_analyst': {
                     'status': 200,
@@ -1431,7 +1573,7 @@ class TestComplianceReporting(BaseTestCase):
                 'fs_user_1': {
                     'status': 200,
                     'actor': 'FUEL_SUPPLIER',
-                    'actions': []
+                    'actions': ['CREATE_SUPPLEMENTAL']
                 },
                 'gov_analyst': {
                     'status': 200,
@@ -1453,7 +1595,7 @@ class TestComplianceReporting(BaseTestCase):
                 'fs_user_1': {
                     'status': 200,
                     'actor': 'FUEL_SUPPLIER',
-                    'actions': []
+                    'actions': ['CREATE_SUPPLEMENTAL']
                 },
                 'gov_analyst': {
                     'status': 200,

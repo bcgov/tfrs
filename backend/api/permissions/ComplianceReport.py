@@ -52,6 +52,12 @@ class ComplianceReportPermissions(permissions.BasePermission):
     ))
 
     actions.append(ActionMap(
+        _Relationship.FuelSupplier,
+        'Submitted', '.*', '.*', '(Unreviewed|Accepted)',
+        ['CREATE_SUPPLEMENTAL']
+    ))
+
+    actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Unreviewed|Returned|Retracted)', '.*', 'Unreviewed',
         ['RECOMMEND', 'DISCOMMEND', 'REQUEST_SUPPLEMENTAL']
