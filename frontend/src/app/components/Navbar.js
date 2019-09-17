@@ -103,7 +103,7 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
-          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           !this.props.loggedInUser.isGovernmentUser &&
@@ -238,6 +238,19 @@ class Navbar extends Component {
               Credit Transactions
             </NavLink>
           </li>
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-compliance-reporting"
+              to={COMPLIANCE_REPORTING.LIST}
+            >
+              Compliance &amp; Exclusion Reports
+            </NavLink>
+          </li>
+          }
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
