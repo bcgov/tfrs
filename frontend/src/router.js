@@ -22,6 +22,7 @@ import EXCLUSION_REPORTS from './constants/routes/ExclusionReports';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
+import DashboardContainer from './dashboard/DashboardContainer';
 import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
 import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer';
 import FuelCodeEditContainer from './admin/fuel_codes/FuelCodeEditContainer';
@@ -85,7 +86,7 @@ const Router = routerProps => (
         <Route
           exact
           path={Routes.HOME}
-          component={withRouter(CreditTransactionsContainer)
+          component={withRouter(DashboardContainer)
           }
         />
         <Route
@@ -375,6 +376,11 @@ const Router = routerProps => (
             component={withRouter(ExclusionReportEditContainer)}
           />
         ]}
+        <Route
+          path="/dashboard"
+          exact
+          component={withRouter(DashboardContainer)}
+        />
         <Route component={NotFound} />
       </Switch>
     </App>

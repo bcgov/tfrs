@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 const ComplianceReportStatus = (props) => {
   if (props.status.directorStatus === 'Accepted') {
     return 'Accepted';
@@ -38,10 +36,6 @@ const ComplianceReportStatus = (props) => {
   }
 
   return props.status;
-};
-
-ComplianceReportStatus.propTypes = {
-  status: PropTypes.shape().isRequired
 };
 
 export default ComplianceReportStatus;

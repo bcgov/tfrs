@@ -8,9 +8,9 @@ import moment from 'moment';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
 import history from '../../app/History';
-import ComplianceReportStatus from './ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import ComplianceReportStatus from './ComplianceReportStatus';
 
 const ComplianceReportingTable = (props) => {
   const columns = [{
@@ -33,7 +33,7 @@ const ComplianceReportingTable = (props) => {
     id: 'type',
     minWidth: 75
   }, {
-    accessor: item => <ComplianceReportStatus status={item.status} />,
+    accessor: ComplianceReportStatus,
     className: 'col-status',
     Header: 'Status',
     id: 'status',
@@ -54,8 +54,6 @@ const ComplianceReportingTable = (props) => {
       .includes(filter.value.toLowerCase()) : true;
   };
 
-  const filterable = true;
-
   return (
     <ReactTable
       stateKey="compliance-reporting"
@@ -69,7 +67,7 @@ const ComplianceReportingTable = (props) => {
         desc: true
       }]}
       loading={props.isFetching}
-      filterable={filterable}
+      filterable
       getTrProps={(state, row) => {
         if (row && row.original) {
           return {
