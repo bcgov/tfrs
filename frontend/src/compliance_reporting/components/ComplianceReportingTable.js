@@ -10,6 +10,7 @@ import ReactTable from '../../app/components/StateSavingReactTable';
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import ComplianceReportStatus from './ComplianceReportStatus';
 
 const ComplianceReportingTable = (props) => {
   const columns = [{
@@ -32,45 +33,7 @@ const ComplianceReportingTable = (props) => {
     id: 'type',
     minWidth: 75
   }, {
-    accessor: (item) => {
-      if (item.status.directorStatus === 'Accepted') {
-        return 'Accepted';
-      }
-
-      if (item.status.directorStatus === 'Rejected') {
-        return 'Rejected';
-      }
-
-      if (item.status.managerStatus === 'Recommended') {
-        return 'Recommended Acceptance - Manager';
-      }
-
-      if (item.status.managerStatus === 'Not Recommended') {
-        return 'Recommended Rejection - Manager';
-      }
-
-      if (item.status.managerStatus === 'Requested Supplemental') {
-        return 'Requested Supplemental';
-      }
-
-      if (item.status.analystStatus === 'Recommended') {
-        return 'Recommended Acceptance - Analyst';
-      }
-
-      if (item.status.analystStatus === 'Not Recommended') {
-        return 'Recommended Rejection - Analyst';
-      }
-
-      if (item.status.analystStatus === 'Requested Supplemental') {
-        return 'Requested Supplemental';
-      }
-
-      if (item.status.fuelSupplierStatus) {
-        return item.status.fuelSupplierStatus;
-      }
-
-      return item.status;
-    },
+    accessor: ComplianceReportStatus,
     className: 'col-status',
     Header: 'Status',
     id: 'status',
