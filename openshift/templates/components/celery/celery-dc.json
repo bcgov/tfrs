@@ -170,6 +170,18 @@
                                     {
                                         "name": "MINIO_BUCKET_NAME",
                                         "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "EMAIL_FROM_ADDRESS",
+                                        "value": "tfrs@gov.bc.ca"
+                                    },
+                                    {
+                                        "name": "EMAIL_SENDING_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "SMTP_SERVER_HOST",
+                                        "value": "apps.smtp.gov.bc.ca"
                                     }
                                 ],
                                 "resources": {
