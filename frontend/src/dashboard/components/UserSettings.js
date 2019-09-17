@@ -38,8 +38,10 @@ class UserSettings extends Component {
         <h1>User Settings</h1>
 
         <div>
-          {this.props.loggedInUser.displayName},
-          {this.props.loggedInUser.organization && ` ${this.props.loggedInUser.organization.name}`}
+          {this.props.loggedInUser.displayName}
+          {this.props.loggedInUser.title &&
+          this.props.loggedInUser.title !== '' &&
+          `, ${this.props.loggedInUser.title}`}
         </div>
 
         <div>
