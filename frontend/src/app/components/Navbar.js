@@ -11,7 +11,7 @@ import history from '../../app/History';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
-import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
+import { FUEL_CODES } from '../../constants/routes/Admin';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -65,6 +65,20 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container-fluid">
+          <NavLink
+            activeClassName="active"
+            id="navbar-home"
+            isActive={(match, location) => {
+              if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
+                return true;
+              }
+
+              return false;
+            }}
+            to={Routes.HOME}
+          >
+            Home
+          </NavLink>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -124,33 +138,6 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
-          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
-          typeof this.props.loggedInUser.hasPermission === 'function' &&
-          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
-          <NavLink
-            activeClassName="active"
-            id="navbar-secure-document-upload"
-            to={SECURE_DOCUMENT_UPLOAD.LIST}
-          >
-            Secure File Submission
-          </NavLink>
-          }
-          {this.props.loggedInUser.isGovernmentUser &&
-          <NavLink
-            activeClassName="active"
-            id="navbar-administration"
-            isActive={(match, location) => {
-              if (location.pathname.indexOf('/admin/') >= 0) {
-                return true;
-              }
-
-              return false;
-            }}
-            to={HISTORICAL_DATA_ENTRY.LIST}
-          >
-            Administration
-          </NavLink>
-          }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
@@ -166,16 +153,30 @@ class Navbar extends Component {
             }}
             to={COMPLIANCE_REPORTING.LIST}
           >
-            Compliance Reporting
+            Compliance &amp; Exclusion Reports
           </NavLink>
           }
-          <a
-            href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
-            rel="noopener noreferrer"
-            target="_blank"
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-secure-document-upload"
+            to={SECURE_DOCUMENT_UPLOAD.LIST}
           >
-            Help
-          </a>
+            File Submissions
+          </NavLink>
+          }
+          {CONFIG.FUEL_CODES.ENABLED &&
+          this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-fuel-codes"
+            to={FUEL_CODES.LIST}
+          >
+            Fuel Codes
+          </NavLink>
+          }
           <NavLink
             activeClassName="active"
             id="navbar-notifications"
@@ -200,6 +201,22 @@ class Navbar extends Component {
       >
         <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="navbar-home"
+              isActive={(match, location) => {
+                if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
+                  return true;
+                }
+
+                return false;
+              }}
+              to={Routes.HOME}
+            >
+              Home
+            </NavLink>
+          </li>
           {this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
@@ -263,6 +280,19 @@ class Navbar extends Component {
               Credit Transactions
             </NavLink>
           </li>
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-compliance-reporting"
+              to={COMPLIANCE_REPORTING.LIST}
+            >
+              Compliance &amp; Exclusion Reports
+            </NavLink>
+          </li>
+          }
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
@@ -272,24 +302,19 @@ class Navbar extends Component {
               id="collapse-navbar-secure-document-upload"
               to={SECURE_DOCUMENT_UPLOAD.LIST}
             >
-              Secure File Submission
+              File Submissions
             </NavLink>
           </li>
           }
-          {this.props.loggedInUser.isGovernmentUser &&
+          {CONFIG.FUEL_CODES.ENABLED &&
+          this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
-              id="collapse-navbar-administration"
-              isActive={(match, location) => {
-                if (location.pathname.indexOf('/admin/') >= 0) {
-                  return true;
-                }
-
-                return false;
-              }}
-              to={HISTORICAL_DATA_ENTRY.LIST}
+              activeClassName="active"
+              id="navbar-fuel-codes"
+              to={FUEL_CODES.LIST}
             >
-              Administration
+              Fuel Codes
             </NavLink>
           </li>
           }
@@ -309,28 +334,6 @@ class Navbar extends Component {
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
             </NavLink>
-          </li>
-          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
-          typeof this.props.loggedInUser.hasPermission === 'function' &&
-          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
-          <li>
-            <NavLink
-              activeClassName="active"
-              id="collapse-navbar-compliance-reporting"
-              to={COMPLIANCE_REPORTING.LIST}
-            >
-              Compliance Reporting
-            </NavLink>
-          </li>
-          }
-          <li>
-            <a
-              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Help
-            </a>
           </li>
           <li>
             <NavLink
