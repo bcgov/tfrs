@@ -16,6 +16,7 @@ const ExclusionAgreementPage = props => (
       <ComplianceReportingStatusHistory
         complianceReport={props.exclusionReport}
         key="history"
+        reportType="Exclusion Report"
       />
 
       <div className="scrollable">
