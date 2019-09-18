@@ -9,6 +9,9 @@ const toastr = {
     }
 
     switch (status) {
+      case 'Supplemental Created':
+        reduxToastr.success('Success!', 'Supplemental report created.');
+        break;
       case 'Accepted':
         reduxToastr.success('Success!', 'Compliance Report accepted.');
         break;

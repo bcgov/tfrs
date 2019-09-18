@@ -20,9 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import SlugRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
@@ -33,9 +34,10 @@ from api.models.ComplianceReportSchedules import \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
+from api.models.Organization import Organization
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
-    OrganizationMinSerializer, CompliancePeriodSerializer, datetime
+    OrganizationMinSerializer, CompliancePeriodSerializer, datetime, PrimaryKeyRelatedField
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
@@ -104,7 +106,7 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
         if value.status in ['Accepted', 'Rejected'] and \
                 field_name in 'director_status':
             return True
-        
+
         if value.status in ['Requested Supplemental'] and \
                 field_name in ['manager_status', 'analyst_status']:
             return True
@@ -139,11 +141,38 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
+    supplemental_reports = SerializerMethodField()
+    display_name = SerializerMethodField()
+
+    def get_display_name(self, obj):
+        if obj.nickname is not None and obj.nickname is not '':
+            return obj.nickname
+        return obj.generated_nickname
+
+    def get_supplemental_reports(self, obj):
+        qs = obj.supplemental_reports.order_by('create_timestamp')
+        gov_org = Organization.objects.get(type=1)
+        organization = self.context['request'].user.organization
+
+        if organization == gov_org:
+            # If organization == Government
+            #  don't show "Draft" transactions
+            #  don't show "Deleted" transactions
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=["Draft", "Deleted"])
+            )
+
+        return ComplianceReportListSerializer(
+            qs.all(),
+            read_only=True,
+            context=self.context,
+            many=True).data
 
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
-                  'update_timestamp', 'has_snapshot', 'read_only')
+                  'update_timestamp', 'has_snapshot', 'read_only',
+                  'supplemental_reports', 'display_name')
 
 
 class ComplianceReportDetailSerializer(serializers.ModelSerializer):
@@ -554,7 +583,24 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         slug_field='description',
         queryset=CompliancePeriod.objects.all()
     )
+    supplements = PrimaryKeyRelatedField(
+        queryset=ComplianceReport.objects.all(),
+        read_only=False,
+        required=False,
+        allow_null=True
+    )
     organization = OrganizationMinSerializer(read_only=True)
+
+    def validate_supplements(self, value):
+        user = self.context.get('request').user
+        original = value
+        relationship = ComplianceReportPermissions.get_relationship(original, user)
+        actions = ComplianceReportPermissions.get_available_actions(original, relationship)
+        if 'CREATE_SUPPLEMENTAL' not in actions:
+            raise serializers.ValidationError(
+                'Cannot create a supplemental report'
+            )
+        return value
 
     def validate(self, data):
         request = self.context.get('request')
@@ -579,9 +625,101 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         status_data = validated_data.pop('status')
         status = ComplianceReportWorkflowState.objects.create(**status_data)
-        return ComplianceReport.objects.create(
+        cr = ComplianceReport.objects.create(
             status=status,
             **validated_data)
+        if 'supplements' in validated_data and validated_data['supplements'] is not None:
+            # need to copy all the schedule entries
+            original_report = validated_data['supplements']
+            if original_report.schedule_a is not None:
+                schedule_a = ScheduleA.objects.create()
+                cr.schedule_a = schedule_a
+                schedule_a.save()
+                cr.save()
+                for original_record in original_report.schedule_a.records.all():
+                    record = ScheduleARecord()
+                    record.schedule = schedule_a
+                    record.trading_partner = original_record.trading_partner
+                    record.postal_address = original_record.postal_address
+                    record.quantity = original_record.quantity
+                    record.fuel_class = original_record.fuel_class
+                    record.transfer_type = original_record.transfer_type
+                    record.save()
+
+            if original_report.schedule_b is not None:
+                schedule_b = ScheduleB.objects.create()
+                cr.schedule_b = schedule_b
+                schedule_b.save()
+                cr.save()
+                for original_record in original_report.schedule_b.records.all():
+                    record = ScheduleBRecord()
+                    record.schedule = schedule_b
+                    record.provision_of_the_act = original_record.provision_of_the_act
+                    record.intensity = original_record.intensity
+                    record.quantity = original_record.quantity
+                    record.fuel_type = original_record.fuel_type
+                    record.fuel_class = original_record.fuel_class
+                    record.fuel_code = original_record.fuel_code
+                    record.schedule_d_sheet_index = original_record.schedule_d_sheet_index
+                    record.save()
+
+            if original_report.schedule_c is not None:
+                schedule_c = ScheduleC.objects.create()
+                cr.schedule_c = schedule_c
+                schedule_c.save()
+                cr.save()
+                for original_record in original_report.schedule_c.records.all():
+                    record = ScheduleCRecord()
+                    record.schedule = schedule_c
+                    record.quantity = original_record.quantity
+                    record.fuel_type = original_record.fuel_type
+                    record.fuel_class = original_record.fuel_class
+                    record.expected_use = original_record.expected_use
+                    record.rationale = original_record.rationale
+                    record.save()
+
+            if original_report.schedule_d is not None:
+                schedule_d = ScheduleD.objects.create()
+                cr.schedule_d = schedule_d
+                schedule_d.save()
+                cr.save()
+                for original_sheet in original_report.schedule_d.sheets.all():
+                    sheet = ScheduleDSheet()
+                    sheet.schedule = schedule_d
+                    sheet.feedstock = original_sheet.feedstock
+                    sheet.fuel_type = original_sheet.fuel_type
+                    sheet.fuel_class = original_sheet.fuel_class
+                    sheet.save()
+                    for original_input in original_sheet.inputs.all():
+                        input = ScheduleDSheetInput()
+                        input.sheet = sheet
+                        input.worksheet_name = original_input.worksheet_name
+                        input.cell = original_input.cell
+                        input.value = original_input.value
+                        input.units = original_input.units
+                        input.description = original_input.description
+                        input.save()
+
+                    for original_output in original_sheet.outputs.all():
+                        output = ScheduleDSheetOutput()
+                        output.sheet = sheet
+                        output.intensity = original_output.intensity
+                        output.description = original_output.description
+                        output.save()
+
+            if original_report.summary is not None:
+                summary = ScheduleSummary.objects.create()
+                cr.summary = summary
+                cr.save()
+                original_summary = original_report.summary
+                summary.gasoline_class_retained = original_summary.gasoline_class_retained
+                summary.gasoline_class_deferred = original_summary.gasoline_class_deferred
+                summary.diesel_class_retained = original_summary.diesel_class_retained
+                summary.diesel_class_deferred = original_summary.diesel_class_deferred
+                summary.credits_offset = original_summary.credits_offset
+                summary.save()
+
+        return cr
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -594,7 +732,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
-                  'id')
+                  'id', 'supplements')
         read_only_fields = ('id',)
 
 
