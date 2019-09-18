@@ -29,11 +29,6 @@ const CreditTransactions = (props) => {
 
   items.forEach((item) => {
     if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
-      if (item.status.status === 'Submitted') {
-        awaitingReview.part3Awards.analyst += 1;
-        awaitingReview.part3Awards.total += 1;
-      }
-
       if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
         awaitingReview.part3Awards.director += 1;
         awaitingReview.part3Awards.total += 1;
@@ -66,7 +61,7 @@ const CreditTransactions = (props) => {
         <div className="content">
           <h2>credit transfers in progress:</h2>
 
-          <div>
+          <div>{/* n awaiting government analyst review */}
             <button
               onClick={() => {
                 props.setFilter([{
@@ -87,7 +82,8 @@ const CreditTransactions = (props) => {
               {awaitingReview.creditTransfers.analyst} awaiting government analyst review
             </button>
           </div>
-          <div>
+
+          <div>{/* n awaiting Director review */}
             <button
               onClick={() => {
                 props.setFilter([{
@@ -112,7 +108,7 @@ const CreditTransactions = (props) => {
         </div>
       </div>
 
-      <div>
+      <div>{/* n awaiting Director review for Part 3 Awards */}
         <div className="value">
           {awaitingReview.part3Awards.total}
         </div>
