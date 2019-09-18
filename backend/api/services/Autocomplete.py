@@ -105,7 +105,7 @@ class SimpleDatabaseCompletion(Completion):
                 " LIMIT 10"
                 .format(table=self.table, col=self.column), [q]
             )
-            matches = [row[0] for row in cursor.fetchall]
+            matches = [row[0] for row in cursor.fetchall()]
             return matches
 
     def _get_matches_postgres(self, q):
