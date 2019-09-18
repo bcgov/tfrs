@@ -1,3 +1,5 @@
+import collections
+from datetime import datetime
 from typing import List
 from django.db import models
 from django.db.models import Q
@@ -111,7 +113,7 @@ class ComplianceReportType(DisplayOrder):
 
     def natural_key(self):
         """
-        Allows type 'status' to be used to identify
+        Allows type 'the_type' to be used to identify
         a row in the table
         """
         return (self.the_type,)
@@ -202,6 +204,67 @@ class ComplianceReport(Auditable):
         null=True
     )
 
+    supplements = models.ForeignKey(
+        'ComplianceReport',
+        related_name='supplemental_reports',
+        on_delete=models.PROTECT,
+        null=True
+    )
+
+    nickname = models.CharField(
+        max_length=255, blank=True, null=True,
+        db_comment="An optional user-supplied nickname for this report"
+    )
+
+    @property
+    def generated_nickname(self):
+        """ Used for display in the UI when no nickname is set"""
+        best_timestamp = datetime.now()
+
+        if self.update_timestamp:
+            best_timestamp = self.update_timestamp
+        if self.create_timestamp:
+            best_timestamp = self.create_timestamp
+
+        if self.supplements is not None:
+            # found out how many in this tree
+            supplement_count = 0
+
+            # wind back to root
+            ancestor = self
+            while ancestor.supplements is not None:
+                ancestor = ancestor.supplements
+
+            # now at the root, traverse to find all
+            visited = []
+            to_visit = collections.deque([ancestor.id])
+            position_in_traversal = 0
+            i = 0
+
+            while len(to_visit) > 0:
+                current_id = to_visit.popleft()
+
+                #break loops
+                if current_id in visited:
+                    continue
+                visited.append(current_id)
+
+                current = ComplianceReport.objects.get(id=current_id)
+
+                # don't count non-supplement reports (really should just be the root)
+                if current.supplements is not None:
+                    i += 1
+
+                if current_id == self.id:
+                    position_in_traversal = i
+
+                for descendant in current.supplemental_reports.order_by('create_timestamp').all():
+                    to_visit.append(descendant.id)
+
+            return 'Supplemental {} #{}, {}'.format(self.type.the_type, position_in_traversal, best_timestamp.strftime('%Y-%m-%d %H:%M'))
+        else:
+            return '{},  {}'.format(self.type.the_type, best_timestamp.strftime('%Y-%m-%d %H:%M'))
+
     def get_history(self, include_government_statuses=False):
         """
         Fetch the compliance report status changes.
@@ -252,6 +315,10 @@ class ComplianceReport(Auditable):
     def has_snapshot(self):
         return ComplianceReportSnapshot.objects. \
                    filter(compliance_report=self).count() > 0
+
+    @property
+    def is_supplemental(self):
+        return self.supplements is not None
 
     @property
     def snapshot(self):

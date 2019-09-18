@@ -39,6 +39,16 @@ const ScheduleButtons = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
+      {props.actions.includes('CREATE_SUPPLEMENTAL') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmCreateSupplemental"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
+      </button>
+      }
       {props.actions.includes('DELETE') &&
       <button
         className="btn btn-danger"

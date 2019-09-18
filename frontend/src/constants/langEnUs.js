@@ -6,6 +6,7 @@ export const BTN_ADD = 'Add';
 export const BTN_ADD_TO_QUEUE = 'Add to Queue';
 export const BTN_APP_CANCEL = 'Back';
 export const BTN_COMMIT = 'Commit';
+export const BTN_CREATE_SUPPLEMENTAL = 'Create Supplemental Report';
 export const BTN_CT_CANCEL = 'Cancel';
 export const BTN_DECLINE_FOR_APPROVAL = 'Decline to Approve';
 export const BTN_DELETE = 'Delete';
