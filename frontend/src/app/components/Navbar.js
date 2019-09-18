@@ -96,41 +96,6 @@ class Navbar extends Component {
             Fuel Suppliers
           </NavLink>
           }
-          {!this.props.loggedInUser.isGovernmentUser &&
-          [
-            <a
-              href={ORGANIZATIONS.BULLETIN}
-              key="bulletin"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Fuel Suppliers
-            </a>,
-            <NavLink
-              activeClassName="active"
-              id="navbar-credit-transactions"
-              isActive={(match, location) => {
-                if (match || location.pathname.indexOf('/users/') === 0) {
-                  return true;
-                }
-
-                return false;
-              }}
-              key="company-details"
-              to={ORGANIZATIONS.MINE}
-            >
-              Organization Details
-            </NavLink>,
-            <a
-              href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-              key="credit-market-report"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Credit Market Report
-            </a>
-          ]
-          }
           <NavLink
             activeClassName="active"
             id="navbar-credit-transactions"
@@ -138,6 +103,18 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          !this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-secure-document-upload"
+            to={SECURE_DOCUMENT_UPLOAD.LIST}
+          >
+            Part 3 Agreements
+          </NavLink>
+          }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
@@ -159,6 +136,7 @@ class Navbar extends Component {
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
             id="navbar-secure-document-upload"
@@ -175,6 +153,23 @@ class Navbar extends Component {
             to={FUEL_CODES.LIST}
           >
             Fuel Codes
+          </NavLink>
+          }
+          {!this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-credit-transactions"
+            isActive={(match, location) => {
+              if (match || location.pathname.indexOf('/users/') === 0) {
+                return true;
+              }
+
+              return false;
+            }}
+            key="company-details"
+            to={ORGANIZATIONS.MINE}
+          >
+            Organization Details
           </NavLink>
           }
           <NavLink
@@ -234,43 +229,6 @@ class Navbar extends Component {
             </NavLink>
           </li>
           }
-          {!this.props.loggedInUser.isGovernmentUser &&
-          [
-            <li key="bulletin">
-              <a
-                href={ORGANIZATIONS.BULLETIN}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Fuel Suppliers
-              </a>
-            </li>,
-            <li key="company-details">
-              <NavLink
-                id="navbar-credit-transactions"
-                isActive={(match, location) => {
-                  if (match || location.pathname.indexOf('/users/') === 0) {
-                    return true;
-                  }
-
-                  return false;
-                }}
-                to={ORGANIZATIONS.MINE}
-              >
-                Organization Details
-              </NavLink>
-            </li>,
-            <li key="credit-market-report">
-              <a
-                href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Credit Market Report
-              </a>
-            </li>
-          ]
-          }
           <li>
             <NavLink
               activeClassName="active"
@@ -296,6 +254,34 @@ class Navbar extends Component {
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          !this.props.loggedInUser.isGovernmentUser &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-secure-document-upload"
+              to={SECURE_DOCUMENT_UPLOAD.LIST}
+            >
+              Part 3 Agreements
+            </NavLink>
+          </li>
+          }
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-compliance-reporting"
+              to={COMPLIANCE_REPORTING.LIST}
+            >
+              Compliance &amp; Exclusion Reports
+            </NavLink>
+          </li>
+          }
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
               activeClassName="active"
@@ -315,6 +301,23 @@ class Navbar extends Component {
               to={FUEL_CODES.LIST}
             >
               Fuel Codes
+            </NavLink>
+          </li>
+          }
+          {!this.props.loggedInUser.isGovernmentUser &&
+          <li key="company-details">
+            <NavLink
+              id="navbar-credit-transactions"
+              isActive={(match, location) => {
+                if (match || location.pathname.indexOf('/users/') === 0) {
+                  return true;
+                }
+
+                return false;
+              }}
+              to={ORGANIZATIONS.MINE}
+            >
+              Organization Details
             </NavLink>
           </li>
           }

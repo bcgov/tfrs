@@ -13,7 +13,6 @@ import { getDocumentUploads } from '../actions/documentUploads';
 import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
-import history from '../app/History';
 import DashboardPage from './components/DashboardPage';
 
 class DashboardContainer extends Component {
@@ -31,13 +30,14 @@ class DashboardContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.loggedInUser.isGovernmentUser) { // this will be removed when we get the bceid dashboard in
-      this._getComplianceReports();
-      this._getCreditTransfers();
-      this._getFileSubmissions();
+    this._getComplianceReports();
+    this._getCreditTransfers();
+    this._getFileSubmissions();
+    this._getUnreadNotificationCount();
+
+    if (this.props.loggedInUser.isGovernmentUser) {
       this._getFuelCodes();
       this._getOrganizations();
-      this._getUnreadNotificationCount();
     }
   }
 
@@ -110,10 +110,6 @@ class DashboardContainer extends Component {
   }
 
   render () {
-    if (!this.props.loggedInUser.isGovernmentUser) {
-      history.push('/credit_transactions'); // this will be removed when we get the bceid dashboard in
-    }
-
     return (
       <DashboardPage
         complianceReports={this.props.complianceReports}
