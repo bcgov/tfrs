@@ -10,7 +10,6 @@ import ReactTable from '../../app/components/StateSavingReactTable';
 import {ReactTableDefaults} from 'react-table';
 
 import history from '../../app/History';
-import ComplianceReportStatus from './ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
