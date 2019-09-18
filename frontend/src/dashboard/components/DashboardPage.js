@@ -3,21 +3,65 @@ import PropTypes from 'prop-types';
 
 import Administration from './Administration';
 import Balance from './Balance';
+import BalanceBCEID from './BalanceBCEID';
 import CreditTradingValue from './CreditTradingValue';
 import CreditTransactions from './CreditTransactions';
+import CreditTransactionsBCEID from './CreditTransactionsBCEID';
 import ComplianceReports from './ComplianceReports';
+import ComplianceReportsBCEID from './ComplianceReportsBCEID';
 import FileSubmissions from './FileSubmissions';
 import FuelCodes from './FuelCodes';
+import OrganizationDetails from './OrganizationDetails';
+import Part3Agreements from './Part3Agreements';
 import UserSettings from './UserSettings';
 
-const DashboardPage = props => (
+const BCEIDDashboardPage = obj => (
+  <div className="row dashboard-page">
+    <div className="col-md-3">
+      <BalanceBCEID
+        loggedInUser={obj.loggedInUser}
+      />
+
+      <CreditTradingValue />
+    </div>
+
+    <div className="col-md-5">
+      <CreditTransactionsBCEID
+        creditTransfers={obj.creditTransfers}
+        loggedInUser={obj.loggedInUser}
+        setFilter={obj.setFilter}
+      />
+
+      <Part3Agreements />
+
+      <ComplianceReportsBCEID
+        complianceReports={obj.complianceReports}
+        loggedInUser={obj.loggedInUser}
+        setFilter={obj.setFilter}
+      />
+    </div>
+
+    <div className="col-md-4">
+      <OrganizationDetails
+        loggedInUser={obj.loggedInUser}
+      />
+
+      <UserSettings
+        loggedInUser={obj.loggedInUser}
+        unreadNotificationsCount={obj.unreadNotificationsCount}
+      />
+    </div>
+  </div>
+);
+
+const IDIRDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
       <Balance
-        loggedInUser={props.loggedInUser}
-        organization={props.organization}
-        organizations={props.organizations}
-        selectOrganization={props.selectOrganization}
+        loggedInUser={obj.loggedInUser}
+        organization={obj.organization}
+        organizations={obj.organizations}
+        selectOrganization={obj.selectOrganization}
       />
 
       <CreditTradingValue />
@@ -25,36 +69,44 @@ const DashboardPage = props => (
 
     <div className="col-md-5">
       <CreditTransactions
-        creditTransfers={props.creditTransfers}
-        setFilter={props.setFilter}
+        creditTransfers={obj.creditTransfers}
+        setFilter={obj.setFilter}
       />
 
       <ComplianceReports
-        complianceReports={props.complianceReports}
-        setFilter={props.setFilter}
+        complianceReports={obj.complianceReports}
+        setFilter={obj.setFilter}
       />
 
       <FuelCodes
-        fuelCodes={props.fuelCodes}
-        setFilter={props.setFilter}
+        fuelCodes={obj.fuelCodes}
+        setFilter={obj.setFilter}
       />
     </div>
 
     <div className="col-md-4">
       <FileSubmissions
-        documentUploads={props.documentUploads}
-        setFilter={props.setFilter}
+        documentUploads={obj.documentUploads}
+        setFilter={obj.setFilter}
       />
 
       <Administration />
 
       <UserSettings
-        loggedInUser={props.loggedInUser}
-        unreadNotificationsCount={props.unreadNotificationsCount}
+        loggedInUser={obj.loggedInUser}
+        unreadNotificationsCount={obj.unreadNotificationsCount}
       />
     </div>
   </div>
 );
+
+const DashboardPage = (props) => {
+  if (!props.loggedInUser.isGovernmentUser) {
+    return BCEIDDashboardPage(props);
+  }
+
+  return IDIRDashboardPage(props);
+};
 
 DashboardPage.defaultProps = {
   organization: {},

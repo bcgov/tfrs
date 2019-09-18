@@ -28,7 +28,7 @@ const CreditTransactions = (props) => {
   };
 
   items.forEach((item) => {
-    if (['Credit Reduction', 'Credit Validation', 'Part 3 Award'].indexOf(item.type.theType) >= 0) {
+    if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
       if (item.status.status === 'Submitted') {
         awaitingReview.part3Awards.analyst += 1;
         awaitingReview.part3Awards.total += 1;
@@ -179,14 +179,16 @@ const CreditTransactions = (props) => {
               All/historical
             </button>
           </div>
-          <div>&nbsp;</div>
-          <div>
-            <Link
-              to={ORGANIZATIONS.LIST}
-            >
-              Fuel Supplier Organizations
-            </Link>
-          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="content">
+          <Link
+            to={ORGANIZATIONS.LIST}
+          >
+            Fuel Supplier Organizations
+          </Link>
         </div>
       </div>
     </div>
