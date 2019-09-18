@@ -28,7 +28,7 @@ const SecureFileSubmissionDetails = props => (
           <label htmlFor="document-status">Document Submission Status:
             <div>
               <span className="value">{props.item.status.status}</span> on
-              <span className="value"> <LocalTimestamp iso8601Date={props.item.updateTimestamp}/></span>
+              <span className="value"> <LocalTimestamp iso8601Date={props.item.updateTimestamp} /></span>
             </div>
           </label>
         </div>
@@ -131,7 +131,7 @@ const SecureFileSubmissionDetails = props => (
       {Object.keys(props.errors).length > 0 &&
       <div className="row">
         <div className="col-md-12">
-          <Errors errors={props.errors}/>
+          <Errors errors={props.errors} />
         </div>
       </div>
       }
@@ -144,7 +144,7 @@ const SecureFileSubmissionDetails = props => (
           <div className="form-group value">None</div>
           }
           {props.item.comments.map(c => (
-            <SecureFileSubmissionComment comment={c} key={c.id} saveComment={props.saveComment}/>
+            <SecureFileSubmissionComment comment={c} key={c.id} saveComment={props.saveComment} />
           ))
           }
           <SecureFileSubmissionCommentButtons
@@ -170,7 +170,7 @@ const SecureFileSubmissionDetails = props => (
         onClick={() => history.goBack()}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
       {props.availableActions.includes('Cancelled') &&
       <button
@@ -179,7 +179,7 @@ const SecureFileSubmissionDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.availableActions.includes('Draft') &&
@@ -189,7 +189,7 @@ const SecureFileSubmissionDetails = props => (
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
-        <FontAwesomeIcon icon="edit"/> {Lang.BTN_EDIT}
+        <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
       }
       {props.availableActions.includes('Draft') &&
@@ -200,7 +200,7 @@ const SecureFileSubmissionDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="undo-alt"/> {Lang.BTN_RESCIND_AS_DRAFT}
+        <FontAwesomeIcon icon="undo-alt" /> {Lang.BTN_RESCIND_AS_DRAFT}
       </button>
       }
       {props.availableActions.includes('Submitted') &&
@@ -215,7 +215,7 @@ const SecureFileSubmissionDetails = props => (
           type="button"
           disabled={props.hasFailures}
         >
-          <FontAwesomeIcon icon="share-square"/> {Lang.BTN_SUBMIT}
+          <FontAwesomeIcon icon="share-square" /> {Lang.BTN_SUBMIT}
         </button>
       </TooltipWhenDisabled>
       }
@@ -226,7 +226,7 @@ const SecureFileSubmissionDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> {Lang.BTN_RECEIVED}
+        <FontAwesomeIcon icon="check" /> {Lang.BTN_RECEIVED}
       </button>
       }
       {props.availableActions.includes('Archived') &&
@@ -241,7 +241,7 @@ const SecureFileSubmissionDetails = props => (
           disabled={props.formValidationMessage.length > 0}
           type="button"
         >
-          <FontAwesomeIcon icon="archive"/> {Lang.BTN_ARCHIVE}
+          <FontAwesomeIcon icon="archive" /> {Lang.BTN_ARCHIVE}
         </button>
       </TooltipWhenDisabled>
       }

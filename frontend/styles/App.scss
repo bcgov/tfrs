@@ -81,6 +81,10 @@
       margin: 0;
       padding: 0;
       vertical-align: middle;
+      
+      &:focus {
+        outline: none;
+      }
 
       &.text {
         text-align: left;
@@ -98,4 +102,8 @@
       }
     }
   }
+}
+
+.navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse {
+  max-height: unset;
 }

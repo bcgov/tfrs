@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { transactionTypes } from '../actions/transactionTypes';
+import AddressBuilder from '../app/components/AddressBuilder';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
@@ -276,39 +277,11 @@ class ExclusionAgreementContainer extends Component {
           selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
       }
 
-      if (col === EXCLUSION_AGREEMENT.LEGAL_NAME) {
-        if (cell.attributes.address) {
-          let address = '';
-
-          if (cell.attributes.address.address_line_1) {
-            address += cell.attributes.address.address_line_1;
-          }
-
-          if (cell.attributes.address.address_line_2) {
-            address += ` ${cell.attributes.address.address_line_2}`;
-          }
-
-          if (cell.attributes.address.address_line_3) {
-            address += ` ${cell.attributes.address.address_line_3}`;
-          }
-
-          if (cell.attributes.address.city) {
-            address += ` ${cell.attributes.address.city}`;
-          }
-
-          if (cell.attributes.address.state) {
-            address += `, ${cell.attributes.address.state}`;
-          }
-
-          if (cell.attributes.address.postal_code) {
-            address += `, ${cell.attributes.address.postal_code}`;
-          }
-
-          grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
-            ...grid[row][EXCLUSION_AGREEMENT.ADDRESS],
-            value: address
-          };
-        }
+      if (col === EXCLUSION_AGREEMENT.LEGAL_NAME && cell.attributes.address) {
+        grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
+          ...grid[row][EXCLUSION_AGREEMENT.ADDRESS],
+          value: AddressBuilder(cell.attributes.address)
+        };
       }
 
       if (col === EXCLUSION_AGREEMENT.QUANTITY || col === EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD) {

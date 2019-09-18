@@ -13,6 +13,7 @@ import history from '../../app/History';
 import ComplianceReportStatus from './ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import ComplianceReportStatus from './ComplianceReportStatus';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const ComplianceReportRow = (props) => {
