@@ -593,7 +593,6 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
     def validate_supplements(self, value):
         user = self.context.get('request').user
-        print('validating value: {}'.format(value))
         original = value
         relationship = ComplianceReportPermissions.get_relationship(original, user)
         actions = ComplianceReportPermissions.get_available_actions(original, relationship)
@@ -629,11 +628,6 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         cr = ComplianceReport.objects.create(
             status=status,
             **validated_data)
-        print('c')
-        if 'supplements' in validated_data:
-            print(validated_data['supplements'])
-        else:
-            print('nos')
         if 'supplements' in validated_data and validated_data['supplements'] is not None:
             # need to copy all the schedule entries
             original_report = validated_data['supplements']
