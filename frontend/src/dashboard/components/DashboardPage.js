@@ -9,11 +9,14 @@ import CreditTransactions from './CreditTransactions';
 import CreditTransactionsBCEID from './CreditTransactionsBCEID';
 import ComplianceReports from './ComplianceReports';
 import ComplianceReportsBCEID from './ComplianceReportsBCEID';
+import DirectorReview from './DirectorReview';
 import FileSubmissions from './FileSubmissions';
 import FuelCodes from './FuelCodes';
 import OrganizationDetails from './OrganizationDetails';
 import Part3Agreements from './Part3Agreements';
 import UserSettings from './UserSettings';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 
 const BCEIDDashboardPage = obj => (
   <div className="row dashboard-page">
@@ -46,6 +49,36 @@ const BCEIDDashboardPage = obj => (
         loggedInUser={obj.loggedInUser}
       />
 
+      <UserSettings
+        loggedInUser={obj.loggedInUser}
+        unreadNotificationsCount={obj.unreadNotificationsCount}
+      />
+    </div>
+  </div>
+);
+
+const DirectorDashboardPage = obj => (
+  <div className="row dashboard-page">
+    <div className="col-md-3">
+      <Balance
+        loggedInUser={obj.loggedInUser}
+        organization={obj.organization}
+        organizations={obj.organizations}
+        selectOrganization={obj.selectOrganization}
+      />
+
+      <CreditTradingValue />
+    </div>
+
+    <div className="col-md-5">
+      <DirectorReview
+        complianceReports={obj.complianceReports}
+        creditTransfers={obj.creditTransfers}
+        setFilter={obj.setFilter}
+      />
+    </div>
+
+    <div className="col-md-4">
       <UserSettings
         loggedInUser={obj.loggedInUser}
         unreadNotificationsCount={obj.unreadNotificationsCount}
@@ -103,6 +136,11 @@ const IDIRDashboardPage = obj => (
 const DashboardPage = (props) => {
   if (!props.loggedInUser.isGovernmentUser) {
     return BCEIDDashboardPage(props);
+  }
+
+  if (props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.APPROVE) ||
+  props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.APPROVE)) {
+    return DirectorDashboardPage(props);
   }
 
   return IDIRDashboardPage(props);
