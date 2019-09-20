@@ -107,7 +107,7 @@ class ComplianceReportingStatusHistory extends Component {
               onClick={this._toggleStatusHistory}
               type="button"
             >
-              <FontAwesomeIcon icon="history" /> Compliance Report for
+              <FontAwesomeIcon icon="history" /> {this.props.reportType} for
               {` ${typeof this.props.complianceReport.compliancePeriod === 'string'
                 ? this.props.complianceReport.compliancePeriod
                 : this.props.complianceReport.compliancePeriod.description
@@ -169,7 +169,8 @@ ComplianceReportingStatusHistory.defaultProps = {
     organization: {
       name: ''
     }
-  }
+  },
+  reportType: 'Compliance Report'
 };
 
 ComplianceReportingStatusHistory.propTypes = {
@@ -197,7 +198,8 @@ ComplianceReportingStatusHistory.propTypes = {
     organization: PropTypes.shape({
       name: PropTypes.string
     })
-  })
+  }),
+  reportType: PropTypes.string
 };
 
 export default ComplianceReportingStatusHistory;

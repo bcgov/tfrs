@@ -246,8 +246,8 @@ class ExclusionReportEditContainer extends Component {
         saving={this.props.saving}
       />,
       <Modal
-        disabled={this.state.terms.findIndex(term => term.value === false) >= 0 ||
-          this.state.terms.length === 0}
+        disabled={this.state.terms.filter(term => term.value === true).length <
+          this.props.signingAuthorityAssertions.items.length}
         handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
