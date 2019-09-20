@@ -5,8 +5,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import NotificationsCreditTransactionsTable from './NotificationsCreditTransactionsTable';
+import NotificationsTable from './NotificationsTable';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
+import COMPLIANCE_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsComplianceReports';
+import EXCLUSION_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsExclusionReports';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Lang from '../../constants/langEnUs';
@@ -38,7 +41,7 @@ const SettingsDetails = props => (
         <h3 key="header-credit-transactions">
           Credit Transfer Proposals
         </h3>,
-        <NotificationsCreditTransactionsTable
+        <NotificationsTable
           addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
           items={CREDIT_TRANSFER_NOTIFICATIONS.filter((notification) => {
@@ -65,7 +68,7 @@ const SettingsDetails = props => (
         <h3 key="header-pvr">
           Part 3 Awards, Credit Validations, and Credit Reductions
         </h3>,
-        <NotificationsCreditTransactionsTable
+        <NotificationsTable
           addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
           items={GOVERNMENT_TRANSFER_NOTIFICATIONS.filter(notification =>
@@ -85,7 +88,7 @@ const SettingsDetails = props => (
         <h3 key="header-doc">
           File Submission
         </h3>,
-        <NotificationsCreditTransactionsTable
+        <NotificationsTable
           addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
           items={DOCUMENT_NOTIFICATIONS.filter(notification =>
@@ -96,6 +99,41 @@ const SettingsDetails = props => (
           key="table-doc"
           toggleCheck={props.toggleCheck}
           type="documents"
+        />
+      ]}
+      {!props.subscriptions.isFetching && props.subscriptions.success &&
+      CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+      typeof props.loggedInUser.hasPermission === 'function' &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) && [
+        <h3 key="header-compliance-reports">
+          Compliance Reports
+        </h3>,
+        <NotificationsTable
+          addToFields={props.addToFields}
+          fields={props.fields.settings.notifications}
+          items={COMPLIANCE_REPORT_NOTIFICATIONS.filter(notification =>
+            (props.loggedInUser.isGovernmentUser
+              ? notification.recipients.includes('government')
+              : notification.recipients.includes('fuel_supplier')
+            ))}
+          key="table-compliance-reports"
+          toggleCheck={props.toggleCheck}
+          type="compliance-report"
+        />,
+        <h3 key="header-exclusion-reports">
+          Exclusion Reports
+        </h3>,
+        <NotificationsTable
+          addToFields={props.addToFields}
+          fields={props.fields.settings.notifications}
+          items={EXCLUSION_REPORT_NOTIFICATIONS.filter(notification =>
+            (props.loggedInUser.isGovernmentUser
+              ? notification.recipients.includes('government')
+              : notification.recipients.includes('fuel_supplier')
+            ))}
+          key="table-exclusion-reports"
+          toggleCheck={props.toggleCheck}
+          type="exclusion-report"
         />
       ]}
       {!props.subscriptions.isFetching && props.subscriptions.success && [

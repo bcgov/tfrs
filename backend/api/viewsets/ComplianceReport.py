@@ -1,11 +1,11 @@
 from django.db import transaction
-from django.db.models import Count
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.models.ComplianceReport import ComplianceReport, ComplianceReportType
+from api.models.ComplianceReport import ComplianceReport, \
+    ComplianceReportStatus, ComplianceReportType
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.ComplianceReport import \
@@ -81,8 +81,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         )
 
     def perform_update(self, serializer):
+        previous_state = self.get_object()
+        previous_status = previous_state.status
         compliance_report = serializer.save()
         ComplianceReportService.create_history(compliance_report, False)
+
+        status_deleted = ComplianceReportStatus.objects.get(status="Deleted")
+
+        if compliance_report.status.fuel_supplier_status != status_deleted:
+            ComplianceReportService.dispatch_notifications(
+                previous_status, compliance_report)
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -98,24 +106,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = ExclusionReportDetailSerializer(
             instance,
             read_only=True,
-            context={'request': request}
-        )
-
-        return Response(serializer.data)
-
-    def list(self, request, *args, **kwargs):
-        """
-        Override the base list method.
-        Filter supplemental reports from the list
-        """
-        serializer = ComplianceReportListSerializer(
-            self.get_queryset()
-                .annotate(Count('supplements'))
-                .filter(supplements__count=0)
-                .order_by('update_timestamp')
-                .all(),
-            read_only=True,
-            many=True,
             context={'request': request}
         )
 

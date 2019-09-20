@@ -23,7 +23,16 @@ const NOTIFICATION_TYPES = {
   DOCUMENT_PENDING_SUBMISSION: 'File Pending Submission',
   DOCUMENT_RECEIVED: 'Submission Received',
   DOCUMENT_SUBMITTED: 'File Submitted',
-  DOCUMENT_SCAN_FAILED: 'File Security Scan Failed'
+  DOCUMENT_SCAN_FAILED: 'File Security Scan Failed',
+  COMPLIANCE_REPORT_DRAFT: 'Compliance Report Draft Saved',
+  COMPLIANCE_REPORT_SUBMITTED: 'Compliance Report Submitted',
+  COMPLIANCE_REPORT_RECOMMENDED_FOR_ACCEPTANCE_ANALYST: 'Compliance Report Recommended for Acceptance - Analyst',
+  COMPLIANCE_REPORT_RECOMMENDED_FOR_REJECTION_ANALYST: 'Compliance Report Recommended for Rejection - Analyst',
+  COMPLIANCE_REPORT_RECOMMENDED_FOR_ACCEPTANCE_MANAGER: 'Compliance Report Recommended for Acceptance - Manager',
+  COMPLIANCE_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER: 'Compliance Report Recommended for Rejection - Manager',
+  COMPLIANCE_REPORT_ACCEPTED: 'Compliance Report Accepted',
+  COMPLIANCE_REPORT_REJECTED: 'Compliance Report Rejected',
+  COMPLIANCE_REPORT_REQUESTED_SUPPLEMENTAL: 'Compliance Report Requested Supplemental'
 };
 
 export default NOTIFICATION_TYPES;
