@@ -343,7 +343,24 @@ class ScheduleSummaryContainer extends Component {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
 
       part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
+
+      penalty[SCHEDULE_PENALTY.LINE_11][2] = {
+        ...penalty[SCHEDULE_PENALTY.LINE_11][2],
+        value: ScheduleSummaryContainer.calculateGasolinePayable(gasoline)
+      };
+
+      penalty[SCHEDULE_PENALTY.LINE_22][2] = {
+        ...penalty[SCHEDULE_PENALTY.LINE_22][2],
+        value: ScheduleSummaryContainer.calculateDieselPayable(diesel)
+      };
+
+      penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+        ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+        value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
+      };
+
       penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+
       this.setState({
         diesel,
         gasoline,
@@ -694,10 +711,9 @@ class ScheduleSummaryContainer extends Component {
     let {
       diesel,
       gasoline,
-      part3
+      part3,
+      penalty
     } = this.state;
-
-    const { penalty } = this.state;
 
     diesel = this._calculateDiesel();
     gasoline = this._calculateGasoline();
@@ -717,6 +733,8 @@ class ScheduleSummaryContainer extends Component {
       ...penalty[SCHEDULE_PENALTY.LINE_28][2],
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     };
+
+    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
     this.setState({
       ...this.state,

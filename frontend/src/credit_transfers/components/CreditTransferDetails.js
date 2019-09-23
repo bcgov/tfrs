@@ -73,6 +73,7 @@ const CreditTransferDetails = props => (
           <CreditTransferTerms
             addToFields={props.addToFields}
             fields={props.fields}
+            signingAuthorityAssertions={props.signingAuthorityAssertions}
             toggleCheck={props.toggleCheck}
           />
           }
@@ -126,10 +127,10 @@ const CreditTransferDetails = props => (
                   CREDIT_TRANSFER_TYPES.retirement.id,
                   CREDIT_TRANSFER_TYPES.part3Award.id].includes(props.tradeType.id) &&
                   props.comments.length === 0,
-                BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
-                props.fields.terms.length === 0,
-                BTN_SIGN_2_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
-                props.fields.terms.length === 0
+                BTN_SIGN_1_2: props.fields.terms.filter(term =>
+                  term.value === true).length < props.signingAuthorityAssertions.items.length,
+                BTN_SIGN_2_2: props.fields.terms.filter(term =>
+                  term.value === true).length < props.signingAuthorityAssertions.items.length
               }
             }
             id={props.id}
@@ -248,6 +249,7 @@ CreditTransferDetails.propTypes = {
     lastName: PropTypes.string,
     organization: PropTypes.shape()
   })),
+  signingAuthorityAssertions: PropTypes.shape().isRequired,
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string

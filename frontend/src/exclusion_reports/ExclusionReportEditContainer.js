@@ -246,8 +246,8 @@ class ExclusionReportEditContainer extends Component {
         saving={this.props.saving}
       />,
       <Modal
-        disabled={this.state.terms.findIndex(term => term.value === false) >= 0 ||
-          this.state.terms.length === 0}
+        disabled={this.state.terms.filter(term => term.value === true).length <
+          this.props.signingAuthorityAssertions.items.length}
         handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
@@ -298,7 +298,7 @@ class ExclusionReportEditContainer extends Component {
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
       >
-        Are you sure you want to request a supplemental compliance report?
+        Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
@@ -319,7 +319,7 @@ class ExclusionReportEditContainer extends Component {
         id="confirmManagerRequestSupplemental"
         key="confirmManagerRequestSupplemental"
       >
-        Are you sure you want to request a supplemental compliance report?
+        Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}

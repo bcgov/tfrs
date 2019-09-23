@@ -22,6 +22,7 @@ import {
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../actions/organizationActions';
+import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import { getLoggedInUser } from '../actions/userActions';
 import {
   addSigningAuthorityConfirmation,
@@ -74,6 +75,7 @@ class CreditTransferEditContainer extends Component {
     this.props.invalidateCreditTransfer();
     this.loadData(this.props.match.params.id);
     this.props.getFuelSuppliers();
+    this.props.getSigningAuthorityAssertions();
   }
 
   componentWillReceiveProps (props) {
@@ -284,6 +286,7 @@ class CreditTransferEditContainer extends Component {
         id={item.id}
         key="creditTransferForm"
         loggedInUser={this.props.loggedInUser}
+        signingAuthorityAssertions={this.props.signingAuthorityAssertions}
         terms={this.state.terms}
         title="Edit Credit Transfer"
         toggleCheck={this._toggleCheck}
@@ -520,6 +523,7 @@ CreditTransferEditContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
+  getSigningAuthorityAssertions: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   isFetching: PropTypes.bool.isRequired,
@@ -565,6 +569,7 @@ CreditTransferEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
+  signingAuthorityAssertions: PropTypes.shape().isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
@@ -575,7 +580,11 @@ const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  signingAuthorityAssertions: {
+    isFetching: state.rootReducer.signingAuthorityAssertions.isFetching,
+    items: state.rootReducer.signingAuthorityAssertions.items
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -585,6 +594,7 @@ const mapDispatchToProps = dispatch => ({
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),

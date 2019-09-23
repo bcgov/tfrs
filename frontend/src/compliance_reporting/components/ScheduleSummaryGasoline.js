@@ -25,6 +25,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of petroleum-based gasoline supplied'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -44,6 +45,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of gasoline class renewable fuel supplied'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -63,6 +65,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Total volume of gasoline class fuel supplied (Line 1 + Line 2)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -82,6 +85,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of Part 2 gasoline class renewable fuel required (5% of Line 3)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -102,6 +106,7 @@ class ScheduleSummaryGasoline {
         value: 'Net volume of renewable fuel notionally transferred to and received ' +
                'from other suppliers as reported in Schedule A'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -121,6 +126,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of renewable fuel retained (up to 5% of Line 4)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -149,6 +155,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of renewable fuel previously retained (from Line 6 of previous compliance period)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -170,6 +177,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of renewable obligation deferred (up to 5% of Line 4)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -198,6 +206,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Volume of renewable obligation added (from Line 8 of previous compliance period)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -220,6 +229,7 @@ class ScheduleSummaryGasoline {
         value: 'Net volume of renewable Part 2 gasoline class fuel supplied ' +
                '(Total of Line 2 + Line 5 - Line 6 + Line 7 + Line 8 - Line 9)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -239,7 +249,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: 'Gasoline class non-compliance payable (Line 4 - Line 10) x $0.30/L'
       }, {
-        className: 'total',
+        className: 'line total',
         readOnly: true,
         value: (
           <div>
