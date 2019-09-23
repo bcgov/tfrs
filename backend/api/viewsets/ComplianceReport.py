@@ -1,4 +1,8 @@
+import json
+
 from django.db import transaction
+from django.db.models import Count
+from django.http import JsonResponse
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
@@ -174,6 +178,31 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
 
         return Response(snapshot.snapshot)
+
+    @detail_route(methods=['GET'])
+    def deltas(self, request, pk=None):
+        obj = self.get_object()
+
+        # failure to find an object will trigger an exception that is
+        # translated into a 404
+
+        deltas = []
+
+        current = obj
+        i = 1
+        while current.supplements is not None:
+            current = current.supplements
+            ancestor_snapshot = ComplianceReportSnapshot.objects.get(compliance_report=current).snapshot
+            current_snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj).snapshot
+            deltas += [{
+                'levels_up': i,
+                'ancestor_id': current.id,
+                'ancestor_display_name': current.nickname if (current.nickname is not None and current.nickname != '') else current.generated_nickname,
+                'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot)
+            }]
+            i += 1
+
+        return JsonResponse(deltas, safe=False)
 
     @detail_route(methods=['patch'])
     def compute_totals(self, request, pk=None):

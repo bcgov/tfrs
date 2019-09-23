@@ -24,7 +24,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import SerializerMethodField
-from rest_framework.relations import SlugRelatedField
+from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import \
@@ -141,6 +141,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
     supplemental_reports = SerializerMethodField()
+    supplements = PrimaryKeyRelatedField(read_only=True)
     display_name = SerializerMethodField()
 
     def get_display_name(self, obj):
@@ -171,7 +172,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
                   'update_timestamp', 'has_snapshot', 'read_only',
-                  'supplemental_reports', 'display_name')
+                  'supplemental_reports', 'supplements', 'display_name')
 
 
 class ComplianceReportMinSerializer(serializers.ModelSerializer):

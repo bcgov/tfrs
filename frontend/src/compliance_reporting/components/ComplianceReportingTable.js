@@ -15,34 +15,6 @@ import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-const ComplianceReportRow = (props) => {
-  return (
-    [
-      <tr key={props.complianceReport.id}>
-        <td>
-          <FontAwesomeIcon style={{marginLeft: `${props.tabDepth*2}em`}} icon="arrow-right"/>
-          <a onClick={e => {
-            let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', props.complianceReport.id)
-              .replace(':tab', 'intro');
-            history.push(viewUrl);
-          }}>{props.complianceReport.displayName}</a>
-        </td>
-        <td><ComplianceReportStatus status={props.complianceReport.status}/></td>
-        <td>
-          {props.complianceReport.updateTimestamp ?
-            moment(props.complianceReport.updateTimestamp).format('YYYY-MM-DD') : '-'}
-        </td>
-      </tr>,
-      props.complianceReport.supplementalReports.map(sr => (
-        <ComplianceReportRow tabDepth={props.tabDepth + 1} key={sr.id} complianceReport={sr}/>
-      ))
-    ]);
-};
-
-ComplianceReportRow.defaultProps = {
-  tabDepth: 0
-};
-
 class ComplianceReportingTable extends Component {
   constructor(props) {
     super(props);
@@ -69,23 +41,19 @@ class ComplianceReportingTable extends Component {
 
   render() {
     const customDefaults = {
-      ...ReactTableDefaults.column,
-      Expander: (props) => {
-        const rowId = props.original.id;
-        const dataRow = this.props.items.find(i => (i.id === rowId));
-        if (dataRow.supplementalReports.length === 0) {
-          return null;
-        }
-        return (<FontAwesomeIcon icon="plus"/>);
-      }
-
+      ...ReactTableDefaults.column
     };
 
     const columns = [{
       expander: true,
       show: false
     }, {
-      accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
+      accessor: item => {
+        if (item.supplements !== null) {
+          return ''
+        }
+        return (item.compliancePeriod ? item.compliancePeriod.description : '');
+      },
       className: 'col-compliance-year',
       Header: 'Compliance Period',
       id: 'compliance-period',
@@ -98,7 +66,23 @@ class ComplianceReportingTable extends Component {
       minWidth: 75,
       show: this.props.loggedInUser.isGovernmentUser
     }, {
-      accessor: item => (item.displayName),
+      accessor: item => {
+        if (item.supplements !== null) {
+          return ([
+            <FontAwesomeIcon
+              className='fa-rotate-90'
+              style={{
+                'marginLeft': '16px',
+                'marginRight': '4px',
+              }}
+
+              icon='level-up-alt'
+            />,
+            item.displayName
+          ])
+        }
+        return (item.displayName);
+      },
       className: 'col-displayname',
       Header: 'Display Name',
       id: 'displayname',
@@ -160,7 +144,11 @@ class ComplianceReportingTable extends Component {
         filterable={filterable}
         column={customDefaults}
 
+        subRowsKey={'supplementalReports'}
+
         getTrProps={(state, row) => {
+          console.log(row);
+          const stripeClass = row && row.nestingPath[0] % 2 ? 'odd':'even' || 'even';
           if (row && row.original) {
             return {
               onClick: (e) => {
@@ -174,42 +162,16 @@ class ComplianceReportingTable extends Component {
 
                 history.push(viewUrl);
               },
-              className: 'clickable'
+              className: `clickable ${stripeClass}`
             };
           }
 
-        return {};
+          return {};
         }}
         pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
-        SubComponent={row => {
-          let ds = this.props.items.find(i => (i.id === row.original.id));
-          if (ds.supplementalReports.length === 0) {
-            return null;
-          } else {
-            return (
-              <div className="subcomponentWrapper">
-                <span className="subcomponentHeader">Supplemental Reports</span>
-                <table className="supplementalTable">
-                  <thead>
-                  <tr>
-                    <th>Display Name</th>
-                    <th style={{width: '75px'}}>Status</th>
-                    <th style={{width: '75px'}}>Last Updated On</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {ds.supplementalReports.map(sr => (
-                    <ComplianceReportRow key={sr.id} complianceReport={sr}/>
-                  ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          }
-        }
-        }
       />
-    );
+    )
+      ;
   }
 };
 
