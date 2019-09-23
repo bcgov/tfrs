@@ -298,7 +298,7 @@ class ExclusionReportEditContainer extends Component {
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
       >
-        Are you sure you want to request a supplemental compliance report?
+        Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
@@ -319,7 +319,7 @@ class ExclusionReportEditContainer extends Component {
         id="confirmManagerRequestSupplemental"
         key="confirmManagerRequestSupplemental"
       >
-        Are you sure you want to request a supplemental compliance report?
+        Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
