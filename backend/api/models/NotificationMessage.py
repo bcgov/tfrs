@@ -26,6 +26,7 @@ from django.db import models
 from api.models.CreditTrade import CreditTrade
 from api.models.Document import Document
 from api.models.Organization import Organization
+from api.models.ComplianceReport import ComplianceReport
 from api.models.User import User
 from auditable.models import Auditable
 
@@ -55,6 +56,11 @@ class NotificationMessage(Auditable):
         on_delete=models.PROTECT,
         null=True
     )
+    related_report = models.ForeignKey(
+        ComplianceReport,
+        on_delete=models.PROTECT,
+        null=True
+    )
     related_user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -66,7 +72,8 @@ class NotificationMessage(Auditable):
         on_delete=models.PROTECT,
         null=True,
         related_name='notification_originating_user',
-        db_comment='The (possibly NULL) user that caused this notification to be created'
+        db_comment="The (possibly NULL) user that caused this notification "
+                   "to be created"
     )
     message = models.CharField(
         null=False,

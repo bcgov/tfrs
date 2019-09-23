@@ -8,7 +8,7 @@ import 'react-table/react-table.css';
 import CheckBox from '../../app/components/CheckBox';
 import ReactTable from '../../app/components/StateSavingReactTable';
 
-const NotificationsCreditTransactionsTable = (props) => {
+const NotificationsTable = (props) => {
   const columns = [{
     accessor: item => (item.description),
     className: 'col-action',
@@ -79,7 +79,7 @@ const NotificationsCreditTransactionsTable = (props) => {
   );
 };
 
-NotificationsCreditTransactionsTable.propTypes = {
+NotificationsTable.propTypes = {
   addToFields: PropTypes.func.isRequired,
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -87,4 +87,4 @@ NotificationsCreditTransactionsTable.propTypes = {
   type: PropTypes.string.isRequired
 };
 
-export default NotificationsCreditTransactionsTable;
+export default NotificationsTable;

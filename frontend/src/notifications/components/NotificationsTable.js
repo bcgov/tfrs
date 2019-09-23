@@ -10,6 +10,8 @@ import moment from 'moment';
 import CheckBox from '../../app/components/CheckBox';
 import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import ReactTable from '../../app/components/StateSavingReactTable';
@@ -36,15 +38,25 @@ const NotificationsTable = (props) => {
         return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType);
       }
 
+      if (item.relatedReport) {
+        return NOTIFICATION_TYPES[item.message].replace(/Report/, `Report for ${item.relatedReport.compliancePeriod.description}`);
+      }
+
       return NOTIFICATION_TYPES[item.message];
     },
     Cell: (row) => {
       let viewUrl = null;
 
       if (row.original.relatedDocument) {
-        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.relatedDocument.id);
+        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(/:id/gi, row.original.relatedDocument.id);
       } else if (row.original.relatedCreditTrade) {
-        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
+        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(/:id/gi, row.original.relatedCreditTrade.id);
+      } else if (row.original.relatedReport && row.original.relatedReport.type.theType === 'Compliance Report') {
+        viewUrl = COMPLIANCE_REPORTING.EDIT.replace(/:id/gi, row.original.relatedReport.id);
+        viewUrl = viewUrl.replace(/:tab/gi, 'intro');
+      } else if (row.original.relatedReport && row.original.relatedReport.type.theType === 'Exclusion Report') {
+        viewUrl = EXCLUSION_REPORTS.EDIT.replace(/:id/gi, row.original.relatedReport.id);
+        viewUrl = viewUrl.replace(/:tab/gi, 'intro');
       }
 
       return (
