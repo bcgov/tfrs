@@ -157,24 +157,64 @@ class ComplianceReportService(object):
             previous_status,
             compliance_report: ComplianceReport
     ):
-        # if compliance_report.type.the_type == 'ExclusionReport':
-        #     return CreditTradeService.pvr_notification(
-        #         previous_state, credit_trade)
+        if compliance_report.type.the_type == 'Exclusion Report':
+            status, message, notification_type = ComplianceReportService.\
+                get_exclusion_report_notification_message(
+                    previous_status, compliance_report
+                )
+        else:
+            status, message, notification_type = ComplianceReportService.\
+                get_compliance_report_notification_message(
+                    previous_status, compliance_report
+                )
 
-        return ComplianceReportService.compliance_report_notification(
-            previous_status, compliance_report
-        )
+        interested_parties = []
+
+        if status in [
+                'Accepted',
+                'Draft',
+                'Rejected',
+                'Requested Supplemental',
+                'Submitted'
+        ]:
+            interested_parties.append(compliance_report.organization.id)
+
+        if status in [
+                'Accepted',
+                'Not Recommended',
+                'Recommended',
+                'Rejected',
+                'Requested Supplemental',
+                'Submitted'
+        ]:
+            government = Organization.objects.filter(
+                type__type='Government'
+            ).first()
+
+            interested_parties.append(government.id)
+
+        notifications_to_send = []
+
+        for interested_organization_id in interested_parties:
+            notifications_to_send.append({
+                'interested_organization_id': interested_organization_id,
+                'message': message,
+                'notification_type': notification_type,
+                'originating_user_id': compliance_report.update_user.id,
+                'related_organization_id': compliance_report.organization.id,
+                'related_report_id': compliance_report.id
+            })
+
+        on_commit(lambda: async_send_notifications(notifications_to_send))
 
     @staticmethod
-    def compliance_report_notification(previous_status, compliance_report):
-        government = Organization.objects.filter(
-            type__type='Government').first()
-
+    def get_compliance_report_notification_message(
+            previous_status,
+            compliance_report: ComplianceReport
+    ):
         current_status = compliance_report.status
-
         message = None
         notification_type = None
-        notifications_to_send = []
         status = None
 
         if current_status.fuel_supplier_status.status == 'Draft':
@@ -251,37 +291,93 @@ class ComplianceReportService(object):
                 notification_type = NotificationType.\
                     COMPLIANCE_REPORT_REJECTED.value
 
-        interested_parties = []
+        return status, message, notification_type
 
-        if status in [
-                'Accepted',
-                'Draft',
-                'Rejected',
-                'Requested Supplemental',
-                'Submitted'
-        ]:
-            interested_parties.append(compliance_report.organization.id)
+    @staticmethod
+    def get_exclusion_report_notification_message(
+            previous_status,
+            compliance_report: ComplianceReport
+    ):
+        current_status = compliance_report.status
+        message = None
+        notification_type = None
+        status = None
 
-        if status in [
-                'Accepted',
-                'Not Recommended',
-                'Recommended',
-                'Rejected',
-                'Requested Supplemental',
-                'Submitted'
-        ]:
-            interested_parties.append(government.id)
+        if current_status.fuel_supplier_status.status == 'Draft':
+            status = 'Draft'
 
-        for interested_organization_id in interested_parties:
-            notifications_to_send.append({
-                'interested_organization_id': interested_organization_id,
-                'message': message,
-                'notification_type': notification_type,
-                'related_organization_id': compliance_report.organization.id,
-                'originating_user_id': compliance_report.update_user.id
-            })
+            message = NotificationType.EXCLUSION_REPORT_DRAFT.name
+            notification_type = NotificationType.EXCLUSION_REPORT_DRAFT.value
 
-        on_commit(lambda: async_send_notifications(notifications_to_send))
+        if current_status.fuel_supplier_status.status != \
+                previous_status.fuel_supplier_status.status:
+            status = current_status.fuel_supplier_status.status
+
+            if status == 'Submitted':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_SUBMITTED.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_SUBMITTED.value
+
+        if current_status.analyst_status.status != \
+                previous_status.analyst_status.status:
+            status = current_status.analyst_status.status
+
+            if status == 'Recommended':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_ANALYST.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_ANALYST.value
+
+            if status == 'Not Recommended':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_ANALYST.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_ANALYST.value
+
+            if status == 'Requested Supplemental':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL.value
+
+        if current_status.manager_status.status != \
+                previous_status.manager_status.status:
+            status = current_status.manager_status.status
+
+            if status == 'Recommended':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_MANAGER.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_MANAGER.value
+
+            if status == 'Not Recommended':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER.value
+
+            if status == 'Requested Supplemental':
+                message = NotificationType.\
+                    EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL.value
+
+        if current_status.director_status.status != \
+                previous_status.director_status.status:
+            status = current_status.director_status.status
+
+            if status == 'Accepted':
+                message = NotificationType.EXCLUSION_REPORT_ACCEPTED.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_ACCEPTED.value
+
+            if status == 'Rejected':
+                message = NotificationType.EXCLUSION_REPORT_REJECTED.name
+                notification_type = NotificationType.\
+                    EXCLUSION_REPORT_REJECTED.value
+
+        return status, message, notification_type
 
 
 class InvalidStateException(Exception):

@@ -9,14 +9,15 @@ from django.core.cache import caches
 from django.db import transaction
 from rest_framework import serializers
 
+from api.models.ComplianceReport import ComplianceReport
+from api.models.CreditTrade import CreditTrade
+from api.models.Document import Document
 from api.models.NotificationChannel import NotificationChannel
 from api.models.NotificationMessage import NotificationMessage
 from api.models.NotificationSubscription import NotificationSubscription
-from api.models.User import User
-from api.models.CreditTrade import CreditTrade
-from api.models.Document import Document
 from api.models.Organization import Organization
 from api.models.Role import Role
+from api.models.User import User
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 
@@ -29,22 +30,26 @@ def send_amqp_notification(user):
         connection = pika.BlockingConnection(parameters)
         channel = connection.channel()
         # channel.confirm_delivery()
-        channel.exchange_declare(exchange='notifications',
-                                 durable=True,
-                                 auto_delete=False,
-                                 exchange_type='fanout')
+        channel.exchange_declare(
+            exchange='notifications',
+            durable=True,
+            auto_delete=False,
+            exchange_type='fanout'
+        )
 
-        channel.basic_publish(exchange='notifications',
-                              routing_key='global',
-                              body=json.dumps({
-                                  'audience': user.username,
-                                  'type': 'notification'
-                              }),
-                              properties=pika.BasicProperties(
-                                  content_type='application/json',
-                                  delivery_mode=1
-                              ),
-                              mandatory=True)
+        channel.basic_publish(
+            exchange='notifications',
+            routing_key='global',
+            body=json.dumps({
+                'audience': user.username,
+                'type': 'notification'
+            }),
+            properties=pika.BasicProperties(
+                content_type='application/json',
+                delivery_mode=1
+            ),
+            mandatory=True
+        )
 
         connection.close()
     except AMQPError as error:
@@ -58,9 +63,11 @@ class EffectiveSubscription(object):
         self.subscribed = subscribed
 
     def __eq__(self, other):
-        return (self.channel == other.channel and
-                self.subscribed == other.subscribed and
-                self.notification_type == other.notification_type)
+        return (
+            self.channel == other.channel and
+            self.subscribed == other.subscribed and
+            self.notification_type == other.notification_type
+        )
 
 
 class EffectiveSubscriptionSerializer(serializers.Serializer):
@@ -88,13 +95,17 @@ class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
             data['notification_type'] = NotificationType[data.get(
                 'notification_type'
             )]
+
         except KeyError:
             raise serializers.ValidationError({
                 'notification_type': 'Notification Type invalid'
             })
 
         try:
-            data['channel'] = NotificationChannel.objects.get(channel=data.get('channel'))
+            data['channel'] = NotificationChannel.objects.get(
+                channel=data.get('channel')
+            )
+
         except NotificationChannel.DoesNotExist:
             raise serializers.ValidationError({
                 'channel': 'Channel does not exist'
@@ -104,7 +115,6 @@ class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
 
 
 class AMQPNotificationService:
-
     @staticmethod
     def __determine_message_recipients(
             is_global: bool = False,
@@ -175,14 +185,18 @@ class AMQPNotificationService:
         """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
 
         with open('assets/bcgov.png', 'rb') as image:
-            msg.get_payload()[1].add_related(image.read(), 'image', 'png', cid=bcgov_cid)
+            msg.get_payload()[1].add_related(
+                image.read(), 'image', 'png', cid=bcgov_cid
+            )
 
         msg['Subject'] = 'TFRS Notification'
         msg['From'] = EMAIL['FROM_ADDRESS']
         msg['To'] = email_recipient
 
-        with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
-                          port=EMAIL['SMTP_SERVER_PORT']) as server:
+        with smtplib.SMTP(
+                host=EMAIL['SMTP_SERVER_HOST'],
+                port=EMAIL['SMTP_SERVER_PORT']
+        ) as server:
             try:
                 server.send_message(msg)
             except SMTPException as error:
@@ -208,11 +222,14 @@ class AMQPNotificationService:
                     channel=channel,
                     notification_type=notification_type
                 ).first()
-                is_subscribed = subscription.enabled if subscription else channel.subscribe_by_default
+                is_subscribed = subscription.enabled \
+                    if subscription else channel.subscribe_by_default
                 effective_subscriptions.append(
-                    EffectiveSubscription(channel=channel,
-                                          notification_type=notification_type,
-                                          subscribed=is_subscribed)
+                    EffectiveSubscription(
+                        channel=channel,
+                        notification_type=notification_type,
+                        subscribed=is_subscribed
+                    )
                 )
 
         subscription_cache.set(user.username, effective_subscriptions)
@@ -248,18 +265,21 @@ class AMQPNotificationService:
 
     @staticmethod
     @transaction.atomic
-    def send_notification(message: str,
-                          interested_organization: Organization,
-                          interested_roles: List[Role] = [],
-                          related_credit_trade: CreditTrade = None,
-                          related_document: Document = None,
-                          related_organization: Organization = None,
-                          related_user: User = None,
-                          is_error: bool = False,
-                          is_warning: bool = False,
-                          is_global: bool = False,
-                          notification_type: NotificationType = None,
-                          originating_user: User = None):
+    def send_notification(
+            message: str,
+            interested_organization: Organization,
+            interested_roles: List[Role] = [],
+            related_credit_trade: CreditTrade = None,
+            related_document: Document = None,
+            related_organization: Organization = None,
+            related_report: ComplianceReport = None,
+            related_user: User = None,
+            is_error: bool = False,
+            is_warning: bool = False,
+            is_global: bool = False,
+            notification_type: NotificationType = None,
+            originating_user: User = None
+    ):
 
         if interested_organization is None and not is_global:
             raise InvalidNotificationArguments(
@@ -290,12 +310,14 @@ class AMQPNotificationService:
             if not recipient.is_active:
                 continue
 
-            effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
+            effective_subscriptions = AMQPNotificationService.\
+                compute_effective_subscriptions(recipient)
 
             if app_subscription in effective_subscriptions:
                 notification = NotificationMessage(
                     user=recipient,
                     originating_user=originating_user,
+                    related_report=related_report,
                     related_credit_trade=related_credit_trade,
                     related_document=related_document,
                     related_organization=related_organization,
@@ -308,7 +330,9 @@ class AMQPNotificationService:
                 send_amqp_notification(recipient)
 
                 if email_subscription in effective_subscriptions:
-                    AMQPNotificationService.send_email_for_notification(notification)
+                    AMQPNotificationService.send_email_for_notification(
+                        notification
+                    )
 
 
 class InvalidNotificationArguments(Exception):

@@ -23,6 +23,7 @@
 from rest_framework import serializers
 
 from api.models.NotificationMessage import NotificationMessage
+from .ComplianceReport import ComplianceReportMinSerializer
 from .CreditTrade import CreditTradeMinSerializer
 from .Document import DocumentMinSerializer
 from .Organization import OrganizationMinSerializer
@@ -38,6 +39,7 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
     related_credit_trade = CreditTradeMinSerializer(read_only=True)
     related_document = DocumentMinSerializer(read_only=True)
     related_organization = OrganizationMinSerializer(read_only=True)
+    related_report = ComplianceReportMinSerializer(read_only=True)
 
     def __init__(self, *args, **kwargs):
         super(NotificationMessageSerializer, self).__init__(*args, **kwargs)

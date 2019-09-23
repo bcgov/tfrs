@@ -64,7 +64,6 @@ class SelectiveVisibilitySlugField(serializers.SlugRelatedField):
     """ Calls should_show() on parent serializer to decide if
         it should return or censor a value
     """
-
     def to_representation(self, value):
         visible = getattr(self.parent, 'should_show')
 
@@ -173,6 +172,18 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
                   'update_timestamp', 'has_snapshot', 'read_only',
                   'supplemental_reports', 'display_name')
+
+
+class ComplianceReportMinSerializer(serializers.ModelSerializer):
+    """
+    Basic Serializer for a Report (just shows the type and compliance period)
+    """
+    type = ComplianceReportTypeSerializer(read_only=True)
+    compliance_period = CompliancePeriodSerializer(read_only=True)
+
+    class Meta:
+        model = ComplianceReport
+        fields = ('id', 'type', 'compliance_period')
 
 
 class ComplianceReportDetailSerializer(serializers.ModelSerializer):
