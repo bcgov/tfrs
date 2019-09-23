@@ -28,6 +28,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Total credits from fuel supplied (from Schedule B)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -50,6 +51,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Total debits from fuel supplied (from Schedule B)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -72,6 +74,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Net credit or debit balance for compliance period'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -94,6 +97,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Banked credits used to offset outstanding debits (if applicable)'
       }, {
+        className: 'line',
         readOnly: true,
         value: (
           <div>
@@ -128,7 +132,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Outstanding debit balance'
       }, {
-        className: 'total',
+        className: 'line total',
         readOnly: true,
         value: (
           <div>
@@ -152,7 +156,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Part 3 non-compliance penalty payable'
       }, {
-        className: 'total',
+        className: 'line total',
         readOnly: true,
         value: (
           <div>

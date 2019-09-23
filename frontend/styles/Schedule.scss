@@ -343,6 +343,29 @@
     margin-right: -15px;
   }
 
+  &.spreadsheet-component .data-grid-container .spreadsheet.data-grid .cell.line {
+    &.read-only:not(.header) {
+      padding: 0.5rem 2.5rem 0.5rem 1.5rem;
+      position: relative;
+      text-align: left;
+
+      .overlay-trigger {
+        position: absolute;
+        right: 1rem;
+      }
+
+      &:hover .overlay-trigger {
+        z-index: 1200;
+      }
+    }
+
+    &.header.cell.read-only {
+      min-width: 10rem;
+      text-align: center;
+      width: 10rem;  
+    }
+  }
+
   .credits {
     min-width: 10rem;
     width: 10rem;
@@ -361,11 +384,6 @@
 
   .col-lg-6 {
     margin-bottom: 2rem;
-  }
-
-  .line {
-    min-width: 10rem;
-    width: 10rem;
   }
 
   .litres {

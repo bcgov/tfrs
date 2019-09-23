@@ -21,6 +21,7 @@ class ScheduleSummaryPenalty {
         readOnly: true,
         value: 'Part 2 Gasoline class non-compliance payable'
       }, {
+        className: 'line',
         readOnly: true,
         value: 'Line 11'
       }, totalViewer],
@@ -29,6 +30,7 @@ class ScheduleSummaryPenalty {
         readOnly: true,
         value: 'Part 2 Diesel class non-compliance payable'
       }, {
+        className: 'line',
         readOnly: true,
         value: 'Line 22'
       }, totalViewer],
@@ -37,6 +39,7 @@ class ScheduleSummaryPenalty {
         readOnly: true,
         value: 'Part 3 non-compliance penalty payable'
       }, {
+        className: 'line',
         readOnly: true,
         value: 'Line 28'
       }, totalViewer],
