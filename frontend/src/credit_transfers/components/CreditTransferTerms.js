@@ -1,56 +1,37 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-import getSigningAuthorityAssertions from '../../actions/signingAuthorityAssertionsActions';
+import React from 'react';
 import CheckBox from '../../app/components/CheckBox';
 
-class CreditTransferTerms extends Component {
-  componentDidMount () {
-    this.props.getSigningAuthorityAssertions();
-  }
+const CreditTransferTerms = props => (
+  <div className="credit-transfer-terms">
+    <h3 className="terms-header">Signing Authority Declaration</h3>
 
-  render () {
-    let content = [(
-      <h3 className="terms-header" key="header">Signing Authority Declaration</h3>
-    )];
-
-    content = content.concat(this.props.signingAuthorityAssertions.map(assertion => (
+    {!props.signingAuthorityAssertions.isFetching &&
+    props.signingAuthorityAssertions.items.map(assertion => (
       <div className="terms" key={assertion.id}>
         <div id="credit-transfer-term" className="check">
           <CheckBox
-            addToFields={this.props.addToFields}
-            fields={this.props.fields.terms}
+            addToFields={props.addToFields}
+            fields={props.fields.terms}
             id={assertion.id}
-            toggleCheck={this.props.toggleCheck}
+            toggleCheck={props.toggleCheck}
           />
         </div>
         <div>{assertion.description}</div>
       </div>
-    )));
-
-    return (<div className="credit-transfer-terms">{content}</div>);
-  }
-}
+    ))}
+  </div>
+);
 
 CreditTransferTerms.propTypes = {
   addToFields: PropTypes.func.isRequired,
   fields: PropTypes.shape({
     terms: PropTypes.array
   }).isRequired,
-  getSigningAuthorityAssertions: PropTypes.func.isRequired,
-  signingAuthorityAssertions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  signingAuthorityAssertions: {
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }.isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  isFetching: state.rootReducer.signingAuthorityAssertions.isFetching,
-  signingAuthorityAssertions: state.rootReducer.signingAuthorityAssertions.items
-});
-
-const mapDispatchToProps = dispatch => ({
-  getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferTerms);
+export default CreditTransferTerms;

@@ -53,6 +53,7 @@ const CreditTransferForm = props => (
         <CreditTransferTerms
           addToFields={props.addToFields}
           fields={props.fields}
+          signingAuthorityAssertions={props.signingAuthorityAssertions}
           toggleCheck={props.toggleCheck}
         />
       }
@@ -76,8 +77,8 @@ const CreditTransferForm = props => (
         disabled={
           {
             BTN_SIGN_1_2: !props.fields.terms ||
-            props.fields.terms.findIndex(term => term.value === false) >= 0 ||
-            props.fields.terms.length === 0
+            props.fields.terms.filter(term =>
+              term.value === true).length < props.signingAuthorityAssertions.items.length
           }
         }
         permissions={
@@ -114,10 +115,6 @@ CreditTransferForm.propTypes = {
     id: PropTypes.number,
     comment: PropTypes.string
   })),
-  zeroDollarReason: PropTypes.shape({
-    id: PropTypes.number,
-    reason: PropTypes.string
-  }),
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
@@ -156,10 +153,17 @@ CreditTransferForm.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
+  signingAuthorityAssertions: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   title: PropTypes.string,
   toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired,
-  validationErrors: PropTypes.shape({})
+  validationErrors: PropTypes.shape({}),
+  zeroDollarReason: PropTypes.shape({
+    id: PropTypes.number,
+    reason: PropTypes.string
+  })
 };
 
 export default CreditTransferForm;

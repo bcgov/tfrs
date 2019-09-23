@@ -20,6 +20,7 @@ import {
   invalidateCreditTransfer,
   invalidateCreditTransfers
 } from '../actions/creditTransfersActions';
+import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
@@ -86,6 +87,7 @@ class CreditTransferAddContainer extends Component {
   componentDidMount () {
     this.props.invalidateCreditTransfer();
     this.props.getFuelSuppliers();
+    this.props.getSigningAuthorityAssertions();
   }
 
   componentWillReceiveProps (props) {
@@ -254,17 +256,18 @@ class CreditTransferAddContainer extends Component {
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
+        handleCommentChanged={this._handleCommentChanged}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        handleCommentChanged={this._handleCommentChanged}
         key="creditTransferForm"
-        zeroDollarReason={this.state.fields.zeroDollarReason}
         loggedInUser={this.props.loggedInUser}
+        signingAuthorityAssertions={this.props.signingAuthorityAssertions}
         terms={this.state.terms}
         title="New Credit Transfer"
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         validationErrors={this.state.validationErrors}
+        zeroDollarReason={this.state.fields.zeroDollarReason}
       />,
       <ModalSubmitCreditTransfer
         handleSubmit={(event) => {
@@ -402,6 +405,7 @@ CreditTransferAddContainer.propTypes = {
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  getSigningAuthorityAssertions: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
@@ -414,13 +418,18 @@ CreditTransferAddContainer.propTypes = {
     })
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
+  signingAuthorityAssertions: PropTypes.shape().isRequired,
   validationErrors: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  signingAuthorityAssertions: {
+    isFetching: state.rootReducer.signingAuthorityAssertions.isFetching,
+    items: state.rootReducer.signingAuthorityAssertions.items
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -429,6 +438,7 @@ const mapDispatchToProps = dispatch => ({
   addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
