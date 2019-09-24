@@ -55,7 +55,7 @@ class ComplianceReportService(object):
 
             return comparison + ComplianceReportService._array_difference(ancestor, current, field, path, i + 1)
 
-        if current[field][i] != ancestor[field][i]:
+        if str(current[field][i]) != str(ancestor[field][i]):
             return [
                        Delta(path='.'.join(path),
                              field='{}[{}]'.format(field, i),
@@ -70,8 +70,11 @@ class ComplianceReportService(object):
     def compute_delta(snapshot, ancestor_snapshot, path=[]):
 
         differences = []
+        blacklist_keys = ['id', 'timestamp', 'status', 'read_only', 'actions', 'version', 'timestamp']
 
         for k in snapshot.keys():
+            if k in blacklist_keys:
+                continue
             current_path = path + [k]
             if k in ancestor_snapshot:
                 if k not in ancestor_snapshot:
@@ -91,7 +94,7 @@ class ComplianceReportService(object):
                 if isinstance(snapshot[k], list):
                     differences += ComplianceReportService._array_difference(ancestor_snapshot, snapshot, k, path)
                     continue
-                if snapshot[k] != ancestor_snapshot[k]:
+                if str(snapshot[k]) != str(ancestor_snapshot[k]):
                     differences += [Delta(path='.'.join(path),
                                          field=k,
                                          action='modified',
@@ -99,6 +102,8 @@ class ComplianceReportService(object):
                                          new_value=snapshot[k])._asdict()]
 
         for k in ancestor_snapshot.keys():
+            if k in blacklist_keys:
+                continue
             if k not in snapshot:
                 differences += [Delta(path='.'.join(path),
                                       field=k,

@@ -29,6 +29,7 @@ import history from '../app/History';
 import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
+import ChangelogContainer from "./ChangelogContainer";
 
 class ComplianceReportingEditContainer extends Component {
   static componentForTabName (tab) {
@@ -55,6 +56,10 @@ class ComplianceReportingEditContainer extends Component {
 
       case 'schedule-summary':
         TabComponent = withReferenceData()(ScheduleSummaryContainer);
+        break;
+
+      case 'changelog':
+        TabComponent = withReferenceData()(ChangelogContainer);
         break;
 
       default:

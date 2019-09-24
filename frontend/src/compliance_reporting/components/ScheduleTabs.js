@@ -15,6 +15,7 @@ const ScheduleTabs = (props) => {
     scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
     scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d'),
     ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary'),
+    ScheduleChangelog: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'changelog'),
     snapshot: COMPLIANCE_REPORTING.SNAPSHOT.replace(':id', props.id)
   };
 
@@ -66,6 +67,14 @@ const ScheduleTabs = (props) => {
       >
         <Link id="navbar-administration" to={urls.ScheduleSummary}>
           Summary &amp; Declaration
+        </Link>
+      </li>
+      <li
+        role="presentation"
+        className={`${(props.active === 'changelog') && 'active'}`}
+      >
+        <Link id="schedules-changelog" to={urls.ScheduleChangelog}>
+          Changelog
         </Link>
       </li>
       {props.hasSnapshot &&

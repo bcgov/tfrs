@@ -17,16 +17,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
 
     this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
     this.doGetSnapshot = this.doGetSnapshot.bind(this);
-
-    this.getDeltasHandler = this.getDeltasHandler.bind(this);
-    this.doGetDeltas = this.doGetDeltas.bind(this);
   }
 
   getCustomIdentityActions() {
     return ['VALIDATE', 'VALIDATE_SUCCESS',
             'RECOMPUTE', 'RECOMPUTE_SUCCESS',
-            'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS',
-            'GET_DELTAS', 'GET_DELTAS_SUCCESS']
+            'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS']
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -38,8 +34,6 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isRecomputing: false,
       isGettingSnapshot: false,
       snapshotItem: null,
-      isGettingDeltas: false,
-      deltasItem: null,
       recomputeResult: {},
     }
   }
@@ -82,17 +76,6 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         ...state,
         isGettingSnapshot: false,
         snapshotItem: action.payload,
-      })],
-      [this.getDeltas, (state, action) => ({
-        ...state,
-        id: action.payload.id || action.payload,
-        isGettingDeltas: true,
-        deltasItem: null,
-      })],
-      [this.getDeltasSuccess, (state, action) => ({
-        ...state,
-        isGettingDeltas: false,
-        deltasItem: action.payload,
       })]
     ];
   }
@@ -161,30 +144,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-  doGetDeltas(data = null) {
-    const id = data;
-    console.log(data);
-    console.log(id);
-    return axios.get(`${this.baseUrl}/${id}/deltas`);
-  }
-
-  * getDeltasHandler() {
-    const data = yield (select(this.idSelector()));
-
-    try {
-      const response = yield call(this.doGetDeltas, data);
-      yield put(this.getDeltasSuccess(response.data));
-    } catch (error) {
-      yield put(this.error(error.response.data));
-    }
-  }
 
   getCustomSagas() {
     return [
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
-      takeLatest(this.getSnapshot, this.getSnapshotHandler),
-      takeLatest(this.getDeltas, this.getDeltasHandler),
+      takeLatest(this.getSnapshot, this.getSnapshotHandler)
     ]
   }
 }

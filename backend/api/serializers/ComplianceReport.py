@@ -203,6 +203,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     actor = serializers.SerializerMethodField()
     summary = serializers.SerializerMethodField()
     history = serializers.SerializerMethodField()
+    deltas = serializers.SerializerMethodField()
+    skip_deltas = False
 
     def get_actor(self, obj):
         return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
@@ -210,6 +212,42 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     def get_actions(self, obj):
         relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
         return ComplianceReportPermissions.get_available_actions(obj, relationship)
+
+    def get_deltas(self, obj):
+
+        deltas = []
+
+        if self.skip_deltas:
+            return deltas
+
+        if obj.supplements:
+            ancestor = obj.supplements
+
+            qs = ComplianceReportSnapshot.objects.filter(compliance_report=ancestor)
+            if qs.exists():
+                ancestor_snapshot = qs.first().snapshot
+            else:
+                # no snapshot. make one.
+                ser = ComplianceReportDetailSerializer(ancestor, context=self.context)
+                ser.skip_deltas = True
+                ancestor_snapshot = ser.data
+
+            qs = ComplianceReportSnapshot.objects.filter(compliance_report=obj)
+            if qs.exists():
+                current_snapshot = qs.first().snapshot
+            else:
+                # no snapshot
+                ser = ComplianceReportDetailSerializer(obj, context=self.context)
+                ser.skip_deltas = True
+                current_snapshot = ser.data
+
+            deltas += [{
+                'levels_up': 1,
+                'ancestor_id': ancestor.id,
+                'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
+                'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot)
+            }]
+        return deltas
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -342,7 +380,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
-                  'actor']
+                  'actor', 'deltas']
 
 
 class ComplianceReportValidator:

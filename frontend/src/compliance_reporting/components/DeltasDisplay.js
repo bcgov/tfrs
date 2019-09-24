@@ -36,6 +36,11 @@ class DeltasDisplay extends Component {
       }
       return (<span>{row.value}</span>);
     };
+
+    if (deltas.length === 0) {
+      return (<p>This is not a supplementary report, so there are no changes to display.</p>)
+    }
+
     return (
       <div className="deltas">
         {
@@ -67,21 +72,21 @@ class DeltasDisplay extends Component {
                   {
                     id: 'oldvalue',
                     Header: 'Old Value',
-                    accessor: item => (item.old_value),
+                    accessor: item => (item.oldValue),
                     Cell: valueRenderer
                   },
                   {
                     id: 'newvalue',
                     Header: 'New Value',
-                    accessor: item => (item.new_value),
+                    accessor: item => (item.newValue),
                     Cell: valueRenderer
                   },
                   {
                     id: 'delta',
                     Header: 'Delta',
                     accessor: item => {
-                      const ov = Number.parseFloat(item.old_value);
-                      const nv = Number.parseFloat(item.new_value);
+                      const ov = Number.parseFloat(item.oldValue);
+                      const nv = Number.parseFloat(item.newValue);
                       if (Number.isNaN(ov) || Number.isNaN(nv)) {
                         return 'N/A'
                       }
@@ -92,9 +97,11 @@ class DeltasDisplay extends Component {
                 ];
 
               return (
-                <div key={d.ancestor_id}>
-                  <h2>Delta to {d.ancestor_display_name}</h2>
+                <div key={d.ancestorId}>
+                  <h2>Delta to {d.ancestorDisplayName}</h2>
 
+                  {(d.delta.length === 0) &&
+                  <p>No changes</p> ||
                   <ReactTable
                     columns={columns}
                     data={d.delta}
@@ -102,6 +109,7 @@ class DeltasDisplay extends Component {
                     sortable
                     defaultPageSize={d.delta.length}
                   />
+                  }
 
                 </div>
               );
