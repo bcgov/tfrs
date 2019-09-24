@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import Loading from '../../app/components/Loading';
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import CONFIG from '../../config';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 
 const DirectorReview = (props) => {
   const {
@@ -29,34 +32,41 @@ const DirectorReview = (props) => {
     total: 0
   };
 
-  complianceReports.forEach((item) => {
-    if (['Not Recommended', 'Recommended'].indexOf(item.status.managerStatus) >= 0 &&
-    item.status.directorStatus === 'Unreviewed') {
-      if (item.type === 'Compliance Report') {
-        awaitingReview.complianceReports += 1;
-        awaitingReview.total += 1;
-      }
+  if (CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+  typeof props.loggedInUser.hasPermission === 'function' &&
+  props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
+    complianceReports.forEach((item) => {
+      if (['Not Recommended', 'Recommended'].indexOf(item.status.managerStatus) >= 0 &&
+      item.status.directorStatus === 'Unreviewed') {
+        if (item.type === 'Compliance Report') {
+          awaitingReview.complianceReports += 1;
+          awaitingReview.total += 1;
+        }
 
-      if (item.type === 'Exclusion Report') {
-        awaitingReview.exclusionReports += 1;
-        awaitingReview.total += 1;
+        if (item.type === 'Exclusion Report' && CONFIG.COMPLIANCE_REPORTING.ENABLED) {
+          awaitingReview.exclusionReports += 1;
+          awaitingReview.total += 1;
+        }
       }
-    }
-  });
+    });
+  }
 
-  creditTransfers.forEach((item) => {
-    if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-      if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-        awaitingReview.creditTransfers += 1;
-        awaitingReview.total += 1;
-      }
+  if (typeof props.loggedInUser.hasPermission === 'function' &&
+  props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) {
+    creditTransfers.forEach((item) => {
+      if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
+        if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
+          awaitingReview.creditTransfers += 1;
+          awaitingReview.total += 1;
+        }
 
-      if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
-        awaitingReview.part3Awards += 1;
-        awaitingReview.total += 1;
+        if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
+          awaitingReview.part3Awards += 1;
+          awaitingReview.total += 1;
+        }
       }
-    }
-  });
+    });
+  }
 
   return (
     <div className="dashboard-fieldset">
@@ -70,6 +80,8 @@ const DirectorReview = (props) => {
         <div className="content">
           <h2>item(s) in progress for your action:</h2>
 
+          {(typeof props.loggedInUser.hasPermission === 'function' &&
+          props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
           <div>{/* Credit transfers awaiting review */}
             <button
               onClick={() => {
@@ -92,7 +104,11 @@ const DirectorReview = (props) => {
               credit transfer(s) for your review and statutory decision
             </button>
           </div>
+          }
 
+          {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          typeof props.loggedInUser.hasPermission === 'function' &&
+          props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
           <div>{/* Compliance Reports awaiting review */}
             <button
               onClick={() => {
@@ -114,7 +130,11 @@ const DirectorReview = (props) => {
               {awaitingReview.complianceReports} compliance report(s) awaiting your review
             </button>
           </div>
+          }
 
+          {(CONFIG.EXCLUSION_REPORTS.ENABLED &&
+          typeof props.loggedInUser.hasPermission === 'function' &&
+          props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
           <div>{/* Exclusion Reports awaiting review */}
             <button
               onClick={() => {
@@ -136,7 +156,10 @@ const DirectorReview = (props) => {
               {awaitingReview.exclusionReports} exclusion report(s) awaiting your review
             </button>
           </div>
+          }
 
+          {(typeof props.loggedInUser.hasPermission === 'function' &&
+          props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
           <div>
             <button
               onClick={() => {
@@ -158,6 +181,7 @@ const DirectorReview = (props) => {
               {awaitingReview.part3Awards} Part 3 Award(s) awaiting Director review
             </button>
           </div>
+          }
         </div>
       </div>
     </div>
@@ -176,6 +200,7 @@ DirectorReview.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  loggedInUser: PropTypes.shape().isRequired,
   setFilter: PropTypes.func.isRequired
 };
 

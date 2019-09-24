@@ -14,6 +14,12 @@ import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
 import DashboardPage from './components/DashboardPage';
+import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';
+import PERMISSIONS_FUEL_CODES from '../constants/permissions/FuelCodes';
+import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../constants/permissions/SecureDocumentUpload';
+import CONFIG from '../config';
 
 class DashboardContainer extends Component {
   constructor (props) {
@@ -34,11 +40,8 @@ class DashboardContainer extends Component {
     this._getCreditTransfers();
     this._getFileSubmissions();
     this._getUnreadNotificationCount();
-
-    if (this.props.loggedInUser.isGovernmentUser) {
-      this._getFuelCodes();
-      this._getOrganizations();
-    }
+    this._getFuelCodes();
+    this._getOrganizations();
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
@@ -48,23 +51,39 @@ class DashboardContainer extends Component {
   }
 
   _getComplianceReports () {
-    this.props.getComplianceReports();
+    if (CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+    typeof this.props.loggedInUser.hasPermission === 'function' &&
+    this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
+      this.props.getComplianceReports();
+    }
   }
 
   _getCreditTransfers () {
-    this.props.getCreditTransfersIfNeeded();
+    if (typeof this.props.loggedInUser.hasPermission === 'function' &&
+      this.props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) {
+      this.props.getCreditTransfersIfNeeded();
+    }
   }
 
   _getFileSubmissions () {
-    this.props.getDocumentUploads();
+    if (typeof this.props.loggedInUser.hasPermission === 'function' &&
+      this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) {
+      this.props.getDocumentUploads();
+    }
   }
 
   _getFuelCodes () {
-    this.props.getFuelCodes();
+    if (typeof this.props.loggedInUser.hasPermission === 'function' &&
+      this.props.loggedInUser.hasPermission(PERMISSIONS_FUEL_CODES.VIEW)) {
+      this.props.getFuelCodes();
+    }
   }
 
   _getOrganizations () {
-    this.props.getOrganizations();
+    if (typeof this.props.loggedInUser.hasPermission === 'function' &&
+      this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) {
+      this.props.getOrganizations();
+    }
   }
 
   _getUnreadNotificationCount (nextProps = null) {
