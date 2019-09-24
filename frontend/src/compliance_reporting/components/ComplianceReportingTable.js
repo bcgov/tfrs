@@ -131,7 +131,6 @@ class ComplianceReportingTable extends Component {
         data={this.props.items}
         expanded={this.state.expanded}
         onExpandedChange={(expanded, index, event) => {
-          console.log('expanded changed');
           this.setState({expanded});
         }}
         defaultFilterMethod={filterMethod}
@@ -147,7 +146,6 @@ class ComplianceReportingTable extends Component {
         subRowsKey={'supplementalReports'}
 
         getTrProps={(state, row) => {
-          console.log(row);
           const stripeClass = row && row.nestingPath[0] % 2 ? 'odd':'even' || 'even';
           if (row && row.original) {
             return {
