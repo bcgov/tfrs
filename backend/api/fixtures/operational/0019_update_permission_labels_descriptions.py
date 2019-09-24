@@ -47,17 +47,9 @@ class UpdatePermissionLabels(OperationalDataScript):
         Permission.objects.filter(
             code="LOGIN"
         ).update(
-            name="Edit compliance periods",
+            name="Login",
             description="authenticate using BCeID or IDIR credentials to "
                         "gain access to TFRS"
-        )
-
-        Permission.objects.filter(
-            code="EDIT_FUEL_SUPPLIERS"
-        ).update(
-            name="Organization management",
-            description="add new organizations and edit organization "
-                        "information"
         )
 
         Permission.objects.filter(
