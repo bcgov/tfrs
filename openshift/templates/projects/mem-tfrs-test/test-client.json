@@ -1,0 +1,222 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "test-client",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "client",
+                "generation": 287,
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "client"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "client:test"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28"
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 2,
+                "test": false,
+                "selector": {
+                    "name": "client"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "client",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "client"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "client",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "API_URL",
+                                        "value": "http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"
+                                    },
+                                    {
+                                        "name": "RealIpFrom"
+                                    },
+                                    {
+                                        "name": "AdditionalRealIpFromRules"
+                                    },
+                                    {
+                                        "name": "IpFilterRules"
+                                    },
+                                    {
+                                        "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "API_URL",
+                                        "value": "http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "200m",
+                                        "memory": "400Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "client",
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Exposes and load balances the front end pods"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "client"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "test-lowcarbonfuels-frontend",
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                }
+            },
+            "spec": {
+                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "client",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-10-25T17:33:18Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}
