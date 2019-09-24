@@ -97,3 +97,9 @@ minio.env
 package-lock.json
 supervisord.pid
 celerybeat.pid
+
+# ignore openshift exports
+openshift/templates/projects/mem-tfrs-tools/*
+openshift/templates/projects/mem-tfrs-dev/*
+openshift/templates/projects/mem-tfrs-test/*
+openshift/templates/projects/mem-tfrs-prod/*
