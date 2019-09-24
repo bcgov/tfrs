@@ -61,6 +61,13 @@ class UpdatePermissionLabels(OperationalDataScript):
         )
 
         Permission.objects.filter(
+            code="EDIT_FUEL_SUPPLIER"
+        ).update(
+            name="Edit organization address",
+            description="edit organization address"
+        )
+
+        Permission.objects.filter(
             code="ROLES_AND_PERMISSIONS"
         ).update(
             name="Roles and permissions",
