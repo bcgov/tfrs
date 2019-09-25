@@ -305,6 +305,7 @@ class CreditTradeService(object):
         updated to.
         e.g. Draft -> Proposed
         Proposed -> Accepted, Rejected
+        IDIR users uses the PROPOSE_CREDIT_TRANSFER permission to create PVRs
         """
         allowed_statuses = []
 
@@ -465,7 +466,9 @@ class CreditTradeService(object):
                 'related_organization_id': credit_trade.respondent.id,
                 'originating_user_id': credit_trade.update_user.id
             })
-        on_commit(lambda: async_send_notifications(ps))
+        on_commit(lambda:
+                  async_send_notifications(ps)
+                  )
 
     @staticmethod
     def pvr_notification(previous_state, credit_trade):
@@ -540,4 +543,6 @@ class CreditTradeService(object):
                 'related_organization_id': credit_trade.respondent.id,
                 'originating_user_id': credit_trade.update_user.id
             })
-        on_commit(lambda: async_send_notifications(ps))
+        on_commit(lambda:
+                  async_send_notifications(ps)
+                  )
