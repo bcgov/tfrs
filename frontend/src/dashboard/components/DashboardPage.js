@@ -52,6 +52,8 @@ const BCEIDDashboardPage = obj => (
       obj.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
         <ComplianceReportsBCEID
           complianceReports={obj.complianceReports}
+          createComplianceReport={obj.createComplianceReport}
+          createExclusionReport={obj.createExclusionReport}
           loggedInUser={obj.loggedInUser}
           setFilter={obj.setFilter}
         />
@@ -191,6 +193,8 @@ DashboardPage.defaultProps = {
 
 DashboardPage.propTypes = {
   complianceReports: PropTypes.shape().isRequired,
+  createComplianceReport: PropTypes.func.isRequired,
+  createExclusionReport: PropTypes.func.isRequired,
   creditTransfers: PropTypes.shape().isRequired,
   documentUploads: PropTypes.shape().isRequired,
   fuelCodes: PropTypes.shape().isRequired,

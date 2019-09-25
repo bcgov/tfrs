@@ -26,7 +26,7 @@ const Balance = props => (
       </div>
     ]}
 
-    <div>Show transactions involving:</div>
+    <div>Show balance for:</div>
 
     <select
       id="organizationFilterSelect"
@@ -38,7 +38,20 @@ const Balance = props => (
       value={props.organization.id}
     >
       <option value="-1">All Organizations</option>
-      {props.organizations.map(organization =>
+      {props.organizations.sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+
+        if (nameA < nameB) {
+          return -1;
+        }
+
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        return 0;
+      }).map(organization =>
         (organization.id !== DEFAULT_ORGANIZATION.id &&
           <option
             key={organization.id.toString(10)}

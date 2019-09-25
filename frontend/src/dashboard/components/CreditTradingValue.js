@@ -5,16 +5,20 @@ import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 const CreditTradingValue = props => (
   <div className="dashboard-card">
-    <div>
+    <a
+      href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Credit Market Report
+    </a>
+    <a
+      href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
       <FontAwesomeIcon icon={['far', 'file-pdf']} />
-      <a
-        href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Credit Market Report
-      </a>
-    </div>
+    </a>
   </div>
 );
 

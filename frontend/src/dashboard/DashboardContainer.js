@@ -10,16 +10,21 @@ import PropTypes from 'prop-types';
 import { complianceReporting } from '../actions/complianceReporting';
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getDocumentUploads } from '../actions/documentUploads';
+import { exclusionReports } from '../actions/exclusionReports';
 import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
+import history from '../app/History';
 import DashboardPage from './components/DashboardPage';
 import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';
 import PERMISSIONS_FUEL_CODES from '../constants/permissions/FuelCodes';
 import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../constants/permissions/SecureDocumentUpload';
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import CONFIG from '../config';
+import toastr from '../utils/toastr';
 
 class DashboardContainer extends Component {
   constructor (props) {
@@ -30,6 +35,8 @@ class DashboardContainer extends Component {
       unreadNotificationsCount: 0
     };
 
+    this._createComplianceReport = this._createComplianceReport.bind(this);
+    this._createExclusionReport = this._createExclusionReport.bind(this);
     this._selectOrganization = this._selectOrganization.bind(this);
     this._selectedOrganization = this._selectedOrganization.bind(this);
     this._setFilter = this._setFilter.bind(this);
@@ -48,6 +55,52 @@ class DashboardContainer extends Component {
     if (nextProps.unreadNotificationsCount) {
       this._getUnreadNotificationCount(nextProps);
     }
+
+    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
+      if (nextProps.complianceReporting.success) {
+        history.push(COMPLIANCE_REPORTING.EDIT
+          .replace(':id', nextProps.complianceReporting.item.id)
+          .replace(':tab', 'intro'));
+        toastr.complianceReporting('Created');
+      }
+    }
+
+    if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
+      if (nextProps.exclusionReports.success) {
+        history.push(EXCLUSION_REPORTS.EDIT
+          .replace(':id', nextProps.exclusionReports.item.id)
+          .replace(':tab', 'intro'));
+        toastr.exclusionReports('Created');
+      }
+    }
+  }
+
+  _createComplianceReport (compliancePeriodDescription) {
+    const currentYear = new Date().getFullYear();
+
+    const payload = {
+      status: {
+        fuelSupplierStatus: 'Draft'
+      },
+      type: 'Compliance Report',
+      compliancePeriod: currentYear
+    };
+
+    this.props.createComplianceReport(payload);
+  }
+
+  _createExclusionReport (compliancePeriodDescription) {
+    const currentYear = new Date().getFullYear();
+
+    const payload = {
+      status: {
+        fuelSupplierStatus: 'Draft'
+      },
+      type: 'Exclusion Report',
+      compliancePeriod: currentYear
+    };
+
+    this.props.createExclusionReport(payload);
   }
 
   _getComplianceReports () {
@@ -132,6 +185,8 @@ class DashboardContainer extends Component {
     return (
       <DashboardPage
         complianceReports={this.props.complianceReports}
+        createComplianceReport={this._createComplianceReport}
+        createExclusionReport={this._createExclusionReport}
         creditTransfers={this.props.creditTransfers}
         documentUploads={this.props.documentUploads}
         fuelCodes={this.props.fuelCodes}
@@ -147,6 +202,8 @@ class DashboardContainer extends Component {
 }
 
 DashboardContainer.defaultProps = {
+  complianceReporting: {},
+  exclusionReports: {},
   organization: null,
   unreadNotificationsCount: null
 };
@@ -156,11 +213,39 @@ DashboardContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()),
     isFinding: PropTypes.bool
   }).isRequired,
+  complianceReporting: PropTypes.shape({
+    isCreating: PropTypes.bool,
+    success: PropTypes.bool,
+    item: PropTypes.shape({
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ]),
+      id: PropTypes.number
+    })
+  }),
+  createComplianceReport: PropTypes.func.isRequired,
+  createExclusionReport: PropTypes.func.isRequired,
   creditTransfers: PropTypes.shape().isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  exclusionReports: PropTypes.shape({
+    isCreating: PropTypes.bool,
+    success: PropTypes.bool,
+    item: PropTypes.shape({
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ]),
+      id: PropTypes.number
+    })
+  }),
   fuelCodes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
@@ -188,6 +273,8 @@ DashboardContainer.propTypes = {
 };
 
 const mapDispatchToProps = ({
+  createComplianceReport: complianceReporting.create,
+  createExclusionReport: exclusionReports.create,
   getComplianceReports: complianceReporting.find,
   getCreditTransfersIfNeeded,
   getDocumentUploads,
@@ -199,6 +286,12 @@ const mapDispatchToProps = ({
 
 const mapStateToProps = (state, ownProps) => ({
   complianceReports: state.rootReducer.complianceReporting,
+  complianceReporting: {
+    errorMessage: state.rootReducer.complianceReporting.errorMessage,
+    isCreating: state.rootReducer.complianceReporting.isCreating,
+    item: state.rootReducer.complianceReporting.item,
+    success: state.rootReducer.complianceReporting.success
+  },
   creditTransfers: {
     items: state.rootReducer.creditTransfers.items,
     isFetching: state.rootReducer.creditTransfers.isFetching
@@ -206,6 +299,12 @@ const mapStateToProps = (state, ownProps) => ({
   documentUploads: {
     isFetching: state.rootReducer.documentUploads.isFetching,
     items: state.rootReducer.documentUploads.items
+  },
+  exclusionReports: {
+    errorMessage: state.rootReducer.exclusionReports.errorMessage,
+    isCreating: state.rootReducer.exclusionReports.isCreating,
+    item: state.rootReducer.exclusionReports.item,
+    success: state.rootReducer.exclusionReports.success
   },
   fuelCodes: {
     isFetching: state.rootReducer.fuelCodes.isFetching,

@@ -57,7 +57,7 @@ class UserSettings extends Component {
             {this.state.unreadCount}
           </div>
           <div className="content">
-            <Link id="navbar-administration" to={Routes.SETTINGS}>
+            <Link id="navbar-administration" to={Routes.NOTIFICATIONS.LIST}>
               Notifications
             </Link>
           </div>
@@ -82,6 +82,13 @@ class UserSettings extends Component {
               target="_blank"
             >
               Help
+            </a>
+            <a
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={['far', 'file-pdf']} />
             </a>
           </div>
         </div>
