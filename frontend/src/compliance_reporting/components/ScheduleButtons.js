@@ -200,14 +200,16 @@ const ScheduleButtons = props => (
 );
 
 ScheduleButtons.defaultProps = {
+  actions: [],
+  actor: '',
   validating: false,
   valid: true,
   validationMessages: {}
 };
 
 ScheduleButtons.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  actor: PropTypes.string.isRequired,
+  actions: PropTypes.arrayOf(PropTypes.string),
+  actor: PropTypes.string,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
