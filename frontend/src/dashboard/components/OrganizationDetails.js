@@ -7,6 +7,7 @@ import history from '../../app/History';
 import { USERS } from '../../constants/routes/Admin';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
 
 const OrganizationDetails = props => (
   <div className="dashboard-fieldset organization-details">
@@ -32,6 +33,8 @@ const OrganizationDetails = props => (
       }
     </div>
 
+    {props.loggedInUser &&
+    props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER) &&
     <div>
       <div className="content">
         <button
@@ -42,6 +45,7 @@ const OrganizationDetails = props => (
         </button>
       </div>
     </div>
+    }
 
     <div>
       <div className="content">

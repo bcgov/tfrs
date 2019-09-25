@@ -15,8 +15,12 @@ import FuelCodes from './FuelCodes';
 import OrganizationDetails from './OrganizationDetails';
 import Part3Agreements from './Part3Agreements';
 import UserSettings from './UserSettings';
+import CONFIG from '../../config';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
+import PERMISSIONS_FUEL_CODES from '../../constants/permissions/FuelCodes';
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 
 const BCEIDDashboardPage = obj => (
   <div className="row dashboard-page">
@@ -29,19 +33,29 @@ const BCEIDDashboardPage = obj => (
     </div>
 
     <div className="col-md-5">
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
       <CreditTransactionsBCEID
         creditTransfers={obj.creditTransfers}
         loggedInUser={obj.loggedInUser}
         setFilter={obj.setFilter}
       />
+      }
 
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
       <Part3Agreements />
+      }
 
-      <ComplianceReportsBCEID
-        complianceReports={obj.complianceReports}
-        loggedInUser={obj.loggedInUser}
-        setFilter={obj.setFilter}
-      />
+      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
+        <ComplianceReportsBCEID
+          complianceReports={obj.complianceReports}
+          loggedInUser={obj.loggedInUser}
+          setFilter={obj.setFilter}
+        />
+      }
     </div>
 
     <div className="col-md-4">
@@ -60,12 +74,16 @@ const BCEIDDashboardPage = obj => (
 const DirectorDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      <Balance
-        loggedInUser={obj.loggedInUser}
-        organization={obj.organization}
-        organizations={obj.organizations}
-        selectOrganization={obj.selectOrganization}
-      />
+      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+        typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
+        <Balance
+          loggedInUser={obj.loggedInUser}
+          organization={obj.organization}
+          organizations={obj.organizations}
+          selectOrganization={obj.selectOrganization}
+        />
+      }
 
       <CreditTradingValue />
     </div>
@@ -74,6 +92,7 @@ const DirectorDashboardPage = obj => (
       <DirectorReview
         complianceReports={obj.complianceReports}
         creditTransfers={obj.creditTransfers}
+        loggedInUser={obj.loggedInUser}
         setFilter={obj.setFilter}
       />
     </div>
@@ -90,38 +109,56 @@ const DirectorDashboardPage = obj => (
 const IDIRDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      <Balance
-        loggedInUser={obj.loggedInUser}
-        organization={obj.organization}
-        organizations={obj.organizations}
-        selectOrganization={obj.selectOrganization}
-      />
+      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+        typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
+        <Balance
+          loggedInUser={obj.loggedInUser}
+          organization={obj.organization}
+          organizations={obj.organizations}
+          selectOrganization={obj.selectOrganization}
+        />
+      }
 
       <CreditTradingValue />
     </div>
 
     <div className="col-md-5">
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
       <CreditTransactions
         creditTransfers={obj.creditTransfers}
         setFilter={obj.setFilter}
       />
+      }
 
-      <ComplianceReports
-        complianceReports={obj.complianceReports}
-        setFilter={obj.setFilter}
-      />
+      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+        typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
+        <ComplianceReports
+          complianceReports={obj.complianceReports}
+          setFilter={obj.setFilter}
+        />
+      }
 
-      <FuelCodes
-        fuelCodes={obj.fuelCodes}
-        setFilter={obj.setFilter}
-      />
+      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+        typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_FUEL_CODES.VIEW)) &&
+        <FuelCodes
+          fuelCodes={obj.fuelCodes}
+          setFilter={obj.setFilter}
+        />
+      }
     </div>
 
     <div className="col-md-4">
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
       <FileSubmissions
         documentUploads={obj.documentUploads}
         setFilter={obj.setFilter}
       />
+      }
 
       <Administration />
 
