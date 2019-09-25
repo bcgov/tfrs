@@ -97,6 +97,7 @@ const ScheduleTabs = (props) => {
 
 ScheduleTabs.defaultProps = {
   compliancePeriod: null,
+  hasSnapshot: false,
   id: null
 };
 
@@ -104,7 +105,7 @@ ScheduleTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
   id: PropTypes.string,
-  hasSnapshot: PropTypes.bool.isRequired
+  hasSnapshot: PropTypes.bool
 };
 
 export default ScheduleTabs;
