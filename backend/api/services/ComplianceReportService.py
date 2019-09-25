@@ -25,7 +25,8 @@ class ComplianceReportService(object):
     """
 
     def _array_difference(ancestor, current, field, path, i=0):
-        longest = max(len(ancestor[field]), len(current[field]))
+        longest = max(len(ancestor[field]) if field in ancestor else 0,
+                      len(current[field]) if field in current else 0)
 
         if i >= longest:
             return []
@@ -70,7 +71,8 @@ class ComplianceReportService(object):
     def compute_delta(snapshot, ancestor_snapshot, path=[]):
 
         differences = []
-        blacklist_keys = ['id', 'timestamp', 'status', 'read_only', 'actions', 'version', 'timestamp']
+        blacklist_keys = ['id', 'timestamp', 'status', 'read_only',
+                          'history', 'actions', 'version', 'timestamp']
 
         for k in snapshot.keys():
             if k in blacklist_keys:
