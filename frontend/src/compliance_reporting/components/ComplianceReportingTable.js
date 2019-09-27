@@ -99,13 +99,22 @@ class ComplianceReportingTable extends Component {
       Header: 'Status',
       id: 'status',
       minWidth: 75
-    }, {
-      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
-      className: 'col-date',
-      Header: 'Last Updated On',
-      id: 'updateTimestamp',
-      minWidth: 95
-    }
+    },
+      {
+        accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+        className: 'col-date',
+        Header: 'Last Updated On',
+        id: 'updateTimestamp',
+        minWidth: 95
+      },
+      {
+        accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
+        className: 'col-sdate',
+        Header: 'Last Activity',
+        id: 'sortDate',
+        minWidth: 95,
+        show: false //in discussion
+      }
     ];
 
     const filterMethod = (filter, row, column) => {
@@ -146,7 +155,8 @@ class ComplianceReportingTable extends Component {
         subRowsKey={'supplementalReports'}
 
         getTrProps={(state, row) => {
-          const stripeClass = row && row.nestingPath[0] % 2 ? 'odd':'even' || 'even';
+          console.log(row ? row.nestingPath : '');
+          const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even';
           if (row && row.original) {
             return {
               onClick: (e) => {
