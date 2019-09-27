@@ -24,6 +24,7 @@ class ComplianceReportService(object):
     Helper functions for Compliance Reporting
     """
 
+    @staticmethod
     def _array_difference(ancestor, current, field, path, i=0):
         longest = max(len(ancestor[field]) if field in ancestor else 0,
                       len(current[field]) if field in current else 0)
@@ -71,37 +72,57 @@ class ComplianceReportService(object):
     def compute_delta(snapshot, ancestor_snapshot, path=[]):
 
         differences = []
-        blacklist_keys = ['id', 'timestamp', 'status', 'read_only',
-                          'history', 'actions', 'version', 'timestamp']
+
+        blacklist_keys = ['id', 'deltas', 'timestamp', 'status',
+                          'read_only', 'actions', 'version', 'timestamp',
+                          'history', 'actor', 'has_snapshot']
+
+        if snapshot is None and ancestor_snapshot is not None:
+            differences += [Delta(path='.'.join(path),
+                                  field=path[len(path)-1],
+                                  action='removed',
+                                  old_value=ancestor_snapshot,
+                                  new_value=None)._asdict()]
+            return differences
+
+        if ancestor_snapshot is None and snapshot is not None:
+            differences += [Delta(path='.'.join(path),
+                                  field=path[len(path)-1],
+                                  action='added',
+                                  old_value=None,
+                                  new_value=snapshot)._asdict()]
+            return differences
+
+        if ancestor_snapshot is None and snapshot is None:
+            return differences
 
         for k in snapshot.keys():
             if k in blacklist_keys:
                 continue
             current_path = path + [k]
-            if k in ancestor_snapshot:
-                if k not in ancestor_snapshot:
-                    differences += [Delta(path='.'.join(path),
-                                        field=k,
-                                        action='added',
-                                        old_value=None,
-                                        new_value=snapshot[k])._asdict()]
-                    continue
-                if isinstance(snapshot[k], dict):
-                    comparison = ComplianceReportService.compute_delta(snapshot[k],
-                                                                       ancestor_snapshot[k],
-                                                                       path=current_path)
-                    if len(comparison) > 0:
-                        differences += comparison
-                    continue
-                if isinstance(snapshot[k], list):
-                    differences += ComplianceReportService._array_difference(ancestor_snapshot, snapshot, k, path)
-                    continue
-                if str(snapshot[k]) != str(ancestor_snapshot[k]):
-                    differences += [Delta(path='.'.join(path),
-                                         field=k,
-                                         action='modified',
-                                         old_value=ancestor_snapshot[k],
-                                         new_value=snapshot[k])._asdict()]
+            if k not in ancestor_snapshot:
+                differences += [Delta(path='.'.join(path),
+                                      field=k,
+                                      action='added',
+                                      old_value=None,
+                                      new_value=snapshot[k])._asdict()]
+                continue
+            if isinstance(snapshot[k], dict):
+                comparison = ComplianceReportService.compute_delta(snapshot[k],
+                                                                   ancestor_snapshot[k],
+                                                                   path=current_path)
+                if len(comparison) > 0:
+                    differences += comparison
+                continue
+            if isinstance(snapshot[k], list):
+                differences += ComplianceReportService._array_difference(ancestor_snapshot, snapshot, k, path)
+                continue
+            if str(snapshot[k]) != str(ancestor_snapshot[k]):
+                differences += [Delta(path='.'.join(path),
+                                      field=k,
+                                      action='modified',
+                                      old_value=ancestor_snapshot[k],
+                                      new_value=snapshot[k])._asdict()]
 
         for k in ancestor_snapshot.keys():
             if k in blacklist_keys:
