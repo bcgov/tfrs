@@ -45,7 +45,7 @@ const UserDetails = props => (
           {`${props.user.details.firstName} ${props.user.details.lastName}`}
         </h1>
         {props.user.details.organization &&
-          <div>Company:
+          <div>Organization:
             <strong> {props.user.details.organization.name}</strong>
           </div>
         }

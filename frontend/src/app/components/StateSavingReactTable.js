@@ -5,6 +5,57 @@ import { bindActionCreators } from 'redux';
 import connect from 'react-redux/es/connect/connect';
 import saveTableState from '../../actions/stateSavingReactTableActions';
 
+class ModifiedReactTable extends ReactTable {
+  /*
+  This is copied from the source code of React Table.
+  We're modifying this since filteredData was trying to look for subRowsKey
+  for EACH of the row and it's breaking our filters.
+  So we're modifying it that it just returns true
+  */
+  filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
+    let filteredData = data;
+
+    if (filtered.length) {
+      filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
+        const column = allVisibleColumns.find(x => x.id === nextFilter.id)
+
+        // Don't filter hidden columns or columns that have had their filters disabled
+        if (!column || column.filterable === false) {
+          return filteredSoFar;
+        }
+
+        const filterMethod = column.filterMethod || defaultFilterMethod;
+
+        // If 'filterAll' is set to true, pass the entire dataset to the filter method
+        if (column.filterAll) {
+          return filterMethod(nextFilter, filteredSoFar, column);
+        }
+        return filteredSoFar.filter(row => filterMethod(nextFilter, row, column));
+      }, filteredData);
+
+      // Apply the filter to the subrows if we are pivoting, and then
+      // filter any rows without subcolumns because it would be strange to show
+      filteredData = filteredData
+        .map((row) => {
+          if (!row[this.props.subRowsKey]) {
+            return row;
+          }
+          return {
+            ...row,
+            [this.props.subRowsKey]: this.filterData(
+              row[this.props.subRowsKey],
+              filtered,
+              defaultFilterMethod,
+              allVisibleColumns
+            )
+          };
+        });
+    }
+
+    return filteredData;
+  }
+}
+
 class StateSavingReactTable extends Component {
   constructor (props) {
     super(props);
@@ -48,7 +99,7 @@ class StateSavingReactTable extends Component {
   render () {
     if (this.props.saveState) {
       return (
-        <ReactTable
+        <ModifiedReactTable
           page={this.props.tableState.page}
           pageSize={this.props.tableState.pageSize}
           sorted={this.props.tableState.sorted}
