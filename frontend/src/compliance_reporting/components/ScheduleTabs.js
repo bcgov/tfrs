@@ -15,6 +15,7 @@ const ScheduleTabs = (props) => {
     scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
     scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d'),
     ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary'),
+    ScheduleChangelog: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'changelog'),
     snapshot: COMPLIANCE_REPORTING.SNAPSHOT.replace(':id', props.id)
   };
 
@@ -68,6 +69,14 @@ const ScheduleTabs = (props) => {
           Summary &amp; Declaration
         </Link>
       </li>
+      <li
+        role="presentation"
+        className={`${(props.active === 'changelog') && 'active'}`}
+      >
+        <Link id="schedules-changelog" to={urls.ScheduleChangelog}>
+          Changelog
+        </Link>
+      </li>
       {props.hasSnapshot &&
       <li>
         <button
@@ -88,6 +97,7 @@ const ScheduleTabs = (props) => {
 
 ScheduleTabs.defaultProps = {
   compliancePeriod: null,
+  hasSnapshot: false,
   id: null
 };
 
@@ -95,7 +105,7 @@ ScheduleTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
   id: PropTypes.string,
-  hasSnapshot: PropTypes.bool.isRequired
+  hasSnapshot: PropTypes.bool
 };
 
 export default ScheduleTabs;

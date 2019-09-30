@@ -73,6 +73,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
             available_statuses.append('Recorded')
 
+        # IDIR users need this permission to create PVRs
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append('Draft')
 

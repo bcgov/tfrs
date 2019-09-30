@@ -29,6 +29,7 @@ import history from '../app/History';
 import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
+import ChangelogContainer from './ChangelogContainer';
 
 class ComplianceReportingEditContainer extends Component {
   static componentForTabName (tab) {
@@ -57,6 +58,10 @@ class ComplianceReportingEditContainer extends Component {
         TabComponent = withReferenceData()(ScheduleSummaryContainer);
         break;
 
+      case 'changelog':
+        TabComponent = withReferenceData()(ChangelogContainer);
+        break;
+
       default:
         TabComponent = ComplianceReportIntroContainer;
     }
@@ -79,7 +84,8 @@ class ComplianceReportingEditContainer extends Component {
     let initialState = {
       schedules: {},
       terms: [],
-      getCalled: false
+      getCalled: false,
+      createSupplementalCalled: false
     };
     if (props.loadedState) {
       initialState = {
@@ -90,6 +96,7 @@ class ComplianceReportingEditContainer extends Component {
 
     this.state = initialState;
     this._addToFields = this._addToFields.bind(this);
+    this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -124,6 +131,15 @@ class ComplianceReportingEditContainer extends Component {
 
       if (nextProps.complianceReporting.item.hasSnapshot) {
         this.props.getSnapshotRequest(id);
+      }
+    }
+
+    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
+      if (!nextProps.complianceReporting.success) {
+        reduxToastr.error('Error creating supplemental report');
+      } else {
+        toastr.complianceReporting('Supplemental Created');
+        history.push(COMPLIANCE_REPORTING.LIST);
       }
     }
 
@@ -189,6 +205,21 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.match.params.id });
+  }
+
+  _handleCreateSupplemental (event, compliancePeriodDescription) {
+    this.setState({
+      createSupplementalCalled: true
+    });
+
+    this.props.createComplianceReport({
+      status: {
+        fuelSupplierStatus: 'Draft'
+      },
+      type: 'Compliance Report',
+      compliancePeriod: compliancePeriodDescription,
+      supplements: Number(this.props.match.params.id)
+    });
   }
 
   _addToFields (value) {
@@ -383,6 +414,13 @@ class ComplianceReportingEditContainer extends Component {
         Are you sure you want to save this compliance report?
       </Modal>,
       <Modal
+        handleSubmit={event => this._handleCreateSupplemental(event, period)}
+        id="confirmCreateSupplemental"
+        key="confirmCreateSupplemental"
+      >
+        Are you sure you want to create a supplemental compliance report?
+      </Modal>,
+      <Modal
         disabled={this.state.terms.filter(term => term.value === true).length <
           this.props.signingAuthorityAssertions.items.length}
         handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
@@ -462,7 +500,7 @@ ComplianceReportingEditContainer.propTypes = {
     validating: PropTypes.bool,
     validationMessages: PropTypes.object,
     snapshot: PropTypes.shape(),
-    snapshotIsLoading: PropTypes.bool.isRequired,
+    snapshotIsLoading: PropTypes.bool.isRequired
   }),
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
@@ -516,6 +554,7 @@ const
       isGetting: state.rootReducer.complianceReporting.isGetting,
       isRecomputing: state.rootReducer.complianceReporting.isRecomputing,
       isUpdating: state.rootReducer.complianceReporting.isUpdating,
+      isCreating: state.rootReducer.complianceReporting.isCreating,
       item: state.rootReducer.complianceReporting.item,
       recomputeResult: state.rootReducer.complianceReporting.recomputeResult,
       success: state.rootReducer.complianceReporting.success,

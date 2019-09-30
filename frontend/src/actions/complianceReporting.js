@@ -144,12 +144,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
+
   getCustomSagas() {
     return [
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
-      takeLatest(this.getSnapshot, this.getSnapshotHandler),
-
+      takeLatest(this.getSnapshot, this.getSnapshotHandler)
     ]
   }
 }

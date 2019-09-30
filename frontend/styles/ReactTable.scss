@@ -16,8 +16,16 @@
       background-color: $background-grey;
     }
 
+    &.even {
+      background-color: $background-grey !important;
+    }
+
+    &.odd {
+      background-color: white !important;
+    }
+
     &.clickable:hover {
-      background-color: $yellow;
+      background-color: $yellow !important;
       cursor: pointer;
     }
   }
@@ -25,14 +33,4 @@
   .col-actions {
     text-align: center;
   }
-}
-
-div.subcomponentWrapper {
-  padding-left: 2em;
-  padding-right: 2em;
-}
-span.subcomponentHeader {
-  font-weight: bold;
-  font-size: 120%;
-  margin-bottom: 1.5em;
 }

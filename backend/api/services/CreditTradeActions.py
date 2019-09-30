@@ -40,10 +40,13 @@ class CreditTradeActions(object):
         saving the credit transfer into a draft
         and if the user has enough permission,
         sign the credit transfer
+
+        IDIR users uses the PROPOSE_CREDIT_TRANSFER permission to create PVRs
         """
         status_dict = {s.status: s for s in CreditTradeActions.__statuses}
 
         available_statuses = []
+
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append(
                 status_dict["Draft"]
@@ -88,14 +91,10 @@ class CreditTradeActions(object):
 
         if credit_trade.initiator == request.user.organization:
             if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-                available_statuses.append(
-                    status_dict["Cancelled"]
-                )
+                available_statuses.append(status_dict["Cancelled"])
         else:
             if request.user.has_perm('REFUSE_CREDIT_TRANSFER'):
-                available_statuses.append(
-                    status_dict["Refused"]
-                )
+                available_statuses.append(status_dict["Refused"])
 
         serializer = CreditTradeStatusMinSerializer(
             available_statuses, many=True)
@@ -114,14 +113,10 @@ class CreditTradeActions(object):
 
         available_statuses = []
         if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
-            available_statuses.append(
-                status_dict["Recommended"]
-            )
+            available_statuses.append(status_dict["Recommended"])
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-            available_statuses.append(
-                status_dict["Cancelled"]
-            )
+            available_statuses.append(status_dict["Cancelled"])
 
         serializer = CreditTradeStatusMinSerializer(
             available_statuses, many=True)
@@ -136,6 +131,8 @@ class CreditTradeActions(object):
         declining the credit transfer
         and rescinding the credit transfer
         (provided the user has the right permissions)
+        For PVRs, IDIR users need the RESCIND permission so they can
+        retract their recommendation
         """
         status_dict = {s.status: s for s in CreditTradeActions.__statuses}
 
