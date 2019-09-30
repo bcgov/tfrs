@@ -37,7 +37,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     queryset = ComplianceReport.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
-    ordering = ('-create_timestamp',)
+    ordering = ('compliance_period__effective_date', '-update_timestamp', '-create_timestamp',)
     serializer_class = ComplianceReportListSerializer
     serializer_classes = {
         'default': ComplianceReportListSerializer,
@@ -148,6 +148,15 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset().annotate(Count('supplements')).filter(supplements__count=0)\
+            .order_by('-compliance_period__effective_date')
+
+        sorted_qs = sorted(list(qs.all()), key=lambda x: [x.compliance_period.effective_date, x.sort_date])
+
+        serializer = self.get_serializer(sorted_qs, many=True,context={'request': request})
         return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])

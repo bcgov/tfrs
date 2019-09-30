@@ -172,7 +172,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
                   'update_timestamp', 'has_snapshot', 'read_only',
-                  'supplemental_reports', 'supplements', 'display_name')
+                  'supplemental_reports', 'supplements', 'display_name', 'sort_date')
 
 
 class ComplianceReportMinSerializer(serializers.ModelSerializer):

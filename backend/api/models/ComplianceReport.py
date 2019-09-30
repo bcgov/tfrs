@@ -324,6 +324,18 @@ class ComplianceReport(Auditable):
     def snapshot(self):
         return ComplianceReportSnapshot.objects.filter(compliance_report=self).first().snapshot
 
+    @property
+    def sort_date(self):
+        latest = self.update_timestamp if self.update_timestamp else self.create_timestamp
+        to_check = self.supplemental_reports.all()
+
+        for c in to_check:
+            c_sort_date = c.sort_date
+            if c_sort_date > latest:
+                latest = c_sort_date
+
+        return latest
+
     class Meta:
         db_table = 'compliance_report'
 
