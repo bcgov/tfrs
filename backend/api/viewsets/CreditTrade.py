@@ -182,7 +182,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(credit_trade, data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        completed_credit_trade = CreditTradeService.approve(credit_trade)
+        completed_credit_trade = CreditTradeService.approve(
+            credit_trade, request.user
+        )
         serializer = self.get_serializer(completed_credit_trade)
 
         CreditTradeService.dispatch_notifications(previous_state,
