@@ -98,6 +98,12 @@
     }
   }
 
+  &.director {
+    .content > div {
+      margin: 2rem 0 0;
+    }
+  }
+
   &.organization-details {
     .content {
       margin-left: 0;

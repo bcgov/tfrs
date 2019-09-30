@@ -98,6 +98,8 @@ const DirectorDashboardPage = obj => (
     </div>
 
     <div className="col-md-4">
+      <Administration />
+
       <UserSettings
         loggedInUser={obj.loggedInUser}
         unreadNotificationsCount={obj.unreadNotificationsCount}

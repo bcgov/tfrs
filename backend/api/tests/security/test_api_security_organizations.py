@@ -139,6 +139,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             'status': status.HTTP_201_CREATED,
             'reason': 'Director should have create access for orgs'}
 
+        expected_results[('gov_manager',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Gov Compliance Manager should have create access for orgs'}
+
         expected_results[('gov_multi_role',)] = {
             'status': status.HTTP_201_CREATED,
             'reason': 'Gov Multi-role should have create access for orgs'}
@@ -192,6 +196,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
         expected_results[('gov_director',)] = {
             'status': status.HTTP_200_OK,
             'reason': 'Director should have write access for orgs'}
+
+        expected_results[('gov_manager',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Gov Compliance Manager should have write access for orgs'}
 
         expected_results[('gov_multi_role',)] = {
             'status': status.HTTP_200_OK,

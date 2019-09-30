@@ -1,22 +1,22 @@
 /*
  * Presentational component
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
 import moment from 'moment';
+import { ReactTableDefaults } from 'react-table';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import 'react-table/react-table.css';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
-import {ReactTableDefaults} from 'react-table';
 
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class ComplianceReportingTable extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -24,22 +24,23 @@ class ComplianceReportingTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({expanded: this.computeExpanded(nextProps)});
+  componentWillReceiveProps (nextProps) {
+    this.setState({ expanded: this.computeExpanded(nextProps) });
   }
 
-  computeExpanded(props) {
-    let newExpanded = {};
+  // eslint-disable-next-line class-methods-use-this
+  computeExpanded (props) {
+    const newExpanded = {};
     if (props.items) {
-      for (let i = 0; i < props.items.length; i++) {
-        //just expand everything
+      for (let i = 0; i < props.items.length; i += 1) {
+        // just expand everything
         newExpanded[i] = true;
       }
     }
     return newExpanded;
   }
 
-  render() {
+  render () {
     const customDefaults = {
       ...ReactTableDefaults.column
     };
@@ -48,9 +49,9 @@ class ComplianceReportingTable extends Component {
       expander: true,
       show: false
     }, {
-      accessor: item => {
+      accessor: (item) => {
         if (item.supplements !== null) {
-          return ''
+          return '';
         }
         return (item.compliancePeriod ? item.compliancePeriod.description : '');
       },
@@ -66,20 +67,19 @@ class ComplianceReportingTable extends Component {
       minWidth: 75,
       show: this.props.loggedInUser.isGovernmentUser
     }, {
-      accessor: item => {
+      accessor: (item) => {
         if (item.supplements !== null) {
           return ([
             <FontAwesomeIcon
-              className='fa-rotate-90'
+              className="fa-rotate-90"
               style={{
-                'marginLeft': '16px',
-                'marginRight': '4px',
+                marginLeft: '16px',
+                marginRight: '8px'
               }}
-
-              icon='level-up-alt'
+              icon="level-up-alt"
             />,
             item.displayName
-          ])
+          ]);
         }
         return (item.displayName);
       },
@@ -94,7 +94,7 @@ class ComplianceReportingTable extends Component {
       id: 'type',
       minWidth: 75
     }, {
-      accessor: item => <ComplianceReportStatus status={item.status}/>,
+      accessor: ComplianceReportStatus,
       className: 'col-status',
       Header: 'Status',
       id: 'status',
@@ -119,16 +119,17 @@ class ComplianceReportingTable extends Component {
 
     const filterMethod = (filter, row, column) => {
       const id = filter.pivotId || filter.id;
+
       return row[id] !== undefined ? String(row[id])
         .toLowerCase()
         .includes(filter.value.toLowerCase()) : true;
     };
 
-    const findExpanded = (data) => {
-      return data.map((row, i) => (
-        {i: true}
-      ));
-    };
+    const findExpanded = data => (
+      data.map((row, i) => (
+        { i: true }
+      ))
+    );
 
     const filterable = true;
 
@@ -140,7 +141,7 @@ class ComplianceReportingTable extends Component {
         data={this.props.items}
         expanded={this.state.expanded}
         onExpandedChange={(expanded, index, event) => {
-          this.setState({expanded});
+          this.setState({ expanded });
         }}
         defaultFilterMethod={filterMethod}
         defaultPageSize={10}
@@ -150,10 +151,7 @@ class ComplianceReportingTable extends Component {
         }]}
         loading={this.props.isFetching}
         filterable={filterable}
-        column={customDefaults}
-
-        subRowsKey={'supplementalReports'}
-
+        subRowsKey="supplementalReports"
         getTrProps={(state, row) => {
           const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even';
           if (row && row.original) {
@@ -177,16 +175,14 @@ class ComplianceReportingTable extends Component {
         }}
         pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       />
-    )
-      ;
+    );
   }
-};
+}
 
 ComplianceReportingTable
   .defaultProps = {};
 
-ComplianceReportingTable
-  .propTypes = {
+ComplianceReportingTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     organization: PropTypes.shape({
       name: PropTypes.string
