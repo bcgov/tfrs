@@ -155,7 +155,6 @@ class ComplianceReportingTable extends Component {
         subRowsKey={'supplementalReports'}
 
         getTrProps={(state, row) => {
-          console.log(row ? row.nestingPath : '');
           const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even';
           if (row && row.original) {
             return {
