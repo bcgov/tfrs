@@ -57,7 +57,7 @@ const FileSubmissions = (props) => {
               type="button"
             >
               {`${awaitingReview.documentUploads.submitted} `}
-              awaiting Director review and statutory decision
+              awaiting to be marked as received
             </button>
           </div>
 
@@ -73,7 +73,7 @@ const FileSubmissions = (props) => {
               }}
               type="button"
             >
-              {awaitingReview.documentUploads.received} awaiting to be archived
+              {awaitingReview.documentUploads.received} awaiting review and archive
             </button>
           </div>
         </div>

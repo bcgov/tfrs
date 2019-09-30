@@ -36,12 +36,12 @@ const CreditTransactions = (props) => {
     }
 
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-      if (item.status.status === 'Submitted') {
+      if (item.status.status === 'Accepted' && !item.isRescinded) {
         awaitingReview.creditTransfers.analyst += 1;
         awaitingReview.creditTransfers.total += 1;
       }
 
-      if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
+      if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0 && !item.isRescinded) {
         awaitingReview.creditTransfers.director += 1;
         awaitingReview.creditTransfers.total += 1;
       }

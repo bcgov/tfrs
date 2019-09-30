@@ -99,9 +99,6 @@ const CreditTransactions = (props) => {
       </div>
 
       <div>
-        <div className="value">
-          <FontAwesomeIcon icon={['far', 'file-pdf']} />
-        </div>
         <div className="content">
           <a
             href={ORGANIZATIONS.BULLETIN}
@@ -111,11 +108,23 @@ const CreditTransactions = (props) => {
           >
             Part 3 Fuel Suppliers Report (PDF)
           </a>
+          <a
+            href={ORGANIZATIONS.BULLETIN}
+            key="bulletin"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <FontAwesomeIcon icon={['far', 'file-pdf']} />
+          </a>
         </div>
       </div>
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
-        <button className="add-button" type="button">
+        <button
+          className="add-button"
+          onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
+          type="button"
+        >
           <FontAwesomeIcon icon="play" /> Start a new credit transfer proposal
         </button>
       }

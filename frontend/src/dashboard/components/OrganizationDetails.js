@@ -4,10 +4,10 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
 import history from '../../app/History';
-import { USERS } from '../../constants/routes/Admin';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
+import USERS from '../../constants/routes/Users';
 
 const OrganizationDetails = props => (
   <div className="dashboard-fieldset organization-details">

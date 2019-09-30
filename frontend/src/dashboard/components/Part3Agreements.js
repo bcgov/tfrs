@@ -26,6 +26,14 @@ const Part3Agreements = props => (
         >
           Part 3 Agreement application information
         </a>
+        <a
+          href={ORGANIZATIONS.PART_3}
+          key="bulletin"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <FontAwesomeIcon icon="external-link-alt" />
+        </a>
       </div>
     </div>
 
