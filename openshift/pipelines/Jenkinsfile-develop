@@ -17,7 +17,15 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
             activeDeadlineSeconds: 600,
             slaveConnectTimeout: 600,
             command: '',
-            args: '${computer.jnlpmac} ${computer.name}'
+            args: '${computer.jnlpmac} ${computer.name}',
+		    envVars: [
+                envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql'), 
+                envVar(key: 'DATABASE_ENGINE', value: 'postgresql'),
+                envVar(key: 'DATABASE_NAME', value: 'tfrstest'),
+                envVar(key: 'DATABASE_USER', value: 'tfrstest'),
+                envVar(key: 'DATABASE_PASSWORD', value: 'tfrstest'),
+                envVar(key: 'DJANGO_DEBUG', value: 'true')
+		    ], 
         )
     ]
 ){    
