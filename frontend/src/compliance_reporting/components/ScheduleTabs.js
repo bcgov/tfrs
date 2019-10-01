@@ -25,7 +25,9 @@ const ScheduleTabs = (props) => {
     showAssessment = true;
   }
 
-  if (props.loggedInUser.isGovernmentUser) {
+  if (props.loggedInUser.isGovernmentUser &&
+    (['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.analystStatus) >= 0 ||
+    ['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0)) {
     showAssessment = true;
   }
 

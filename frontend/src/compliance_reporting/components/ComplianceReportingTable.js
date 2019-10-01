@@ -157,9 +157,10 @@ class ComplianceReportingTable extends Component {
               onClick: (e) => {
                 let tab = 'intro';
 
-                if ((row.original.status &&
-                  ['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0) ||
-                  this.props.loggedInUser.isGovernmentUser) {
+                if (row.original.status &&
+                  (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
                   tab = 'schedule-assessment';
                 }
 
