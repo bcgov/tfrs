@@ -15,9 +15,19 @@ const ScheduleTabs = (props) => {
     scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
     scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d'),
     ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary'),
+    scheduleAssessment: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-assessment'),
     ScheduleChangelog: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'changelog'),
     snapshot: COMPLIANCE_REPORTING.SNAPSHOT.replace(':id', props.id)
   };
+
+  let showAssessment = false;
+  if (props.complianceReport && ['Accepted', 'Rejected'].indexOf(props.complianceReport.status.directorStatus) >= 0) {
+    showAssessment = true;
+  }
+
+  if (props.loggedInUser.isGovernmentUser) {
+    showAssessment = true;
+  }
 
   return (
     <ul className="schedule-tabs nav nav-tabs" role="tablist">
@@ -25,7 +35,7 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'intro') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.intro}>
+        <Link id="navbar-introduction" to={urls.intro}>
           Introduction
         </Link>
       </li>
@@ -33,7 +43,7 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'schedule-a') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.scheduleA}>
+        <Link id="navbar-schedule-a" to={urls.scheduleA}>
           Schedule A
         </Link>
       </li>
@@ -41,7 +51,7 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'schedule-b') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.scheduleB}>
+        <Link id="navbar-schedule-b" to={urls.scheduleB}>
           Schedule B
         </Link>
       </li>
@@ -49,7 +59,7 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'schedule-c') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.scheduleC}>
+        <Link id="navbar-schedule-c" to={urls.scheduleC}>
           Schedule C
         </Link>
       </li>
@@ -57,7 +67,7 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'schedule-d') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.scheduleD}>
+        <Link id="navbar-schedule-d" to={urls.scheduleD}>
           Schedule D
         </Link>
       </li>
@@ -65,10 +75,20 @@ const ScheduleTabs = (props) => {
         role="presentation"
         className={`${(props.active === 'schedule-summary') && 'active'}`}
       >
-        <Link id="navbar-administration" to={urls.ScheduleSummary}>
+        <Link id="navbar-summary" to={urls.ScheduleSummary}>
           Summary &amp; Declaration
         </Link>
       </li>
+      {showAssessment &&
+      <li
+        role="presentation"
+        className={`${(props.active === 'schedule-assessment') && 'active'}`}
+      >
+        <Link id="navbar-assessment" to={urls.scheduleAssessment}>
+          Assessment
+        </Link>
+      </li>
+      }
       <li
         role="presentation"
         className={`${(props.active === 'changelog') && 'active'}`}
@@ -97,6 +117,7 @@ const ScheduleTabs = (props) => {
 
 ScheduleTabs.defaultProps = {
   compliancePeriod: null,
+  complianceReport: null,
   hasSnapshot: false,
   id: null
 };
@@ -104,8 +125,14 @@ ScheduleTabs.defaultProps = {
 ScheduleTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
+  complianceReport: PropTypes.shape({
+    status: PropTypes.shape()
+  }),
   id: PropTypes.string,
-  hasSnapshot: PropTypes.bool
+  hasSnapshot: PropTypes.bool,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired
 };
 
 export default ScheduleTabs;
