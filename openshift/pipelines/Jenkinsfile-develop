@@ -19,7 +19,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
             command: '',
             args: '${computer.jnlpmac} ${computer.name}',
 		    envVars: [
-                envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql'), 
+                envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql96-unittest'), 
                 envVar(key: 'DATABASE_ENGINE', value: 'postgresql'),
                 envVar(key: 'DATABASE_NAME', value: 'tfrs'),
                 envVar(key: 'DATABASE_USER', value: 'tfrstest'),
