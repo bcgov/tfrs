@@ -5,7 +5,7 @@ def unitTestStage () {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
                     sh 'python manage.py collectstatic'
-                    sh 'python manage.py test -c nose.cfg'
+                    sh 'python manage.py test --noinput -c nose.cfg'
                 } catch(Throwable t) {
                     result = 1;
                 } finally {
