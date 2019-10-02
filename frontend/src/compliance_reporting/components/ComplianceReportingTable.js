@@ -105,8 +105,7 @@ class ComplianceReportingTable extends Component {
       Header: 'Last Updated On',
       id: 'updateTimestamp',
       minWidth: 95
-    },
-    {
+    }, {
       accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
       className: 'col-sdate',
       Header: 'Last Activity',
