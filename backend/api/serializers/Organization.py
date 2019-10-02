@@ -120,19 +120,41 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     """
     Update Serializer for Organization
     """
-    organization_address = OrganizationAddressSerializer(allow_null=True)
-    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
-    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
-    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
+    organization_address = OrganizationAddressSerializer(
+        allow_null=True
+    )
+    status = PrimaryKeyRelatedField(
+        queryset=OrganizationStatus.objects.all()
+    )
+    type = PrimaryKeyRelatedField(
+        queryset=OrganizationType.objects.all()
+        )
 
     def update(self, obj, validated_data):
         request = self.context.get('request')
 
         if request.user.has_perm('EDIT_FUEL_SUPPLIERS'):
+            status = validated_data['status']
+
+            # Default action type
+            # (or if set to inactive and organization has zero balance)
+            actions_type = OrganizationActionsType.objects.get(
+                the_type="None"
+            )
+
+            if status.status == 'Active':
+                actions_type = OrganizationActionsType.objects.get(
+                    the_type="Buy And Sell"
+                )
+            elif obj.organization_balance['validated_credits'] > 0:
+                actions_type = OrganizationActionsType.objects.get(
+                    the_type="Sell Only"
+                )
+
             Organization.objects.filter(id=obj.id).update(
                 name=validated_data['name'],
-                actions_type=validated_data['actions_type'],
-                status=validated_data['status'],
+                actions_type=actions_type,
+                status=status,
                 update_timestamp=timezone.now()
             )
 

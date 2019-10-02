@@ -102,7 +102,6 @@ const CreditTransactions = (props) => {
         <div className="content">
           <a
             href={ORGANIZATIONS.BULLETIN}
-            key="bulletin"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -110,7 +109,6 @@ const CreditTransactions = (props) => {
           </a>
           <a
             href={ORGANIZATIONS.BULLETIN}
-            key="bulletin"
             rel="noopener noreferrer"
             target="_blank"
           >
