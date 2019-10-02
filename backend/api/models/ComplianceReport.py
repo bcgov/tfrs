@@ -321,6 +321,20 @@ class ComplianceReport(Auditable):
         return self.supplements is not None
 
     @property
+    def group_id(self):
+        current = self
+        while len(current.supplemental_reports.all()) != 0:
+            current = current.supplemental_reports.first()
+        return current.id
+
+    @property
+    def original_report_id(self):
+        current = self
+        while current.supplements is not None:
+            current = current.supplements
+        return current.id
+
+    @property
     def snapshot(self):
         return ComplianceReportSnapshot.objects.filter(compliance_report=self).first().snapshot
 

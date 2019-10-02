@@ -73,7 +73,7 @@ class ComplianceReportingStatusHistory extends Component {
     super(props);
 
     this.state = {
-      collapsed: true
+      collapsed: false
     };
 
     this._toggleStatusHistory = this._toggleStatusHistory.bind(this);

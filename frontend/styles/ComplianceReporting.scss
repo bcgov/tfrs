@@ -1,3 +1,6 @@
+@import './variables.scss';
+@import './mixins.scss';
+
 .page-compliance-reporting {
   h2 {
     margin-top: 2rem;
@@ -15,6 +18,20 @@
         display: inline-block;
         width: 2.5rem;
       }
+    }
+  }
+
+  .complianceReportListTable {
+    .rt-tbody .rt-tr-group:hover .rt-tr {
+      background: $yellow !important;
+    }
+
+    .rt-tbody .rt-tr-group .rt-tr-group {
+      border-bottom: 0;
+    }
+
+    .rt-tbody > .rt-tr-group:not(:last-of-type) {
+      border-bottom: 1px solid $border-grey;
     }
   }
 
@@ -47,6 +64,73 @@
 
   .unit-of-measure {
     border-top: 1px solid $border-grey;
+  }
+}
+
+#deltas {
+
+  .history-container {
+
+    display: flex;
+    flex-direction: row;
+
+    .history-list {
+      flex: 1;
+      min-height: 50vh;
+      max-width: 20% !important;
+      min-width: 20% !important;
+
+      .panel-body {
+        height: 100%;
+        border-right: 2px solid $border-grey;
+      }
+
+      ul {
+
+        list-style-type: none;
+        display: block;
+        padding: 0;
+        margin: 0;
+        border: 1px solid $border-grey;
+        overflow: scroll;
+
+        li {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          text-align: justify;
+
+          a {
+            cursor: pointer;
+          }
+
+          &:hover {
+            background: $yellow !important;
+          }
+
+          &.active {
+            font-weight: bold !important;
+          }
+
+          &:nth-child(odd) {
+            background: $white;
+          }
+
+          &:nth-child(even) {
+            background: $lighter-grey;
+          }
+
+          &:not(:last-child) {
+            border-bottom: 1px solid $border-grey;
+          }
+        }
+      }
+
+    }
+
+    .history-content {
+      flex: 1;
+
+    }
   }
 }
 
@@ -162,6 +246,7 @@ table.supplementalTable {
     text-align: center;
     font-size: 120%;
   }
+
   td {
     font-size: 120%;
   }

@@ -55,7 +55,7 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-summary':
-        TabComponent = withReferenceData()(ScheduleSummaryContainer);
+        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleSummaryContainer));
         break;
 
       case 'changelog':

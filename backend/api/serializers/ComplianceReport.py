@@ -171,8 +171,9 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
-                  'update_timestamp', 'has_snapshot', 'read_only',
-                  'supplemental_reports', 'supplements', 'display_name', 'sort_date')
+                  'update_timestamp', 'has_snapshot', 'read_only', 'group_id',
+                  'supplemental_reports', 'supplements', 'display_name', 'sort_date',
+                  'original_report_id')
 
 
 class ComplianceReportMinSerializer(serializers.ModelSerializer):
@@ -220,33 +221,47 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         if self.skip_deltas:
             return deltas
 
-        if obj.supplements:
-            ancestor = obj.supplements
+        current = obj
 
-            qs = ComplianceReportSnapshot.objects.filter(compliance_report=ancestor)
-            if qs.exists():
-                ancestor_snapshot = qs.first().snapshot
-            else:
-                # no snapshot. make one.
-                ser = ComplianceReportDetailSerializer(ancestor, context=self.context)
-                ser.skip_deltas = True
-                ancestor_snapshot = ser.data
+        while current:
+            if current.supplements:
+                ancestor = current.supplements
 
-            qs = ComplianceReportSnapshot.objects.filter(compliance_report=obj)
-            if qs.exists():
-                current_snapshot = qs.first().snapshot
-            else:
-                # no snapshot
-                ser = ComplianceReportDetailSerializer(obj, context=self.context)
-                ser.skip_deltas = True
-                current_snapshot = ser.data
+                qs = ComplianceReportSnapshot.objects.filter(compliance_report=ancestor)
 
-            deltas += [{
-                'levels_up': 1,
-                'ancestor_id': ancestor.id,
-                'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
-                'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot)
-            }]
+                if qs.exists():
+                    ancestor_snapshot = qs.first().snapshot
+                    ancestor_computed = False
+                else:
+                    # no snapshot. make one.
+                    ser = ComplianceReportDetailSerializer(ancestor, context=self.context)
+                    ser.skip_deltas = True
+                    ancestor_snapshot = ser.data
+                    ancestor_computed = True
+
+                qs = ComplianceReportSnapshot.objects.filter(compliance_report=current)
+
+                if qs.exists():
+                    current_snapshot = qs.first().snapshot
+                else:
+                    # no snapshot
+                    ser = ComplianceReportDetailSerializer(current, context=self.context)
+                    ser.skip_deltas = True
+                    current_snapshot = ser.data
+
+                deltas += [{
+                    'levels_up': 1,
+                    'ancestor_id': ancestor.id,
+                    'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
+                    'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot),
+                    'snapshot': {
+                        'data': ancestor_snapshot,
+                        'computed': ancestor_computed
+                    }
+                }]
+
+            current = current.supplements
+
         return deltas
 
     def get_summary(self, obj):

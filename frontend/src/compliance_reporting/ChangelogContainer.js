@@ -30,7 +30,7 @@ class ChangelogContainer extends Component {
     this.setState(this._recomputeDerivedStateFromProps(nextProps));
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.snapshot) {
       this.componentWillReceiveProps(this.props);
     } else {
@@ -59,7 +59,13 @@ class ChangelogContainer extends Component {
     }
 
     if (this.state.deltas) {
-      return (<DeltasDisplay deltas={this.state.deltas}/>);
+      return (
+        <DeltasDisplay
+          snapshot={this.props.snapshot}
+          complianceReport={this.props.complianceReport}
+          recomputedTotals={this.props.recomputedTotals}
+          deltas={this.state.deltas}
+        />);
     } else {
       return (<Loading/>)
     }

@@ -74,22 +74,9 @@ const ScheduleTabs = (props) => {
         className={`${(props.active === 'changelog') && 'active'}`}
       >
         <Link id="schedules-changelog" to={urls.ScheduleChangelog}>
-          Changelog
+          Submission History
         </Link>
       </li>
-      {props.hasSnapshot &&
-      <li>
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() => {
-            history.push(urls.snapshot);
-          }}
-        >
-          <FontAwesomeIcon icon="camera" /> Submission Snapshot
-        </button>
-      </li>
-      }
     </ul>
 
   );
