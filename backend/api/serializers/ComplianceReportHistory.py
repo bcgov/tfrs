@@ -24,7 +24,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from api.models.ComplianceReportHistory import ComplianceReportHistory
-from api.serializers import UserMinSerializer
+from api.serializers import UserMinSerializer, PrimaryKeyRelatedField
 from api.serializers.ComplianceReport import \
     ComplianceReportWorkflowStateSerializer
 
@@ -36,6 +36,7 @@ class ComplianceReportHistorySerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
     user_role = RoleMinSerializer(read_only=True)
     display_name = SerializerMethodField()
+    compliance_report = PrimaryKeyRelatedField(read_only=True)
 
     def get_display_name(self, obj):
         if obj.compliance_report.nickname is not None and obj.compliance_report.nickname is not '':
@@ -51,4 +52,5 @@ class ComplianceReportHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReportHistory
-        fields = ('id', 'display_name', 'user', 'status', 'user', 'user_role')
+        fields = ('id', 'compliance_report', 'display_name', 'user',
+                  'status', 'user', 'user_role')

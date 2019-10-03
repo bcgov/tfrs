@@ -77,8 +77,13 @@
     .history-list {
       flex: 1;
       min-height: 50vh;
-      max-width: 20% !important;
-      min-width: 20% !important;
+      max-width: 15% !important;
+      min-width: 15% !important;
+
+      /* Only show on huge screens */
+      @media only screen and (max-width: 1920px) {
+        display: none;
+      }
 
       .panel-body {
         height: 100%;
@@ -95,9 +100,7 @@
         overflow: scroll;
 
         li {
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          text-align: justify;
+          padding: 0.5rem 0.25rem;
 
           a {
             cursor: pointer;
@@ -109,6 +112,11 @@
 
           &.active {
             font-weight: bold !important;
+          }
+
+          .history {
+            border-bottom: 2px solid $border-grey;
+            padding-bottom: 1rem;
           }
 
           &:nth-child(odd) {

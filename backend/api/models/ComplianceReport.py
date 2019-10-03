@@ -323,6 +323,8 @@ class ComplianceReport(Auditable):
                 if len(qs) > 0:
                     history.extend(list(qs.all()))
 
+        history = sorted(history, reverse=True, key=lambda h: h.create_timestamp)
+
         return history
 
     @property
@@ -338,11 +340,16 @@ class ComplianceReport(Auditable):
     def is_supplemental(self):
         return self.supplements is not None
 
-    @property
-    def group_id(self):
+    def group_id(self, filter_drafts=False):
         current = self
-        while len(current.supplemental_reports.all()) != 0:
+
+        q = Q()
+        if filter_drafts:
+            q = Q(status__fuel_supplier_status__status__in=["Submitted"])
+
+        while len(current.supplemental_reports.filter(q).all()) != 0:
             current = current.supplemental_reports.first()
+
         return current.id
 
     @property

@@ -181,29 +181,13 @@ class Current extends Component {
 
     return (
       <div>
-        <ul className="delta-tabs nav nav-tabs" role="tablist">
-          <li
-            role="presentation"
-            className={(this.state.activeTab === 'snapshot' ? 'active' : '')}
-          >
-            <a href='#' onClick={() => this.setState({activeTab: 'snapshot'})}>Snapshot</a>
-          </li>
-          <li
-            role="presentation"
-            className={(this.state.activeTab === 'history' ? 'active' : '')}
-          >
-            <a href='#' onClick={() => this.setState({activeTab: 'history'})}>History</a>
-          </li>
-        </ul>
-        <div>
           {content}
-        </div>
       </div>
     );
   }
 }
 
-class DeltasDisplay extends Component {
+class ReportHistory extends Component {
 
   constructor(props) {
     super(props);
@@ -231,27 +215,47 @@ class DeltasDisplay extends Component {
       currentSnapshot = this.props.recomputedTotals || this.props.complianceReport;
     }
 
+    let title;
+    switch (String(activeDelta)) {
+      case '-1':
+        title = this.props.complianceReport.displayName;
+        break;
+      default:
+        try {
+          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeDelta))).ancestorDisplayName;
+        } catch (e) {
+          title = "Current Report";
+        }
+    }
+
     return (
       <div id="deltas" className="deltas">
 
-        <h1>Submission History</h1>
+        <h1>Report History</h1>
+
+        <ComplianceReportingStatusHistory
+          complianceReport={this.props.complianceReport}
+          onSwitchHandler={this.handleDeltaSelection}
+        />
 
         <div className="history-container">
           <div className="history-list panel panel-default">
             <div className="panel-body">
               <h3>Revisions</h3>
               <ul>
-                <li className={String(activeDelta) === '-1' ? "active" : ""}>
-                  <a href="#" onClick={() => this.handleDeltaSelection(-1)}>
-                    Current
-                  </a>
+                <li
+                  className={String(activeDelta) === '-1' ? "active" : ""}
+                  onClick={() => this.handleDeltaSelection(-1)}
+                >
+                  {this.props.complianceReport.displayName}
                 </li>
                 {
                   deltas.map(d => (
-                      <li key={d.ancestorId} className={String(activeDelta) === String(d.ancestorId) ? "active" : ""}>
-                        <a href="#" onClick={() => this.handleDeltaSelection(d.ancestorId)}>
-                          {d.ancestorDisplayName}
-                        </a>
+                      <li key={d.ancestorId}
+                          className={String(activeDelta) === String(d.ancestorId) ? "active" : ""}
+                          onClick={() => this.handleDeltaSelection(d.ancestorId)}
+                      >
+                        {d.ancestorDisplayName}
                       </li>
                     )
                   )
@@ -261,6 +265,7 @@ class DeltasDisplay extends Component {
           </div>
           <div className="history-content panel">
             <div className="panel-body">
+              <h1>{title}</h1>
               {(String(activeDelta) === '-1') &&
               <Current snapshot={currentSnapshot}
                        computedWarning={currentSnapshotComputed}
@@ -287,11 +292,11 @@ class DeltasDisplay extends Component {
   }
 }
 
-DeltasDisplay.defaultProps = {
+ReportHistory.defaultProps = {
   deltas: []
 };
 
-DeltasDisplay.propTypes = {
+ReportHistory.propTypes = {
   deltas: PropTypes.array
 };
 
@@ -299,4 +304,4 @@ const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeltasDisplay);
+export default connect(mapStateToProps, mapDispatchToProps)(ReportHistory);

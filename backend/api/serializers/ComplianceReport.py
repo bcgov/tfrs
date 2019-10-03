@@ -142,12 +142,17 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     compliance_period = CompliancePeriodSerializer(read_only=True)
     supplemental_reports = SerializerMethodField()
     supplements = PrimaryKeyRelatedField(read_only=True)
+    group_id = SerializerMethodField()
     display_name = SerializerMethodField()
 
     def get_display_name(self, obj):
         if obj.nickname is not None and obj.nickname is not '':
             return obj.nickname
         return obj.generated_nickname
+
+    def get_group_id(self, obj):
+        user = self.context['request'].user
+        return obj.group_id(filter_drafts=user.is_government_user)
 
     def get_supplemental_reports(self, obj):
         qs = obj.supplemental_reports.order_by('create_timestamp')
@@ -205,7 +210,14 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     summary = serializers.SerializerMethodField()
     history = serializers.SerializerMethodField()
     deltas = serializers.SerializerMethodField()
+    display_name = SerializerMethodField()
+
     skip_deltas = False
+
+    def get_display_name(self, obj):
+        if obj.nickname is not None and obj.nickname is not '':
+            return obj.nickname
+        return obj.generated_nickname
 
     def get_actor(self, obj):
         return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
@@ -396,7 +408,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
-                  'actor', 'deltas']
+                  'actor', 'deltas', 'display_name']
 
 
 class ComplianceReportValidator:
@@ -822,8 +834,15 @@ class ComplianceReportUpdateSerializer(
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
+    display_name = SerializerMethodField()
+
     strip_summary = False
     disregard_status = False
+
+    def get_display_name(self, obj):
+        if obj.nickname is not None and obj.nickname is not '':
+            return obj.nickname
+        return obj.generated_nickname
 
     def get_actor(self, obj):
         return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
@@ -1049,9 +1068,10 @@ class ComplianceReportUpdateSerializer(
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor')
+                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+                  'display_name')
         read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
-                            'organization', 'actions', 'actor')
+                            'organization', 'actions', 'actor', 'display_name')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

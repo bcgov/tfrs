@@ -74,7 +74,7 @@ const ScheduleTabs = (props) => {
         className={`${(props.active === 'changelog') && 'active'}`}
       >
         <Link id="schedules-changelog" to={urls.ScheduleChangelog}>
-          Submission History
+          Report History
         </Link>
       </li>
     </ul>
