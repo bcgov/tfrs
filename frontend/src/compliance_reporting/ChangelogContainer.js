@@ -16,7 +16,7 @@ import OrganizationAutocomplete from '../app/components/Spreadsheet/Organization
 import Select from '../app/components/Spreadsheet/Select';
 import SchedulesPage from './components/SchedulesPage';
 import {SCHEDULE_A, SCHEDULE_A_ERROR_KEYS} from '../constants/schedules/scheduleColumns';
-import DeltasDisplay from "./components/DeltasDisplay";
+import DeltasDisplay from "./components/ReportHistory";
 import Loading from "../app/components/Loading";
 
 class ChangelogContainer extends Component {
@@ -30,7 +30,7 @@ class ChangelogContainer extends Component {
     this.setState(this._recomputeDerivedStateFromProps(nextProps));
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.snapshot) {
       this.componentWillReceiveProps(this.props);
     } else {
@@ -59,7 +59,13 @@ class ChangelogContainer extends Component {
     }
 
     if (this.state.deltas) {
-      return (<DeltasDisplay deltas={this.state.deltas}/>);
+      return (
+        <DeltasDisplay
+          snapshot={this.props.snapshot}
+          complianceReport={this.props.complianceReport}
+          recomputedTotals={this.props.recomputedTotals}
+          deltas={this.state.deltas}
+        />);
     } else {
       return (<Loading/>)
     }

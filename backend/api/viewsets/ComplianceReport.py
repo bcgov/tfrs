@@ -194,6 +194,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         This works much like a regular PATCH, but rolls back the transaction
         """
 
+        validation_deserializer = ComplianceReportValidationSerializer(
+            data=request.data
+        )
+        if not validation_deserializer.is_valid():
+            return Response(validation_deserializer.errors)
+
         sid = transaction.savepoint()
         obj = self.get_object()
         deserializer = ComplianceReportUpdateSerializer(
