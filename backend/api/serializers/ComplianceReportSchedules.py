@@ -134,7 +134,7 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
     provision_of_the_act = SlugRelatedField(slug_field='provision', queryset=ProvisionOfTheAct.objects.all())
     fuel_code = PrimaryKeyRelatedField(queryset=FuelCode.objects.all(), required=False, allow_null=True)
     schedule_d_sheet_index = serializers.IntegerField(required=False, allow_null=True, min_value=0)
-    intensity = serializers.FloatField(required=False, allow_null=True, min_value=0)
+    intensity = serializers.DecimalField(required=False, allow_null=True, min_value=0, max_digits=5, decimal_places=2)
 
     def validate_quantity(self, value):
         if value == 0:

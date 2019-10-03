@@ -368,6 +368,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         """
         Returns all the previous status changes for the compliance report
         """
+
         from .ComplianceReportHistory import ComplianceReportHistorySerializer
         user = self.context['request'].user if 'request' in self.context else None
 
@@ -1019,7 +1020,9 @@ class ComplianceReportUpdateSerializer(
         if instance.status.fuel_supplier_status.status in ['Submitted'] and not instance.has_snapshot:
             # Create a snapshot
             request = self.context.get('request')
-            snap = dict(ComplianceReportDetailSerializer(instance, context=self.context).data)
+            ser = ComplianceReportDetailSerializer(instance, context=self.context)
+            ser.skip_deltas = True
+            snap = dict(ser.data)
             snap['version'] = 1  # to track deserialization version
             snap['timestamp'] = datetime.now()
 

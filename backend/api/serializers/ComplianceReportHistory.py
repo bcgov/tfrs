@@ -35,6 +35,12 @@ class ComplianceReportHistorySerializer(serializers.ModelSerializer):
     status = ComplianceReportWorkflowStateSerializer(read_only=True)
     user = SerializerMethodField()
     user_role = RoleMinSerializer(read_only=True)
+    display_name = SerializerMethodField()
+
+    def get_display_name(self, obj):
+        if obj.compliance_report.nickname is not None and obj.compliance_report.nickname is not '':
+            return obj.compliance_report.nickname
+        return obj.compliance_report.generated_nickname
 
     def get_user(self, obj):
         serializer = UserMinSerializer(
@@ -45,4 +51,4 @@ class ComplianceReportHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReportHistory
-        fields = ('id', 'user', 'status', 'user', 'user_role')
+        fields = ('id', 'display_name', 'user', 'status', 'user', 'user_role')

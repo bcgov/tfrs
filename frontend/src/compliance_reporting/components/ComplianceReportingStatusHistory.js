@@ -143,7 +143,8 @@ class ComplianceReportingStatusHistory extends Component {
 
                     return (
                       <li key={history.id}>
-                        {action} <span> on </span>
+                        {action} {history.displayName}
+                        <span> on </span>
                         {moment(history.createTimestamp).format('LL')}
                         <span> by </span>
                         <strong> {history.user.firstName} {history.user.lastName}</strong> of
