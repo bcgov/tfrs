@@ -216,6 +216,11 @@ class ComplianceReport(Auditable):
         db_comment="An optional user-supplied nickname for this report"
     )
 
+    supplemental_note = models.CharField(
+        max_length=500, blank=True, null=True,
+        db_comment='An explanatory note required when submitting a supplemental report'
+    )
+
     @property
     def generated_nickname(self):
         """ Used for display in the UI when no nickname is set"""
