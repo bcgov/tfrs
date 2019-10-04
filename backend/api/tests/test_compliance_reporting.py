@@ -352,7 +352,7 @@ class TestComplianceReporting(BaseTestCase):
                         'fuelClass': 'Diesel',
                         'quantity': 10,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
-                        'intensity': '23.5'
+                        'intensity': '23.50'
                     }
                 ]
             }
@@ -368,7 +368,7 @@ class TestComplianceReporting(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], 23.5)
+        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], '23.50')
 
     def test_schedule_b_altnerative_method_no_intensity(self):
         payload = {

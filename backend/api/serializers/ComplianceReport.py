@@ -22,7 +22,7 @@
 """
 from django.db.models import Q
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
@@ -64,6 +64,7 @@ class SelectiveVisibilitySlugField(serializers.SlugRelatedField):
     """ Calls should_show() on parent serializer to decide if
         it should return or censor a value
     """
+
     def to_representation(self, value):
         visible = getattr(self.parent, 'should_show')
 
@@ -264,7 +265,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                 deltas += [{
                     'levels_up': 1,
                     'ancestor_id': ancestor.id,
-                    'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
+                    'ancestor_display_name': ancestor.nickname if (
+                                ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
                     'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot),
                     'snapshot': {
                         'data': ancestor_snapshot,
@@ -408,7 +410,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
-                  'actor', 'deltas', 'display_name']
+                  'actor', 'deltas', 'display_name', 'supplemental_note',
+                  'is_supplemental']
 
 
 class ComplianceReportValidator:
@@ -832,6 +835,7 @@ class ComplianceReportUpdateSerializer(
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
+    supplemental_note = serializers.CharField(max_length=500, min_length=1, required=False, allow_null=True)
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
@@ -875,6 +879,11 @@ class ComplianceReportUpdateSerializer(
 
             if 'fuel_supplier_status' in status_data:
                 instance.status.fuel_supplier_status = status_data['fuel_supplier_status']
+                if instance.supplements is not None and instance.status.fuel_supplier_status.status in ['Submitted']:
+                    # supplemental note is required
+                    if 'supplemental_note' not in validated_data:
+                        raise ValidationError('supplemental note is required when submitting a supplemental report')
+                    instance.supplemental_note = validated_data.pop('supplemental_note')
             if 'analyst_status' in status_data:
                 instance.status.analyst_status = status_data['analyst_status']
             if 'manager_status' in status_data:
@@ -1069,9 +1078,10 @@ class ComplianceReportUpdateSerializer(
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
-                  'display_name')
+                  'display_name', 'supplemental_note', 'is_supplemental')
         read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
-                            'organization', 'actions', 'actor', 'display_name')
+                            'organization', 'actions', 'actor', 'display_name',
+                            'is_supplemental')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
