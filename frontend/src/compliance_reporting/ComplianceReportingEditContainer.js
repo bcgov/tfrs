@@ -285,30 +285,10 @@ class ComplianceReportingEditContainer extends Component {
     const { schedules } = this.state;
     const { id } = this.props.match.params;
 
-    let dieselClassDeferred = 0;
-    let dieselClassRetained = 0;
-    let gasolineClassDeferred = 0;
-    let gasolineClassRetained = 0;
-
-    if (schedules.summmary) {
-      dieselClassDeferred = schedules.summary.dieselClassDeferred || 0;
-      dieselClassRetained = schedules.summary.dieselClassRetained || 0;
-      gasolineClassDeferred = schedules.summary.gasolineClassDeferred || 0;
-      gasolineClassRetained = schedules.summary.gasolineClassRetained || 0;
-    }
-
     this.props.recomputeTotals({
       id,
       state: {
-        schedules: {
-          ...schedules,
-          summary: {
-            dieselClassDeferred,
-            dieselClassRetained,
-            gasolineClassDeferred,
-            gasolineClassRetained
-          }
-        }
+        ...schedules
       }
     });
   }

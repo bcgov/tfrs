@@ -736,26 +736,26 @@ class ScheduleSummaryContainer extends Component {
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
-      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <=
-        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
+      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
-      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <=
-        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
+      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
-      readOnly: diesel[SCHEDULE_SUMMARY.LINE_13][2].value <=
-        diesel[SCHEDULE_SUMMARY.LINE_15][2].value
+      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+        diesel[SCHEDULE_SUMMARY.LINE_13][2].value <= diesel[SCHEDULE_SUMMARY.LINE_15][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
-      readOnly: diesel[SCHEDULE_SUMMARY.LINE_15][2].value <=
-        diesel[SCHEDULE_SUMMARY.LINE_13][2].value
+      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+        diesel[SCHEDULE_SUMMARY.LINE_15][2].value <= diesel[SCHEDULE_SUMMARY.LINE_13][2].value
     };
 
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
