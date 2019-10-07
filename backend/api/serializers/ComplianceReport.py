@@ -166,6 +166,10 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
             qs = qs.filter(
                 ~Q(status__fuel_supplier_status__status__in=["Draft", "Deleted"])
             )
+        else:
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+            )
 
         return ComplianceReportListSerializer(
             qs.all(),
