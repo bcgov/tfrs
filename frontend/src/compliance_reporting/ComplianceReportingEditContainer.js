@@ -284,7 +284,15 @@ class ComplianceReportingEditContainer extends Component {
     this.props.recomputeTotals({
       id,
       state: {
-        ...schedules
+        schedules: {
+          ...schedules,
+          summary: {
+            dieselClassDeferred: schedules.summary.dieselClassDeferred || 0,
+            dieselClassRetained: schedules.summary.dieselClassRetained || 0,
+            gasolineClassDeferred: schedules.summary.gasolineClassDeferred || 0,
+            gasolineClassRetained: schedules.summary.gasolineClassRetained || 0
+          }
+        }
       }
     });
   }
