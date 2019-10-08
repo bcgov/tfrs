@@ -75,7 +75,7 @@
                                 "namespace": "openshift",
                                 "name": "postgresql:9.6"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451"
+                            "lastTriggeredImage": ""
                         }
                     },
                     {
@@ -107,7 +107,7 @@
                         "containers": [
                             {
                                 "name": "postgresql96-unittest",
-                                "image": "docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451",
+                                "image": "",
                                 "ports": [
                                     {
                                         "containerPort": 5432,
@@ -121,11 +121,11 @@
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
-                                        "value": "tfrsunittestuser"
+                                        "value": "tfrstest"
                                     },
                                     {
                                         "name": "POSTGRESQL_PASSWORD",
-                                        "value": "tfrsunittestpassword"
+                                        "value": "tfrstest"
                                     }
                                 ],
                                 "resources": {
@@ -148,8 +148,8 @@
                                     "tcpSocket": {
                                         "port": 5432
                                     },
-                                    "initialDelaySeconds": 30,
-                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 35,
+                                    "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
@@ -163,8 +163,8 @@
                                             "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d tfrs -c 'SELECT 1'"
                                         ]
                                     },
-                                    "initialDelaySeconds": 5,
-                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 40,
+                                    "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
