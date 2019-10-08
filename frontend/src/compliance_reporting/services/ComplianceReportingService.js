@@ -277,6 +277,79 @@ class ComplianceReportingService {
     return result;
   }
 
+  static computeSummaryValues(context, sourceValues) {
+
+    const {
+      compliancePeriod,
+      availableScheduleDFuels,
+      scheduleA,
+      scheduleB
+    } = context;
+
+    const {
+      line6,
+      line8,
+      line17,
+      line19
+    } = sourceValues;
+
+    const result = {
+      inputs: {
+        line6,
+        line8,
+        line17,
+        line19
+      },
+      outputs: {
+        // gasoline class
+        line1: null,
+        line2: null,
+        line3: null,
+        line4: null,
+        line5: null,
+        line7: null,
+        line9: null,
+        line11: null,
+
+        //diesel class
+        line12: null,
+        line13: null,
+        line14: null,
+        line15: null,
+        line16: null,
+        line18: null,
+        line20: null,
+        line21: null,
+        line22: null,
+
+        //part3,
+        line23: null,
+        line24: null,
+        line25: null,
+        line26: null,
+        line27: null,
+        line28: null,
+
+        //penalty
+        totalPenalty: null,
+      },
+      parameters: {}
+    };
+
+    result.inputs = {
+      ...result.inputs,
+      line6,
+      line8,
+      line17,
+      line19
+    };
+
+
+
+    return result;
+  }
+
+
 }
 
 export default ComplianceReportingService;
