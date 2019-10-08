@@ -868,6 +868,18 @@ class SnapshotDisplay extends Component {
         </div>
         }
         <div>
+          {(snapshot.supplementalNote && snapshot.supplementalNote.length > 0) &&
+          <div>
+            <h1 className="schedule-header">Supplemental Submission Explanation</h1>
+            <hr/>
+            <div
+              key="supplemental-note"
+              className="panel"
+            >
+              <span>{snapshot.supplementalNote}</span>
+            </div>
+          </div>
+          }
           {snapshot.scheduleA &&
           <div>
             <h1 className="schedule-header">Schedule A</h1>

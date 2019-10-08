@@ -148,40 +148,14 @@ class Delta extends Component {
 }
 
 class Current extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTab: 'snapshot'
-    };
-  }
-
   render() {
-
-    let content = null;
-
-    switch (this.state.activeTab) {
-      case 'snapshot':
-        content = (
-          <SnapshotDisplay
-            snapshot={this.props.snapshot}
-            computedWarning={this.props.computedWarning}
-            showHeaders={false}
-          />
-        );
-        break;
-      case 'history':
-        content = (
-          < ComplianceReportingStatusHistory
-            complianceReport={this.props.complianceReport}
-            key="history"
-          />
-        );
-        break;
-    }
-
     return (
       <div>
-          {content}
+        <SnapshotDisplay
+          snapshot={this.props.snapshot}
+          computedWarning={this.props.computedWarning}
+          showHeaders={false}
+        />
       </div>
     );
   }
