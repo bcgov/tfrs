@@ -442,16 +442,9 @@ const
 const
   config = {
     key: '-',
-    version: 3,
+    version: 4,
     name: 'exclusion-report',
-    customPathGenerator: (props) => {
-      if (props.match.path.indexOf('/edit/') >= 0) {
-        return `edit:${props.match.params.id}`;
-      } else if (props.match.path.indexOf('/add/') >= 0) {
-        return `add:${props.match.params.period}`;
-      }
-      return props.location.pathname;
-    }
+    customPathGenerator: props => (props.location.pathname)
   };
 
 export default connect(

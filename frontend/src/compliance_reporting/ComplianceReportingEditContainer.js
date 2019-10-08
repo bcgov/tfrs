@@ -138,6 +138,7 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error creating supplemental report');
       } else {
+        this.props.invalidateAutosaved();
         toastr.complianceReporting('Supplemental Created');
         history.push(COMPLIANCE_REPORTING.LIST);
       }
@@ -168,9 +169,9 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
+      this.props.invalidateAutosaved();
       history.push(COMPLIANCE_REPORTING.LIST);
       toastr.complianceReporting('Cancelled');
-      this.props.invalidateAutosaved();
     }
   }
 
@@ -580,7 +581,7 @@ const
     key: '-',
     version: 4,
     name: 'compliance-report',
-    customPathGenerator: props => (`edit:${props.match.params.id}`)
+    customPathGenerator: props => (props.location.pathname)
   };
 
 export default connect(
