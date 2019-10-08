@@ -178,7 +178,7 @@ const DirectorReview = (props) => {
               }}
               type="button"
             >
-              {awaitingReview.part3Awards} Part 3 Award(s) awaiting Director review
+              {awaitingReview.part3Awards} Part 3 Award(s) awaiting your review
             </button>
           </div>
           }

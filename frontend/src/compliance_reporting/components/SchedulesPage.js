@@ -16,11 +16,6 @@ const SchedulesPage = props => (
 
       {props.children}
 
-      <ComplianceReportingStatusHistory
-        complianceReport={props.complianceReport}
-        key="history"
-      />
-
       {!props.readOnly &&
       <ValidationMessages
         scheduleType={props.scheduleType}

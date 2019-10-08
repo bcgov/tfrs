@@ -20,7 +20,6 @@ const Part3Agreements = props => (
       <div className="content">
         <a
           href={ORGANIZATIONS.PART_3}
-          key="bulletin"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -28,7 +27,6 @@ const Part3Agreements = props => (
         </a>
         <a
           href={ORGANIZATIONS.PART_3}
-          key="bulletin"
           rel="noopener noreferrer"
           target="_blank"
         >
