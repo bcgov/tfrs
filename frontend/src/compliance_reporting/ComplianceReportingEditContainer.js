@@ -130,7 +130,9 @@ class ComplianceReportingEditContainer extends Component {
         id,
         state: {
           // compliancePeriod: period,
-          ...this.state.schedules
+          schedules: {
+            ...this.state.schedules
+          }
         }
       });
 
@@ -195,8 +197,10 @@ class ComplianceReportingEditContainer extends Component {
       id,
       state: {
         compliancePeriod: period,
-        ...schedules,
-        ...mergedState
+        schedules: {
+          ...schedules,
+          ...mergedState
+        }
       }
     });
 

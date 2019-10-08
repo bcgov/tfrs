@@ -226,7 +226,7 @@ class ScheduleSummaryDiesel {
       [{ // line 21
         className: 'text',
         readOnly: true,
-        value: 'Net volume of renewable Part 2 gasoline class fuel supplied ' +
+        value: 'Net volume of renewable Part 2 diesel class fuel supplied ' +
                '(Total of Line 13 + Line 16 - Line 17 + Line 18 + Line 19 - Line 20)'
       }, {
         className: 'line',
