@@ -27,35 +27,19 @@ class NotificationsContainer extends Component {
       }
     };
 
-    this._addToFields = this._addToFields.bind(this);
     this._selectIdForModal = this._selectIdForModal.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateNotification = this._updateNotification.bind(this);
     this._updateNotifications = this._updateNotifications.bind(this);
   }
 
-
-
   componentDidMount () {
     this.props.getNotifications();
     this.props.autoloadNotificationsEnable();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.autoloadNotificationsDisable();
-  }
-
-  _addToFields (value) {
-    const fieldState = { ...this.state.fields };
-
-    if (value &&
-      fieldState.notifications.findIndex(notification => (notification.id === value.id)) < 0) {
-      fieldState.notifications.push(value);
-    }
-
-    this.setState({
-      fields: fieldState
-    });
   }
 
   _selectIdForModal (id) {
@@ -125,7 +109,6 @@ class NotificationsContainer extends Component {
   render () {
     return ([
       <NotificationsDetails
-        addToFields={this._addToFields}
         fields={this.state.fields}
         isFetching={this.props.isFetching}
         items={this.props.items}

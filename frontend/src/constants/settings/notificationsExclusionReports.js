@@ -25,13 +25,13 @@ const EXCLUSION_REPORTS_NOTIFICATIONS = [{
 }, {
   id: 5,
   code: 'EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_MANAGER',
-  description: 'Recommended Acceptance - Rejection',
+  description: 'Recommended Acceptance - Manager',
   key: 'recommended-acceptance-manager',
   recipients: ['government']
 }, {
   id: 6,
   code: 'EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER',
-  description: 'Recommended Acceptance - Rejection',
+  description: 'Recommended Rejection - Manager',
   key: 'recommended-rejection-manager',
   recipients: ['government']
 }, {
