@@ -25,6 +25,15 @@ from rest_framework import serializers
 from api.models.OrganizationStatus import OrganizationStatus
 
 
+class OrganizationMinStatusSerializer(serializers.ModelSerializer):
+    """
+    Sets of statuses an Organization can have such as Active and Archived
+    """
+    class Meta:
+        model = OrganizationStatus
+        fields = ('id', 'status', 'description')
+
+
 class OrganizationStatusSerializer(serializers.ModelSerializer):
     """
     Sets of statuses an Organization can have such as Active and Archived

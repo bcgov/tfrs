@@ -55,6 +55,13 @@ class Role(Auditable):
         db_comment="Relative rank in display sorting order"
     )
 
+    default_role = models.BooleanField(
+        default=False,
+        db_comment="Flag. True if this will be a default role "
+                   "applied to a user if the user doesn't have "
+                   "any other roles."
+    )
+
     @property
     def permissions(self):
         """
