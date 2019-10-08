@@ -56,7 +56,7 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-summary':
-        TabComponent = withReferenceData()(ScheduleSummaryContainer);
+        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleSummaryContainer));
         break;
 
       case 'schedule-assessment':
@@ -323,6 +323,13 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     return ([
+      <h2>
+        {this.props.complianceReporting.item.organization.name}
+        &nbsp;--&nbsp;
+        {this.props.complianceReporting.item.type.theType}
+        &nbsp;for&nbsp;
+        {this.props.complianceReporting.item.compliancePeriod.description}
+      </h2>,
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}

@@ -271,39 +271,59 @@ class ComplianceReport(Auditable):
         The parameter needed here would be the statuses that
         we'd like to show.
         """
-        if include_government_statuses:
-            history = ComplianceReportHistory.objects.filter(
-                Q(status__fuel_supplier_status__status__in=["Submitted"]) |
-                Q(status__analyst_status__status__in=[
-                    "Recommended", "Not Recommended",
-                    "Requested Supplemental"
-                ]) |
-                Q(status__director_status__status__in=[
-                    "Accepted", "Rejected"
-                ]) |
-                Q(status__manager_status__status__in=[
-                    "Recommended", "Not Recommended",
-                    "Requested Supplemental"
-                ]),
-                compliance_report_id=self.id
-            ).order_by('create_timestamp')
-        else:
-            history = ComplianceReportHistory.objects.filter(
-                Q(
-                    Q(status__fuel_supplier_status__status__in=["Submitted"]) &
-                    Q(user_role__is_government_role=False)
-                ) |
-                Q(status__director_status__status__in=[
-                    "Accepted", "Rejected"
-                ]) |
-                Q(status__analyst_status__status__in=[
-                    "Requested Supplemental"
-                ]) |
-                Q(status__manager_status__status__in=[
-                    "Requested Supplemental"
-                ]),
-                compliance_report_id=self.id
-            ).order_by('create_timestamp')
+        current = self
+        while current.supplements is not None:
+            current = current.supplements
+
+        all_reports_in_chain = [] + [current]
+
+        for report in all_reports_in_chain:
+            for supplemental in report.supplemental_reports.all():
+                if supplemental not in all_reports_in_chain:
+                    all_reports_in_chain.append(supplemental)
+
+        history = []
+
+        for report in all_reports_in_chain:
+            if include_government_statuses:
+                qs = ComplianceReportHistory.objects.filter(
+                    Q(status__fuel_supplier_status__status__in=["Submitted"]) |
+                    Q(status__analyst_status__status__in=[
+                        "Recommended", "Not Recommended",
+                        "Requested Supplemental"
+                    ]) |
+                    Q(status__director_status__status__in=[
+                        "Accepted", "Rejected"
+                    ]) |
+                    Q(status__manager_status__status__in=[
+                        "Recommended", "Not Recommended",
+                        "Requested Supplemental"
+                    ]),
+                    compliance_report_id=report.id
+                ).order_by('create_timestamp')
+                if len(qs) > 0:
+                    history.extend(list(qs.all()))
+            else:
+                qs = ComplianceReportHistory.objects.filter(
+                    Q(
+                        Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                        Q(user_role__is_government_role=False)
+                    ) |
+                    Q(status__director_status__status__in=[
+                        "Accepted", "Rejected"
+                    ]) |
+                    Q(status__analyst_status__status__in=[
+                        "Requested Supplemental"
+                    ]) |
+                    Q(status__manager_status__status__in=[
+                        "Requested Supplemental"
+                    ]),
+                    compliance_report_id=report.id
+                ).order_by('create_timestamp')
+                if len(qs) > 0:
+                    history.extend(list(qs.all()))
+
+        history = sorted(history, reverse=True, key=lambda h: h.create_timestamp)
 
         return history
 
@@ -319,6 +339,25 @@ class ComplianceReport(Auditable):
     @property
     def is_supplemental(self):
         return self.supplements is not None
+
+    def group_id(self, filter_drafts=False):
+        current = self
+
+        q = Q()
+        if filter_drafts:
+            q = Q(status__fuel_supplier_status__status__in=["Submitted"])
+
+        while len(current.supplemental_reports.filter(q).all()) != 0:
+            current = current.supplemental_reports.first()
+
+        return current.id
+
+    @property
+    def original_report_id(self):
+        current = self
+        while current.supplements is not None:
+            current = current.supplements
+        return current.id
 
     @property
     def snapshot(self):

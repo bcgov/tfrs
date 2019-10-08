@@ -48,7 +48,15 @@ class ComplianceReportingTable extends Component {
     const columns = [{
       expander: true,
       show: false
-    }, {
+    },
+      {
+        accessor: item => (item.groupId),
+        className: 'col-groupId',
+        Header: 'Group ID',
+        id: 'groupId',
+        minWidth: 25,
+        show: false
+      }, {
       accessor: (item) => {
         if (item.supplements !== null) {
           return '';
@@ -133,7 +141,7 @@ class ComplianceReportingTable extends Component {
     return (
       <ReactTable
         stateKey="compliance-reporting"
-        className="searchable"
+        className="searchable complianceReportListTable"
         columns={columns}
         data={this.props.items}
         expanded={this.state.expanded}
@@ -154,6 +162,7 @@ class ComplianceReportingTable extends Component {
           if (row && row.original) {
             return {
               onClick: (e) => {
+
                 let tab = 'intro';
 
                 if (row.original.status &&
@@ -163,7 +172,7 @@ class ComplianceReportingTable extends Component {
                   tab = 'schedule-assessment';
                 }
 
-                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id)
+                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
                   .replace(':tab', tab);
 
                 if (row.original.type === 'Exclusion Report') {
