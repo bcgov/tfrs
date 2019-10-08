@@ -23,6 +23,7 @@
 """
 import json
 
+from django.utils import timezone
 from rest_framework import status
 
 from api.models import OrganizationBalance
@@ -57,6 +58,9 @@ class TestComplianceReporting(BaseTestCase):
             "Test Org 1")
         report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
         report.type = ComplianceReportType.objects.get_by_natural_key(report_type)
+        report.create_timestamp = timezone.now()
+        report.update_timestamp = timezone.now()
+
         report.save()
         report.refresh_from_db()
         return report.id

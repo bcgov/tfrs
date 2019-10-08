@@ -107,23 +107,20 @@ class ComplianceReportingTable extends Component {
       Header: 'Status',
       id: 'status',
       minWidth: 75
-    },
-      {
-        accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
-        className: 'col-date',
-        Header: 'Last Updated On',
-        id: 'updateTimestamp',
-        minWidth: 95
-      },
-      {
-        accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
-        className: 'col-sdate',
-        Header: 'Last Activity',
-        id: 'sortDate',
-        minWidth: 95,
-        show: false //in discussion
-      }
-    ];
+    }, {
+      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+      className: 'col-date',
+      Header: 'Last Updated On',
+      id: 'updateTimestamp',
+      minWidth: 95
+    }, {
+      accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
+      className: 'col-sdate',
+      Header: 'Last Activity',
+      id: 'sortDate',
+      minWidth: 95,
+      show: false // in discussion
+    }];
 
     const filterMethod = (filter, row, column) => {
       const id = filter.pivotId || filter.id;
@@ -165,12 +162,22 @@ class ComplianceReportingTable extends Component {
           if (row && row.original) {
             return {
               onClick: (e) => {
+                    
+                let tab = 'intro';
+
+                if (row.original.status &&
+                  (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
+                  tab = 'schedule-assessment';
+                }
+
                 let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
-                  .replace(':tab', 'intro');
+                  .replace(':tab', tab);
 
                 if (row.original.type === 'Exclusion Report') {
                   viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
-                    .replace(':tab', 'intro');
+                    .replace(':tab', tab);
                 }
 
                 history.push(viewUrl);

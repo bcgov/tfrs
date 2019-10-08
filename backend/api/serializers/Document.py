@@ -56,20 +56,22 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     def get_url(self, obj):
+        try:
+            minio = Minio(MINIO['ENDPOINT'],
+                          access_key=MINIO['ACCESS_KEY'],
+                          secret_key=MINIO['SECRET_KEY'],
+                          secure=MINIO['USE_SSL'])
 
-        minio = Minio(MINIO['ENDPOINT'],
-                      access_key=MINIO['ACCESS_KEY'],
-                      secret_key=MINIO['SECRET_KEY'],
-                      secure=MINIO['USE_SSL'])
+            object_name = re.search(r".*/([^\?]+)", obj.url).group(1)
 
-        object_name = re.search(r".*/([^\?]+)", obj.url).group(1)
+            get_url = minio.presigned_get_object(
+                bucket_name=MINIO['BUCKET_NAME'],
+                object_name=object_name,
+                expires=timedelta(seconds=3600))
 
-        get_url = minio.presigned_get_object(
-            bucket_name=MINIO['BUCKET_NAME'],
-            object_name=object_name,
-            expires=timedelta(seconds=3600))
-
-        return get_url;
+            return get_url
+        except TypeError:
+            return 'Minio unconfigured'
 
     class Meta:
         model = DocumentFileAttachment
