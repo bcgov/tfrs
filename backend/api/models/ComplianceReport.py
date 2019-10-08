@@ -91,7 +91,7 @@ class ComplianceReportWorkflowState(Auditable):
                        "compliance report."
 
 
-class ComplianceReportType(DisplayOrder):
+class ComplianceReportType(Auditable, DisplayOrder, EffectiveDates):
     """
     List of Possible types for compliance reports.
     """

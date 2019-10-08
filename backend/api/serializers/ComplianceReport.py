@@ -265,8 +265,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                 deltas += [{
                     'levels_up': 1,
                     'ancestor_id': ancestor.id,
-                    'ancestor_display_name': ancestor.nickname if (
-                                ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
+                    'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
                     'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot),
                     'snapshot': {
                         'data': ancestor_snapshot,

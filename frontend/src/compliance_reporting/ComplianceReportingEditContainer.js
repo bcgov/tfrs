@@ -15,6 +15,7 @@ import {complianceReporting} from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
+import ScheduleAssessmentContainer from './ScheduleAssessmentContainer';
 import ScheduleBContainer from './ScheduleBContainer';
 import ScheduleCContainer from './ScheduleCContainer';
 import ScheduleDContainer from './ScheduleDContainer';
@@ -56,6 +57,10 @@ class ComplianceReportingEditContainer extends Component {
 
       case 'schedule-summary':
         TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleSummaryContainer));
+        break;
+
+      case 'schedule-assessment':
+        TabComponent = withReferenceData()(ScheduleAssessmentContainer);
         break;
 
       case 'changelog':
@@ -128,15 +133,15 @@ class ComplianceReportingEditContainer extends Component {
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
       const {id} = this.props.match.params;
 
-      if (nextProps.complianceReporting.item &&
-        !nextProps.complianceReporting.item.readOnly) {
-        this.props.validateComplianceReport({
-          id,
-          state: {
+      this.props.validateComplianceReport({
+        id,
+        state: {
+          // compliancePeriod: period,
+          schedules: {
             ...this.state.schedules
           }
-        });
-      }
+        }
+      });
 
       if (nextProps.complianceReporting.item.hasSnapshot) {
         this.props.getSnapshotRequest(id);
@@ -205,8 +210,10 @@ class ComplianceReportingEditContainer extends Component {
       id,
       state: {
         compliancePeriod: period,
-        ...schedules,
-        ...mergedState
+        schedules: {
+          ...schedules,
+          ...mergedState
+        }
       }
     });
 
@@ -353,10 +360,12 @@ class ComplianceReportingEditContainer extends Component {
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}
+        complianceReport={this.props.complianceReporting.item}
         edit={this.edit}
         hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
         id={id}
         key="nav"
+        loggedInUser={this.props.loggedInUser}
       />,
       <TabComponent
         complianceReport={this.props.complianceReporting.item}
@@ -370,6 +379,7 @@ class ComplianceReportingEditContainer extends Component {
         recomputing={this.props.complianceReporting.isRecomputing}
         scheduleState={this.state.schedules}
         snapshot={this.props.complianceReporting.snapshot}
+        snapshotIsLoading={this.props.complianceReporting.snapshotIsLoading}
         updateScheduleState={this._updateScheduleState}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
