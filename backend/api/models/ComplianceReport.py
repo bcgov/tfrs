@@ -91,7 +91,7 @@ class ComplianceReportWorkflowState(Auditable):
                        "compliance report."
 
 
-class ComplianceReportType(DisplayOrder):
+class ComplianceReportType(Auditable, DisplayOrder, EffectiveDates):
     """
     List of Possible types for compliance reports.
     """
@@ -216,6 +216,11 @@ class ComplianceReport(Auditable):
         db_comment="An optional user-supplied nickname for this report"
     )
 
+    supplemental_note = models.CharField(
+        max_length=500, blank=True, null=True,
+        db_comment='An explanatory note required when submitting a supplemental report'
+    )
+
     @property
     def generated_nickname(self):
         """ Used for display in the UI when no nickname is set"""
@@ -271,39 +276,59 @@ class ComplianceReport(Auditable):
         The parameter needed here would be the statuses that
         we'd like to show.
         """
-        if include_government_statuses:
-            history = ComplianceReportHistory.objects.filter(
-                Q(status__fuel_supplier_status__status__in=["Submitted"]) |
-                Q(status__analyst_status__status__in=[
-                    "Recommended", "Not Recommended",
-                    "Requested Supplemental"
-                ]) |
-                Q(status__director_status__status__in=[
-                    "Accepted", "Rejected"
-                ]) |
-                Q(status__manager_status__status__in=[
-                    "Recommended", "Not Recommended",
-                    "Requested Supplemental"
-                ]),
-                compliance_report_id=self.id
-            ).order_by('create_timestamp')
-        else:
-            history = ComplianceReportHistory.objects.filter(
-                Q(
-                    Q(status__fuel_supplier_status__status__in=["Submitted"]) &
-                    Q(user_role__is_government_role=False)
-                ) |
-                Q(status__director_status__status__in=[
-                    "Accepted", "Rejected"
-                ]) |
-                Q(status__analyst_status__status__in=[
-                    "Requested Supplemental"
-                ]) |
-                Q(status__manager_status__status__in=[
-                    "Requested Supplemental"
-                ]),
-                compliance_report_id=self.id
-            ).order_by('create_timestamp')
+        current = self
+        while current.supplements is not None:
+            current = current.supplements
+
+        all_reports_in_chain = [] + [current]
+
+        for report in all_reports_in_chain:
+            for supplemental in report.supplemental_reports.all():
+                if supplemental not in all_reports_in_chain:
+                    all_reports_in_chain.append(supplemental)
+
+        history = []
+
+        for report in all_reports_in_chain:
+            if include_government_statuses:
+                qs = ComplianceReportHistory.objects.filter(
+                    Q(status__fuel_supplier_status__status__in=["Submitted"]) |
+                    Q(status__analyst_status__status__in=[
+                        "Recommended", "Not Recommended",
+                        "Requested Supplemental"
+                    ]) |
+                    Q(status__director_status__status__in=[
+                        "Accepted", "Rejected"
+                    ]) |
+                    Q(status__manager_status__status__in=[
+                        "Recommended", "Not Recommended",
+                        "Requested Supplemental"
+                    ]),
+                    compliance_report_id=report.id
+                ).order_by('create_timestamp')
+                if len(qs) > 0:
+                    history.extend(list(qs.all()))
+            else:
+                qs = ComplianceReportHistory.objects.filter(
+                    Q(
+                        Q(status__fuel_supplier_status__status__in=["Submitted"]) &
+                        Q(user_role__is_government_role=False)
+                    ) |
+                    Q(status__director_status__status__in=[
+                        "Accepted", "Rejected"
+                    ]) |
+                    Q(status__analyst_status__status__in=[
+                        "Requested Supplemental"
+                    ]) |
+                    Q(status__manager_status__status__in=[
+                        "Requested Supplemental"
+                    ]),
+                    compliance_report_id=report.id
+                ).order_by('create_timestamp')
+                if len(qs) > 0:
+                    history.extend(list(qs.all()))
+
+        history = sorted(history, reverse=True, key=lambda h: h.create_timestamp)
 
         return history
 
@@ -320,9 +345,42 @@ class ComplianceReport(Auditable):
     def is_supplemental(self):
         return self.supplements is not None
 
+    def group_id(self, filter_drafts=False):
+        current = self
+
+        # filter deleted
+        q = ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+
+        if filter_drafts:
+            q = Q(status__fuel_supplier_status__status__in=["Submitted"])
+
+        while len(current.supplemental_reports.filter(q).all()) != 0:
+            current = current.supplemental_reports.filter(q).first()
+
+        return current.id
+
+    @property
+    def original_report_id(self):
+        current = self
+        while current.supplements is not None:
+            current = current.supplements
+        return current.id
+
     @property
     def snapshot(self):
         return ComplianceReportSnapshot.objects.filter(compliance_report=self).first().snapshot
+
+    @property
+    def sort_date(self):
+        latest = self.update_timestamp if self.update_timestamp else self.create_timestamp
+        to_check = self.supplemental_reports.all()
+
+        for c in to_check:
+            c_sort_date = c.sort_date
+            if c_sort_date > latest:
+                latest = c_sort_date
+
+        return latest
 
     class Meta:
         db_table = 'compliance_report'

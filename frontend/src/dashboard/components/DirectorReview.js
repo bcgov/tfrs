@@ -69,7 +69,7 @@ const DirectorReview = (props) => {
   }
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset director">
       <h1>Director Review</h1>
       There are:
 

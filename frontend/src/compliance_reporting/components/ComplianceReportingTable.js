@@ -3,17 +3,17 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
 import moment from 'moment';
+import {ReactTableDefaults} from 'react-table';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import 'react-table/react-table.css';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
-import {ReactTableDefaults} from 'react-table';
 
 import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class ComplianceReportingTable extends Component {
   constructor(props) {
@@ -28,11 +28,12 @@ class ComplianceReportingTable extends Component {
     this.setState({expanded: this.computeExpanded(nextProps)});
   }
 
+  // eslint-disable-next-line class-methods-use-this
   computeExpanded(props) {
-    let newExpanded = {};
+    const newExpanded = {};
     if (props.items) {
-      for (let i = 0; i < props.items.length; i++) {
-        //just expand everything
+      for (let i = 0; i < props.items.length; i += 1) {
+        // just expand everything
         newExpanded[i] = true;
       }
     }
@@ -47,86 +48,120 @@ class ComplianceReportingTable extends Component {
     const columns = [{
       expander: true,
       show: false
-    }, {
-      accessor: item => {
-        if (item.supplements !== null) {
-          return ''
-        }
-        return (item.compliancePeriod ? item.compliancePeriod.description : '');
+    },
+      {
+        accessor: item => (item.groupId),
+        className: 'col-groupId',
+        Header: 'Group ID',
+        id: 'groupId',
+        minWidth: 25,
+        show: false
+      }, {
+        accessor: (item) => {
+          if (item.supplements !== null) {
+            return '';
+          }
+          return (item.compliancePeriod ? item.compliancePeriod.description : '');
+        },
+        className: 'col-compliance-year',
+        Header: 'Compliance Period',
+        id: 'compliance-period',
+        minWidth: 50
+      }, {
+        accessor: item => (item.organization ? item.organization.name : ''),
+        className: 'col-organization',
+        Header: 'Organization',
+        id: 'organization',
+        minWidth: 75,
+        show: this.props.loggedInUser.isGovernmentUser
+      }, {
+        accessor: (item) => {
+          if (item.supplements !== null) {
+            return ([
+              <FontAwesomeIcon
+                className="fa-rotate-90"
+                style={{
+                  marginLeft: '16px',
+                  marginRight: '8px'
+                }}
+                icon="level-up-alt"
+              />,
+              item.displayName
+            ]);
+          }
+          return (item.displayName);
+        },
+        className: 'col-displayname',
+        Header: 'Display Name',
+        id: 'displayname',
+        minWidth: 75
+      }, {
+        accessor: item => (item.type),
+        className: 'col-type',
+        Header: 'Type',
+        id: 'type',
+        minWidth: 75
+      }, {
+        accessor: ComplianceReportStatus,
+        className: 'col-status',
+        Header: 'Status',
+        id: 'status',
+        minWidth: 75
       },
-      className: 'col-compliance-year',
-      Header: 'Compliance Period',
-      id: 'compliance-period',
-      minWidth: 50
-    }, {
-      accessor: item => (item.organization ? item.organization.name : ''),
-      className: 'col-organization',
-      Header: 'Organization',
-      id: 'organization',
-      minWidth: 75,
-      show: this.props.loggedInUser.isGovernmentUser
-    }, {
-      accessor: item => {
-        if (item.supplements !== null) {
-          return ([
-            <FontAwesomeIcon
-              className='fa-rotate-90'
-              style={{
-                'marginLeft': '16px',
-                'marginRight': '4px',
-              }}
+      {
+        accessor: item => {
+          if (item.supplementalReports == null || item.supplementalReports.length === 0) {
+            return '-';
+          }
+          let deepestSupplemental = item.supplementalReports[0];
+          while (deepestSupplemental.supplementalReports && deepestSupplemental.supplementalReports.length > 0) {
+            deepestSupplemental = deepestSupplemental.supplementalReports[0];
+          }
 
-              icon='level-up-alt'
-            />,
-            item.displayName
-          ])
-        }
-        return (item.displayName);
+          return ComplianceReportStatus(deepestSupplemental)
+        },
+        className: 'col-supplemental-status',
+        Header: 'Supplemental Status',
+        id: 'supplemental-status',
+        minWidth: 75
       },
-      className: 'col-displayname',
-      Header: 'Display Name',
-      id: 'displayname',
-      minWidth: 75
-    }, {
-      accessor: item => (item.type),
-      className: 'col-type',
-      Header: 'Type',
-      id: 'type',
-      minWidth: 75
-    }, {
-      accessor: item => <ComplianceReportStatus status={item.status}/>,
-      className: 'col-status',
-      Header: 'Status',
-      id: 'status',
-      minWidth: 75
-    }, {
-      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
-      className: 'col-date',
-      Header: 'Last Updated On',
-      id: 'updateTimestamp',
-      minWidth: 95
-    }
+      {
+        accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+        className: 'col-date',
+        Header: 'Last Updated On',
+        id: 'updateTimestamp',
+        minWidth: 95
+      },
+      {
+        accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
+        className: 'col-sdate',
+        Header: 'Last Activity',
+        id: 'sortDate',
+        minWidth: 95,
+        show: false //in discussion
+      }
     ];
 
     const filterMethod = (filter, row, column) => {
       const id = filter.pivotId || filter.id;
+
       return row[id] !== undefined ? String(row[id])
         .toLowerCase()
         .includes(filter.value.toLowerCase()) : true;
     };
 
-    const findExpanded = (data) => {
-      return data.map((row, i) => (
+    const findExpanded = data => (
+      data.map((row, i) => (
         {i: true}
-      ));
-    };
+      ))
+    );
 
     const filterable = true;
 
     return (
       <ReactTable
         stateKey="compliance-reporting"
-        className="searchable"
+        className="searchable complianceReportListTable"
         columns={columns}
         data={this.props.items}
         expanded={this.state.expanded}
@@ -141,21 +176,28 @@ class ComplianceReportingTable extends Component {
         }]}
         loading={this.props.isFetching}
         filterable={filterable}
-        column={customDefaults}
-
-        subRowsKey={'supplementalReports'}
-
         getTrProps={(state, row) => {
-          const stripeClass = row && row.nestingPath[0] % 2 ? 'odd':'even' || 'even';
+          const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even';
           if (row && row.original) {
             return {
               onClick: (e) => {
-                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id)
-                  .replace(':tab', 'intro');
+
+                let tab = 'intro';
+
+                if (row.original.status &&
+                  (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
+                  tab = 'schedule-assessment';
+                }
+
+                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
+                  .replace(':tab', tab);
+
 
                 if (row.original.type === 'Exclusion Report') {
                   viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
-                    .replace(':tab', 'intro');
+                    .replace(':tab', tab);
                 }
 
                 history.push(viewUrl);
@@ -168,16 +210,14 @@ class ComplianceReportingTable extends Component {
         }}
         pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       />
-    )
-      ;
+    );
   }
-};
+}
 
 ComplianceReportingTable
   .defaultProps = {};
 
-ComplianceReportingTable
-  .propTypes = {
+ComplianceReportingTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     organization: PropTypes.shape({
       name: PropTypes.string

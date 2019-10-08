@@ -17,29 +17,22 @@ const SchedulesPage = props => (
 
       {props.children}
 
-      <div className="panels">
-        <ComplianceReportingStatusHistory
-          complianceReport={props.complianceReport}
-          key="history"
-        />
-
-        {!props.readOnly && [
-          <ValidationMessages
-            key="validation-messages"
-            scheduleType={props.scheduleType}
-            valid={props.valid}
-            validating={props.validating}
-            validationMessages={props.validationMessages}
-          />,
-          <ScheduleInstructions
-            key="schedule-instructions"
-          >
-            Report the fuel volumes supplied for transportation. Do not include fuel volumes
-            supplied for purposes other than transportation in Schedule B; please report those
-            fuel quantities in Schedule C.
-          </ScheduleInstructions>
-        ]}
-      </div>
+      {!props.readOnly && [
+        <ValidationMessages
+          key="validation-messages"
+          scheduleType={props.scheduleType}
+          valid={props.valid}
+          validating={props.validating}
+          validationMessages={props.validationMessages}
+        />,
+        <ScheduleInstructions
+          key="schedule-instructions"
+        >
+          Report the fuel volumes supplied for transportation. Do not include fuel volumes
+          supplied for purposes other than transportation in Schedule B; please report those
+          fuel quantities in Schedule C.
+        </ScheduleInstructions>
+      ]}
 
       <div className="scrollable">
         <ReactDataSheet

@@ -348,6 +348,25 @@
   }
 }
 
+.schedule-assessment {
+  h1 {
+    color: $blue;
+    padding: 0;
+    margin: 2rem 0;
+  }
+
+  h2 {
+    color: $blue;
+    font-size: 1.8rem;
+    margin: 0 0 3rem;
+  }
+
+  p {
+    margin: 0 0 2rem;
+    padding: 0;
+  }
+}
+
 .schedule-summary {
   > .row {
     margin-left: -15px;

@@ -52,6 +52,8 @@ const BCEIDDashboardPage = obj => (
       obj.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) &&
         <ComplianceReportsBCEID
           complianceReports={obj.complianceReports}
+          createComplianceReport={obj.createComplianceReport}
+          createExclusionReport={obj.createExclusionReport}
           loggedInUser={obj.loggedInUser}
           setFilter={obj.setFilter}
         />
@@ -98,6 +100,8 @@ const DirectorDashboardPage = obj => (
     </div>
 
     <div className="col-md-4">
+      <Administration />
+
       <UserSettings
         loggedInUser={obj.loggedInUser}
         unreadNotificationsCount={obj.unreadNotificationsCount}
@@ -191,6 +195,8 @@ DashboardPage.defaultProps = {
 
 DashboardPage.propTypes = {
   complianceReports: PropTypes.shape().isRequired,
+  createComplianceReport: PropTypes.func.isRequired,
+  createExclusionReport: PropTypes.func.isRequired,
   creditTransfers: PropTypes.shape().isRequired,
   documentUploads: PropTypes.shape().isRequired,
   fuelCodes: PropTypes.shape().isRequired,
