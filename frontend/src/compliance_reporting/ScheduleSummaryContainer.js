@@ -887,7 +887,8 @@ class ScheduleSummaryContainer extends Component {
   render () {
     if (!this.props.snapshot &&
       (this.props.recomputing ||
-        Object.keys(this.props.recomputedTotals).length === 0)) {
+        (Object.keys(this.props.recomputedTotals).length === 0 &&
+        Object.keys(this.props.validationMessages).length === 0))) {
       return (<Loading />);
     }
 
@@ -901,6 +902,10 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
+        readOnly={this.props.readOnly}
+        valid={this.props.valid}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       />,
       <ComplianceReportingStatusHistory
         key="history"
@@ -1020,7 +1025,8 @@ ScheduleSummaryContainer.propTypes = {
       records: PropTypes.arrayOf(PropTypes.shape())
     })
   }),
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  validationMessages: PropTypes.shape().isRequired
 };
 
 const mapStateToProps = state => ({
