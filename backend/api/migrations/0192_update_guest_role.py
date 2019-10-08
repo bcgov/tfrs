@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0189_role_default_role'),
+        ('api', '0191_role_default_role'),
     ]
 
     operations = [

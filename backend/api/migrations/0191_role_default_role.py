@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0188_update_roles_permissions'),
+        ('api', '0190_compliancereport_supplemental_note'),
     ]
 
     operations = [
