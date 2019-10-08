@@ -17,8 +17,20 @@ const ExclusionReportTabs = (props) => {
     urls = {
       intro: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'intro'),
       exclusionAgreement: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'exclusion-agreement'),
+      scheduleAssessment: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'schedule-assessment'),
       snapshot: EXCLUSION_REPORTS.SNAPSHOT.replace(':id', props.id)
     };
+  }
+
+  let showAssessment = false;
+  if (props.exclusionReport && ['Accepted', 'Rejected'].indexOf(props.exclusionReport.status.directorStatus) >= 0) {
+    showAssessment = true;
+  }
+
+  if (props.loggedInUser.isGovernmentUser &&
+    (['Recommended', 'Not Recommended'].indexOf(props.exclusionReport.status.analystStatus) >= 0 ||
+    ['Recommended', 'Not Recommended'].indexOf(props.exclusionReport.status.managerStatus) >= 0)) {
+    showAssessment = true;
   }
 
   return (
@@ -39,6 +51,16 @@ const ExclusionReportTabs = (props) => {
           Exclusion Agreement
         </Link>
       </li>
+      {showAssessment &&
+      <li
+        role="presentation"
+        className={`${(props.active === 'schedule-assessment') && 'active'}`}
+      >
+        <Link id="navbar-assessment" to={urls.scheduleAssessment}>
+          Assessment
+        </Link>
+      </li>
+      }
       {props.hasSnapshot &&
       <li className="snapshot-button">
         <button
@@ -58,6 +80,7 @@ const ExclusionReportTabs = (props) => {
 
 ExclusionReportTabs.defaultProps = {
   compliancePeriod: null,
+  exclusionReport: null,
   id: null
 };
 
@@ -65,8 +88,14 @@ ExclusionReportTabs.propTypes = {
   active: PropTypes.string.isRequired,
   compliancePeriod: PropTypes.string,
   edit: PropTypes.bool.isRequired,
+  exclusionReport: PropTypes.shape({
+    status: PropTypes.shape()
+  }),
   hasSnapshot: PropTypes.bool.isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired
 };
 
 export default ExclusionReportTabs;
