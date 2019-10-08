@@ -4,7 +4,6 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
 import ScheduleATotals from './ScheduleATotals';
 import ScheduleInstructions from './ScheduleInstructions';
 import ScheduleBTotals from './ScheduleBTotals';
