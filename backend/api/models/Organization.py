@@ -100,7 +100,7 @@ class Organization(Auditable):
 
     @property
     def status_display(self):
-        return self.status.status
+        return self.status.description
 
     class Meta:
         db_table = 'organization'

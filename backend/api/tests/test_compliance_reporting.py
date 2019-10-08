@@ -23,6 +23,7 @@
 """
 import json
 
+from django.utils import timezone
 from rest_framework import status
 
 from api.models import OrganizationBalance
@@ -57,6 +58,9 @@ class TestComplianceReporting(BaseTestCase):
             "Test Org 1")
         report.compliance_period = CompliancePeriod.objects.get_by_natural_key('2018')
         report.type = ComplianceReportType.objects.get_by_natural_key(report_type)
+        report.create_timestamp = timezone.now()
+        report.update_timestamp = timezone.now()
+
         report.save()
         report.refresh_from_db()
         return report.id
@@ -352,7 +356,7 @@ class TestComplianceReporting(BaseTestCase):
                         'fuelClass': 'Diesel',
                         'quantity': 10,
                         'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
-                        'intensity': '23.5'
+                        'intensity': '23.50'
                     }
                 ]
             }
@@ -368,7 +372,7 @@ class TestComplianceReporting(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], 23.5)
+        self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], '23.50')
 
     def test_schedule_b_altnerative_method_no_intensity(self):
         payload = {

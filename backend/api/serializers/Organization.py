@@ -31,7 +31,11 @@ from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.OrganizationAddress import OrganizationAddress
 from api.models.OrganizationStatus import OrganizationStatus
 from api.models.OrganizationType import OrganizationType
+from api.models.Role import Role
+from api.models.User import User
+from api.models.UserRole import UserRole
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
+from .OrganizationStatus import OrganizationMinStatusSerializer
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -120,21 +124,73 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     """
     Update Serializer for Organization
     """
-    organization_address = OrganizationAddressSerializer(allow_null=True)
-    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
-    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
-    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
+    organization_address = OrganizationAddressSerializer(
+        allow_null=True
+    )
+    status = PrimaryKeyRelatedField(
+        queryset=OrganizationStatus.objects.all()
+    )
+    type = PrimaryKeyRelatedField(
+        queryset=OrganizationType.objects.all()
+        )
 
     def update(self, obj, validated_data):
         request = self.context.get('request')
 
         if request.user.has_perm('EDIT_FUEL_SUPPLIERS'):
+            status = validated_data['status']
+
+            # Default action type
+            # (or if set to inactive and organization has zero balance)
+            actions_type = OrganizationActionsType.objects.get(
+                the_type="None"
+            )
+
+            if status.status == 'Active':
+                actions_type = OrganizationActionsType.objects.get(
+                    the_type="Buy And Sell"
+                )
+            elif obj.organization_balance['validated_credits'] > 0:
+                actions_type = OrganizationActionsType.objects.get(
+                    the_type="Sell Only"
+                )
+
             Organization.objects.filter(id=obj.id).update(
                 name=validated_data['name'],
-                actions_type=validated_data['actions_type'],
-                status=validated_data['status'],
+                actions_type=actions_type,
+                status=status,
                 update_timestamp=timezone.now()
             )
+
+            # If the organization is being marked as inactive
+            # We have to remove all file submission roles
+            if status.status == 'Archived':
+                file_submission_roles = Role.objects.filter(
+                    role_permissions__permission__code="DOCUMENTS_CREATE_DRAFT"
+                )
+
+                for role in file_submission_roles:
+                    UserRole.objects.filter(
+                        user__organization__id=obj.id,
+                        role_id=role.id
+                    ).delete()
+
+                users = User.objects.filter(
+                    organization_id=obj.id,
+                    user_roles=None
+                )
+
+                default_roles = Role.objects.filter(
+                    default_role=True
+                )
+
+                for user in users:
+                    for role in default_roles:
+                        UserRole.objects.create(
+                            user=user,
+                            role_id=role.id,
+                            create_user=request.user
+                        )
 
         addr = validated_data.pop('organization_address')
 
@@ -161,11 +217,13 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
 class OrganizationMinSerializer(serializers.ModelSerializer):
     """
     Minimum Serializer for the Fuel Supplier
-    Only Loads the id and name for the basic requirements
+    Only Loads the basic requirements
     """
+    status = OrganizationMinStatusSerializer(read_only=True)
+
     class Meta:
         model = Organization
-        fields = ('id', 'name', 'type')
+        fields = ('id', 'name', 'type', 'status')
 
 
 class OrganizationDisplaySerializer(serializers.ModelSerializer):

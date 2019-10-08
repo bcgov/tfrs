@@ -30,35 +30,37 @@ const CreditTransactions = (props) => {
   return (
     <div className="dashboard-fieldset">
       <h1>Credit Transactions</h1>
-      There are:
 
-      <div>
-        <div className="value">
-          {inProgress.creditTransfers}
+      {props.loggedInUser.organization.actionsTypeDisplay !== 'None' && [
+        <span key="credit-transactions-label">There are:</span>,
+        <div key="credit-transactions">
+          <div className="value">
+            {inProgress.creditTransfers}
+          </div>
+
+          <div className="content">
+            <button
+              onClick={() => {
+                props.setFilter([{
+                  id: 'compliancePeriod',
+                  value: ''
+                }, {
+                  id: 'transactionType',
+                  value: 'Credit Transfer'
+                }, {
+                  id: 'status',
+                  value: 'Signed'
+                }], 'credit-transfers');
+
+                return history.push(CREDIT_TRANSACTIONS.LIST);
+              }}
+              type="button"
+            >
+              Credit transfer(s) in progress
+            </button>
+          </div>
         </div>
-
-        <div className="content">
-          <button
-            onClick={() => {
-              props.setFilter([{
-                id: 'compliancePeriod',
-                value: ''
-              }, {
-                id: 'transactionType',
-                value: 'Credit Transfer'
-              }, {
-                id: 'status',
-                value: 'Signed'
-              }], 'credit-transfers');
-
-              return history.push(CREDIT_TRANSACTIONS.LIST);
-            }}
-            type="button"
-          >
-            Credit transfer(s) in progress
-          </button>
-        </div>
-      </div>
+      ]}
 
       <div>
         <div className="content">
@@ -102,7 +104,6 @@ const CreditTransactions = (props) => {
         <div className="content">
           <a
             href={ORGANIZATIONS.BULLETIN}
-            key="bulletin"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -110,7 +111,6 @@ const CreditTransactions = (props) => {
           </a>
           <a
             href={ORGANIZATIONS.BULLETIN}
-            key="bulletin"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -120,6 +120,7 @@ const CreditTransactions = (props) => {
       </div>
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
+      props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
         <button
           className="add-button"
           onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
@@ -141,7 +142,10 @@ CreditTransactions.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
+    hasPermission: PropTypes.func,
+    organization: PropTypes.shape({
+      actionsTypeDisplay: PropTypes.string
+    })
   }).isRequired,
   setFilter: PropTypes.func.isRequired
 };

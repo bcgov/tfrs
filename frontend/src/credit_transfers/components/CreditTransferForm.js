@@ -26,10 +26,11 @@ const CreditTransferForm = props => (
         props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
     >
       <CreditTransferFormDetails
-        fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
-        totalValue={props.totalValue}
+        fuelSuppliers={props.fuelSuppliers}
         handleInputChange={props.handleInputChange}
+        loggedInUser={props.loggedInUser}
+        totalValue={props.totalValue}
       />
 
       {Object.keys(props.errors).length > 0 &&

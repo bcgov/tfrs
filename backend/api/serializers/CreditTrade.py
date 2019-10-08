@@ -167,6 +167,19 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                                request.user.organization.name)
                 })
 
+        if request.user.organization.actions_type.the_type == 'None':
+            raise serializers.ValidationError({
+                'forbidden': "Organizations that are inactive and have zero "
+                             "credits are not allowed to propose transfers."
+            })
+
+        if request.user.organization.actions_type.the_type == 'Sell Only' and \
+                credit_trade_type != sell_type:
+            raise serializers.ValidationError({
+                'forbidden': "Organizations that are inactive cannot buy "
+                             "credits."
+            })
+
         return data
 
     def save(self, **kwargs):

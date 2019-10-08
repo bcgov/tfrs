@@ -22,7 +22,7 @@
 """
 from django.db.models import Q
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
@@ -64,6 +64,7 @@ class SelectiveVisibilitySlugField(serializers.SlugRelatedField):
     """ Calls should_show() on parent serializer to decide if
         it should return or censor a value
     """
+
     def to_representation(self, value):
         visible = getattr(self.parent, 'should_show')
 
@@ -142,12 +143,17 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     compliance_period = CompliancePeriodSerializer(read_only=True)
     supplemental_reports = SerializerMethodField()
     supplements = PrimaryKeyRelatedField(read_only=True)
+    group_id = SerializerMethodField()
     display_name = SerializerMethodField()
 
     def get_display_name(self, obj):
         if obj.nickname is not None and obj.nickname is not '':
             return obj.nickname
         return obj.generated_nickname
+
+    def get_group_id(self, obj):
+        user = self.context['request'].user
+        return obj.group_id(filter_drafts=user.is_government_user)
 
     def get_supplemental_reports(self, obj):
         qs = obj.supplemental_reports.order_by('create_timestamp')
@@ -161,6 +167,10 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
             qs = qs.filter(
                 ~Q(status__fuel_supplier_status__status__in=["Draft", "Deleted"])
             )
+        else:
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+            )
 
         return ComplianceReportListSerializer(
             qs.all(),
@@ -171,8 +181,9 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
-                  'update_timestamp', 'has_snapshot', 'read_only',
-                  'supplemental_reports', 'supplements', 'display_name', 'sort_date')
+                  'update_timestamp', 'has_snapshot', 'read_only', 'group_id',
+                  'supplemental_reports', 'supplements', 'display_name', 'sort_date',
+                  'original_report_id')
 
 
 class ComplianceReportMinSerializer(serializers.ModelSerializer):
@@ -204,7 +215,14 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     summary = serializers.SerializerMethodField()
     history = serializers.SerializerMethodField()
     deltas = serializers.SerializerMethodField()
+    display_name = SerializerMethodField()
+
     skip_deltas = False
+
+    def get_display_name(self, obj):
+        if obj.nickname is not None and obj.nickname is not '':
+            return obj.nickname
+        return obj.generated_nickname
 
     def get_actor(self, obj):
         return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
@@ -220,33 +238,47 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         if self.skip_deltas:
             return deltas
 
-        if obj.supplements:
-            ancestor = obj.supplements
+        current = obj
 
-            qs = ComplianceReportSnapshot.objects.filter(compliance_report=ancestor)
-            if qs.exists():
-                ancestor_snapshot = qs.first().snapshot
-            else:
-                # no snapshot. make one.
-                ser = ComplianceReportDetailSerializer(ancestor, context=self.context)
-                ser.skip_deltas = True
-                ancestor_snapshot = ser.data
+        while current:
+            if current.supplements:
+                ancestor = current.supplements
 
-            qs = ComplianceReportSnapshot.objects.filter(compliance_report=obj)
-            if qs.exists():
-                current_snapshot = qs.first().snapshot
-            else:
-                # no snapshot
-                ser = ComplianceReportDetailSerializer(obj, context=self.context)
-                ser.skip_deltas = True
-                current_snapshot = ser.data
+                qs = ComplianceReportSnapshot.objects.filter(compliance_report=ancestor)
 
-            deltas += [{
-                'levels_up': 1,
-                'ancestor_id': ancestor.id,
-                'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
-                'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot)
-            }]
+                if qs.exists():
+                    ancestor_snapshot = qs.first().snapshot
+                    ancestor_computed = False
+                else:
+                    # no snapshot. make one.
+                    ser = ComplianceReportDetailSerializer(ancestor, context=self.context)
+                    ser.skip_deltas = True
+                    ancestor_snapshot = ser.data
+                    ancestor_computed = True
+
+                qs = ComplianceReportSnapshot.objects.filter(compliance_report=current)
+
+                if qs.exists():
+                    current_snapshot = qs.first().snapshot
+                else:
+                    # no snapshot
+                    ser = ComplianceReportDetailSerializer(current, context=self.context)
+                    ser.skip_deltas = True
+                    current_snapshot = ser.data
+
+                deltas += [{
+                    'levels_up': 1,
+                    'ancestor_id': ancestor.id,
+                    'ancestor_display_name': ancestor.nickname if (ancestor.nickname is not None and ancestor.nickname != '') else ancestor.generated_nickname,
+                    'delta': ComplianceReportService.compute_delta(current_snapshot, ancestor_snapshot),
+                    'snapshot': {
+                        'data': ancestor_snapshot,
+                        'computed': ancestor_computed
+                    }
+                }]
+
+            current = current.supplements
+
         return deltas
 
     def get_summary(self, obj):
@@ -353,6 +385,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         """
         Returns all the previous status changes for the compliance report
         """
+
         from .ComplianceReportHistory import ComplianceReportHistorySerializer
         user = self.context['request'].user if 'request' in self.context else None
 
@@ -380,7 +413,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
-                  'actor', 'deltas']
+                  'actor', 'deltas', 'display_name', 'supplemental_note',
+                  'is_supplemental']
 
 
 class ComplianceReportValidator:
@@ -804,10 +838,18 @@ class ComplianceReportUpdateSerializer(
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
     schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
     summary = ScheduleSummaryDetailSerializer(allow_null=True, required=False)
+    supplemental_note = serializers.CharField(max_length=500, min_length=1, required=False, allow_null=True)
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
+    display_name = SerializerMethodField()
+
     strip_summary = False
     disregard_status = False
+
+    def get_display_name(self, obj):
+        if obj.nickname is not None and obj.nickname is not '':
+            return obj.nickname
+        return obj.generated_nickname
 
     def get_actor(self, obj):
         return ComplianceReportPermissions.get_relationship(obj, self.context['request'].user).value
@@ -840,6 +882,11 @@ class ComplianceReportUpdateSerializer(
 
             if 'fuel_supplier_status' in status_data:
                 instance.status.fuel_supplier_status = status_data['fuel_supplier_status']
+                if instance.supplements is not None and instance.status.fuel_supplier_status.status in ['Submitted']:
+                    # supplemental note is required
+                    if 'supplemental_note' not in validated_data:
+                        raise ValidationError('supplemental note is required when submitting a supplemental report')
+                    instance.supplemental_note = validated_data.pop('supplemental_note')
             if 'analyst_status' in status_data:
                 instance.status.analyst_status = status_data['analyst_status']
             if 'manager_status' in status_data:
@@ -1004,7 +1051,9 @@ class ComplianceReportUpdateSerializer(
         if instance.status.fuel_supplier_status.status in ['Submitted'] and not instance.has_snapshot:
             # Create a snapshot
             request = self.context.get('request')
-            snap = dict(ComplianceReportDetailSerializer(instance, context=self.context).data)
+            ser = ComplianceReportDetailSerializer(instance, context=self.context)
+            ser.skip_deltas = True
+            snap = dict(ser.data)
             snap['version'] = 1  # to track deserialization version
             snap['timestamp'] = datetime.now()
 
@@ -1031,9 +1080,11 @@ class ComplianceReportUpdateSerializer(
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor')
+                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+                  'display_name', 'supplemental_note', 'is_supplemental')
         read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
-                            'organization', 'actions', 'actor')
+                            'organization', 'actions', 'actor', 'display_name',
+                            'is_supplemental')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

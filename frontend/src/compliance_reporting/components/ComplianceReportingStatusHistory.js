@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Collapse } from 'react-bootstrap';
+import React, {Component} from 'react';
+import {Collapse} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 class ComplianceReportingStatusHistory extends Component {
-  static renderDirectorStatus (history) {
+  static renderDirectorStatus(history) {
     let action = <strong>Accepted</strong>;
 
     if (history.status.directorStatus === 'Rejected') {
@@ -18,7 +18,7 @@ class ComplianceReportingStatusHistory extends Component {
       roleDisplay = history.userRole.description;
 
       if (history.userRole.name === 'GovDeputyDirector' ||
-          history.userRole.name === 'GovDirector') {
+        history.userRole.name === 'GovDirector') {
         roleDisplay = roleDisplay.replace('Government ', '');
       }
     }
@@ -30,7 +30,7 @@ class ComplianceReportingStatusHistory extends Component {
         <span> by </span>
         <strong> {history.user.firstName} {history.user.lastName}</strong>
         {roleDisplay &&
-          <span>
+        <span>
             <strong>, {roleDisplay} </strong> under the
           </span>
         }
@@ -39,7 +39,7 @@ class ComplianceReportingStatusHistory extends Component {
     );
   }
 
-  static renderHistory (history) {
+  static renderHistory(history) {
     // please do not combine this with the bottom check
     // they output the same, but the order of condition is important
     if (history.status.managerStatus === 'Recommended') {
@@ -69,92 +69,57 @@ class ComplianceReportingStatusHistory extends Component {
     return (<strong>{history.status.fuelSupplierStatus} </strong>);
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
-
-    this.state = {
-      collapsed: true
-    };
-
-    this._toggleStatusHistory = this._toggleStatusHistory.bind(this);
   }
 
-  _toggleStatusHistory () {
-    const collapsed = !this.state.collapsed;
-
-    this.setState({
-      collapsed
-    });
-  }
-
-  render () {
+  render() {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
       return false;
     }
 
+
+    const showCurrent = (this.props.complianceReport.history.filter(
+      c => (c.complianceReport === this.props.complianceReport.id)
+    ).length === 0);
+
+
     return (
       <div className="panel panel-default">
-        <div
-          className="panel-heading"
-          id="transaction-history-header"
-          role="tab"
-        >
-          <h4 className="panel-title">
-            <button
-              aria-controls="collapse-messages"
-              aria-expanded="true"
-              className="text"
-              onClick={this._toggleStatusHistory}
-              type="button"
-            >
-              <FontAwesomeIcon icon="history" /> {this.props.reportType} for
-              {` ${typeof this.props.complianceReport.compliancePeriod === 'string'
-                ? this.props.complianceReport.compliancePeriod
-                : this.props.complianceReport.compliancePeriod.description
-              }, `}
-              {` ${this.props.complianceReport.organization.name} `}
-              &mdash; Report Status &amp; History
-            </button>
-            <button
-              aria-controls="collapse-messages"
-              aria-expanded={!this.state.collapsed}
-              className="toggle"
-              onClick={this._toggleStatusHistory}
-              type="button"
-            >
-              {<FontAwesomeIcon icon={this.state.collapsed ? 'angle-down' : 'angle-up'} />}
-            </button>
-          </h4>
+        <div className="panel-body">
+          <ul>
+            {showCurrent &&
+            <li>
+              <a href="#" onClick={() => this.props.onSwitchHandler(-1)}>Current Revision {this.props.complianceReport.displayName}</a>
+            </li>
+            }
+            {this.props.complianceReport.history.length > 0 &&
+            this.props.complianceReport.history.map((history, index, arr) => {
+              let deltaTarget = history.complianceReport;
+              if (this.props.complianceReport.deltas.filter(d => (d.ancestorId === deltaTarget)).length === 0) {
+                deltaTarget = '-1';
+              }
+
+              const action = ComplianceReportingStatusHistory.renderHistory(history);
+
+              if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
+                return ComplianceReportingStatusHistory.renderDirectorStatus(history);
+              }
+
+              return (
+                <li key={history.id}>{action}
+                  <a href="#"
+                     onClick={() => this.props.onSwitchHandler(deltaTarget)}>{history.displayName}</a>
+                  <span> on </span>
+                  {moment(history.createTimestamp).format('LL')}
+                  <span> by </span>
+                  <strong> {history.user.firstName} {history.user.lastName}</strong> of
+                  <strong> {history.user.organization.name} </strong>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-
-        <Collapse in={!this.state.collapsed}>
-          <div
-            id="collapse-messages"
-          >
-            <div className="panel-body">
-              <ul>
-                {this.props.complianceReport.history.length > 0 &&
-                  this.props.complianceReport.history.map((history, index, arr) => {
-                    const action = ComplianceReportingStatusHistory.renderHistory(history);
-
-                    if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
-                      return ComplianceReportingStatusHistory.renderDirectorStatus(history);
-                    }
-
-                    return (
-                      <li key={history.id}>
-                        {action} <span> on </span>
-                        {moment(history.createTimestamp).format('LL')}
-                        <span> by </span>
-                        <strong> {history.user.firstName} {history.user.lastName}</strong> of
-                        <strong> {history.user.organization.name} </strong>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
-          </div>
-        </Collapse>
       </div>
     );
   }
@@ -199,6 +164,7 @@ ComplianceReportingStatusHistory.propTypes = {
       name: PropTypes.string
     })
   }),
+  onSwitchHandler: PropTypes.func.isRequired,
   reportType: PropTypes.string
 };
 
