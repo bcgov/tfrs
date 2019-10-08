@@ -181,12 +181,21 @@ class ComplianceReportingTable extends Component {
           if (row && row.original) {
             return {
               onClick: (e) => {
+                let tab = 'intro';
+
+                if (row.original.status &&
+                  (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
+                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
+                  tab = 'schedule-assessment';
+                }
+
                 let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
-                  .replace(':tab', 'intro');
+                  .replace(':tab', tab);
 
                 if (row.original.type === 'Exclusion Report') {
                   viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
-                    .replace(':tab', 'intro');
+                    .replace(':tab', tab);
                 }
 
                 history.push(viewUrl);
