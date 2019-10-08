@@ -348,12 +348,14 @@ class ComplianceReport(Auditable):
     def group_id(self, filter_drafts=False):
         current = self
 
-        q = Q()
+        # filter deleted
+        q = ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+
         if filter_drafts:
             q = Q(status__fuel_supplier_status__status__in=["Submitted"])
 
         while len(current.supplemental_reports.filter(q).all()) != 0:
-            current = current.supplemental_reports.first()
+            current = current.supplemental_reports.filter(q).first()
 
         return current.id
 
