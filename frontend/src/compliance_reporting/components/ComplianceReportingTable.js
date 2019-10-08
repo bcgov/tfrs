@@ -181,6 +181,7 @@ class ComplianceReportingTable extends Component {
           if (row && row.original) {
             return {
               onClick: (e) => {
+
                 let tab = 'intro';
 
                 if (row.original.status &&
@@ -192,6 +193,7 @@ class ComplianceReportingTable extends Component {
 
                 let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
                   .replace(':tab', tab);
+
 
                 if (row.original.type === 'Exclusion Report') {
                   viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
