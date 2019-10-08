@@ -175,6 +175,7 @@ class ComplianceReportingTable extends Component {
                 let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
                   .replace(':tab', tab);
 
+
                 if (row.original.type === 'Exclusion Report') {
                   viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
                     .replace(':tab', tab);

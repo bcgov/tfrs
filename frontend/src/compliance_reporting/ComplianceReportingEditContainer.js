@@ -133,15 +133,17 @@ class ComplianceReportingEditContainer extends Component {
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
       const {id} = this.props.match.params;
 
-      this.props.validateComplianceReport({
-        id,
-        state: {
-          // compliancePeriod: period,
-          schedules: {
-            ...this.state.schedules
+      if (nextProps.complianceReporting.item &&
+        !nextProps.complianceReporting.item.readOnly) {
+        this.props.validateComplianceReport({
+          id,
+          state: {
+            schedules: {
+              ...this.state.schedules
+            }
           }
-        }
-      });
+        });
+      }
 
       if (nextProps.complianceReporting.item.hasSnapshot) {
         this.props.getSnapshotRequest(id);
