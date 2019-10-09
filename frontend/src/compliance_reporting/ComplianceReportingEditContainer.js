@@ -160,6 +160,7 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error creating supplemental report');
       } else {
+        this.props.invalidateAutosaved();
         toastr.complianceReporting('Supplemental Created');
         history.push(COMPLIANCE_REPORTING.LIST);
       }
@@ -190,9 +191,9 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
+      this.props.invalidateAutosaved();
       history.push(COMPLIANCE_REPORTING.LIST);
       toastr.complianceReporting('Cancelled');
-      this.props.invalidateAutosaved();
     }
   }
 
@@ -319,12 +320,15 @@ class ComplianceReportingEditContainer extends Component {
     const {schedules} = this.state;
     const {id} = this.props.match.params;
 
-    this.props.recomputeTotals({
-      id,
-      state: {
-        ...schedules
-      }
-    });
+    if (!this.props.complianceReporting.validationMessages ||
+      Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
+      this.props.recomputeTotals({
+        id,
+        state: {
+          ...schedules
+        }
+      });
+    }
   }
 
   render() {
@@ -394,6 +398,7 @@ class ComplianceReportingEditContainer extends Component {
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
         saving={this.props.saving}
+        tab={tab}
         valid={this.props.complianceReporting.valid !== false}
         validating={this.props.complianceReporting.validating}
         validationMessages={this.props.complianceReporting.validationMessages}
@@ -571,6 +576,7 @@ ComplianceReportingEditContainer.propTypes = {
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool.isRequired
   }),
+  createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
@@ -649,7 +655,7 @@ const
     key: '-',
     version: 4,
     name: 'compliance-report',
-    customPathGenerator: props => (`edit:${props.match.params.id}`)
+    customPathGenerator: props => (props.location.pathname)
   };
 
 export default connect(

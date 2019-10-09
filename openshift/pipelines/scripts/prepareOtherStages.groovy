@@ -3,9 +3,9 @@ def unitTestStage () {
         stage('Unit Test') {
             dir('backend') {
                 try {
-                    sh 'pip install --upgrade pip && pip install -r requirements.txt'
-                    sh 'python manage.py collectstatic && python manage.py migrate'
-                    sh 'python manage.py test -c nose.cfg'
+                    sh 'pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude'
+                    sh 'python manage.py collectstatic'
+                    sh 'python manage.py test --noinput -c nose.cfg'
                 } catch(Throwable t) {
                     result = 1;
                 } finally {
