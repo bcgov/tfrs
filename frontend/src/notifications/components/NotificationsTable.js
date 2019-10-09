@@ -21,7 +21,7 @@ const NotificationsTable = (props) => {
     accessor: item => item.id,
     Cell: row => (
       <CheckBox
-        addToFields={props.addToFields}
+        addToFields={() => {}}
         fields={props.fields.notifications}
         id={row.value}
         toggleCheck={props.toggleCheck}
@@ -187,7 +187,6 @@ const NotificationsTable = (props) => {
 };
 
 NotificationsTable.propTypes = {
-  addToFields: PropTypes.func.isRequired,
   fields: PropTypes.shape({
     notifications: PropTypes.array
   }).isRequired,

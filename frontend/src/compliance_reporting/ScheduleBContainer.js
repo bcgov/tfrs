@@ -401,12 +401,12 @@ class ScheduleBContainer extends Component {
           grid[row] = this._validate(grid[row], row);
         }
       }
-
-      this.recomputeDerivedState(nextProps, {
-        ...this.state,
-        grid
-      });
     } // end read-write prop load
+
+    this.recomputeDerivedState(nextProps, {
+      ...this.state,
+      grid
+    });
   }
 
   loadInitialState () {

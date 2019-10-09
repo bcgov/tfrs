@@ -47,7 +47,6 @@ const NotificationsDetails = props => (
     <h1>Notifications</h1>
 
     <NotificationsTable
-      addToFields={props.addToFields}
       fields={props.fields}
       items={props.items}
       selectIdForModal={props.selectIdForModal}
@@ -59,7 +58,6 @@ const NotificationsDetails = props => (
 );
 
 NotificationsDetails.propTypes = {
-  addToFields: PropTypes.func.isRequired,
   fields: PropTypes.shape({
     notifications: PropTypes.array
   }).isRequired,

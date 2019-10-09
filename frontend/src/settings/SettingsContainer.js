@@ -52,10 +52,6 @@ class SettingsContainer extends Component {
         value: this._getSubscription(value.field.toUpperCase(), value.id)
       });
     }
-
-    this.setState({
-      fields: fieldState
-    });
   }
 
   _getSubscription (channel, code) {
