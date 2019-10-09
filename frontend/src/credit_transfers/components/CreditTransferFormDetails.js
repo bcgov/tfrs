@@ -26,19 +26,24 @@ class CreditTransferFormDetails extends Component {
           <span>
             {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to `}
           </span>
-          <div className="form-group">
-            <select
-              className="form-control"
-              id="proposal-type"
-              name="tradeType"
-              value={this.props.fields.tradeType.id}
-              onChange={this.props.handleInputChange}
-            >
-              <option value="" />
-              <option value="1">Sell</option>
-              <option value="2">Buy</option>
-            </select>
-          </div>
+          {this.props.loggedInUser.organization.actionsTypeDisplay === 'Buy And Sell' &&
+            <div className="form-group">
+              <select
+                className="form-control"
+                id="proposal-type"
+                name="tradeType"
+                value={this.props.fields.tradeType.id}
+                onChange={this.props.handleInputChange}
+              >
+                <option value="" />
+                <option value="1">Sell</option>
+                <option value="2">Buy</option>
+              </select>
+            </div>
+          }
+          {this.props.loggedInUser.organization.actionsTypeDisplay !== 'Buy And Sell' &&
+            <span> sell </span>
+          }
           <div className="form-group">
             <InputWithTooltip
               handleInputChange={this.props.handleInputChange}
@@ -129,6 +134,10 @@ CreditTransferFormDetails.defaultProps = {
 };
 
 CreditTransferFormDetails.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
@@ -150,12 +159,13 @@ CreditTransferFormDetails.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  totalValue: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      actionsTypeDisplay: PropTypes.string
+    })
+  }).isRequired,
+  totalValue: PropTypes.number.isRequired
 };
 
 export default CreditTransferFormDetails;

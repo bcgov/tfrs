@@ -11,6 +11,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import Modal from '../app/components/Modal';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
+import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_B, SCHEDULE_B_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
@@ -33,7 +34,26 @@ class ScheduleBContainer extends Component {
         }, {
           colSpan: 2,
           readOnly: true,
-          value: 'CREDIT/DEBIT CALCULATION'
+          value: (
+            <div>
+              {`CREDIT/DEBIT CALCULATION `}
+              <TooltipWhenDisabled
+                className="info left"
+                disabled
+                title={`This value will be calculated based on the information provided using the formula specified in section 6 (4) of the Act.
+- Credit or Debit = (CI class x EER fuel – CI fuel) x EC fuel / 1,000,000.
+- where,
+> - Credit or Debit = The number of credits generated or debits incurred. This value will be displayed in the appropriate column (Credit or Debit).
+> - CI class = The prescribed carbon intensity limit for the compliance period for the class of fuel of which the fuel is a part.
+> - EER fuel = The prescribed energy effectiveness ratio for that fuel in that class of fuel.
+> - CI fuel = The carbon intensity of the fuel.
+> - EC fuel = The energy content of the fuel calculated in accordance with section 11.02 (3) of the Regulation.
+\nCredits and debits are displayed as whole values; fractional values are accounted for when determining the total credits generated and/or the total debits incurred from all fuel supplied within a compliance period. Conventional rounding is used only after the total credits and total debits are calculated.`}
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }],
         [{
           className: 'row-number',
@@ -41,19 +61,71 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'fuel-type',
           readOnly: true,
-          value: 'Fuel Type'
+          value: (
+            <div>
+              {`Fuel Type `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="Select the fuel type from the drop-down list."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'fuel-class',
           readOnly: true,
-          value: 'Fuel Class'
+          value: (
+            <div>
+              {`Fuel Class `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="Select the fuel class in which the fuel was used from the drop-down list."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'provision',
           readOnly: true,
-          value: 'Provision of the Act Relied Upon to Determine Carbon Intensity'
+          value: (
+            <div>
+              {`Provision of the Act Relied Upon to Determine Carbon Intensity `}
+              <TooltipWhenDisabled
+                className="info left"
+                disabled
+                title="Act Relied Upon to Determine Carbon Intensity: Identify the appropriate provision of the Act relied upon to determine the carbon intensity of each Part 3 fuel.
+- Section 6 (5) (a): The Regulation-prescribed carbon intensity for petroleum-based gasoline.
+- Section 6 (5) (b): The Regulation-prescribed carbon intensity for petroleum-based diesel fuel.
+- Section 6 (5) (c) - Approved fuel code: Use this method for fuels that have been assigned an approved BCLCF code. A drop-down list of appropriate fuel codes based on the selected fuel type will be provided.
+- Section 6 (5) (d) (i) - Regulation default carbon intensity value: The carbon intensity of this fuel type determined in accordance with the Regulation.
+- Section 6 (5) (d) (ii) (A) - Approved version of GHGenius. Users selecting this method are required to provide a record of inputs to the GHGenius model, as defined in section 11.06 (1) of the Regulation, and any additional information necessary to reproduce, using the approved GHGenius, the results submitted.
+- Section 6 (5) (d) (ii) (B) - Approved alternative method: Users selecting this method are required to provide a copy of the Director's approval letter of that method and appropriate documentation of the inputs and outputs of the electronic calculation, as appropriate."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'fuel-code',
           readOnly: true,
-          value: <div>Fuel Code or Schedule D Entry<br />(if applicable)</div>
+          value: (
+            <div>
+              Fuel Code or Schedule D Entry<br />{`(if applicable) `}
+              <TooltipWhenDisabled
+                className="info left"
+                disabled
+                title="
+- Fuel Code: If an approved fuel code is relied upon to determine carbon intensity, a drop-down list of the appropriate fuel codes based on the selected fuel type will be provided.
+- Schedule D Entry: If GHGenius modelled is relied upon to determine carbon intensity, a drop-down list of the appropriate fuel(s) reported in Schedule D based on the selected fuel type and fuel class will be provided."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'quantity',
           readOnly: true,
@@ -61,27 +133,93 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'units',
           readOnly: true,
-          value: 'Units'
+          value: (
+            <div>
+              {`Units `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="This value will be provided based on the type of fuel reported."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity Limit<br />(gCO₂e/MJ)</div>
+          value: (
+            <div>
+              Carbon Intensity Limit<br />{`(gCO₂e/MJ) `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The prescribed carbon intensity limit for the compliance period for the class of fuel of which the fuel is a part. This value will be provided based on the fuel class reported."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'density',
           readOnly: true,
-          value: <div>Carbon Intensity of Fuel<br />(gCO₂e/MJ)</div>
+          value: (
+            <div>
+              Carbon Intensity of Fuel<br />{`(gCO₂e/MJ) `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The carbon intensity of the fuel. This value will be provided based on the specific fuel and determination method reported."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'density',
           readOnly: true,
-          value: 'Energy Density'
+          value: (
+            <div>
+              {`Energy Density `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="This value will be provided based on the type of fuel reported as specified in section 11.02 (3) of the Regulation."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'energy-effectiveness-ratio',
           readOnly: true,
-          value: 'EER'
+          value: (
+            <div>
+              {`EER `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The Energy Effectiveness Ratio (EER) will be provided based on the type of fuel and fuel class reported as specified in section 11.02 (2) of the Regulation."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'energy-content',
           readOnly: true,
-          value: <div>Energy Content (MJ)</div>
+          value: (
+            <div>
+              {`Energy Content (MJ) `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="This value will be calculated using the formula specified in section 11.02 (3) of the Regulation. The formula is Energy Content (megajoules) = Quantity of Fuel Supplied X Energy Density."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'credit',
           readOnly: true,
@@ -203,6 +341,7 @@ class ScheduleBContainer extends Component {
           grid[row][SCHEDULE_B.FUEL_CODE].value = 'From Schedule D';
         }
       }
+
       this._calculateTotal(grid);
     } else {
       // in read-write mode

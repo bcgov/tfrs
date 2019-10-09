@@ -25,7 +25,7 @@ services:
                 bash -c
                 "pip install -q -r requirements.txt &&
                 /wfi/wait-for-it.sh -t 14400 test-db:5432 &&
-                python3 manage.py test -v 2 --testrunner django.test.runner.DiscoverRunner"
+                python3 manage.py test -v 2 --testrunner django.test.runner.DiscoverRunner api.tests.test_document_scan"
         volumes:
             - ./backend:/app
     test-minio:

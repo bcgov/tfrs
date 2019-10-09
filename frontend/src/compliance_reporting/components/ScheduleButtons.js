@@ -18,6 +18,10 @@ const getValidationMessages = (props) => {
     return 'Please fix validation errors before submitting.';
   }
 
+  if (props.tab !== 'schedule-summary') {
+    return 'You can only submit this report in the Summary and Declaration tab.';
+  }
+
   if (props.validating) {
     return 'Validating...';
   }
@@ -76,11 +80,7 @@ const ScheduleButtons = props => (
           </button>
         </TooltipWhenDisabled>,
         <TooltipWhenDisabled
-          disabled={
-            !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN) ||
-            props.validating ||
-            !props.valid
-          }
+          disabled={getValidationMessages(props) !== ''}
           key="btn-submit"
           title={getValidationMessages(props)}
         >
@@ -88,11 +88,7 @@ const ScheduleButtons = props => (
             className="btn btn-primary"
             data-target="#confirmSubmit"
             data-toggle="modal"
-            disabled={
-              !props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN) ||
-              props.validating ||
-              !props.valid
-            }
+            disabled={getValidationMessages(props) !== ''}
             type="button"
           >
             <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
@@ -214,6 +210,7 @@ ScheduleButtons.propTypes = {
     hasPermission: PropTypes.func
   }).isRequired,
   saving: PropTypes.bool.isRequired,
+  tab: PropTypes.string.isRequired,
   validating: PropTypes.bool,
   valid: PropTypes.bool,
   validationMessages: PropTypes.shape()

@@ -3,8 +3,19 @@ import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 
+import ValidationMessages from './ValidationMessages';
+
 const ScheduleSummaryPage = props => (
   <div className="schedule-summary spreadsheet-component">
+    {!props.readOnly &&
+    <ValidationMessages
+      scheduleType="schedule-summary"
+      valid={props.valid}
+      validating={props.validating}
+      validationMessages={props.validationMessages}
+    />
+    }
+
     <h1>Part 2 - Renewable Fuel Requirement Summary</h1>
 
     <div className="row">
@@ -53,7 +64,8 @@ const ScheduleSummaryPage = props => (
 );
 
 ScheduleSummaryPage.defaultProps = {
-  children: null
+  children: null,
+  validationMessages: {}
 };
 
 ScheduleSummaryPage.propTypes = {
@@ -67,7 +79,11 @@ ScheduleSummaryPage.propTypes = {
   handleGasolineChanged: PropTypes.func.isRequired,
   handlePart3Changed: PropTypes.func.isRequired,
   part3: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  penalty: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired
+  penalty: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
+  readOnly: PropTypes.bool.isRequired,
+  valid: PropTypes.bool.isRequired,
+  validating: PropTypes.bool.isRequired,
+  validationMessages: PropTypes.shape()
 };
 
 export default ScheduleSummaryPage;

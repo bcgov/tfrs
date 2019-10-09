@@ -336,11 +336,48 @@ class ScheduleSummaryContainer extends Component {
       let { part3, penalty } = this.state;
       const { summary } = nextProps.scheduleState;
 
-      diesel[SCHEDULE_SUMMARY.LINE_6][2].value = summary.dieselClassRetained;
-      diesel[SCHEDULE_SUMMARY.LINE_8][2].value = summary.dieselClassDeferred;
-      gasoline[SCHEDULE_SUMMARY.LINE_17][2].value = summary.gasolineClassRetained;
-      gasoline[SCHEDULE_SUMMARY.LINE_19][2].value = summary.gasolineClassDeferred;
+      const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
+      diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
+
+      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].readOnly) {
+        diesel[SCHEDULE_SUMMARY.LINE_17][2].value = 0;
+      } else if (line15percent < summary.dieselClassRetained) {
+        diesel[SCHEDULE_SUMMARY.LINE_17][2].value = line15percent;
+      }
+
+      diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
+
+      if (diesel[SCHEDULE_SUMMARY.LINE_19][2].readOnly) {
+        diesel[SCHEDULE_SUMMARY.LINE_19][2].value = 0;
+      } else if (line15percent < summary.dieselClassDeferred) {
+        diesel[SCHEDULE_SUMMARY.LINE_19][2].value = line15percent;
+      }
+
+      const line4percent = gasoline[SCHEDULE_SUMMARY.LINE_4][2].value * 0.05;
+      gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
+
+      if (gasoline[SCHEDULE_SUMMARY.LINE_6][2].readOnly) {
+        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = 0;
+      } else if (line4percent < summary.gasolineClassRetained) {
+        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = line4percent;
+      }
+
+      gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
+
+      if (gasoline[SCHEDULE_SUMMARY.LINE_8][2].readOnly) {
+        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = 0;
+      } else if (line4percent < summary.gasolineClassDeferred) {
+        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = line4percent;
+      }
+
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+      const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
+
+      if (part3[SCHEDULE_SUMMARY.LINE_26][2].readOnly) {
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+      } else if (line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value = line25value;
+      }
 
       part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
 
@@ -734,6 +771,30 @@ class ScheduleSummaryContainer extends Component {
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     };
 
+    gasoline[SCHEDULE_SUMMARY.LINE_6][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
+      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_8][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
+      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_17][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
+      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+        diesel[SCHEDULE_SUMMARY.LINE_13][2].value <= diesel[SCHEDULE_SUMMARY.LINE_15][2].value
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_19][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
+      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+        diesel[SCHEDULE_SUMMARY.LINE_15][2].value <= diesel[SCHEDULE_SUMMARY.LINE_13][2].value
+    };
+
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
 
     this.setState({
@@ -887,7 +948,8 @@ class ScheduleSummaryContainer extends Component {
   render () {
     if (!this.props.snapshot &&
       (this.props.recomputing ||
-        Object.keys(this.props.recomputedTotals).length === 0)) {
+        (Object.keys(this.props.recomputedTotals).length === 0 &&
+        Object.keys(this.props.validationMessages).length === 0))) {
       return (<Loading />);
     }
 
@@ -901,6 +963,10 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
+        readOnly={this.props.readOnly}
+        valid={this.props.valid}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       />,
       <ComplianceReportingStatusHistory
         key="history"
@@ -1020,7 +1086,8 @@ ScheduleSummaryContainer.propTypes = {
       records: PropTypes.arrayOf(PropTypes.shape())
     })
   }),
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  validationMessages: PropTypes.shape().isRequired
 };
 
 const mapStateToProps = state => ({

@@ -20,6 +20,7 @@ import ExclusionReportButtons from './components/ExclusionReportButtons';
 import ExclusionReportTabs from './components/ExclusionReportTabs';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
+import ExclusionAssessmentContainer from './ExclusionAssessmentContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
 import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
@@ -32,6 +33,10 @@ class ExclusionReportEditContainer extends Component {
     switch (tab) {
       case 'exclusion-agreement':
         TabComponent = withReferenceData()(ExclusionAgreementContainer);
+        break;
+
+      case 'schedule-assessment':
+        TabComponent = withReferenceData()(ExclusionAssessmentContainer);
         break;
 
       default:
@@ -220,9 +225,11 @@ class ExclusionReportEditContainer extends Component {
         active={tab}
         compliancePeriod={period}
         edit={this.edit}
+        exclusionReport={this.props.exclusionReports.item}
         hasSnapshot={this.props.exclusionReports.item.hasSnapshot}
         id={id}
         key="nav"
+        loggedInUser={this.props.loggedInUser}
       />,
       <TabComponent
         key="tab-component"
@@ -232,6 +239,7 @@ class ExclusionReportEditContainer extends Component {
         exclusionReport={this.props.exclusionReports.item}
         loadedState={this.props.loadedState}
         loggedInUser={this.props.loggedInUser}
+        match={this.props.match}
         updateScheduleState={this._updateScheduleState}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
