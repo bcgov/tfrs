@@ -17,19 +17,19 @@ const Footer = props => (
                 </Link>
               </li>
               <li>
-                <a id="footer-about-site" href="#" target="_self">About this site</a>
+                <a id="footer-about-site" href="https://www2.gov.bc.ca/gov/content/industry/electricity-alternative-energy/transportation-energies/renewable-low-carbon-fuels/transportation-fuels-reporting-system" rel="noopener noreferrer" target="_blank">About this site</a>
               </li>
               <li>
-                <a id="footer-about-disclaimer" href="http://gov.bc.ca/disclaimer/" target="_self">Disclaimer</a>
+                <a id="footer-about-disclaimer" href="http://gov.bc.ca/disclaimer/" rel="noopener noreferrer" target="_blank">Disclaimer</a>
               </li>
               <li>
-                <a id="footer-about-privacy" href="http://gov.bc.ca/privacy/" target="_self">Privacy</a>
+                <a id="footer-about-privacy" href="http://gov.bc.ca/privacy/" rel="noopener noreferrer" target="_blank">Privacy</a>
               </li>
               <li>
-                <a id="footer-about-accessibility" href="http://gov.bc.ca/webaccessibility/" target="_self">Accessibility</a>
+                <a id="footer-about-accessibility" href="http://gov.bc.ca/webaccessibility/" rel="noopener noreferrer" target="_blank">Accessibility</a>
               </li>
               <li>
-                <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
+                <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" rel="noopener noreferrer" target="_blank">Copyright</a>
               </li>
               <li>
                 <a id="footer-about-contact" href="/contact_us" target="_self">Contact Us</a>
@@ -38,7 +38,6 @@ const Footer = props => (
             <div id="footer-about-version" className="inline">
               <a
                 href={`https://github.com/bcgov/tfrs/releases/tag/v${__VERSION__}`}
-                key="credit-market-report"
                 rel="noopener noreferrer"
                 target="_blank"
               >
