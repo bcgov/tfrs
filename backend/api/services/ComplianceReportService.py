@@ -220,7 +220,7 @@ class ComplianceReportService(object):
         while current.supplements is not None:
             current = current.supplements
             if current.credit_transaction is not None:
-                previous_transactions += previous_transactions
+                previous_transactions.append(current.credit_transaction)
 
         total_previous_reduction = Decimal(0.0)
         total_previous_validation = Decimal(0.0)
@@ -234,7 +234,7 @@ class ComplianceReportService(object):
         if settings.DEVELOPMENT:
             print('we have {} previous transactions to consider'.format(len(previous_transactions)))
             print('Total of previous reductions: {}'.format(total_previous_reduction))
-            print('Total of previous validations: {}'.format(total_previous_reduction))
+            print('Total of previous validations: {}'.format(total_previous_validation))
 
         if compliance_report.snapshot is None:
             raise InvalidStateException()
@@ -249,17 +249,18 @@ class ComplianceReportService(object):
         lines = snapshot['summary']['lines']
 
         desired_net_credit_balance_change = Decimal(0.0)
+
         if Decimal(lines['25']) > Decimal(0):
             desired_net_credit_balance_change = Decimal(lines['25'])
         else:
             if Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
-                desired_net_credit_balance_change = Decimal(lines['25'])*Decimal(-1.0)
+                desired_net_credit_balance_change = Decimal(lines['26'])*Decimal(-1.0)
 
-        required_credit_transaction = total_previous_validation - \
-                                      total_previous_reduction + \
-                                      desired_net_credit_balance_change
+        required_credit_transaction = desired_net_credit_balance_change - \
+                                      (total_previous_validation + total_previous_reduction)
 
         if settings.DEVELOPMENT:
+            print('line 25 of current report: {}'.format(lines['25']))
             print('desired credit balance change: {}'.format(desired_net_credit_balance_change))
             print('required transaction to effect change: {}'.format(required_credit_transaction))
 
