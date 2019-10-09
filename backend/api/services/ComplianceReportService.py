@@ -16,6 +16,8 @@ from api.services.CreditTradeService import CreditTradeService
 
 from api.notifications.notification_types import NotificationType
 from api.async_tasks import async_send_notifications
+from tfrs import settings
+
 Delta = namedtuple('Delta', ['path', 'field', 'action', 'old_value', 'new_value'])
 
 
@@ -213,6 +215,27 @@ class ComplianceReportService(object):
         :param compliance_report:
         :return:
         """
+        previous_transactions = []
+        current = compliance_report
+        while current.supplements is not None:
+            current = current.supplements
+            if current.credit_transaction is not None:
+                previous_transactions.append(current.credit_transaction)
+
+        total_previous_reduction = Decimal(0.0)
+        total_previous_validation = Decimal(0.0)
+
+        for transaction in previous_transactions:
+            if transaction.type.the_type in ['Credit Validation']:
+                total_previous_validation += transaction.number_of_credits
+            if transaction.type.the_type in ['Credit Reduction']:
+                total_previous_reduction += transaction.number_of_credits
+
+        if settings.DEVELOPMENT:
+            print('we have {} previous transactions to consider'.format(len(previous_transactions)))
+            print('Total of previous reductions: {}'.format(total_previous_reduction))
+            print('Total of previous validations: {}'.format(total_previous_validation))
+
         if compliance_report.snapshot is None:
             raise InvalidStateException()
 
@@ -225,14 +248,30 @@ class ComplianceReportService(object):
 
         lines = snapshot['summary']['lines']
 
+        desired_net_credit_balance_change = Decimal(0.0)
+
         if Decimal(lines['25']) > Decimal(0):
+            desired_net_credit_balance_change = Decimal(lines['25'])
+        else:
+            if Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
+                desired_net_credit_balance_change = Decimal(lines['26'])*Decimal(-1.0)
+
+        required_credit_transaction = desired_net_credit_balance_change - \
+                                      (total_previous_validation + total_previous_reduction)
+
+        if settings.DEVELOPMENT:
+            print('line 25 of current report: {}'.format(lines['25']))
+            print('desired credit balance change: {}'.format(desired_net_credit_balance_change))
+            print('required transaction to effect change: {}'.format(required_credit_transaction))
+
+        if required_credit_transaction > Decimal(0):
             # do validation for Decimal(lines['25'])
             credit_transaction = CreditTrade(
                 initiator=Organization.objects.get(id=1),
                 respondent=compliance_report.organization,
                 status=CreditTradeStatus.objects.get(status='Draft'),
                 type=CreditTradeType.objects.get(the_type='Credit Validation'),
-                number_of_credits=Decimal(lines['25']),
+                number_of_credits=required_credit_transaction,
                 compliance_period=compliance_report.compliance_period,
                 create_user=creating_user,
                 update_user=creating_user
@@ -244,7 +283,7 @@ class ComplianceReportService(object):
             compliance_report.save()
             CreditTradeService.pvr_notification(None, credit_transaction)
         else:
-            if Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
+            if required_credit_transaction < Decimal(0):
                 # do_reduction for Decimal(lines['26'])
                 credit_transaction = CreditTrade(
                     initiator=Organization.objects.get(id=1),
@@ -253,7 +292,7 @@ class ComplianceReportService(object):
                     type=CreditTradeType.objects.get(
                         the_type='Credit Reduction'
                     ),
-                    number_of_credits=Decimal(lines['26']),
+                    number_of_credits=required_credit_transaction * Decimal(-1.0),
                     compliance_period=compliance_report.compliance_period,
                     create_user=creating_user,
                     update_user=creating_user

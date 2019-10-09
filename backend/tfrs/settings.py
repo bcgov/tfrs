@@ -37,7 +37,10 @@ SECRET_KEY = os.getenv(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+
+
+DEVELOPMENT = os.getenv('DEVELOPMENT', 'False') == 'True'
 
 # SECURITY WARNING: never set this on in production
 BYPASS_AUTH = os.getenv('BYPASS_HEADER_AUTHENTICATION', False)

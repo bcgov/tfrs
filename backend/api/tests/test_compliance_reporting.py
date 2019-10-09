@@ -1218,6 +1218,261 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertGreater(final_balance, initial_balance)
 
+    def test_happy_signing_path_results_in_validation(self):
+        initial_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
+        rid = self._create_compliance_report()
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 20,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': 0
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 3000000,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 120,
+                    }
+                ]
+            },
+            'scheduleD': {
+                'sheets': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'feedstock': 'Corn',
+                        'inputs': [
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '10',
+                                'units': 'tonnes',
+                                'description': 'test',
+                            },
+                            {
+                                'worksheet_name': 'GHG Inputs',
+                                'cell': 'A1',
+                                'value': '20',
+                                'units': 'percent',
+                            }
+                        ],
+                        'outputs': [
+                            {'description': 'Fuel Dispensing', 'intensity': '1.3'},
+                            {'description': 'Fuel Distribution and Storage', 'intensity': '1.3'},
+                            {'description': 'Fuel Production', 'intensity': '1.3'},
+                            {'description': 'Feedstock Transmission', 'intensity': '1.3'},
+                            {'description': 'Feedstock Recovery', 'intensity': '1.3'},
+                            {'description': 'Feedstock Upgrading', 'intensity': '1.3'},
+                            {'description': 'Land Use Change', 'intensity': '1.3'},
+                            {'description': 'Fertilizer Manufacture', 'intensity': '1.3'},
+                            {'description': 'Gas Leaks and Flares', 'intensity': '1.3'},
+                            {'description': 'CO₂ and H₂S Removed', 'intensity': '1.3'},
+                            {'description': 'Emissions Displaced', 'intensity': '1.3'},
+                            {'description': 'Fuel Use (High Heating Value)', 'intensity': '1.3'}
+                        ]
+                    }
+                ]
+            },
+            'summary': {
+                'creditsOffset': 5,
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'analystStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'managerStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_manager'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'directorStatus': 'Accepted'
+            }
+        }
+
+        response = self.clients['gov_director'].patch(
+            '/api/compliance_reports/{id}'.format(id=rid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=rid)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
+        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        intermediate_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+
+        self.assertLess(intermediate_balance, initial_balance)
+
+        # create a supplemental
+
+        payload = {
+            'supplements': rid,
+            'status': {'fuelSupplierStatus': 'Draft'},
+            'type': 'Compliance Report',
+            'compliancePeriod': '2019'
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/compliance_reports',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        sid = response.json()['id']
+
+        payload = {
+            'status': {
+                'fuelSupplierStatus': 'Submitted'
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 40000000,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
+                        'fuelCode': None,
+                        'scheduleDSheetIndex': 0
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 30,
+                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
+                        'intensity': 120,
+                    }
+                ]
+            },
+            'summary': {
+                'creditsOffset': 0,
+            },
+            'supplementalNote': 'Forgot a railcar or two'
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/{id}'.format(id=sid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'analystStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            '/api/compliance_reports/{id}'.format(id=sid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'managerStatus': 'Recommended'
+            }
+        }
+
+        response = self.clients['gov_manager'].patch(
+            '/api/compliance_reports/{id}'.format(id=sid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'status': {
+                'directorStatus': 'Accepted'
+            }
+        }
+
+        response = self.clients['gov_director'].patch(
+            '/api/compliance_reports/{id}'.format(id=sid),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/compliance_reports/{id}'.format(id=sid)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
+        self.assertGreater(final_balance, initial_balance)
+        self.assertGreater(final_balance, intermediate_balance)
+
     def test_create_supplemental(self):
         rid = self._create_compliance_report()
 

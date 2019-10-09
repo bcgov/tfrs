@@ -705,6 +705,13 @@ class ScheduleSummaryContainer extends Component {
       if (organizationBalance.validatedCredits < maxValue) {
         maxValue = organizationBalance.validatedCredits;
       }
+
+      let previous_reduction_total = 0;
+      if (this.props.complianceReport.totalPreviousCreditReduction) {
+        previous_reduction_total = this.props.complianceReport.totalPreviousCreditReduction;
+      }
+
+      maxValue += previous_reduction_total;
     }
 
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {

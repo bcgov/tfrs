@@ -216,6 +216,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     history = serializers.SerializerMethodField()
     deltas = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
+    total_previous_credit_reductions = SerializerMethodField()
 
     skip_deltas = False
 
@@ -230,6 +231,23 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     def get_actions(self, obj):
         relationship = ComplianceReportPermissions.get_relationship(obj, self.context['request'].user)
         return ComplianceReportPermissions.get_available_actions(obj, relationship)
+
+    def get_total_previous_credit_reductions(self, obj):
+        # Return the total numner of credits for all previous reductions for supplemental reports
+        previous_transactions = []
+        current = obj
+        while current.supplements is not None:
+            current = current.supplements
+            if current.credit_transaction is not None:
+                previous_transactions.append(current.credit_transaction)
+
+        total_previous_reduction = Decimal(0.0)
+
+        for transaction in previous_transactions:
+            if transaction.type.the_type in ['Credit Reduction']:
+                total_previous_reduction += transaction.number_of_credits
+
+        return total_previous_reduction
 
     def get_deltas(self, obj):
 
@@ -414,7 +432,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
-                  'is_supplemental']
+                  'is_supplemental', 'total_previous_credit_reductions']
 
 
 class ComplianceReportValidator:
