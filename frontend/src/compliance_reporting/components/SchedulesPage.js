@@ -16,22 +16,22 @@ const SchedulesPage = props => (
 
       {props.children}
 
-      {!props.readOnly && [
+      {!props.readOnly &&
         <ValidationMessages
           key="validation-messages"
           scheduleType={props.scheduleType}
           valid={props.valid}
           validating={props.validating}
           validationMessages={props.validationMessages}
-        />,
+        />
+      }
+      {!props.readOnly &&
+      ['schedule-b'].indexOf(props.scheduleType) >= 0 &&
         <ScheduleInstructions
           key="schedule-instructions"
-        >
-          Report the fuel volumes supplied for transportation. Do not include fuel volumes
-          supplied for purposes other than transportation in Schedule B; please report those
-          fuel quantities in Schedule C.
-        </ScheduleInstructions>
-      ]}
+          scheduleType={props.scheduleType}
+        />
+      }
 
       <div className="scrollable">
         <ReactDataSheet

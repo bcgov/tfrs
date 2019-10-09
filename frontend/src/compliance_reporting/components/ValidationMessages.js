@@ -353,15 +353,13 @@ class ValidationMessages extends Component {
               onClick={this._toggleErrorMessages}
               type="button"
             >
-              {<FontAwesomeIcon icon={this.state.collapsed ? 'angle-down' : 'angle-up'} />}
+              <FontAwesomeIcon icon={this.state.collapsed ? 'angle-down' : 'angle-up'} />
             </button>
           </h4>
         </div>
 
         <Collapse in={!this.state.collapsed}>
-          <div
-            id="collapse-messages"
-          >
+          <div id="collapse-messages">
             <div className="panel-body">
               {this.props.validating &&
                 'Validating...'
