@@ -6,18 +6,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ComplianceReportingStatusHistory from './components/ComplianceReportingStatusHistory';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
 import Select from '../app/components/Spreadsheet/Select';
+import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
 import {
   SCHEDULE_D,
   SCHEDULE_D_INPUT,
   SCHEDULE_D_INPUT_ERROR_KEYS
 } from '../constants/schedules/scheduleColumns';
 
+import ScheduleInstructions from './components/ScheduleInstructions';
 import ValidationMessages from './components/ValidationMessages';
 
 class ScheduleDContainer extends Component {
@@ -191,23 +194,78 @@ class ScheduleDContainer extends Component {
         }, {
           className: 'worksheet-name',
           readOnly: true,
-          value: 'Worksheet Name'
+          value: (
+            <div>
+              {`Worksheet Name `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The worksheet in the GHGenius model where the change is made (e.g. Input, Coprods, etc.)."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'worksheet-cell',
           readOnly: true,
-          value: 'Cell'
+          value: (
+            <div>
+              {`Cell `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The cell reference in which the change is made (e.g. A1, D155, etc.)."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'worksheet-value',
           readOnly: true,
-          value: 'Value'
+          value: (
+            <div>
+              {`Value `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The value that is replacing the default value."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'units',
           readOnly: true,
-          value: 'Units'
+          value: (
+            <div>
+              {`Units `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The unit given for the Reported Value (e.g L, L/MJ, etc.)."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'description',
           readOnly: true,
-          value: 'Description'
+          value: (
+            <div>
+              {`Description `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="A brief description of the nature of the input (e.g. feedstock transportation mode, natural gas usage, etc.)."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }] // spreadsheet header
       ],
       input: [
@@ -218,11 +276,33 @@ class ScheduleDContainer extends Component {
         }, {
           className: 'feedstock',
           readOnly: true,
-          value: 'Feedstock'
+          value: (
+            <div>
+              {`Feedstock `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The feedstock used to produce the fuel (e.g. corn, soy, etc.)."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }, {
           className: 'fuel-class',
           readOnly: true,
-          value: 'Fuel Class'
+          value: (
+            <div>
+              {`Fuel Class `}
+              <TooltipWhenDisabled
+                className="info"
+                disabled
+                title="The fuel class in which the fuel was used."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </TooltipWhenDisabled>
+            </div>
+          )
         }],
         [{
           className: 'text dropdown-indicator',
@@ -464,15 +544,20 @@ class ScheduleDContainer extends Component {
           key="history"
         />
 
-        {!this.props.readOnly &&
-        <ValidationMessages
-          activeSheet={this.state.activeSheet}
-          scheduleType="schedule-d"
-          valid={this.props.valid}
-          validating={this.props.validating}
-          validationMessages={this.props.validationMessages}
-        />
-        }
+        {!this.props.readOnly && [
+          <ValidationMessages
+            activeSheet={this.state.activeSheet}
+            key="validation-messages"
+            scheduleType="schedule-d"
+            valid={this.props.valid}
+            validating={this.props.validating}
+            validationMessages={this.props.validationMessages}
+          />,
+          <ScheduleInstructions
+            key="schedule-instructions"
+            scheduleType="schedule-d"
+          />
+        ]}
 
         <ScheduleDTabs
           active={this.state.activeSheet}
