@@ -390,11 +390,6 @@ class ScheduleSummaryContainer extends Component {
       penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
     }
 
-    console.error(diesel);
-    console.error(gasoline);
-    console.error(part3);
-    console.error(penalty);
-
     this.setState({
       diesel,
       gasoline,
