@@ -120,7 +120,7 @@ class CreditTradeService(object):
         history.save()
 
     @staticmethod
-    def approve(credit_trade):
+    def approve(credit_trade, update_user=None):
         """
         Transfers the credits between the organizations
         Sets the Credit Transfer to Approved
@@ -135,6 +135,9 @@ class CreditTradeService(object):
             credit_trade.number_of_credits,
             effective_date
         )
+
+        if update_user:
+            credit_trade.update_user = update_user
 
         credit_trade.status = status_approved
         CreditTradeService.create_history(credit_trade)

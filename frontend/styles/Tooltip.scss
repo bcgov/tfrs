@@ -18,6 +18,10 @@
     }  
   }
 
+  &.left .tooltip-inner {
+    text-align: left;
+  }
+
   .tooltip-arrow {
     border-top-color: $primary !important;
   }
@@ -30,6 +34,18 @@
   .heading {
     margin-bottom: 1rem;
     text-align: left;
+  }
+
+  blockquote {
+    border-left: none;
+    font-size: inherit;
+    margin: 0;
+    padding: 0 0.5rem;
+
+    ul {
+      list-style-type: disc;
+      padding: 0 1rem;
+    }
   }
 
   ul {

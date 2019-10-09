@@ -313,13 +313,22 @@ class ValidationMessages extends Component {
               type="button"
             >
               {this.props.validating &&
-                'Validating...'
+                <FontAwesomeIcon icon="ellipsis-h" />
               }
               {!this.props.validating && errorMessages.length === 0 &&
-                'No Validation Errors'
+                <FontAwesomeIcon icon="check" />
               }
               {!this.props.validating && errorMessages.length > 0 &&
-                'Validation Errors'
+                <FontAwesomeIcon icon="times" />
+              }
+              {this.props.validating &&
+                ' Validating...'
+              }
+              {!this.props.validating && errorMessages.length === 0 &&
+                ' No Validation Errors'
+              }
+              {!this.props.validating && errorMessages.length > 0 &&
+                ' Validation Errors'
               }
             </button>
             <button

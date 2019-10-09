@@ -4,8 +4,8 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
 import ScheduleATotals from './ScheduleATotals';
+import ScheduleInstructions from './ScheduleInstructions';
 import ScheduleBTotals from './ScheduleBTotals';
 import ValidationMessages from './ValidationMessages';
 
@@ -16,14 +16,22 @@ const SchedulesPage = props => (
 
       {props.children}
 
-      {!props.readOnly &&
-      <ValidationMessages
-        scheduleType={props.scheduleType}
-        valid={props.valid}
-        validating={props.validating}
-        validationMessages={props.validationMessages}
-      />
-      }
+      {!props.readOnly && [
+        <ValidationMessages
+          key="validation-messages"
+          scheduleType={props.scheduleType}
+          valid={props.valid}
+          validating={props.validating}
+          validationMessages={props.validationMessages}
+        />,
+        <ScheduleInstructions
+          key="schedule-instructions"
+        >
+          Report the fuel volumes supplied for transportation. Do not include fuel volumes
+          supplied for purposes other than transportation in Schedule B; please report those
+          fuel quantities in Schedule C.
+        </ScheduleInstructions>
+      ]}
 
       <div className="scrollable">
         <ReactDataSheet
