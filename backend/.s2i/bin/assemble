@@ -82,9 +82,9 @@ echo "---> current folder is "
 pwd
 
 # Run unit tests in build stage with the code below
-echo "--> running Django unit tests"
+# echo "--> running Django unit tests"
 
-python manage.py test -c nose.cfg
+# python manage.py test -c nose.cfg
 
 # set permissions for any installed artifacts
 fix-permissions /opt/app-root
