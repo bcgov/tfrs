@@ -1,14 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ComplianceReportingStatusHistory from '../../compliance_reporting/components/ComplianceReportingStatusHistory';
-
 const ScheduleAssessmentPage = props => (
   <div className="schedule-assessment">
-    <ComplianceReportingStatusHistory
-      complianceReport={props.exclusionReport}
-    />
-
     <h1>Compliance Assessment</h1>
 
     <p>

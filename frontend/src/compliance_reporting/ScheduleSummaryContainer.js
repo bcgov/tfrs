@@ -233,16 +233,16 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
+    const { diesel, gasoline } = this.state;
+    let { part3, penalty } = this.state;
+
     if (nextProps.snapshot) {
-      const {
-        diesel, gasoline, part3, penalty
-      } = this.state;
       const { summary } = nextProps.snapshot;
 
       const cellFormatNumeric = cellValue => ({
-        cellValue,
         className: 'numeric',
         readOnly: true,
+        value: cellValue,
         valueViewer: (data) => {
           const { value } = data;
 
@@ -261,7 +261,7 @@ class ScheduleSummaryContainer extends Component {
       const cellFormatTotal = cellValue => ({
         className: 'numeric',
         readOnly: true,
-        cellValue,
+        value: cellValue,
         valueViewer: (data) => {
           const { value } = data;
 
@@ -313,13 +313,6 @@ class ScheduleSummaryContainer extends Component {
       penalty[SCHEDULE_PENALTY.LINE_22][2] = cellFormatTotal(summary.lines['22']);
       penalty[SCHEDULE_PENALTY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
       penalty[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = cellFormatTotal(summary.totalPayable);
-
-      this.setState({
-        diesel,
-        gasoline,
-        part3,
-        penalty
-      });
     } else {
       // read-write
       if (nextProps.validating || !nextProps.valid) {
@@ -332,8 +325,6 @@ class ScheduleSummaryContainer extends Component {
 
       this.populateSchedules();
 
-      const { diesel, gasoline } = this.state;
-      let { part3, penalty } = this.state;
       const { summary } = nextProps.scheduleState;
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
@@ -397,14 +388,14 @@ class ScheduleSummaryContainer extends Component {
       };
 
       penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
-
-      this.setState({
-        diesel,
-        gasoline,
-        part3,
-        penalty
-      });
     }
+
+    this.setState({
+      diesel,
+      gasoline,
+      part3,
+      penalty
+    });
   }
 
   loadInitialState () {
@@ -960,26 +951,21 @@ class ScheduleSummaryContainer extends Component {
       return (<Loading />);
     }
 
-    return ([
+    return (
       <ScheduleSummaryPage
         diesel={this.state.diesel}
         gasoline={this.state.gasoline}
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
         handlePart3Changed={this._handlePart3Changed}
-        key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
         readOnly={this.props.readOnly}
         valid={this.props.valid}
         validating={this.props.validating}
         validationMessages={this.props.validationMessages}
-      />,
-      <ComplianceReportingStatusHistory
-        key="history"
-        history={this.props.complianceReport.history}
       />
-    ]);
+    );
   }
 }
 
