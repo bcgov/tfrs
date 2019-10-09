@@ -46,6 +46,7 @@ class ValidationMessages extends Component {
     this._validateScheduleB = this._validateScheduleB.bind(this);
     this._validateScheduleC = this._validateScheduleC.bind(this);
     this._validateScheduleD = this._validateScheduleD.bind(this);
+    this._validateSchedules = this._validateSchedules.bind(this);
   }
 
   _getClassNames (valid = true) {
@@ -278,6 +279,19 @@ class ValidationMessages extends Component {
     return errorMessages;
   }
 
+  _validateSchedules () {
+    const errorMessages = [];
+
+    if (!this.props.valid &&
+      this.props.validationMessages) {
+      const { validationMessages } = this.props;
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
+      errorMessages.push(message);
+    }
+
+    return errorMessages;
+  }
+
   render () {
     let errorMessages = [];
 
@@ -295,6 +309,7 @@ class ValidationMessages extends Component {
         errorMessages = this._validateScheduleD();
         break;
       default:
+        errorMessages = this._validateSchedules();
     }
 
     return (
@@ -375,7 +390,7 @@ ValidationMessages.defaultProps = {
 ValidationMessages.propTypes = {
   activeSheet: PropTypes.number,
   scheduleType: PropTypes.oneOf([
-    'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
+    'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d', 'schedule-summary'
   ]).isRequired,
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
