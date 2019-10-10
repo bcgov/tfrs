@@ -55,7 +55,7 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {Number(props.snapshot.summary.lines[25]) < 0 &&
+    {props.snapshot.summary && Number(props.snapshot.summary.lines[25]) < 0 &&
       <p>
         A
         <strong>
@@ -71,7 +71,7 @@ const ScheduleAssessmentPage = props => (
       </p>
     }
 
-    {Number(props.snapshot.summary.lines[26]) > 0 &&
+    {props.snapshot.summary && Number(props.snapshot.summary.lines[26]) > 0 &&
       <p>
         <strong> {props.snapshot.organization.name} </strong> applied
         {` ${Number(props.snapshot.summary.lines[26])} `}
@@ -82,7 +82,7 @@ const ScheduleAssessmentPage = props => (
       </p>
     }
 
-    {Number(props.snapshot.summary.lines[27]) < 0 &&
+    {props.snapshot.summary && Number(props.snapshot.summary.lines[27]) < 0 &&
       <p>
         There were
         <strong>

@@ -3,15 +3,15 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {toastr as reduxToastr} from 'react-redux-toastr';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { toastr as reduxToastr } from 'react-redux-toastr';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
-import {addSigningAuthorityConfirmation} from '../actions/signingAuthorityConfirmationsActions';
+import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
-import {complianceReporting} from '../actions/complianceReporting';
+import { complianceReporting } from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
@@ -33,7 +33,7 @@ import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 
 class ComplianceReportingEditContainer extends Component {
-  static componentForTabName(tab) {
+  static componentForTabName (tab) {
     let TabComponent;
 
     switch (tab) {
@@ -56,7 +56,7 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-summary':
-        TabComponent = withReferenceData({includeCompliancePeriods: true})(withCreditCalculationService()(ScheduleSummaryContainer));
+        TabComponent = withReferenceData({ includeCompliancePeriods: true })(withCreditCalculationService()(ScheduleSummaryContainer));
         break;
 
       case 'schedule-assessment':
@@ -74,10 +74,10 @@ class ComplianceReportingEditContainer extends Component {
     return TabComponent;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.tabComponent = Loading;
-    const {tab} = props.match.params;
+    const { tab } = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     this.status = {
       fuelSupplierStatus: 'Draft'
@@ -109,10 +109,9 @@ class ComplianceReportingEditContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
 
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
-
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getSigningAuthorityAssertions({
       module: 'compliance_report'
     });
@@ -123,24 +122,22 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {tab} = nextProps.match.params;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { tab } = nextProps.match.params;
 
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
-      const {id} = this.props.match.params;
+      const { id } = this.props.match.params;
 
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
         this.props.validateComplianceReport({
           id,
           state: {
-            schedules: {
-              ...this.state.schedules
-            }
+            ...this.state.schedules
           }
         });
       }
@@ -197,9 +194,9 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _updateScheduleState(mergedState) {
-    const {schedules} = this.state;
-    const {id} = this.props.match.params;
+  _updateScheduleState (mergedState) {
+    const { schedules } = this.state;
+    const { id } = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
 
     this.setState({
@@ -213,10 +210,8 @@ class ComplianceReportingEditContainer extends Component {
       id,
       state: {
         compliancePeriod: period,
-        schedules: {
-          ...schedules,
-          ...mergedState
-        }
+        ...schedules,
+        ...mergedState
       }
     });
 
@@ -228,11 +223,11 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleDelete() {
-    this.props.deleteComplianceReport({id: this.props.match.params.id});
+  _handleDelete () {
+    this.props.deleteComplianceReport({ id: this.props.match.params.id });
   }
 
-  _handleCreateSupplemental(event, compliancePeriodDescription) {
+  _handleCreateSupplemental (event, compliancePeriodDescription) {
     this.setState({
       createSupplementalCalled: true
     });
@@ -247,8 +242,8 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _addToFields(value) {
-    const {terms} = this.state;
+  _addToFields (value) {
+    const { terms } = this.state;
 
     const found = terms.find(term => term.id === value.id);
 
@@ -261,8 +256,8 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _toggleCheck(key) {
-    const {terms} = this.state;
+  _toggleCheck (key) {
+    const { terms } = this.state;
     const index = terms.findIndex(term => term.id === key);
     terms[index].value = !terms[index].value;
 
@@ -271,17 +266,15 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleSupplementalNoteUpdate(event) {
-    this.setState(
-      {
-        supplementalNote: event.target.value
-      }
-    );
+  _handleSupplementalNoteUpdate (event) {
+    this.setState({
+      supplementalNote: event.target.value
+    });
   }
 
-  _handleSubmit(event, status = {fuelSupplierStatus: 'Draft'}) {
+  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
     // patch existing
-    let payload = {
+    const payload = {
       status,
       ...this.state.schedules
     };
@@ -289,7 +282,7 @@ class ComplianceReportingEditContainer extends Component {
     if (this.state.supplementalNoteRequired &&
       status.fuelSupplierStatus &&
       status.fuelSupplierStatus === 'Submitted') {
-      payload['supplementalNote'] = this.state.supplementalNote;
+      payload.supplementalNote = this.state.supplementalNote;
     }
 
     this.status = status;
@@ -316,9 +309,9 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _handleRecomputeRequest() {
-    const {schedules} = this.state;
-    const {id} = this.props.match.params;
+  _handleRecomputeRequest () {
+    const { schedules } = this.state;
+    const { id } = this.props.match.params;
 
     if (!this.props.complianceReporting.validationMessages ||
       Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
@@ -331,21 +324,21 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  render() {
+  render () {
     const TabComponent = this.tabComponent;
 
-    const {tab, id} = this.props.match.params;
+    const { tab, id } = this.props.match.params;
 
     if (!this.state.getCalled) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     if (this.props.complianceReporting.isGetting) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     let period = null;
@@ -404,56 +397,56 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Requested Supplemental'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental' })}
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
       >
         Are you sure you want to request a supplemental compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Not Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Not Recommended' })}
         id="confirmAnalystRecommendRejection"
         key="confirmAnalystRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Requested Supplemental'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Requested Supplemental' })}
         id="confirmManagerRequestSupplemental"
         key="confirmManagerRequestSupplemental"
       >
         Are you sure you want to request a supplemental compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
         id="confirmManagerRecommendAcceptance"
         key="confirmManagerRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Not Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Not Recommended' })}
         id="confirmManagerRecommendRejection"
         key="confirmManagerRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Rejected'})}
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Rejected' })}
         id="confirmDirectorReject"
         key="confirmDirectorReject"
       >
         Are you sure you want to reject this compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Accepted'})}
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Accepted' })}
         id="confirmDirectorAccept"
         key="confirmDirectorAccept"
       >
@@ -478,7 +471,7 @@ class ComplianceReportingEditContainer extends Component {
           (this.state.supplementalNote.trim().length === 0)) ||
         (this.state.terms.filter(term => term.value === true).length <
           this.props.signingAuthorityAssertions.items.length)}
-        handleSubmit={event => this._handleSubmit(event, {fuelSupplierStatus: 'Submitted'})}
+        handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
@@ -507,21 +500,22 @@ class ComplianceReportingEditContainer extends Component {
           ))}
           {this.state.supplementalNoteRequired &&
           <div>
-            <hr/>
-            < label htmlFor="supplementalReasonInput">
+            <hr />
+            <label htmlFor="supplementalReasonInput">
               Supplemental Report Reason
             </label>
-            <textarea id="supplementalReasonInput"
-                      name="supplementalReasonInput"
-                      rows={4}
-                      maxLength={500}
-                      minLength={1}
-                      value={this.state.supplementalNote}
-                      onChange={(e) => this._handleSupplementalNoteUpdate(e)}
-                      placeholder="Use this field to provide a brief explanation for the supplemental report."
-                      required
+            <textarea
+              id="supplementalReasonInput"
+              name="supplementalReasonInput"
+              rows={4}
+              maxLength={500}
+              minLength={1}
+              value={this.state.supplementalNote}
+              onChange={e => this._handleSupplementalNoteUpdate(e)}
+              placeholder="Use this field to provide a brief explanation for the supplemental report."
+              required
             />
-            <hr/>
+            <hr />
           </div>
           }
           Are you sure you want to submit this Compliance Report to the
