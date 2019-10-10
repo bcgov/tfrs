@@ -15,7 +15,7 @@ class ScheduleAssessmentContainer extends Component {
   }
 
   render () {
-    if (this.props.snapshotIsLoading || !this.props.snapshot) {
+    if (this.props.snapshotIsLoading || !this.props.snapshot || !this.props.snapshot.summary) {
       return <Loading />;
     }
 
