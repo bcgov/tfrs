@@ -55,11 +55,11 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {props.snapshot.summary && Number(props.snapshot.summary.lines[25]) < 0 &&
+    {props.snapshot.summary && Number(props.snapshot.summary.lines[25]) > 0 &&
       <p>
         A
         <strong>
-          {` validation of ${Number(props.snapshot.summary.lines[25]) * -1} credit(s) `}
+          {` validation of ${Number(props.snapshot.summary.lines[25])} credit(s) `}
         </strong>
         in accordance with section 8 (8) of the
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>

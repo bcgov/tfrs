@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-class ComplianceReportingStatusHistory extends Component {
+class ExclusionReportingStatusHistory extends Component {
   static renderDirectorStatus (history) {
     let action = <strong>Accepted</strong>;
 
@@ -67,49 +67,26 @@ class ComplianceReportingStatusHistory extends Component {
     return (<strong>{history.status.fuelSupplierStatus} </strong>);
   }
 
-  constructor (props) {
-    super(props);
-  }
-
   render () {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
       return false;
     }
 
-    const showCurrent = (this.props.complianceReport.history.filter(
-      c => (c.complianceReport === this.props.complianceReport.id)
-    ).length === 0);
-
     return (
       <div className="panel panel-default">
         <div className="panel-body">
           <ul>
-            {showCurrent &&
-            <li>
-              <a href="#" onClick={() => this.props.onSwitchHandler(-1)}>Current Revision {this.props.complianceReport.displayName}</a>
-            </li>
-            }
             {this.props.complianceReport.history.length > 0 &&
             this.props.complianceReport.history.map((history, index, arr) => {
-              let deltaTarget = history.complianceReport;
-              if (this.props.complianceReport.deltas.filter(d => (d.ancestorId === deltaTarget)).length === 0) {
-                deltaTarget = '-1';
-              }
-
-              const action = ComplianceReportingStatusHistory.renderHistory(history);
+              const action = ExclusionReportingStatusHistory.renderHistory(history);
 
               if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
-                return ComplianceReportingStatusHistory.renderDirectorStatus(history);
+                return ExclusionReportingStatusHistory.renderDirectorStatus(history);
               }
 
               return (
-                <li key={history.id}>{action}
-                  <a
-                    href="#"
-                    onClick={() => this.props.onSwitchHandler(deltaTarget)}
-                  >
-                    {history.displayName}
-                  </a>
+                <li key={history.id}>
+                  {action} {history.displayName}
                   <span> on </span>
                   {moment(history.createTimestamp).format('LL')}
                   <span> by </span>
@@ -125,7 +102,7 @@ class ComplianceReportingStatusHistory extends Component {
   }
 }
 
-ComplianceReportingStatusHistory.defaultProps = {
+ExclusionReportingStatusHistory.defaultProps = {
   complianceReport: {
     compliancePeriod: {
       description: ''
@@ -134,11 +111,10 @@ ComplianceReportingStatusHistory.defaultProps = {
     organization: {
       name: ''
     }
-  },
-  reportType: 'Compliance Report'
+  }
 };
 
-ComplianceReportingStatusHistory.propTypes = {
+ExclusionReportingStatusHistory.propTypes = {
   complianceReport: PropTypes.shape({
     compliancePeriod: PropTypes.oneOfType([
       PropTypes.string,
@@ -164,8 +140,7 @@ ComplianceReportingStatusHistory.propTypes = {
       name: PropTypes.string
     })
   }),
-  onSwitchHandler: PropTypes.func.isRequired,
-  reportType: PropTypes.string
+  onSwitchHandler: PropTypes.func.isRequired
 };
 
-export default ComplianceReportingStatusHistory;
+export default ExclusionReportingStatusHistory;

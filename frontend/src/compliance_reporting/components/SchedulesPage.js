@@ -5,7 +5,6 @@ import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleATotals from './ScheduleATotals';
-import ScheduleInstructions from './ScheduleInstructions';
 import ScheduleBTotals from './ScheduleBTotals';
 import ValidationMessages from './ValidationMessages';
 
@@ -23,13 +22,6 @@ const SchedulesPage = props => (
           valid={props.valid}
           validating={props.validating}
           validationMessages={props.validationMessages}
-        />
-      }
-      {!props.readOnly &&
-      ['schedule-b'].indexOf(props.scheduleType) >= 0 &&
-        <ScheduleInstructions
-          key="schedule-instructions"
-          scheduleType={props.scheduleType}
         />
       }
 
