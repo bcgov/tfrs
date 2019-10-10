@@ -22,6 +22,7 @@ import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ExclusionAgreementContainer from './ExclusionAgreementContainer';
 import ExclusionAssessmentContainer from './ExclusionAssessmentContainer';
 import ExclusionReportIntroContainer from './ExclusionReportIntroContainer';
+import ExclusionReportChangelogContainer from './ExclusionReportChangelogContainer';
 import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
@@ -37,6 +38,10 @@ class ExclusionReportEditContainer extends Component {
 
       case 'schedule-assessment':
         TabComponent = withReferenceData()(ExclusionAssessmentContainer);
+        break;
+
+      case 'changelog':
+        TabComponent = withReferenceData()(ExclusionReportChangelogContainer);
         break;
 
       default:

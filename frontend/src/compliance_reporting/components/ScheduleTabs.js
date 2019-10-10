@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-
-import history from '../../app/History';
 
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 

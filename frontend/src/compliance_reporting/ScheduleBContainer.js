@@ -939,7 +939,13 @@ class ScheduleBContainer extends Component {
         valid={this.props.valid}
         validating={this.props.validating}
         validationMessages={this.props.validationMessages}
-      />,
+      >
+        <p>
+          Report the fuel volumes supplied for transportation. Do not include fuel volumes
+          supplied for purposes other than transportation in Schedule B; please report those
+          fuel quantities in Schedule C.
+        </p>
+      </SchedulesPage>,
       <Modal
         id="GHGeniusWarning"
         key="ghgeniusWarning"

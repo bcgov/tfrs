@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-
-import history from '../../app/History';
 
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 
@@ -18,7 +15,7 @@ const ExclusionReportTabs = (props) => {
       intro: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'intro'),
       exclusionAgreement: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'exclusion-agreement'),
       scheduleAssessment: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'schedule-assessment'),
-      snapshot: EXCLUSION_REPORTS.SNAPSHOT.replace(':id', props.id)
+      changelog: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'changelog')
     };
   }
 
@@ -62,16 +59,13 @@ const ExclusionReportTabs = (props) => {
       </li>
       }
       {props.hasSnapshot &&
-      <li className="snapshot-button">
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() => {
-            history.push(urls.snapshot);
-          }}
-        >
-          <FontAwesomeIcon icon="camera" /> Submission Snapshot
-        </button>
+      <li
+        role="presentation"
+        className={`${(props.active === 'changelog') && 'active'}`}
+      >
+        <Link id="schedules-changelog" to={urls.changelog}>
+          Report History
+        </Link>
       </li>
       }
     </ul>

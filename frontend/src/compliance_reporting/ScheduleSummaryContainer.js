@@ -11,7 +11,6 @@ import { bindActionCreators } from 'redux';
 import 'react-datasheet/lib/react-datasheet.css';
 
 import getCreditCalculation from '../actions/creditCalculation';
-import ComplianceReportingStatusHistory from './components/ComplianceReportingStatusHistory';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
@@ -330,44 +329,39 @@ class ScheduleSummaryContainer extends Component {
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
 
-      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].readOnly) {
+      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].readOnly ||
+        line15percent < summary.dieselClassRetained) {
         diesel[SCHEDULE_SUMMARY.LINE_17][2].value = 0;
-      } else if (line15percent < summary.dieselClassRetained) {
-        diesel[SCHEDULE_SUMMARY.LINE_17][2].value = line15percent;
       }
 
       diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
 
-      if (diesel[SCHEDULE_SUMMARY.LINE_19][2].readOnly) {
+      if (diesel[SCHEDULE_SUMMARY.LINE_19][2].readOnly ||
+        line15percent < summary.dieselClassDeferred) {
         diesel[SCHEDULE_SUMMARY.LINE_19][2].value = 0;
-      } else if (line15percent < summary.dieselClassDeferred) {
-        diesel[SCHEDULE_SUMMARY.LINE_19][2].value = line15percent;
       }
 
       const line4percent = gasoline[SCHEDULE_SUMMARY.LINE_4][2].value * 0.05;
       gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
 
-      if (gasoline[SCHEDULE_SUMMARY.LINE_6][2].readOnly) {
+      if (gasoline[SCHEDULE_SUMMARY.LINE_6][2].readOnly ||
+        line4percent < summary.gasolineClassRetained) {
         gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = 0;
-      } else if (line4percent < summary.gasolineClassRetained) {
-        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = line4percent;
       }
 
       gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
 
-      if (gasoline[SCHEDULE_SUMMARY.LINE_8][2].readOnly) {
+      if (gasoline[SCHEDULE_SUMMARY.LINE_8][2].readOnly ||
+        line4percent < summary.gasolineClassDeferred) {
         gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = 0;
-      } else if (line4percent < summary.gasolineClassDeferred) {
-        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = line4percent;
       }
 
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
 
-      if (part3[SCHEDULE_SUMMARY.LINE_26][2].readOnly) {
+      if (part3[SCHEDULE_SUMMARY.LINE_26][2].readOnly ||
+        line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
-      } else if (line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
-        part3[SCHEDULE_SUMMARY.LINE_26][2].value = line25value;
       }
 
       part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);

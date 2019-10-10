@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import ComplianceReportingStatusHistory from './components/ComplianceReportingStatusHistory';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
@@ -20,7 +19,6 @@ import {
   SCHEDULE_D_INPUT_ERROR_KEYS
 } from '../constants/schedules/scheduleColumns';
 
-import ScheduleInstructions from './components/ScheduleInstructions';
 import ValidationMessages from './components/ValidationMessages';
 
 class ScheduleDContainer extends Component {
@@ -539,25 +537,63 @@ class ScheduleDContainer extends Component {
       <div className="page_schedule spreadsheet-component" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
 
-        <ComplianceReportingStatusHistory
-          complianceReport={this.props.complianceReport}
-          key="history"
-        />
+        <p>
+          A GHGenius Input and Output Summary Table must be completed for each separate
+          fuel being reported with a carbon intensity determined using GHGenius under
+          section 6 (5) (d) (ii) (A) and reported in Schedule B.
+        </p>
 
-        {!this.props.readOnly && [
+        <p>
+          <strong>
+            Schedule D should be completed before reporting the fuel in Schedule B, as
+            the values entered in this schedule inform the carbon intensity reported in
+            Schedule B.
+          </strong>
+        </p>
+
+        <p>
+          The approved version of GHGenius must be used as defined in section 11.06 (1)
+          of the Renewable and Low Carbon Fuel Requirements Regulation and specified in
+          <em> Information Bulletin RLCF-011 - Approved Version of GHGenius</em>,
+          {` available from `}
+          <a href="https://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">
+          www.gov.bc.ca/lowcarbonfuels
+          </a>.
+        </p>
+
+        <p>
+          The Input Summary Table must include all input data required to reproduce the
+          requested carbon intensity using the approved version of GHGenius.
+        </p>
+
+        <p>
+          The Output Summary Table must contain the emissions associated with all twelve
+          of the lifecycle components listed in the Output Summary Table within this
+          schedule in accordance with section 11.05 (3) of the Renewable and Low Carbon
+          Fuel Requirements Regulation. Input the emissions associated with each component
+          from the GHGenius model into the appropriate row in the Output Summary Table.
+        </p>
+
+        <p>
+          {`It is recommended that users consult `}
+          <em>
+            Information Bulletin RLCF-010 - Using GHGenius in B.C.
+          </em>
+          {`, available from `}
+          <a href="https://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">
+          www.gov.bc.ca/lowcarbonfuels
+          </a>, before attempting to use GHGenius.
+        </p>
+
+        {!this.props.readOnly &&
           <ValidationMessages
             activeSheet={this.state.activeSheet}
-            key="validation-messages"
             scheduleType="schedule-d"
             valid={this.props.valid}
             validating={this.props.validating}
             validationMessages={this.props.validationMessages}
-          />,
-          <ScheduleInstructions
-            key="schedule-instructions"
-            scheduleType="schedule-d"
           />
-        ]}
+        }
 
         <ScheduleDTabs
           active={this.state.activeSheet}
