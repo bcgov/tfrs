@@ -531,16 +531,30 @@ class ScheduleCContainer extends Component {
           Under section 6 (3) of the
           <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
           </em>
-          , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
-          supplier expects, on reasonable grounds, will be used for a purpose other than
-          transportation. The quantities and expected uses of excluded fuels must be reported in
-          accordance with section 11.08 (4) (d) (ii) of the Regulation.
+          , Part 3 requirements do not apply in relation to fuel quantities that the Part 3
+          fuel supplier expects, on reasonable grounds, will be used for a purpose other than
+          transportation. The quantities and expected uses of excluded fuels must be reported
+          in accordance with section 11.08 (4) (d) (ii) of the Regulation.
         </p>
         <p>
           <strong>
-            The volumes reported here should not be reported in Schedule B. This form will
-            include the quantities entered in this Schedule in the Part 2 Summary section
-            as appropriate.
+            Do not report fuels that are excluded from &quot;gasoline class fuel&quot; and
+            &quot;diesel class fuel&quot;.
+          </strong>
+          Under section (3) of the Renewable and Low Carbon Fuel Requirements Regulation,
+          gasoline class fuel does not include fuel that, at the time of sale, the fuel
+          supplier reasonably expects will be used in an aircraft. Under section 3.1 (2),
+          diesel class fuel does not include fuel that is sold to the Department of National
+          Defence (Canada) if at the time of sale the fuel supplier reasonably expects that
+          the fuel will be used in an aircraft, by the Department of National Defence (Canada)
+          in military vessels, vehicles, aircraft or equipment for military operations, or in
+          military vessels, vehicles, aircraft or equipment of a foreign country.
+        </p>
+        <p>
+          <strong>
+            The volumes reported here should not be reported in Schedule B. The quantities of Part
+            2 fuel entered into this Schedule will be included in the Part 2 Summary section as
+            appropriate.
           </strong>
         </p>
         <p>
