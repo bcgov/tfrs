@@ -140,18 +140,20 @@ class SnapshotDisplay extends Component {
         }, {
           className: 'left',
           readOnly: true,
-          value: row.provisionOfTheAct
+          value: `${row.provisionOfTheAct} - ${row.provisionOfTheActDescription}`
         }, {
+          className: 'left',
           readOnly: true,
-          value: row.fuelCode != null ? row.fuelCode
+          value: row.fuelCode != null ? row.fuelCodeDescription
             : (row.scheduleD_sheetIndex != null ? 'From Schedule D' : '')
         }, {
           readOnly: true,
           value: row.quantity,
           valueViewer: SnapshotDisplay.decimalViewer(0)
         }, {
+          className: 'left',
           readOnly: true,
-          value: row.units
+          value: row.unitOfMeasure
         }, {
           readOnly: true,
           value: row.ciLimit,
