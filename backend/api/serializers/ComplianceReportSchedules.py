@@ -88,17 +88,23 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(ComplianceReportValidation.zero)
 
         if value < 0:
-            raise serializers.ValidationError(ComplianceReportValidation.negative)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
 
         if round(value) != value:
-            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
 
         return value
 
     def validate(self, data):
         if data['expected_use'].description == 'Other' and \
                 ('rationale' not in data or len(data['rationale']) == 0):
-            raise serializers.ValidationError(ComplianceReportValidation.missing)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.missing
+            )
 
         return data
 
@@ -106,9 +112,13 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
         model = ScheduleCRecord
         fields = (
             'fuel_type', 'fuel_class', 'quantity', 'expected_use', 'rationale',
-            'petroleum_diesel_volume'
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
         )
-        read_only_fields = ('petroleum_diesel_volume',)
+        read_only_fields = (
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
+        )
 
 
 class ScheduleCDetailSerializer(serializers.ModelSerializer):
@@ -116,8 +126,14 @@ class ScheduleCDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleC
-        fields = ('records', 'total_petroleum_diesel')
-        read_only_fields = ('total_petroleum_diesel',)
+        fields = (
+            'records', 'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
+        read_only_fields = (
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
 
 
 class ScheduleBRecordSerializer(serializers.ModelSerializer):
@@ -141,10 +157,14 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(ComplianceReportValidation.zero)
 
         if value < 0:
-            raise serializers.ValidationError(ComplianceReportValidation.negative)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
 
         if round(value) != value:
-            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
 
         return value
 
@@ -205,12 +225,16 @@ class ScheduleBDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleB
-        fields = ('records', 'total_credits', 'total_debits',
-                  'total_petroleum_diesel', 'total_petroleum_gasoline',
-                  'total_renewable_diesel', 'total_renewable_gasoline')
-        read_only_fields = ('total_credits', 'total_debits',
-                            'total_petroleum_diesel', 'total_petroleum_gasoline',
-                            'total_renewable_diesel', 'total_renewable_gasoline')
+        fields = (
+            'records', 'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
+        read_only_fields = (
+            'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
 
 
 class ScheduleARecordSerializer(serializers.ModelSerializer):

@@ -479,6 +479,16 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.FUEL_CODE].getOptions = () => (response.parameters.fuelCodes);
         grid[row][SCHEDULE_B.FUEL_CODE].readOnly = props.readOnly;
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
+        grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (cellProps) => {
+          const selectedOption = cellProps.cell.getOptions().find(e =>
+            String(e.id) === String(cellProps.value));
+
+          if (selectedOption) {
+            return <span>{selectedOption.descriptiveName}</span>;
+          }
+
+          return <span>{cellProps.value}</span>;
+        };
       } else if (response.parameters.scheduleDSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
         if (response.parameters.scheduleDSelections.length > 0) {

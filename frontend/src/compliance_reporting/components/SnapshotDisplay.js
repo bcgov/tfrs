@@ -3,20 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class SnapshotDisplay extends Component {
-  static decimalViewer(digits = 2) {
+  static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
-  static buildScheduleAGrid(snapshot) {
+  static buildScheduleAGrid (snapshot) {
     const grid = [
       [{
         value: 'Legal Name of Trading Partner',
@@ -70,7 +70,7 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  static buildScheduleBGrid(snapshot) {
+  static buildScheduleBGrid (snapshot) {
     const grid = [
       [{
         className: 'header underlined',
@@ -143,8 +143,8 @@ class SnapshotDisplay extends Component {
           value: row.provisionOfTheAct
         }, {
           readOnly: true,
-          value: row.fuelCode != null ? row.fuelCode :
-            (row.scheduleD_sheetIndex != null ? "From Schedule D" : "")
+          value: row.fuelCode != null ? row.fuelCode
+            : (row.scheduleD_sheetIndex != null ? 'From Schedule D' : '')
         }, {
           readOnly: true,
           value: row.quantity,
@@ -202,7 +202,7 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  static buildScheduleCGrid(snapshot) {
+  static buildScheduleCGrid (snapshot) {
     const grid = [
       [{
         className: 'header underlined',
@@ -256,7 +256,7 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  static buildScheduleDGrid(snapshot, i) {
+  static buildScheduleDGrid (snapshot, i) {
     const grid = [];
     const sheet = snapshot.scheduleD.sheets[i];
 
@@ -392,7 +392,7 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  static buildSummaryGrid(snapshot) {
+  static buildSummaryGrid (snapshot) {
     const grid = [
       [{ // p2 gasoline
         className: 'header',
@@ -845,8 +845,8 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  render() {
-    const {snapshot} = this.props;
+  render () {
+    const { snapshot } = this.props;
 
     if (!snapshot) {
       return (<p>???</p>);
@@ -859,19 +859,19 @@ class SnapshotDisplay extends Component {
           <h1>Compliance Report for {this.props.snapshot.compliancePeriod.description}</h1>
           <h3>{this.props.snapshot.organization.name}</h3>
           <h3>Submitted: {moment(this.props.snapshot.timestamp).format('YYYY-MM-DD')}</h3>
-          <hr/>
+          <hr />
         </div>
         }
         {this.props.computedWarning &&
         <div className="panel panel-warning">
-          <FontAwesomeIcon icon="exclamation-triangle"/>Showing a live view of the data, not a snapshot.
+          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of the data, not a snapshot.
         </div>
         }
         <div>
           {(snapshot.supplementalNote && snapshot.supplementalNote.length > 0) &&
           <div>
             <h1 className="schedule-header">Supplemental Submission Explanation</h1>
-            <hr/>
+            <hr />
             <div
               key="supplemental-note"
               className="panel"
@@ -883,7 +883,7 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleA &&
           <div>
             <h1 className="schedule-header">Schedule A</h1>
-            <hr/>
+            <hr />
             <ReactDataSheet
               key="snapshot-a"
               className="spreadsheet snapshot_a"
@@ -895,7 +895,7 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleB &&
           <div key="snapshot-b">
             <h1 className="schedule-header">Schedule B</h1>
-            <hr/>
+            <hr />
             <ReactDataSheet
               className="spreadsheet snapshot_b"
               data={SnapshotDisplay.buildScheduleBGrid(snapshot)}
@@ -906,7 +906,7 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleC &&
           <div key="snapshot-c">
             <h1 className="schedule-header">Schedule C</h1>
-            <hr/>
+            <hr />
             <ReactDataSheet
               className="spreadsheet snapshot_c"
               data={SnapshotDisplay.buildScheduleCGrid(snapshot)}
@@ -917,7 +917,7 @@ class SnapshotDisplay extends Component {
           {snapshot.scheduleD &&
           <div key="snapshot-d">
             <h1 className="schedule-header">Schedule D</h1>
-            <hr/>
+            <hr />
             {snapshot.scheduleD.sheets.map((s, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <div key={`snapshot-d-${i}`}>
@@ -935,7 +935,7 @@ class SnapshotDisplay extends Component {
           {(snapshot.summary && snapshot.summary.lines) &&
           <div key="snapshot-summary">
             <h1 className="schedule-header">Summary</h1>
-            <hr/>
+            <hr />
             <ReactDataSheet
               className="spreadsheet summary snapshot_summary"
               data={SnapshotDisplay.buildSummaryGrid(snapshot)}

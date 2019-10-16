@@ -691,12 +691,12 @@ class ScheduleSummaryContainer extends Component {
         maxValue = organizationBalance.validatedCredits;
       }
 
-      let previous_reduction_total = 0;
+      let previousReductionTotal = 0;
       if (this.props.complianceReport.totalPreviousCreditReduction) {
-        previous_reduction_total = this.props.complianceReport.totalPreviousCreditReduction;
+        previousReductionTotal = this.props.complianceReport.totalPreviousCreditReduction;
       }
 
-      maxValue += previous_reduction_total;
+      maxValue += previousReductionTotal;
     }
 
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
@@ -765,25 +765,25 @@ class ScheduleSummaryContainer extends Component {
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
-      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+      readOnly: Number.isNaN(gasoline[SCHEDULE_SUMMARY.LINE_2][2].value) ||
         gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
-      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
+      readOnly: Number.isNaN(gasoline[SCHEDULE_SUMMARY.LINE_2][2].value) ||
         gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
-      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+      readOnly: Number.isNaN(diesel[SCHEDULE_SUMMARY.LINE_13][2].value) ||
         diesel[SCHEDULE_SUMMARY.LINE_13][2].value <= diesel[SCHEDULE_SUMMARY.LINE_15][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
-      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
+      readOnly: Number.isNaN(diesel[SCHEDULE_SUMMARY.LINE_13][2].value) ||
         diesel[SCHEDULE_SUMMARY.LINE_15][2].value <= diesel[SCHEDULE_SUMMARY.LINE_13][2].value
     };
 
@@ -1008,7 +1008,11 @@ ScheduleSummaryContainer.propTypes = {
         PropTypes.number,
         PropTypes.string
       ])
-    })
+    }),
+    totalPreviousCreditReduction: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ])
   }),
   creditCalculation: PropTypes.shape({
     isFetching: PropTypes.bool,
