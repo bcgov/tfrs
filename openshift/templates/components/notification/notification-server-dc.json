@@ -122,9 +122,13 @@
                                     }
                                 ],
                                 "resources": {
+                                    "requests": {
+                                        "cpu": "10m",
+                                        "memory": "110Mi"
+                                    },
                                     "limits": {
-                                        "cpu": "250m",
-                                        "memory": "500Mi"
+                                        "cpu": "30m",
+                                        "memory": "200Mi"
                                     }
                                 },
                                 "readinessProbe": {

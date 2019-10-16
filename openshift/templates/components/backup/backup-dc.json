@@ -197,13 +197,13 @@
                                     }
                                 ],
                                 "resources": {
-                                    "limits": {
-                                        "cpu": "0",
-                                        "memory": "0"
-                                    },
                                     "requests": {
-                                        "cpu": "0",
-                                        "memory": "0"
+                                        "cpu": "10m",
+                                        "memory": "15Mi"
+                                    },
+                                    "limits": {
+                                        "cpu": "20m",
+                                        "memory": "30Mi"
                                     }
                                 },
                                 "volumeMounts": [

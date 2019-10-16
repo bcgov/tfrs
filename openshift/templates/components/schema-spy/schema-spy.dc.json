@@ -110,13 +110,13 @@
                                     }
                                 ],
                                 "resources": {
-                                    "limits": {
-                                        "cpu": "750m",
-                                        "memory": "6Gi"
-                                    },
                                     "requests": {
-                                        "cpu": "100m",
-                                        "memory": "512Mi"
+                                        "cpu": "50m",
+                                        "memory": "500Mi"
+                                    },
+                                    "limits": {
+                                        "cpu": "200m",
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "livenessProbe": {
@@ -125,7 +125,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 360,
+                                    "initialDelaySeconds": 1775,
                                     "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -137,7 +137,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 360,
+                                    "initialDelaySeconds": 1775,
                                     "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -266,7 +266,11 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "500m",
+                                        "cpu": "10m",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "200m",
                                         "memory": "1Gi"
                                     }
                                 },

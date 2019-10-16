@@ -115,12 +115,12 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("dev").call()
+        prepareDCStages.backendDCStage("dev").call()
         prepareDCStages.celeryDCStage("dev").call()
-        //prepareDCStages.scanCoordinatorDCStage("dev").call()
-        //prepareDCStages.scanHandlerDCStage("dev").call()
-        //prepareDCStages.notificationServerDCStage("dev").call()
-        //prepareDCStages.frontendDCStage("dev").call()
+        prepareDCStages.scanCoordinatorDCStage("dev").call()
+        prepareDCStages.scanHandlerDCStage("dev").call()
+        prepareDCStages.notificationServerDCStage("dev").call()
+        prepareDCStages.frontendDCStage("dev").call()
 
         //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()

@@ -343,13 +343,13 @@
                                     }
                                 ],
                                 "resources": {
-                                    "limits": {
-                                        "cpu": "1",
-                                        "memory": "1Gi"
-                                    },
                                     "requests": {
-                                        "cpu": "400m",
-                                        "memory": "512Mi"
+                                        "cpu": "10m",
+                                        "memory": "700Mi"
+                                    },
+                                    "limits": {
+                                        "cpu": "600m",
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "livenessProbe": {

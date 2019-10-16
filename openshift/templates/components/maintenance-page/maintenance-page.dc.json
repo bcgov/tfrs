@@ -85,12 +85,13 @@
                                     }
                                 ],
                                 "resources": {
-                                    "limits": {
-                                        "cpu": "100m",
-                                        "memory": "128Mi"
-                                    },
                                     "requests": {
-                                        "memory": "128Mi"
+                                        "cpu": "10m",
+                                        "memory": "50Mi"
+                                    },
+                                    "limits": {
+                                        "cpu": "30m",
+                                        "memory": "100Mi"
                                     }
                                 },
                                 "terminationMessagePath": "/dev/termination-log",

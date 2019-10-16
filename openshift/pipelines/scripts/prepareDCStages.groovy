@@ -377,4 +377,93 @@ def frontendDCOthersStage (String envName) {
         }
     }
 }
+def clamavDCStage (String envName) {
+    return {
+        stage("Apply ClamAV Deployment Config on ${envName}") {
+            timeout(30) {
+                script {
+                    def projectName
+                    def ENV_NAME
+                    if(envName == 'dev') {
+                        projectName = "mem-tfrs-dev"
+                        ENV_NAME = 'dev'
+                    } else if(envName == 'test') {
+                        projectName = "mem-tfrs-test"
+                        ENV_NAME = 'test'
+                    } else if(envName == 'prod') {
+                        projectName = "mem-tfrs-prod"
+                        ENV_NAME = 'prod'
+                    }
+                    openshift.withProject("${projectName}") {
+                        def clamavDCJson = openshift.process(readFile(file:'openshift/templates/components/document-security-scan/clamav-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=${ENV_NAME}"
+                        )
+                        openshift.apply(clamavDCJson)
+                    }
+                }
+            }
+        }
+    }
+}
+
+def maintenancePageDCStage (String envName) {
+    return {
+        stage("Apply Maintenance Page Deployment Config on ${envName}") {
+            timeout(30) {
+                script {
+                    def projectName
+                    def ENV_NAME
+                    if(envName == 'dev') {
+                        projectName = "mem-tfrs-dev"
+                        ENV_NAME = 'dev'
+                    } else if(envName == 'test') {
+                        projectName = "mem-tfrs-test"
+                        ENV_NAME = 'test'
+                    } else if(envName == 'prod') {
+                        projectName = "mem-tfrs-prod"
+                        ENV_NAME = 'prod'
+                    }
+                    openshift.withProject("${projectName}") {
+                        def maintenancePageDCJson = openshift.process(readFile(file:'openshift/templates/components/maintenance-page/maintenance-page-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=${ENV_NAME}"
+                        )
+                        openshift.apply(maintenancePageDCJson)
+                    }
+                }
+            }
+        }
+    }
+}
+
+def nagiosDCStage (String envName) {
+    return {
+        stage("Apply Minio Deployment Config on ${envName}") {
+            timeout(30) {
+                script {
+                    def projectName
+                    def ENV_NAME
+                    if(envName == 'dev') {
+                        projectName = "mem-tfrs-dev"
+                        ENV_NAME = 'dev'
+                    } else if(envName == 'test') {
+                        projectName = "mem-tfrs-test"
+                        ENV_NAME = 'test'
+                    } else if(envName == 'prod') {
+                        projectName = "mem-tfrs-prod"
+                        ENV_NAME = 'prod'
+                    }
+                    openshift.withProject("${projectName}") {
+                        def minioDCJson = openshift.process(readFile(file:'openshift/templates/components/minio/maintenance-page-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=${ENV_NAME}"
+                        )
+                        openshift.apply(minioDCJson)
+                    }
+                }
+            }
+        }
+    }
+}
 return this

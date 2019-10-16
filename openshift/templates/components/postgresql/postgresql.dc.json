@@ -93,8 +93,13 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "5Gi"
-                    }
+                        "cpu": "30m",
+                        "memory": "1Gi"
+                      },
+                      "limits": {
+                        "cpu": "200m",
+                        "memory": "2Gi"
+                      }
                 }
             }
         },
@@ -192,13 +197,13 @@
                                     }
                                 ],
                                 "resources": {
-                                    "limits": {
-                                        "cpu": "200m",
-                                        "memory": "1Gi"
-                                    },
                                     "requests": {
                                         "cpu": "100m",
-                                        "memory": "512Mi"
+                                        "memory": "1100Mi"
+                                    },
+                                    "limits": {
+                                        "cpu": "300m",
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "volumeMounts": [
