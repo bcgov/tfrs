@@ -664,7 +664,10 @@ ComplianceReportingEditContainer.propTypes = {
       organization: PropTypes.shape(),
       readOnly: PropTypes.bool,
       status: PropTypes.shape(),
-      type: PropTypes.shape()
+      type: PropTypes.oneOfType([
+        PropTypes.shape({}),
+        PropTypes.string
+      ])
     }),
     isRecomputing: PropTypes.bool,
     recomputeResult: PropTypes.object,
