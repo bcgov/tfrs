@@ -156,7 +156,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         sorted_qs = sorted(list(qs.all()), key=lambda x: [x.compliance_period.effective_date, x.sort_date])
 
-        serializer = self.get_serializer(sorted_qs, many=True,context={'request': request})
+        serializer = self.get_serializer(sorted_qs, many=True, context={'request': request})
         return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
@@ -193,7 +193,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         """
         This works much like a regular PATCH, but rolls back the transaction
         """
-
         validation_deserializer = ComplianceReportValidationSerializer(
             data=request.data
         )

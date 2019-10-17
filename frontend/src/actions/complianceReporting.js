@@ -19,10 +19,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     this.doGetSnapshot = this.doGetSnapshot.bind(this);
   }
 
-  getCustomIdentityActions() {
-    return ['VALIDATE', 'VALIDATE_SUCCESS',
-            'RECOMPUTE', 'RECOMPUTE_SUCCESS',
-            'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS']
+  getCustomIdentityActions () {
+    return [
+      'VALIDATE', 'VALIDATE_SUCCESS',
+      'RECOMPUTE', 'RECOMPUTE_SUCCESS',
+      'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS'
+    ];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -34,8 +36,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isRecomputing: false,
       isGettingSnapshot: false,
       snapshotItem: null,
-      recomputeResult: {},
-    }
+      recomputeResult: {}
+    };
   }
 
   getCustomReducerMap () {
@@ -64,18 +66,18 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         ...state,
         isRecomputing: false,
         recomputeState: null,
-        recomputeResult: action.payload,
+        recomputeResult: action.payload
       })],
       [this.getSnapshot, (state, action) => ({
         ...state,
         id: action.payload.id || action.payload,
         isGettingSnapshot: true,
-        snapshotItem: null,
+        snapshotItem: null
       })],
       [this.getSnapshotSuccess, (state, action) => ({
         ...state,
         isGettingSnapshot: false,
-        snapshotItem: action.payload,
+        snapshotItem: action.payload
       })]
     ];
   }
@@ -128,12 +130,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-  doGetSnapshot(data = null) {
+  doGetSnapshot (data = null) {
     const id = data;
     return axios.get(`${this.baseUrl}/${id}/snapshot`);
   }
 
-  * getSnapshotHandler() {
+  * getSnapshotHandler () {
     const data = yield (select(this.idSelector()));
 
     try {
@@ -144,13 +146,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
-
-  getCustomSagas() {
+  getCustomSagas () {
     return [
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
       takeLatest(this.getSnapshot, this.getSnapshotHandler)
-    ]
+    ];
   }
 }
 
