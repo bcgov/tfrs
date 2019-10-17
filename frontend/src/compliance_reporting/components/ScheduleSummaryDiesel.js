@@ -153,7 +153,7 @@ class ScheduleSummaryDiesel {
       [{ // line 18
         className: 'text',
         readOnly: true,
-        value: 'Volume of renewable credit (from Line 17 of previous compliance report)'
+        value: 'Volume of renewable fuel previously retained (from Line 17 of previous compliance report)'
       }, {
         className: 'line',
         readOnly: true,
@@ -170,7 +170,13 @@ class ScheduleSummaryDiesel {
           </div>
         )
       }, {
-        readOnly: true
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
       }], // line 18
       [{ // line 19
         className: 'text',
@@ -204,7 +210,7 @@ class ScheduleSummaryDiesel {
       [{ // line 20
         className: 'text',
         readOnly: true,
-        value: 'Volume of renewable fuel previously retained (from Line 19 of previous compliance period)'
+        value: 'Volume of renewable obligation added (from Line 19 of previous compliance period)'
       }, {
         className: 'line',
         readOnly: true,
@@ -221,7 +227,13 @@ class ScheduleSummaryDiesel {
           </div>
         )
       }, {
-        readOnly: true
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
       }], // line 20
       [{ // line 21
         className: 'text',

@@ -334,12 +334,16 @@ class ScheduleSummaryContainer extends Component {
         diesel[SCHEDULE_SUMMARY.LINE_17][2].value = 0;
       }
 
+      diesel[SCHEDULE_SUMMARY.LINE_18][2].value = summary.dieselClassPreviouslyRetained;
+
       diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
 
       if (diesel[SCHEDULE_SUMMARY.LINE_19][2].readOnly ||
         line15percent < summary.dieselClassDeferred) {
         diesel[SCHEDULE_SUMMARY.LINE_19][2].value = 0;
       }
+
+      diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation;
 
       const line4percent = gasoline[SCHEDULE_SUMMARY.LINE_4][2].value * 0.05;
       gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
@@ -349,12 +353,16 @@ class ScheduleSummaryContainer extends Component {
         gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = 0;
       }
 
+      gasoline[SCHEDULE_SUMMARY.LINE_7][2].value = summary.gasolineClassPreviouslyRetained;
+
       gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
 
       if (gasoline[SCHEDULE_SUMMARY.LINE_8][2].readOnly ||
         line4percent < summary.gasolineClassDeferred) {
         gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = 0;
       }
+
+      gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
 
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
@@ -397,8 +405,12 @@ class ScheduleSummaryContainer extends Component {
       const src = this.props.complianceReport.summary;
       const initialState = {
         dieselClassDeferred: src.dieselClassDeferred,
+        dieselClassObligation: src.dieselClassObligation,
+        dieselClassPreviouslyRetained: src.dieselClassPreviouslyRetained,
         dieselClassRetained: src.dieselClassRetained,
         gasolineClassDeferred: src.gasolineClassDeferred,
+        gasolineClassObligation: src.gasolineClassObligation,
+        gasolineClassPreviouslyRetained: src.gasolineClassPreviouslyRetained,
         gasolineClassRetained: src.gasolineClassRetained,
         creditsOffset: src.creditsOffset
       };
@@ -408,8 +420,12 @@ class ScheduleSummaryContainer extends Component {
     } else {
       const initialState = {
         dieselClassDeferred: 0,
+        dieselClassObligation: 0,
+        dieselClassPreviouslyRetained: 0,
         dieselClassRetained: 0,
         gasolineClassDeferred: 0,
+        gasolineClassObligation: 0,
+        gasolineClassPreviouslyRetained: 0,
         gasolineClassRetained: 0,
         creditsOffset: 0
       };
@@ -516,8 +532,16 @@ class ScheduleSummaryContainer extends Component {
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
     }
 
+    if (summary.dieselClassPreviouslyRetained) {
+      diesel[SCHEDULE_SUMMARY.LINE_18][2].value = summary.dieselClassPreviouslyRetained;
+    }
+
     if (summary.dieselClassDeferred) {
       diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
+    }
+
+    if (summary.dieselClassObligation) {
+      diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation;
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
@@ -632,8 +656,17 @@ class ScheduleSummaryContainer extends Component {
     if (summary.gasolineClassDeferred) {
       gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
     }
+
+    if (summary.gasolineClassPreviouslyRetained) {
+      gasoline[SCHEDULE_SUMMARY.LINE_7][2].value = summary.gasolineClassPreviouslyRetained;
+    }
+
     if (summary.gasolineClassRetained) {
       gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
+    }
+
+    if (summary.gasolineClassObligation) {
+      gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_10][2] = {
@@ -903,13 +936,23 @@ class ScheduleSummaryContainer extends Component {
 
   _gridStateToPayload (state) {
     let shouldUpdate = false;
-    const compareOn = ['dieselClassDeferred', 'dieselClassRetained', 'gasolineClassDeferred', 'gasolineClassRetained', 'creditsOffset'];
+    const compareOn = [
+      'dieselClassDeferred', 'dieselClassRetained',
+      'dieselClassPreviouslyRetained', 'dieselClassObligation',
+      'gasolineClassDeferred', 'gasolineClassRetained',
+      'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
+      'creditsOffset'
+    ];
 
     const nextState = {
       summary: {
         dieselClassDeferred: state.diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+        dieselClassObligation: state.diesel[SCHEDULE_SUMMARY.LINE_20][2].value,
+        dieselClassPreviouslyRetained: state.diesel[SCHEDULE_SUMMARY.LINE_18][2].value,
         dieselClassRetained: state.diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
         gasolineClassDeferred: state.gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+        gasolineClassObligation: state.gasoline[SCHEDULE_SUMMARY.LINE_9][2].value,
+        gasolineClassPreviouslyRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_7][2].value,
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value
       }

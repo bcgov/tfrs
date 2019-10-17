@@ -315,21 +315,37 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             lines[
                 '6'] = obj.summary.gasoline_class_retained if obj.summary.gasoline_class_retained is not None else Decimal(
                 0)
+            lines['7'] = obj.summary.gasoline_class_previously_retained \
+                if obj.summary.gasoline_class_previously_retained is not None \
+                else Decimal(0)
             lines[
                 '8'] = obj.summary.gasoline_class_deferred if obj.summary.gasoline_class_deferred is not None else Decimal(
                 0)
+            lines['9'] = obj.summary.gasoline_class_obligation \
+                if obj.summary.gasoline_class_obligation is not None \
+                else Decimal(0)
             lines[
                 '17'] = obj.summary.diesel_class_retained if obj.summary.diesel_class_retained is not None else Decimal(
                 0)
+            lines['18'] = obj.summary.diesel_class_previously_retained \
+                if obj.summary.diesel_class_previously_retained is not None \
+                else Decimal(0)
             lines[
                 '19'] = obj.summary.diesel_class_deferred if obj.summary.diesel_class_deferred is not None else Decimal(
                 0)
+            lines['20'] = obj.summary.diesel_class_obligation \
+                if obj.summary.diesel_class_obligation is not None \
+                else Decimal(0)
             lines['26'] = obj.summary.credits_offset if obj.summary.credits_offset is not None else Decimal(0)
         else:
             lines['6'] = Decimal(0)
+            lines['7'] = Decimal(0)
             lines['8'] = Decimal(0)
+            lines['9'] = Decimal(0)
             lines['17'] = Decimal(0)
+            lines['18'] = Decimal(0)
             lines['19'] = Decimal(0)
+            lines['20'] = Decimal(0)
             lines['26'] = Decimal(0)
 
         if obj.schedule_a:
@@ -355,8 +371,6 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         lines['3'] = lines['1'] + lines['2']
         lines['4'] = (lines['3'] * Decimal('0.05')).quantize(Decimal('1.'),
                                                              rounding=ROUND_HALF_UP)  # hardcoded 5% renewable requirement
-        lines['7'] = Decimal(0)
-        lines['9'] = Decimal(0)
         lines['10'] = lines['2'] + lines['5'] - lines['6'] + lines['7'] + lines['8'] - lines['9']
         lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(Decimal(0)).quantize(Decimal('.01'),
                                                                                               rounding=ROUND_HALF_UP)
@@ -366,8 +380,6 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         lines['14'] = lines['12'] + lines['13']
         lines['15'] = (lines['14'] * Decimal('0.04')).quantize(Decimal('1.'),
                                                                rounding=ROUND_HALF_UP)  # hardcoded 4% renewable requirement
-        lines['18'] = Decimal(0)
-        lines['20'] = Decimal(0)
         lines['21'] = lines['13'] + lines['16'] - lines['17'] + lines['18'] + lines['19'] - lines['20']
         lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(Decimal(0)).quantize(Decimal('.01'),
                                                                                                rounding=ROUND_HALF_UP)

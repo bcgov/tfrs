@@ -205,12 +205,16 @@ class ScheduleBDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleB
-        fields = ('records', 'total_credits', 'total_debits',
-                  'total_petroleum_diesel', 'total_petroleum_gasoline',
-                  'total_renewable_diesel', 'total_renewable_gasoline')
-        read_only_fields = ('total_credits', 'total_debits',
-                            'total_petroleum_diesel', 'total_petroleum_gasoline',
-                            'total_renewable_diesel', 'total_renewable_gasoline')
+        fields = (
+            'records', 'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
+        read_only_fields = (
+            'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
 
 
 class ScheduleARecordSerializer(serializers.ModelSerializer):
@@ -250,6 +254,10 @@ class ScheduleADetailSerializer(serializers.ModelSerializer):
 class ScheduleSummaryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleSummary
-        fields = ('diesel_class_retained', 'gasoline_class_retained',
-                  'diesel_class_deferred', 'gasoline_class_deferred',
-                  'credits_offset')
+        fields = (
+            'diesel_class_deferred', 'diesel_class_retained',
+            'diesel_class_obligation', 'diesel_class_previously_retained',
+            'gasoline_class_retained', 'gasoline_class_deferred',
+            'gasoline_class_obligation', 'gasoline_class_previously_retained',
+            'credits_offset'
+        )

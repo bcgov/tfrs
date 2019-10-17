@@ -684,7 +684,22 @@ class ScheduleSummary(Commentable):
         max_digits=20,
         db_comment="Liters of gasoline-class fuel deferred"
     )
-
+    gasoline_class_previously_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable gasoline previously retained. "
+                   "Line 5 of previous compliance period."
+    )
+    gasoline_class_obligation = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable obligation added (for gasoline). "
+                   "Line 8 of previous compliance period."
+    )
     diesel_class_retained = models.DecimalField(
         blank=True,
         null=True,
@@ -698,6 +713,22 @@ class ScheduleSummary(Commentable):
         decimal_places=2,
         max_digits=20,
         db_comment="Liters of diesel-class fuel deferred"
+    )
+    diesel_class_previously_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable diesel previously retained. "
+                   "Line 17 of previous compliance period."
+    )
+    diesel_class_obligation = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable obligation added (for diesel). "
+                   "Line 19 of previous compliance period."
     )
     credits_offset = models.IntegerField(
         blank=True,
