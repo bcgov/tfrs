@@ -326,49 +326,7 @@ class ScheduleBContainer extends Component {
   componentDidMount () {
     if (this.props.scheduleState.scheduleB || this.props.snapshot) {
       // we already have the state. don't load it. just render it.
-      let { grid } = this.state;
-
-      if (this.props.snapshot && this.props.readOnly) {
-        // just use the snapshot
-        const source = this.props.snapshot.scheduleB;
-
-        if (!source || !source.records) {
-          return;
-        }
-
-        if ((grid.length - 2) < source.records.length) {
-          this._addRow(source.records.length - (grid.length - 2));
-        }
-
-        grid = ScheduleBContainer.snapshotToGrid(source.records, grid);
-
-        this._calculateTotal(grid);
-      } else if (!this.props.scheduleState.scheduleB ||
-        !this.props.scheduleState.scheduleB.records) {
-        if (!this.props.complianceReport.scheduleB ||
-          !this.props.complianceReport.scheduleB.records) {
-          return;
-        }
-
-        if ((grid.length - 2) < this.props.complianceReport.scheduleB.records.length) {
-          this._addRow(this.props.complianceReport.scheduleB.records.length - (grid.length - 2));
-        }
-
-        const { records } = this.props.complianceReport.scheduleB;
-        grid = this._recordsToGrid(records, grid);
-      } else {
-        if ((grid.length - 2) < this.props.scheduleState.scheduleB.records.length) {
-          this._addRow(this.props.scheduleState.scheduleB.records.length - (grid.length - 2));
-        }
-
-        const { records } = this.props.scheduleState.scheduleB;
-        grid = this._recordsToGrid(records, grid);
-      }
-
-      this.recomputeDerivedState(this.props, {
-        ...this.state,
-        grid
-      });
+      this.componentWillReceiveProps(this.props);
     } else if (!this.props.complianceReport.scheduleB) {
       this._addRow(5);
     } else {
@@ -395,17 +353,20 @@ class ScheduleBContainer extends Component {
 
       this._calculateTotal(grid);
     } else {
+      let source = nextProps.scheduleState.scheduleB;
+
+      if (!this.props.scheduleState.scheduleB ||
+        !this.props.scheduleState.scheduleB.records) {
+        source = this.props.complianceReport.scheduleB;
+      }
+
+      const { records } = source;
+
       // in read-write mode
-
-      if (!nextProps.scheduleState.scheduleB || !nextProps.scheduleState.scheduleB.records) {
-        return;
+      if ((grid.length - 2) < records.length) {
+        this._addRow(records.length - (grid.length - 2));
       }
 
-      if ((grid.length - 2) < nextProps.scheduleState.scheduleB.records.length) {
-        this._addRow(nextProps.scheduleState.scheduleB.records.length - (grid.length - 2));
-      }
-
-      const { records } = nextProps.scheduleState.scheduleB;
       grid = this._recordsToGrid(records, grid);
     } // end read-write prop load
 

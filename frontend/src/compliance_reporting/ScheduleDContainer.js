@@ -74,8 +74,12 @@ class ScheduleDContainer extends Component {
     const { sheets } = this.state;
 
     let source = nextProps.scheduleState.scheduleD;
-    if (nextProps.snapshot) {
-      source = this.props.snapshot.scheduleD;
+
+    if (nextProps.snapshot && this.props.readOnly) {
+      source = nextProps.snapshot.scheduleD;
+    } else if (!this.props.scheduleState.scheduleD ||
+      !this.props.scheduleState.scheduleD.sheets) {
+      source = this.props.complianceReport.scheduleD;
     }
 
     if (source && source.sheets) {
