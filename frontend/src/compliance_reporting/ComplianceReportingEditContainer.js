@@ -83,9 +83,6 @@ class ComplianceReportingEditContainer extends Component {
       fuelSupplierStatus: 'Draft'
     };
 
-    this._updateScheduleState = this._updateScheduleState.bind(this);
-    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
-
     let initialState = {
       schedules: {},
       terms: [],
@@ -106,9 +103,10 @@ class ComplianceReportingEditContainer extends Component {
     this.state = initialState;
     this._addToFields = this._addToFields.bind(this);
     this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
-    this._toggleCheck = this._toggleCheck.bind(this);
-
+    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
+    this._updateScheduleState = this._updateScheduleState.bind(this);
   }
 
   componentDidMount () {

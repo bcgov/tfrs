@@ -270,6 +270,34 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
+  static snapshotToGrid (records, _grid) {
+    const grid = _grid;
+
+    for (let i = 0; i < records.length; i += 1) {
+      const record = records[i];
+      const row = i + 2;
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+      grid[row][SCHEDULE_B.QUANTITY].value = record.quantity;
+      grid[row][SCHEDULE_B.UNITS].value = record.unitOfMeasure;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.effectiveCarbonIntensity;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = record.ciLimit;
+      grid[row][SCHEDULE_B.CREDIT].value = record.credits;
+      grid[row][SCHEDULE_B.DEBIT].value = record.debits;
+      grid[row][SCHEDULE_B.EER].value = record.eer;
+      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = record.energyContent;
+      grid[row][SCHEDULE_B.ENERGY_DENSITY].value = record.energyDensity;
+      if (record.fuelCode != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
+      } else if (record.scheduleD_sheetIndex != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = 'From Schedule D';
+      }
+    }
+
+    return grid;
+  }
+
   constructor (props) {
     super(props);
 
@@ -289,6 +317,7 @@ class ScheduleBContainer extends Component {
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
+    this._recordsToGrid = this._recordsToGrid.bind(this);
     this._validate = this._validate.bind(this);
 
     this.loadInitialState = this.loadInitialState.bind(this);
@@ -297,7 +326,49 @@ class ScheduleBContainer extends Component {
   componentDidMount () {
     if (this.props.scheduleState.scheduleB || this.props.snapshot) {
       // we already have the state. don't load it. just render it.
-      this.componentWillReceiveProps(this.props);
+      let { grid } = this.state;
+
+      if (this.props.snapshot && this.props.readOnly) {
+        // just use the snapshot
+        const source = this.props.snapshot.scheduleB;
+
+        if (!source || !source.records) {
+          return;
+        }
+
+        if ((grid.length - 2) < source.records.length) {
+          this._addRow(source.records.length - (grid.length - 2));
+        }
+
+        grid = ScheduleBContainer.snapshotToGrid(source.records, grid);
+
+        this._calculateTotal(grid);
+      } else if (!this.props.scheduleState.scheduleB ||
+        !this.props.scheduleState.scheduleB.records) {
+        if (!this.props.complianceReport.scheduleB ||
+          !this.props.complianceReport.scheduleB.records) {
+          return;
+        }
+
+        if ((grid.length - 2) < this.props.complianceReport.scheduleB.records.length) {
+          this._addRow(this.props.complianceReport.scheduleB.records.length - (grid.length - 2));
+        }
+
+        const { records } = this.props.complianceReport.scheduleB;
+        grid = this._recordsToGrid(records, grid);
+      } else {
+        if ((grid.length - 2) < this.props.scheduleState.scheduleB.records.length) {
+          this._addRow(this.props.scheduleState.scheduleB.records.length - (grid.length - 2));
+        }
+
+        const { records } = this.props.scheduleState.scheduleB;
+        grid = this._recordsToGrid(records, grid);
+      }
+
+      this.recomputeDerivedState(this.props, {
+        ...this.state,
+        grid
+      });
     } else if (!this.props.complianceReport.scheduleB) {
       this._addRow(5);
     } else {
@@ -306,9 +377,9 @@ class ScheduleBContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { grid } = this.state;
+    let { grid } = this.state;
 
-    if (nextProps.snapshot) {
+    if (nextProps.snapshot && this.props.readOnly) {
       // just use the snapshot
       const source = nextProps.snapshot.scheduleB;
 
@@ -320,27 +391,7 @@ class ScheduleBContainer extends Component {
         this._addRow(source.records.length - (grid.length - 2));
       }
 
-      for (let i = 0; i < source.records.length; i += 1) {
-        const record = source.records[i];
-        const row = i + 2;
-        grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
-        grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
-        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
-        grid[row][SCHEDULE_B.QUANTITY].value = record.quantity;
-        grid[row][SCHEDULE_B.UNITS].value = record.unitOfMeasure;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.effectiveCarbonIntensity;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = record.ciLimit;
-        grid[row][SCHEDULE_B.CREDIT].value = record.credits;
-        grid[row][SCHEDULE_B.DEBIT].value = record.debits;
-        grid[row][SCHEDULE_B.EER].value = record.eer;
-        grid[row][SCHEDULE_B.ENERGY_CONTENT].value = record.energyContent;
-        grid[row][SCHEDULE_B.ENERGY_DENSITY].value = record.energyDensity;
-        if (record.fuelCode != null) {
-          grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
-        } else if (record.scheduleD_sheetIndex != null) {
-          grid[row][SCHEDULE_B.FUEL_CODE].value = 'From Schedule D';
-        }
-      }
+      grid = ScheduleBContainer.snapshotToGrid(source.records, grid);
 
       this._calculateTotal(grid);
     } else {
@@ -354,53 +405,8 @@ class ScheduleBContainer extends Component {
         this._addRow(nextProps.scheduleState.scheduleB.records.length - (grid.length - 2));
       }
 
-      for (let i = 0; i < nextProps.scheduleState.scheduleB.records.length; i += 1) {
-        const record = nextProps.scheduleState.scheduleB.records[i];
-        const row = 2 + i;
-
-        grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
-        grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
-        if (record.fuelCode != null) {
-          grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
-          grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
-        } else if (record.scheduleD_sheetIndex != null) {
-          grid[row][SCHEDULE_B.FUEL_CODE].value = record.scheduleD_sheetIndex;
-          grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
-        } else {
-          grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
-        }
-
-        grid[row][SCHEDULE_B.QUANTITY].value = Number(record.quantity ? record.quantity : 0);
-        if (record.intensity !== null) {
-          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.intensity;
-          grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue = record.intensity;
-        }
-
-        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
-
-        if (!this.props.validating) {
-          grid[row] = this._validate(grid[row], i);
-        }
-      }
-
-      // zero any remaining rows
-      for (let row = nextProps.scheduleState.scheduleB.records.length + 2; row < grid.length; row += 1) {
-        grid[row][SCHEDULE_B.FUEL_TYPE].value = null;
-        grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
-        grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
-        grid[row][SCHEDULE_B.QUANTITY].value = null;
-        grid[row][SCHEDULE_B.UNITS].value = null;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null;
-        grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null;
-        grid[row][SCHEDULE_B.CREDIT].value = null;
-        grid[row][SCHEDULE_B.DEBIT].value = null;
-        grid[row][SCHEDULE_B.EER].value = null;
-        grid[row][SCHEDULE_B.ENERGY_CONTENT].value = null;
-        grid[row][SCHEDULE_B.ENERGY_DENSITY].value = null;
-        if (!this.props.validating) {
-          grid[row] = this._validate(grid[row], row);
-        }
-      }
+      const { records } = nextProps.scheduleState.scheduleB;
+      grid = this._recordsToGrid(records, grid);
     } // end read-write prop load
 
     this.recomputeDerivedState(nextProps, {
@@ -778,10 +784,6 @@ class ScheduleBContainer extends Component {
       }
     });
 
-    this.setState({
-      grid
-    });
-
     this.recomputeDerivedState(this.props, { grid });
   }
 
@@ -841,6 +843,60 @@ class ScheduleBContainer extends Component {
         }
       });
     }
+  }
+
+  _recordsToGrid (records, _grid) {
+    const grid = _grid;
+
+    for (let i = 0; i < records.length; i += 1) {
+      const record = records[i];
+      const row = 2 + i;
+
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
+      if (record.fuelCode != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = 'fuelCode';
+      } else if (record.scheduleD_sheetIndex != null) {
+        grid[row][SCHEDULE_B.FUEL_CODE].value = record.scheduleD_sheetIndex;
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
+      } else {
+        grid[row][SCHEDULE_B.FUEL_CODE].mode = null;
+      }
+
+      grid[row][SCHEDULE_B.QUANTITY].value = Number(record.quantity ? record.quantity : 0);
+      if (record.intensity !== null) {
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.intensity;
+        grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue = record.intensity;
+      }
+
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], i);
+      }
+    }
+
+    // zero any remaining rows
+    for (let row = records.length + 2; row < grid.length; row += 1) {
+      grid[row][SCHEDULE_B.FUEL_TYPE].value = null;
+      grid[row][SCHEDULE_B.FUEL_CLASS].value = null;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = null;
+      grid[row][SCHEDULE_B.QUANTITY].value = null;
+      grid[row][SCHEDULE_B.UNITS].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null;
+      grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null;
+      grid[row][SCHEDULE_B.CREDIT].value = null;
+      grid[row][SCHEDULE_B.DEBIT].value = null;
+      grid[row][SCHEDULE_B.EER].value = null;
+      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = null;
+      grid[row][SCHEDULE_B.ENERGY_DENSITY].value = null;
+      if (!this.props.validating) {
+        grid[row] = this._validate(grid[row], row);
+      }
+    }
+
+    return grid;
   }
 
   _validate (_row, rowIndex) {
