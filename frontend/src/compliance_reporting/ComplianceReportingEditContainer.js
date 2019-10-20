@@ -409,6 +409,7 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleRecomputeRequest () {
     const { schedules } = this.state;
+
     const { id } = this.props.match.params;
 
     if (!this.props.complianceReporting.validationMessages ||

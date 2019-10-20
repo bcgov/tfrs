@@ -218,7 +218,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.snapshot) {
+    if (this.props.snapshot && this.props.readOnly) {
       this.componentWillReceiveProps(this.props);
     } else {
       if (this.props.complianceReport && !this.props.complianceReport.hasSnapshot) {
@@ -235,7 +235,7 @@ class ScheduleSummaryContainer extends Component {
     const { diesel, gasoline } = this.state;
     let { part3, penalty } = this.state;
 
-    if (nextProps.snapshot) {
+    if (nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot;
 
       const cellFormatNumeric = cellValue => ({
@@ -324,7 +324,15 @@ class ScheduleSummaryContainer extends Component {
 
       this.populateSchedules();
 
-      const { summary } = nextProps.scheduleState;
+      let { summary } = nextProps.complianceReport;
+
+      if (nextProps.scheduleState) {
+        ({ summary } = nextProps.scheduleState);
+      }
+
+      if (!summary) {
+        return;
+      }
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -685,6 +693,7 @@ class ScheduleSummaryContainer extends Component {
   _calculatePart3 () {
     const { part3 } = this.state;
     let { penalty } = this.state;
+    
     const { summary } = this.props.scheduleState;
 
     let totalCredits = 0;
@@ -758,7 +767,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   populateSchedules () {
-    if (this.props.snapshot) {
+    if (this.props.snapshot && this.props.readOnly) {
       return;
     }
 
@@ -982,9 +991,12 @@ class ScheduleSummaryContainer extends Component {
 
   render () {
     if (!this.props.snapshot &&
-      (this.props.recomputing ||
-        (Object.keys(this.props.recomputedTotals).length === 0 &&
-        Object.keys(this.props.validationMessages).length === 0))) {
+      (Object.keys(this.props.recomputedTotals).length === 0 &&
+        Object.keys(this.props.validationMessages).length === 0)) {
+      return (<Loading />);
+    }
+
+    if (this.props.recomputing) {
       return (<Loading />);
     }
 
@@ -1020,7 +1032,10 @@ ScheduleSummaryContainer.propTypes = {
   validating: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
-    compliancePeriod: PropTypes.shape(),
+    compliancePeriod: PropTypes.oneOfType([
+      PropTypes.shape(),
+      PropTypes.string
+    ]),
     hasSnapshot: PropTypes.bool,
     history: PropTypes.arrayOf(PropTypes.shape()),
     scheduleA: PropTypes.shape(),
