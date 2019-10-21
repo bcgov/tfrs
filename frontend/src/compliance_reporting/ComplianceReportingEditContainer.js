@@ -56,7 +56,9 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-summary':
-        TabComponent = withReferenceData({ includeCompliancePeriods: true })(withCreditCalculationService()(ScheduleSummaryContainer));
+        TabComponent = withReferenceData({
+          includeCompliancePeriods: true
+        })(withCreditCalculationService()(ScheduleSummaryContainer));
         break;
 
       case 'schedule-assessment':
@@ -114,7 +116,9 @@ class ComplianceReportingEditContainer extends Component {
       module: 'compliance_report'
     });
 
+    this.props.getComplianceReports();
     this.props.getComplianceReport(this.props.match.params.id);
+
     this.setState({
       getCalled: true
     });
@@ -488,6 +492,11 @@ class ComplianceReportingEditContainer extends Component {
       <ScheduleButtons
         actions={this.props.complianceReporting.item.actions}
         actor={this.props.complianceReporting.item.actor}
+        compliancePeriod={period}
+        complianceReports={{
+          isFetching: this.props.complianceReports.isFinding,
+          items: this.props.complianceReports.items
+        }}
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
@@ -677,6 +686,10 @@ ComplianceReportingEditContainer.propTypes = {
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool.isRequired
   }),
+  complianceReports: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFinding: PropTypes.bool
+  }).isRequired,
   createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
@@ -740,6 +753,7 @@ const
       snapshot: state.rootReducer.complianceReporting.snapshotItem,
       snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot
     },
+    complianceReports: state.rootReducer.complianceReporting,
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
