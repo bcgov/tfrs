@@ -171,23 +171,32 @@ class ScheduleCContainer extends Component {
         const record = records[i];
         const qty = Number(record.quantity);
 
-        grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
-        grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
-        grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
-        grid[row][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
-
-        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-          fuel.name === record.fuelType);
-
-        grid[row][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-          ? selectedFuel.unitOfMeasure.name : '';
-
-        if (!this.props.validating) {
-          grid[row] = this._validate(grid[row], i);
+        if ((grid.length - 2) < records.length) {
+          this._addRow(records.length - (grid.length - 2));
         }
-      }
+
+        for (let i = 0; i < records.length; i += 1) {
+          const row = 2 + i;
+          const record = records[i];
+          const qty = Number(record.quantity);
+
+          grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
+          grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
+          grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly;
+          grid[row][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty;
+
+          const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+            fuel.name === record.fuelType);
+
+          grid[row][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+            ? selectedFuel.unitOfMeasure.name : '';
+
+          if (!this.props.validating) {
+            grid[row] = this._validate(grid[row], i);
+          }
+        }
 
       // zero remaining rows
       for (let row = records.length + 2; row < grid.length; row += 1) {

@@ -708,7 +708,6 @@ class ScheduleSummaryContainer extends Component {
   _calculatePart3 () {
     const { part3 } = this.state;
     let { penalty } = this.state;
-
     const { summary } = this.props.scheduleState;
 
     let totalCredits = 0;
@@ -852,15 +851,6 @@ class ScheduleSummaryContainer extends Component {
     };
 
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
-
-    let { summary } = this.props.complianceReport;
-
-    if (this.props.scheduleState) {
-      ({ summary } = this.props.scheduleState);
-    }
-
-    console.error(diesel[SCHEDULE_SUMMARY.LINE_19][2].value);
-    console.error(summary.dieselClassDeferred);
 
     this.setState({
       ...this.state,
