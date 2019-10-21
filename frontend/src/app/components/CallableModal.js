@@ -34,6 +34,7 @@ const CallableModal = props => (
       >
         {props.cancelLabel}
       </button>
+      {props.handleSubmit &&
       <button
         className="btn btn-primary"
         data-dismiss="modal"
@@ -43,6 +44,7 @@ const CallableModal = props => (
       >
         {props.confirmLabel}
       </button>
+      }
     </Modal.Footer>
   </Modal>
 );
