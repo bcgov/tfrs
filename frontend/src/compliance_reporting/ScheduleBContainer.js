@@ -360,6 +360,10 @@ class ScheduleBContainer extends Component {
         source = this.props.complianceReport.scheduleB;
       }
 
+      if (!source) {
+        return;
+      }
+
       const { records } = source;
 
       // in read-write mode
