@@ -121,13 +121,15 @@ const CreditTransactions = (props) => {
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
       props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
+      <div className="add-button">
+        <FontAwesomeIcon icon="play" /> {` `}
         <button
-          className="add-button"
           onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
           type="button"
         >
-          <FontAwesomeIcon icon="play" /> Start a new credit transfer proposal
+          Start a new credit transfer proposal
         </button>
+      </div>
       }
     </div>
   );
