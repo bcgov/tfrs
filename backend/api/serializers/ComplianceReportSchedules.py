@@ -44,7 +44,9 @@ class ScheduleDSheetSerializer(serializers.ModelSerializer):
     )
     inputs = ScheduleDSheetInputSerializer(many=True, required=True)
     outputs = ScheduleDSheetOutputSerializer(many=True, required=True)
-    feedstock = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+    feedstock = serializers.CharField(
+        required=True, allow_blank=False, allow_null=False
+    )
 
     def validate_outputs(self, data):
         required_keys = [e.value for e in ScheduleDSheetOutput.OutputCells]
@@ -88,17 +90,23 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(ComplianceReportValidation.zero)
 
         if value < 0:
-            raise serializers.ValidationError(ComplianceReportValidation.negative)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
 
         if round(value) != value:
-            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
 
         return value
 
     def validate(self, data):
         if data['expected_use'].description == 'Other' and \
                 ('rationale' not in data or len(data['rationale']) == 0):
-            raise serializers.ValidationError(ComplianceReportValidation.missing)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.missing
+            )
 
         return data
 
@@ -106,9 +114,13 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
         model = ScheduleCRecord
         fields = (
             'fuel_type', 'fuel_class', 'quantity', 'expected_use', 'rationale',
-            'petroleum_diesel_volume'
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
         )
-        read_only_fields = ('petroleum_diesel_volume',)
+        read_only_fields = (
+            'petroleum_diesel_volume', 'petroleum_gasoline_volume',
+            'renewable_diesel_volume', 'renewable_gasoline_volume'
+        )
 
 
 class ScheduleCDetailSerializer(serializers.ModelSerializer):
@@ -116,8 +128,14 @@ class ScheduleCDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleC
-        fields = ('records', 'total_petroleum_diesel')
-        read_only_fields = ('total_petroleum_diesel',)
+        fields = (
+            'records', 'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
+        read_only_fields = (
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
 
 
 class ScheduleBRecordSerializer(serializers.ModelSerializer):
@@ -129,22 +147,42 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
         slug_field='provision', queryset=ProvisionOfTheAct.objects.all())
     fuel_code = PrimaryKeyRelatedField(
         queryset=FuelCode.objects.all(), required=False, allow_null=True)
-    fuel_type = SlugRelatedField(slug_field='name', queryset=ApprovedFuel.objects.all())
-    fuel_class = SlugRelatedField(slug_field='fuel_class', queryset=FuelClass.objects.all())
-    provision_of_the_act = SlugRelatedField(slug_field='provision', queryset=ProvisionOfTheAct.objects.all())
-    fuel_code = PrimaryKeyRelatedField(queryset=FuelCode.objects.all(), required=False, allow_null=True)
-    schedule_d_sheet_index = serializers.IntegerField(required=False, allow_null=True, min_value=0)
-    intensity = serializers.DecimalField(required=False, allow_null=True, min_value=0, max_digits=5, decimal_places=2)
+    schedule_d_sheet_index = serializers.IntegerField(
+        required=False, allow_null=True, min_value=0
+    )
+    intensity = serializers.DecimalField(
+        required=False, allow_null=True, min_value=0, max_digits=5,
+        decimal_places=2
+    )
+    fuel_code_description = serializers.SerializerMethodField()
+    provision_of_the_act_description = serializers.SerializerMethodField()
+
+    def get_fuel_code_description(self, obj):
+        if obj.fuel_code:
+            return '{fuel_code}{version}.{version_minor}'.format(
+                fuel_code=obj.fuel_code.fuel_code,
+                version=obj.fuel_code.fuel_code_version,
+                version_minor=obj.fuel_code.fuel_code_version_minor
+            )
+
+        return ''
+
+    def get_provision_of_the_act_description(self, obj):
+        return obj.provision_of_the_act.description
 
     def validate_quantity(self, value):
         if value == 0:
             raise serializers.ValidationError(ComplianceReportValidation.zero)
 
         if value < 0:
-            raise serializers.ValidationError(ComplianceReportValidation.negative)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
 
         if round(value) != value:
-            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
 
         return value
 
@@ -155,15 +193,21 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (A)' and
                 ('schedule_d_sheet_index' not in data or
                  data['schedule_d_sheet_index'] is None)):
-            raise serializers.ValidationError({'schedule_d_index': ComplianceReportValidation.missing})
+            raise serializers.ValidationError({
+                'schedule_d_index': ComplianceReportValidation.missing
+            })
 
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (d) (ii) (B)' and
                 ('intensity' not in data or data['intensity'] is None)):
-            raise serializers.ValidationError({'intensity': ComplianceReportValidation.missing})
+            raise serializers.ValidationError({
+                'intensity': ComplianceReportValidation.missing
+            })
 
         if (data['provision_of_the_act'].provision == 'Section 6 (5) (c)' and
                 ('fuel_code' not in data or data['fuel_code'] is None)):
-            raise serializers.ValidationError({'fuel_code': ComplianceReportValidation.missing})
+            raise serializers.ValidationError({
+                'fuel_code': ComplianceReportValidation.missing
+            })
 
         if (('intensity' in data and data['intensity'] is not None) and
                 ('fuel_code' in data and data['fuel_code'] is not None)):
@@ -176,7 +220,9 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
 
         if (('intensity' in data and data['intensity'] is not None) and
                 data['provision_of_the_act'].provision != 'Section 6 (5) (d) (ii) (B)'):
-            raise serializers.ValidationError({'intensity': ComplianceReportValidation.extra_value})
+            raise serializers.ValidationError({
+                'intensity': ComplianceReportValidation.extra_value
+            })
 
         return data
 
@@ -189,14 +235,16 @@ class ScheduleBRecordSerializer(serializers.ModelSerializer):
             'effective_carbon_intensity', 'credits', 'debits',
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
             'renewable_diesel_volume', 'renewable_gasoline_volume',
-            'unit_of_measure'
+            'unit_of_measure', 'fuel_code_description',
+            'provision_of_the_act_description'
         )
         read_only_fields = (
             'energy_density', 'eer', 'ci_limit', 'energy_content',
             'effective_carbon_intensity', 'credits', 'debits',
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
             'renewable_diesel_volume', 'renewable_gasoline_volume',
-            'unit_of_measure'
+            'unit_of_measure', 'fuel_code_description',
+            'provision_of_the_act_description'
         )
 
 
@@ -205,12 +253,16 @@ class ScheduleBDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScheduleB
-        fields = ('records', 'total_credits', 'total_debits',
-                  'total_petroleum_diesel', 'total_petroleum_gasoline',
-                  'total_renewable_diesel', 'total_renewable_gasoline')
-        read_only_fields = ('total_credits', 'total_debits',
-                            'total_petroleum_diesel', 'total_petroleum_gasoline',
-                            'total_renewable_diesel', 'total_renewable_gasoline')
+        fields = (
+            'records', 'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
+        read_only_fields = (
+            'total_credits', 'total_debits',
+            'total_petroleum_diesel', 'total_petroleum_gasoline',
+            'total_renewable_diesel', 'total_renewable_gasoline'
+        )
 
 
 class ScheduleARecordSerializer(serializers.ModelSerializer):
@@ -224,10 +276,14 @@ class ScheduleARecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(ComplianceReportValidation.zero)
 
         if value < 0:
-            raise serializers.ValidationError(ComplianceReportValidation.negative)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
 
         if round(value) != value:
-            raise serializers.ValidationError(ComplianceReportValidation.fractional)
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
 
         return value
 
@@ -250,6 +306,10 @@ class ScheduleADetailSerializer(serializers.ModelSerializer):
 class ScheduleSummaryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleSummary
-        fields = ('diesel_class_retained', 'gasoline_class_retained',
-                  'diesel_class_deferred', 'gasoline_class_deferred',
-                  'credits_offset')
+        fields = (
+            'diesel_class_deferred', 'diesel_class_retained',
+            'diesel_class_obligation', 'diesel_class_previously_retained',
+            'gasoline_class_retained', 'gasoline_class_deferred',
+            'gasoline_class_obligation', 'gasoline_class_previously_retained',
+            'credits_offset'
+        )

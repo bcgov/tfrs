@@ -123,18 +123,24 @@ class ScheduleAContainer extends Component {
     const { grid } = this.state;
 
     let source = nextProps.scheduleState.scheduleA;
-    if (nextProps.snapshot) {
+
+    if (nextProps.snapshot && this.props.readOnly) {
       source = nextProps.snapshot.scheduleA;
+    } else if (!this.props.scheduleState.scheduleA ||
+      !this.props.scheduleState.scheduleA.records) {
+      source = this.props.complianceReport.scheduleA;
     }
 
-    if (source && source.records) {
-      if ((grid.length - 1) < source.records.length) {
-        this._addRow(source.records.length - (grid.length - 1));
+    if (source) {
+      const { records } = source;
+
+      if ((grid.length - 1) < records.length) {
+        this._addRow(records.length - (grid.length - 1));
       }
 
-      for (let i = 0; i < source.records.length; i += 1) {
+      for (let i = 0; i < records.length; i += 1) {
         const row = 1 + i;
-        const record = source.records[i];
+        const record = records[i];
         const qty = Number(record.quantity);
 
         grid[row][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;
@@ -149,7 +155,7 @@ class ScheduleAContainer extends Component {
       }
 
       // zero remaining rows
-      for (let row = source.records.length + 1; row < grid.length; row += 1) {
+      for (let row = records.length + 1; row < grid.length; row += 1) {
         grid[row][SCHEDULE_A.LEGAL_NAME].value = null;
         grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null;
         grid[row][SCHEDULE_A.FUEL_CLASS].value = null;

@@ -113,7 +113,7 @@ class FuelCodeFormDetails extends Component {
                     id="carbon-intensity"
                     max="999.99"
                     maxLength="7"
-                    min="0"
+                    min="-999.99"
                     name="carbonIntensity"
                     required
                     step="0.01"

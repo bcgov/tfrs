@@ -379,7 +379,8 @@ class ScheduleBRecord(Commentable):
     def renewable_gasoline_volume(self):
         fraction = 1
 
-        if self.fuel_code is not None and self.fuel_code.renewable_percentage is not None:
+        if self.fuel_code is not None and \
+                self.fuel_code.renewable_percentage is not None:
             fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
 
         renewable_fuels = ["Ethanol", "Renewable gasoline"]
@@ -393,7 +394,8 @@ class ScheduleBRecord(Commentable):
     def renewable_diesel_volume(self):
         fraction = 1
 
-        if self.fuel_code is not None and self.fuel_code.renewable_percentage is not None:
+        if self.fuel_code is not None and \
+                self.fuel_code.renewable_percentage is not None:
             fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
 
         renewable_fuels = ["Biodiesel", "HDRD", "Renewable diesel"]
@@ -404,15 +406,15 @@ class ScheduleBRecord(Commentable):
         return 0
 
     @property
-    def petroleum_gasoline_volume(self):
-        if self.fuel_type.name == 'Petroleum-based gasoline':
+    def petroleum_diesel_volume(self):
+        if self.fuel_type.name == 'Petroleum-based diesel':
             return self.quantity
 
         return 0
 
     @property
-    def petroleum_diesel_volume(self):
-        if self.fuel_type.name == 'Petroleum-based diesel':
+    def petroleum_gasoline_volume(self):
+        if self.fuel_type.name == 'Petroleum-based gasoline':
             return self.quantity
 
         return 0
@@ -437,6 +439,39 @@ class ScheduleC(Commentable):
         total = 0
         for record in out:
             val = record.petroleum_diesel_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_petroleum_gasoline(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.petroleum_gasoline_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_renewable_diesel(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.renewable_diesel_volume
+            if val is not None:
+                total += val
+
+        return total
+
+    @property
+    def total_renewable_gasoline(self):
+        out = self.records.all()
+        total = 0
+        for record in out:
+            val = record.renewable_gasoline_volume
             if val is not None:
                 total += val
 
@@ -495,8 +530,34 @@ class ScheduleCRecord(Commentable):
 
     @property
     def petroleum_diesel_volume(self):
-        if self.fuel_type.name == 'Petroleum-based diesel' and \
-                self.expected_use.description == 'Heating Oil':
+        if self.fuel_type.name == 'Petroleum-based diesel':
+            return self.quantity
+
+        return 0
+
+    @property
+    def petroleum_gasoline_volume(self):
+        if self.fuel_type.name == 'Petroleum-based gasoline':
+            return self.quantity
+
+        return 0
+
+    @property
+    def renewable_diesel_volume(self):
+        renewable_fuels = ["Biodiesel", "HDRD", "Renewable diesel"]
+
+        if self.fuel_type.name in renewable_fuels and \
+                self.fuel_class.fuel_class == 'Diesel':
+            return self.quantity
+
+        return 0
+
+    @property
+    def renewable_gasoline_volume(self):
+        renewable_fuels = ["Ethanol", "Renewable gasoline"]
+
+        if self.fuel_type.name in renewable_fuels and \
+                self.fuel_class.fuel_class == 'Gasoline':
             return self.quantity
 
         return 0
@@ -684,7 +745,22 @@ class ScheduleSummary(Commentable):
         max_digits=20,
         db_comment="Liters of gasoline-class fuel deferred"
     )
-
+    gasoline_class_previously_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable gasoline previously retained. "
+                   "Line 5 of previous compliance period."
+    )
+    gasoline_class_obligation = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable obligation added (for gasoline). "
+                   "Line 8 of previous compliance period."
+    )
     diesel_class_retained = models.DecimalField(
         blank=True,
         null=True,
@@ -698,6 +774,22 @@ class ScheduleSummary(Commentable):
         decimal_places=2,
         max_digits=20,
         db_comment="Liters of diesel-class fuel deferred"
+    )
+    diesel_class_previously_retained = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable diesel previously retained. "
+                   "Line 17 of previous compliance period."
+    )
+    diesel_class_obligation = models.DecimalField(
+        blank=True,
+        null=True,
+        decimal_places=2,
+        max_digits=20,
+        db_comment="Volume of renewable obligation added (for diesel). "
+                   "Line 19 of previous compliance period."
     )
     credits_offset = models.IntegerField(
         blank=True,

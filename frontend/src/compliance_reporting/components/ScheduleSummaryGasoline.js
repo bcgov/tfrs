@@ -170,7 +170,14 @@ class ScheduleSummaryGasoline {
           </div>
         )
       }, {
-        readOnly: true
+        ...numericInput,
+        readOnly,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
       }], // line 7
       [{ // line 8
         className: 'text',
@@ -221,7 +228,14 @@ class ScheduleSummaryGasoline {
           </div>
         )
       }, {
-        readOnly: true
+        ...numericInput,
+        readOnly,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '30',
+          step: '1'
+        }
       }], // line 9
       [{ // line 10
         className: 'text',
