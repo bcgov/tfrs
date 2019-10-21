@@ -25,7 +25,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
                 envVar(key: 'DATABASE_USER', value: 'tfrstest'),
                 envVar(key: 'DATABASE_PASSWORD', value: 'tfrstest'),
                 envVar(key: 'DJANGO_DEBUG', value: 'true')
-		    ], 
+		    ]
         )
     ]
 ){    
