@@ -341,7 +341,7 @@ class CreditTransferEditContainer extends Component {
         isCommenting={this.state.isCommenting}
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
-        title="Edit Credit Transaction"
+        title="Edit Part 3 Award"
         validationErrors={this.state.validationErrors}
       />,
       <Modal
@@ -351,7 +351,7 @@ class CreditTransferEditContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend approval of this credit transaction?
+        Are you sure you want to recommend approval of this Part 3 Award?
       </Modal>,
       <Modal
         handleSubmit={() => this._deleteCreditTransfer(item.id)}

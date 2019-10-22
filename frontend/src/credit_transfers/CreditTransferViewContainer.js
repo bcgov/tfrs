@@ -56,6 +56,7 @@ class CreditTransferViewContainer extends Component {
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._modalAccept = this._modalAccept.bind(this);
     this._modalDecline = this._modalDecline.bind(this);
+    this._modalDeclinePVR = this._modalDeclinePVR.bind(this);
     this._modalDelete = this._modalDelete.bind(this);
     this._modalDeleteComment = this._modalDeleteComment.bind(this);
     this._modalNotRecommend = this._modalNotRecommend.bind(this);
@@ -133,7 +134,7 @@ class CreditTransferViewContainer extends Component {
       buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
       content.push(this._modalReturn());
-      content.push(this._modalDecline(item));
+      content.push(this._modalDeclinePVR(item));
     }
 
     if (availableActions.includes(Lang.BTN_APPROVE)) {
@@ -341,9 +342,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-        Are you sure you want to approve this Credit
+        Are you sure you want to approve this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' transaction'}?
+          ? ' Credit Transfer Proposal' : ' Part 3 Award'}?
       </Modal>
     );
   }
@@ -368,6 +369,8 @@ class CreditTransferViewContainer extends Component {
               considers the intent of the transfer is to avoid compliance with the Act or
               Regulation, or
             </dd>
+          </dl>
+          <dl>
             <dt>(b)</dt>
             <dd>
               is not satisfied that the transferor or transferee will be able to comply with the
@@ -382,9 +385,9 @@ class CreditTransferViewContainer extends Component {
           </p>
         </div>
 
-        Are you sure you want to decline to approve this Credit
+        Are you sure you want to decline to approve this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' transaction'}?
+          ? ' Credit Transfer Proposal' : ' Part 3 Award'}?
       </Modal>
     );
   }
@@ -432,9 +435,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmNotRecommend"
         key="confirmNotRecommend"
       >
-        Are you sure you want to not recommend approval of this Credit
+        Are you sure you want to not recommend approval of this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' transaction'}?
+          ? ' Credit Transfer Proposal' : ' Part 3 Award'}?
       </Modal>
     );
   }
@@ -448,9 +451,40 @@ class CreditTransferViewContainer extends Component {
         id="confirmPullBack"
         key="confirmPullBack"
       >
-        Are you sure you want to recall this credit transaction? <br />
+        Are you sure you want to retract your recommendation of this Part 3 Award? <br />
         This will return the transaction to a draft state where
         it will no longer be visible to the Director.
+      </Modal>
+    );
+  }
+
+  _modalDeclinePVR (item) {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.declinedForApproval);
+        }}
+        id="confirmDecline"
+        key="confirmDecline"
+      >
+        <div className="alert alert-warning">
+          <p>
+            Under section 8.01 (6) of the Act, if the director is satisfied by evidence
+            provided under subsection (4)(d) that the Part 3 fuel supplier has completed
+            the action, or a stage of the action, that, under the agreement, entitles
+            the Part 3 fuel supplier to a credit, the director must issue the credit.
+          </p>
+          <p>
+            This decision is appealable, and you are strongly encouraged to add a comment
+            that provides an explanation as to why you are not satisfied by the evidence
+            provided that the supplier has completed the designated action. This declined
+            transaction will be visible to the Part 3 fuel supplier.
+          </p>
+        </div>
+
+        Are you sure you want to decline to approve this
+        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
+          ? ' Credit Transfer Proposal' : ' Part 3 Award'}?
       </Modal>
     );
   }
@@ -464,9 +498,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend approval of this Credit
+        Are you sure you want to recommend approval of this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' transaction'}?
+          ? ' Credit Transfer Proposal' : ' Part 3 Award'}?
       </Modal>
     );
   }
@@ -508,7 +542,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmReturn"
         key="confirmReturn"
       >
-        Are you sure you want to return this credit transaction to the Government Analyst?
+        Are you sure you want to return this Part 3 Award transaction to the Government Analyst?
       </Modal>
     );
   }
