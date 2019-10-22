@@ -25,9 +25,9 @@ class SimpleSpec extends LoggedInSpec {
   void 'Log in as the sending fuel supplier and verify the first page'() {
 
     when: 'I am logged in as the sending fuel supplier'
-        logInAsSendingFuelSupplier()
+        logInAsSendingFuelSupplier2()
     then: 'I am on home page'
-        at HomePage
+        at HomePage2
 
   }
 
