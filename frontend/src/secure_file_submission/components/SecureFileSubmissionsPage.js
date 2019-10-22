@@ -38,7 +38,9 @@ const SecureFileSubmissionsPage = (props) => {
               id="new-submission"
               className="btn btn-primary"
               onClick={() => {
-                const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '');
+                const part3Category = props.categories.find(category => category.name === 'Part 3 Agreements');
+                const evidence = part3Category.types.find(category => (category.theType === 'Evidence'));
+                const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', evidence.id);
 
                 history.push(route);
               }}
@@ -73,6 +75,10 @@ const SecureFileSubmissionsPage = (props) => {
           }
         </div>
       </div>
+      <p>
+        Use this feature to securely submit Part 3 Agreement applications and milestone
+        evidence to the Government of British Columbia.
+      </p>
       {isFetching && <Loading />}
       {!isFetching &&
       <SecureFileSubmissionTable

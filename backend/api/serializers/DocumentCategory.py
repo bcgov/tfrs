@@ -20,6 +20,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import datetime
+
+from django.db.models import Q
 from rest_framework import serializers
 
 from api.models.DocumentCategory import DocumentCategory
@@ -33,7 +36,11 @@ class DocumentCategorySerializer(serializers.ModelSerializer):
         """
         Explicit function to ensure that the ordering works as expected
         """
-        types = instance.types.all().order_by('description')
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+
+        types = instance.types.filter(
+            Q(expiration_date__gte=today) | Q(expiration_date=None)
+        ).order_by('description')
         serializer = DocumentTypeSerializer(types, many=True, read_only=True)
         return serializer.data
 
