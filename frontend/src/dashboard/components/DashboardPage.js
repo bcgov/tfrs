@@ -76,8 +76,7 @@ const BCEIDDashboardPage = obj => (
 const DirectorDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
-        typeof obj.loggedInUser.hasPermission === 'function' &&
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
         obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
         <Balance
           loggedInUser={obj.loggedInUser}
@@ -113,8 +112,7 @@ const DirectorDashboardPage = obj => (
 const IDIRDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
-        typeof obj.loggedInUser.hasPermission === 'function' &&
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
         obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
         <Balance
           loggedInUser={obj.loggedInUser}
