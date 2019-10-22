@@ -33,6 +33,19 @@
     }
   }
 
+  .credit_balance {
+    float: right;
+    max-width: 50%;
+    text-align: right;
+
+    @include  mobile {
+      float: none;
+      font-size: 1.5rem;
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+
   .credit-transfer-actions {
     .btn-container {
       text-align: right;
