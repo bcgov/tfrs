@@ -36,7 +36,7 @@ waiting {
   retryInterval = 0.5
 }
 
-atCheckWaiting = [20, 0.5]
+atCheckWaiting = [60, 0.5]
 
 String buildId = SessionIdHolder.instance.buildId
 
