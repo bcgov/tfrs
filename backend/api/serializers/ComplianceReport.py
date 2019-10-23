@@ -938,7 +938,6 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 exclusion_agreement = ExclusionAgreement.objects.create()
                 cr.exclusion_agreement = exclusion_agreement
                 exclusion_agreement.save()
-                exclusion_agreement.save()
                 for original_record in original_report.exclusion_agreement.records.all():
                     record = ExclusionAgreementRecord()
                     record.exclusion_agreement = exclusion_agreement
