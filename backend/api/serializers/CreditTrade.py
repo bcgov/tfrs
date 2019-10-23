@@ -41,7 +41,7 @@ from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
-from .Organization import OrganizationMinSerializer
+from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
 
 
@@ -605,8 +605,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
-    credits_from = OrganizationMinSerializer(read_only=True)
-    credits_to = OrganizationMinSerializer(read_only=True)
+    credits_from = OrganizationSerializer(read_only=True)
+    credits_to = OrganizationSerializer(read_only=True)
     actions = serializers.SerializerMethodField()
     comment_actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)

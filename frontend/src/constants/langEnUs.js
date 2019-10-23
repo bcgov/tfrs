@@ -23,6 +23,7 @@ export const BTN_NEW_TRANSFER = 'New Transfer';
 export const BTN_NEW_CREDIT_TRANSACTION = 'New Credit Transaction';
 export const BTN_NO = 'No';
 export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
+export const BTN_OK = 'OK';
 export const BTN_PROCESS = 'Confirm';
 export const BTN_PROPOSE = 'Propose';
 export const BTN_PULL_BACK = 'Recall as Draft';

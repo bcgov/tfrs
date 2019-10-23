@@ -56,7 +56,9 @@ class ComplianceReportingEditContainer extends Component {
         break;
 
       case 'schedule-summary':
-        TabComponent = withReferenceData({ includeCompliancePeriods: true })(withCreditCalculationService()(ScheduleSummaryContainer));
+        TabComponent = withReferenceData({
+          includeCompliancePeriods: true
+        })(withCreditCalculationService()(ScheduleSummaryContainer));
         break;
 
       case 'schedule-assessment':
@@ -83,9 +85,6 @@ class ComplianceReportingEditContainer extends Component {
       fuelSupplierStatus: 'Draft'
     };
 
-    this._updateScheduleState = this._updateScheduleState.bind(this);
-    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
-
     let initialState = {
       schedules: {},
       terms: [],
@@ -106,9 +105,10 @@ class ComplianceReportingEditContainer extends Component {
     this.state = initialState;
     this._addToFields = this._addToFields.bind(this);
     this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
-    this._toggleCheck = this._toggleCheck.bind(this);
-
+    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
+    this._updateScheduleState = this._updateScheduleState.bind(this);
   }
 
   componentDidMount () {
@@ -116,7 +116,9 @@ class ComplianceReportingEditContainer extends Component {
       module: 'compliance_report'
     });
 
+    this.props.getComplianceReports();
     this.props.getComplianceReport(this.props.match.params.id);
+
     this.setState({
       getCalled: true
     });
@@ -134,10 +136,44 @@ class ComplianceReportingEditContainer extends Component {
 
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
+        const { schedules } = this.state;
+        if (schedules.summary && schedules.summary.dieselClassDeferred) {
+          schedules.summary.dieselClassDeferred =
+            String(schedules.summary.dieselClassDeferred).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.dieselClassObligation) {
+          schedules.summary.dieselClassObligation =
+            String(schedules.summary.dieselClassObligation).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.dieselClassPreviouslyRetained) {
+          schedules.summary.dieselClassPreviouslyRetained =
+            String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.dieselClassRetained) {
+          schedules.summary.dieselClassRetained =
+            String(schedules.summary.dieselClassRetained).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.gasolineClassDeferred) {
+          schedules.summary.gasolineClassDeferred =
+            String(schedules.summary.gasolineClassDeferred).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.gasolineClassObligation) {
+          schedules.summary.gasolineClassObligation =
+            String(schedules.summary.gasolineClassObligation).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.gasolineClassPreviouslyRetained) {
+          schedules.summary.gasolineClassPreviouslyRetained =
+            String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+        }
+        if (schedules.summary && schedules.summary.gasolineClassRetained) {
+          schedules.summary.gasolineClassRetained =
+            String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
+        }
+
         this.props.validateComplianceReport({
           id,
           state: {
-            ...this.state.schedules
+            ...schedules
           }
         });
       }
@@ -150,7 +186,6 @@ class ComplianceReportingEditContainer extends Component {
         supplementalNoteRequired: (nextProps.complianceReporting.item.isSupplemental &&
           nextProps.complianceReporting.item.actions.includes('SUBMIT'))
       });
-
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
@@ -194,10 +229,77 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _updateScheduleState (mergedState) {
+  _updateScheduleState (_mergedState) {
+    const mergedState = _mergedState;
     const { schedules } = this.state;
     const { id } = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
+
+    if (schedules.summary && schedules.summary.dieselClassDeferred) {
+      schedules.summary.dieselClassDeferred =
+        String(schedules.summary.dieselClassDeferred).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.dieselClassObligation) {
+      schedules.summary.dieselClassObligation =
+        String(schedules.summary.dieselClassObligation).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.dieselClassPreviouslyRetained) {
+      schedules.summary.dieselClassPreviouslyRetained =
+        String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.dieselClassRetained) {
+      schedules.summary.dieselClassRetained =
+        String(schedules.summary.dieselClassRetained).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.gasolineClassDeferred) {
+      schedules.summary.gasolineClassDeferred =
+        String(schedules.summary.gasolineClassDeferred).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.gasolineClassObligation) {
+      schedules.summary.gasolineClassObligation =
+        String(schedules.summary.gasolineClassObligation).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.gasolineClassPreviouslyRetained) {
+      schedules.summary.gasolineClassPreviouslyRetained =
+        String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+    }
+    if (schedules.summary && schedules.summary.gasolineClassRetained) {
+      schedules.summary.gasolineClassRetained =
+        String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
+    }
+
+    if (mergedState.summary && mergedState.summary.dieselClassDeferred) {
+      mergedState.summary.dieselClassDeferred =
+        String(mergedState.summary.dieselClassDeferred).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.dieselClassObligation) {
+      mergedState.summary.dieselClassObligation =
+        String(mergedState.summary.dieselClassObligation).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.dieselClassPreviouslyRetained) {
+      mergedState.summary.dieselClassPreviouslyRetained =
+        String(mergedState.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.dieselClassRetained) {
+      mergedState.summary.dieselClassRetained =
+        String(mergedState.summary.dieselClassRetained).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.gasolineClassDeferred) {
+      mergedState.summary.gasolineClassDeferred =
+        String(mergedState.summary.gasolineClassDeferred).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.gasolineClassObligation) {
+      mergedState.summary.gasolineClassObligation =
+        String(mergedState.summary.gasolineClassObligation).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.gasolineClassPreviouslyRetained) {
+      mergedState.summary.gasolineClassPreviouslyRetained =
+        String(mergedState.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+    }
+    if (mergedState.summary && mergedState.summary.gasolineClassRetained) {
+      mergedState.summary.gasolineClassRetained =
+        String(mergedState.summary.gasolineClassRetained).replace(/,/g, '');
+    }
 
     this.setState({
       schedules: {
@@ -311,6 +413,7 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleRecomputeRequest () {
     const { schedules } = this.state;
+
     const { id } = this.props.match.params;
 
     if (!this.props.complianceReporting.validationMessages ||
@@ -351,9 +454,11 @@ class ComplianceReportingEditContainer extends Component {
     return ([
       <h2 key="main-header">
         {this.props.complianceReporting.item.organization.name}
-        &nbsp;--&nbsp;
+        {` -- `}
+        {typeof this.props.complianceReporting.item.type === 'string' && this.props.complianceReporting.item.type}
         {this.props.complianceReporting.item.type.theType}
-        &nbsp;for&nbsp;
+        {` for `}
+        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
         {this.props.complianceReporting.item.compliancePeriod.description}
       </h2>,
       <ScheduleTabs
@@ -387,6 +492,11 @@ class ComplianceReportingEditContainer extends Component {
       <ScheduleButtons
         actions={this.props.complianceReporting.item.actions}
         actor={this.props.complianceReporting.item.actor}
+        compliancePeriod={period}
+        complianceReports={{
+          isFetching: this.props.complianceReports.isFinding,
+          items: this.props.complianceReports.items
+        }}
         edit={this.edit}
         key="scheduleButtons"
         loggedInUser={this.props.loggedInUser}
@@ -558,8 +668,14 @@ ComplianceReportingEditContainer.propTypes = {
         PropTypes.string
       ]),
       hasSnapshot: PropTypes.bool,
+      isSupplemental: PropTypes.bool,
+      organization: PropTypes.shape(),
       readOnly: PropTypes.bool,
-      status: PropTypes.shape()
+      status: PropTypes.shape(),
+      type: PropTypes.oneOfType([
+        PropTypes.shape({}),
+        PropTypes.string
+      ])
     }),
     isRecomputing: PropTypes.bool,
     recomputeResult: PropTypes.object,
@@ -570,6 +686,10 @@ ComplianceReportingEditContainer.propTypes = {
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool.isRequired
   }),
+  complianceReports: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFinding: PropTypes.bool
+  }).isRequired,
   createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
@@ -633,6 +753,7 @@ const
       snapshot: state.rootReducer.complianceReporting.snapshotItem,
       snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot
     },
+    complianceReports: state.rootReducer.complianceReporting,
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,

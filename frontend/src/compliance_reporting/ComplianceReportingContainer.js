@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
+import CallableModal from '../app/components/CallableModal';
 import history from '../app/History';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
 import CONFIG from '../config';
@@ -22,6 +23,16 @@ class ComplianceReportingContainer extends Component {
   constructor (props) {
     super(props);
 
+    this.currentYear = new Date().getFullYear();
+
+    this.state = {
+      reportType: 'compliance',
+      selectedComplianceYear: this.currentYear,
+      showModal: false
+    };
+
+    this._selectComplianceReport = this._selectComplianceReport.bind(this);
+    this._showModal = this._showModal.bind(this);
     this.createComplianceReport = this.createComplianceReport.bind(this);
     this.createExclusionReport = this.createExclusionReport.bind(this);
   }
@@ -54,6 +65,19 @@ class ComplianceReportingContainer extends Component {
     }
   }
 
+  _selectComplianceReport (reportType, complianceYear) {
+    this.setState({
+      reportType,
+      selectedComplianceYear: complianceYear
+    });
+  }
+
+  _showModal (bool) {
+    this.setState({
+      showModal: bool
+    });
+  }
+
   createComplianceReport (compliancePeriodDescription) {
     const payload = {
       status: {
@@ -84,10 +108,9 @@ class ComplianceReportingContainer extends Component {
   }
 
   render () {
-    const currentYear = new Date().getFullYear();
-    const currentEffectiveDate = `${currentYear}-01-01`;
+    const currentEffectiveDate = `${this.currentYear}-01-01`;
 
-    return (
+    return ([
       <ComplianceReportingPage
         compliancePeriods={this.props.compliancePeriods.filter(compliancePeriod =>
           compliancePeriod.effectiveDate <= currentEffectiveDate &&
@@ -99,10 +122,43 @@ class ComplianceReportingContainer extends Component {
         }}
         createComplianceReport={this.createComplianceReport}
         createExclusionReport={this.createExclusionReport}
+        key="compliance-reporting-list"
         loggedInUser={this.props.loggedInUser}
+        selectComplianceReport={this._selectComplianceReport}
+        showModal={this._showModal}
         title="Compliance Reporting"
-      />
-    );
+      />,
+      <CallableModal
+        close={() => {
+          this._showModal(false);
+        }}
+        handleSubmit={() => {
+          if (this.state.reportType === 'exclusion') {
+            this.createExclusionReport(this.state.selectedComplianceYear);
+          } else {
+            this.createComplianceReport(this.state.selectedComplianceYear);
+          }
+        }}
+        id="confirmCreate"
+        key="confirmCreate"
+        show={this.state.showModal}
+      >
+        <p>
+          Your organization has already submitted a {this.state.reportType} report for
+          the {this.state.selectedComplianceYear} compliance period.
+          Are you trying to provide new or updated information to the
+          Government of British Columbia?
+        </p>
+        <p>
+          If yes, please create a supplemental report using the
+          &quot;Create Supplemental Report&quot; button located within the existing report.
+        </p>
+        <p>
+          If not, you can create another report for internal use but you will not be permitted
+          to submit it to government. Do you want to create a new report?
+        </p>
+      </CallableModal>
+    ]);
   }
 }
 

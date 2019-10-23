@@ -18,7 +18,9 @@ import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
 import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
+import CallableModal from '../app/components/CallableModal';
 import Loading from '../app/components/Loading';
+import * as Lang from '../constants/langEnUs';
 
 class ScheduleSummaryContainer extends Component {
   static calculateDieselPayable (grid) {
@@ -202,6 +204,7 @@ class ScheduleSummaryContainer extends Component {
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
       part3: new ScheduleSummaryPart3(),
       penalty: new ScheduleSummaryPenalty(),
+      showModal: false,
       totals: {
         diesel: 0,
         gasoline: 0
@@ -210,6 +213,7 @@ class ScheduleSummaryContainer extends Component {
 
     this.rowNumber = 1;
 
+    this._closeModal = this._closeModal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
@@ -218,7 +222,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.snapshot) {
+    if (this.props.snapshot && this.props.readOnly) {
       this.componentWillReceiveProps(this.props);
     } else {
       if (this.props.complianceReport && !this.props.complianceReport.hasSnapshot) {
@@ -233,9 +237,11 @@ class ScheduleSummaryContainer extends Component {
 
   componentWillReceiveProps (nextProps, nextContext) {
     const { diesel, gasoline } = this.state;
-    let { part3, penalty } = this.state;
+    let { part3, penalty, showModal } = this.state;
 
-    if (nextProps.snapshot) {
+    showModal = false;
+
+    if (nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot;
 
       const cellFormatNumeric = cellValue => ({
@@ -324,7 +330,15 @@ class ScheduleSummaryContainer extends Component {
 
       this.populateSchedules();
 
-      const { summary } = nextProps.scheduleState;
+      let { summary } = nextProps.complianceReport;
+
+      if (nextProps.scheduleState) {
+        ({ summary } = nextProps.scheduleState);
+      }
+
+      if (!summary) {
+        return;
+      }
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -334,12 +348,16 @@ class ScheduleSummaryContainer extends Component {
         diesel[SCHEDULE_SUMMARY.LINE_17][2].value = 0;
       }
 
+      diesel[SCHEDULE_SUMMARY.LINE_18][2].value = summary.dieselClassPreviouslyRetained;
+
       diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
 
       if (diesel[SCHEDULE_SUMMARY.LINE_19][2].readOnly ||
         line15percent < summary.dieselClassDeferred) {
         diesel[SCHEDULE_SUMMARY.LINE_19][2].value = 0;
       }
+
+      diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation;
 
       const line4percent = gasoline[SCHEDULE_SUMMARY.LINE_4][2].value * 0.05;
       gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
@@ -349,12 +367,16 @@ class ScheduleSummaryContainer extends Component {
         gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = 0;
       }
 
+      gasoline[SCHEDULE_SUMMARY.LINE_7][2].value = summary.gasolineClassPreviouslyRetained;
+
       gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
 
       if (gasoline[SCHEDULE_SUMMARY.LINE_8][2].readOnly ||
         line4percent < summary.gasolineClassDeferred) {
         gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = 0;
       }
+
+      gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
 
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
@@ -382,13 +404,22 @@ class ScheduleSummaryContainer extends Component {
       };
 
       penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+
+      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+        diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
+        showModal = true;
+      }
     }
 
     this.setState({
       diesel,
       gasoline,
       part3,
-      penalty
+      penalty,
+      showModal
     });
   }
 
@@ -397,8 +428,12 @@ class ScheduleSummaryContainer extends Component {
       const src = this.props.complianceReport.summary;
       const initialState = {
         dieselClassDeferred: src.dieselClassDeferred,
+        dieselClassObligation: src.dieselClassObligation,
+        dieselClassPreviouslyRetained: src.dieselClassPreviouslyRetained,
         dieselClassRetained: src.dieselClassRetained,
         gasolineClassDeferred: src.gasolineClassDeferred,
+        gasolineClassObligation: src.gasolineClassObligation,
+        gasolineClassPreviouslyRetained: src.gasolineClassPreviouslyRetained,
         gasolineClassRetained: src.gasolineClassRetained,
         creditsOffset: src.creditsOffset
       };
@@ -408,8 +443,12 @@ class ScheduleSummaryContainer extends Component {
     } else {
       const initialState = {
         dieselClassDeferred: 0,
+        dieselClassObligation: 0,
+        dieselClassPreviouslyRetained: 0,
         dieselClassRetained: 0,
         gasolineClassDeferred: 0,
+        gasolineClassObligation: 0,
+        gasolineClassPreviouslyRetained: 0,
         gasolineClassRetained: 0,
         creditsOffset: 0
       };
@@ -516,8 +555,16 @@ class ScheduleSummaryContainer extends Component {
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
     }
 
+    if (summary.dieselClassPreviouslyRetained) {
+      diesel[SCHEDULE_SUMMARY.LINE_18][2].value = summary.dieselClassPreviouslyRetained;
+    }
+
     if (summary.dieselClassDeferred) {
       diesel[SCHEDULE_SUMMARY.LINE_19][2].value = summary.dieselClassDeferred;
+    }
+
+    if (summary.dieselClassObligation) {
+      diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation;
     }
 
     diesel[SCHEDULE_SUMMARY.LINE_21][2] = {
@@ -632,8 +679,17 @@ class ScheduleSummaryContainer extends Component {
     if (summary.gasolineClassDeferred) {
       gasoline[SCHEDULE_SUMMARY.LINE_8][2].value = summary.gasolineClassDeferred;
     }
+
+    if (summary.gasolineClassPreviouslyRetained) {
+      gasoline[SCHEDULE_SUMMARY.LINE_7][2].value = summary.gasolineClassPreviouslyRetained;
+    }
+
     if (summary.gasolineClassRetained) {
       gasoline[SCHEDULE_SUMMARY.LINE_6][2].value = summary.gasolineClassRetained;
+    }
+
+    if (summary.gasolineClassObligation) {
+      gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
     }
 
     gasoline[SCHEDULE_SUMMARY.LINE_10][2] = {
@@ -691,12 +747,12 @@ class ScheduleSummaryContainer extends Component {
         maxValue = organizationBalance.validatedCredits;
       }
 
-      let previous_reduction_total = 0;
+      let previousReductionTotal = 0;
       if (this.props.complianceReport.totalPreviousCreditReduction) {
-        previous_reduction_total = this.props.complianceReport.totalPreviousCreditReduction;
+        previousReductionTotal = this.props.complianceReport.totalPreviousCreditReduction;
       }
 
-      maxValue += previous_reduction_total;
+      maxValue += previousReductionTotal;
     }
 
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
@@ -724,8 +780,15 @@ class ScheduleSummaryContainer extends Component {
     return part3;
   }
 
+  _closeModal () {
+    this.setState({
+      ...this.state,
+      showModal: false
+    });
+  }
+
   populateSchedules () {
-    if (this.props.snapshot) {
+    if (this.props.snapshot && this.props.readOnly) {
       return;
     }
 
@@ -765,26 +828,26 @@ class ScheduleSummaryContainer extends Component {
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
-      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
-        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
+      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <=
+        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
-      readOnly: !gasoline[SCHEDULE_SUMMARY.LINE_2][2].value ||
-        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <= gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
+      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <=
+        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
-      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
-        diesel[SCHEDULE_SUMMARY.LINE_13][2].value <= diesel[SCHEDULE_SUMMARY.LINE_15][2].value
+      readOnly: diesel[SCHEDULE_SUMMARY.LINE_13][2].value <=
+        diesel[SCHEDULE_SUMMARY.LINE_15][2].value
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
-      readOnly: !diesel[SCHEDULE_SUMMARY.LINE_13][2].value ||
-        diesel[SCHEDULE_SUMMARY.LINE_15][2].value <= diesel[SCHEDULE_SUMMARY.LINE_13][2].value
+      readOnly: diesel[SCHEDULE_SUMMARY.LINE_15][2].value <=
+        diesel[SCHEDULE_SUMMARY.LINE_13][2].value
     };
 
     penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
@@ -903,13 +966,23 @@ class ScheduleSummaryContainer extends Component {
 
   _gridStateToPayload (state) {
     let shouldUpdate = false;
-    const compareOn = ['dieselClassDeferred', 'dieselClassRetained', 'gasolineClassDeferred', 'gasolineClassRetained', 'creditsOffset'];
+    const compareOn = [
+      'dieselClassDeferred', 'dieselClassRetained',
+      'dieselClassPreviouslyRetained', 'dieselClassObligation',
+      'gasolineClassDeferred', 'gasolineClassRetained',
+      'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
+      'creditsOffset'
+    ];
 
     const nextState = {
       summary: {
         dieselClassDeferred: state.diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+        dieselClassObligation: state.diesel[SCHEDULE_SUMMARY.LINE_20][2].value,
+        dieselClassPreviouslyRetained: state.diesel[SCHEDULE_SUMMARY.LINE_18][2].value,
         dieselClassRetained: state.diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
         gasolineClassDeferred: state.gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+        gasolineClassObligation: state.gasoline[SCHEDULE_SUMMARY.LINE_9][2].value,
+        gasolineClassPreviouslyRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_7][2].value,
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value
       }
@@ -939,27 +1012,48 @@ class ScheduleSummaryContainer extends Component {
 
   render () {
     if (!this.props.snapshot &&
-      (this.props.recomputing ||
-        (Object.keys(this.props.recomputedTotals).length === 0 &&
-        Object.keys(this.props.validationMessages).length === 0))) {
+      (Object.keys(this.props.recomputedTotals).length === 0 &&
+        Object.keys(this.props.validationMessages).length === 0)) {
       return (<Loading />);
     }
 
-    return (
+    if (this.props.recomputing) {
+      return (<Loading />);
+    }
+
+    return ([
       <ScheduleSummaryPage
         diesel={this.state.diesel}
         gasoline={this.state.gasoline}
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
         handlePart3Changed={this._handlePart3Changed}
+        key="summary-page"
         part3={this.state.part3}
         penalty={this.state.penalty}
         readOnly={this.props.readOnly}
         valid={this.props.valid}
         validating={this.props.validating}
         validationMessages={this.props.validationMessages}
-      />
-    );
+      />,
+      <CallableModal
+        cancelLabel={Lang.BTN_OK}
+        close={() => {
+          this._closeModal();
+        }}
+        id="warning"
+        key="warning"
+        show={this.state.showModal}
+      >
+        <p>
+          The values you previously entered in the Summary &amp; Declaration tab have been cleared
+          as a result of making subsequent changes within the schedules.
+        </p>
+        <p>
+          It is recommended you complete this section after all schedules are complete.
+        </p>
+      </CallableModal>
+    ]);
   }
 }
 
@@ -977,7 +1071,10 @@ ScheduleSummaryContainer.propTypes = {
   validating: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
-    compliancePeriod: PropTypes.shape(),
+    compliancePeriod: PropTypes.oneOfType([
+      PropTypes.shape(),
+      PropTypes.string
+    ]),
     hasSnapshot: PropTypes.bool,
     history: PropTypes.arrayOf(PropTypes.shape()),
     scheduleA: PropTypes.shape(),
@@ -1008,7 +1105,11 @@ ScheduleSummaryContainer.propTypes = {
         PropTypes.number,
         PropTypes.string
       ])
-    })
+    }),
+    totalPreviousCreditReduction: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ])
   }),
   creditCalculation: PropTypes.shape({
     isFetching: PropTypes.bool,

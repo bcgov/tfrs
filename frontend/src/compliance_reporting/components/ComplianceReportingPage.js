@@ -38,7 +38,17 @@ const ComplianceReportingPage = (props) => {
                 <li key={compliancePeriod.description}>
                   <button
                     onClick={() => {
-                      props.createComplianceReport(compliancePeriod.description);
+                      const found = items.findIndex(item => (
+                        item.status.fuelSupplierStatus === 'Submitted' &&
+                        item.compliancePeriod.id === compliancePeriod.id
+                      ));
+
+                      if (found >= 0) {
+                        props.selectComplianceReport('compliance', compliancePeriod.description);
+                        props.showModal(true);
+                      } else {
+                        props.createComplianceReport(compliancePeriod.description);
+                      }
                     }}
                     type="button"
                   >
@@ -70,7 +80,17 @@ const ComplianceReportingPage = (props) => {
                 <li key={compliancePeriod.description}>
                   <button
                     onClick={() => {
-                      props.createExclusionReport(compliancePeriod.description);
+                      const found = items.findIndex(item => (
+                        item.status.fuelSupplierStatus === 'Submitted' &&
+                        item.compliancePeriod.id === compliancePeriod.id
+                      ));
+
+                      if (found >= 0) {
+                        props.selectComplianceReport('exclusion', compliancePeriod.description);
+                        props.showModal(true);
+                      } else {
+                        props.createExclusionReport(compliancePeriod.description);
+                      }
                     }}
                     type="button"
                   >
@@ -111,6 +131,8 @@ ComplianceReportingPage.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
+  selectComplianceReport: PropTypes.func.isRequired,
+  showModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
 };
 

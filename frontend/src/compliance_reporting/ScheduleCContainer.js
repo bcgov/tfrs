@@ -127,7 +127,7 @@ class ScheduleCContainer extends Component {
   componentWillReceiveProps (nextProps, nextContext) {
     const { grid } = this.state;
 
-    if (nextProps.snapshot) {
+    if (nextProps.snapshot && this.props.readOnly) {
       const source = nextProps.snapshot.scheduleC;
 
       if (!source || !source.records) {
@@ -138,7 +138,7 @@ class ScheduleCContainer extends Component {
         this._addRow(source.records.length - (grid.length - 2));
       }
 
-      for (let i = 0; i < source.records.length; i+=1) {
+      for (let i = 0; i < source.records.length; i += 1) {
         const row = i + 2;
         const record = source.records[i];
 
@@ -148,14 +148,27 @@ class ScheduleCContainer extends Component {
         grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
         grid[row][SCHEDULE_C.QUANTITY].value = record.quantity;
       }
-    } else if (nextProps.scheduleState.scheduleC && nextProps.scheduleState.scheduleC.records) {
-      if ((grid.length - 2) < nextProps.scheduleState.scheduleC.records.length) {
-        this._addRow(nextProps.scheduleState.scheduleC.records.length - (grid.length - 2));
+    } else {
+      let source = nextProps.scheduleState.scheduleC;
+
+      if (!this.props.scheduleState.scheduleC ||
+        !this.props.scheduleState.scheduleC.records) {
+        source = this.props.complianceReport.scheduleC;
       }
 
-      for (let i = 0; i < nextProps.scheduleState.scheduleC.records.length; i += 1) {
+      if (!source) {
+        return;
+      }
+
+      const { records } = source;
+
+      if ((grid.length - 2) < records.length) {
+        this._addRow(records.length - (grid.length - 2));
+      }
+
+      for (let i = 0; i < records.length; i += 1) {
         const row = 2 + i;
-        const record = nextProps.scheduleState.scheduleC.records[i];
+        const record = records[i];
         const qty = Number(record.quantity);
 
         grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
@@ -177,7 +190,7 @@ class ScheduleCContainer extends Component {
       }
 
       // zero remaining rows
-      for (let row = nextProps.scheduleState.scheduleC.records.length + 2; row < grid.length; row += 1) {
+      for (let row = records.length + 2; row < grid.length; row += 1) {
         grid[row][SCHEDULE_C.FUEL_TYPE].value = null;
         grid[row][SCHEDULE_C.FUEL_CLASS].value = null;
         grid[row][SCHEDULE_C.EXPECTED_USE].value = null;
@@ -202,7 +215,7 @@ class ScheduleCContainer extends Component {
     const records = [];
 
     for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
-      records.push({...this.props.complianceReport.scheduleC.records[i]});
+      records.push({ ...this.props.complianceReport.scheduleC.records[i] });
       this.props.updateScheduleState({
         scheduleC: {
           records
@@ -411,7 +424,7 @@ class ScheduleCContainer extends Component {
         ...row[SCHEDULE_C.ROW_NUMBER],
         className: rowNumberClassName,
         valueViewer: data => (
-          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'}/></div>
+          <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
         )
       };
 
@@ -454,7 +467,7 @@ class ScheduleCContainer extends Component {
               ...row[SCHEDULE_C.ROW_NUMBER],
               className,
               valueViewer: data => (
-                <div><FontAwesomeIcon icon="exclamation-triangle"/></div>
+                <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
               )
             };
           }

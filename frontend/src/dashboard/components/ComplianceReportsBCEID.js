@@ -265,24 +265,12 @@ const ComplianceReportsBCEID = (props) => {
 
       {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
       <div className="add-button">
-        <FontAwesomeIcon icon="play" />
-        {` Start a new `}
+        <FontAwesomeIcon icon="play" /> {` `}
         <button
-          onClick={() => {
-            props.createComplianceReport();
-          }}
+          onClick={() => (history.push(COMPLIANCE_REPORTING.LIST))}
           type="button"
         >
-          compliance report
-        </button>
-        {` or `}
-        <button
-          onClick={() => {
-            props.createExclusionReport();
-          }}
-          type="button"
-        >
-          exclusion report
+          Start a new compliance report or exclusion report
         </button>
       </div>
       }
@@ -298,8 +286,6 @@ ComplianceReportsBCEID.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  createComplianceReport: PropTypes.func.isRequired,
-  createExclusionReport: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     organization: PropTypes.shape({

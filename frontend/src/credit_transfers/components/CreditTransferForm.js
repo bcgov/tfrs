@@ -19,6 +19,19 @@ import CreditTransferComment from './CreditTransferComment';
 const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
+    <h3>
+      <p>
+        Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel Requirements Regulation,
+        a transfer of validated credits is not effective unless the transfer is approved by the
+        Director.
+      </p>
+      <p>
+        All credit transfer proposals must include a “fair market value” of any consideration,
+        under section 11.11 (2) (c) (iv) of the Regulation. Transfers deemed to underestimate
+        &quot;fair market value&quot; or those using a &quot;zero dollar&quot; value must include
+        a written explanation justifying the use of the identified credit value.
+      </p>
+    </h3>
     <CreditTransferProgress status={CREDIT_TRANSFER_STATUS.draft} type={props.fields.tradeType} />
     <form
       className="form-inline"

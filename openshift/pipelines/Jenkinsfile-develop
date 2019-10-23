@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.5.13"
+tfrsRelease="v1.5.14"
 
 def runFunctionalTest = input id: 'runFunctionalTest', message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
@@ -25,7 +25,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
                 envVar(key: 'DATABASE_USER', value: 'tfrstest'),
                 envVar(key: 'DATABASE_PASSWORD', value: 'tfrstest'),
                 envVar(key: 'DJANGO_DEBUG', value: 'true')
-		    ], 
+		    ]
         )
     ]
 ){    

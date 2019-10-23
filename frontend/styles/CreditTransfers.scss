@@ -400,6 +400,11 @@
     text-align: center;
   }
 
+  .credit-balance {
+    font-size: 1.6rem;
+    margin-top: 1rem;
+  }
+
   .arrow {
     padding: 2rem;
     text-align: center;
@@ -479,6 +484,7 @@
       color: $dark-yellow;
     }
   }
+
   .initiator-container {
     border-color: $green;
 
