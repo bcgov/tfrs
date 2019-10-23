@@ -118,12 +118,18 @@ class UserAddContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
+    let email = this.state.fields.userCreationRequest.keycloakEmail;
+
+    if (this.state.fields.email) {
+      ({ email } = this.state.fields.email);
+    }
+
     // API data structure
     const data = {
       user: {
         cellPhone: this.state.fields.mobilePhone,
         username: `user${(new Date().getTime())}`,
-        email: this.state.fields.email,
+        email,
         firstName: this.state.fields.firstName,
         lastName: this.state.fields.lastName,
         organization: this.state.fields.organization ? this.state.fields.organization.id : null,
