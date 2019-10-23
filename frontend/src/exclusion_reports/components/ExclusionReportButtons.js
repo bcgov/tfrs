@@ -56,6 +56,16 @@ const ExclusionReportButtons = props => (
           </button>
         </TooltipWhenDisabled>
       ]}
+      {props.actions.includes('CREATE_SUPPLEMENTAL') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmCreateSupplemental"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
+      </button>
+      }
       {props.actor === 'ANALYST' &&
       props.actions.includes('REQUEST_SUPPLEMENTAL') &&
         <button

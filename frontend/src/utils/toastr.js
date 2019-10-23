@@ -152,6 +152,9 @@ const toastr = {
       case 'Submitted':
         reduxToastr.success('Success!', 'Exclusion Report submitted.');
         break;
+      case 'Supplemental Created':
+        reduxToastr.success('Success!', 'Supplemental report created.');
+        break;
       default:
         reduxToastr.success('Success!', 'Exclusion Report saved.');
     }

@@ -34,6 +34,7 @@ from api.models.ComplianceReportSchedules import \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
+from api.models.ExclusionReportAgreement import ExclusionAgreement, ExclusionAgreementRecord
 from api.models.Organization import Organization
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
@@ -820,6 +821,22 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.diesel_class_deferred = original_summary.diesel_class_deferred
                 summary.credits_offset = original_summary.credits_offset
                 summary.save()
+
+            if original_report.exclusion_agreement is not None:
+                exclusion_agreement = ExclusionAgreement.objects.create()
+                cr.exclusion_agreement = exclusion_agreement
+                exclusion_agreement.save()
+                exclusion_agreement.save()
+                for original_record in original_report.exclusion_agreement.records.all():
+                    record = ExclusionAgreementRecord()
+                    record.exclusion_agreement = exclusion_agreement
+                    record.transaction_partner = original_record.transaction_partner
+                    record.postal_address = original_record.postal_address
+                    record.quantity = original_record.quantity
+                    record.quantity_not_sold = original_record.quantity_not_sold
+                    record.fuel_type = original_record.fuel_type
+                    record.transaction_type = original_record.transaction_type
+                    record.save()
 
         return cr
 
