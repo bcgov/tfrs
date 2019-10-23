@@ -90,6 +90,7 @@ class ComplianceReportingEditContainer extends Component {
       terms: [],
       getCalled: false,
       createSupplementalCalled: false,
+      showPenaltyWarning: false,
       supplementalNoteRequired: (props.complianceReporting.item &&
         props.complianceReporting.item.isSupplemental &&
         props.complianceReporting.item.actions.includes('SUBMIT')),
@@ -107,6 +108,7 @@ class ComplianceReportingEditContainer extends Component {
     this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
+    this._showPenaltyWarning = this._showPenaltyWarning.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateScheduleState = this._updateScheduleState.bind(this);
   }
@@ -427,6 +429,13 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
+  _showPenaltyWarning (bool) {
+    this.setState({
+      ...this.state,
+      showPenaltyWarning: bool
+    });
+  }
+
   render () {
     const TabComponent = this.tabComponent;
 
@@ -482,6 +491,7 @@ class ComplianceReportingEditContainer extends Component {
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
         scheduleState={this.state.schedules}
+        showPenaltyWarning={this._showPenaltyWarning}
         snapshot={this.props.complianceReporting.snapshot}
         snapshotIsLoading={this.props.complianceReporting.snapshotIsLoading}
         updateScheduleState={this._updateScheduleState}
@@ -493,6 +503,7 @@ class ComplianceReportingEditContainer extends Component {
         actions={this.props.complianceReporting.item.actions}
         actor={this.props.complianceReporting.item.actor}
         compliancePeriod={period}
+        complianceReport={this.props.complianceReporting.item}
         complianceReports={{
           isFetching: this.props.complianceReports.isFinding,
           items: this.props.complianceReports.items
@@ -587,6 +598,19 @@ class ComplianceReportingEditContainer extends Component {
         title="Signing Authority Declaration"
         tooltipMessage="Please complete the Signing Authority declaration."
       >
+        {this.state.showPenaltyWarning &&
+          <div className="alert alert-warning">
+            <p>
+              Based on the information contained within this report, your organization is not
+              compliant with the Part 2 and/or the Part 3 requirements.
+            </p>
+            <p>
+              Please be advised that payment of penalties must be submitted to the
+              Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
+              are to be made payable to the Minister of Finance.
+            </p>
+          </div>
+        }
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
 
