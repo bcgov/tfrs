@@ -32,6 +32,32 @@ const CreditTransferDetails = props => (
             getCreditTransferType(props.tradeType.id)
           }
         </h1>
+        {[
+          CREDIT_TRANSFER_TYPES.buy.id,
+          CREDIT_TRANSFER_TYPES.sell.id
+        ].indexOf(props.tradeType.id) >= 0 &&
+        <h3>
+          {props.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+          <p>
+            Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel Requirements
+            Regulation, a transfer of validated credits is not effective unless the transfer
+            is approved by the Director.
+          </p>
+          }
+          {[
+            CREDIT_TRANSFER_STATUS.draft.id,
+            CREDIT_TRANSFER_STATUS.proposed.id
+          ].indexOf(props.status.id) >= 0 &&
+          <p>
+            All credit transfer proposals must include a “fair market value” of any
+            consideration, under section 11.11 (2) (c) (iv) of the Regulation. Transfers
+            deemed to underestimate &quot;fair market value&quot; or those using a
+            &quot;zero dollar&quot; value must include a written explanation justifying
+            the use of the identified credit value.
+          </p>
+          }
+        </h3>
+        }
         <CreditTransferProgress
           isRescinded={props.isRescinded}
           status={props.status}
@@ -62,6 +88,7 @@ const CreditTransferDetails = props => (
           creditsFrom={props.creditsFrom}
           creditsTo={props.creditsTo}
           numberOfCredits={props.numberOfCredits}
+          status={props.status}
           totalValue={props.totalValue}
           tradeType={props.tradeType}
           zeroDollarReason={props.zeroDollarReason}

@@ -4,7 +4,7 @@ import numeral from 'numeral';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 class CreditTransferVisualRepresentation extends Component {
@@ -66,11 +66,24 @@ class CreditTransferVisualRepresentation extends Component {
   _renderCreditTransfer () {
     return (
       <div className="row visual-representation container">
+        {this.props.creditsFrom &&
         <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="initiator-container">
-            {this.props.creditsFrom && this.props.creditsFrom.name}
+            {this.props.creditsFrom.name}
           </div>
+          {[
+            CREDIT_TRANSFER_STATUS.accepted.id,
+            CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
+            CREDIT_TRANSFER_STATUS.notRecommended.id
+          ].indexOf(this.props.status.id) >= 0 &&
+          <div className="credit-balance">
+            Credit Balance:
+            {this.props.creditsFrom.organizationBalance &&
+              ` ${numeral(this.props.creditsFrom.organizationBalance.validatedCredits).format(NumberFormat.INT)}`}
+          </div>
+          }
         </div>
+        }
         <div className="col-xs-12 col-md-2 arrow">
           {(Number(this.props.numberOfCredits) > 0) &&
           <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
@@ -83,11 +96,24 @@ class CreditTransferVisualRepresentation extends Component {
           {Number(this.props.totalValue) > 0 &&
           <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}
         </div>
+        {this.props.creditsTo &&
         <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="respondent-container">
-            {this.props.creditsTo && this.props.creditsTo.name}
+            {this.props.creditsTo.name}
           </div>
+          {[
+            CREDIT_TRANSFER_STATUS.accepted.id,
+            CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
+            CREDIT_TRANSFER_STATUS.notRecommended.id
+          ].indexOf(this.props.status.id) >= 0 &&
+          <div className="credit-balance">
+            Credit Balance:
+            {this.props.creditsTo.organizationBalance &&
+              ` ${numeral(this.props.creditsTo.organizationBalance.validatedCredits).format(NumberFormat.INT)}`}
+          </div>
+          }
         </div>
+        }
       </div>
     );
   }
@@ -115,22 +141,34 @@ CreditTransferVisualRepresentation.defaultProps = {
     name: 'To'
   },
   numberOfCredits: '',
+  status: {
+    id: 0
+  },
   zeroDollarReason: null
 };
 
 CreditTransferVisualRepresentation.propTypes = {
   creditsFrom: PropTypes.shape({
     name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    organizationBalance: PropTypes.shape({
+      validatedCredits: PropTypes.number
+    })
   }),
   creditsTo: PropTypes.shape({
     name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    organizationBalance: PropTypes.shape({
+      validatedCredits: PropTypes.number
+    })
   }),
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
+  status: PropTypes.shape({
+    id: PropTypes.number
+  }),
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
