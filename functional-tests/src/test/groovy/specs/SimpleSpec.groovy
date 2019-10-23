@@ -1,6 +1,6 @@
 package specs
 
-import pages.HomePage
+import pages.HomePage2
 import pages.NewCreditTransferPage
 import pages.CreditTransactionsPage
 import pages.ConfirmSubmitModal
