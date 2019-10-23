@@ -18,8 +18,8 @@ import spock.lang.Shared
 import pages.HomePage
 
 @Stepwise
-@Title('Credit Transfer Test')
-@Narrative('''As a fuel supplier, I want to transfer credits to another fuel supplier.''')
+@Title('a simple test')
+@Narrative('''a simple test.''')
 class SimpleSpec extends LoggedInSpec {
 
   void 'Log in as the sending fuel supplier and verify the first page'() {
