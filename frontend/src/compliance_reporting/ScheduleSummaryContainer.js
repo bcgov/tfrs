@@ -18,7 +18,9 @@ import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
 import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
+import CallableModal from '../app/components/CallableModal';
 import Loading from '../app/components/Loading';
+import * as Lang from '../constants/langEnUs';
 
 class ScheduleSummaryContainer extends Component {
   static calculateDieselPayable (grid) {
@@ -202,6 +204,7 @@ class ScheduleSummaryContainer extends Component {
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
       part3: new ScheduleSummaryPart3(),
       penalty: new ScheduleSummaryPenalty(),
+      showModal: false,
       totals: {
         diesel: 0,
         gasoline: 0
@@ -210,6 +213,7 @@ class ScheduleSummaryContainer extends Component {
 
     this.rowNumber = 1;
 
+    this._closeModal = this._closeModal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
@@ -233,7 +237,9 @@ class ScheduleSummaryContainer extends Component {
 
   componentWillReceiveProps (nextProps, nextContext) {
     const { diesel, gasoline } = this.state;
-    let { part3, penalty } = this.state;
+    let { part3, penalty, showModal } = this.state;
+
+    showModal = false;
 
     if (nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot;
@@ -398,13 +404,22 @@ class ScheduleSummaryContainer extends Component {
       };
 
       penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+
+      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+        diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
+        showModal = true;
+      }
     }
 
     this.setState({
       diesel,
       gasoline,
       part3,
-      penalty
+      penalty,
+      showModal
     });
   }
 
@@ -693,7 +708,6 @@ class ScheduleSummaryContainer extends Component {
   _calculatePart3 () {
     const { part3 } = this.state;
     let { penalty } = this.state;
-    
     const { summary } = this.props.scheduleState;
 
     let totalCredits = 0;
@@ -764,6 +778,13 @@ class ScheduleSummaryContainer extends Component {
     });
 
     return part3;
+  }
+
+  _closeModal () {
+    this.setState({
+      ...this.state,
+      showModal: false
+    });
   }
 
   populateSchedules () {
@@ -1000,21 +1021,39 @@ class ScheduleSummaryContainer extends Component {
       return (<Loading />);
     }
 
-    return (
+    return ([
       <ScheduleSummaryPage
         diesel={this.state.diesel}
         gasoline={this.state.gasoline}
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
         handlePart3Changed={this._handlePart3Changed}
+        key="summary-page"
         part3={this.state.part3}
         penalty={this.state.penalty}
         readOnly={this.props.readOnly}
         valid={this.props.valid}
         validating={this.props.validating}
         validationMessages={this.props.validationMessages}
-      />
-    );
+      />,
+      <CallableModal
+        cancelLabel={Lang.BTN_OK}
+        close={() => {
+          this._closeModal();
+        }}
+        id="warning"
+        key="warning"
+        show={this.state.showModal}
+      >
+        <p>
+          The values you previously entered in the Summary &amp; Declaration tab have been cleared
+          as a result of making subsequent changes within the schedules.
+        </p>
+        <p>
+          It is recommended you complete this section after all schedules are complete.
+        </p>
+      </CallableModal>
+    ]);
   }
 }
 

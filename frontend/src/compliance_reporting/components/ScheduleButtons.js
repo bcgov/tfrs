@@ -22,8 +22,21 @@ const getValidationMessages = (props) => {
     return 'You can only submit this report in the Summary and Declaration tab.';
   }
 
-  if (props.validating) {
+  if (props.validating || props.complianceReports.isFinding) {
     return 'Validating...';
+  }
+
+  const found = props.complianceReports.items.findIndex(item => (
+    item.status.fuelSupplierStatus === 'Submitted' &&
+    item.compliancePeriod.description === props.compliancePeriod
+  ));
+
+  if (found >= 0) {
+    return `A Compliance/Exclusion Report for ${props.compliancePeriod} has already been submitted
+      to the Government of British Columbia. If the information in the previous report does not
+      completely and accurately disclose the information required to be included in the report,
+      please create a supplemental report by opening the previous report and clicking on the
+      "Create Supplemental Report" button.`;
   }
 
   return '';
@@ -198,6 +211,7 @@ const ScheduleButtons = props => (
 ScheduleButtons.defaultProps = {
   actions: [],
   actor: '',
+  compliancePeriod: null,
   validating: false,
   valid: true,
   validationMessages: {}
@@ -206,6 +220,11 @@ ScheduleButtons.defaultProps = {
 ScheduleButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string),
   actor: PropTypes.string,
+  compliancePeriod: PropTypes.string,
+  complianceReports: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFinding: PropTypes.bool
+  }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
