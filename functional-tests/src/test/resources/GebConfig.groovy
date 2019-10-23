@@ -32,7 +32,7 @@ if (!USERNAME || !AUTOMATE_KEY)
     throw RuntimeError('BROWSERSTACK_USERNAME and BROWSERSTACK_TOKEN are required');
 
 waiting {
-  timeout = 20
+  timeout = 60
   retryInterval = 0.5
 }
 
