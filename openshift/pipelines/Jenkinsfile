@@ -14,7 +14,6 @@ podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-ba
             workingDir: '/home/jenkins',
             command: '',
             args: '${computer.jnlpmac} ${computer.name}',
-            args: '${computer.jnlpmac} ${computer.name}',
 		    envVars: [
                 envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql96-unittest'), 
                 envVar(key: 'DATABASE_ENGINE', value: 'postgresql'),
