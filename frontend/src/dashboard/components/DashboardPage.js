@@ -10,6 +10,7 @@ import CreditTransactionsBCEID from './CreditTransactionsBCEID';
 import ComplianceReports from './ComplianceReports';
 import ComplianceReportsBCEID from './ComplianceReportsBCEID';
 import DirectorReview from './DirectorReview';
+import Feedback from './Feedback';
 import FileSubmissions from './FileSubmissions';
 import FuelCodes from './FuelCodes';
 import OrganizationDetails from './OrganizationDetails';
@@ -29,7 +30,7 @@ const BCEIDDashboardPage = obj => (
         loggedInUser={obj.loggedInUser}
       />
 
-      <CreditTradingValue />
+      <Feedback />
     </div>
 
     <div className="col-md-5">

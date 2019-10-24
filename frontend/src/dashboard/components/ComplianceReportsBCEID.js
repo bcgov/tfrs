@@ -114,14 +114,14 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Compliance Report'
                 }, {
                   id: 'status',
-                  value: 'Requested Supplemental'
+                  value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
                 return history.push(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
-              {awaitingReview.complianceReports.supplemental} requested supplemental
+              {awaitingReview.complianceReports.supplemental} supplemental requested
             </button>
           </div>
 
@@ -190,14 +190,14 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Exclusion Report'
                 }, {
                   id: 'status',
-                  value: 'Requested Supplemental'
+                  value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
                 return history.push(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
-              {awaitingReview.exclusionReports.supplemental} requested supplemental
+              {awaitingReview.exclusionReports.supplemental} supplemental requested
             </button>
           </div>
 

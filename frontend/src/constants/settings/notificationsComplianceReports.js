@@ -37,7 +37,7 @@ const COMPLIANCE_REPORTS_NOTIFICATIONS = [{
 }, {
   id: 7,
   code: 'COMPLIANCE_REPORT_REQUESTED_SUPPLEMENTAL',
-  description: 'Requested Supplemental',
+  description: 'Supplemental Requested',
   key: 'requested-supplemental',
   recipients: ['fuel_supplier', 'government']
 }, {

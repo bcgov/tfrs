@@ -49,7 +49,7 @@ class ExclusionReportingStatusHistory extends Component {
     }
 
     if (history.status.managerStatus === 'Requested Supplemental') {
-      return <strong>Requested Supplemental</strong>;
+      return <strong>Supplemental Requested </strong>;
     }
 
     if (history.status.analystStatus === 'Recommended') {
@@ -61,7 +61,7 @@ class ExclusionReportingStatusHistory extends Component {
     }
 
     if (history.status.analystStatus === 'Requested Supplemental') {
-      return <strong>Requested Supplemental </strong>;
+      return <strong>Supplemental Requested </strong>;
     }
 
     return (<strong>{history.status.fuelSupplierStatus} </strong>);
