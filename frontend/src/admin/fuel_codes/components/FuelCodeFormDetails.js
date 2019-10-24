@@ -57,21 +57,19 @@ class FuelCodeFormDetails extends Component {
                       autocompleteFieldName="fuel_code.fuel_code_version"
                       cache={false}
                       handleInputChange={this.props.handleInputChange}
-                      inputProps={
-                        {
-                          id: 'fuelCode',
-                          maxLength: 11,
-                          name: 'fuelCode',
-                          onPaste: (event) => {
-                            const clipboard = event.clipboardData.getData('Text');
-                            if (clipboard.match(/\D/g)) {
-                              event.preventDefault();
-                            }
-                          },
-                          readOnly: this.props.edit,
-                          required: true
-                        }
-                      }
+                      inputProps={{
+                        id: 'fuelCode',
+                        maxLength: 11,
+                        name: 'fuelCode',
+                        onPaste: (event) => {
+                          const clipboard = event.clipboardData.getData('Text');
+                          if (clipboard.match(/\D/g)) {
+                            event.preventDefault();
+                          }
+                        },
+                        readOnly: this.props.edit,
+                        required: true
+                      }}
                       integersOnly
                       onSelectEvent={this.props.handleSelect}
                       value={this.props.fields.fuelCode}
@@ -85,17 +83,16 @@ class FuelCodeFormDetails extends Component {
               <div className="form-group">
                 <label htmlFor="company">Company (full legal operating name):
                   <AutocompletedInput
-                    handleInputChange={this.props.handleInputChange}
                     autocompleteFieldName="fuel_code.company"
+                    handleInputChange={this.props.handleInputChange}
+                    inputProps={{
+                      id: 'company',
+                      maxLength: 100,
+                      name: 'company',
+                      required: true
+                    }}
+                    selectOnBlur={false}
                     value={this.props.fields.company}
-                    inputProps={
-                      {
-                        id: 'company',
-                        maxLength: 100,
-                        name: 'company',
-                        required: true
-                      }
-                    }
                   />
                 </label>
               </div>
@@ -238,17 +235,16 @@ class FuelCodeFormDetails extends Component {
               <div className="form-group">
                 <label htmlFor="feedstock">Feedstock:
                   <AutocompletedInput
-                    handleInputChange={this.props.handleInputChange}
                     autocompleteFieldName="fuel_code.feedstock"
+                    handleInputChange={this.props.handleInputChange}
+                    inputProps={{
+                      id: 'feedstock',
+                      maxLength: 100,
+                      name: 'feedstock',
+                      required: true
+                    }}
+                    selectOnBlur={false}
                     value={this.props.fields.feedstock}
-                    inputProps={
-                      {
-                        id: 'feedstock',
-                        maxLength: 100,
-                        name: 'feedstock',
-                        required: true
-                      }
-                    }
                   />
                 </label>
               </div>
@@ -260,17 +256,16 @@ class FuelCodeFormDetails extends Component {
               <div className="form-group">
                 <label htmlFor="feedstock-location">Feedstock Location (e.g. US Central, Manitoba, Japan):
                   <AutocompletedInput
-                    handleInputChange={this.props.handleInputChange}
                     autocompleteFieldName="fuel_code.feedstock_location"
+                    handleInputChange={this.props.handleInputChange}
+                    inputProps={{
+                      maxLength: 100,
+                      required: true,
+                      name: 'feedstockLocation',
+                      id: 'feedstockLocation'
+                    }}
+                    selectOnBlur={false}
                     value={this.props.fields.feedstockLocation}
-                    inputProps={
-                      {
-                        maxLength: 100,
-                        required: true,
-                        name: 'feedstockLocation',
-                        id: 'feedstockLocation'
-                      }
-                    }
                   />
                 </label>
               </div>
@@ -279,17 +274,16 @@ class FuelCodeFormDetails extends Component {
               <div className="form-group">
                 <label htmlFor="feedstock-miscellaneous">Feedstock Misc (e.g. methane capture, no peat, etc.):
                   <AutocompletedInput
-                    handleInputChange={this.props.handleInputChange}
                     autocompleteFieldName="fuel_code.feedstock_misc"
+                    handleInputChange={this.props.handleInputChange}
+                    inputProps={{
+                      id: 'feedstockMisc',
+                      maxLength: 100,
+                      name: 'feedstockMisc',
+                      required: false
+                    }}
+                    selectOnBlur={false}
                     value={this.props.fields.feedstockMisc}
-                    inputProps={
-                      {
-                        id: 'feedstockMisc',
-                        maxLength: 100,
-                        name: 'feedstockMisc',
-                        required: false
-                      }
-                    }
                   />
                 </label>
               </div>
@@ -301,17 +295,16 @@ class FuelCodeFormDetails extends Component {
               <div className="form-group">
                 <label htmlFor="facility-location">Fuel Production Facility Location (City, Province/State/Country):
                   <AutocompletedInput
-                    handleInputChange={this.props.handleInputChange}
                     autocompleteFieldName="fuel_code.facility_location"
+                    handleInputChange={this.props.handleInputChange}
+                    inputProps={{
+                      id: 'facilityLocation',
+                      maxLength: 100,
+                      name: 'facilityLocation',
+                      required: true
+                    }}
+                    selectOnBlur={false}
                     value={this.props.fields.facilityLocation}
-                    inputProps={
-                      {
-                        id: 'facilityLocation',
-                        maxLength: 100,
-                        name: 'facilityLocation',
-                        required: true
-                      }
-                    }
                   />
                 </label>
               </div>
@@ -386,17 +379,16 @@ class FuelCodeFormDetails extends Component {
             <div className="col-sm-6">
               <label htmlFor="former-company-name">Former Company Name:
                 <AutocompletedInput
-                  handleInputChange={this.props.handleInputChange}
                   autocompleteFieldName="fuel_code.former_company"
+                  handleInputChange={this.props.handleInputChange}
+                  inputProps={{
+                    id: 'formerCompany',
+                    maxLength: 100,
+                    name: 'formerCompany',
+                    required: false
+                  }}
+                  selectOnBlur={false}
                   value={this.props.fields.formerCompany}
-                  inputProps={
-                    {
-                      id: 'formerCompany',
-                      maxLength: 100,
-                      name: 'formerCompany',
-                      required: false
-                    }
-                  }
                 />
               </label>
             </div>

@@ -120,7 +120,9 @@ const CreditTransactions = (props) => {
       </div>
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
-      props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
+      (props.loggedInUser.organization.statusDisplay === 'Active' ||
+      (props.loggedInUser.organization.organizationBalance &&
+      (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
       <div className="add-button">
         <FontAwesomeIcon icon="play" /> {` `}
         <button
@@ -146,7 +148,11 @@ CreditTransactions.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     organization: PropTypes.shape({
-      actionsTypeDisplay: PropTypes.string
+      actionsTypeDisplay: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
     })
   }).isRequired,
   setFilter: PropTypes.func.isRequired
