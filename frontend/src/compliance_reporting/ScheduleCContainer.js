@@ -554,14 +554,14 @@ class ScheduleCContainer extends Component {
             Do not report fuels that are excluded from &quot;gasoline class fuel&quot; and
             &quot;diesel class fuel&quot;.
           </strong>
-          Under section (3) of the Renewable and Low Carbon Fuel Requirements Regulation,
+          {` Under section (3) of the Renewable and Low Carbon Fuel Requirements Regulation,
           gasoline class fuel does not include fuel that, at the time of sale, the fuel
           supplier reasonably expects will be used in an aircraft. Under section 3.1 (2),
           diesel class fuel does not include fuel that is sold to the Department of National
           Defence (Canada) if at the time of sale the fuel supplier reasonably expects that
           the fuel will be used in an aircraft, by the Department of National Defence (Canada)
           in military vessels, vehicles, aircraft or equipment for military operations, or in
-          military vessels, vehicles, aircraft or equipment of a foreign country.
+          military vessels, vehicles, aircraft or equipment of a foreign country.`}
         </p>
         <p>
           <strong>

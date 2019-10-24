@@ -63,6 +63,22 @@ const OrganizationDetails = props => (
         <dl className="dl-horizontal">
           <dt>Status:</dt>
           <dd>{props.organization.statusDisplay}</dd>
+          <dt />
+          {props.organization.statusDisplay === 'Inactive' &&
+            <dd className="status-description">
+              An inactive organization is not actively supplying fuel in British Columbia
+              and cannot purchase low carbon fuel credits.
+            </dd>
+          }
+          {props.organization.statusDisplay !== 'Inactive' &&
+            <dd className="status-description">
+              An active organization is one that is actively &quot;supplying&quot; fuel in
+              British Columbia as defined under the
+              <strong>
+                {` Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act `}
+              </strong>.
+            </dd>
+          }
         </dl>
       </div>
     </div>

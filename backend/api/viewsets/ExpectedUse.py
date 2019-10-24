@@ -38,9 +38,9 @@ class ExpectedUseViewSet(AuditableMixin, mixins.ListModelMixin,
 
         result = ExpectedUse.objects.filter(
             Q(expiration_date__gte=as_of) | Q(expiration_date=None)
-        )
+        ).order_by('display_order')
         result = result.filter(
             effective_date__lte=as_of
-        )
+        ).order_by('display_order')
 
         return result

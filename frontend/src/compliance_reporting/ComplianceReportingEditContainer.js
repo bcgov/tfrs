@@ -109,6 +109,7 @@ class ComplianceReportingEditContainer extends Component {
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateScheduleState = this._updateScheduleState.bind(this);
+    this._validate = this._validate.bind(this);
   }
 
   componentDidMount () {
@@ -170,7 +171,7 @@ class ComplianceReportingEditContainer extends Component {
             String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
         }
 
-        this.props.validateComplianceReport({
+        this._validate({
           id,
           state: {
             ...schedules
@@ -308,7 +309,7 @@ class ComplianceReportingEditContainer extends Component {
       }
     });
 
-    this.props.validateComplianceReport({
+    this._validate({
       id,
       state: {
         compliancePeriod: period,
@@ -425,6 +426,28 @@ class ComplianceReportingEditContainer extends Component {
         }
       });
     }
+  }
+
+  _validate (_payload) {
+    const payload = _payload;
+    if (payload.state && payload.state.summary) {
+      const { summary } = payload.state;
+
+      payload.state.summary = {
+        ...summary,
+        creditsOffset: Number(summary.creditsOffset),
+        dieselClassDeferred: Number(summary.dieselClassDeferred),
+        dieselClassObligation: Number(summary.dieselClassObligation),
+        dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
+        dieselClassRetained: Number(summary.dieselClassRetained),
+        gasolineClassDeferred: Number(summary.gasolineClassDeferred),
+        gasolineClassObligation: Number(summary.gasolineClassObligation),
+        gasolineClassPreviouslyRetained: Number(summary.gasolineClassPreviouslyRetained),
+        gasolineClassRetained: Number(summary.gasolineClassRetained)
+      };
+    }
+
+    return this.props.validateComplianceReport(payload);
   }
 
   render () {
