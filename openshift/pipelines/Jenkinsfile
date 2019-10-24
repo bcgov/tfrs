@@ -24,7 +24,6 @@ podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-ba
                 envVar(key: 'DJANGO_DEBUG', value: 'true')
 		    ]
         )
-        )
     ]
 ){
     node("master-backend-python-${env.BUILD_NUMBER}") {
