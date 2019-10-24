@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import numeral from 'numeral';
 
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferProgress from './CreditTransferProgress';
@@ -14,6 +15,7 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
+import * as NumberFormat from '../../constants/numeralFormats';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
@@ -27,6 +29,17 @@ const CreditTransferDetails = props => (
     {props.isFetching && <Loading />}
     {!props.isFetching &&
       <div>
+        <div className="credit_balance">
+          {props.loggedInUser.roles &&
+            !props.loggedInUser.isGovernmentUser &&
+            <h3>
+              Credit Balance: {
+                numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
+                  .format(NumberFormat.INT)
+              }
+            </h3>
+          }
+        </div>
         <h1>
           {props.tradeType.id &&
             getCreditTransferType(props.tradeType.id)
@@ -243,10 +256,18 @@ CreditTransferDetails.propTypes = {
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
+      actionsTypeDisplay: PropTypes.string,
+      id: PropTypes.number,
       name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      })
+    }),
+    roles: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number
-    })
+    }))
   }).isRequired,
   history: PropTypes.arrayOf(PropTypes.shape({
     status: PropTypes.shape({

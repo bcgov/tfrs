@@ -87,15 +87,14 @@ const CreditTransactionsPage = (props) => {
         <div className="actions-container">
           {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
           props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
+          !props.loggedInUser.isGovernmentUser &&
             <button
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
               onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
-              <FontAwesomeIcon icon="plus-circle" />
-              {!props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_TRANSFER}`}
-              {props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_CREDIT_TRANSACTION}`}
+              <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_TRANSFER}
             </button>
           }
           <button

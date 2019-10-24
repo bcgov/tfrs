@@ -81,7 +81,7 @@ class CreditTradeStatus(Auditable, DisplayOrder, EffectiveDates):
         Front-end language for the Credit Trade Status
         """
         if self.status == "Accepted":
-            return "Signed 2/2"
+            return "Signed"
         elif self.status == "Cancelled":
             return "Deleted"
         elif self.status == "Approved":
@@ -93,7 +93,7 @@ class CreditTradeStatus(Auditable, DisplayOrder, EffectiveDates):
         elif self.status == "Refused":
             return "Refused"
         elif self.status == "Submitted":
-            return "Signed 1/2"
+            return "Proposed"
 
         return self.status
 

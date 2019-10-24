@@ -8,7 +8,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 2,
   code: 'CREDIT_TRANSFER_SIGNED_1OF2',
-  description: 'Signed 1/2',
+  description: 'Proposed',
   key: 'submitted',
   recipients: ['fuel_supplier'],
   feature: 'credit_transfer'
@@ -22,7 +22,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 3,
   code: 'CREDIT_TRANSFER_SIGNED_2OF2',
-  description: 'Signed 2/2',
+  description: 'Signed',
   key: 'accepted',
   recipients: ['fuel_supplier', 'government'],
   feature: 'credit_transfer'

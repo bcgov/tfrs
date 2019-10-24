@@ -107,7 +107,7 @@ class CreditTransferSigningHistory extends Component {
   }
 
   static renderAccepted (history) {
-    return (<strong>Signed 2/2</strong>);
+    return (<strong>Signed</strong>);
   }
 
   static renderHistory (history) {
@@ -145,7 +145,7 @@ class CreditTransferSigningHistory extends Component {
   }
 
   static renderSubmitted (history) {
-    return (<strong>Signed 1/2</strong>);
+    return (<strong>Proposed</strong>);
   }
 
   render () {
