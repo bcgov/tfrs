@@ -58,7 +58,6 @@ const ExclusionReportTabs = (props) => {
         </Link>
       </li>
       }
-      {props.hasSnapshot &&
       <li
         role="presentation"
         className={`${(props.active === 'changelog') && 'active'}`}
@@ -67,7 +66,6 @@ const ExclusionReportTabs = (props) => {
           Report History
         </Link>
       </li>
-      }
     </ul>
   );
 };
@@ -85,7 +83,6 @@ ExclusionReportTabs.propTypes = {
   exclusionReport: PropTypes.shape({
     status: PropTypes.shape()
   }),
-  hasSnapshot: PropTypes.bool.isRequired,
   id: PropTypes.string,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool

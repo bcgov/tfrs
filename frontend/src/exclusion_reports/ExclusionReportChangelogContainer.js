@@ -8,29 +8,22 @@ import { connect } from 'react-redux';
 
 import { complianceReporting } from '../actions/complianceReporting';
 import ExclusionReportStatusHistory from './components/ExclusionReportStatusHistory';
-import ExclusionReportSnapshotDisplay from './components/ExclusionReportSnapshopDisplay';
+import ExclusionReportSnapshotDisplay from './components/ExclusionReportSnapshotDisplay';
 
 import Loading from '../app/components/Loading';
+import ReportHistory from "./components/ReportHistory";
 
 class ExclusionReportChangelogContainer extends Component {
   componentDidMount () {
-    this.props.getSnapshotRequest(this.props.match.params.id);
   }
 
   render () {
-    if (this.props.loading) {
-      return (<Loading />);
-    }
-
     return (
-      <div>
-        <ExclusionReportStatusHistory
-          complianceReport={this.props.exclusionReport}
-          onSwitchHandler={() => {}}
+        <ReportHistory
+          deltas={this.props.exclusionReport.deltas}
+          exclusionReport={this.props.exclusionReport}
+          snapshot={this.props.snapshot}
         />
-
-        <ExclusionReportSnapshotDisplay snapshot={this.props.snapshot} />
-      </div>
     );
   }
 }
@@ -41,7 +34,6 @@ ExclusionReportChangelogContainer.defaultProps = {
 
 ExclusionReportChangelogContainer.propTypes = {
   exclusionReport: PropTypes.shape().isRequired,
-  getSnapshotRequest: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({

@@ -196,7 +196,7 @@ class ComplianceReportingTable extends Component {
 
 
                 if (row.original.type === 'Exclusion Report') {
-                  viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.id)
+                  viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.groupId)
                     .replace(':tab', tab);
                 }
 
