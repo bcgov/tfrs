@@ -51,7 +51,7 @@ const UserFormDetails = props => (
           <div className="form-group">
             <label htmlFor="keycloak-email">
               {document.location.pathname.indexOf('/admin/users/') < 0 &&
-                'BCeID Email Address:'}
+                'Email address associated with BCeID user:'}
               {document.location.pathname.indexOf('/admin/users/') >= 0 &&
                 'IDIR Email Address:'}
               {props.isAdding &&
@@ -165,7 +165,7 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="email">Email:
+            <label htmlFor="email">Alternate email address (to receive notifications):
               <input
                 className="form-control"
                 id="email"
@@ -274,6 +274,7 @@ const UserFormDetails = props => (
 
               if (fileSubmissionRole &&
                 props.fields.organization &&
+                props.fields.organization.status &&
                 props.fields.organization.status.status === 'Archived') {
                 return false;
               }
