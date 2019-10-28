@@ -305,7 +305,7 @@ class CreditTransferAddContainer extends Component {
         isCommenting={this.state.isCommenting}
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
-        title="New Credit Transaction"
+        title="New Part 3 Award"
         validationErrors={this.state.validationErrors}
       />,
       <Modal
@@ -315,7 +315,7 @@ class CreditTransferAddContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend approval of this credit transaction?
+        Are you sure you want to recommend approval of this Part 3 Award?
       </Modal>
     ]);
   }

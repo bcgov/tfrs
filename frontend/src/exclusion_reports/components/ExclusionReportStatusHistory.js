@@ -28,7 +28,7 @@ class ExclusionReportingStatusHistory extends Component {
         <span> by </span>
         <strong> {history.user.firstName} {history.user.lastName}</strong>
         {roleDisplay &&
-          <span>
+        <span>
             <strong>, {roleDisplay} </strong> under the
           </span>
         }
@@ -67,17 +67,35 @@ class ExclusionReportingStatusHistory extends Component {
     return (<strong>{history.status.fuelSupplierStatus} </strong>);
   }
 
+  constructor (props) {
+    super(props);
+  }
+
   render () {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
       return false;
     }
 
+    const showCurrent = (this.props.complianceReport.history.filter(
+      c => (c.complianceReport === this.props.complianceReport.id)
+    ).length === 0);
+
     return (
       <div className="panel panel-default">
         <div className="panel-body">
           <ul>
+            {showCurrent &&
+            <li>
+              <a href="#" onClick={() => this.props.onSwitchHandler(-1)}>Current Revision {this.props.complianceReport.displayName}</a>
+            </li>
+            }
             {this.props.complianceReport.history.length > 0 &&
             this.props.complianceReport.history.map((history, index, arr) => {
+              let deltaTarget = history.complianceReport;
+              if (this.props.complianceReport.deltas.filter(d => (d.ancestorId === deltaTarget)).length === 0) {
+                deltaTarget = '-1';
+              }
+
               const action = ExclusionReportingStatusHistory.renderHistory(history);
 
               if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
@@ -85,8 +103,13 @@ class ExclusionReportingStatusHistory extends Component {
               }
 
               return (
-                <li key={history.id}>
-                  {action} {history.displayName}
+                <li key={history.id}>{action}
+                  <a
+                    href="#"
+                    onClick={() => this.props.onSwitchHandler(deltaTarget)}
+                  >
+                    {history.displayName}
+                  </a>
                   <span> on </span>
                   {moment(history.createTimestamp).format('LL')}
                   <span> by </span>
@@ -111,7 +134,8 @@ ExclusionReportingStatusHistory.defaultProps = {
     organization: {
       name: ''
     }
-  }
+  },
+  reportType: 'Exclusion Report'
 };
 
 ExclusionReportingStatusHistory.propTypes = {
@@ -140,7 +164,8 @@ ExclusionReportingStatusHistory.propTypes = {
       name: PropTypes.string
     })
   }),
-  onSwitchHandler: PropTypes.func.isRequired
+  onSwitchHandler: PropTypes.func.isRequired,
+  reportType: PropTypes.string
 };
 
 export default ExclusionReportingStatusHistory;

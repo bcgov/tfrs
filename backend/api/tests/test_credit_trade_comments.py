@@ -234,13 +234,13 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin,
         expected_results[('Submitted', True, 'fs_husky', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Initiator can comment in Submitted (Signed 1/2) '
+                'reason': 'Initiator can comment in Submitted (Proposed) '
                           'if rescinded'
             }
         expected_results[('Accepted', True, 'fs_husky', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Initiator can comment in Accepted (Signed 2/2) '
+                'reason': 'Initiator can comment in Accepted (Signed) '
                           'if rescinded'
             }
         expected_results[('Recommended', True, 'fs_husky', False)] = \
@@ -257,12 +257,12 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin,
         expected_results[('Submitted', False, 'fs_shell', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Respondent can comment in Submitted (Signed 1/2)'
+                'reason': 'Respondent can comment in Submitted (Proposed)'
             }
         expected_results[('Accepted', True, 'fs_shell', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Respondent can comment in Submitted (Signed 2/2) '
+                'reason': 'Respondent can comment in Submitted (Signed) '
                           'if rescinded'
             }
         expected_results[('Recommended', True, 'fs_shell', False)] = \
@@ -279,22 +279,22 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin,
         expected_results[('Accepted', False, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Analyst can comment in Accepted (Signed 2/2)'
+                'reason': 'Analyst can comment in Accepted (Signed)'
             }
         expected_results[('Accepted', False, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Analyst can comment in Accepted (Signed2/2)'
+                'reason': 'Analyst can comment in Accepted (Signed)'
             }
         expected_results[('Accepted', True, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Analyst can comment in Accepted (Signed 2/2)'
+                'reason': 'Analyst can comment in Accepted (Signed)'
             }
         expected_results[('Accepted', True, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Analyst can comment in Accepted (Signed 2/2)'
+                'reason': 'Analyst can comment in Accepted (Signed)'
             }
         expected_results[('Recommended', False, 'gov_analyst', False)] = \
             {

@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.5.14"
+tfrsRelease="v1.5.15"
 
 podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
@@ -14,7 +14,6 @@ podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-ba
             workingDir: '/home/jenkins',
             command: '',
             args: '${computer.jnlpmac} ${computer.name}',
-            args: '${computer.jnlpmac} ${computer.name}',
 		    envVars: [
                 envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql96-unittest'), 
                 envVar(key: 'DATABASE_ENGINE', value: 'postgresql'),
@@ -23,7 +22,6 @@ podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-ba
                 envVar(key: 'DATABASE_PASSWORD', value: 'tfrstest'),
                 envVar(key: 'DJANGO_DEBUG', value: 'true')
 		    ]
-        )
         )
     ]
 ){

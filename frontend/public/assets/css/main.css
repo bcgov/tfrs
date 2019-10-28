@@ -1709,9 +1709,13 @@ img.back-to-top:hover {
 	float: left;
 }
 
-.alert p{
-	margin: 0;
+.alert p, .alert dl {
+	margin: 0 0 20px;
 	padding-left: 1.8em;
+}
+
+.alert p:last-child, .alert dl:last-child {
+	margin-bottom: 0;
 }
 
 .ss-gac-m tr:hover {

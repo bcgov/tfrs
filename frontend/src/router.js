@@ -73,7 +73,6 @@ import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 import ComplianceReportingEditContainer from './compliance_reporting/ComplianceReportingEditContainer';
 import ComplianceReportingSnapshotContainer from './compliance_reporting/SnapshotContainer';
-import ExclusionReportsSnapshotContainer from './exclusion_reports/ExclusionReportsSnapshotContainer';
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -355,12 +354,6 @@ const Router = routerProps => (
           />
         ]}
         {CONFIG.EXCLUSION_REPORTS.ENABLED && [
-          <Route
-            exact
-            key="compliance_reporting_snapshot"
-            path={EXCLUSION_REPORTS.SNAPSHOT}
-            component={withRouter(ExclusionReportsSnapshotContainer)}
-          />,
           <Route
             key="exclusion_reports_add"
             path={EXCLUSION_REPORTS.ADD}

@@ -45,8 +45,14 @@
         margin: 0;
       }
     }
+
     .comment-label {
       display: none;
+    }
+
+    div.form-control {
+      border: none;
+      box-shadow: none;
     }
   }
 }

@@ -58,7 +58,7 @@ class CreditTransferSpec extends LoggedInSpec {
       receivingFuelSupplier_initialCreditBalance = getCreditBalance()
     and: 'I populate all required fields to accept the proposed credit transfer'
       to NotificationsPage
-      getCreditTransferLinkByText('Credit Transfer Proposal Signed 1/2').click()
+      getCreditTransferLinkByText('Credit Transfer Proposal Proposed').click()
       page(new CreditTransactionsViewPage('Credit Transfer'))
       checkTerms()
       addComment('Log in as the receiving fuel supplier and accept the credit transfer')
@@ -80,7 +80,7 @@ class CreditTransferSpec extends LoggedInSpec {
       logInAsAnalyst()
     and: 'I populate all required fields to recommend the accepted credit transfer'
       to NotificationsPage
-      getCreditTransferLinkByText('Credit Transfer Proposal Signed 2/2').click()
+      getCreditTransferLinkByText('Credit Transfer Proposal Signed').click()
       page(new CreditTransactionsViewPage('Credit Transfer'))
       addComment('Log in as an analyst and recommend the credit transfer')
       addInternalComment('Log in as an analyst and recommend the credit transfer')

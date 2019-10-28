@@ -89,15 +89,14 @@ const CreditTransactionsPage = (props) => {
           (props.loggedInUser.organization.statusDisplay === 'Active' ||
           (props.loggedInUser.organization.organizationBalance &&
           (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
+          !props.loggedInUser.isGovernmentUser &&
             <button
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
               onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
-              <FontAwesomeIcon icon="plus-circle" />
-              {!props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_TRANSFER}`}
-              {props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_CREDIT_TRANSACTION}`}
+              <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_TRANSFER}
             </button>
           }
           <button

@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import InputWithTooltip from '../../app/components/InputWithTooltip';
-import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
 const GovernmentTransferFormDetails = props => (
   <div className="credit-transaction-details">
@@ -13,10 +12,8 @@ const GovernmentTransferFormDetails = props => (
       <div className="row">
         <div className="form-group col-md-6">
           <label htmlFor="transfer-type">Transaction Type:
-            <div className="btn-group" role="group" id="transaction-type">
-              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.part3Award.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
-              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.validation.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
-              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.retirement.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
+            <div className="form-control">
+              Part 3 Award
             </div>
           </label>
         </div>
