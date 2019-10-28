@@ -156,7 +156,7 @@ const CreditTransferTable = (props) => {
               if (row.original.complianceReport) {
                 viewUrl = COMPLIANCE_REPORTING.EDIT
                   .replace(':id', row.original.complianceReport)
-                  .replace(':tab', 'intro');
+                  .replace(':tab', 'schedule-assessment');
               } else {
                 viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
               }
