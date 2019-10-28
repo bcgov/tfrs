@@ -984,7 +984,7 @@ class ComplianceReportUpdateSerializer(
         slug_field='description',
         read_only=True
     )
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationDisplaySerializer(read_only=True)
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
