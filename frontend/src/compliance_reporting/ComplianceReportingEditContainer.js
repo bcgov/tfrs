@@ -33,6 +33,21 @@ import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 
 class ComplianceReportingEditContainer extends Component {
+  static cleanSummaryValues (summary) {
+    return {
+      ...summary,
+      creditsOffset: Number(summary.creditsOffset),
+      dieselClassDeferred: Number(summary.dieselClassDeferred),
+      dieselClassObligation: Number(summary.dieselClassObligation),
+      dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
+      dieselClassRetained: Number(summary.dieselClassRetained),
+      gasolineClassDeferred: Number(summary.gasolineClassDeferred),
+      gasolineClassObligation: Number(summary.gasolineClassObligation),
+      gasolineClassPreviouslyRetained: Number(summary.gasolineClassPreviouslyRetained),
+      gasolineClassRetained: Number(summary.gasolineClassRetained)
+    };
+  }
+
   static componentForTabName (tab) {
     let TabComponent;
 
@@ -388,6 +403,12 @@ class ComplianceReportingEditContainer extends Component {
       payload.supplementalNote = this.state.supplementalNote;
     }
 
+    if (payload.summary) {
+      const { summary } = payload;
+
+      payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+    }
+
     this.status = status;
 
     this.props.updateComplianceReport({
@@ -433,18 +454,7 @@ class ComplianceReportingEditContainer extends Component {
     if (payload.state && payload.state.summary) {
       const { summary } = payload.state;
 
-      payload.state.summary = {
-        ...summary,
-        creditsOffset: Number(summary.creditsOffset),
-        dieselClassDeferred: Number(summary.dieselClassDeferred),
-        dieselClassObligation: Number(summary.dieselClassObligation),
-        dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
-        dieselClassRetained: Number(summary.dieselClassRetained),
-        gasolineClassDeferred: Number(summary.gasolineClassDeferred),
-        gasolineClassObligation: Number(summary.gasolineClassObligation),
-        gasolineClassPreviouslyRetained: Number(summary.gasolineClassPreviouslyRetained),
-        gasolineClassRetained: Number(summary.gasolineClassRetained)
-      };
+      payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
     }
 
     return this.props.validateComplianceReport(payload);
