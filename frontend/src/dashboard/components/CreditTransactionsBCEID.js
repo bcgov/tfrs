@@ -49,7 +49,7 @@ const CreditTransactions = (props) => {
                   value: 'Credit Transfer'
                 }, {
                   id: 'status',
-                  value: 'Signed'
+                  value: 'Proposed,Signed'
                 }], 'credit-transfers');
 
                 return history.push(CREDIT_TRANSACTIONS.LIST);

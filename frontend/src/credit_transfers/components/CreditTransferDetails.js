@@ -100,6 +100,7 @@ const CreditTransferDetails = props => (
         <CreditTransferVisualRepresentation
           creditsFrom={props.creditsFrom}
           creditsTo={props.creditsTo}
+          loggedInUser={props.loggedInUser}
           numberOfCredits={props.numberOfCredits}
           status={props.status}
           totalValue={props.totalValue}

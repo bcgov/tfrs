@@ -18,6 +18,12 @@ const SecureFileSubmissionsPage = (props) => {
   return (
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
+      {!props.loggedInUser.isGovernmentUser &&
+      <p className="instructions">
+        Use this feature to securely submit Part 3 Agreement applications and milestone
+        evidence to the Government of British Columbia.
+      </p>
+      }
       <div className="right-toolbar-container">
         <div className="actions-container">
           {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
@@ -75,10 +81,6 @@ const SecureFileSubmissionsPage = (props) => {
           }
         </div>
       </div>
-      <p>
-        Use this feature to securely submit Part 3 Agreement applications and milestone
-        evidence to the Government of British Columbia.
-      </p>
       {isFetching && <Loading />}
       {!isFetching &&
       <SecureFileSubmissionTable

@@ -4,7 +4,7 @@ const NOTIFICATION_TYPES = {
   CREDIT_TRANSFER_CREATED: 'Credit Transfer Proposal Created',
   CREDIT_TRANSFER_DECLINED: 'Credit Transfer Proposal Declined',
   CREDIT_TRANSFER_INTERNAL_COMMENT: 'Credit Transfer Proposal Internal Comment Created Or Updated',
-  CREDIT_TRANSFER_PROPOSAL_ACCEPTED: 'Credit Transfer Proposal Accepted',
+  CREDIT_TRANSFER_PROPOSAL_ACCEPTED: 'Credit Transfer Proposal Signed',
   CREDIT_TRANSFER_PROPOSAL_REFUSED: 'Credit Transfer Proposal Refused',
   CREDIT_TRANSFER_RECOMMENDED_FOR_APPROVAL: 'Credit Transfer Proposal Recommended For Approval',
   CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION: 'Credit Transfer Proposal Recommended For Declination',

@@ -70,6 +70,7 @@ const CreditTransferForm = props => (
       <CreditTransferVisualRepresentation
         creditsFrom={props.creditsFrom}
         creditsTo={props.creditsTo}
+        loggedInUser={props.loggedInUser}
         numberOfCredits={props.fields.numberOfCredits}
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}

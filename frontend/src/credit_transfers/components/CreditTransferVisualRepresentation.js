@@ -76,6 +76,7 @@ class CreditTransferVisualRepresentation extends Component {
             CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
             CREDIT_TRANSFER_STATUS.notRecommended.id
           ].indexOf(this.props.status.id) >= 0 &&
+          this.props.loggedInUser.isGovernmentUser &&
           <div className="credit-balance">
             Credit Balance:
             {this.props.creditsFrom.organizationBalance &&
@@ -106,6 +107,7 @@ class CreditTransferVisualRepresentation extends Component {
             CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
             CREDIT_TRANSFER_STATUS.notRecommended.id
           ].indexOf(this.props.status.id) >= 0 &&
+          this.props.loggedInUser.isGovernmentUser &&
           <div className="credit-balance">
             Credit Balance:
             {this.props.creditsTo.organizationBalance &&
@@ -162,6 +164,9 @@ CreditTransferVisualRepresentation.propTypes = {
       validatedCredits: PropTypes.number
     })
   }),
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired,
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
