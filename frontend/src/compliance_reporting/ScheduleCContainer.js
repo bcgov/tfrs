@@ -147,6 +147,7 @@ class ScheduleCContainer extends Component {
         grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
         grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
         grid[row][SCHEDULE_C.QUANTITY].value = record.quantity;
+        grid[row][SCHEDULE_C.UNITS].value = record.unitOfMeasure;
       }
     } else {
       let source = nextProps.scheduleState.scheduleC;
