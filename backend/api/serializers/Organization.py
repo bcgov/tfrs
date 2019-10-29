@@ -232,6 +232,7 @@ class OrganizationDisplaySerializer(serializers.ModelSerializer):
     Loads most information fields like address and name of the fuel supplier
     """
     organization_address = serializers.SerializerMethodField()
+    status = OrganizationMinStatusSerializer(read_only=True)
 
     def get_organization_address(self, obj):
         """
@@ -247,4 +248,4 @@ class OrganizationDisplaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ('id', 'name', 'organization_address')
+        fields = ('id', 'name', 'organization_address', 'type', 'status')

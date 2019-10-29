@@ -13,6 +13,7 @@ import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConf
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import { complianceReporting } from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
+import AddressBuilder from '../app/components/AddressBuilder';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
 import ScheduleAssessmentContainer from './ScheduleAssessmentContainer';
@@ -460,6 +461,17 @@ class ComplianceReportingEditContainer extends Component {
       period = this.props.complianceReporting.item.compliancePeriod.description;
     }
 
+    let organizationAddress = null;
+
+    if (this.props.complianceReporting.item.hasSnapshot &&
+      this.props.complianceReporting.snapshot &&
+      this.props.complianceReporting.snapshot.organization.organizationAddress) {
+      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
+    } else if (this.props.loggedInUser.organization.organizationAddress &&
+      !this.props.loggedInUser.isGovernmentUser) {
+      ({ organizationAddress } = this.props.loggedInUser.organization);
+    }
+
     return ([
       <h2 key="main-header">
         {this.props.complianceReporting.item.organization.name}
@@ -470,6 +482,18 @@ class ComplianceReportingEditContainer extends Component {
         {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
         {this.props.complianceReporting.item.compliancePeriod.description}
       </h2>,
+      <p key="organization-address">
+        {organizationAddress &&
+          AddressBuilder({
+            address_line_1: organizationAddress.addressLine_1,
+            address_line_2: organizationAddress.addressLine_2,
+            address_line_3: organizationAddress.addressLine_3,
+            city: organizationAddress.city,
+            state: organizationAddress.state,
+            postal_code: organizationAddress.postalCode
+          })
+        }
+      </p>,
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}
@@ -724,6 +748,10 @@ ComplianceReportingEditContainer.propTypes = {
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    isGovernmentUser: PropTypes.bool,
+    organization: PropTypes.shape({
+      organizationAddress: PropTypes.shape()
+    }),
     title: PropTypes.string
   }).isRequired,
   match: PropTypes.shape({

@@ -12,6 +12,7 @@ import {addSigningAuthorityConfirmation} from '../actions/signingAuthorityConfir
 import {complianceReporting} from '../actions/complianceReporting';
 import {exclusionReports} from '../actions/exclusionReports';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
+import AddressBuilder from '../app/components/AddressBuilder';
 import CheckBox from '../app/components/CheckBox';
 import history from '../app/History';
 import Loading from '../app/components/Loading';
@@ -133,11 +134,9 @@ class ExclusionReportEditContainer extends Component {
           nextProps.exclusionReports.item.actions.includes('SUBMIT'))
       });
 
-
       if (nextProps.exclusionReports.item.hasSnapshot) {
         this.props.getSnapshotRequest(id);
       }
-
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
@@ -291,6 +290,17 @@ class ExclusionReportEditContainer extends Component {
       period = this.props.exclusionReports.item.compliancePeriod.description;
     }
 
+    let organizationAddress = null;
+
+    if (this.props.exclusionReports.item.hasSnapshot &&
+      this.props.complianceReporting.snapshot &&
+      this.props.complianceReporting.snapshot.organization.organizationAddress) {
+      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
+    } else if (this.props.loggedInUser.organization.organizationAddress &&
+      !this.props.loggedInUser.isGovernmentUser) {
+      ({ organizationAddress } = this.props.loggedInUser.organization);
+    }
+
     return ([
       <h2 key="main-header">
         {this.props.exclusionReports.item.organization.name}
@@ -299,6 +309,18 @@ class ExclusionReportEditContainer extends Component {
         &nbsp;for&nbsp;
         {this.props.exclusionReports.item.compliancePeriod.description}
       </h2>,
+      <p key="organization-address">
+        {organizationAddress &&
+          AddressBuilder({
+            address_line_1: organizationAddress.addressLine_1,
+            address_line_2: organizationAddress.addressLine_2,
+            address_line_3: organizationAddress.addressLine_3,
+            city: organizationAddress.city,
+            state: organizationAddress.state,
+            postal_code: organizationAddress.postalCode
+          })
+        }
+      </p>,
       <ExclusionReportTabs
         active={tab}
         compliancePeriod={period}
@@ -482,6 +504,7 @@ ExclusionReportEditContainer.propTypes = {
   createComplianceReport: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
+    snapshot: PropTypes.shape(),
     success: PropTypes.bool
   }),
   exclusionReports: PropTypes.shape({
@@ -497,7 +520,9 @@ ExclusionReportEditContainer.propTypes = {
         }),
         PropTypes.string
       ]),
-      hasSnapshot: PropTypes.bool
+      hasSnapshot: PropTypes.bool,
+      organization: PropTypes.shape,
+      type: PropTypes.shape()
     }),
     success: PropTypes.bool
   }),
