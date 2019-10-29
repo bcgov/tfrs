@@ -115,17 +115,10 @@ class DocumentViewSet(AuditableMixin,
         document = serializer.save()
         DocumentService.create_history(document)
 
-        files = DocumentFileAttachment.objects.filter(
-            document=document,
-            security_scan_status='NOT RUN')
-
-        if files and document.status.status != 'Draft':
+        if document.status.status != 'Draft':
             document.status = DocumentStatus.objects.get(
                 status='Pending Submission')
             document.save()
-
-            for file in files:
-                SecurityScan.send_scan_request(file)
 
         DocumentService.send_notification(document, user)
 
@@ -134,17 +127,11 @@ class DocumentViewSet(AuditableMixin,
 
         document = serializer.save()
         DocumentService.create_history(document)
-        files = document.attachments.filter(
-            security_scan_status='NOT RUN'
-        )
 
-        if files and document.status.status == 'Submitted':
+        if document.status.status == 'Submitted':
             document.status = DocumentStatus.objects.get(
                 status='Pending Submission')
             document.save()
-
-            for file in files:
-                SecurityScan.send_scan_request(file)
 
         DocumentService.send_notification(document, user)
 
@@ -165,6 +152,24 @@ class DocumentViewSet(AuditableMixin,
                                            document=document)
 
         return Response(None, status=status.HTTP_202_ACCEPTED)
+
+    @detail_route(methods=['put'])
+    def scan_attachments(self, request, pk=None):
+        """
+        Sends a request to ClamAV to scan the attachments for a specific
+        document
+        """
+        document = self.get_object()
+
+        files = DocumentFileAttachment.objects.filter(
+            document=document,
+            security_scan_status='NOT RUN')
+
+        if files:
+            for file in files:
+                SecurityScan.send_scan_request(file)
+
+        return Response(None)
 
     @detail_route(methods=['put'])
     @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')

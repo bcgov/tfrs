@@ -9,7 +9,7 @@ from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentHistory import DocumentHistory
 from api.models.Organization import Organization
 from api.notifications.notification_types import NotificationType
-from api.async_tasks import async_send_notification
+from api.async_tasks import async_send_notifications
 from tfrs.settings import MINIO
 
 
@@ -168,13 +168,16 @@ class DocumentService(object):
             notification_type = NotificationType.DOCUMENT_SCAN_FAILED
 
         if notification_type:
+            notifications_to_send = []
             for organization in interested_organizations:
-                on_commit(
-                    lambda: async_send_notification.delay(
-                        interested_organization_id=organization.id,
-                        message=notification_type.name,
-                        notification_type=notification_type.value,
-                        originating_user_id=originating_user.id,
-                        related_document_id=document.id
-                    )
-                )
+                notifications_to_send.append({
+                    'interested_organization_id': organization.id,
+                    'message': notification_type.name,
+                    'notification_type': notification_type.value,
+                    'originating_user_id': originating_user.id,
+                    'related_document_id': document.id
+                })
+
+            on_commit(
+                lambda: async_send_notifications(notifications_to_send)
+            )
