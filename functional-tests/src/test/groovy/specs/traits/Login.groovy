@@ -25,23 +25,9 @@ trait Login implements Users {
     at HomePage
   }
 
-  void login2(Map user) {
-    to LoginPage
-
-    usernameField.value(user.username)
-    passwordField.value(user.password)
-
-    logInButton.click()
-  }
-
   void logInAsSendingFuelSupplier() {
     login(getSendingFuelSupplier())
   }
-
-  void logInAsSendingFuelSupplier2() {
-    login2(getSendingFuelSupplier())
-  }
-
 
   void logInAsReceivingFuelSupplier() {
     login(getReceivingFuelSupplier())
