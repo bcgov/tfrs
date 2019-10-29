@@ -562,6 +562,13 @@ class ScheduleCRecord(Commentable):
 
         return 0
 
+    @property
+    def unit_of_measure(self):
+        if self.fuel_type is None:
+            return None
+
+        return self.fuel_type.unit_of_measure.name
+
     class Meta:
         db_table = 'compliance_report_schedule_c_record'
         ordering = ['id']

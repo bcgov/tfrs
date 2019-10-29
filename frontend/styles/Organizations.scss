@@ -12,6 +12,12 @@
 
     dd {
       margin-left: 80px;
+
+      &.status-description {
+        font-size: 1.2rem;
+        font-style: italic;
+        margin-top: 1rem;
+      }
     }
 
     dt {

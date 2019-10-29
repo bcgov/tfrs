@@ -278,7 +278,11 @@ class ScheduleBContainer extends Component {
       const row = i + 2;
       grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
       grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
-      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = record.provisionOfTheAct;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT] = {
+        ...grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT],
+        value: record.provisionOfTheAct,
+        valueViewer: () => (`${record.provisionOfTheAct} - ${record.provisionOfTheActDescription}`)
+      };
       grid[row][SCHEDULE_B.QUANTITY].value = record.quantity;
       grid[row][SCHEDULE_B.UNITS].value = record.unitOfMeasure;
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.effectiveCarbonIntensity;
@@ -288,8 +292,13 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.EER].value = record.eer;
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = record.energyContent;
       grid[row][SCHEDULE_B.ENERGY_DENSITY].value = record.energyDensity;
+
       if (record.fuelCode != null) {
-        grid[row][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
+        grid[row][SCHEDULE_B.FUEL_CODE] = {
+          ...grid[row][SCHEDULE_B.FUEL_CODE],
+          value: record.fuelCode,
+          valueViewer: () => (record.fuelCodeDescription)
+        };
       } else if (record.scheduleD_sheetIndex != null) {
         grid[row][SCHEDULE_B.FUEL_CODE].value = 'From Schedule D';
       }
@@ -372,12 +381,12 @@ class ScheduleBContainer extends Component {
       }
 
       grid = this._recordsToGrid(records, grid);
-    } // end read-write prop load
 
-    this.recomputeDerivedState(nextProps, {
-      ...this.state,
-      grid
-    });
+      this.recomputeDerivedState(nextProps, {
+        ...this.state,
+        grid
+      });
+    } // end read-write prop load
   }
 
   loadInitialState () {
@@ -458,8 +467,18 @@ class ScheduleBContainer extends Component {
             return <span>{selectedOption.descriptiveName}</span>;
           }
 
-          return <span>{cellProps.value}</span>;
+          return <span />;
         };
+
+        // if fuel code is no longer valid while this is in draft
+        // set the cell to blank so it doesn't pass an invalid value
+
+        const selectedFuelCode = response.parameters.fuelCodes.find(fuelCode =>
+          String(fuelCode.id) === String(grid[row][SCHEDULE_B.FUEL_CODE].value));
+
+        if (!selectedFuelCode) {
+          grid[row][SCHEDULE_B.FUEL_CODE].value = '';
+        }
       } else if (response.parameters.scheduleDSelectionRequired) {
         grid[row][SCHEDULE_B.FUEL_CODE].mode = 'scheduleD';
         if (response.parameters.scheduleDSelections.length > 0) {

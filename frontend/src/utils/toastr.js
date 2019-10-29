@@ -58,7 +58,7 @@ const toastr = {
 
     switch (statusId) {
       case CREDIT_TRANSFER_STATUS.accepted.id:
-        reduxToastr.success('Success!', `${text} accepted.`);
+        reduxToastr.success('Success!', `${text} signed.`);
         break;
       case CREDIT_TRANSFER_STATUS.approved.id:
         reduxToastr.success('Success!', `${text} approved.`);

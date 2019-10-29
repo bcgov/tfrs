@@ -86,7 +86,9 @@ const CreditTransactionsPage = (props) => {
       <div className="right-toolbar-container">
         <div className="actions-container">
           {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
-          props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
+          (props.loggedInUser.organization.statusDisplay === 'Active' ||
+          (props.loggedInUser.organization.organizationBalance &&
+          (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
           !props.loggedInUser.isGovernmentUser &&
             <button
               id="credit-transfer-new-transfer"
@@ -153,7 +155,8 @@ CreditTransactionsPage.propTypes = {
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
         validatedCredits: PropTypes.number
-      })
+      }),
+      statusDisplay: PropTypes.string
     }),
     roles: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number

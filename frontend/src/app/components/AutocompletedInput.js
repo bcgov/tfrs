@@ -90,7 +90,7 @@ class AutocompletedInput extends Component {
             {...props}
           />
         )}
-        selectOnBlur
+        selectOnBlur={this.props.selectOnBlur}
         value={this.props.value}
         wrapperStyle={{}}
       />
@@ -125,6 +125,7 @@ AutocompletedInput.defaultProps = {
       {items}
     </div>
   ),
+  selectOnBlur: true,
   value: ''
 };
 
@@ -140,6 +141,7 @@ AutocompletedInput.propTypes = {
   onSelectEvent: PropTypes.func,
   renderItem: PropTypes.func,
   renderMenu: PropTypes.func,
+  selectOnBlur: PropTypes.bool,
   value: PropTypes.any
 };
 

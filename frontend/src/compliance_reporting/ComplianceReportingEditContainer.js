@@ -34,6 +34,21 @@ import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 
 class ComplianceReportingEditContainer extends Component {
+  static cleanSummaryValues (summary) {
+    return {
+      ...summary,
+      creditsOffset: Number(summary.creditsOffset),
+      dieselClassDeferred: Number(summary.dieselClassDeferred),
+      dieselClassObligation: Number(summary.dieselClassObligation),
+      dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
+      dieselClassRetained: Number(summary.dieselClassRetained),
+      gasolineClassDeferred: Number(summary.gasolineClassDeferred),
+      gasolineClassObligation: Number(summary.gasolineClassObligation),
+      gasolineClassPreviouslyRetained: Number(summary.gasolineClassPreviouslyRetained),
+      gasolineClassRetained: Number(summary.gasolineClassRetained)
+    };
+  }
+
   static componentForTabName (tab) {
     let TabComponent;
 
@@ -112,6 +127,7 @@ class ComplianceReportingEditContainer extends Component {
     this._showPenaltyWarning = this._showPenaltyWarning.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateScheduleState = this._updateScheduleState.bind(this);
+    this._validate = this._validate.bind(this);
   }
 
   componentDidMount () {
@@ -173,7 +189,7 @@ class ComplianceReportingEditContainer extends Component {
             String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
         }
 
-        this.props.validateComplianceReport({
+        this._validate({
           id,
           state: {
             ...schedules
@@ -311,7 +327,7 @@ class ComplianceReportingEditContainer extends Component {
       }
     });
 
-    this.props.validateComplianceReport({
+    this._validate({
       id,
       state: {
         compliancePeriod: period,
@@ -390,6 +406,12 @@ class ComplianceReportingEditContainer extends Component {
       payload.supplementalNote = this.state.supplementalNote;
     }
 
+    if (payload.summary) {
+      const { summary } = payload;
+
+      payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+    }
+
     this.status = status;
 
     this.props.updateComplianceReport({
@@ -435,6 +457,17 @@ class ComplianceReportingEditContainer extends Component {
       ...this.state,
       showPenaltyWarning: bool
     });
+  }
+
+  _validate (_payload) {
+    const payload = _payload;
+    if (payload.state && payload.state.summary) {
+      const { summary } = payload.state;
+
+      payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+    }
+
+    return this.props.validateComplianceReport(payload);
   }
 
   render () {

@@ -51,7 +51,7 @@ const UserFormDetails = props => (
           <div className="form-group">
             <label htmlFor="keycloak-email">
               {document.location.pathname.indexOf('/admin/users/') < 0 &&
-                'Email address associated with BCeID user:'}
+                'Email address associated with the BCeID user account:'}
               {document.location.pathname.indexOf('/admin/users/') >= 0 &&
                 'IDIR Email Address:'}
               {props.isAdding &&

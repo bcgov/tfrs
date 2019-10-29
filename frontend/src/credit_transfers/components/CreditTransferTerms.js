@@ -28,9 +28,10 @@ CreditTransferTerms.propTypes = {
   fields: PropTypes.shape({
     terms: PropTypes.array
   }).isRequired,
-  signingAuthorityAssertions: {
+  signingAuthorityAssertions: PropTypes.shape({
+    isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }.isRequired,
+  }).isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 

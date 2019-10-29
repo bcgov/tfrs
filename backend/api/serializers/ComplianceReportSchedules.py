@@ -115,11 +115,13 @@ class ScheduleCRecordSerializer(serializers.ModelSerializer):
         fields = (
             'fuel_type', 'fuel_class', 'quantity', 'expected_use', 'rationale',
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
-            'renewable_diesel_volume', 'renewable_gasoline_volume'
+            'renewable_diesel_volume', 'renewable_gasoline_volume',
+            'unit_of_measure'
         )
         read_only_fields = (
             'petroleum_diesel_volume', 'petroleum_gasoline_volume',
-            'renewable_diesel_volume', 'renewable_gasoline_volume'
+            'renewable_diesel_volume', 'renewable_gasoline_volume',
+            'unit_of_measure'
         )
 
 
@@ -130,7 +132,7 @@ class ScheduleCDetailSerializer(serializers.ModelSerializer):
         model = ScheduleC
         fields = (
             'records', 'total_petroleum_diesel', 'total_petroleum_gasoline',
-            'total_renewable_diesel', 'total_renewable_gasoline'
+            'total_renewable_diesel', 'total_renewable_gasoline',
         )
         read_only_fields = (
             'total_petroleum_diesel', 'total_petroleum_gasoline',
