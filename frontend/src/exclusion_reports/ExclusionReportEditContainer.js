@@ -137,6 +137,18 @@ class ExclusionReportEditContainer extends Component {
       if (nextProps.exclusionReports.item.hasSnapshot) {
         this.props.getSnapshotRequest(id);
       }
+
+      if (!nextProps.exclusionReports.item.readOnly) {
+        const {exclusionAgreement} = this.state;
+        this.props.validateExclusionReport({
+          id,
+          state: {
+            ...exclusionAgreement
+          }
+        });
+      }
+
+
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
@@ -257,6 +269,15 @@ class ExclusionReportEditContainer extends Component {
 
   _updateScheduleState(mergedState) {
     const {exclusionAgreement} = this.state;
+    const { id } = this.props.match.params;
+
+    this.props.validateExclusionReport({
+      id,
+      state: {
+        ...exclusionAgreement,
+        ...mergedState
+      }
+    });
 
     this.setState({
       exclusionAgreement: {
@@ -264,6 +285,7 @@ class ExclusionReportEditContainer extends Component {
         ...mergedState
       }
     });
+
   }
 
   render() {
@@ -344,6 +366,9 @@ class ExclusionReportEditContainer extends Component {
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
         }}
+        valid={this.props.exclusionReports.valid !== false}
+        validating={this.props.exclusionReports.validating}
+        validationMessages={this.props.exclusionReports.validationMessages}
       />,
       <ExclusionReportButtons
         actions={this.props.exclusionReports.item.actions}
@@ -352,6 +377,9 @@ class ExclusionReportEditContainer extends Component {
         key="exclusionReportButtons"
         loggedInUser={this.props.loggedInUser}
         saving={this.props.saving}
+        valid={this.props.exclusionReports.valid !== false}
+        validating={this.props.exclusionReports.validating}
+        validationMessages={this.props.exclusionReports.validationMessages}
       />,
       <Modal
         disabled={(this.state.supplementalNoteRequired &&
@@ -502,6 +530,7 @@ ExclusionReportEditContainer.propTypes = {
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   createComplianceReport: PropTypes.func.isRequired,
+  validateExclusionReport: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
     snapshot: PropTypes.shape(),
@@ -524,7 +553,10 @@ ExclusionReportEditContainer.propTypes = {
       organization: PropTypes.shape,
       type: PropTypes.shape()
     }),
-    success: PropTypes.bool
+    success: PropTypes.bool,
+    valid: PropTypes.bool,
+    validating: PropTypes.bool,
+    validationMessages: PropTypes.object
   }),
   getExclusionReport: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
@@ -554,6 +586,7 @@ const
     getComplianceReports: complianceReporting.find,
     createComplianceReport: complianceReporting.create,
     getExclusionReport: exclusionReports.get,
+    validateExclusionReport: exclusionReports.validate,
     getSnapshotRequest: complianceReporting.getSnapshot,
     getSigningAuthorityAssertions,
     updateExclusionReport: exclusionReports.update
