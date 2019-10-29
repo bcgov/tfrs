@@ -529,6 +529,7 @@ class CreditTransferViewContainer extends Component {
         key="confirmRescind"
       >
         Are you sure you want to rescind this transfer?
+        This will cancel the Credit Transfer Proposal.
       </Modal>
     );
   }

@@ -11,7 +11,11 @@ import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 
 import {
-  deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
+  deleteDocumentUpload,
+  getDocumentUpload,
+  getDocumentUploadURL,
+  partialUpdateDocument,
+  scanDocumentAttachments,
   uploadDocument
 } from '../actions/documentUploads';
 import history from '../app/History';
@@ -29,7 +33,7 @@ class SecureFileSubmissionEditContainer extends Component {
       fields: {
         attachmentCategory: '',
         attachments: [],
-        compliancePeriod: {id: 0, description: ''},
+        compliancePeriod: { id: 0, description: '' },
         documentType: {
           id: 1
         },
@@ -97,10 +101,10 @@ class SecureFileSubmissionEditContainer extends Component {
 
     let hasFailures = false;
 
-    let attachments = props.item.attachments;
+    const { attachments } = props.item;
     if (attachments) {
-      attachments.forEach(attachment => {
-        if (attachment.securityScanStatus == "FAIL") {
+      attachments.forEach((attachment) => {
+        if (attachment.securityScanStatus === 'FAIL') {
           hasFailures = true;
         }
       });
@@ -211,10 +215,10 @@ class SecureFileSubmissionEditContainer extends Component {
 
     let hasFailures = false;
 
-    let attachments = fieldState.attachments;
+    const { attachments } = fieldState;
     if (attachments) {
-      attachments.forEach(attachment => {
-        if (attachment.securityScanStatus == "FAIL") {
+      attachments.forEach((attachment) => {
+        if (attachment.securityScanStatus === 'FAIL') {
           hasFailures = true;
         }
       });
@@ -316,7 +320,7 @@ class SecureFileSubmissionEditContainer extends Component {
       ))
       .map(attachment => attachment.id);
 
-    const {id} = this.props.item;
+    const { id } = this.props.item;
 
     // API data structure
     const data = {
@@ -331,7 +335,9 @@ class SecureFileSubmissionEditContainer extends Component {
 
     Promise.all(uploadPromises).then(() => (
       this.props.partialUpdateDocument(id, data).then((response) => {
-        this.setState({uploadState: 'success'});
+        this.props.scanDocumentAttachments(id);
+
+        this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       }).catch((reason) => {
@@ -417,6 +423,7 @@ SecureFileSubmissionEditContainer.propTypes = {
   }),
   getDocumentUpload: PropTypes.func.isRequired,
   item: PropTypes.shape({
+    attachments: PropTypes.arrayOf(PropTypes.shape()),
     id: PropTypes.number
   }).isRequired,
   loggedInUser: PropTypes.shape({
@@ -440,6 +447,7 @@ SecureFileSubmissionEditContainer.propTypes = {
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
   partialUpdateDocument: PropTypes.func.isRequired,
+  scanDocumentAttachments: PropTypes.func.isRequired,
   uploadDocument: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
 };
@@ -460,6 +468,7 @@ const mapDispatchToProps = dispatch => ({
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
+  scanDocumentAttachments: bindActionCreators(scanDocumentAttachments, dispatch),
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 

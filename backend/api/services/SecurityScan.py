@@ -68,6 +68,7 @@ class SecurityScan:
             attachment.document.status = DocumentStatus.objects.get(
                 status="Security Scan Failed")
             attachment.document.save()
+            DocumentService.send_notification(attachment.document, user)
 
         elif attachment.document.status.status == "Pending Submission":
             submitted_status = DocumentStatus.objects.get(status="Submitted")
@@ -75,7 +76,7 @@ class SecurityScan:
 
             attachment.document.save()
 
-        DocumentService.send_notification(attachment.document, user)
+            DocumentService.send_notification(attachment.document, user)
 
     @staticmethod
     def resubmit_stalled_scans():
@@ -119,6 +120,7 @@ class SecurityScan:
 
             attachment.update_timestamp = datetime.now()
             attachment.save()
+
             SecurityScan.update_status_and_send_notifications(attachment)
         except DocumentFileAttachment.DoesNotExist:
             print('File does not exist. Ignoring...')
@@ -135,19 +137,21 @@ class SecurityScan:
             channel.confirm_delivery()
             channel.queue_declare(queue='security-scan-requests')
 
-            channel.basic_publish(exchange='',
-                                  routing_key='security-scan-requests',
-                                  body=json.dumps({
-                                      'message': 'scan-request',
-                                      'url': file.url,
-                                      'id': file.id,
-                                      'filename': file.filename
-                                  }),
-                                  properties=pika.BasicProperties(
-                                      content_type='application/json',
-                                      delivery_mode=1
-                                  ),
-                                  mandatory=True)
+            channel.basic_publish(
+                exchange='',
+                routing_key='security-scan-requests',
+                body=json.dumps({
+                    'message': 'scan-request',
+                    'url': file.url,
+                    'id': file.id,
+                    'filename': file.filename
+                }),
+                properties=pika.BasicProperties(
+                    content_type='application/json',
+                    delivery_mode=1
+                ),
+                mandatory=True
+            )
 
             channel.close()
             connection.close()

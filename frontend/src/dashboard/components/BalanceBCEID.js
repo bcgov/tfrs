@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as NumberFormat from '../../constants/numeralFormats';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 const BalanceBCEID = props => (
-  <div className="dashboard-card">
+  <div className="dashboard-card balance">
     {props.loggedInUser.organization && props.loggedInUser.organization.organizationBalance && [
       <h2 key="name">{props.loggedInUser.organization.name}</h2>,
       <div key="label">has a balance of</div>,
@@ -14,6 +16,22 @@ const BalanceBCEID = props => (
       </div>,
       <h2 key="validated-credits">validated credits</h2>
     ]}
+    <div className="credit-market-report">
+      <a
+        href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Credit Market Report
+      </a>
+      <a
+        href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <FontAwesomeIcon icon={['far', 'file-pdf']} />
+      </a>
+    </div>
   </div>
 );
 

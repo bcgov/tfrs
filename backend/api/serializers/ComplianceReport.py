@@ -37,7 +37,8 @@ from api.models.ComplianceReportSchedules import \
     ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, \
     ScheduleDSheetOutput, ScheduleDSheetInput, ScheduleSummary
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
-from api.models.ExclusionReportAgreement import ExclusionAgreement, ExclusionAgreementRecord
+from api.models.ExclusionReportAgreement import ExclusionAgreement, \
+    ExclusionAgreementRecord
 from api.models.Organization import Organization
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
@@ -45,7 +46,8 @@ from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
     ScheduleBDetailSerializer, ScheduleDDetailSerializer, \
     ScheduleSummaryDetailSerializer
-from api.serializers.Organization import OrganizationMinSerializer
+from api.serializers.Organization import OrganizationMinSerializer, \
+    OrganizationDisplaySerializer
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 
@@ -208,7 +210,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     """
     status = ComplianceReportWorkflowStateSerializer(read_only=True)
     type = ComplianceReportTypeSerializer(read_only=True)
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationDisplaySerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
     schedule_a = ScheduleADetailSerializer(read_only=True)
     schedule_b = ScheduleBDetailSerializer(read_only=True)
@@ -375,8 +377,10 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             lines['26'] = Decimal(0)
 
         if obj.schedule_a:
-            net_gasoline_class_transferred += obj.schedule_a.net_gasoline_class_transferred
-            net_diesel_class_transferred += obj.schedule_a.net_diesel_class_transferred
+            net_gasoline_class_transferred += \
+                obj.schedule_a.net_gasoline_class_transferred
+            net_diesel_class_transferred += \
+                obj.schedule_a.net_diesel_class_transferred
 
         lines['5'] = net_gasoline_class_transferred
         lines['16'] = net_diesel_class_transferred
@@ -941,10 +945,12 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 for original_record in original_report.exclusion_agreement.records.all():
                     record = ExclusionAgreementRecord()
                     record.exclusion_agreement = exclusion_agreement
-                    record.transaction_partner = original_record.transaction_partner
+                    record.transaction_partner = \
+                        original_record.transaction_partner
                     record.postal_address = original_record.postal_address
                     record.quantity = original_record.quantity
-                    record.quantity_not_sold = original_record.quantity_not_sold
+                    record.quantity_not_sold = \
+                        original_record.quantity_not_sold
                     record.fuel_type = original_record.fuel_type
                     record.transaction_type = original_record.transaction_type
                     record.save()
@@ -978,7 +984,7 @@ class ComplianceReportUpdateSerializer(
         slug_field='description',
         read_only=True
     )
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationDisplaySerializer(read_only=True)
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)

@@ -394,6 +394,13 @@ const getCreditTransfersError = error => ({
   errorMessage: error
 });
 
+/*
+ * Sends document attachments for scanning
+ */
+const scanDocumentAttachments = id => dispatch => (
+  axios.put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/scan_attachments`)
+);
+
 export {
   addCommentToDocument,
   addDocumentUpload,
@@ -407,5 +414,6 @@ export {
   uploadDocument,
   updateDocumentUpload,
   linkDocument,
-  unlinkDocument
+  unlinkDocument,
+  scanDocumentAttachments
 };

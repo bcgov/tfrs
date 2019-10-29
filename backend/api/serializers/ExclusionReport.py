@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import datetime
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import SlugRelatedField
@@ -33,8 +34,8 @@ from api.models.TransactionType import TransactionType
 from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportWorkflowStateSerializer
 from api.permissions.ComplianceReport import ComplianceReportPermissions
-from api.serializers import \
-    datetime, OrganizationMinSerializer, CompliancePeriodSerializer
+from api.serializers.CompliancePeriod import CompliancePeriodSerializer
+from api.serializers.Organization import OrganizationDisplaySerializer
 from api.services.ComplianceReportService import ComplianceReportService
 
 
@@ -87,7 +88,7 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     compliance_period = CompliancePeriodSerializer(read_only=True)
     exclusion_agreement = ExclusionAgreementSerializer(read_only=True)
     history = serializers.SerializerMethodField()
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationDisplaySerializer(read_only=True)
     status = ComplianceReportWorkflowStateSerializer(read_only=True)
     type = ComplianceReportTypeSerializer(read_only=True)
     deltas = serializers.SerializerMethodField()
@@ -196,8 +197,8 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
                   'exclusion_agreement', 'read_only', 'history', 'actions',
-                  'actor', 'has_snapshot', 'deltas', 'display_name', 'supplemental_note',
-                  'is_supplemental']
+                  'actor', 'has_snapshot', 'deltas', 'display_name',
+                  'supplemental_note', 'is_supplemental']
 
 
 class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
@@ -213,7 +214,7 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
     exclusion_agreement = ExclusionAgreementSerializer(
         allow_null=True, required=False
     )
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationDisplaySerializer(read_only=True)
     status = ComplianceReportWorkflowStateSerializer(required=False)
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     supplemental_note = serializers.CharField(max_length=500, min_length=1, required=False, allow_null=True)
@@ -267,11 +268,15 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
                 instance.status.fuel_supplier_status = status_data[
                     'fuel_supplier_status']
                 if instance.supplements is not None and instance.status.fuel_supplier_status.status in ['Submitted']:
-                # supplemental note is required
+                    # supplemental note is required
                     if 'supplemental_note' not in validated_data:
-                        raise serializers.ValidationError('supplemental note is required when submitting a'
-                                                          ' supplemental report')
-                    instance.supplemental_note = validated_data.pop('supplemental_note')
+                        raise serializers.ValidationError(
+                            'supplemental note is required when submitting a '
+                            'supplemental report'
+                        )
+                    instance.supplemental_note = validated_data.pop(
+                        'supplemental_note'
+                    )
             if 'analyst_status' in status_data:
                 instance.status.analyst_status = status_data[
                     'analyst_status']

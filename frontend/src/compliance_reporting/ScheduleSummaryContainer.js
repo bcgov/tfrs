@@ -81,30 +81,6 @@ class ScheduleSummaryContainer extends Component {
     return totals;
   }
 
-  static calculateNonCompliancePayable (penalty) {
-    const grid = penalty;
-    let total = 0;
-
-    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_11][2].value)) {
-      total += Number(grid[SCHEDULE_PENALTY.LINE_11][2].value);
-    }
-
-    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_22][2].value)) {
-      total += Number(grid[SCHEDULE_PENALTY.LINE_22][2].value);
-    }
-
-    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_28][2].value)) {
-      total += Number(grid[SCHEDULE_PENALTY.LINE_28][2].value);
-    }
-
-    grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = {
-      ...grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2],
-      value: total
-    };
-
-    return penalty;
-  }
-
   static calculateGasolinePayable (grid) {
     let totals = 0;
 
@@ -219,6 +195,7 @@ class ScheduleSummaryContainer extends Component {
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
     this._handlePart3Changed = this._handlePart3Changed.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
+    this._calculateNonCompliancePayable = this._calculateNonCompliancePayable.bind(this);
   }
 
   componentDidMount () {
@@ -403,7 +380,7 @@ class ScheduleSummaryContainer extends Component {
         value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
       };
 
-      penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+      penalty = this._calculateNonCompliancePayable(penalty);
 
       if (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
         diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
@@ -769,7 +746,7 @@ class ScheduleSummaryContainer extends Component {
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     };
 
-    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+    penalty = this._calculateNonCompliancePayable(penalty);
 
     this.setState({
       ...this.state,
@@ -778,6 +755,36 @@ class ScheduleSummaryContainer extends Component {
     });
 
     return part3;
+  }
+
+  _calculateNonCompliancePayable (penalty) {
+    const grid = penalty;
+    let total = 0;
+
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_11][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_11][2].value);
+    }
+
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_22][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_22][2].value);
+    }
+
+    if (!Number.isNaN(grid[SCHEDULE_PENALTY.LINE_28][2].value)) {
+      total += Number(grid[SCHEDULE_PENALTY.LINE_28][2].value);
+    }
+
+    grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = {
+      ...grid[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2],
+      value: total
+    };
+
+    if (total > 0) {
+      this.props.showPenaltyWarning(true);
+    } else {
+      this.props.showPenaltyWarning(false);
+    }
+
+    return grid;
   }
 
   _closeModal () {
@@ -850,7 +857,7 @@ class ScheduleSummaryContainer extends Component {
         diesel[SCHEDULE_SUMMARY.LINE_13][2].value
     };
 
-    penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+    penalty = this._calculateNonCompliancePayable(penalty);
 
     this.setState({
       ...this.state,
@@ -893,7 +900,7 @@ class ScheduleSummaryContainer extends Component {
           value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
         };
 
-        penalty = ScheduleSummaryContainer.calculateNonCompliancePayable(penalty);
+        penalty = this._calculateNonCompliancePayable(penalty);
       }
     });
 
@@ -1157,6 +1164,7 @@ ScheduleSummaryContainer.propTypes = {
       records: PropTypes.arrayOf(PropTypes.shape())
     })
   }).isRequired,
+  showPenaltyWarning: PropTypes.func.isRequired,
   snapshot: PropTypes.shape({
     scheduleA: PropTypes.shape({
       records: PropTypes.arrayOf(PropTypes.shape())
