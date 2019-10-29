@@ -1,4 +1,5 @@
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
@@ -8,6 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
+import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
@@ -172,18 +174,47 @@ class Navbar extends Component {
             Organization Details
           </NavLink>
           }
-          <NavLink
-            activeClassName="active"
-            id="navbar-notifications"
-            to={Routes.NOTIFICATIONS.LIST}
-          >
-            <span className="fa-layers">
-              <FontAwesomeIcon icon="bell" />
-              {this.state.unreadCount > 0 &&
-              <span className="fa-layers-counter">{this.state.unreadCount}</span>
-              }
-            </span>
-          </NavLink>
+          <div id="user-options">
+            {this.props.loggedInUser.displayName &&
+              <div id="display-name">
+                <DropdownButton
+                  className="display-name-button"
+                  id="display-name-button"
+                  pullRight
+                  title={this.props.loggedInUser.displayName}
+                >
+                  <MenuItem className="dropdown-menu-caret" header>
+                    <FontAwesomeIcon icon="caret-up" size="2x" />
+                  </MenuItem>
+                  <MenuItem onClick={() => {
+                    history.push(Routes.SETTINGS);
+                  }}
+                  >
+                    <FontAwesomeIcon icon="cog" /> Settings
+                  </MenuItem>
+                  <MenuItem onClick={(e) => {
+                    e.preventDefault();
+                    this.props.signUserOut();
+                  }}
+                  >
+                    <FontAwesomeIcon icon="sign-out-alt" /> Log Out
+                  </MenuItem>
+                </DropdownButton>
+              </div>
+            }
+            <NavLink
+              activeClassName="active"
+              id="navbar-notifications"
+              to={Routes.NOTIFICATIONS.LIST}
+            >
+              <div>
+                <FontAwesomeIcon icon="bell" />
+                {this.state.unreadCount > 0 &&
+                <span className="fa-layers-counter">{this.state.unreadCount}</span>
+                }
+              </div>
+            </NavLink>
+          </div>
         </div>
       </div>
     );
@@ -413,37 +444,21 @@ class Navbar extends Component {
               </div>
 
               <div className="pull-right">
-                <h5 id="display_name">
-                  {this.props.loggedInUser.displayName &&
-                  <DropdownButton
-                    className="display-name-button"
-                    id="display-name-button"
-                    pullRight
-                    title={this.props.loggedInUser.displayName}
-                  >
-                    <MenuItem className="dropdown-menu-caret" header>
-                      <FontAwesomeIcon icon="caret-up" size="2x" />
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                      history.push(Routes.SETTINGS);
-                    }}
-                    >
-                      <FontAwesomeIcon icon="cog" /> Settings
-                    </MenuItem>
-                    <MenuItem onClick={(e) => {
-                      e.preventDefault();
-                      this.props.signUserOut();
-                    }}
-                    >
-                      <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                    </MenuItem>
-                  </DropdownButton>
+                <div>
+                  <h5 id="organization-name">
+                    {this.props.loggedInUser.organization &&
+                      this.props.loggedInUser.organization.name}
+                  </h5>
+                  {this.props.loggedInUser.roles &&
+                  !this.props.loggedInUser.isGovernmentUser &&
+                  <span id="organization-balance">
+                      Credit Balance: {
+                      numeral(this.props.loggedInUser.organization.organizationBalance.validatedCredits)
+                        .format(NumberFormat.INT)
+                    }
+                  </span>
                   }
-                </h5>
-                <span id="user_organization">
-                  {this.props.loggedInUser.organization &&
-                  this.props.loggedInUser.organization.name}
-                </span>
+                </div>
               </div>
               {this.props.isAuthenticated && CollapsedNavigation}
             </div>
@@ -468,8 +483,11 @@ Navbar.propTypes = {
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
+      id: PropTypes.number,
       name: PropTypes.string,
-      id: PropTypes.number
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      })
     }),
     roles: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number

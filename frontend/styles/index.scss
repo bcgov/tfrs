@@ -63,50 +63,24 @@ body {
 #header{
   color: $white;
 
-  #display_name{
-    color: $white;
+  #organization-balance {
+    display: block;
+    font-size: 1.5rem;
     text-align: right;
-    margin-top: 1rem;
-
-    .display-name-button {
-      background-color: transparent;
-      border: 0;
-      color: $white;
-      margin: 0;
-      padding: 0;
-      text-align: right;
-
-      .caret {
-        border-width: 5px;
-        margin-left: 0.5rem;
-        margin-right: -1px;
-      }
-    }
-
-    .dropdown-menu {
-      right: -1rem;
-      top: 120%;
-
-      .dropdown-menu-caret {
-        color: $white;
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        right: 0.5rem;
-        top: -1.5rem;
-      }
-    }
-
-    .open .caret {
-      color: $grey;
-    }
   }
 
-  #user_organization{
-    font-size: 1.2rem;
-    font-style: italic;
+  #organization-name {
+    color: $white;
     display: block;
+    font-size: 1.6rem;
+    margin: 0.5rem 0;
     text-align: right;
+  }
+
+  .pull-right {
+    align-items: center;
+    display: flex;
+    height: 100%;
   }
 }
 

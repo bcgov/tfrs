@@ -12,29 +12,133 @@
     border-bottom: 1px solid $yellow;
   }
 
-  #navbar-notifications {
-    font-size: 2.5rem;
+  #user-options {
+    align-items: center;
+    display: flex;
     font-weight: normal;
     height: 100%;
-    padding: 0.25rem 0;
+    margin: 0 1rem;
     position: absolute;
     right: 1.5rem;
     text-decoration: none;
     top: 0;
-    width: 5rem;
 
-    &.active {
-      border-bottom: 1px solid $yellow;
+    > *:not(:first-child):after {
+      content: "";
+      background: #748bad;
+      position: absolute;
+      bottom: 25%;
+      left: 0;
+      height: 50%;
+      width: 1px;
+    }
+
+    #display-name {
+      display: inline-block;
+      font-size: 1.5rem;
+      height: 100%;
+      margin: 0;
+      padding: 0 1.5rem;
+      vertical-align: middle;
+
+      > .dropdown {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+
+        .display-name-button {
+          background-color: transparent;
+          border: 0;
+          color: $white;
+          display: inline-block;
+          margin: 0;
+          padding: 0;
+  
+          .caret {
+            border-width: 8px;
+            margin-left: 0.5rem;
+            margin-right: -1px;
+            margin-top: -2px;
+          }
+        }
+
+        .dropdown-menu {
+          border: 0;
+          right: -0.5rem;
+          top: 90%;
+
+          li a {
+            text-align: left;
+          }
+    
+          .dropdown-menu-caret {
+            color: $white;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: 0.5rem;
+            top: -1.5rem;
+          }
+        }
+    
+        .open .caret {
+          color: $grey;
+        }
+      }
+    }
+
+    #navbar-notifications {
+      display: inline-block;
+      margin: 0;
+      padding: 0 1.5rem;
+      height: 100%;
+      vertical-align: middle;
+
+      > div {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+      }
+
+      .fa-bell {
+        font-size: 2.5rem;
+      }
+
+      .fa-layers-counter {
+        background-color: $red;
+        font-size: 4rem;
+        right: 0.5rem;
+        top: 1rem;
+      }
     }
 
     &:after {
       display: none;
     }
 
-    .fa-layers-counter {
-      background-color: $red;
-      font-size: 4rem;
-    }
+    // #display_name {
+    //   color: $white;
+    //   text-align: right;
+    //   margin-top: 1rem;
+  
+      // .display-name-button {
+      //   background-color: transparent;
+      //   border: 0;
+      //   color: $white;
+      //   margin: 0;
+      //   padding: 0;
+      //   text-align: right;
+  
+      //   .caret {
+      //     border-width: 5px;
+      //     margin-left: 0.5rem;
+      //     margin-right: -1px;
+      //   }
+      // }
+
+    // }
   }
 }
 
