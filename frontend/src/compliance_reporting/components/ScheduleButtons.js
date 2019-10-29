@@ -26,13 +26,28 @@ const getValidationMessages = (props) => {
     return 'Validating...';
   }
 
-  const found = props.complianceReports.items.findIndex(item => (
+  let period = null;
+  if (typeof (props.complianceReport.compliancePeriod) === 'string') {
+    period = props.complianceReport.compliancePeriod;
+  } else {
+    period = props.complianceReport.compliancePeriod.description;
+  }
+
+  let type = null;
+  if (typeof (props.complianceReport.type) === 'string') {
+    ({ type } = props.complianceReport);
+  } else {
+    type = props.complianceReport.type.theType;
+  }
+
+  const found = props.complianceReports.items.find(item => (
     item.status.fuelSupplierStatus === 'Submitted' &&
-    item.compliancePeriod.description === props.compliancePeriod
+    item.compliancePeriod.description === period &&
+    item.type === type
   ));
 
-  if (found >= 0) {
-    return `A Compliance/Exclusion Report for ${props.compliancePeriod} has already been submitted
+  if (found && !props.complianceReport.isSupplemental) {
+    return `A ${type} for ${period} has already been submitted
       to the Government of British Columbia. If the information in the previous report does not
       completely and accurately disclose the information required to be included in the report,
       please create a supplemental report by opening the previous report and clicking on the
@@ -211,7 +226,7 @@ const ScheduleButtons = props => (
 ScheduleButtons.defaultProps = {
   actions: [],
   actor: '',
-  compliancePeriod: null,
+  complianceReport: null,
   validating: false,
   valid: true,
   validationMessages: {}
@@ -220,7 +235,19 @@ ScheduleButtons.defaultProps = {
 ScheduleButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string),
   actor: PropTypes.string,
-  compliancePeriod: PropTypes.string,
+  complianceReport: PropTypes.shape({
+    compliancePeriod: PropTypes.oneOfType([
+      PropTypes.shape({
+        description: PropTypes.string
+      }),
+      PropTypes.string
+    ]),
+    isSupplemental: PropTypes.bool,
+    type: PropTypes.oneOfType([
+      PropTypes.shape({}),
+      PropTypes.string
+    ])
+  }),
   complianceReports: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()),
     isFinding: PropTypes.bool
