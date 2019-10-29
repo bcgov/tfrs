@@ -3,20 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { transactionTypes } from '../actions/transactionTypes';
+import {transactionTypes} from '../actions/transactionTypes';
 import AddressBuilder from '../app/components/AddressBuilder';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
 import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
 import ExclusionAgreementPage from './components/ExclusionAgreementPage';
-import { EXCLUSION_AGREEMENT } from '../constants/schedules/exclusionReportColumns';
+import {EXCLUSION_AGREEMENT, EXCLUSION_AGREEMENT_ERROR_KEYS} from '../constants/schedules/exclusionReportColumns';
 
 class ExclusionAgreementContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -59,7 +59,7 @@ class ExclusionAgreementContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = ExclusionAgreementContainer.addHeaders();
@@ -70,7 +70,7 @@ class ExclusionAgreementContainer extends Component {
     this.loadData = this.loadData.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadTransactionTypes();
 
     if (this.props.exclusionReport.exclusionAgreement &&
@@ -82,8 +82,8 @@ class ExclusionAgreementContainer extends Component {
     }
   }
 
-  loadData () {
-    const { grid } = this.state;
+  loadData() {
+    const {grid} = this.state;
     this._addRow(this.props.exclusionReport.exclusionAgreement.records.length);
 
     const readOnly = this.props.exclusionReport.readOnly === true;
@@ -142,8 +142,8 @@ class ExclusionAgreementContainer extends Component {
     });
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -184,7 +184,7 @@ class ExclusionAgreementContainer extends Component {
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }, { // units
@@ -201,7 +201,7 @@ class ExclusionAgreementContainer extends Component {
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }, { // units
@@ -218,7 +218,7 @@ class ExclusionAgreementContainer extends Component {
     });
   }
 
-  _gridStateToPayload (state) {
+  _gridStateToPayload(state) {
     const startingRow = 1;
 
     const records = [];
@@ -249,7 +249,7 @@ class ExclusionAgreementContainer extends Component {
     });
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -291,6 +291,7 @@ class ExclusionAgreementContainer extends Component {
           value: Number.isNaN(cleanedValue) ? '' : cleanedValue
         };
       }
+
     });
 
     this.setState({
@@ -302,7 +303,7 @@ class ExclusionAgreementContainer extends Component {
     });
   }
 
-  render () {
+  render() {
     return ([
       <ExclusionAgreementPage
         addRow={this._addRow}
@@ -312,10 +313,13 @@ class ExclusionAgreementContainer extends Component {
         key="spreadsheet"
         title="Exclusion Report"
         totals={this.state.totals}
+        valid={this.props.valid !== false}
+        validating={this.props.validating}
+        validationMessages={this.props.validationMessages}
       >
         <p>
           Report all Part 3 fuels either purchased or sold under an exclusion agreement within
-          this Compliance Period. <br />
+          this Compliance Period. <br/>
           <b>This report does not apply to petroleum-based gasoline or petroleum-based diesel.</b>
         </p>
       </ExclusionAgreementPage>
@@ -346,7 +350,10 @@ ExclusionAgreementContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  valid: PropTypes.bool,
+  validating: PropTypes.bool,
+  validationMessages: PropTypes.object
 };
 
 const mapStateToProps = state => ({

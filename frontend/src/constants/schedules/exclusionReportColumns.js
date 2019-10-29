@@ -9,6 +9,15 @@ const EXCLUSION_AGREEMENT = {
   NOT_SOLD_UNITS: 8
 };
 
+const EXCLUSION_AGREEMENT_ERROR_KEYS = {
+  legalName: 3,
+  address: 4,
+  fuelType: 2,
+  transactionType: 1,
+  quantity: 5,
+  quantityNotSold: 7
+};
+
 export {
-  EXCLUSION_AGREEMENT
+  EXCLUSION_AGREEMENT, EXCLUSION_AGREEMENT_ERROR_KEYS
 };

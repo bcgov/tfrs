@@ -8,6 +8,23 @@ import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
+
+const getValidationMessages = (props) => {
+  if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
+    return 'You must have the Signing Authority role to submit an Exclusion Report to the Government of British Columbia.';
+  }
+
+  if (!props.valid) {
+    return 'Please fix validation errors before submitting.';
+  }
+
+  if (props.validating) {
+    return 'Validating...';
+  }
+
+  return '';
+};
+
 const ExclusionReportButtons = props => (
   <div className="exclusion-report-buttons btn-container">
     <div className="left" />
@@ -30,26 +47,31 @@ const ExclusionReportButtons = props => (
       </button>
       }
       {props.actions.includes('SUBMIT') && [
-        <button
-          className="btn btn-primary"
-          data-target="#confirmSave"
-          data-toggle="modal"
-          key="btn-save"
-          type="button"
-        >
-          <FontAwesomeIcon icon="save" /> Save
-        </button>,
         <TooltipWhenDisabled
-          disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
+          disabled={props.validating || !props.valid}
+          key="btn-save"
+          title="Please fix validation errors before saving."
+        >
+          <button
+            className="btn btn-primary"
+            data-target="#confirmSave"
+            data-toggle="modal"
+            disabled={props.validating || !props.valid}
+            type="button"
+          >
+            <FontAwesomeIcon icon="save" /> Save
+          </button>
+        </TooltipWhenDisabled>,
+        <TooltipWhenDisabled
+          disabled={getValidationMessages(props) !== ''}
           key="btn-submit"
-          title="You must have the Signing Authority role to submit an Exclusion Report to the Government of British Columbia."
+          title={getValidationMessages(props)}
         >
           <button
             className="btn btn-primary"
             data-target="#confirmSubmit"
             data-toggle="modal"
-            disabled={!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)}
-            key="btn-submit"
+            disabled={getValidationMessages(props) !== ''}
             type="button"
           >
             <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
@@ -168,7 +190,10 @@ const ExclusionReportButtons = props => (
 
 ExclusionReportButtons.defaultProps = {
   actions: [],
-  actor: ''
+  actor: '',
+  validating: false,
+  valid: true,
+  validationMessages: {}
 };
 
 ExclusionReportButtons.propTypes = {
@@ -178,7 +203,10 @@ ExclusionReportButtons.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  saving: PropTypes.bool.isRequired
+  saving: PropTypes.bool.isRequired,
+  validating: PropTypes.bool,
+  valid: PropTypes.bool,
+  validationMessages: PropTypes.shape()
 };
 
 export default ExclusionReportButtons;

@@ -18,7 +18,7 @@ from api.serializers.ComplianceReport import \
     ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
     ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer
 from api.serializers.ExclusionReport import \
-    ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer
+    ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from auditable.views import AuditableMixin
 
@@ -173,7 +173,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @detail_route(methods=['post'])
     def validate_partial(self, request, pk=None):
-        serializer = self.get_serializer(data=request.data)
+        instance = self.get_object()
+
+        if instance.type.the_type == 'Exclusion Report':
+            serializer = ExclusionReportValidationSerializer(data=request.data,
+                                                             context={'request': request})
+        else:
+            serializer = self.get_serializer(data=request.data)
+
         serializer.is_valid()
 
         return Response(serializer.errors)

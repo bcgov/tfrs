@@ -35,6 +35,7 @@ from api.serializers.ComplianceReport import \
 from api.permissions.ComplianceReport import ComplianceReportPermissions
 from api.serializers import \
     datetime, OrganizationMinSerializer, CompliancePeriodSerializer
+from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 
 
@@ -47,6 +48,50 @@ class ExclusionAgreementRecordSerializer(serializers.ModelSerializer):
     fuel_type = SlugRelatedField(
         slug_field='name', queryset=ApprovedFuel.objects.all())
     unit_of_measure = serializers.SerializerMethodField()
+
+    def validate_transaction_partner(self, value):
+        org = self.context['request'].user.organization
+        if value == org.name:
+            raise serializers.ValidationError(ComplianceReportValidation.own_organization_selected)
+        return value
+
+    def validate_quantity(self, value):
+        if value == 0:
+            raise serializers.ValidationError(ComplianceReportValidation.zero)
+
+        if value < 0:
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
+
+        if round(value) != value:
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
+
+        return value
+
+    def validate_quantity_not_sold(self, value):
+        if value < 0:
+            raise serializers.ValidationError(
+                ComplianceReportValidation.negative
+            )
+
+        if round(value) != value:
+            raise serializers.ValidationError(
+                ComplianceReportValidation.fractional
+            )
+
+        return value
+
+    def validate(self, data):
+        if data['quantity_not_sold'] > data['quantity']:
+            raise serializers.ValidationError({
+                'quantity_not_sold': ComplianceReportValidation.x_cannot_exceed_y.format(x='Quantity Not Sold',
+                                                                                         y='Quantity')
+            })
+
+        return data
 
     def get_unit_of_measure(self, obj):
         """
@@ -200,7 +245,63 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
                   'is_supplemental']
 
 
-class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
+class ExclusionReportValidator:
+    def validate_exclusion_agreement(self, data):
+        if 'records' not in data:
+            return data
+
+        seen_tuples = {}
+
+        for (i, record) in enumerate(data['records']):
+            prov = None
+
+            if ('transaction_type' in record and
+                record['transaction_type'] is not None) and \
+                    ('fuel_type' in record and
+                     record['fuel_type'] is not None) and \
+                    ('transaction_partner' in record and
+                     record['transaction_partner'] is not None) and \
+                    ('postal_address' in record and
+                     record['postal_address'] is not None):
+                prov = (
+                    record['transaction_type'],
+                    record['fuel_type'],
+                    record['transaction_partner'],
+                    record['postal_address']
+                )
+
+            if prov is not None:
+                if prov in seen_tuples.keys():
+                    seen_tuples[prov].append(i)
+                else:
+                    seen_tuples[prov] = [i]
+
+        failures = []
+
+        for k in seen_tuples.keys():
+            if len(seen_tuples[k]) > 1:
+                for x in seen_tuples[k]:
+                    failures.append(
+                        ComplianceReportValidation.duplicate_with_row.format(
+                            row=x
+                        )
+                    )
+
+        if len(failures) > 0:
+            raise (serializers.ValidationError(failures))
+
+        return data
+
+
+class ExclusionReportValidationSerializer(serializers.ModelSerializer, ExclusionReportValidator):
+    exclusion_agreement = ExclusionAgreementSerializer(allow_null=True, required=False)
+
+    class Meta:
+        model = ComplianceReport
+        fields = ['exclusion_agreement']
+
+
+class ExclusionReportUpdateSerializer(serializers.ModelSerializer, ExclusionReportValidator):
     """
     Update Serializer for the Exclusion Report
     """
@@ -238,9 +339,6 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer):
         return ComplianceReportPermissions.get_relationship(
             obj, self.context['request'].user
         ).value
-
-    def validate_exclusion_agreement(self, data):
-        return data
 
     def update(self, instance, validated_data):
         request = self.context.get('request')

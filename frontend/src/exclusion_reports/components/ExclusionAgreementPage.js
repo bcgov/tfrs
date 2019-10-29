@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import ValidationMessages from "./ValidationMessages";
 
 const ExclusionAgreementPage = props => (
   <div className="spreadsheet-component">
@@ -10,6 +11,16 @@ const ExclusionAgreementPage = props => (
       <h1>{props.title}</h1>
 
       {props.children}
+
+      {!props.exclusionReport.readOnly &&
+      <ValidationMessages
+        key="validation-messages"
+        scheduleType={props.scheduleType}
+        valid={props.valid}
+        validating={props.validating}
+        validationMessages={props.validationMessages}
+      />
+      }
 
       <div className="scrollable">
         <ReactDataSheet
@@ -59,7 +70,11 @@ const ExclusionAgreementPage = props => (
 
 ExclusionAgreementPage.defaultProps = {
   children: null,
-  totals: {}
+  totals: {},
+  validating: false,
+  valid: true,
+  validationMessages: {},
+  scheduleType: 'exclusion-agreement'
 };
 
 ExclusionAgreementPage.propTypes = {
@@ -74,7 +89,11 @@ ExclusionAgreementPage.propTypes = {
   }).isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  totals: PropTypes.shape()
+  totals: PropTypes.shape(),
+  validating: PropTypes.bool,
+  valid: PropTypes.bool,
+  validationMessages: PropTypes.shape(),
+  scheduleType: PropTypes.string,
 };
 
 export default ExclusionAgreementPage;
