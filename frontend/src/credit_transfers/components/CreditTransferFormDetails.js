@@ -44,7 +44,7 @@ class CreditTransferFormDetails extends Component {
           {this.props.loggedInUser.organization.actionsTypeDisplay !== 'Buy And Sell' &&
             <span> sell </span>
           }
-          <div className="form-group">
+          <div className="form-group number-of-credits">
             <InputWithTooltip
               handleInputChange={this.props.handleInputChange}
               id="number-of-credits"

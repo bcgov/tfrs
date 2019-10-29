@@ -13,6 +13,7 @@ import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConf
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import { complianceReporting } from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
+import AddressBuilder from '../app/components/AddressBuilder';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
 import ScheduleAssessmentContainer from './ScheduleAssessmentContainer';
@@ -90,6 +91,7 @@ class ComplianceReportingEditContainer extends Component {
       terms: [],
       getCalled: false,
       createSupplementalCalled: false,
+      showPenaltyWarning: false,
       supplementalNoteRequired: (props.complianceReporting.item &&
         props.complianceReporting.item.isSupplemental &&
         props.complianceReporting.item.actions.includes('SUBMIT')),
@@ -107,6 +109,7 @@ class ComplianceReportingEditContainer extends Component {
     this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
+    this._showPenaltyWarning = this._showPenaltyWarning.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateScheduleState = this._updateScheduleState.bind(this);
   }
@@ -427,6 +430,13 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
+  _showPenaltyWarning (bool) {
+    this.setState({
+      ...this.state,
+      showPenaltyWarning: bool
+    });
+  }
+
   render () {
     const TabComponent = this.tabComponent;
 
@@ -451,6 +461,17 @@ class ComplianceReportingEditContainer extends Component {
       period = this.props.complianceReporting.item.compliancePeriod.description;
     }
 
+    let organizationAddress = null;
+
+    if (this.props.complianceReporting.item.hasSnapshot &&
+      this.props.complianceReporting.snapshot &&
+      this.props.complianceReporting.snapshot.organization.organizationAddress) {
+      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
+    } else if (this.props.loggedInUser.organization.organizationAddress &&
+      !this.props.loggedInUser.isGovernmentUser) {
+      ({ organizationAddress } = this.props.loggedInUser.organization);
+    }
+
     return ([
       <h2 key="main-header">
         {this.props.complianceReporting.item.organization.name}
@@ -461,6 +482,18 @@ class ComplianceReportingEditContainer extends Component {
         {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
         {this.props.complianceReporting.item.compliancePeriod.description}
       </h2>,
+      <p key="organization-address">
+        {organizationAddress &&
+          AddressBuilder({
+            address_line_1: organizationAddress.addressLine_1,
+            address_line_2: organizationAddress.addressLine_2,
+            address_line_3: organizationAddress.addressLine_3,
+            city: organizationAddress.city,
+            state: organizationAddress.state,
+            postal_code: organizationAddress.postalCode
+          })
+        }
+      </p>,
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}
@@ -482,6 +515,7 @@ class ComplianceReportingEditContainer extends Component {
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
         scheduleState={this.state.schedules}
+        showPenaltyWarning={this._showPenaltyWarning}
         snapshot={this.props.complianceReporting.snapshot}
         snapshotIsLoading={this.props.complianceReporting.snapshotIsLoading}
         updateScheduleState={this._updateScheduleState}
@@ -493,6 +527,7 @@ class ComplianceReportingEditContainer extends Component {
         actions={this.props.complianceReporting.item.actions}
         actor={this.props.complianceReporting.item.actor}
         compliancePeriod={period}
+        complianceReport={this.props.complianceReporting.item}
         complianceReports={{
           isFetching: this.props.complianceReports.isFinding,
           items: this.props.complianceReports.items
@@ -587,6 +622,19 @@ class ComplianceReportingEditContainer extends Component {
         title="Signing Authority Declaration"
         tooltipMessage="Please complete the Signing Authority declaration."
       >
+        {this.state.showPenaltyWarning &&
+          <div className="alert alert-warning">
+            <p>
+              Based on the information contained within this report, your organization is not
+              compliant with the Part 2 and/or the Part 3 requirements.
+            </p>
+            <p>
+              Please be advised that payment of penalties must be submitted to the
+              Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
+              are to be made payable to the Minister of Finance.
+            </p>
+          </div>
+        }
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
 
@@ -700,6 +748,10 @@ ComplianceReportingEditContainer.propTypes = {
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    isGovernmentUser: PropTypes.bool,
+    organization: PropTypes.shape({
+      organizationAddress: PropTypes.shape()
+    }),
     title: PropTypes.string
   }).isRequired,
   match: PropTypes.shape({

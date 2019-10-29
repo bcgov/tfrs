@@ -7,7 +7,7 @@ const NOTIFICATION_TYPES = {
   CREDIT_TRANSFER_PROPOSAL_ACCEPTED: 'Credit Transfer Proposal Accepted',
   CREDIT_TRANSFER_PROPOSAL_REFUSED: 'Credit Transfer Proposal Refused',
   CREDIT_TRANSFER_RECOMMENDED_FOR_APPROVAL: 'Credit Transfer Proposal Recommended For Approval',
-  CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION: 'Credit Transfer Proposal Recommended For Declination',
+  CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION: 'Credit Transfer Proposal Not Reommended For Approval',
   CREDIT_TRANSFER_RESCINDED: 'Credit Transfer Proposal Rescinded',
   CREDIT_TRANSFER_SIGNED_1OF2: 'Credit Transfer Proposal Proposed',
   CREDIT_TRANSFER_SIGNED_2OF2: 'Credit Transfer Proposal Signed',
@@ -32,7 +32,7 @@ const NOTIFICATION_TYPES = {
   COMPLIANCE_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER: 'Compliance Report Recommended for Rejection - Manager',
   COMPLIANCE_REPORT_ACCEPTED: 'Compliance Report Accepted',
   COMPLIANCE_REPORT_REJECTED: 'Compliance Report Rejected',
-  COMPLIANCE_REPORT_REQUESTED_SUPPLEMENTAL: 'Compliance Report Requested Supplemental',
+  COMPLIANCE_REPORT_REQUESTED_SUPPLEMENTAL: 'Compliance Report Supplemental Requested',
   EXCLUSION_REPORT_DRAFT: 'Exclusion Report Draft Saved',
   EXCLUSION_REPORT_SUBMITTED: 'Exclusion Report Submitted',
   EXCLUSION_REPORT_RECOMMENDED_FOR_ACCEPTANCE_ANALYST: 'Exclusion Report Recommended for Acceptance - Analyst',
@@ -41,7 +41,7 @@ const NOTIFICATION_TYPES = {
   EXCLUSION_REPORT_RECOMMENDED_FOR_REJECTION_MANAGER: 'Exclusion Report Recommended for Rejection - Manager',
   EXCLUSION_REPORT_ACCEPTED: 'Exclusion Report Accepted',
   EXCLUSION_REPORT_REJECTED: 'Exclusion Report Rejected',
-  EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL: 'Exclusion Report Requested Supplemental'
+  EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL: 'Exclusion Report Supplemental Requested'
 };
 
 export default NOTIFICATION_TYPES;

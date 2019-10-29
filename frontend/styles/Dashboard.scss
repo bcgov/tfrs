@@ -6,6 +6,20 @@
   padding: 2rem;
   text-align: center;
 
+  &.balance .credit-market-report {
+    margin-top: 2rem;
+  }
+
+  &.feedback {
+    h2 {
+      margin: 1.5rem 0;
+    }
+
+    svg {
+      font-size: 5rem;
+    }
+  }
+
   a {
     display: inline-block;
     text-decoration: underline;

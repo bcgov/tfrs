@@ -14,6 +14,7 @@ import {
   addDocumentUpload,
   clearDocumentUploadError,
   getDocumentUploadURL,
+  scanDocumentAttachments,
   uploadDocument
 } from '../actions/documentUploads';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
@@ -190,6 +191,7 @@ class SecureFileSubmissionAddContainer extends Component {
                   total: progressEvent.total
                 }
               };
+
               this.setState({
                 ...this.state,
                 uploadProgress
@@ -245,6 +247,9 @@ class SecureFileSubmissionAddContainer extends Component {
 
     Promise.all(uploadPromises).then(() => (
       this.props.addDocumentUpload(data).then((response) => {
+        const { id } = response.data;
+        this.props.scanDocumentAttachments(id);
+
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
@@ -324,6 +329,7 @@ SecureFileSubmissionAddContainer.propTypes = {
     isSuccessful: PropTypes.bool
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
+  scanDocumentAttachments: PropTypes.func.isRequired,
   uploadDocument: PropTypes.func.isRequired
 
 };
@@ -341,6 +347,7 @@ const mapDispatchToProps = dispatch => ({
   addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
   clearDocumentUploadError: bindActionCreators(clearDocumentUploadError, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
+  scanDocumentAttachments: bindActionCreators(scanDocumentAttachments, dispatch),
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 

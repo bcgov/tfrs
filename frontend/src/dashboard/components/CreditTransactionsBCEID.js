@@ -107,7 +107,7 @@ const CreditTransactions = (props) => {
             rel="noopener noreferrer"
             target="_blank"
           >
-            Part 3 Fuel Suppliers Report (PDF)
+            Recognized Part 3 Fuel Suppliers
           </a>
           <a
             href={ORGANIZATIONS.BULLETIN}

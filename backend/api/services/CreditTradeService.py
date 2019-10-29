@@ -453,11 +453,19 @@ class CreditTradeService(object):
                 NotificationType.CREDIT_TRANSFER_DECLINED),
         ]
 
-        notifications_to_send = notification_map[
-            StatusChange(
-                credit_trade.status.status
-            )
-        ]
+        if credit_trade.is_rescinded:
+            notifications_to_send = [
+                ResultingNotification(
+                    credit_trade.initiator,
+                    NotificationType.CREDIT_TRANSFER_RESCINDED),
+                ResultingNotification(
+                    credit_trade.respondent,
+                    NotificationType.CREDIT_TRANSFER_RESCINDED)
+            ]
+        else:
+            notifications_to_send = notification_map[
+                StatusChange(credit_trade.status.status)
+            ]
 
         ps = []
         for notification in notifications_to_send:
@@ -469,9 +477,7 @@ class CreditTradeService(object):
                 'related_organization_id': credit_trade.respondent.id,
                 'originating_user_id': credit_trade.update_user.id
             })
-        on_commit(lambda:
-                  async_send_notifications(ps)
-                  )
+        on_commit(lambda: async_send_notifications(ps))
 
     @staticmethod
     def pvr_notification(previous_state, credit_trade):
