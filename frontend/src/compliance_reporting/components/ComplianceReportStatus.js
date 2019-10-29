@@ -16,7 +16,7 @@ const ComplianceReportStatus = (props) => {
   }
 
   if (props.status.managerStatus === 'Requested Supplemental') {
-    return 'Requested Supplemental';
+    return 'Supplemental Requested';
   }
 
   if (props.status.analystStatus === 'Recommended') {
@@ -28,7 +28,7 @@ const ComplianceReportStatus = (props) => {
   }
 
   if (props.status.analystStatus === 'Requested Supplemental') {
-    return 'Requested Supplemental';
+    return 'Supplemental Requested';
   }
 
   if (props.status.fuelSupplierStatus) {
