@@ -160,6 +160,7 @@ class Navbar extends Component {
           {!this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
+            className="navbar-item"
             id="navbar-credit-transactions"
             isActive={(match, location) => {
               if (match || location.pathname.indexOf('/users/') === 0) {
@@ -176,7 +177,10 @@ class Navbar extends Component {
           }
           <div id="user-options">
             {this.props.loggedInUser.displayName &&
-              <div id="display-name">
+              <div
+                className="navbar-item"
+                id="display-name"
+              >
                 <DropdownButton
                   className="display-name-button"
                   id="display-name-button"
@@ -186,11 +190,29 @@ class Navbar extends Component {
                   <MenuItem className="dropdown-menu-caret" header>
                     <FontAwesomeIcon icon="caret-up" size="2x" />
                   </MenuItem>
+                  <MenuItem
+                    className="dropdown-hidden-item"
+                    onClick={() => {
+                      history.push(Routes.NOTIFICATIONS.LIST);
+                    }}
+                  >
+                    <FontAwesomeIcon icon="bell" /> Notifications
+                    {this.state.unreadCount > 0 &&
+                      ` (${this.state.unreadCount}) `
+                    }
+                  </MenuItem>
                   <MenuItem onClick={() => {
                     history.push(Routes.SETTINGS);
                   }}
                   >
                     <FontAwesomeIcon icon="cog" /> Settings
+                  </MenuItem>
+                  <MenuItem
+                    className="dropdown-hidden-item"
+                    href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+                    target="_blank"
+                  >
+                    <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
                   </MenuItem>
                   <MenuItem onClick={(e) => {
                     e.preventDefault();
@@ -204,6 +226,7 @@ class Navbar extends Component {
             }
             <NavLink
               activeClassName="active"
+              className="navbar-item"
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS.LIST}
             >
@@ -214,6 +237,17 @@ class Navbar extends Component {
                 }
               </div>
             </NavLink>
+            <a
+              className="navbar-item"
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              id="navbar-help"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div>
+                <FontAwesomeIcon icon={['far', 'question-circle']} />
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -269,19 +303,6 @@ class Navbar extends Component {
               Credit Transactions
             </NavLink>
           </li>
-          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
-          typeof this.props.loggedInUser.hasPermission === 'function' &&
-          this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
-          <li>
-            <NavLink
-              activeClassName="active"
-              id="collapse-navbar-compliance-reporting"
-              to={COMPLIANCE_REPORTING.LIST}
-            >
-              Compliance &amp; Exclusion Reports
-            </NavLink>
-          </li>
-          }
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
@@ -368,6 +389,15 @@ class Navbar extends Component {
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
             </NavLink>
+          </li>
+          <li>
+            <a
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Help
+            </a>
           </li>
           <li>
             <NavLink

@@ -7,7 +7,7 @@ const Feedback = props => (
     <h2>We want to hear from you</h2>
     <p>
       We are always striving to improve TFRS. <br />
-      Please send your suggestions and feedback to
+      {` Please send your suggestions and feedback to `}
       <a
         href="mailto: tfrs@gov.bc.ca"
         rel="noopener noreferrer"

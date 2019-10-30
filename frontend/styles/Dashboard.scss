@@ -11,6 +11,11 @@
   }
 
   &.feedback {
+    a {
+      display: inline;
+      vertical-align: unset;
+    }
+
     h2 {
       margin: 1.5rem 0;
     }
