@@ -130,7 +130,7 @@ class UserEditContainer extends Component {
     let email = this.state.fields.userCreationRequest.keycloakEmail;
 
     if (this.state.fields.email) {
-      ({ email } = this.state.fields.email);
+      ({ email } = this.state.fields);
     }
 
     // API data structure

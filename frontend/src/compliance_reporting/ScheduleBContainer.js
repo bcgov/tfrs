@@ -333,7 +333,7 @@ class ScheduleBContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.scheduleState.scheduleB || this.props.snapshot) {
+    if (this.props.scheduleState.scheduleB || (this.props.snapshot && this.props.readOnly)) {
       // we already have the state. don't load it. just render it.
       this.componentWillReceiveProps(this.props);
     } else if (!this.props.complianceReport.scheduleB) {

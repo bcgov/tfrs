@@ -58,7 +58,7 @@ class ScheduleDContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.scheduleState.scheduleD || this.props.snapshot) {
+    if (this.props.scheduleState.scheduleD || (this.props.snapshot && this.props.readOnly)) {
       // it's probably more elegant to use getDerivedStateFromProps,
       // but it is defined static and we need to access instance methods to set the headers
       this.componentWillReceiveProps(this.props);
