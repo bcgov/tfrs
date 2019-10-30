@@ -30,7 +30,9 @@ class CreditTransferSpec extends LoggedInSpec {
   void 'Log in as the sending fuel supplier and initiate a new credit transfer'() {
     given: 'I am logged in as the sending fuel supplier'
       logInAsSendingFuelSupplier()
+      to CreditTransactionsPage
       sendingFuelSupplier_initialCreditBalance = getCreditBalance()
+      sleep(5000)
     and: 'I populate all required fields for a new credit transfer'
       to NewCreditTransferPage
       setTransactionType('Sell')
@@ -42,19 +44,22 @@ class CreditTransferSpec extends LoggedInSpec {
     when: 'I sign 1 of 2 and submit the transfer'
       signCreditTransfer()
       page(ConfirmSubmitModal)
+      sleep(5000)
       clickYesButton()
     then: 'The credit transfer is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
   //  and: 'I am shown a success toast popup'
   //    at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
-    and: 'My credit balance has not changed'
-      page(HomePage)
-      getCreditBalance() == sendingFuelSupplier_initialCreditBalance
+      and: 'My credit balance has not changed'
+        page(CreditTransactionsPage)
+        getCreditBalance() == sendingFuelSupplier_initialCreditBalance
+        sleep(10000)
   }
 
   void 'Log in as the receiving fuel supplier and accept the credit transfer'() {
     given: 'I am logged in as the receiving fuel supplier'
       logInAsReceivingFuelSupplier()
+      to CreditTransactionsPage
       receivingFuelSupplier_initialCreditBalance = getCreditBalance()
     and: 'I populate all required fields to accept the proposed credit transfer'
       to NotificationsPage
@@ -71,8 +76,9 @@ class CreditTransferSpec extends LoggedInSpec {
    // and: 'I am shown a success toast popup'
      // at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
     and: 'My credit balance has not changed'
-      page(HomePage)
+      page(CreditTransactionsPage)
       getCreditBalance() == receivingFuelSupplier_initialCreditBalance
+      sleep(10000)
   }
 
   void 'Log in as an analyst and recommend the credit transfer'() {
@@ -90,6 +96,7 @@ class CreditTransferSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The credit transfer is recommended and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
+      sleep(10000)
    // and: 'I am shown a success toast popup'
    //   at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
   }
@@ -109,6 +116,7 @@ class CreditTransferSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The credit transfer is approved and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
+      sleep(10000)
    // and: 'I am shown a success toast popup'
     //  at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
   }
@@ -116,16 +124,21 @@ class CreditTransferSpec extends LoggedInSpec {
   void 'Log in as the sending fuel supplier and verify my credit balance has decreased'() {
     given: 'I am logged in as the sending fuel supplier'
       logInAsSendingFuelSupplier()
+      to CreditTransactionsPage
     when: 'I have previously successfully transferred credits to another fuel supplier'
     then: 'My credit balance is decreased by the amount transferred'
       getCreditBalance() == sendingFuelSupplier_initialCreditBalance - 98
+      sleep(10000)
   }
 
   void 'Log in as the receiving fuel supplier and verify my credit balance has increased'() {
     given: 'I am logged in as the receiving fuel supplier'
       logInAsReceivingFuelSupplier()
+      to CreditTransactionsPage
     when: 'I have previously successfully been transferred credits from another fuel supplier'
     then: 'My credit balance is increased by the amount transferred'
       getCreditBalance() == receivingFuelSupplier_initialCreditBalance + 98
+      sleep(10000)
   }
+
 }

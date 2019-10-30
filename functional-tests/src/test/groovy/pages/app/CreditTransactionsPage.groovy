@@ -9,6 +9,8 @@ class CreditTransactionsPage extends BaseAppPage {
     newTransferButton { $('#credit-transfer-new-transfer') }
 
     downloadButton { $('#download-credit-transfers') }
+
+    creditBalanceString { $('#main .credit_balance h3') }
   }
 
   String getDownloadButtonText() {
@@ -17,5 +19,15 @@ class CreditTransactionsPage extends BaseAppPage {
 
   void clickDownloadButton() {
     waitFor { downloadButton.click() }
+  }
+
+  /**
+   * Parse the credit balance string into an Integer containing only the number of credits.
+   *
+   * @return credit balance value
+   * @throws NumberFormatException if the parsed credit balance string fails to be cast to an Integer.
+   */
+  Integer getCreditBalance() {
+    creditBalanceString.text().replaceAll(/[^0-9]/, '').toInteger()
   }
 }
