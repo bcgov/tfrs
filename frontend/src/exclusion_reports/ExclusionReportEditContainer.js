@@ -371,6 +371,7 @@ class ExclusionReportEditContainer extends Component {
         validationMessages={this.props.exclusionReports.validationMessages}
       />,
       <ExclusionReportButtons
+        id={this.props.match.params.id}
         actions={this.props.exclusionReports.item.actions}
         actor={this.props.exclusionReports.item.actor}
         edit={this.edit}

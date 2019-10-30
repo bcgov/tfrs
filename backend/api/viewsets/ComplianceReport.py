@@ -1,8 +1,9 @@
+import datetime
 import json
 
 from django.db import transaction
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
@@ -20,6 +21,7 @@ from api.serializers.ComplianceReport import \
 from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
+from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
 from auditable.views import AuditableMixin
 
 
@@ -228,3 +230,43 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         transaction.savepoint_rollback(sid)
 
         return Response(result)
+
+    @detail_route(methods=['get'])
+    def xls(self, request, pk=None):
+        """
+        Exports the compliance report as a spreadsheet
+        """
+
+        obj = self.get_object()
+
+        try:
+            snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj).snapshot
+        except:
+            if obj.type.the_type == 'Exclusion Report':
+                serializer = ExclusionReportDetailSerializer(obj, context={'request': request})
+            else:
+                serializer = ComplianceReportDetailSerializer(obj, context={'request': request})
+
+            snapshot = serializer.data
+
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.xls"'.format(
+                datetime.datetime.now().strftime(
+                    "BC-LCFS_{type}_%Y-%m-%d".format(type=obj.type.the_type))
+            ))
+
+        workbook = ComplianceReportSpreadsheet()
+
+        if obj.type.the_type == 'Exclusion Report':
+            workbook.add_exclusion_agreement(snapshot['exclusion_agreement'])
+        if obj.type.the_type == 'Compliance Report':
+            workbook.add_schedule_a(snapshot['schedule_a'])
+            workbook.add_schedule_b(snapshot['schedule_b'])
+            workbook.add_schedule_c(snapshot['schedule_c'])
+            workbook.add_schedule_d(snapshot['schedule_d'])
+            workbook.add_schedule_summary(snapshot['summary'])
+
+        workbook.save(response)
+
+        return response

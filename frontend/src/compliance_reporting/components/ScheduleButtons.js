@@ -8,6 +8,8 @@ import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import AutosaveNotifier from './AutosaveNotifier';
+import * as Routes from "../../constants/routes";
+import {download} from "../../utils/functions";
 
 const getValidationMessages = (props) => {
   if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
@@ -35,7 +37,7 @@ const getValidationMessages = (props) => {
 
   let type = null;
   if (typeof (props.complianceReport.type) === 'string') {
-    ({ type } = props.complianceReport);
+    ({type} = props.complianceReport);
   } else {
     type = props.complianceReport.type.theType;
   }
@@ -60,7 +62,7 @@ const getValidationMessages = (props) => {
 const ScheduleButtons = props => (
   <div className="schedule-buttons btn-container">
     <div className="left">
-      <AutosaveNotifier saving={props.saving} />
+      <AutosaveNotifier saving={props.saving}/>
     </div>
 
     <div className="right">
@@ -69,7 +71,7 @@ const ScheduleButtons = props => (
         onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
       </button>
       {props.actions.includes('CREATE_SUPPLEMENTAL') &&
       <button
@@ -78,7 +80,7 @@ const ScheduleButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
+        <FontAwesomeIcon icon="clone"/> {Lang.BTN_CREATE_SUPPLEMENTAL}
       </button>
       }
       {props.actions.includes('DELETE') &&
@@ -88,7 +90,7 @@ const ScheduleButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes('SUBMIT') && [
@@ -104,7 +106,7 @@ const ScheduleButtons = props => (
             disabled={props.validating || !props.valid}
             type="button"
           >
-            <FontAwesomeIcon icon="save" /> Save
+            <FontAwesomeIcon icon="save"/> Save
           </button>
         </TooltipWhenDisabled>,
         <TooltipWhenDisabled
@@ -119,106 +121,125 @@ const ScheduleButtons = props => (
             disabled={getValidationMessages(props) !== ''}
             type="button"
           >
-            <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
+            <FontAwesomeIcon icon="pen-fancy"/> {Lang.BTN_SUBMIT}
           </button>
         </TooltipWhenDisabled>
       ]}
       {props.actor === 'ANALYST' &&
       props.actions.includes('REQUEST_SUPPLEMENTAL') &&
-        <button
-          className="btn btn-info"
-          data-target="#confirmAnalystRequestSupplemental"
-          data-toggle="modal"
-          key="btn-analyst-request-supplemental"
-          type="button"
-        >
-          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
-        </button>
+      <button
+        className="btn btn-info"
+        data-target="#confirmAnalystRequestSupplemental"
+        data-toggle="modal"
+        key="btn-analyst-request-supplemental"
+        type="button"
+      >
+        <FontAwesomeIcon icon="exclamation-circle"/> {Lang.BTN_REQUEST_SUPPLEMENTAL}
+      </button>
       }
       {props.actor === 'ANALYST' &&
       props.actions.includes('DISCOMMEND') &&
-        <button
-          className="btn btn-danger"
-          data-target="#confirmAnalystRecommendRejection"
-          data-toggle="modal"
-          key="btn-analyst-recommend-rejection"
-          type="button"
-        >
-          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
-        </button>
+      <button
+        className="btn btn-danger"
+        data-target="#confirmAnalystRecommendRejection"
+        data-toggle="modal"
+        key="btn-analyst-recommend-rejection"
+        type="button"
+      >
+        <FontAwesomeIcon icon="times"/> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+      </button>
       }
       {props.actor === 'ANALYST' &&
       props.actions.includes('RECOMMEND') &&
-        <button
-          className="btn btn-primary"
-          data-target="#confirmAnalystRecommendAcceptance"
-          data-toggle="modal"
-          key="btn-analyst-recommend-acceptance"
-          type="button"
-        >
-          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
-        </button>
+      <button
+        className="btn btn-primary"
+        data-target="#confirmAnalystRecommendAcceptance"
+        data-toggle="modal"
+        key="btn-analyst-recommend-acceptance"
+        type="button"
+      >
+        <FontAwesomeIcon icon="check"/> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+      </button>
       }
       {props.actor === 'MANAGER' &&
       props.actions.includes('REQUEST_SUPPLEMENTAL') &&
-        <button
-          className="btn btn-info"
-          data-target="#confirmManagerRequestSupplemental"
-          data-toggle="modal"
-          key="btn-manager-request-supplemental"
-          type="button"
-        >
-          <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
-        </button>
+      <button
+        className="btn btn-info"
+        data-target="#confirmManagerRequestSupplemental"
+        data-toggle="modal"
+        key="btn-manager-request-supplemental"
+        type="button"
+      >
+        <FontAwesomeIcon icon="exclamation-circle"/> {Lang.BTN_REQUEST_SUPPLEMENTAL}
+      </button>
       }
       {props.actor === 'MANAGER' &&
       props.actions.includes('DISCOMMEND') &&
-        <button
-          className="btn btn-danger"
-          data-target="#confirmManagerRecommendRejection"
-          data-toggle="modal"
-          key="btn-manager-recommend-rejection"
-          type="button"
-        >
-          <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
-        </button>
+      <button
+        className="btn btn-danger"
+        data-target="#confirmManagerRecommendRejection"
+        data-toggle="modal"
+        key="btn-manager-recommend-rejection"
+        type="button"
+      >
+        <FontAwesomeIcon icon="times"/> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+      </button>
       }
       {props.actor === 'MANAGER' &&
       props.actions.includes('RECOMMEND') &&
-        <button
-          className="btn btn-primary"
-          data-target="#confirmManagerRecommendAcceptance"
-          data-toggle="modal"
-          key="btn-manager-recommend-acceptance"
-          type="button"
-        >
-          <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
-        </button>
+      <button
+        className="btn btn-primary"
+        data-target="#confirmManagerRecommendAcceptance"
+        data-toggle="modal"
+        key="btn-manager-recommend-acceptance"
+        type="button"
+      >
+        <FontAwesomeIcon icon="check"/> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+      </button>
       }
       {props.actor === 'DIRECTOR' &&
       props.actions.includes('REJECT') &&
-        <button
-          className="btn btn-danger"
-          data-target="#confirmDirectorReject"
-          data-toggle="modal"
-          key="btn-director-reject"
-          type="button"
-        >
-          <FontAwesomeIcon icon="times" /> {Lang.BTN_REJECT}
-        </button>
+      <button
+        className="btn btn-danger"
+        data-target="#confirmDirectorReject"
+        data-toggle="modal"
+        key="btn-director-reject"
+        type="button"
+      >
+        <FontAwesomeIcon icon="times"/> {Lang.BTN_REJECT}
+      </button>
       }
       {props.actor === 'DIRECTOR' &&
       props.actions.includes('ACCEPT') &&
-        <button
-          className="btn btn-primary"
-          data-target="#confirmDirectorAccept"
-          data-toggle="modal"
-          key="btn-director-accept"
-          type="button"
-        >
-          <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
-        </button>
+      <button
+        className="btn btn-primary"
+        data-target="#confirmDirectorAccept"
+        data-toggle="modal"
+        key="btn-director-accept"
+        type="button"
+      >
+        <FontAwesomeIcon icon="check"/> {Lang.BTN_ACCEPT}
+      </button>
       }
+      <button
+        className="btn btn-info"
+        id="download-report"
+        type="button"
+        onClick={(e) => {
+          const element = e.target;
+          const original = element.innerHTML;
+
+          element.firstChild.textContent = ' Downloading...';
+
+          const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
+
+          return download(url).then(() => {
+            element.innerHTML = original;
+          });
+        }}
+      >
+        <FontAwesomeIcon icon="file-excel"/> <span>Download as .xls</span>
+      </button>
     </div>
   </div>
 );
@@ -255,6 +276,7 @@ ScheduleButtons.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
+  id: PropTypes.string,
   saving: PropTypes.bool.isRequired,
   tab: PropTypes.string.isRequired,
   validating: PropTypes.bool,
