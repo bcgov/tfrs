@@ -46,8 +46,14 @@ const getValidationMessages = (props) => {
     item.type === type
   ));
 
+  let typeString = `A ${type}`;
+
+  if (type === 'Exclusion Report') {
+    typeString = `An ${type}`;
+  }
+
   if (found && !props.complianceReport.isSupplemental) {
-    return `A ${type} for ${period} has already been submitted
+    return `${typeString} for ${period} has already been submitted
       to the Government of British Columbia. If the information in the previous report does not
       completely and accurately disclose the information required to be included in the report,
       please create a supplemental report by opening the previous report and clicking on the

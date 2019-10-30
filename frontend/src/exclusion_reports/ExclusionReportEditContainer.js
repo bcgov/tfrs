@@ -550,7 +550,7 @@ ExclusionReportEditContainer.propTypes = {
         PropTypes.string
       ]),
       hasSnapshot: PropTypes.bool,
-      organization: PropTypes.shape,
+      organization: PropTypes.shape(),
       type: PropTypes.shape()
     }),
     success: PropTypes.bool,

@@ -66,7 +66,13 @@ class ComplianceReportPermissions(permissions.BasePermission):
     actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Recommended|Not Recommended)', 'Unreviewed', 'Unreviewed',
-        ['RETRACT']
+        ['RETRACT', 'REQUEST_SUPPLEMENTAL']
+    ))
+
+    actions.append(ActionMap(
+        _Relationship.GovernmentComplianceManager, 'Submitted',
+        'Unreviewed', 'Unreviewed', 'Unreviewed',
+        ['REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
@@ -80,7 +86,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
         _Relationship.GovernmentComplianceManager, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Unreviewed',
-        ['RETRACT']
+        ['RETRACT', 'REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
@@ -196,6 +202,14 @@ class ComplianceReportPermissions(permissions.BasePermission):
                 ComplianceReportPermissions._Relationship.GovernmentAnalyst:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
                 return False  # Not submitted
+            # if either analyst or compliance manager requested supplemental
+            # prevent further status change
+            if oldstatus.analyst_status.status in ['Requested Supplemental'] \
+                or oldstatus.manager_status.status in \
+                    ['Requested Supplemental']:
+                return False  # already requested supplemental
+            if new_analyst_status == 'Requested Supplemental':
+                return True
             if oldstatus.manager_status.status not in [
                     'Unreviewed', 'Returned'
             ]:
@@ -211,6 +225,14 @@ class ComplianceReportPermissions(permissions.BasePermission):
                 ComplianceReportPermissions._Relationship.GovernmentComplianceManager:
             if oldstatus.fuel_supplier_status.status not in ['Submitted']:
                 return False  # Not submitted
+            # if either analyst or compliance manager requested supplemental
+            # prevent further status change
+            if oldstatus.analyst_status.status in ['Requested Supplemental'] \
+                or oldstatus.manager_status.status in \
+                    ['Requested Supplemental']:
+                return False  # already requested supplemental
+            if new_manager_status == 'Requested Supplemental':
+                return True
             if oldstatus.director_status.status not in [
                     'Unreviewed', 'Returned'
             ]:

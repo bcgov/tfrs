@@ -144,8 +144,8 @@ class ComplianceReportingContainer extends Component {
         show={this.state.showModal}
       >
         <p>
-          Your organization has already submitted a {this.state.reportType} report for
-          the {this.state.selectedComplianceYear} compliance period.
+          Your organization has already submitted {this.state.reportType === 'exclusion' ? 'an ' : 'a ' }
+          {this.state.reportType} report for the {this.state.selectedComplianceYear} compliance period.
           Are you trying to provide new or updated information to the
           Government of British Columbia?
         </p>
