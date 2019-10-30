@@ -12,29 +12,131 @@
     border-bottom: 1px solid $yellow;
   }
 
-  #navbar-notifications {
-    font-size: 2.5rem;
+  #user-options {
+    align-items: center;
+    display: flex;
     font-weight: normal;
     height: 100%;
-    padding: 0.25rem 0;
+    margin: 0 1rem;
     position: absolute;
     right: 1.5rem;
     text-decoration: none;
     top: 0;
-    width: 5rem;
 
-    &.active {
-      border-bottom: 1px solid $yellow;
+    > *:not(:first-child):after {
+      content: "";
+      background: $navbar-separator;
+      position: absolute;
+      bottom: 25%;
+      left: 0;
+      height: 50%;
+      width: 1px;
+    }
+
+    #display-name {
+      font-size: 1.5rem;
+
+      .display-name-button {
+        background-color: transparent;
+        border: 0;
+        color: $white;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+
+        .caret {
+          border-width: 8px;
+          margin-left: 0.5rem;
+          margin-top: -2px;
+        }
+      }
+
+      .dropdown-menu {
+        border: 0;
+        min-width: unset;
+        right: -0.5rem;
+        top: 90%;
+
+        li {
+          margin: 0.5rem 1rem;
+
+          a {
+            text-align: left;
+          }
+        }
+  
+        .dropdown-menu-caret {
+          color: $white;
+          margin: 0;
+          padding: 0;
+          position: absolute;
+          right: 0.5rem;
+          top: -1.5rem;
+        }
+
+        .dropdown-hidden-item {
+          display: none;
+        }
+      }
+  
+      .open .caret {
+        color: $grey;
+      }
+
+      @media (max-width: 919px) {
+        .display-name-button {
+          visibility: hidden;
+
+          .caret {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    .navbar-item {
+      display: inline-block;
+      margin: 0;
+      padding: 0 1.5rem;
+      height: 100%;
+      vertical-align: middle;
+
+      > div {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+
+        > svg {
+          font-size: 2.5rem;
+        }
+      }
+
+      .fa-layers-counter {
+        background-color: $red;
+        font-size: 4rem;
+        right: 0.5rem;
+        top: 1rem;
+      }
     }
 
     &:after {
       display: none;
     }
 
-    .fa-layers-counter {
-      background-color: $red;
-      font-size: 4rem;
+    @media (max-width: 999px) {
+      .dropdown-hidden-item {
+        display: block !important;
+      }
+
+      a.navbar-item {
+        display: none;        
+      }
     }
+  }
+
+  @media (max-width: 919px) {
+    padding-right: 7rem;
   }
 }
 
