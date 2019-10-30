@@ -184,7 +184,7 @@ class ComplianceReportSpreadsheet(object):
                 row_index += 2
 
             columns = [
-                "Fuel Type", "Fuel Class", "Feedstock"
+                "Fuel Type", "Feedstock", "Fuel Class"
             ]
 
             for col_index, value in enumerate(columns):
