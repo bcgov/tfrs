@@ -66,7 +66,7 @@ const SettingsDetails = props => (
           type="credit-transfer"
         />,
         <h3 key="header-pvr">
-          Part 3 Awards, Credit Validations, and Credit Reductions
+          Part 3 Awards
         </h3>,
         <NotificationsTable
           addToFields={props.addToFields}
