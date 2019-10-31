@@ -7,6 +7,9 @@ import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import {download} from "../../utils/functions";
+import * as Routes from "../../constants/routes";
+import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
 
 
 const getValidationMessages = (props) => {
@@ -184,6 +187,33 @@ const ExclusionReportButtons = props => (
           <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
         </button>
       }
+      <button
+        className="btn btn-info"
+        id="download-report"
+        type="button"
+        onClick={(e) => {
+          const element = e.target;
+          const original = element.innerHTML;
+
+          element.firstChild.textContent = ' Downloading...';
+
+          const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
+
+          return download(url).then(() => {
+            element.innerHTML = original;
+          });
+        }}
+      >
+        <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+      </button>
+
+      <button
+        className="btn btn-default"
+        onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
+        type="button"
+      >
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+      </button>
     </div>
   </div>
 );
@@ -197,6 +227,7 @@ ExclusionReportButtons.defaultProps = {
 };
 
 ExclusionReportButtons.propTypes = {
+  id: PropTypes.string,
   actions: PropTypes.arrayOf(PropTypes.string),
   actor: PropTypes.string,
   edit: PropTypes.bool.isRequired,

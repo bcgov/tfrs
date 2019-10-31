@@ -557,6 +557,7 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <ScheduleButtons
+        id={this.props.match.params.id}
         actions={this.props.complianceReporting.item.actions}
         actor={this.props.complianceReporting.item.actor}
         compliancePeriod={period}
