@@ -187,7 +187,6 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
-    this.modalHasBeenShown = false;
     this.rowNumber = 1;
 
     this._closeModal = this._closeModal.bind(this);
@@ -389,6 +388,17 @@ class ScheduleSummaryContainer extends Component {
         gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
         part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
         showModal = true;
+
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        });
       }
     }
 
@@ -1047,15 +1057,11 @@ class ScheduleSummaryContainer extends Component {
       <CallableModal
         cancelLabel={Lang.BTN_OK}
         close={() => {
-          this.modalHasBeenShown = true;
           this._closeModal();
-        }}
-        handleOnLoad={() => {
-          this.modalHasBeenShown = true;
         }}
         id="warning"
         key="warning"
-        show={this.state.showModal && !this.modalHasBeenShown}
+        show={this.state.showModal}
       >
         <p>
           The values you previously entered in the Summary &amp; Declaration tab have been cleared
