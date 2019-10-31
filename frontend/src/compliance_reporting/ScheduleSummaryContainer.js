@@ -187,6 +187,7 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
+    this.modalHasBeenShown = false;
     this.rowNumber = 1;
 
     this._closeModal = this._closeModal.bind(this);
@@ -1046,11 +1047,15 @@ class ScheduleSummaryContainer extends Component {
       <CallableModal
         cancelLabel={Lang.BTN_OK}
         close={() => {
+          this.modalHasBeenShown = true;
           this._closeModal();
+        }}
+        handleOnLoad={() => {
+          this.modalHasBeenShown = true;
         }}
         id="warning"
         key="warning"
-        show={this.state.showModal}
+        show={this.state.showModal && !this.modalHasBeenShown}
       >
         <p>
           The values you previously entered in the Summary &amp; Declaration tab have been cleared
