@@ -428,7 +428,16 @@ class ScheduleBContainer extends Component {
 
       const response = ComplianceReportingService.computeCredits(context, values);
 
-      grid[row][SCHEDULE_B.FUEL_CLASS].getOptions = () => (response.parameters.fuelClasses);
+      grid[row][SCHEDULE_B.FUEL_TYPE] = {
+        ...grid[row][SCHEDULE_B.FUEL_TYPE],
+        value: response.parameters.fuelType ? response.parameters.fuelType : ''
+      };
+
+      grid[row][SCHEDULE_B.FUEL_CLASS] = {
+        ...grid[row][SCHEDULE_B.FUEL_CLASS],
+        getOptions: () => (response.parameters.fuelClasses),
+        value: response.parameters.fuelClass ? response.parameters.fuelClass : ''
+      };
 
       if (response.parameters.singleFuelClassAvailable) {
         grid[row][SCHEDULE_B.FUEL_CLASS] = {
@@ -443,10 +452,12 @@ class ScheduleBContainer extends Component {
         };
       }
 
-      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].getOptions = () =>
-        (response.parameters.provisions);
-      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].selectedProvision =
-        response.outputs.selectedProvision;
+      grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT] = {
+        ...grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT],
+        getOptions: () => (response.parameters.provisions),
+        value: response.parameters.provision
+          ? `${response.parameters.provision.provision} - ${response.parameters.provision.description}` : ''
+      };
 
       if (response.parameters.singleProvisionAvailable) {
         grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value = response.inputs.provisionOfTheAct;
@@ -533,7 +544,8 @@ class ScheduleBContainer extends Component {
         };
       }
 
-      grid[row][SCHEDULE_B.UNITS].value = response.parameters.unitOfMeasure.name;
+      grid[row][SCHEDULE_B.UNITS].value = response.parameters.unitOfMeasure &&
+        response.parameters.unitOfMeasure.name;
 
       grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = response.outputs.carbonIntensityLimit;
       grid[row][SCHEDULE_B.ENERGY_DENSITY].value = response.outputs.energyDensity;
