@@ -157,6 +157,7 @@ const IDIRDashboardPage = obj => (
     <div className="col-md-4">
       {(typeof obj.loggedInUser.hasPermission === 'function' &&
       obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
+      CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
       <FileSubmissions
         documentUploads={obj.documentUploads}
         setFilter={obj.setFilter}

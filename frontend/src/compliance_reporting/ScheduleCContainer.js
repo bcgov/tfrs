@@ -115,7 +115,7 @@ class ScheduleCContainer extends Component {
   componentDidMount () {
     this.props.loadExpectedUses();
 
-    if (this.props.scheduleState.scheduleC || this.props.snapshot) {
+    if (this.props.scheduleState.scheduleC || (this.props.snapshot && this.props.readOnly)) {
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleC) {
       this._addRow(5);

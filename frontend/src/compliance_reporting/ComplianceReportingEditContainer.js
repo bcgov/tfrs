@@ -156,6 +156,7 @@ class ComplianceReportingEditContainer extends Component {
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
         const { schedules } = this.state;
+
         if (schedules.summary && schedules.summary.dieselClassDeferred) {
           schedules.summary.dieselClassDeferred =
             String(schedules.summary.dieselClassDeferred).replace(/,/g, '');
