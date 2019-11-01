@@ -75,6 +75,60 @@
   width: 100%;
 }
 
+.login-modal {
+  button {
+    background-color: $background-grey;
+    font-size: 1.7rem;
+    padding: 0.5rem 2.5rem;
+    text-align: center;
+  }
+
+  .content {
+    display: inline-block;
+    padding: 1rem;
+    width: 45rem;
+
+    p {
+      font-size: 1.7rem;
+    }
+  }
+
+  .modal-header {
+    display: none;
+  }
+
+  .modal-footer {
+    display: none;
+  }
+
+  .no-ie-icon {
+    display: inline-block;
+    margin-right: 1rem;
+    position: relative;
+    vertical-align: top;
+
+    svg {
+      &.fa-ban {
+        position: relative;
+        color: $red;
+        margin: 0 auto;
+        z-index: 1000;
+      }
+
+      &.fa-internet-explorer  {
+        position: absolute;
+        color: $ie-blue;
+        bottom: 0;
+        left: 0;
+        right: 6px;
+        top: 12px;
+        margin: 0 auto;
+        z-index: 900;
+      }
+    }
+  }
+}
+
 .login-tfrs-page {
   background-color: $white;
   background-color: rgba(255, 255, 255, 0.8);
