@@ -6,6 +6,7 @@ import * as Lang from '../../constants/langEnUs';
 
 const CallableModal = props => (
   <Modal
+    className={props.className}
     show={props.show}
     id={props.id}
   >
@@ -51,6 +52,7 @@ const CallableModal = props => (
 
 CallableModal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
+  className: '',
   confirmLabel: Lang.BTN_YES,
   handleSubmit: null,
   title: 'Confirmation'
@@ -58,6 +60,7 @@ CallableModal.defaultProps = {
 
 CallableModal.propTypes = {
   cancelLabel: PropTypes.string,
+  className: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
