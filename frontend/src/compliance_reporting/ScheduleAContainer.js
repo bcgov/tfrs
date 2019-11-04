@@ -312,6 +312,32 @@ class ScheduleAContainer extends Component {
         };
       }
 
+      if (col === SCHEDULE_A.FUEL_CLASS) {
+        const items = grid[row][col].getOptions();
+
+        const fuelClass = items.find(item => (
+          String(item.fuelClass).toUpperCase() === String(value).toUpperCase()
+        ));
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: fuelClass ? fuelClass.fuelClass : ''
+        };
+      }
+
+      if (col === SCHEDULE_A.TRANSFER_TYPE) {
+        const items = grid[row][col].getOptions();
+
+        const transferType = items.find(item => (
+          String(item.theType).toUpperCase() === String(value).toUpperCase()
+        ));
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: transferType ? transferType.theType : ''
+        };
+      }
+
       if (col === SCHEDULE_A.LEGAL_NAME && cell.attributes.address) {
         grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
           ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],

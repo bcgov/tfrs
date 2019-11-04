@@ -338,6 +338,17 @@ class ScheduleCContainer extends Component {
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { //  Expected Use
+        const items = grid[row][col].getOptions();
+
+        const selectedExpectedUse = items.find(item => (
+          String(item.description).toUpperCase() === String(value).toUpperCase()
+        ));
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: selectedExpectedUse ? selectedExpectedUse.description : ''
+        };
+
         if (value !== 'Other') {
           grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
             ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],

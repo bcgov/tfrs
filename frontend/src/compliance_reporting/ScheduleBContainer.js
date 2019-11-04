@@ -456,7 +456,7 @@ class ScheduleBContainer extends Component {
         ...grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT],
         getOptions: () => (response.parameters.provisions),
         value: response.parameters.provision
-          ? `${response.parameters.provision.provision} - ${response.parameters.provision.description}` : ''
+          ? response.parameters.provision.provision : ''
       };
 
       if (response.parameters.singleProvisionAvailable) {
