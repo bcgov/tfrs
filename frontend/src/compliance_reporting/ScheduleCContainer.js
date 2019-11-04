@@ -338,6 +338,17 @@ class ScheduleCContainer extends Component {
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { //  Expected Use
+        const items = grid[row][col].getOptions();
+
+        const selectedExpectedUse = items.find(item => (
+          String(item.description).toUpperCase() === String(value).toUpperCase()
+        ));
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: selectedExpectedUse ? selectedExpectedUse.description : ''
+        };
+
         if (value !== 'Other') {
           grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
             ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
@@ -484,13 +495,20 @@ class ScheduleCContainer extends Component {
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
-      .find(fuel => fuel.name === fuelType.value);
+      .find(fuel => String(fuel.name).toUpperCase() === String(fuelType.value).toUpperCase());
 
-    if (!selectedFuel ||
-      selectedFuel.fuelClasses.findIndex(fuelClass => fuelClass.fuelClass === value) < 0) {
+    if (!selectedFuel) {
       row[SCHEDULE_C.FUEL_CLASS] = {
         ...row[SCHEDULE_C.FUEL_CLASS],
         value: ''
+      };
+    } else {
+      const selectedFuelClass = selectedFuel.fuelClasses.find(fuelClass =>
+        String(fuelClass.fuelClass).toUpperCase() === String(value).toUpperCase());
+
+      row[SCHEDULE_C.FUEL_CLASS] = {
+        ...row[SCHEDULE_C.FUEL_CLASS],
+        value: selectedFuelClass ? selectedFuelClass.fuelClass : ''
       };
     }
 
@@ -499,14 +517,13 @@ class ScheduleCContainer extends Component {
 
   _validateFuelTypeColumn (currentRow, value) {
     const row = currentRow;
-    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
+    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+      String(fuel.name).toUpperCase() === String(value).toUpperCase());
 
-    if (!selectedFuel) {
-      row[SCHEDULE_C.FUEL_TYPE] = {
-        ...row[SCHEDULE_C.FUEL_TYPE],
-        value: ''
-      };
-    }
+    row[SCHEDULE_C.FUEL_TYPE] = {
+      ...row[SCHEDULE_C.FUEL_TYPE],
+      value: selectedFuel ? selectedFuel.name : ''
+    };
 
     // if fuel type only allows one fuel class, pre-select the fuel class
     // otherwise, reset the fuel class
