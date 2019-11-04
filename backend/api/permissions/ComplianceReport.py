@@ -70,6 +70,13 @@ class ComplianceReportPermissions(permissions.BasePermission):
     ))
 
     actions.append(ActionMap(
+        _Relationship.GovernmentAnalyst, 'Submitted',
+        '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
+        'Accepted',
+        ['REQUEST_SUPPLEMENTAL']
+    ))
+
+    actions.append(ActionMap(
         _Relationship.GovernmentComplianceManager, 'Submitted',
         'Unreviewed', 'Unreviewed', 'Unreviewed',
         ['REQUEST_SUPPLEMENTAL']
@@ -87,6 +94,13 @@ class ComplianceReportPermissions(permissions.BasePermission):
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Unreviewed',
         ['RETRACT', 'REQUEST_SUPPLEMENTAL']
+    ))
+
+    actions.append(ActionMap(
+        _Relationship.GovernmentComplianceManager, 'Submitted',
+        '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
+        'Accepted',
+        ['REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(

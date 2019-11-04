@@ -98,7 +98,9 @@ class ComplianceReportingStatusHistory extends Component {
 
               const action = ComplianceReportingStatusHistory.renderHistory(history);
 
-              if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0) {
+              if (['Accepted', 'Rejected'].indexOf(history.status.directorStatus) >= 0 &&
+              history.status.managerStatus !== 'Requested Supplemental' &&
+              history.status.analystStatus !== 'Requested Supplemental') {
                 return ComplianceReportingStatusHistory.renderDirectorStatus(history);
               }
 
@@ -135,6 +137,7 @@ ComplianceReportingStatusHistory.defaultProps = {
       name: ''
     }
   },
+  onSwitchHandler: () => {},
   reportType: 'Compliance Report'
 };
 
@@ -164,7 +167,7 @@ ComplianceReportingStatusHistory.propTypes = {
       name: PropTypes.string
     })
   }),
-  onSwitchHandler: PropTypes.func.isRequired,
+  onSwitchHandler: PropTypes.func,
   reportType: PropTypes.string
 };
 
