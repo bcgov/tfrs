@@ -122,15 +122,13 @@ class ComplianceReportingTable extends Component {
       Header: 'Supplemental Status',
       id: 'supplemental-status',
       minWidth: 75
-    },
-    {
+    }, {
       accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
       className: 'col-date',
       Header: 'Last Updated On',
       id: 'updateTimestamp',
       minWidth: 95
-    },
-    {
+    }, {
       accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
       className: 'col-sdate',
       Header: 'Last Activity',

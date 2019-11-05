@@ -1859,12 +1859,12 @@ class TestComplianceReporting(BaseTestCase):
                 'gov_analyst': {
                     'status': 200,
                     'actor': 'ANALYST',
-                    'actions': []
+                    'actions': ['REQUEST_SUPPLEMENTAL']
                 },
                 'gov_manager': {
                     'status': 200,
                     'actor': 'MANAGER',
-                    'actions': []
+                    'actions': ['REQUEST_SUPPLEMENTAL']
                 },
                 'gov_director': {
                     'status': 200,

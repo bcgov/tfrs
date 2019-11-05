@@ -1,4 +1,12 @@
 const ComplianceReportStatus = (props) => {
+  if (props.status.managerStatus === 'Requested Supplemental') {
+    return 'Supplemental Requested';
+  }
+
+  if (props.status.analystStatus === 'Requested Supplemental') {
+    return 'Supplemental Requested';
+  }
+
   if (props.status.directorStatus === 'Accepted') {
     return 'Accepted';
   }
@@ -15,20 +23,12 @@ const ComplianceReportStatus = (props) => {
     return 'Recommended Rejection - Manager';
   }
 
-  if (props.status.managerStatus === 'Requested Supplemental') {
-    return 'Supplemental Requested';
-  }
-
   if (props.status.analystStatus === 'Recommended') {
     return 'Recommended Acceptance - Analyst';
   }
 
   if (props.status.analystStatus === 'Not Recommended') {
     return 'Recommended Rejection - Analyst';
-  }
-
-  if (props.status.analystStatus === 'Requested Supplemental') {
-    return 'Supplemental Requested';
   }
 
   if (props.status.fuelSupplierStatus) {
