@@ -92,12 +92,12 @@
                     },
                     "resources": {
                         "requests": {
-                            "cpu": "100m",
-                            "memory": "1Gi"
+                            "cpu": "30m",
+                            "memory": "140Mi"
                           },
                           "limits": {
                             "cpu": "100m",
-                            "memory": "2Gi"
+                            "memory": "200Mi"
                           }
                     },
                     "activeDeadlineSeconds": 21600

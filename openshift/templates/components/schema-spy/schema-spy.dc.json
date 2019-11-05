@@ -125,7 +125,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 360,
+                                    "initialDelaySeconds": 1750,
                                     "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -137,7 +137,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 360,
+                                    "initialDelaySeconds": 1750,
                                     "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -277,7 +277,7 @@
                                         "scheme": "HTTP"
                                     },
                                     "initialDelaySeconds": 90,
-                                    "timeoutSeconds": 3000,
+                                    "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
@@ -289,7 +289,7 @@
                                         "scheme": "HTTP"
                                     },
                                     "initialDelaySeconds": 90,
-                                    "timeoutSeconds": 3000,
+                                    "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3

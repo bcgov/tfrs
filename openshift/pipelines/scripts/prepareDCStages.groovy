@@ -14,6 +14,10 @@ def backendDCStage (String envName) {
                     def KEYCLOAK_CLIENT_ID
                     def KEYCLOAK_ISSUER
                     def KEYCLOAK_REALM
+                    def CPU_REQUEST
+                    def CPU_LIMIT
+                    def MEMORY_REQUEST
+                    def MEMORY_LIMIT
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = "dev"
@@ -26,6 +30,10 @@ def backendDCStage (String envName) {
                         KEYCLOAK_CLIENT_ID = "tfrs-dev"
                         KEYCLOAK_ISSUER = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
                         KEYCLOAK_REALM = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='600m'
+                        MEMORY_REQUEST='700Mi'
+                        MEMORY_LIMIT='2Gi'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = "test"
@@ -38,6 +46,10 @@ def backendDCStage (String envName) {
                         KEYCLOAK_CLIENT_ID = "tfrs"
                         KEYCLOAK_ISSUER = "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs"
                         KEYCLOAK_REALM = "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs"
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='600m'
+                        MEMORY_REQUEST='700Mi'
+                        MEMORY_LIMIT='2Gi'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = "prod"
@@ -50,6 +62,10 @@ def backendDCStage (String envName) {
                         KEYCLOAK_CLIENT_ID = "tfrs"
                         KEYCLOAK_ISSUER = "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs"
                         KEYCLOAK_REALM = "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs"
+                        CPU_REQUEST='400m'
+                        CPU_LIMIT='600m'
+                        MEMORY_REQUEST='700Mi'
+                        MEMORY_LIMIT='2Gi'
                     }
                     openshift.withProject("${projectName}") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -63,7 +79,11 @@ def backendDCStage (String envName) {
                         "KEYCLOAK_CERTS_URL=${KEYCLOAK_CERTS_URL}",
                         "KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}",
                         "KEYCLOAK_ISSUER=${KEYCLOAK_ISSUER}",
-                        "KEYCLOAK_REALM=${KEYCLOAK_REALM}"
+                        "KEYCLOAK_REALM=${KEYCLOAK_REALM}",
+                        "CPU_REQUEST"="${CPU_REQUEST}",
+                        "CPU_LIMIT"="${CPU_LIMIT}",
+                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
                         )
                         openshift.apply(backendDCJson)
                     }
@@ -151,24 +171,44 @@ def scanCoordinatorDCStage (String envName) {
                     def projectName
                     def ENV_NAME
                     def SOURCE_IS_NAME
+                    def CPU_REQUEST
+                    def CPU_LIMIT
+                    def MEMORY_REQUEST
+                    def MEMORY_LIMIT
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'scan-coordinator-develop'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='100m'
+                        MEMORY_REQUEST='30Mi'
+                        MEMORY_LIMIT='100Mi'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'scan-coordinator'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='100m'
+                        MEMORY_REQUEST='30Mi'
+                        MEMORY_LIMIT='100Mi'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'scan-coordinator'
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='250m'
+                        MEMORY_REQUEST='256Mi'
+                        MEMORY_LIMIT='512Mi'
                     }
                     openshift.withProject("${projectName}") {
                         def scanCoordinatorDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-dc.json'), 
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
-                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}"
+                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
+                        "CPU_REQUEST"="${CPU_REQUEST}",
+                        "CPU_LIMIT"="${CPU_LIMIT}",
+                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
                         )
                         openshift.apply(scanCoordinatorDCJson)
                     }
@@ -186,24 +226,44 @@ def scanHandlerDCStage (String envName) {
                     def projectName
                     def ENV_NAME
                     def SOURCE_IS_NAME
+                    def CPU_REQUEST
+                    def CPU_LIMIT
+                    def MEMORY_REQUEST
+                    def MEMORY_LIMIT
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'scan-handler-develop'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='100m'
+                        MEMORY_REQUEST='120Mi'
+                        MEMORY_LIMIT='200Mi'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'scan-handler'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='100m'
+                        MEMORY_REQUEST='120Mi'
+                        MEMORY_LIMIT='200Mi'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'scan-handler'
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='250m'
+                        MEMORY_REQUEST='256Mi'
+                        MEMORY_LIMIT='512Mi'
                     }
                     openshift.withProject("${projectName}") {
                         def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
-                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}"
+                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
+                        "CPU_REQUEST"="${CPU_REQUEST}",
+                        "CPU_LIMIT"="${CPU_LIMIT}",
+                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
                         )
                         openshift.apply(scanHandlerDCJson)
                     }
@@ -222,28 +282,48 @@ def notificationServerDCStage (String envName) {
                     def ENV_NAME
                     def SOURCE_IS_NAME
                     def KEYCLOAK_CERTS_URL
+                    def CPU_REQUEST
+                    def CPU_LIMIT
+                    def MEMORY_REQUEST
+                    def MEMORY_LIMIT
                     if(envName == 'dev') {
                         projectName = 'mem-tfrs-dev'
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'notification-server-develop'
                         KEYCLOAK_CERTS_URL = 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='30m'
+                        MEMORY_REQUEST='110Mi'
+                        MEMORY_LIMIT='200Mi'
                     } else if(envName == 'test') {
                         projectName = 'mem-tfrs-test'
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'notification-server'
                         KEYCLOAK_CERTS_URL = 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='30m'
+                        MEMORY_REQUEST='110Mi'
+                        MEMORY_LIMIT='200Mi'                    
                     } else if(envName == 'prod') {
                         projectName = 'mem-tfrs-prod'
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'notification-server'
                         KEYCLOAK_CERTS_URL = 'https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='400m'
+                        MEMORY_REQUEST='256Mi'
+                        MEMORY_LIMIT='512Mi'                    
                     }
                     openshift.withProject("${projectName}") {
                         def notificationServerDCJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-dc.json'), 
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
-                        "KEYCLOAK_CERTS_URL=${KEYCLOAK_CERTS_URL}"
+                        "KEYCLOAK_CERTS_URL=${KEYCLOAK_CERTS_URL}",
+                        "CPU_REQUEST"="${CPU_REQUEST}",
+                        "CPU_LIMIT"="${CPU_LIMIT}",
+                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
                         )
                         openshift.apply(notificationServerDCJson)
                     }
@@ -296,24 +376,44 @@ def frontendDCStage (String envName) {
                     def projectName
                     def ENV_NAME
                     def SOURCE_IS_NAME
+                    def CPU_REQUEST
+                    def CPU_LIMIT
+                    def MEMORY_REQUEST
+                    def MEMORY_LIMIT
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'client-develop'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='400m'
+                        MEMORY_REQUEST='80Mi'
+                        MEMORY_LIMIT='200Mi'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'client'
+                        CPU_REQUEST='10m'
+                        CPU_LIMIT='400m'
+                        MEMORY_REQUEST='80Mi'
+                        MEMORY_LIMIT='200Mi'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'client'
+                        CPU_REQUEST='100m'
+                        CPU_LIMIT='400m'
+                        MEMORY_REQUEST='200Mi'
+                        MEMORY_LIMIT='250Mi'
                     }
                     openshift.withProject("${projectName}") {
                         def clientDCJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-dc.json'), 
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
-                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}"
+                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
+                        "CPU_REQUEST"="${CPU_REQUEST}",
+                        "CPU_LIMIT"="${CPU_LIMIT}",
+                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
                         )
                         openshift.apply(clientDCJson)
                     }

@@ -68,6 +68,30 @@
             "displayName": "KEYCLOAK_REALM",
             "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
             "required": true
+        },
+        {
+            "name": "CPU_REQUEST",
+            "displayName": "Requested CPU",
+            "description": "Requested CPU",
+            "required": true
+        },
+        {
+            "name": "CPU_LIMIT",
+            "displayName": "CPU upper limit",
+            "description": "CPU upper limit",
+            "required": true
+        },
+        {
+            "name": "MEMORY_REQUEST",
+            "displayName": "Requested memory",
+            "description": "Requested memory",
+            "required": true
+        },
+        {
+            "name": "MEMORY_LIMIT",
+            "displayName": "Memory upper limit",
+            "description": "Memory upper limit",
+            "required": true
         }
     ],
     "objects": [
@@ -344,12 +368,12 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "1",
-                                        "memory": "1Gi"
+                                        "cpu": "${CPU_LIMIT}",
+                                        "memory": "${MEMORY_LIMIT}"
                                     },
                                     "requests": {
-                                        "cpu": "400m",
-                                        "memory": "512Mi"
+                                        "cpu": "${CPU_REQUEST}",
+                                        "memory": "${MEMORY_REQUEST}"
                                     }
                                 },
                                 "livenessProbe": {

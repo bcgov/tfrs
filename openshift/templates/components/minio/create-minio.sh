@@ -15,6 +15,10 @@ IMAGESTREAM_TAG=dev \
 MINIO_ACCESS_KEY=*** \
 MINIO_SECRET_KEY=*** \
 VOLUME_CAPACITY=5Gi \
+CPU_REQUEST=10m
+CPU_LIMIT=125m
+MEMORY_REQUEST=40Mi
+MEMORY_LIMIT=80Mi
 | oc create -n mem-tfrs-dev -f - --dry-run=true
 
 ## Deploy on Test
