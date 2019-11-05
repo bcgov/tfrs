@@ -4,12 +4,11 @@
  * Move projection and mapping out of UI layer
  */
 
-import axios from "axios";
-import * as Routes from "../../constants/routes";
+import axios from 'axios';
+import * as Routes from '../../constants/routes';
 
 class ComplianceReportingService {
-
-  static getAvailableScheduleDFuels(complianceReport, scheduleState) {
+  static getAvailableScheduleDFuels (complianceReport, scheduleState) {
     let source;
 
     if (scheduleState.scheduleD) {
@@ -22,7 +21,7 @@ class ComplianceReportingService {
       return [];
     }
 
-    let fuels = [];
+    const fuels = [];
 
     for (let [i, sheet] of source.sheets.entries()) {
       const intensity = this.computeScheduleDFuelIntensity(sheet);
@@ -38,7 +37,7 @@ class ComplianceReportingService {
     return fuels;
   }
 
-  static computeScheduleDFuelIntensity(sheet) {
+  static computeScheduleDFuelIntensity (sheet) {
     let total = 0.0;
     let empty = true;
 
@@ -52,7 +51,7 @@ class ComplianceReportingService {
     return empty ? null : total;
   }
 
-  static _fetchCalculationValuePromise(compliancePeriod) {
+  static _fetchCalculationValuePromise (compliancePeriod) {
     if (!ComplianceReportingService._cache) {
       ComplianceReportingService._cache = [];
     }
@@ -70,14 +69,13 @@ class ComplianceReportingService {
           compliance_period: compliancePeriod
         }
       }).then((response) => {
-
         // enhance the supplied data with synthetic properties
-        for (let i = 0; i < response.data.length; i++) {
-          for (let j = 0; j < response.data[i].fuelCodes.length; j++) {
+        for (let i = 0; i < response.data.length; i += 1) {
+          for (let j = 0; j < response.data[i].fuelCodes.length; j += 1) {
             const fc = response.data[i].fuelCodes[j];
             response.data[i].fuelCodes[j].descriptiveName = `${fc.fuelCode}${fc.fuelCodeVersion}.${fc.fuelCodeVersionMinor}`;
           }
-          for (let j = 0; j < response.data[i].provisions.length; j++) {
+          for (let j = 0; j < response.data[i].provisions.length; j += 1) {
             const p = response.data[i].provisions[j];
             response.data[i].provisions[j].descriptiveName = `${p.provision} - ${p.description}`;
           }
@@ -92,7 +90,7 @@ class ComplianceReportingService {
     });
   }
 
-  static loadData(compliancePeriod) {
+  static loadData (compliancePeriod) {
     if (!ComplianceReportingService._cache) {
       ComplianceReportingService._cache = [];
     }
@@ -100,13 +98,12 @@ class ComplianceReportingService {
     if (!cached) {
       return this._fetchCalculationValuePromise(compliancePeriod);
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       resolve();
     });
   }
 
-  static computeCredits(context, sourceValues) {
-
+  static computeCredits (context, sourceValues) {
     const {
       compliancePeriod,
       availableScheduleDFuels
@@ -151,16 +148,37 @@ class ComplianceReportingService {
 
     const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod);
     if (!cached) {
-      throw {msg: 'you must seed the cache for this compliancePeriod first'}
+      throw { msg: 'you must seed the cache for this compliancePeriod first' }
     }
     const response = cached.data;
 
-    const fuel = response.find(e => e.name === fuelType);
-    const filteredScheduleDFuels = availableScheduleDFuels.filter(f =>
-      (f.fuelType === fuel.name && f.fuelClass === fuelClass)
-    );
+    const fuel = response.find(e =>
+      String(e.name).toUpperCase() === String(fuelType).toUpperCase());
 
-    let result = {
+    let selectedFuelClass = null;
+
+    if (fuel && fuel.fuelClasses && fuelClass) {
+      selectedFuelClass = fuel.fuelClasses.find(item => (
+        String(item.fuelClass).toUpperCase() === String(fuelClass).toUpperCase()
+      ));
+    }
+
+    let selectedProvision = null;
+
+    if (fuel && fuel.provisions && provisionOfTheAct) {
+      selectedProvision = fuel.provisions.find((item) => {
+        const inputProvisions = provisionOfTheAct.split('-');
+
+        return String(item.provision).toUpperCase().indexOf(
+          inputProvisions[0].trim().toUpperCase()
+        ) >= 0;
+      });
+    }
+
+    const filteredScheduleDFuels = availableScheduleDFuels.filter(f =>
+      (f.fuelType === fuel.name && f.fuelClass === fuelClass));
+
+    const result = {
       inputs: {
         fuelClass,
         fuelType,
@@ -172,7 +190,7 @@ class ComplianceReportingService {
       },
       outputs: {
         energyEffectivenessRatio: null,
-        energyDensity: fuel.energyDensity,
+        energyDensity: (fuel ? fuel.energyDensity : null),
         carbonIntensityFuel: null,
         carbonIntensityLimit: null,
         credits: null,
@@ -181,8 +199,11 @@ class ComplianceReportingService {
         customIntensityValue: null
       },
       parameters: {
+        fuelType: (fuel ? fuel.name : null),
+        fuelClass: (selectedFuelClass ? selectedFuelClass.fuelClass : null),
         fuelClasses: (fuel ? fuel.fuelClasses : []),
         fuelCodes: (fuel ? fuel.fuelCodes : []),
+        provision: (selectedProvision || null),
         provisions: (fuel ? fuel.provisions : []),
         scheduleDSelections: filteredScheduleDFuels,
         unitOfMeasure: (fuel ? fuel.unitOfMeasure : null),
@@ -204,13 +225,13 @@ class ComplianceReportingService {
       result.inputs.provisionOfTheAct = result.parameters.provisions[0].provision;
     }
 
-// select carbon intensity limit
-    switch (result.inputs.fuelClass) {
-      case 'Diesel':
+    // select carbon intensity limit
+    switch (String(result.inputs.fuelClass).toUpperCase()) {
+      case 'DIESEL':
         result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.diesel;
         result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.diesel;
         break;
-      case 'Gasoline':
+      case 'GASOLINE':
         result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.gasoline;
         result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.gasoline;
         break;
@@ -218,9 +239,13 @@ class ComplianceReportingService {
         break;
     }
 
-    const provisionObject = fuel.provisions.find(p => p.provision === provisionOfTheAct);
+    let provisionObject = null;
 
-// select carbon intensity of fuel
+    if (fuel) {
+      provisionObject = fuel.provisions.find(p => p.provision === provisionOfTheAct);
+    }
+
+    // select carbon intensity of fuel
     if (provisionObject) {
       switch (provisionObject.description) {
         case 'Default Carbon Intensity Value':
@@ -255,12 +280,12 @@ class ComplianceReportingService {
       }
     }
 
-// compute energy content
+    // compute energy content
     if (result.inputs.quantity) {
       result.outputs.energyContent = Number(result.outputs.energyDensity) * Number(result.inputs.quantity);
     }
 
-// compute credit or debit
+    // compute credit or debit
     if (result.outputs.carbonIntensityFuel && result.outputs.energyContent &&
       result.outputs.carbonIntensityLimit && result.outputs.energyEffectivenessRatio) {
       let credit = Number(result.outputs.carbonIntensityLimit) * Number(result.outputs.energyEffectivenessRatio);
@@ -277,8 +302,7 @@ class ComplianceReportingService {
     return result;
   }
 
-  static computeSummaryValues(context, sourceValues) {
-
+  static computeSummaryValues (context, sourceValues) {
     const {
       compliancePeriod,
       availableScheduleDFuels,
@@ -311,7 +335,7 @@ class ComplianceReportingService {
         line9: null,
         line11: null,
 
-        //diesel class
+        // diesel class
         line12: null,
         line13: null,
         line14: null,
@@ -322,7 +346,7 @@ class ComplianceReportingService {
         line21: null,
         line22: null,
 
-        //part3,
+        // part3,
         line23: null,
         line24: null,
         line25: null,
@@ -330,8 +354,8 @@ class ComplianceReportingService {
         line27: null,
         line28: null,
 
-        //penalty
-        totalPenalty: null,
+        // penalty
+        totalPenalty: null
       },
       parameters: {}
     };
@@ -344,12 +368,8 @@ class ComplianceReportingService {
       line19
     };
 
-
-
     return result;
   }
-
-
 }
 
 export default ComplianceReportingService;

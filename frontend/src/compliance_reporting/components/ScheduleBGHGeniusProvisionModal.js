@@ -1,21 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from "../../app/components/Modal";
+import Modal from '../../app/components/Modal';
 
-const RoundedNumericSpan = (props) => {
-  return (
-    (
-      props.value &&
-      <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
-      || <span><i>pending</i></span>)
-  );
-}
+const RoundedNumericSpan = props => (
+  (props.value &&
+    <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span> ||
+    <span><i>pending</i></span>
+  )
+);
 
 class ScheduleBGHGeniusProvisionModal extends React.Component {
-
-  render() {
+  render () {
     const
-      filteredSelections = this.props.availableSelections.filter(sel => {
+      filteredSelections = this.props.availableSelections.filter((sel) => {
         if (this.props.matchFuelClass) {
           if (this.props.matchFuelClass !== sel.fuelClass) {
             return false;
@@ -31,7 +28,7 @@ class ScheduleBGHGeniusProvisionModal extends React.Component {
 
     return (
       <Modal
-        id='schedule-d-modal'
+        id="schedule-d-modal"
         title="Select Schedule D Entry"
         initiallyShown
         key="schedule-d-modal"
@@ -53,7 +50,9 @@ class ScheduleBGHGeniusProvisionModal extends React.Component {
                     href="#"
                     onClick={() => this.props.handleSelection(sel)}
                     data-dismiss="modal"
-                  >Select {sel.fuelType} <RoundedNumericSpan value={sel.intensity}/></a>
+                  >
+                    Select {sel.fuelType} <RoundedNumericSpan value={sel.intensity} />
+                  </a>
                 </li>
               ))}
             </ul>
@@ -71,13 +70,11 @@ ScheduleBGHGeniusProvisionModal.defaultProps = {
 };
 
 ScheduleBGHGeniusProvisionModal.propTypes = {
-  availableSelections: PropTypes.arrayOf(
-    PropTypes.shape({
-      fuelType: PropTypes.string,
-      fuelClass: PropTypes.string,
-      intensity: PropTypes.oneOf(PropTypes.number, PropTypes.string)
-    })
-  ).isRequired,
+  availableSelections: PropTypes.arrayOf(PropTypes.shape({
+    fuelType: PropTypes.string,
+    fuelClass: PropTypes.string,
+    intensity: PropTypes.oneOf(PropTypes.number, PropTypes.string)
+  })).isRequired,
   matchFuelType: PropTypes.string,
   matchFuelClass: PropTypes.string,
   handleSelection: PropTypes.func.isRequired,
