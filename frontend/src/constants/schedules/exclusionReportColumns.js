@@ -1,4 +1,5 @@
 const EXCLUSION_AGREEMENT = {
+  ROW_NUMBER: 0,
   TRANSACTION_TYPE: 1,
   FUEL_TYPE: 2,
   LEGAL_NAME: 3,
@@ -10,14 +11,15 @@ const EXCLUSION_AGREEMENT = {
 };
 
 const EXCLUSION_AGREEMENT_ERROR_KEYS = {
-  legalName: 3,
-  address: 4,
   fuelType: 2,
-  transactionType: 1,
+  postalAddress: 4,
   quantity: 5,
-  quantityNotSold: 7
+  quantityNotSold: 7,
+  transactionPartner: 3,
+  transactionType: 1
 };
 
 export {
-  EXCLUSION_AGREEMENT, EXCLUSION_AGREEMENT_ERROR_KEYS
+  EXCLUSION_AGREEMENT,
+  EXCLUSION_AGREEMENT_ERROR_KEYS
 };
