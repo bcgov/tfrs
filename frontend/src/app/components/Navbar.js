@@ -209,7 +209,7 @@ class Navbar extends Component {
                   </MenuItem>
                   <MenuItem
                     className="dropdown-hidden-item"
-                    href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+                    href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
@@ -239,7 +239,7 @@ class Navbar extends Component {
             </NavLink>
             <a
               className="navbar-item"
-              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               id="navbar-help"
               rel="noopener noreferrer"
               target="_blank"
@@ -392,7 +392,7 @@ class Navbar extends Component {
           </li>
           <li>
             <a
-              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >
