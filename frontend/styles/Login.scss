@@ -3,6 +3,30 @@
   src: url('/assets/fonts/MyriadWebPro.ttf');
 }
 
+@font-face {
+  font-family: "BCSans";
+  src: url('/assets/fonts/BCSans-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: "BCSans";
+  src: url('/assets/fonts/BCSans-Bold.woff') format('woff');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "BCSans";
+  src: url('/assets/fonts/BCSans-BoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "BCSans";
+  src: url('/assets/fonts/BCSans-Italic.woff') format('woff');
+  font-style: italic;
+}
+
 #link-bceid {
   background-color: #002663;
   border-radius: 0.7rem;
@@ -32,6 +56,7 @@
     background-size: contain;
     color: transparent;
     display: inline-block;
+    font-family: "BCSans", "Myriad-Pro", "Calibri", "Arial", 'sans serif' !important;
     height: 2.5rem;
     vertical-align: middle;
     width: 10rem;
@@ -57,6 +82,7 @@
   }
 
   .display-name {
+    font-family: "BCSans", "Myriad-Pro", "Calibri", "Arial", 'sans serif' !important;
     font-weight: bold;
   }
 }
@@ -172,7 +198,7 @@
 
   .login-tfrs-page-header-text {
     color: #ffffff;
-    font-family: "MyriadWebPro", sans-serif;
+    font-family: "BCSans", "MyriadWebPro", sans-serif;
     font-size: 3.5rem;
     line-height: normal;
     position: relative;

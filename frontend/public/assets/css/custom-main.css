@@ -5,6 +5,30 @@
     src: url('../fonts/MyriadWebPro.ttf');
 }
 
+@font-face {
+    font-family: "BCSans";
+    src: url('../fonts/BCSans-Regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: "BCSans";
+    src: url('../fonts/BCSans-Bold.woff') format('woff');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "BCSans";
+    src: url('../fonts/BCSans-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "BCSans";
+    src: url('../fonts/BCSans-Italic.woff') format('woff');
+    font-style: italic;
+}
+
 
 /* background image */
 
@@ -29,10 +53,13 @@ html {
 
 body {
     color: #494949;
-    font-family: Myriad-Pro, Calibri, Arial, "sans serif";
+    font-family: "BCSans", "Myriad-Pro", Calibri, Arial, "sans serif" !important;
     font-size: 13px;
 }
 
+h1, h2, h3, h4, h5 {
+    font-family: "BCSans", "Myriad-Pro", Calibri, Arial, "sans serif" !important;
+}
 
 /* logo whitespace */
 
