@@ -42,5 +42,4 @@ ExclusionAssessmentContainer.propTypes = {
   snapshot: PropTypes.shape()
 };
 
-
 export default (ExclusionAssessmentContainer);
