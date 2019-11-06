@@ -3,14 +3,14 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
-import {addSigningAuthorityConfirmation} from '../actions/signingAuthorityConfirmationsActions';
-import {complianceReporting} from '../actions/complianceReporting';
-import {exclusionReports} from '../actions/exclusionReports';
+import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
+import { complianceReporting } from '../actions/complianceReporting';
+import { exclusionReports } from '../actions/exclusionReports';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import AddressBuilder from '../app/components/AddressBuilder';
 import CheckBox from '../app/components/CheckBox';
@@ -29,7 +29,7 @@ import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
 
 class ExclusionReportEditContainer extends Component {
-  static componentForTabName(tab) {
+  static componentForTabName (tab) {
     let TabComponent;
 
     switch (tab) {
@@ -52,10 +52,10 @@ class ExclusionReportEditContainer extends Component {
     return TabComponent;
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.tabComponent = Loading;
-    const {tab} = props.match.params;
+    const { tab } = props.match.params;
     this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
     this.status = {
       fuelSupplierStatus: 'Draft'
@@ -83,7 +83,7 @@ class ExclusionReportEditContainer extends Component {
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getSigningAuthorityAssertions({
       module: 'exclusion_report'
     });
@@ -91,8 +91,8 @@ class ExclusionReportEditContainer extends Component {
     this.loadData();
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const {tab} = nextProps.match.params;
+  componentWillReceiveProps (nextProps, nextContext) {
+    const { tab } = nextProps.match.params;
 
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
@@ -139,7 +139,7 @@ class ExclusionReportEditContainer extends Component {
       }
 
       if (!nextProps.exclusionReports.item.readOnly) {
-        const {exclusionAgreement} = this.state;
+        const { exclusionAgreement } = this.state;
         this.props.validateExclusionReport({
           id,
           state: {
@@ -147,8 +147,6 @@ class ExclusionReportEditContainer extends Component {
           }
         });
       }
-
-
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
@@ -162,12 +160,12 @@ class ExclusionReportEditContainer extends Component {
     }
   }
 
-  loadData() {
+  loadData () {
     this.props.getExclusionReport(this.props.match.params.id);
   }
 
-  _addToFields(value) {
-    const {terms} = this.state;
+  _addToFields (value) {
+    const { terms } = this.state;
 
     const found = terms.find(term => term.id === value.id);
 
@@ -180,11 +178,11 @@ class ExclusionReportEditContainer extends Component {
     });
   }
 
-  _handleDelete() {
-    this.props.deleteComplianceReport({id: this.props.match.params.id});
+  _handleDelete () {
+    this.props.deleteComplianceReport({ id: this.props.match.params.id });
   }
 
-  _handleCreateSupplemental(event, compliancePeriodDescription) {
+  _handleCreateSupplemental (event, compliancePeriodDescription) {
     this.setState({
       createSupplementalCalled: true
     });
@@ -199,21 +197,18 @@ class ExclusionReportEditContainer extends Component {
     });
   }
 
-
-  _handleSupplementalNoteUpdate(event) {
+  _handleSupplementalNoteUpdate (event) {
     this.setState({
       supplementalNote: event.target.value
     });
   }
 
-
-  _handleSubmit(event, status = {fuelSupplierStatus: 'Draft'}) {
+  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
     // patch existing
     const payload = {
       status,
       ...this.state.exclusionAgreement
     };
-
 
     if (this.state.supplementalNoteRequired &&
       status.fuelSupplierStatus &&
@@ -245,8 +240,8 @@ class ExclusionReportEditContainer extends Component {
     }
   }
 
-  _toggleCheck(key) {
-    const {terms} = this.state;
+  _toggleCheck (key) {
+    const { terms } = this.state;
     const index = terms.findIndex(term => term.id === key);
     terms[index].value = !terms[index].value;
 
@@ -255,7 +250,7 @@ class ExclusionReportEditContainer extends Component {
     });
   }
 
-  _updateAutosaveState(tab, state) {
+  _updateAutosaveState (tab, state) {
     const autosaveState = {
       ...this.state.autosaveState,
       tab: state
@@ -267,8 +262,8 @@ class ExclusionReportEditContainer extends Component {
     this.props.updateStateToSave(autosaveState);
   }
 
-  _updateScheduleState(mergedState) {
-    const {exclusionAgreement} = this.state;
+  _updateScheduleState (mergedState) {
+    const { exclusionAgreement } = this.state;
     const { id } = this.props.match.params;
 
     this.props.validateExclusionReport({
@@ -285,25 +280,24 @@ class ExclusionReportEditContainer extends Component {
         ...mergedState
       }
     });
-
   }
 
-  render() {
+  render () {
     const TabComponent = this.tabComponent;
 
-    const {tab, id} = this.props.match.params;
-    let {period} = this.props.match.params;
+    const { tab, id } = this.props.match.params;
+    let { period } = this.props.match.params;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
     }
 
     if (this.props.exclusionReports.isGetting || !this.props.exclusionReports.item) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     if (typeof (this.props.exclusionReports.item.compliancePeriod) === 'string') {
@@ -326,9 +320,11 @@ class ExclusionReportEditContainer extends Component {
     return ([
       <h2 key="main-header">
         {this.props.exclusionReports.item.organization.name}
-        &nbsp;--&nbsp;
+        {` -- `}
+        {typeof this.props.exclusionReports.item.type === 'string' && this.props.exclusionReports.item.type}
         {this.props.exclusionReports.item.type.theType}
-        &nbsp;for&nbsp;
+        {` for `}
+        {typeof this.props.exclusionReports.item.compliancePeriod === 'string' && this.props.exclusionReports.item.compliancePeriod}
         {this.props.exclusionReports.item.compliancePeriod.description}
       </h2>,
       <p key="organization-address">
@@ -386,7 +382,7 @@ class ExclusionReportEditContainer extends Component {
         disabled={(this.state.supplementalNoteRequired &&
           (this.state.supplementalNote.trim().length === 0)) || (this.state.terms.filter(term => term.value === true).length <
           this.props.signingAuthorityAssertions.items.length)}
-        handleSubmit={event => this._handleSubmit(event, {fuelSupplierStatus: 'Submitted'})}
+        handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
@@ -415,7 +411,7 @@ class ExclusionReportEditContainer extends Component {
           ))}
           {this.state.supplementalNoteRequired &&
           <div>
-            <hr/>
+            <hr />
             <label htmlFor="supplementalReasonInput">
               Supplemental Report Reason
             </label>
@@ -430,7 +426,7 @@ class ExclusionReportEditContainer extends Component {
               placeholder="Use this field to provide a brief explanation for the supplemental report."
               required
             />
-            <hr/>
+            <hr />
           </div>
           }
           Are you sure you want to submit this Exclusion Report to the
@@ -459,56 +455,56 @@ class ExclusionReportEditContainer extends Component {
         Are you sure you want to create a supplemental exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Requested Supplemental'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental' })}
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
       >
         Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Not Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Not Recommended' })}
         id="confirmAnalystRecommendRejection"
         key="confirmAnalystRecommendRejection"
       >
         Are you sure you want to recommend rejection of the exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Requested Supplemental'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Requested Supplemental' })}
         id="confirmManagerRequestSupplemental"
         key="confirmManagerRequestSupplemental"
       >
         Are you sure you want to request a supplemental exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
         id="confirmManagerRecommendAcceptance"
         key="confirmManagerRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Not Recommended'})}
+        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Not Recommended' })}
         id="confirmManagerRecommendRejection"
         key="confirmManagerRecommendRejection"
       >
         Are you sure you want to recommend rejection of the exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Rejected'})}
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Rejected' })}
         id="confirmDirectorReject"
         key="confirmDirectorReject"
       >
         Are you sure you want to reject this exclusion report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Accepted'})}
+        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Accepted' })}
         id="confirmDirectorAccept"
         key="confirmDirectorAccept"
       >
@@ -519,10 +515,16 @@ class ExclusionReportEditContainer extends Component {
 }
 
 ExclusionReportEditContainer.defaultProps = {
+  complianceReporting: {
+    isCreating: false,
+    snapshot: null,
+    success: false
+  },
   exclusionReports: {
     isCreating: false,
     success: false
   },
+  getSnapshotRequest: () => {},
   loadedState: null
 };
 
@@ -535,6 +537,7 @@ ExclusionReportEditContainer.propTypes = {
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
     snapshot: PropTypes.shape(),
+    snapshotIsLoading: PropTypes.bool,
     success: PropTypes.bool
   }),
   exclusionReports: PropTypes.shape({
@@ -551,8 +554,13 @@ ExclusionReportEditContainer.propTypes = {
         PropTypes.string
       ]),
       hasSnapshot: PropTypes.bool,
+      isSupplemental: PropTypes.bool,
       organization: PropTypes.shape(),
-      type: PropTypes.shape()
+      readOnly: PropTypes.bool,
+      type: PropTypes.oneOfType([
+        PropTypes.shape({}),
+        PropTypes.string
+      ])
     }),
     success: PropTypes.bool,
     valid: PropTypes.bool,
@@ -561,6 +569,7 @@ ExclusionReportEditContainer.propTypes = {
   }),
   getExclusionReport: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getSnapshotRequest: PropTypes.func,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
