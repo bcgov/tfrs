@@ -75,7 +75,7 @@ class ScheduleDSheet extends Component {
       this.rowNumber += 1;
     }
 
-    this.props.handleSheetChanged(grid, this.props.id);
+    this.props.handleSheetChanged({ grid }, this.props.id);
   }
 
   _handleCellsChanged (gridType, changes, addition = null) {
