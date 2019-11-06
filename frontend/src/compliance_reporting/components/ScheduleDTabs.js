@@ -40,7 +40,7 @@ const ScheduleDTabs = (props) => {
               data-target="#confirmDelete"
               type="button"
             >
-              <FontAwesomeIcon icon="times" />
+              <FontAwesomeIcon icon="minus-circle" />
             </button>
             }
           </div>
