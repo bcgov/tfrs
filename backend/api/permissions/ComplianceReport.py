@@ -48,66 +48,66 @@ class ComplianceReportPermissions(permissions.BasePermission):
     actions.append(ActionMap(
         _Relationship.FuelSupplier,
         'Draft', '.*', '.*', '.*',
-        ['SUBMIT', 'DELETE']
+        lambda c: ['SUBMIT', 'DELETE']
     ))
 
     actions.append(ActionMap(
         _Relationship.FuelSupplier,
         'Submitted', '.*', '.*', '(Unreviewed|Accepted)',
-        ['CREATE_SUPPLEMENTAL']
+        lambda c: ['CREATE_SUPPLEMENTAL'] if len(c.supplemental_reports.all()) == 0 else []
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Unreviewed|Returned|Retracted)', '.*', 'Unreviewed',
-        ['RECOMMEND', 'DISCOMMEND', 'REQUEST_SUPPLEMENTAL']
+        lambda c: ['RECOMMEND', 'DISCOMMEND', 'REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Recommended|Not Recommended)', 'Unreviewed', 'Unreviewed',
-        ['RETRACT', 'REQUEST_SUPPLEMENTAL']
+        lambda c: ['RETRACT', 'REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Accepted',
-        ['REQUEST_SUPPLEMENTAL']
+        lambda c: ['REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentComplianceManager, 'Submitted',
         'Unreviewed', 'Unreviewed', 'Unreviewed',
-        ['REQUEST_SUPPLEMENTAL']
+        lambda c: ['REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentComplianceManager, 'Submitted',
         '(Recommended|Not Recommended)', '(Unreviewed|Returned|Retracted)',
         'Unreviewed',
-        ['RECOMMEND', 'DISCOMMEND', 'RETURN', 'REQUEST_SUPPLEMENTAL']
+        lambda c: ['RECOMMEND', 'DISCOMMEND', 'RETURN', 'REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentComplianceManager, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Unreviewed',
-        ['RETRACT', 'REQUEST_SUPPLEMENTAL']
+        lambda c: ['RETRACT', 'REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentComplianceManager, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Accepted',
-        ['REQUEST_SUPPLEMENTAL']
+        lambda c: ['REQUEST_SUPPLEMENTAL']
     ))
 
     actions.append(ActionMap(
         _Relationship.GovernmentDirector, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
         'Unreviewed',
-        ['ACCEPT', 'REJECT', 'RETURN']
+        lambda c: ['ACCEPT', 'REJECT', 'RETURN']
     ))
 
     @staticmethod
@@ -162,7 +162,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
             ):
                 continue
 
-            return action.resulting_actions
+            return action.resulting_actions(compliance_report)
 
         return []
 
