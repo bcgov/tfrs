@@ -80,10 +80,10 @@ def backendDCStage (String envName) {
                         "KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}",
                         "KEYCLOAK_ISSUER=${KEYCLOAK_ISSUER}",
                         "KEYCLOAK_REALM=${KEYCLOAK_REALM}",
-                        "CPU_REQUEST"="${CPU_REQUEST}",
-                        "CPU_LIMIT"="${CPU_LIMIT}",
-                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
+                        "CPU_REQUEST=${CPU_REQUEST}",
+                        "CPU_LIMIT=${CPU_LIMIT}",
+                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
                         )
                         openshift.apply(backendDCJson)
                     }
@@ -205,10 +205,10 @@ def scanCoordinatorDCStage (String envName) {
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
-                        "CPU_REQUEST"="${CPU_REQUEST}",
-                        "CPU_LIMIT"="${CPU_LIMIT}",
-                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
+                        "CPU_REQUEST=${CPU_REQUEST}",
+                        "CPU_LIMIT=${CPU_LIMIT}",
+                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
                         )
                         openshift.apply(scanCoordinatorDCJson)
                     }
@@ -260,10 +260,10 @@ def scanHandlerDCStage (String envName) {
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
-                        "CPU_REQUEST"="${CPU_REQUEST}",
-                        "CPU_LIMIT"="${CPU_LIMIT}",
-                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
+                        "CPU_REQUEST=${CPU_REQUEST}",
+                        "CPU_LIMIT=${CPU_LIMIT}",
+                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
                         )
                         openshift.apply(scanHandlerDCJson)
                     }
@@ -320,10 +320,10 @@ def notificationServerDCStage (String envName) {
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
                         "KEYCLOAK_CERTS_URL=${KEYCLOAK_CERTS_URL}",
-                        "CPU_REQUEST"="${CPU_REQUEST}",
-                        "CPU_LIMIT"="${CPU_LIMIT}",
-                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
+                        "CPU_REQUEST=${CPU_REQUEST}",
+                        "CPU_LIMIT=${CPU_LIMIT}",
+                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
                         )
                         openshift.apply(notificationServerDCJson)
                     }
@@ -410,10 +410,10 @@ def frontendDCStage (String envName) {
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
-                        "CPU_REQUEST"="${CPU_REQUEST}",
-                        "CPU_LIMIT"="${CPU_LIMIT}",
-                        "MEMORY_REQUEST"="${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT"="${MEMORY_LIMIT}"
+                        "CPU_REQUEST=${CPU_REQUEST}",
+                        "CPU_LIMIT=${CPU_LIMIT}",
+                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
                         )
                         openshift.apply(clientDCJson)
                     }
