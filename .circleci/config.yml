@@ -1,8 +1,11 @@
 version: 2.1
+
+orbs:
+  redhat-openshift: circleci/redhat-openshift@0.2.0
+  
 jobs:
-  build:
-    docker: 
-      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+  test: 
+    docker:
+      - image: python/3.6-stretch
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world from forked tfrs" # run the `echo` command
+      - checkout
