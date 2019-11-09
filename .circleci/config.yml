@@ -4,7 +4,7 @@ orbs:
   redhat-openshift: circleci/redhat-openshift@0.2.0
   
 jobs:
-  test: 
+  build: 
     docker:
       - image: python/3.6-stretch
     steps:
