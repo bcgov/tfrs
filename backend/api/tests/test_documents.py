@@ -164,7 +164,7 @@ class TestDocuments(BaseTestCase):
         document = Document.objects.get(id=response_data['id'])
 
         self.assertEqual(document.title, document_title)
-        self.assertEqual(document.milestone.milestone, document_milestone)
+        self.assertEqual(document.milestone, document_milestone)
 
     def test_update_draft_as_fuel_supplier(self):
         """
