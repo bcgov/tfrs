@@ -1,6 +1,10 @@
 @import './mixins.scss';
 @import './variables.scss';
 
+body, h1, h2, h3, h4, h5 {
+  font-family: $font-family;
+}
+
 input[type="number"] {
   -moz-appearance: textfield;
 
