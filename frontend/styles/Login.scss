@@ -1,7 +1,4 @@
-@font-face {
-  font-family: "MyriadWebPro";
-  src: url('/assets/fonts/MyriadWebPro.ttf');
-}
+@import './variables.scss';
 
 #link-bceid {
   background-color: #002663;
@@ -21,6 +18,7 @@
   
   .text {
     display: inline-block;
+    font-family: $font-family;
     vertical-align: middle;
   }
   
@@ -32,6 +30,7 @@
     background-size: contain;
     color: transparent;
     display: inline-block;
+    font-family: $font-family;
     height: 2.5rem;
     vertical-align: middle;
     width: 10rem;
@@ -57,7 +56,12 @@
   }
 
   .display-name {
+    font-family: $font-family;
     font-weight: bold;
+  }
+
+  .text {
+    font-family: $font-family;
   }
 }
 
@@ -172,7 +176,7 @@
 
   .login-tfrs-page-header-text {
     color: #ffffff;
-    font-family: "MyriadWebPro", sans-serif;
+    font-family: $font-family;
     font-size: 3.5rem;
     line-height: normal;
     position: relative;

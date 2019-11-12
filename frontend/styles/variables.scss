@@ -1,3 +1,34 @@
+@font-face {
+	font-family: "BCSans";
+	src: url('/assets/fonts/BCSans-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: "BCSans";
+	src: url('/assets/fonts/BCSans-Bold.woff') format('woff');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: "BCSans";
+	src: url('/assets/fonts/BCSans-BoldItalic.woff') format('woff');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BCSans";
+	src: url('/assets/fonts/BCSans-Italic.woff') format('woff');
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Myriad-Pro';
+	src: url('/assets/fonts/MyriadWebPro.ttf');
+}
+
+$font-family: "BCSans", "Myriad-Pro", Calibri, Arial, "sans serif" !important;
+
 $link-color: #1a5a96;
 $link-color-hover: #5091cd;
 $link-color-hover-dark: #223654;
