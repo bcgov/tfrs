@@ -11,6 +11,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
+import Modal from '../app/components/Modal';
 import Select from '../app/components/Spreadsheet/Select';
 import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
 import {
@@ -50,6 +51,7 @@ class ScheduleDContainer extends Component {
 
     this._addHeaders = this._addHeaders.bind(this);
     this._addSheet = this._addSheet.bind(this);
+    this._deleteActiveSheet = this._deleteActiveSheet.bind(this);
     this._handleSheetChanged = this._handleSheetChanged.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
     this._setActiveSheet = this._setActiveSheet.bind(this);
@@ -187,7 +189,13 @@ class ScheduleDContainer extends Component {
     }
   }
 
-  _addHeaders (id) {
+  _addHeaders (_id) {
+    let id = _id;
+
+    if (this.state.sheets.length > 0) {
+      id = this.state.sheets[this.state.sheets.length - 1].id + 1;
+    }
+
     return {
       grid: [
         [{
@@ -348,6 +356,19 @@ class ScheduleDContainer extends Component {
     });
   }
 
+  _deleteActiveSheet () {
+    const { activeSheet, sheets } = this.state;
+
+    const index = sheets.findIndex(sheet => (sheet.id === activeSheet));
+    sheets.splice(index, 1);
+
+    const { id } = sheets[0]; // default to the first one
+
+    this.setState({
+      activeSheet: id
+    });
+  }
+
   _getFuelClasses (row, id) {
     const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
 
@@ -361,13 +382,35 @@ class ScheduleDContainer extends Component {
     return [];
   }
 
-  _handleSheetChanged (grid, index) {
+  _handleSheetChanged (gridObject, id) {
     const { sheets } = this.state;
 
-    sheets[index] = {
-      ...sheets[index],
-      ...grid
-    };
+    const index = sheets.findIndex(sheet => (sheet.id === id));
+
+    if (index < 0) {
+      return;
+    }
+
+    if (gridObject.grid) {
+      sheets[index] = {
+        ...sheets[index],
+        grid: gridObject.grid
+      };
+    }
+
+    if (gridObject.input) {
+      sheets[index] = {
+        ...sheets[index],
+        input: gridObject.input
+      };
+    }
+
+    if (gridObject.output) {
+      sheets[index] = {
+        ...sheets[index],
+        output: gridObject.output
+      };
+    }
 
     this.setState({
       sheets
@@ -624,6 +667,16 @@ class ScheduleDContainer extends Component {
             />
           </div>
         ))}
+
+        <Modal
+          handleSubmit={() => {
+            this._deleteActiveSheet();
+          }}
+          id="confirmDelete"
+          title="Confirm Delete"
+        >
+          Do you want to delete this entry?
+        </Modal>
       </div>
     );
   }
