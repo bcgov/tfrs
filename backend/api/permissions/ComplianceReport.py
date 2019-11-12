@@ -72,7 +72,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
     actions.append(ActionMap(
         _Relationship.GovernmentAnalyst, 'Submitted',
         '(Recommended|Not Recommended)', '(Recommended|Not Recommended)',
-        'Accepted',
+        '(Accepted|Unreviewed)',
         ['REQUEST_SUPPLEMENTAL']
     ))
 
