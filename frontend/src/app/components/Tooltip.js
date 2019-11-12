@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip as ReactTooltip } from 'react-bootstrap';
 
-class TooltipWhenDisabled extends Component {
-  _renderDisabled () {
+class Tooltip extends Component {
+  _renderOverlay () {
     return (
       <OverlayTrigger placement="top" overlay={this._tooltip()}>
         <div className="overlay-trigger">
@@ -16,42 +16,42 @@ class TooltipWhenDisabled extends Component {
 
   _tooltip () {
     return (
-      <Tooltip className={this.props.className} id="tooltip">
+      <ReactTooltip className={this.props.className} id="tooltip">
         {Array.isArray(this.props.title) &&
           this.props.title.map(title => (<div key={title}><ReactMarkdown source={title} /></div>))
         }
         {!Array.isArray(this.props.title) &&
           <ReactMarkdown source={this.props.title} />
         }
-      </Tooltip>
+      </ReactTooltip>
     );
   }
 
   render () {
-    if (this.props.disabled) {
-      return this._renderDisabled();
+    if (this.props.show) {
+      return this._renderOverlay();
     }
 
     return this.props.children;
   }
 }
 
-TooltipWhenDisabled.defaultProps = {
+Tooltip.defaultProps = {
   className: 'danger',
-  disabled: true
+  show: true
 };
 
-TooltipWhenDisabled.propTypes = {
+Tooltip.propTypes = {
   className: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
-  disabled: PropTypes.bool,
+  show: PropTypes.bool,
   title: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired
 };
 
-export default TooltipWhenDisabled;
+export default Tooltip;

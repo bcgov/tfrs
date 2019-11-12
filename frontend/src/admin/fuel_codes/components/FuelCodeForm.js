@@ -10,7 +10,7 @@ import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import CallableModal from '../../../app/components/CallableModal';
 import Errors from '../../../app/components/Errors';
-import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../../app/components/Tooltip';
 
 class FuelCodeForm extends Component {
   constructor (props) {
@@ -182,7 +182,7 @@ class FuelCodeForm extends Component {
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
-              <TooltipWhenDisabled
+              <Tooltip
                 disabled={this._getValidationMessagesForDraft().length > 0}
                 title={this._getValidationMessagesForDraft()}
               >
@@ -193,8 +193,8 @@ class FuelCodeForm extends Component {
                 >
                   <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
                 </button>
-              </TooltipWhenDisabled>
-              <TooltipWhenDisabled
+              </Tooltip>
+              <Tooltip
                 className={`danger adjust-tooltip ${this.props.fields.facilityNameplate === '' ? 'adjust-for-facility-nameplate' : ''}`}
                 disabled={this._getValidationMessagesForApproval().length > 0}
                 title={this._getValidationMessagesForApproval()}
@@ -208,7 +208,7 @@ class FuelCodeForm extends Component {
                   <FontAwesomeIcon icon={this.props.edit ? 'save' : 'plus'} />
                   {this.props.edit ? ` ${Lang.BTN_UPDATE}` : ` ${Lang.BTN_ADD}`}
                 </button>
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           </div>
         </form>
