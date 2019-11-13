@@ -1,5 +1,5 @@
 const API = '/documents';
-const BASE_PATH = '/secure_document_upload';
+const BASE_PATH = '/part_3_agreements';
 
 const SECURE_DOCUMENT_UPLOAD = {
   API,

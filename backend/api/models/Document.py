@@ -90,15 +90,6 @@ class Document(Auditable, DocumentData):
 
         return comments
 
-    @property
-    def milestone(self):
-        """
-        Additional information for document type: Evidence
-        """
-        from .DocumentMilestone import DocumentMilestone
-
-        return DocumentMilestone.objects.filter(document_id=self.id).first()
-
     class Meta:
         db_table = 'document'
 

@@ -56,7 +56,7 @@ const SecureFileSubmissionDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="milestone-id">Milestone:
-                <div className="value">{props.item.milestone.milestone}</div>
+                <div className="value">{props.item.milestone}</div>
               </label>
             </div>
           </div>

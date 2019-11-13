@@ -32,5 +32,10 @@ class DocumentData(models.Model):
         null=False
     )
 
+    milestone = models.CharField(
+        blank=True, max_length=1000, null=True,
+        db_comment="Record section of agreement containing milestone."
+    )
+
     class Meta:
         abstract = True

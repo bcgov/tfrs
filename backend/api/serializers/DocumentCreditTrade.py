@@ -5,7 +5,6 @@ from api.models.Document import Document
 from api.models.CreditTrade import CreditTrade
 from api.serializers.CreditTradeType import CreditTradeTypeSerializer
 from api.serializers.CreditTradeStatus import CreditTradeStatusMinSerializer
-from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 
@@ -17,19 +16,6 @@ class DocumentAuxiliarySerializer(serializers.ModelSerializer):
 
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
-    milestone = serializers.SerializerMethodField()
-
-    def get_milestone(self, obj):
-        """
-        Additional information for milestone evidences
-        """
-        if obj.type.the_type == 'Evidence':
-            milestone = obj.milestone
-            serializer = DocumentMilestoneSerializer(milestone)
-
-            return serializer.data
-
-        return None
 
     class Meta:
         model = Document

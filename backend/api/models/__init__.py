@@ -28,7 +28,6 @@ from . import CreditTrade
 from . import CompliancePeriod
 from . import CreditTradeHistory
 from . import CreditTradeZeroReason
-from . import DocumentMilestone
 from . import DocumentStatus
 from . import DocumentType
 from . import OrganizationActionsType
