@@ -10,9 +10,27 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "cd to backend folder"
+          command: cd backend
+      - run:
           name: "Install required packages"
           command: |
-            cd backend
+            pwd
             pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
             python manage.py collectstatic
+      - run:
+          name: "Run unit tests"
+          command: |
+            pwd
+            python manage.py test --noinput -c nose.cfg
+            mkdir test_results
+            mv coverage.xml test_results
+            mv nosetests.xml test_results
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: test_results/nosetests.xml
+      - store_artifacts:
+          path: test_results/nosetests.xml
+
 
