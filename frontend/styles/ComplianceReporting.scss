@@ -265,3 +265,20 @@ table.supplementalTable {
     font-size: 120%;
   }
 }
+
+.report-history-panel {
+
+  .title {
+    text-decoration: underline;
+    color: $link-color;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+  }
+
+  .panel-body {
+    &:hover {
+      background: $yellow !important;
+    }
+  }
+}
+

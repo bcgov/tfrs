@@ -224,12 +224,6 @@ class ComplianceReport(Auditable):
     @property
     def generated_nickname(self):
         """ Used for display in the UI when no nickname is set"""
-        best_timestamp = datetime.now()
-
-        if self.update_timestamp:
-            best_timestamp = self.update_timestamp
-        if self.create_timestamp:
-            best_timestamp = self.create_timestamp
 
         if self.supplements is not None:
             # found out how many in this tree
@@ -249,7 +243,7 @@ class ComplianceReport(Auditable):
             while len(to_visit) > 0:
                 current_id = to_visit.popleft()
 
-                #break loops
+                # break loops
                 if current_id in visited:
                     continue
                 visited.append(current_id)
@@ -266,9 +260,13 @@ class ComplianceReport(Auditable):
                 for descendant in current.supplemental_reports.order_by('create_timestamp').all():
                     to_visit.append(descendant.id)
 
-            return 'Supplemental {} #{}, {}'.format(self.type.the_type, position_in_traversal, best_timestamp.strftime('%Y-%m-%d %H:%M'))
+            return '{type} for {period} -- Supplemental Report #{position}' \
+                .format(type=self.type.the_type,
+                        position=position_in_traversal,
+                        period=self.compliance_period.description)
         else:
-            return '{},  {}'.format(self.type.the_type, best_timestamp.strftime('%Y-%m-%d %H:%M'))
+            return '{type} for {period}'.format(period=self.compliance_period.description,
+                                                type=self.type.the_type)
 
     def get_history(self, include_government_statuses=False):
         """
