@@ -5,7 +5,11 @@ orbs:
   
 jobs:
   build: 
+    working_directory: ~/project/backend
     docker:
       - image: python:3.6.9-stretch
     steps:
       - checkout
+      - run:
+          name: "Install required packages"
+          command: pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
