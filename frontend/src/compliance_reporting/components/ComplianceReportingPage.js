@@ -40,7 +40,8 @@ const ComplianceReportingPage = (props) => {
                     onClick={() => {
                       const found = items.findIndex(item => (
                         item.status.fuelSupplierStatus === 'Submitted' &&
-                        item.compliancePeriod.id === compliancePeriod.id
+                        item.compliancePeriod.id === compliancePeriod.id &&
+                        item.type === 'Compliance Report'
                       ));
 
                       if (found >= 0) {
@@ -82,7 +83,8 @@ const ComplianceReportingPage = (props) => {
                     onClick={() => {
                       const found = items.findIndex(item => (
                         item.status.fuelSupplierStatus === 'Submitted' &&
-                        item.compliancePeriod.id === compliancePeriod.id
+                        item.compliancePeriod.id === compliancePeriod.id &&
+                        item.type === 'Exclusion Report'
                       ));
 
                       if (found >= 0) {
