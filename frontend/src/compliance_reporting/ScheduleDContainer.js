@@ -13,7 +13,7 @@ import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
 import Modal from '../app/components/Modal';
 import Select from '../app/components/Spreadsheet/Select';
-import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
+import Tooltip from '../app/components/Tooltip';
 import {
   SCHEDULE_D,
   SCHEDULE_D_INPUT,
@@ -207,13 +207,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Worksheet Name `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The worksheet in the GHGenius model where the change is made (e.g. Input, Coprods, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -222,13 +222,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Cell `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The cell reference in which the change is made (e.g. A1, D155, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -237,13 +237,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Value `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The value that is replacing the default value."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -252,13 +252,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Units `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The unit given for the Reported Value (e.g L, L/MJ, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -267,13 +267,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Description `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="A brief description of the nature of the input (e.g. feedstock transportation mode, natural gas usage, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }] // spreadsheet header
@@ -289,13 +289,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Feedstock `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The feedstock used to produce the fuel (e.g. corn, soy, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -304,13 +304,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Fuel Class `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The fuel class in which the fuel was used."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }],

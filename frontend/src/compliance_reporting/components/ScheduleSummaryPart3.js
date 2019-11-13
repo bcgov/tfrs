@@ -2,7 +2,7 @@ import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import { numericColumn, numericInput, totalViewer } from './Columns';
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 
 class ScheduleSummaryPart3 {
   constructor () {
@@ -33,13 +33,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 23 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="This line displays the total number of credits for the compliance period and is informed from reporting in Schedule B."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, numericColumn, {
@@ -56,13 +56,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 24 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="This line displays the total number of debits for the compliance period and is informed from reporting in Schedule B."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, numericColumn, {
@@ -79,13 +79,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 25 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="This line displays the net balance of credits or debits for the compliance period."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, numericColumn, {
@@ -102,13 +102,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 26 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, {
@@ -137,13 +137,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 27 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="This line displays the outstanding debit balance (if any) based on the information provided."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, numericColumn, {
@@ -161,13 +161,13 @@ class ScheduleSummaryPart3 {
         value: (
           <div>
             {`Line 28 `}
-            <TooltipWhenDisabled
+            <Tooltip
               className="info"
               disabled
               title="This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty."
             >
               <FontAwesomeIcon icon="info-circle" />
-            </TooltipWhenDisabled>
+            </Tooltip>
           </div>
         )
       }, {

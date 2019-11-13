@@ -7,7 +7,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Errors from '../../app/components/Errors';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
@@ -204,7 +204,7 @@ const SecureFileSubmissionDetails = props => (
       </button>
       }
       {props.availableActions.includes('Submitted') &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.hasFailures}
         title="Please edit and remove all attachments with failing security scans."
       >
@@ -217,7 +217,7 @@ const SecureFileSubmissionDetails = props => (
         >
           <FontAwesomeIcon icon="share-square" /> {Lang.BTN_SUBMIT}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.availableActions.includes('Received') &&
       <button
@@ -230,7 +230,7 @@ const SecureFileSubmissionDetails = props => (
       </button>
       }
       {props.availableActions.includes('Archived') &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.formValidationMessage.length > 0}
         title={props.formValidationMessage}
       >
@@ -243,7 +243,7 @@ const SecureFileSubmissionDetails = props => (
         >
           <FontAwesomeIcon icon="archive" /> {Lang.BTN_ARCHIVE}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
     </div>
   </div>

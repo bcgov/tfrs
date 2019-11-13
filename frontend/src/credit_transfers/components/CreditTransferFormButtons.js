@@ -6,7 +6,7 @@ import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 
 const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
@@ -29,7 +29,7 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
@@ -41,7 +41,7 @@ const CreditTransferFormButtons = props => (
         >
           <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT_DRAFT}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_EDIT_PVR_DRAFT) &&
         <button
@@ -62,7 +62,7 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting || props.disabled.BTN_SIGN_1_2}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_1_2
           ? 'Signing Authority Declaration needs to be accepted'
@@ -80,10 +80,10 @@ const CreditTransferFormButtons = props => (
         >
           <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SIGN_1_2}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
@@ -96,10 +96,10 @@ const CreditTransferFormButtons = props => (
         >
           <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_SIGN_2_2) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting || props.disabled.BTN_SIGN_2_2}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_2_2
           ? 'Signing Authority Declaration needs to be accepted'
@@ -116,7 +116,7 @@ const CreditTransferFormButtons = props => (
         >
           <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SIGN_2_2}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_RESCIND) &&
       <button
@@ -129,7 +129,7 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
@@ -142,10 +142,10 @@ const CreditTransferFormButtons = props => (
         >
           {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting || props.disabled.BTN_RECOMMEND}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : Lang.TEXT_COMMENT_REQUIRED}
       >
@@ -159,7 +159,7 @@ const CreditTransferFormButtons = props => (
         >
           {Lang.BTN_RECOMMEND_FOR_DECISION}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_PULL_BACK) &&
         <button
@@ -183,7 +183,7 @@ const CreditTransferFormButtons = props => (
         </button>
       }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
@@ -196,10 +196,10 @@ const CreditTransferFormButtons = props => (
         >
           {Lang.BTN_DECLINE_FOR_APPROVAL}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
       {props.actions.includes(Lang.BTN_APPROVE) &&
-      <TooltipWhenDisabled
+      <Tooltip
         disabled={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
@@ -213,7 +213,7 @@ const CreditTransferFormButtons = props => (
         >
           {Lang.BTN_APPROVE}
         </button>
-      </TooltipWhenDisabled>
+      </Tooltip>
       }
     </div>
   </div>

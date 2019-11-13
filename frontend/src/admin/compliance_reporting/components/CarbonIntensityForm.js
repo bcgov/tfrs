@@ -9,7 +9,7 @@ import CarbonIntensityFormDetails from './CarbonIntensityFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import Errors from '../../../app/components/Errors';
-import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../../app/components/Tooltip';
 
 class CarbonIntensityForm extends Component {
   _getValidationMessages () {
@@ -53,7 +53,7 @@ class CarbonIntensityForm extends Component {
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
-              <TooltipWhenDisabled
+              <Tooltip
                 disabled={this._getValidationMessages().length > 0}
                 title={this._getValidationMessages()}
               >
@@ -66,7 +66,7 @@ class CarbonIntensityForm extends Component {
                 >
                   <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
                 </button>
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           </div>
         </form>

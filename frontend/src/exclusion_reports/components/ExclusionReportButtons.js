@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import {download} from "../../utils/functions";
-import * as Routes from "../../constants/routes";
-import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
-
+import { download } from '../../utils/functions';
+import * as Routes from '../../constants/routes';
 
 const getValidationMessages = (props) => {
   if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
@@ -50,7 +48,7 @@ const ExclusionReportButtons = props => (
       </button>
       }
       {props.actions.includes('SUBMIT') && [
-        <TooltipWhenDisabled
+        <Tooltip
           disabled={props.validating || !props.valid}
           key="btn-save"
           title="Please fix validation errors before saving."
@@ -64,8 +62,8 @@ const ExclusionReportButtons = props => (
           >
             <FontAwesomeIcon icon="save" /> Save
           </button>
-        </TooltipWhenDisabled>,
-        <TooltipWhenDisabled
+        </Tooltip>,
+        <Tooltip
           disabled={getValidationMessages(props) !== ''}
           key="btn-submit"
           title={getValidationMessages(props)}
@@ -79,7 +77,7 @@ const ExclusionReportButtons = props => (
           >
             <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
           </button>
-        </TooltipWhenDisabled>
+        </Tooltip>
       ]}
       {props.actions.includes('CREATE_SUPPLEMENTAL') &&
       <button

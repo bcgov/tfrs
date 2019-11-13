@@ -9,7 +9,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import Errors from '../../app/components/Errors';
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
@@ -88,7 +88,7 @@ class GovernmentTransferForm extends Component {
               </button>
               }
               {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
-              <TooltipWhenDisabled
+              <Tooltip
                 disabled={this.props.fields.comment.length === 0}
                 title={Lang.TEXT_COMMENT_REQUIRED}
               >
@@ -102,7 +102,7 @@ class GovernmentTransferForm extends Component {
                 >
                   {Lang.BTN_RECOMMEND_FOR_DECISION}
                 </button>
-              </TooltipWhenDisabled>
+              </Tooltip>
               }
             </div>
           </div>
