@@ -23,11 +23,9 @@ jobs:
             mkdir test_results
             mv coverage.xml test_results
             mv nosetests.xml test_results
-      - store_test_results:
-          path: ~/project/backend/test_results
       - store_artifacts:
-          path: ~/project/backend/nosetests.xml
+          path: backend/test_results/nosetests.xml
       - store_artifacts:
-          path: ~/project/backend/coverage.xml
+          path: backend/test_results/coverage.xml
 
 
