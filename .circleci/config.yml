@@ -15,4 +15,4 @@ jobs:
             cd backend
             pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
             python manage.py collectstatic
-            python manage.py test --noinput -c nose.cfg
+
