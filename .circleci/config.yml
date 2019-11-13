@@ -6,6 +6,6 @@ orbs:
 jobs:
   build: 
     docker:
-      - image: python/3.6-stretch
+      - image: python/3.6.9-stretch
     steps:
       - checkout
