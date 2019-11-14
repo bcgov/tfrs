@@ -18,12 +18,13 @@ jobs:
       - run:
           name: "Run unit tests"
           command: |
-            cd backend
             set +e
+            cd backend
             python manage.py test --noinput -c nose.cfg
       - run:
           name: "move test results"
           command: |
+            set +e
             cd backend
             mkdir test_results
             cd test_results
