@@ -33,7 +33,6 @@ const config = {
       tokenRenewalPath
     ]
   },
-
   output: {
     // We need to give Webpack a path. It does not actually need it,
     // because files are kept in memory in webpack-dev-server, but an
