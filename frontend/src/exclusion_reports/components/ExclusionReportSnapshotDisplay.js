@@ -111,12 +111,13 @@ class SnapshotDisplay extends Component {
         </div>
         }
         {(snapshot.supplementalNote && snapshot.supplementalNote.length > 0) &&
-        <div>
-          <h1 className="schedule-header">Supplemental Submission Explanation</h1>
-          <hr/>
+        <div className={'panel panel-default'}>
+          <div className={'panel-heading'}>
+            Supplemental Submission Explanation
+          </div>
           <div
             key="supplemental-note"
-            className="panel"
+            className="panel-body"
           >
             <span>{snapshot.supplementalNote}</span>
           </div>

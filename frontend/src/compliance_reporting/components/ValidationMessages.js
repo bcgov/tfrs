@@ -261,7 +261,7 @@ class ValidationMessages extends Component {
     ) {
       const errors = this.props.validationMessages.scheduleD.sheets[this.props.activeSheet];
 
-      if (Object.keys(errors).length > 0) {
+      if (errors && Object.keys(errors).length > 0) {
         const message = 'There is missing information, please ensure all fields are completed.';
 
         if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {

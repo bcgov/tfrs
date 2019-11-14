@@ -10,7 +10,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails';
 import Errors from '../../app/components/Errors';
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import DOCUMENT_STATUSES from '../../constants/documentStatuses';
@@ -69,7 +69,7 @@ class SecureFileSubmissionForm extends Component {
               </button>
               }
               {this.props.availableActions.includes('Submitted') &&
-              <TooltipWhenDisabled
+              <Tooltip
                 disabled={this.props.formValidationMessage.length > 0}
                 title={this.props.formValidationMessage}
               >
@@ -82,7 +82,7 @@ class SecureFileSubmissionForm extends Component {
                 >
                   <FontAwesomeIcon icon="upload" /> {Lang.BTN_SUBMIT}
                 </button>
-              </TooltipWhenDisabled>
+              </Tooltip>
               }
             </div>
           </div>

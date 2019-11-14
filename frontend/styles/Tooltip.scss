@@ -1,6 +1,16 @@
 @import './variables.scss';
 
+.overlay-trigger {
+  display: inline-block;
+
+  button {
+    pointer-events: none;
+  }
+}
+
 .tooltip {
+  z-index: 99;
+
   &.danger {
     .tooltip-arrow {
       border-top-color: $dark-red !important;
@@ -54,4 +64,8 @@
     margin: 0.5rem 0;
     padding: 0 0.5rem;
   }
+}
+
+.tooltip-inner p {
+  margin: 0;
 }

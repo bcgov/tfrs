@@ -11,7 +11,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import Modal from '../app/components/Modal';
 import Input from '../app/components/Spreadsheet/Input';
 import Select from '../app/components/Spreadsheet/Select';
-import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
+import Tooltip from '../app/components/Tooltip';
 import SchedulesPage from './components/SchedulesPage';
 import { SCHEDULE_B, SCHEDULE_B_ERROR_KEYS } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
@@ -37,7 +37,7 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`CREDIT/DEBIT CALCULATION `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info left"
                 disabled
                 title={`This value will be calculated based on the information provided using the formula specified in section 6 (4) of the Act.
@@ -51,7 +51,7 @@ class ScheduleBContainer extends Component {
 \nCredits and debits are displayed as whole values; fractional values are accounted for when determining the total credits generated and/or the total debits incurred from all fuel supplied within a compliance period. Conventional rounding is used only after the total credits and total debits are calculated.`}
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }],
@@ -64,13 +64,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Fuel Type `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="Select the fuel type from the drop-down list."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -79,13 +79,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Fuel Class `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="Select the fuel class in which the fuel was used from the drop-down list."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -94,7 +94,7 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Provision of the Act Relied Upon to Determine Carbon Intensity `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info left"
                 disabled
                 title="Act Relied Upon to Determine Carbon Intensity: Identify the appropriate provision of the Act relied upon to determine the carbon intensity of each Part 3 fuel.
@@ -106,7 +106,7 @@ class ScheduleBContainer extends Component {
 - Section 6 (5) (d) (ii) (B) - Approved alternative method: Users selecting this method are required to provide a copy of the Director's approval letter of that method and appropriate documentation of the inputs and outputs of the electronic calculation, as appropriate."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -115,7 +115,7 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               Fuel Code or Schedule D Entry<br />{`(if applicable) `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info left"
                 disabled
                 title="
@@ -123,7 +123,7 @@ class ScheduleBContainer extends Component {
 - Schedule D Entry: If GHGenius modelled is relied upon to determine carbon intensity, a drop-down list of the appropriate fuel(s) reported in Schedule D based on the selected fuel type and fuel class will be provided."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -136,13 +136,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Units `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="This value will be provided based on the type of fuel reported."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -151,13 +151,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               Carbon Intensity Limit<br />{`(gCO₂e/MJ) `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The prescribed carbon intensity limit for the compliance period for the class of fuel of which the fuel is a part. This value will be provided based on the fuel class reported."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -166,13 +166,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               Carbon Intensity of Fuel<br />{`(gCO₂e/MJ) `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The carbon intensity of the fuel. This value will be provided based on the specific fuel and determination method reported."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -181,13 +181,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Energy Density `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="This value will be provided based on the type of fuel reported as specified in section 11.02 (3) of the Regulation."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -196,13 +196,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`EER `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The Energy Effectiveness Ratio (EER) will be provided based on the type of fuel and fuel class reported as specified in section 11.02 (2) of the Regulation."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -211,13 +211,13 @@ class ScheduleBContainer extends Component {
           value: (
             <div>
               {`Energy Content (MJ) `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="This value will be calculated using the formula specified in section 11.02 (3) of the Regulation. The formula is Energy Content (megajoules) = Quantity of Fuel Supplied X Energy Density."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {

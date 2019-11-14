@@ -29,7 +29,6 @@ from rest_framework import serializers
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
 from api.models.DocumentComment import DocumentComment
-from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
 
@@ -37,7 +36,6 @@ from api.serializers import CreditTradeAuxiliarySerializer
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
 from api.serializers.DocumentHistory import DocumentHistorySerializer
-from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 from api.serializers.User import UserMinSerializer
@@ -102,11 +100,11 @@ class DocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = (
             'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
-            'update_timestamp', 'update_user', 'credit_trades')
+            'milestone', 'update_timestamp', 'update_user', 'credit_trades')
 
         read_only_fields = (
             'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
-            'update_timestamp', 'update_user', 'credit_trades')
+            'milestone', 'update_timestamp', 'update_user', 'credit_trades')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
@@ -180,15 +178,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        milestone = validated_data.pop('milestone', None)
         document = Document.objects.create(**validated_data)
-
-        if document.type.the_type == 'Evidence':
-            DocumentMilestone.objects.create(
-                document=document,
-                create_user=document.create_user,
-                milestone=milestone
-            )
 
         return document
 
@@ -283,7 +273,6 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     link_actions = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
-    milestone = serializers.SerializerMethodField()
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     credit_trades = serializers.SerializerMethodField()
@@ -386,18 +375,6 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
 
         return serializer.data
 
-    def get_milestone(self, obj):
-        """
-        Additional information for milestone evidences
-        """
-        if obj.type.the_type == 'Evidence':
-            milestone = obj.milestone
-            serializer = DocumentMilestoneSerializer(milestone)
-
-            return serializer.data
-
-        return None
-
     class Meta:
         model = Document
         fields = (
@@ -422,21 +399,8 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
-    milestone = serializers.SerializerMethodField()
     credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
     history = DocumentHistorySerializer(many=True, read_only=True)
-
-    def get_milestone(self, obj):
-        """
-        Additional information for milestone evidences
-        """
-        if obj.type.the_type == 'Evidence':
-            milestone = obj.milestone
-            serializer = DocumentMilestoneSerializer(milestone)
-
-            return serializer.data
-
-        return None
 
     class Meta:
         model = Document
@@ -614,18 +578,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, document, validated_data):
-        milestone = validated_data.pop('milestone', None)
         status = validated_data.get('status', document.status)
-
-        if document.type.the_type == 'Evidence' and milestone and \
-                status.status in ['Draft', 'Submitted']:
-            DocumentMilestone.objects.update_or_create(
-                document=document,
-                defaults={
-                    'create_user': document.create_user,
-                    'milestone': milestone
-                }
-            )
 
         Document.objects.filter(id=document.id).update(**validated_data)
 
@@ -688,16 +641,6 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         create_timestamp=datetime.now(),
                         privileged_access=False
                     )
-
-            if document.type.the_type == 'Evidence' and \
-                    request.data.get('milestone'):
-                DocumentMilestone.objects.update_or_create(
-                    document=document,
-                    defaults={
-                        'create_user': document.create_user,
-                        'milestone': request.data.get('milestone')
-                    }
-                )
 
         return document
 

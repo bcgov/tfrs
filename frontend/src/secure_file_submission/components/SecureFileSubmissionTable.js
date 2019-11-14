@@ -56,10 +56,8 @@ const SecureFileSubmissionTable = (props) => {
   }, {
     accessor: (item) => {
       if (item.type.theType === 'Evidence') {
-        if (item.milestone &&
-          item.milestone.milestone &&
-          item.milestone.milestone.length > 0) {
-          return `${item.title}: ${item.milestone.milestone}`;
+        if (item.milestone) {
+          return `${item.title}: ${item.milestone}`;
         }
       }
 

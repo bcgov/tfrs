@@ -1,17 +1,17 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-import TooltipWhenDisabled from '../../../src/app/components/TooltipWhenDisabled';
+import Tooltip from '../../../src/app/components/Tooltip';
 
-test('TooltipWhenDisabled should display properly', () => {
+test('Tooltip should display properly', () => {
   const component = renderer.create([
-    <TooltipWhenDisabled
-      disabled
+    <Tooltip
       key="tooltip"
+      show
       title="Sample Title"
     >
       <button type="button">Test Button</button>
-    </TooltipWhenDisabled>
+    </Tooltip>
   ]);
 
   const tree = component.toJSON();

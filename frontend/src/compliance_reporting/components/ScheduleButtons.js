@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import AutosaveNotifier from './AutosaveNotifier';
-import * as Routes from "../../constants/routes";
-import {download} from "../../utils/functions";
+import * as Routes from '../../constants/routes';
+import { download } from '../../utils/functions';
 
 const getValidationMessages = (props) => {
   if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
@@ -37,7 +37,7 @@ const getValidationMessages = (props) => {
 
   let type = null;
   if (typeof (props.complianceReport.type) === 'string') {
-    ({type} = props.complianceReport);
+    ({ type } = props.complianceReport);
   } else {
     type = props.complianceReport.type.theType;
   }
@@ -68,7 +68,7 @@ const getValidationMessages = (props) => {
 const ScheduleButtons = props => (
   <div className="schedule-buttons btn-container">
     <div className="left">
-      <AutosaveNotifier saving={props.saving}/>
+      <AutosaveNotifier saving={props.saving} />
     </div>
 
     <div className="right">
@@ -77,7 +77,7 @@ const ScheduleButtons = props => (
         onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
       {props.actions.includes('CREATE_SUPPLEMENTAL') &&
       <button
@@ -86,7 +86,7 @@ const ScheduleButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="clone"/> {Lang.BTN_CREATE_SUPPLEMENTAL}
+        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
       </button>
       }
       {props.actions.includes('DELETE') &&
@@ -96,11 +96,11 @@ const ScheduleButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes('SUBMIT') && [
-        <TooltipWhenDisabled
+        <Tooltip
           disabled={props.validating || !props.valid}
           key="btn-save"
           title="Please fix validation errors before saving."
@@ -112,10 +112,10 @@ const ScheduleButtons = props => (
             disabled={props.validating || !props.valid}
             type="button"
           >
-            <FontAwesomeIcon icon="save"/> Save
+            <FontAwesomeIcon icon="save" /> Save
           </button>
-        </TooltipWhenDisabled>,
-        <TooltipWhenDisabled
+        </Tooltip>,
+        <Tooltip
           disabled={getValidationMessages(props) !== ''}
           key="btn-submit"
           title={getValidationMessages(props)}
@@ -127,9 +127,9 @@ const ScheduleButtons = props => (
             disabled={getValidationMessages(props) !== ''}
             type="button"
           >
-            <FontAwesomeIcon icon="pen-fancy"/> {Lang.BTN_SUBMIT}
+            <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
           </button>
-        </TooltipWhenDisabled>
+        </Tooltip>
       ]}
       {props.actor === 'ANALYST' &&
       props.actions.includes('REQUEST_SUPPLEMENTAL') &&
@@ -140,7 +140,7 @@ const ScheduleButtons = props => (
         key="btn-analyst-request-supplemental"
         type="button"
       >
-        <FontAwesomeIcon icon="exclamation-circle"/> {Lang.BTN_REQUEST_SUPPLEMENTAL}
+        <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
       </button>
       }
       {props.actor === 'ANALYST' &&
@@ -152,7 +152,7 @@ const ScheduleButtons = props => (
         key="btn-analyst-recommend-rejection"
         type="button"
       >
-        <FontAwesomeIcon icon="times"/> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
       </button>
       }
       {props.actor === 'ANALYST' &&
@@ -164,7 +164,7 @@ const ScheduleButtons = props => (
         key="btn-analyst-recommend-acceptance"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
       </button>
       }
       {props.actor === 'MANAGER' &&
@@ -176,7 +176,7 @@ const ScheduleButtons = props => (
         key="btn-manager-request-supplemental"
         type="button"
       >
-        <FontAwesomeIcon icon="exclamation-circle"/> {Lang.BTN_REQUEST_SUPPLEMENTAL}
+        <FontAwesomeIcon icon="exclamation-circle" /> {Lang.BTN_REQUEST_SUPPLEMENTAL}
       </button>
       }
       {props.actor === 'MANAGER' &&
@@ -188,7 +188,7 @@ const ScheduleButtons = props => (
         key="btn-manager-recommend-rejection"
         type="button"
       >
-        <FontAwesomeIcon icon="times"/> {Lang.BTN_RECOMMEND_FOR_REJECTION}
+        <FontAwesomeIcon icon="times" /> {Lang.BTN_RECOMMEND_FOR_REJECTION}
       </button>
       }
       {props.actor === 'MANAGER' &&
@@ -200,7 +200,7 @@ const ScheduleButtons = props => (
         key="btn-manager-recommend-acceptance"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
+        <FontAwesomeIcon icon="check" /> {Lang.BTN_RECOMMEND_FOR_ACCEPTANCE}
       </button>
       }
       {props.actor === 'DIRECTOR' &&
@@ -212,7 +212,7 @@ const ScheduleButtons = props => (
         key="btn-director-reject"
         type="button"
       >
-        <FontAwesomeIcon icon="times"/> {Lang.BTN_REJECT}
+        <FontAwesomeIcon icon="times" /> {Lang.BTN_REJECT}
       </button>
       }
       {props.actor === 'DIRECTOR' &&
@@ -224,7 +224,7 @@ const ScheduleButtons = props => (
         key="btn-director-accept"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> {Lang.BTN_ACCEPT}
+        <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
       </button>
       }
       <button
@@ -244,7 +244,7 @@ const ScheduleButtons = props => (
           });
         }}
       >
-        <FontAwesomeIcon icon="file-excel"/> <span>Download as .xls</span>
+        <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
       </button>
     </div>
   </div>

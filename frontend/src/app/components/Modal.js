@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
+import Tooltip from '../../app/components/Tooltip';
 import * as Lang from '../../constants/langEnUs';
 
 const bootstrapClassFor = (extraConfirmType) => {
@@ -78,7 +78,7 @@ class Modal extends React.Component {
                 {this.props.cancelLabel}
               </button>
               {this.props.showConfirmButton &&
-              <TooltipWhenDisabled
+              <Tooltip
                 disabled={this.props.disabled}
                 title={this.props.tooltipMessage}
               >
@@ -93,7 +93,7 @@ class Modal extends React.Component {
                 >
                   {this.props.confirmLabel}
                 </button>
-              </TooltipWhenDisabled>
+              </Tooltip>
               }
             </div>
           </div>

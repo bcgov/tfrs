@@ -290,20 +290,36 @@
   margin-bottom: 2rem;
 
   li {
+    border-radius: 4px 4px 0 0;
     float: right;
     margin-left: 1rem;
 
-    &.active button {
+    &.active {
+      background-color: $white;
       border: 1px solid $border-grey;
       border-bottom: none;
+
+      button.delete {
+        display: inline;
+      }
+    }
+
+    > div {
+      height: 100%;
+      padding: 1rem;
     }
 
     button {
-      background-color: $white;
+      background-color: transparent;
       border: none;
-      border-radius: 4px 4px 0 0;
       color: $link-color;
-      padding: 1rem;
+      padding: 0;
+    }
+
+    .delete {
+      color: $red;
+      display: none;
+      margin-left: 1rem;
     }
   }
 }

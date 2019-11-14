@@ -11,8 +11,9 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
+import Modal from '../app/components/Modal';
 import Select from '../app/components/Spreadsheet/Select';
-import TooltipWhenDisabled from '../app/components/TooltipWhenDisabled';
+import Tooltip from '../app/components/Tooltip';
 import {
   SCHEDULE_D,
   SCHEDULE_D_INPUT,
@@ -50,6 +51,7 @@ class ScheduleDContainer extends Component {
 
     this._addHeaders = this._addHeaders.bind(this);
     this._addSheet = this._addSheet.bind(this);
+    this._deleteActiveSheet = this._deleteActiveSheet.bind(this);
     this._handleSheetChanged = this._handleSheetChanged.bind(this);
     this._gridStateToPayload = this._gridStateToPayload.bind(this);
     this._setActiveSheet = this._setActiveSheet.bind(this);
@@ -187,7 +189,13 @@ class ScheduleDContainer extends Component {
     }
   }
 
-  _addHeaders (id) {
+  _addHeaders (_id) {
+    let id = _id;
+
+    if (this.state.sheets.length > 0) {
+      id = this.state.sheets[this.state.sheets.length - 1].id + 1;
+    }
+
     return {
       grid: [
         [{
@@ -199,13 +207,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Worksheet Name `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The worksheet in the GHGenius model where the change is made (e.g. Input, Coprods, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -214,13 +222,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Cell `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The cell reference in which the change is made (e.g. A1, D155, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -229,13 +237,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Value `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The value that is replacing the default value."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -244,13 +252,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Units `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The unit given for the Reported Value (e.g L, L/MJ, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -259,13 +267,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Description `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="A brief description of the nature of the input (e.g. feedstock transportation mode, natural gas usage, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }] // spreadsheet header
@@ -281,13 +289,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Feedstock `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The feedstock used to produce the fuel (e.g. corn, soy, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }, {
@@ -296,13 +304,13 @@ class ScheduleDContainer extends Component {
           value: (
             <div>
               {`Fuel Class `}
-              <TooltipWhenDisabled
+              <Tooltip
                 className="info"
                 disabled
                 title="The fuel class in which the fuel was used."
               >
                 <FontAwesomeIcon icon="info-circle" />
-              </TooltipWhenDisabled>
+              </Tooltip>
             </div>
           )
         }],
@@ -348,6 +356,19 @@ class ScheduleDContainer extends Component {
     });
   }
 
+  _deleteActiveSheet () {
+    const { activeSheet, sheets } = this.state;
+
+    const index = sheets.findIndex(sheet => (sheet.id === activeSheet));
+    sheets.splice(index, 1);
+
+    const { id } = sheets[0]; // default to the first one
+
+    this.setState({
+      activeSheet: id
+    });
+  }
+
   _getFuelClasses (row, id) {
     const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
 
@@ -361,13 +382,35 @@ class ScheduleDContainer extends Component {
     return [];
   }
 
-  _handleSheetChanged (grid, index) {
+  _handleSheetChanged (gridObject, id) {
     const { sheets } = this.state;
 
-    sheets[index] = {
-      ...sheets[index],
-      ...grid
-    };
+    const index = sheets.findIndex(sheet => (sheet.id === id));
+
+    if (index < 0) {
+      return;
+    }
+
+    if (gridObject.grid) {
+      sheets[index] = {
+        ...sheets[index],
+        grid: gridObject.grid
+      };
+    }
+
+    if (gridObject.input) {
+      sheets[index] = {
+        ...sheets[index],
+        input: gridObject.input
+      };
+    }
+
+    if (gridObject.output) {
+      sheets[index] = {
+        ...sheets[index],
+        output: gridObject.output
+      };
+    }
 
     this.setState({
       sheets
@@ -624,6 +667,16 @@ class ScheduleDContainer extends Component {
             />
           </div>
         ))}
+
+        <Modal
+          handleSubmit={() => {
+            this._deleteActiveSheet();
+          }}
+          id="confirmDelete"
+          title="Confirm Delete"
+        >
+          Do you want to delete this entry?
+        </Modal>
       </div>
     );
   }
