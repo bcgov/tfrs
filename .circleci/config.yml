@@ -20,12 +20,9 @@ jobs:
           command: |
             cd backend
             python manage.py test --noinput -c nose.cfg
-            mkdir test_results
-            mv coverage.xml test_results
-            mv nosetests.xml test_results
       - store_artifacts:
-          path: backend/test_results/nosetests.xml
+          path: backend/nosetests.xml
       - store_artifacts:
-          path: backend/test_results/coverage.xml
+          path: backend/coverage.xml
 
 
