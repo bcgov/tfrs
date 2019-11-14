@@ -37,7 +37,7 @@ const NotificationsDetails = props => (
               data-target="#confirmArchive"
               type="button"
             >
-              <FontAwesomeIcon icon="archive" /> Archive
+              <FontAwesomeIcon icon="minus-circle" /> Delete
             </button>
           </li>
         </ul>

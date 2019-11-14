@@ -124,7 +124,7 @@ class NotificationsContainer extends Component {
         key="modal"
         title="Confirm Archive"
       >
-        Are you sure you want to archive the selected notifications?
+        Are you sure you want to delete the selected notifications?
       </Modal>,
       <Modal
         handleSubmit={() => this._updateNotification(this.state.selectedId, { isArchived: true })}
