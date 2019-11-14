@@ -70,7 +70,7 @@ class SecureFileSubmissionForm extends Component {
               }
               {this.props.availableActions.includes('Submitted') &&
               <Tooltip
-                disabled={this.props.formValidationMessage.length > 0}
+                show={this.props.formValidationMessage.length > 0}
                 title={this.props.formValidationMessage}
               >
                 <button

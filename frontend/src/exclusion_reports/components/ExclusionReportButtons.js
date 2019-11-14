@@ -49,8 +49,8 @@ const ExclusionReportButtons = props => (
       }
       {props.actions.includes('SUBMIT') && [
         <Tooltip
-          disabled={props.validating || !props.valid}
           key="btn-save"
+          show={props.validating || !props.valid}
           title="Please fix validation errors before saving."
         >
           <button
@@ -64,8 +64,8 @@ const ExclusionReportButtons = props => (
           </button>
         </Tooltip>,
         <Tooltip
-          disabled={getValidationMessages(props) !== ''}
           key="btn-submit"
+          show={getValidationMessages(props) !== ''}
           title={getValidationMessages(props)}
         >
           <button

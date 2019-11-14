@@ -35,7 +35,7 @@ class ScheduleSummaryPart3 {
             {`Line 23 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total number of credits for the compliance period and is informed from reporting in Schedule B."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -58,7 +58,7 @@ class ScheduleSummaryPart3 {
             {`Line 24 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total number of debits for the compliance period and is informed from reporting in Schedule B."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -81,7 +81,7 @@ class ScheduleSummaryPart3 {
             {`Line 25 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the net balance of credits or debits for the compliance period."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -104,7 +104,7 @@ class ScheduleSummaryPart3 {
             {`Line 26 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -139,7 +139,7 @@ class ScheduleSummaryPart3 {
             {`Line 27 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the outstanding debit balance (if any) based on the information provided."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -163,7 +163,7 @@ class ScheduleSummaryPart3 {
             {`Line 28 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty."
             >
               <FontAwesomeIcon icon="info-circle" />

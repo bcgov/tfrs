@@ -32,7 +32,7 @@ class ScheduleSummaryDiesel {
             {`Line 12 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of petroleum-based diesel supplied for the compliance period as reported in Schedule B and Schedule C with an expected use of heating oil.  This is the sum of all petroleum-based diesel that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -52,7 +52,7 @@ class ScheduleSummaryDiesel {
             {`Line 13 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of renewable fuel in the diesel fuel class for the compliance period as reported in Schedule B and Schedule C with an expected use of heating oil.  This is the sum of all renewable fuel that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -72,7 +72,7 @@ class ScheduleSummaryDiesel {
             {`Line 14 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of fuel supplied in the diesel fuel class in the compliance period.  It is the sum of Line 12 + Line 13."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -92,7 +92,7 @@ class ScheduleSummaryDiesel {
             {`Line 15 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the volume of renewable fuel that is required in the diesel fuel class and amounts to 4% of the total fuel volume reported."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -113,7 +113,7 @@ class ScheduleSummaryDiesel {
             {`Line 16 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the net volume of diesel class renewable fuel notionally transferred to and received from other suppliers under section 5 (1) of the *Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act*, as reported in Schedule A."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -133,7 +133,7 @@ class ScheduleSummaryDiesel {
             {`Line 17 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="If you exceed your renewable fuel obligation for the compliance period, under section 5 (3) (a) of the Act you may retain records of surplus volumes for up to 5% of your obligations calculated in Line 15.  Report the volume of renewable fuel retained in the diesel fuel class for the next compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -162,7 +162,7 @@ class ScheduleSummaryDiesel {
             {`Line 18 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="The amount of renewable class fuel retained in the previous compliance period as described under section 5 (3) (b) of the Act. This value is populated automatically based on the amount reported in Line 17 in the previous compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -190,7 +190,7 @@ class ScheduleSummaryDiesel {
             {`Line 19 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="If you do not meet your renewable fuel obligations for the compliance period, under section 5 (4) (a) of the Act you may defer the deficiency for up to 5% of your obligations calculated in Line 15 and add that volume to your obligation for the next compliance period.  Report the volume you are deferring to the next compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -219,7 +219,7 @@ class ScheduleSummaryDiesel {
             {`Line 20 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="The amount of renewable class fuel deferred from the previous compliance period as described under section 5 (4) (b) of the Act. This value is populated automatically based on the amount reported in Line 19 in the previous compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -248,7 +248,7 @@ class ScheduleSummaryDiesel {
             {`Line 21 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the net volume of renewable fuel supplied in the diesel fuel class for this compliance period."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -268,7 +268,7 @@ class ScheduleSummaryDiesel {
             {`Line 22 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the Part 2 penalty payable if the volume of renewable fuel supplied does not meet the required volume for the diesel class, as informed by the information provided in this compliance report. The penalty displayed in this line is calculated at a rate of $0.45 per litre."
             >
               <FontAwesomeIcon icon="info-circle" />

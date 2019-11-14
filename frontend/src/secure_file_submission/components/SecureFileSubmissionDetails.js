@@ -205,7 +205,7 @@ const SecureFileSubmissionDetails = props => (
       }
       {props.availableActions.includes('Submitted') &&
       <Tooltip
-        disabled={props.hasFailures}
+        show={props.hasFailures}
         title="Please edit and remove all attachments with failing security scans."
       >
         <button
@@ -231,7 +231,7 @@ const SecureFileSubmissionDetails = props => (
       }
       {props.availableActions.includes('Archived') &&
       <Tooltip
-        disabled={props.formValidationMessage.length > 0}
+        show={props.formValidationMessage.length > 0}
         title={props.formValidationMessage}
       >
         <button

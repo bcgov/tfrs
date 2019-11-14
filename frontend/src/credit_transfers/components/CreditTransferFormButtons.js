@@ -30,12 +30,12 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
       <Tooltip
-        disabled={props.isCommenting}
+        show={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button
           className="btn btn-default"
-          disabled={props.isCommenting}
+          show={props.isCommenting}
           onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
@@ -63,7 +63,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <Tooltip
-        disabled={props.isCommenting || props.disabled.BTN_SIGN_1_2}
+        show={props.isCommenting || props.disabled.BTN_SIGN_1_2}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_1_2
           ? 'Signing Authority Declaration needs to be accepted'
           : 'You must be assigned the Signing Authority role in order to sign and send ' +
@@ -84,7 +84,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
       <Tooltip
-        disabled={props.isCommenting}
+        show={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button
@@ -100,7 +100,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_SIGN_2_2) &&
       <Tooltip
-        disabled={props.isCommenting || props.disabled.BTN_SIGN_2_2}
+        show={props.isCommenting || props.disabled.BTN_SIGN_2_2}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_2_2
           ? 'Signing Authority Declaration needs to be accepted'
           : 'You must be assigned the Signing Authority role in order to sign and send ' +
@@ -130,7 +130,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
       <Tooltip
-        disabled={props.isCommenting}
+        show={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button
@@ -146,7 +146,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
       <Tooltip
-        disabled={props.isCommenting || props.disabled.BTN_RECOMMEND}
+        show={props.isCommenting || props.disabled.BTN_RECOMMEND}
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : Lang.TEXT_COMMENT_REQUIRED}
       >
         <button
@@ -184,7 +184,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
       <Tooltip
-        disabled={props.isCommenting}
+        show={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button
@@ -200,7 +200,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_APPROVE) &&
       <Tooltip
-        disabled={props.isCommenting}
+        show={props.isCommenting}
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button

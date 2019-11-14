@@ -79,7 +79,7 @@ class Modal extends React.Component {
               </button>
               {this.props.showConfirmButton &&
               <Tooltip
-                disabled={this.props.disabled}
+                show={this.props.disabled}
                 title={this.props.tooltipMessage}
               >
                 <button

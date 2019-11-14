@@ -32,7 +32,7 @@ class ScheduleSummaryGasoline {
             {`Line 1 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of petroleum-based gasoline supplied for the compliance period as reported in Schedule B.  This is the sum of all petroleum-based gasoline that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -52,7 +52,7 @@ class ScheduleSummaryGasoline {
             {`Line 2 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of renewable fuel in the gasoline fuel class for the compliance period as reported in Schedule B.  This is the sum of all renewable fuel that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -72,7 +72,7 @@ class ScheduleSummaryGasoline {
             {`Line 3 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the total volume of fuel supplied in the gasoline fuel class in the compliance period.  It is the sum of Line 1 + Line 2."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -92,7 +92,7 @@ class ScheduleSummaryGasoline {
             {`Line 4 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the volume of renewable fuel that is required in the gasoline fuel class and amounts to 5% of the total fuel volume reported."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -113,7 +113,7 @@ class ScheduleSummaryGasoline {
             {`Line 5 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the net volume of gasoline class renewable fuel notionally transferred to and received from other suppliers under section 5 (1) of the *Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act*, as reported in Schedule A."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -133,7 +133,7 @@ class ScheduleSummaryGasoline {
             {`Line 6 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="If you exceed your renewable fuel obligation for the compliance period, under section 5 (3) (a) of the Act you may retain records of surplus volumes for up to 5% of your obligations calculated in Line 4.  Report the volume of renewable fuel retained in the gasoline fuel class for the next compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -162,7 +162,7 @@ class ScheduleSummaryGasoline {
             {`Line 7 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="The amount of renewable class fuel retained in the previous compliance period as described under section 5 (3) (b) of the Act. This value is populated automatically based on the amount reported in Line 6 in the previous compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -191,7 +191,7 @@ class ScheduleSummaryGasoline {
             {`Line 8 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="If you do not meet your renewable fuel obligations for the compliance period, under section 5 (4) (a) of the Act you may defer the deficiency for up to 5% of your obligations calculated in Line 4 and add that volume to your obligation for the next compliance period.  Report the volume you are deferring to the next compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -220,7 +220,7 @@ class ScheduleSummaryGasoline {
             {`Line 9 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="The amount of renewable class fuel deferred from the previous compliance period as described under section 5 (4) (b) of the Act. This value is populated automatically based on the amount reported in Line 8 in the previous compliance period (if applicable)."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -250,7 +250,7 @@ class ScheduleSummaryGasoline {
             {`Line 10 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the net volume of renewable fuel supplied in the gasoline fuel class for this compliance period."
             >
               <FontAwesomeIcon icon="info-circle" />
@@ -270,7 +270,7 @@ class ScheduleSummaryGasoline {
             {`Line 11 `}
             <Tooltip
               className="info"
-              disabled
+              show
               title="This line displays the Part 2 penalty payable if the volume of renewable fuel supplied does not meet the required volume for the gasoline class, as informed by the information provided in this compliance report. The penalty displayed in this line is calculated at a rate of $0.30 per litre."
             >
               <FontAwesomeIcon icon="info-circle" />
