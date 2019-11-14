@@ -101,8 +101,8 @@ const ScheduleButtons = props => (
       }
       {props.actions.includes('SUBMIT') && [
         <Tooltip
-          disabled={props.validating || !props.valid}
           key="btn-save"
+          show={props.validating || !props.valid}
           title="Please fix validation errors before saving."
         >
           <button
@@ -116,7 +116,7 @@ const ScheduleButtons = props => (
           </button>
         </Tooltip>,
         <Tooltip
-          disabled={getValidationMessages(props) !== ''}
+          show={getValidationMessages(props) !== ''}
           key="btn-submit"
           title={getValidationMessages(props)}
         >

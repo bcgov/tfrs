@@ -89,7 +89,7 @@ class GovernmentTransferForm extends Component {
               }
               {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
               <Tooltip
-                disabled={this.props.fields.comment.length === 0}
+                show={this.props.fields.comment.length === 0}
                 title={Lang.TEXT_COMMENT_REQUIRED}
               >
                 <button

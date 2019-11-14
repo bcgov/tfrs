@@ -72,7 +72,7 @@ class Tooltip extends Component {
 
 Tooltip.defaultProps = {
   className: 'danger',
-  show: true
+  show: false
 };
 
 Tooltip.propTypes = {

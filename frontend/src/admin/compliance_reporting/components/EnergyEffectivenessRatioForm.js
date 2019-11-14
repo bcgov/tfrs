@@ -54,7 +54,7 @@ class EnergyEffectivenessRatioForm extends Component {
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
               <Tooltip
-                disabled={this._getValidationMessages().length > 0}
+                show={this._getValidationMessages().length > 0}
                 title={this._getValidationMessages()}
               >
                 <button

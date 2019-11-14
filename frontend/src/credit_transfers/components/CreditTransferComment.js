@@ -65,7 +65,7 @@ class CreditTransferComment extends Component {
             <div className="col-xs-1 text-right">
               {this.props.comment.privilegedAccess &&
               <Tooltip
-                disabled
+                show
                 title={Lang.TEXT_VISIBLE_TO_GOV}
               >
                 <FontAwesomeIcon size="2x" icon="eye-slash" />
@@ -73,7 +73,7 @@ class CreditTransferComment extends Component {
               }
               {this.props.comment.privilegedAccess ||
               <Tooltip
-                disabled
+                show
                 title={Lang.TEXT_VISIBLE_TO_ALL}
               >
                 <FontAwesomeIcon size="2x" icon="eye" />

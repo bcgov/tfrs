@@ -183,7 +183,7 @@ class FuelCodeForm extends Component {
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
               <Tooltip
-                disabled={this._getValidationMessagesForDraft().length > 0}
+                show={this._getValidationMessagesForDraft().length > 0}
                 title={this._getValidationMessagesForDraft()}
               >
                 <button
@@ -196,7 +196,7 @@ class FuelCodeForm extends Component {
               </Tooltip>
               <Tooltip
                 className={`danger adjust-tooltip ${this.props.fields.facilityNameplate === '' ? 'adjust-for-facility-nameplate' : ''}`}
-                disabled={this._getValidationMessagesForApproval().length > 0}
+                show={this._getValidationMessagesForApproval().length > 0}
                 title={this._getValidationMessagesForApproval()}
               >
                 <button

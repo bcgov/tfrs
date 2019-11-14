@@ -209,7 +209,7 @@ class ScheduleDContainer extends Component {
               {`Worksheet Name `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The worksheet in the GHGenius model where the change is made (e.g. Input, Coprods, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -224,7 +224,7 @@ class ScheduleDContainer extends Component {
               {`Cell `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The cell reference in which the change is made (e.g. A1, D155, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -239,7 +239,7 @@ class ScheduleDContainer extends Component {
               {`Value `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The value that is replacing the default value."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -254,7 +254,7 @@ class ScheduleDContainer extends Component {
               {`Units `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The unit given for the Reported Value (e.g L, L/MJ, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -269,7 +269,7 @@ class ScheduleDContainer extends Component {
               {`Description `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="A brief description of the nature of the input (e.g. feedstock transportation mode, natural gas usage, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -291,7 +291,7 @@ class ScheduleDContainer extends Component {
               {`Feedstock `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The feedstock used to produce the fuel (e.g. corn, soy, etc.)."
               >
                 <FontAwesomeIcon icon="info-circle" />
@@ -306,7 +306,7 @@ class ScheduleDContainer extends Component {
               {`Fuel Class `}
               <Tooltip
                 className="info"
-                disabled
+                show
                 title="The fuel class in which the fuel was used."
               >
                 <FontAwesomeIcon icon="info-circle" />
