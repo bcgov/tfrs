@@ -2,43 +2,34 @@ version: 2.1
 
 orbs:
   redhat-openshift: circleci/redhat-openshift@0.2.0
-  
+
 jobs:
-  build: 
+  test:
     docker:
-      - image: python:3.6.9-stretch
+      - image: wenzowski/sqitch:0.9999
+      - image: wenzowski/postgres:11.2
     steps:
       - checkout
       - run:
-          name: "Install required packages"
+          name: "Pull Submodules"
           command: |
-            cd backend
-            pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
-            python manage.py collectstatic
+            git submodule init
+            git submodule update --remote
       - run:
-          name: "Run unit tests"
+          name: Create testing db
           command: |
-            set +e
-            cd backend
-            python manage.py test --noinput -c nose.cfg
+            RETRIES=5
+            until psql -h localhost -U postgres -d postgres -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+              echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
+              sleep 1
+            done
+            createuser sqitch  -U postgres -h localhost
+            createdb -O sqitch sqitch -U postgres -h localhost
+            createdb -O sqitch ggircs_test -U postgres -h localhost
       - run:
-          name: "move test results"
-          command: |
-            set +e
-            cd backend
-            mkdir test_results
-            cd test_results
-            mkdir unit_test
-            mkdir coverage
-            cd ..
-            mv nosetests.xml test_results/unit_test
-            mv coverage.xml test_results/coverage
-      - store_test_results:
-          path:  backend/test_results
-      - store_artifacts:
-          path: backend/test_results/unit_test/nosetests.xml
-      - store_artifacts:
-          path: backend/test_results/coverage/coverage.xml
+          name: Test database using Make
+          command: make test PSQL="psql -h localhost" CI_NO_PIPELINE=true
+
 
 
 
