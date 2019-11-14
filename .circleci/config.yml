@@ -29,6 +29,11 @@ jobs:
       - run:
           name: Test database using Make
           command: make test PSQL="psql -h localhost" CI_NO_PIPELINE=true
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
 
 
 
