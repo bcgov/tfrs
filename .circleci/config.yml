@@ -20,10 +20,23 @@ jobs:
           command: |
             cd backend
             python manage.py test --noinput -c nose.cfg
+      - run:
+          name: "move test results"
+          command: |
+            cd backend
+            mkdir test_results
+            cd test_results
+            mkdir unit_test
+            mkdir coverage
+            cd ..
+            mv nosetests.xml test_results/unit_test
+            mv coverage.xml test_results/coverage
+      - store_test_results:
+          path:  backend/test_results
       - store_artifacts:
-          path: backend/nosetests.xml
+          path: backend/test_results/unit_test/nosetests.xml
       - store_artifacts:
-          path: backend/coverage.xml
+          path: backend/test_results/coverage/coverage.xml
 
 
 
