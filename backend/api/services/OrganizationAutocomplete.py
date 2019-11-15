@@ -45,8 +45,11 @@ class OrganizationAutocomplete(Completion):
     in 'increment' and filtered by 'column'
     """
 
-    def get_matches(self, q):
-        results = Organization.objects.filter(
+    def get_matches(self, q, request=None):
+
+        results = Organization.objects.exclude(
+            id=request.user.organization.id
+        ).filter(
             name__icontains=q
         ).order_by('name')[:10]
 
