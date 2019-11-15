@@ -20,6 +20,17 @@ jobs:
               sleep 1
             done
             echo Failed waiting for Postgres && exit 1
+      - run:
+          name: "Install required packages"
+          command: |
+            cd backend
+            pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
+            python manage.py collectstatic
+      - run:
+          name: "Run unit tests"
+          command: |
+            cd backend
+            python manage.py test --noinput -c nose.cfg
 workflows:
   version: 2
   build-deploy:
