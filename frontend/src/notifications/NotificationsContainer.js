@@ -122,7 +122,7 @@ class NotificationsContainer extends Component {
         handleSubmit={() => this._updateNotifications({ isArchived: true })}
         id="confirmArchive"
         key="modal"
-        title="Confirm Archive"
+        title="Confirm Delete"
       >
         Are you sure you want to delete the selected notifications?
       </Modal>,
@@ -130,9 +130,17 @@ class NotificationsContainer extends Component {
         handleSubmit={() => this._updateNotification(this.state.selectedId, { isArchived: true })}
         id="confirmArchiveSingle"
         key="modal-single"
-        title="Confirm Archive"
+        title="Confirm Delete"
       >
-        Are you sure you want to archive this notification?
+        Are you sure you want to delete this notification?
+      </Modal>,
+      <Modal
+        handleSubmit={() => this._updateNotifications({ ids: 'all', isRead: true })}
+        id="confirmReadAll"
+        key="modal-read-all"
+        title="Confirm Mark all as Read"
+      >
+        Are you sure you want to mark all as read?
       </Modal>
     ]);
   }

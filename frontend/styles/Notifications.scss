@@ -41,6 +41,12 @@
     }
   }
 
+  .dropdown-menu {
+    .fa-minus-circle {
+      color: $red;
+    }
+  }
+
   .ReactTable {
     clear: both;
 
@@ -51,6 +57,10 @@
 
       &:hover {
         text-decoration: underline;
+      }
+
+      .fa-minus-circle {
+        color: $red;
       }
     }
   }

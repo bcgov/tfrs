@@ -152,7 +152,7 @@ const NotificationsTable = (props) => {
           <FontAwesomeIcon
             data-toggle="modal"
             data-target="#confirmArchiveSingle"
-            icon="archive"
+            icon="minus-circle"
           />
         </button>
       </div>

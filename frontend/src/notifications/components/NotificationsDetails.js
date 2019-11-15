@@ -25,6 +25,15 @@ const NotificationsDetails = props => (
         <ul className="dropdown-menu">
           <li>
             <button
+              data-toggle="modal"
+              data-target="#confirmReadAll"
+              type="button"
+            >
+              <FontAwesomeIcon icon="check-double" /> Mark all as Read
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => props.updateNotifications({ isRead: false })}
               type="button"
             >
