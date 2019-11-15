@@ -337,13 +337,13 @@ class ValidationMessages extends Component {
                 <FontAwesomeIcon icon="times" />
               }
               {this.props.validating &&
-                ' Validating...'
+                ' Identifying potential issues...'
               }
               {!this.props.validating && errorMessages.length === 0 &&
-                ' No Validation Errors'
+                ' No issues identified'
               }
               {!this.props.validating && errorMessages.length > 0 &&
-                ' Validation Errors'
+                ' Issues identified'
               }
             </button>
             <button
