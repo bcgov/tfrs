@@ -68,6 +68,7 @@ class ComplianceReportingStatusHistory extends Component {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
       return false;
     }
+    const currentId = this.props.complianceReport.id;
 
     const showCurrent = (this.props.complianceReport.history.filter(
       c => (c.complianceReport === this.props.complianceReport.id)
@@ -104,7 +105,7 @@ class ComplianceReportingStatusHistory extends Component {
         distinctReports.map(r => {
           return (<div className="panel panel-default report-history-panel"
                        key={r.displayName}
-                       onClick={() => this.props.onSwitchHandler(r.id)}>
+                       onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id)}>
               <div className="panel-body">
                 <span className={'title'}>{r.displayName}</span>
                 <ul>

@@ -1,4 +1,5 @@
 import json
+import re
 from collections import defaultdict, namedtuple
 from decimal import Decimal
 
@@ -118,6 +119,13 @@ class ComplianceReportService(object):
                     differences += comparison
                 continue
             if isinstance(snapshot[k], list):
+
+                if re.match('schedule_d\.sheets\[\d+\]\.outputs','.'.join(path + [k])):
+                    # looks like schedule d output sheet. sorting by description for
+                    # stability of deltas
+                    ancestor_snapshot[k] = sorted(ancestor_snapshot[k], key=lambda o: o['description'])
+                    snapshot[k] = sorted(snapshot[k], key=lambda o: o['description'])
+
                 differences += ComplianceReportService._array_difference(ancestor_snapshot, snapshot, k, path)
                 continue
             if str(snapshot[k]) != str(ancestor_snapshot[k]):
