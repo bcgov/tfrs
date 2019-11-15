@@ -24,7 +24,7 @@ jobs:
           name: "Install required packages"
           command: |
             cd backend
-            pip install nose-exclude --upgrade pip --user -r requirements.txt
+            pip install --upgrade pip && pip install -r requirements.txt --user && pip install nose-exclude --user
             python manage.py collectstatic
       - run:
           name: "Run unit tests"
