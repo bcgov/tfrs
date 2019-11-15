@@ -25,6 +25,7 @@ jobs:
           command: |
             cd backend
             pip install --upgrade pip && pip install -r requirements.txt && pip install nose-exclude
+            python -m pip install django
             python manage.py collectstatic
       - run:
           name: "Run unit tests"
