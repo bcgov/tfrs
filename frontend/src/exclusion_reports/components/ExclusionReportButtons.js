@@ -16,11 +16,11 @@ const getValidationMessages = (props) => {
   }
 
   if (!props.valid) {
-    return 'Please fix validation errors before submitting.';
+    return 'Please fix the issues identified before submitting.';
   }
 
   if (props.validating) {
-    return 'Validating...';
+    return 'Identifying potential issues...';
   }
 
   return '';
@@ -51,7 +51,7 @@ const ExclusionReportButtons = props => (
         <Tooltip
           key="btn-save"
           show={props.validating || !props.valid}
-          title="Please fix validation errors before saving."
+          title="Please fix the issues identified before saving."
         >
           <button
             className="btn btn-primary"

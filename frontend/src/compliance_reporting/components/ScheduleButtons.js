@@ -17,7 +17,7 @@ const getValidationMessages = (props) => {
   }
 
   if (!props.valid) {
-    return 'Please fix validation errors before submitting.';
+    return 'Please fix the issues identified before submitting.';
   }
 
   if (props.tab !== 'schedule-summary') {
@@ -25,7 +25,7 @@ const getValidationMessages = (props) => {
   }
 
   if (props.validating || props.complianceReports.isFinding) {
-    return 'Validating...';
+    return 'Identifying potential issues...';
   }
 
   let period = null;
@@ -103,7 +103,7 @@ const ScheduleButtons = props => (
         <Tooltip
           key="btn-save"
           show={props.validating || !props.valid}
-          title="Please fix validation errors before saving."
+          title="Please fix the issues identified before saving."
         >
           <button
             className="btn btn-primary"
