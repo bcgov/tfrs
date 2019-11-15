@@ -47,11 +47,17 @@ class OrganizationAutocomplete(Completion):
 
     def get_matches(self, q, request=None):
 
-        results = Organization.objects.exclude(
-            id=request.user.organization.id
-        ).filter(
+        results = Organization.objects.filter(
             name__icontains=q
-        ).order_by('name')[:10]
+        )
+
+        exclude_self = request.GET.get('exclude_self', False)
+        if exclude_self == 'true' or exclude_self:
+            results = results.exclude(
+                id=request.user.organization.id
+            )
+
+        results = results.order_by('name')[:10]
 
         serializer = OrganizationDisplaySerializer(
             results, many=True, read_only=True)
