@@ -6,9 +6,8 @@ orbs:
 jobs:
   build:
     docker:
-      - image: python:3.6.9-stretch
+      - image: circleci/python:3.6-stretch
       - image: circleci/postgres:9.6-alpine
-
     steps:
       - checkout
       - run:
