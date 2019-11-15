@@ -109,12 +109,24 @@ class NotificationViewSet(AuditableMixin,
         Updates the notifications to read or unread
         """
         data = request.data
+        user = request.user
 
         if 'ids' not in data:
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
-        notifications = NotificationMessage.objects.filter(
-            id__in=data['ids'])
+        ids = data.get('ids')
+
+        if isinstance(ids, str) and ids == 'all':
+            notifications = NotificationMessage.objects.filter(
+                is_archived=False,
+                is_read=False,
+                user=user
+            )
+        else:
+            notifications = NotificationMessage.objects.filter(
+                id__in=ids,
+                user=user
+            )
 
         if 'is_archived' in data:
             notifications.update(
