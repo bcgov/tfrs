@@ -15,6 +15,7 @@ class AutocompleteViewSet(ViewSet):
         field = request.GET.get('field')
         q = request.GET.get('q')
         cache_results = request.GET.get('cache', True)
+
         if cache_results == 'False':
             cache_results = False
 
@@ -26,7 +27,7 @@ class AutocompleteViewSet(ViewSet):
                 'required query parameter field or q not present')
 
         try:
-            result = Autocomplete.get_matches(field, q, cache_results)
+            result = Autocomplete.get_matches(field, q, cache_results, request)
             response = JsonResponse(result, safe=False)
             response['Cache-Control'] = 'max-age=3600'
 
