@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
 class ExclusionReportingStatusHistory extends Component {
-
-  static actionFor(h) {
+  static actionFor (h) {
     let action = (<strong>{h.status.fuelSupplierStatus}</strong>);
     let roleDisplay = null;
-
 
     if (h.status.directorStatus === 'Accepted') {
       action = (<strong>Accepted</strong>);
@@ -46,25 +44,27 @@ class ExclusionReportingStatusHistory extends Component {
       action = (<strong>Supplemental Requested </strong>);
     }
 
-    return (<span>
-      {action}
-      <span> on </span>
-      {moment(h.createTimestamp).format('LL')}
-      <span> by </span>
-      <strong>{h.user.firstName} {h.user.lastName}</strong>
-      <span> of </span>
-      <strong>{h.user.organization.name}</strong>
-      {roleDisplay &&
+    return (
       <span>
+        {action}
+        <span> on </span>
+        {moment(h.createTimestamp).format('LL')}
+        <span> by </span>
+        <strong>{h.user.firstName} {h.user.lastName}</strong>
+        <span> of </span>
+        <strong>{h.user.organization.name}</strong>
+        {roleDisplay &&
+        <span>
           <strong>, {roleDisplay} </strong>
           <span>under the</span>
           <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+        </span>
+        }
       </span>
-      }
-    </span>);
+    );
   }
 
-  render() {
+  render () {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
       return false;
     }
@@ -76,8 +76,8 @@ class ExclusionReportingStatusHistory extends Component {
 
     const distinctReports = this.props.complianceReport.history.reduce(
       (m, value) => {
-        if (!m.some(v => {
-          return v.displayName === value.displayName
+        if (!m.some((v) => {
+          return v.displayName === value.displayName;
         })) {
           m.push({
             displayName: value.displayName,
@@ -92,39 +92,37 @@ class ExclusionReportingStatusHistory extends Component {
     );
 
     return (
-      <div className={'panel-group'}>
+      <div className="panel-group">
         {showCurrent &&
         <div className="panel panel-default report-history-panel">
           <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1)}>
-            <span className={'title'}>{this.props.complianceReport.displayName}</span><br/>
+            <span className="title">{this.props.complianceReport.displayName}</span><br />
             <strong>Current Version</strong>
           </div>
         </div>
         }
         {distinctReports.length > 0 &&
-        distinctReports.map(r => {
-          return (<div className="panel panel-default report-history-panel"
-                       key={r.displayName}
-                       onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id)}>
+        distinctReports.map((r) => {
+          return (
+            <div
+              className="panel panel-default report-history-panel"
+              key={r.displayName}
+              onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id)}
+            >
               <div className="panel-body">
-                <span className={'title'}>{r.displayName}</span>
+                <span className="title">{r.displayName}</span>
                 <ul>
-                  {r.history.map(h => {
-                    return (
-
-                      <li key={h.id}>
-                        {ExclusionReportingStatusHistory.actionFor(h)}
-                      </li>
-                    );
-                  })}
+                  {r.history.map(h => (
+                    <li key={h.id}>
+                      {ExclusionReportingStatusHistory.actionFor(h)}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
           );
-
         })
         }
-
       </div>
     );
   }

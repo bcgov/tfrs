@@ -22,13 +22,14 @@
 """
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q, Count
 from django.contrib.auth.models import AbstractUser
 import django.contrib.auth.validators
 
 from auditable.models import Auditable
 from api.managers.UserManager import UserManager
 
+from .ComplianceReportHistory import ComplianceReportHistory
 from .CreditTradeHistory import CreditTradeHistory
 from .Permission import Permission
 from .Role import Role
@@ -88,6 +89,29 @@ class User(AbstractUser, Auditable):
         """
         return Role.objects.filter(user_roles__user_id=self.id)
 
+    def get_compliance_report_history(self, filters):
+        history = ComplianceReportHistory.objects.filter(
+            filters, Q(create_user_id=self.id)
+        ).extra(
+            select={
+                'timestamp':
+                    'compliance_report_history.create_timestamp',
+                'history_id': 'compliance_report_history.id',
+                'obj_id': 'compliance_report_id',
+                'obj_type': '%s',
+                'history_status_id': 'compliance_report_history.status_id'
+            },
+            select_params=('Compliance Report',)
+        ).values(
+            'timestamp',
+            'history_id',
+            'obj_id',
+            'obj_type',
+            'history_status_id'
+        )
+
+        return history
+
     def get_history(self, filters):
         """
         Helper function to get the user's activity.
@@ -95,7 +119,22 @@ class User(AbstractUser, Auditable):
         """
         history = CreditTradeHistory.objects.filter(
             filters, Q(create_user_id=self.id)
-        ).order_by('-create_timestamp')
+        ).extra(
+            select={
+                'timestamp': 'credit_trade_history.create_timestamp',
+                'history_id': 'credit_trade_history.id',
+                'obj_id': 'credit_trade_id',
+                'obj_type': '%s',
+                'history_status_id': 'credit_trade_history.status_id'
+            },
+            select_params=('Credit Trade',)
+        ).values(
+            'timestamp',
+            'history_id',
+            'obj_id',
+            'obj_type',
+            'history_status_id'
+        )
 
         return history
 
