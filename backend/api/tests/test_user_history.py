@@ -175,18 +175,17 @@ class TestUserHistory(BaseTestCase):
         for activity in history:
             correct_view = False
             credit_trade = CreditTrade.objects.get(
-                id=activity['creditTradeId']
+                id=activity['objectId']
             )
 
             # make sure that the status is correct and we don't see anything
             # that's not submitted, accepted or refused
             # unless it's rescinded (even if it's rescinded we shouldn't see
             # the recommended or not recommended status)
-            if activity['statusId'] == self.statuses['submitted'].id or \
-                activity['statusId'] == self.statuses['accepted'].id or \
-                activity['statusId'] == self.statuses['refused'].id or \
-                (activity['statusId'] is None and
-                 activity['isRescinded'] is True):
+            if activity['status']['id'] == self.statuses['submitted'].id or \
+                activity['status']['id'] == self.statuses['accepted'].id or \
+                activity['status']['id'] == self.statuses['refused'].id or \
+                    activity['status'].status == 'Rescinded':
                 # make sure we don't see any entries that our organization is
                 # not a part of
                 if credit_trade.initiator.id == \
@@ -217,9 +216,9 @@ class TestUserHistory(BaseTestCase):
             # that's not submitted, accepted or refused
             # unless it's rescinded (even if it's rescinded we shouldn't see
             # the recommended or not recommended status)
-            if activity['statusId'] == self.statuses['not_recommended'].id or \
-                activity['statusId'] == self.statuses['recommended'].id or \
-                    activity['statusId'] == self.statuses['accepted'].id:
+            if activity['status']['id'] == self.statuses['not_recommended'].id or \
+                activity['status']['id'] == self.statuses['recommended'].id or \
+                    activity['status']['id'] == self.statuses['accepted'].id:
                 correct_view = True
 
             self.assertTrue(correct_view)
