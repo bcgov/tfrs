@@ -486,7 +486,7 @@ class ScheduleSummaryContainer extends Component {
       value: totalDiesel === 0 ? '' : totalDiesel
     };
 
-    const line15Value = totalDiesel * 0.04;
+    const line15Value = Math.round(totalDiesel * 0.04);
 
     diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
       ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
@@ -611,7 +611,7 @@ class ScheduleSummaryContainer extends Component {
       value: totalGasoline === 0 ? '' : totalGasoline
     };
 
-    const line4Value = totalGasoline * 0.05;
+    const line4Value = Math.round(totalGasoline * 0.05);
 
     gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
       ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
