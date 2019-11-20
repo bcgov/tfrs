@@ -57,6 +57,9 @@ class GetNextIncrement(Completion):
         if column == 'fuel_code_version':
             self.table = FuelCode
             self.increment = 'fuel_code_version_minor'
+            self.exclude = {
+                'status__status': "Cancelled"
+            }
 
     def get_matches(self, q):
         # get only digits
@@ -76,7 +79,9 @@ class GetNextIncrement(Completion):
             self.column: q
         }
 
-        query = self.table.objects.filter(**kwargs).aggregate(
+        query = self.table.objects.filter(**kwargs).exclude(
+            **self.exclude
+        ).aggregate(
             Max(self.increment)
         )
 
