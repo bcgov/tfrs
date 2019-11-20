@@ -22,7 +22,7 @@
 """
 
 from django.db import models
-from django.db.models import F, Q, Count
+from django.db.models import F, Q
 from django.contrib.auth.models import AbstractUser
 import django.contrib.auth.validators
 

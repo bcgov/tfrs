@@ -7,12 +7,13 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import axios from 'axios';
 
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import history from '../../app/History';
+import ComplianceReportStatus from '../../compliance_reporting/components/ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import * as Routes from '../../constants/routes';
-import ComplianceReportStatus from '../../compliance_reporting/components/ComplianceReportStatus';
 
 class UserHistoryTable extends React.Component {
   constructor () {
@@ -84,7 +85,13 @@ class UserHistoryTable extends React.Component {
       minWidth: 75,
       sortable: false
     }, {
-      accessor: item => (item.type && item.type.theType),
+      accessor: (item) => {
+        if (item.historyType === 'Credit Trade') {
+          return getCreditTransferType(item.type.id);
+        }
+
+        return item.type && item.type.theType;
+      },
       className: 'col-type',
       Header: 'Transaction Type',
       id: 'type',
