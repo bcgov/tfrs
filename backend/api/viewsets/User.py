@@ -144,11 +144,11 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         # It also needs to reference a field, (you'll notice there are two
         # id's, This is to bypass the check to the model)
         history = history.values(
-            create_timestamp=F('create_timestamp'),
-            id=F('id'),
-            object_id=F('id'),
             type=F('type'),
+            id=F('id'),
+            object_id=F('credit_trade_id'),
             status_id=F('status_id'),
+            create_timestamp=F('create_timestamp')
         ).order_by('{sort_direction}{sort_by}'.format(
             sort_direction=sort_direction, sort_by=sort_by
         ))
