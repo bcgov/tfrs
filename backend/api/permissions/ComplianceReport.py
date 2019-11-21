@@ -54,7 +54,10 @@ class ComplianceReportPermissions(permissions.BasePermission):
     actions.append(ActionMap(
         _Relationship.FuelSupplier,
         'Submitted', '.*', '.*', '(Unreviewed|Accepted)',
-        lambda c: ['CREATE_SUPPLEMENTAL'] if len(c.supplemental_reports.all()) == 0 else []
+        lambda c: ['CREATE_SUPPLEMENTAL']
+        if len(c.supplemental_reports.exclude(
+            status__fuel_supplier_status="Deleted"
+        ).all()) == 0 else []
     ))
 
     actions.append(ActionMap(
