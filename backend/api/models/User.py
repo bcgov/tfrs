@@ -94,20 +94,20 @@ class User(AbstractUser, Auditable):
             filters, Q(create_user_id=self.id)
         ).extra(
             select={
-                'timestamp':
-                    'compliance_report_history.create_timestamp',
+                'obj_type': '%s',
                 'history_id': 'compliance_report_history.id',
                 'obj_id': 'compliance_report_id',
-                'obj_type': '%s',
-                'history_status_id': 'compliance_report_history.status_id'
+                'history_status_id': 'compliance_report_history.status_id',
+                'timestamp':
+                    'compliance_report_history.create_timestamp'
             },
             select_params=('Compliance Report',)
         ).values(
-            'timestamp',
             'history_id',
             'obj_id',
             'obj_type',
-            'history_status_id'
+            'history_status_id',
+            'timestamp'
         )
 
         return history
@@ -121,19 +121,19 @@ class User(AbstractUser, Auditable):
             filters, Q(create_user_id=self.id)
         ).extra(
             select={
-                'timestamp': 'credit_trade_history.create_timestamp',
+                'obj_type': '%s',
                 'history_id': 'credit_trade_history.id',
                 'obj_id': 'credit_trade_id',
-                'obj_type': '%s',
-                'history_status_id': 'credit_trade_history.status_id'
+                'history_status_id': 'credit_trade_history.status_id',
+                'timestamp': 'credit_trade_history.create_timestamp'
             },
             select_params=('Credit Trade',)
         ).values(
-            'timestamp',
+            'obj_type',
             'history_id',
             'obj_id',
-            'obj_type',
-            'history_status_id'
+            'history_status_id',
+            'timestamp'
         )
 
         return history
