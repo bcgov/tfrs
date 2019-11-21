@@ -866,7 +866,7 @@ class SnapshotDisplay extends Component {
         }
         {this.props.computedWarning &&
         <div className="panel panel-warning">
-          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of the data, not a snapshot.
+          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of this report.
         </div>
         }
         <div>

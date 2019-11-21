@@ -97,7 +97,7 @@ class ExclusionReportingStatusHistory extends Component {
         <div className="panel panel-default report-history-panel">
           <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1)}>
             <span className={'title'}>{this.props.complianceReport.displayName}</span><br/>
-            <strong>Current Version</strong>
+            <strong>Draft</strong>
           </div>
         </div>
         }
