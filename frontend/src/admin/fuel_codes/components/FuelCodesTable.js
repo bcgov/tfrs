@@ -213,8 +213,13 @@ const FuelCodesTable = (props) => {
               history.push(viewUrl);
             },
             onMouseOver: (e) => {
-              const message = `The effective dates of this fuel code overlap with
-                ${invalidDates.fuelCode}${invalidDates.fuelCodeVersion}.${invalidDates.fuelCodeVersionMinor}`;
+              let message = '';
+
+              if (invalidDates) {
+                message = `The effective dates of this fuel code overlap with
+                  ${invalidDates.fuelCode}${invalidDates.fuelCodeVersion}.${invalidDates.fuelCodeVersionMinor}`;
+              }
+
               const showTooltip = Boolean(invalidDates);
 
               handleTooltip(e, showTooltip, message);
