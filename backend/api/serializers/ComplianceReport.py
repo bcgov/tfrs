@@ -936,6 +936,14 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.diesel_class_deferred = \
                     original_summary.diesel_class_deferred
                 summary.credits_offset = original_summary.credits_offset
+                summary.gasoline_class_previously_retained = \
+                    original_summary.gasoline_class_previously_retained
+                summary.gasoline_class_obligation = \
+                    original_summary.gasoline_class_obligation
+                summary.diesel_class_previously_retained = \
+                    original_summary.diesel_class_previously_retained
+                summary.diesel_class_obligation = \
+                    original_summary.diesel_class_obligation
                 summary.save()
 
             if original_report.exclusion_agreement is not None:
