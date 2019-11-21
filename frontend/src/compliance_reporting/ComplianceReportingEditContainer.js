@@ -444,10 +444,52 @@ class ComplianceReportingEditContainer extends Component {
 
     if (!this.props.complianceReporting.validationMessages ||
       Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
+
+      const { summary } = schedules;
+
+      if (summary && !summary.dieselClassDeferred) {
+        summary.dieselClassDeferred = 0;
+      }
+
+      if (summary && !summary.dieselClassRetained) {
+        summary.dieselClassRetained = 0;
+      }
+
+      if (summary && !summary.dieselClassPreviouslyRetained) {
+        summary.dieselClassPreviouslyRetained = 0;
+      }
+
+      if (summary && !summary.dieselClassObligation) {
+        summary.dieselClassObligation = 0;
+      }
+
+      if (summary && !summary.gasolineClassDeferred) {
+        summary.gasolineClassDeferred = 0;
+      }
+
+      if (summary && !summary.gasolineClassRetained) {
+        summary.gasolineClassRetained = 0;
+      }
+
+      if (summary && !summary.gasolineClassPreviouslyRetained) {
+        summary.gasolineClassPreviouslyRetained = 0;
+      }
+
+      if (summary && !summary.gasolineClassObligation) {
+        summary.gasolineClassObligation = 0;
+      }
+
+      if (summary && !summary.creditsOffset) {
+        summary.creditsOffset = 0;
+      }
+
       this.props.recomputeTotals({
         id,
         state: {
-          ...schedules
+          ...schedules,
+          summary: {
+            ...summary
+          }
         }
       });
     }
