@@ -493,7 +493,7 @@ class ScheduleSummaryContainer extends Component {
       value: line15Value // Line 14 x 4%
     };
 
-    const line17Value = line15Value * 0.05; // Line 15 x 5%
+    const line17Value = Math.floor(line15Value * 0.05); // Line 15 x 5%
     let line17Label = diesel[SCHEDULE_SUMMARY.LINE_17][0].value;
     if (line17Value > 0) {
       line17Label = line17Label.replace('Line 15)', `Line 15 is ${formatNumeric(line17Value, 0)} L)`);
@@ -618,7 +618,7 @@ class ScheduleSummaryContainer extends Component {
       value: line4Value // Line 3 x 5%
     };
 
-    const line6Value = line4Value * 0.05; // Line 4 x 5%
+    const line6Value = Math.floor(line4Value * 0.05); // Line 4 x 5%
     let line6Label = gasoline[SCHEDULE_SUMMARY.LINE_6][0].value;
     if (line6Value > 0) {
       line6Label = line6Label.replace('Line 4)', `Line 4 is ${formatNumeric(line6Value, 0)} L)`);
