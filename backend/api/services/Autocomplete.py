@@ -57,6 +57,9 @@ class GetNextIncrement(Completion):
         if column == 'fuel_code_version':
             self.table = FuelCode
             self.increment = 'fuel_code_version_minor'
+            self.exclude = {
+                'status__status': "Cancelled"
+            }
 
     def get_matches(self, q):
         # get only digits
@@ -76,7 +79,9 @@ class GetNextIncrement(Completion):
             self.column: q
         }
 
-        query = self.table.objects.filter(**kwargs).aggregate(
+        query = self.table.objects.filter(**kwargs).exclude(
+            **self.exclude
+        ).aggregate(
             Max(self.increment)
         )
 
@@ -152,7 +157,7 @@ class Autocomplete:
     }
 
     @staticmethod
-    def get_matches(name, q, cache_results=True):
+    def get_matches(name, q, cache_results=True, request=None):
         if name not in Autocomplete.completions:
             raise NoSuchFieldError('No completion for field {}'.format(name))
 
@@ -164,7 +169,11 @@ class Autocomplete:
             result = None
 
         if not result:
-            result = Autocomplete.completions[name].get_matches(q)
+            if name == 'organization.name':
+                result = Autocomplete.completions[name].get_matches(q, request)
+            else:
+                result = Autocomplete.completions[name].get_matches(q)
+
             cache.set(cache_key, result)
 
         return result

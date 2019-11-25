@@ -165,8 +165,10 @@ class FuelCode(Auditable):
 
     class Meta:
         db_table = 'fuel_code'
-        unique_together = (('fuel_code', 'fuel_code_version',
-                            'fuel_code_version_minor'),)
+        unique_together = ((
+            'fuel_code', 'fuel_code_version', 'fuel_code_version_minor',
+            'status'
+        ),)
 
     db_table_comment = "Fuel Codes." \
                        "List of recognized fuel pathways in BC" \

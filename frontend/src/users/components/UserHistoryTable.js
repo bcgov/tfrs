@@ -9,8 +9,10 @@ import axios from 'axios';
 
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import history from '../../app/History';
+import ComplianceReportStatus from '../../compliance_reporting/components/ComplianceReportStatus';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import * as Routes from '../../constants/routes';
 
 class UserHistoryTable extends React.Component {
@@ -73,32 +75,39 @@ class UserHistoryTable extends React.Component {
       show: false,
       width: 50
     }, {
-      accessor: item => (item.isRescinded
-        ? CREDIT_TRANSFER_STATUS.rescinded.description
-        : (
-          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.statusId)
-        ).description),
+      accessor: item => (item.historyType === 'Credit Trade'
+        ? item.status && item.status.status
+        : ComplianceReportStatus(item)
+      ),
       className: 'col-action',
       Header: 'Action Taken',
-      id: 'action',
-      minWidth: 75
+      id: 'status',
+      minWidth: 75,
+      sortable: false
     }, {
-      accessor: item => getCreditTransferType(item.type.id),
+      accessor: (item) => {
+        if (item.historyType === 'Credit Trade') {
+          return getCreditTransferType(item.type.id);
+        }
+
+        return item.type && item.type.theType;
+      },
       className: 'col-type',
       Header: 'Transaction Type',
-      id: 'creditType',
+      id: 'type',
+      sortable: false,
       width: 150
     }, {
-      accessor: item => item.creditTradeId,
+      accessor: item => item.objectId,
       className: 'col-id',
       Header: 'Transaction ID',
-      id: 'creditTradeId',
+      id: 'id',
       resizable: false,
       width: 100
     }, {
       accessor: (item) => {
-        if (item.creditTradeUpdateTimestamp) {
-          const ts = Date.parse(item.creditTradeUpdateTimestamp);
+        if (item.createTimestamp) {
+          const ts = Date.parse(item.createTimestamp);
 
           return formatter.format(ts);
         }
@@ -111,7 +120,7 @@ class UserHistoryTable extends React.Component {
       minWidth: 75
     }, {
       accessor: item => item.fuelSupplier.name,
-      Header: 'Fuel Supplier',
+      Header: 'Organization',
       id: 'fuelSupplier',
       minWidth: 100,
       sortable: false
@@ -131,7 +140,16 @@ class UserHistoryTable extends React.Component {
           if (row && row.original) {
             return {
               onClick: (e) => {
-                const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.creditTradeId);
+                let viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(/:id/gi, row.original.objectId);
+
+                if (row.original.type.theType === 'Compliance Report') {
+                  viewUrl = COMPLIANCE_REPORTING.EDIT.replace(/:id/gi, row.original.objectId);
+                  viewUrl = viewUrl.replace(/:tab/gi, 'intro');
+                } else if (row.original.type.theType === 'Exclusion Report') {
+                  viewUrl = EXCLUSION_REPORTS.EDIT.replace(/:id/gi, row.original.objectId);
+                  viewUrl = viewUrl.replace(/:tab/gi, 'intro');
+                }
+
                 history.push(viewUrl);
               },
               className: 'clickable'

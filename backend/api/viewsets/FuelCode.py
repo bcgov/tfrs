@@ -116,6 +116,8 @@ class FuelCodeViewSet(AuditableMixin,
         fuel_code_object = FuelCode.objects.filter(
             fuel_code=fuel_code,
             fuel_code_version=fuel_code_version
+        ).exclude(
+            status__status="Cancelled"
         ).order_by('-fuel_code_version_minor', '-id').first()
 
         serializer = self.get_serializer(fuel_code_object, read_only=True)

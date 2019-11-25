@@ -2,12 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 
-class ComplianceReportingStatusHistory extends Component {
-
-  static actionFor(h) {
+class ExclusionReportingStatusHistory extends Component {
+  static actionFor (h) {
     let action = (<strong>{h.status.fuelSupplierStatus}</strong>);
     let roleDisplay = null;
-
 
     if (h.status.directorStatus === 'Accepted') {
       action = (<strong>Accepted</strong>);
@@ -94,7 +92,7 @@ class ComplianceReportingStatusHistory extends Component {
     );
 
     return (
-      <div className={'panel-group'}>
+      <div className="panel-group">
         {showCurrent &&
         <div className="panel panel-default report-history-panel">
           <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1, 'snapshot')}>
@@ -139,7 +137,7 @@ class ComplianceReportingStatusHistory extends Component {
                     {r.history.map(h => {
                       return (
                         <li key={h.id}>
-                          {ComplianceReportingStatusHistory.actionFor(h)}
+                          {ExclusionReportingStatusHistory.actionFor(h)}
                         </li>
                       );
                     })}
@@ -155,7 +153,7 @@ class ComplianceReportingStatusHistory extends Component {
   }
 }
 
-ComplianceReportingStatusHistory.defaultProps = {
+ExclusionReportingStatusHistory.defaultProps = {
   complianceReport: {
     compliancePeriod: {
       description: ''
@@ -170,7 +168,7 @@ ComplianceReportingStatusHistory.defaultProps = {
   reportType: 'Compliance Report'
 };
 
-ComplianceReportingStatusHistory.propTypes = {
+ExclusionReportingStatusHistory.propTypes = {
   complianceReport: PropTypes.shape({
     compliancePeriod: PropTypes.oneOfType([
       PropTypes.string,
@@ -200,4 +198,4 @@ ComplianceReportingStatusHistory.propTypes = {
   reportType: PropTypes.string
 };
 
-export default ComplianceReportingStatusHistory;
+export default ExclusionReportingStatusHistory;

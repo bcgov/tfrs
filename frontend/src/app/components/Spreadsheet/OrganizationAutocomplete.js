@@ -35,6 +35,7 @@ class OrganizationAutocomplete extends PureComponent {
 
     return (
       <AutocompletedInput
+        additionalParams="&exclude_self=true"
         autocompleteFieldName="organization.name"
         className="data-editor"
         getItemValue={item => (item.name)}

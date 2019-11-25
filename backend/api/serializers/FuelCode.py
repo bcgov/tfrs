@@ -172,7 +172,7 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
         validators = [
             serializers.UniqueTogetherValidator(
-                queryset=FuelCode.objects.all(),
+                queryset=FuelCode.objects.exclude(status__status="Cancelled"),
                 fields=('fuel_code', 'fuel_code_version',
                         'fuel_code_version_minor'),
                 message=("The fuel code is already in use. "
@@ -279,8 +279,17 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelCode
         fields = '__all__'
-
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'fuel_code',
             'fuel_code_version', 'fuel_code_version_minor'
         )
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=FuelCode.objects.exclude(status__status="Cancelled"),
+                fields=('fuel_code', 'fuel_code_version',
+                        'fuel_code_version_minor'),
+                message=("The fuel code is already in use. "
+                         "Please consult the Fuel Codes table to ensure that "
+                         "this entry does not already exist.")
+            )
+        ]

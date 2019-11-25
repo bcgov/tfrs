@@ -11,7 +11,6 @@ import 'react-table/react-table.css';
 import ReactJson from 'react-json-view';
 import ExclusionReportingStatusHistory from "./ExclusionReportStatusHistory";
 import SnapshotDisplay from "./ExclusionReportSnapshotDisplay";
-import ComplianceReportingStatusHistory from "../../compliance_reporting/components/ComplianceReportingStatusHistory";
 
 class Delta extends Component {
 
