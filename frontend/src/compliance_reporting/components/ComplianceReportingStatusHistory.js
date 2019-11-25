@@ -108,7 +108,7 @@ class ComplianceReportingStatusHistory extends Component {
           const currentDelta = deltas ? deltas.find(f => f.ancestorDisplayName === r.displayName) : null;
           let deltaPanel = null;
 
-          if (currentDelta) {
+          if (currentDelta && !this.props.hideChangelogs) {
             deltaPanel = (
               <div key={`delta-${r.id}`}
                    className={'panel panel-default report-history-panel indented'}
@@ -167,7 +167,8 @@ ComplianceReportingStatusHistory.defaultProps = {
   },
   onSwitchHandler: () => {
   },
-  reportType: 'Compliance Report'
+  reportType: 'Compliance Report',
+  hideChangelogs: false
 };
 
 ComplianceReportingStatusHistory.propTypes = {
@@ -197,7 +198,8 @@ ComplianceReportingStatusHistory.propTypes = {
     })
   }),
   onSwitchHandler: PropTypes.func,
-  reportType: PropTypes.string
+  reportType: PropTypes.string,
+  hideChangelogs: PropTypes.bool
 };
 
 export default ComplianceReportingStatusHistory;

@@ -8,38 +8,39 @@ const ScheduleAssessmentPage = props => (
   <div className="schedule-assessment">
     <ComplianceReportingStatusHistory
       complianceReport={props.complianceReport}
+      hideChangelogs
     />
 
     {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.APPROVE) &&
-      <h2>
-        Upon acceptance the following information will become visible to
-        {` ${props.snapshot.organization.name} `}
-      </h2>
+    <h2>
+      Upon acceptance the following information will become visible to
+      {` ${props.snapshot.organization.name} `}
+    </h2>
     }
     <h1>Part 2 requirements: {props.part2Compliant}</h1>
 
     {props.part2Compliant !== 'Did not supply Part 2 fuel' &&
-      <p>
-        Based on the information submitted,
-        <strong> {props.snapshot.organization.name} </strong> {` was `}
-        {props.part2Compliant === 'Non-compliant' &&
-        <strong> not </strong>
-        }
-        compliant with the Part 2 requirements of the
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-        under section 7 of the Renewable and Low Carbon Fuel Requirements Regulation for the
-        {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-      </p>
+    <p>
+      Based on the information submitted,
+      <strong> {props.snapshot.organization.name} </strong> {` was `}
+      {props.part2Compliant === 'Non-compliant' &&
+      <strong> not </strong>
+      }
+      compliant with the Part 2 requirements of the
+      <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
+      under section 7 of the Renewable and Low Carbon Fuel Requirements Regulation for the
+      {` ${props.snapshot.compliancePeriod.description} `} compliance period.
+    </p>
     }
     {props.part2Compliant === 'Did not supply Part 2 fuel' &&
-      <p>
-        Based on the information submitted,
-        <strong> {props.snapshot.organization.name} </strong> did not supply Part 2
-        fuels and therefore was not subject to the Part 2 requirements of the
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-        under section 7 of the Renewable and Low Carbon Fuel Requirements Regulation for the
-        {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-      </p>
+    <p>
+      Based on the information submitted,
+      <strong> {props.snapshot.organization.name} </strong> did not supply Part 2
+      fuels and therefore was not subject to the Part 2 requirements of the
+      <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
+      under section 7 of the Renewable and Low Carbon Fuel Requirements Regulation for the
+      {` ${props.snapshot.compliancePeriod.description} `} compliance period.
+    </p>
     }
 
     <h1>Part 3 requirements: {props.part3Compliant}</h1>
@@ -55,43 +56,73 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {props.snapshot.summary && Number(props.snapshot.summary.lines[25]) > 0 &&
-      <p>
-        A
-        <strong>
-          {` validation of ${Number(props.snapshot.summary.lines[25])} credit(s) `}
-        </strong>
-        in accordance with section 8 (8) of the
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-        and based on the information submitted by
-        <strong> {props.snapshot.organization.name} </strong>. These
-        credits may now be transferred to other Part 3 fuel suppliers in accordance with the
-        Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
-        requirements.
-      </p>
-    }
+    {props.complianceReport.creditTransactions.map(transaction => {
+        if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
+          return (
+            <p key={transaction.id}>
+              A
+              <strong>
+                {` validation of ${Number(transaction.credits)} credit(s) `}
+              </strong>
+              in accordance with section 8 (8) of the
+              <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
+              and based on the information submitted by
+              <strong> {props.snapshot.organization.name} </strong>. These
+              credits may now be transferred to other Part 3 fuel suppliers in accordance with the
+              Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
+              requirements.
+            </p>
+          )
+        }
+        if (transaction.type === 'Credit Validation' && transaction.supplemental) {
+          return (<p key={transaction.id}>
+            A
+            <strong>
+              {` validation of ${Number(transaction.credits)} credit(s) `}
+            </strong>
+            in accordance with section 8 (8) of the <em>
+            Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+            and based on the <strong>Supplemental Reporting</strong> information submitted by
+            <strong> {props.snapshot.organization.name} </strong>. These credits may now be transferred to other Part 3
+            fuel suppliers in accordance with
+            the Renewable and Low Carbon Fuel Requirements Regulation or retained
+            for future compliance requirements.
+          </p>)
+        }
+        if (transaction.type === 'Credit Reduction' && !transaction.supplemental) {
+          return (
+            <p key={transaction.id}>
+              <strong> {props.snapshot.organization.name} </strong> applied
+              {` ${Number(props.snapshot.summary.lines[26])} `}
+              {` credit(s) to `}
+              {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
+              {` offset a net debit balance in the `}
+              {` ${props.snapshot.compliancePeriod.description} `} compliance period.
+            </p>
+          )
+        }
+        if (transaction.type === 'Credit Reduction' && transaction.supplemental) {
+          return (<p key={transaction.id}>
+            A <strong>reduction of {Number(transaction.credits)} credit(s)</strong> to either offset a net debit balance
+            or to correct a discrepancy in previous reporting for the
+            {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
+          </p>)
+        }
+        return null;
+      }
+    )}
 
-    {props.snapshot.summary && Number(props.snapshot.summary.lines[26]) > 0 &&
-      <p>
-        <strong> {props.snapshot.organization.name} </strong> applied
-        {` ${Number(props.snapshot.summary.lines[26])} `}
-        {` credits to `}
-        {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
-        {` offset a net debit balance in the `}
-        {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-      </p>
-    }
 
     {props.snapshot.summary && Number(props.snapshot.summary.lines[27]) < 0 &&
-      <p>
-        There were
-        <strong>
-          {` ${Number(props.snapshot.summary.lines[27]) * -1} `}
-          {` outstanding debits `}
-        </strong>
-        subject to an administrative penalty under section 10 of the
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>.
-      </p>
+    <p>
+      There were
+      <strong>
+        {` ${Number(props.snapshot.summary.lines[27]) * -1} `}
+        {` outstanding debits `}
+      </strong>
+      subject to an administrative penalty under section 10 of the
+      <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>.
+    </p>
     }
 
     <p>
@@ -104,8 +135,7 @@ const ScheduleAssessmentPage = props => (
   </div>
 );
 
-ScheduleAssessmentPage.defaultProps = {
-};
+ScheduleAssessmentPage.defaultProps = {};
 
 ScheduleAssessmentPage.propTypes = {
   complianceReport: PropTypes.shape().isRequired,
