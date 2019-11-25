@@ -79,7 +79,7 @@ class ComplianceReportService(object):
         blacklist_keys = ['id', 'deltas', 'timestamp', 'status',
                           'read_only', 'actions', 'version', 'timestamp',
                           'history', 'actor', 'has_snapshot', 'is_supplemental',
-                          'display_name', 'nickname']
+                          'display_name', 'nickname', 'supplemental_note']
 
         if snapshot is None and ancestor_snapshot is not None:
             differences += [Delta(path='.'.join(path),

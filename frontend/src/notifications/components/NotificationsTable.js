@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import CheckBox from '../../app/components/CheckBox';
 import history from '../../app/History';

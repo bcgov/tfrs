@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values';
 import { arrayMove } from '../../utils/functions';

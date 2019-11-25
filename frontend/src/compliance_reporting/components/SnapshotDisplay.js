@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class SnapshotDisplay extends Component {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Overlay, Tooltip } from 'react-bootstrap';
 
 import 'react-table/react-table.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import history from '../../../app/History';
 import { FUEL_CODES } from '../../../constants/routes/Admin';

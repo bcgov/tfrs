@@ -695,7 +695,7 @@ class ComplianceReportingEditContainer extends Component {
           <div>
             <hr />
             <label htmlFor="supplementalReasonInput">
-              Supplemental Report Reason
+              Supplemental Report Reason (Required)
             </label>
             <textarea
               id="supplementalReasonInput"
