@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class SnapshotDisplay extends Component {
@@ -866,7 +866,7 @@ class SnapshotDisplay extends Component {
         }
         {this.props.computedWarning &&
         <div className="panel panel-warning">
-          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of the data, not a snapshot.
+          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of this report.
         </div>
         }
         <div>

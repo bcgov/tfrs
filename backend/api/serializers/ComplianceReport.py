@@ -41,6 +41,7 @@ from api.models.ExclusionReportAgreement import ExclusionAgreement, \
     ExclusionAgreementRecord
 from api.models.Organization import Organization
 from api.permissions.ComplianceReport import ComplianceReportPermissions
+from api.serializers import CreditTradeMinSerializer
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
@@ -223,8 +224,24 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     deltas = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
+    credit_transactions = SerializerMethodField()
 
     skip_deltas = False
+
+    def get_credit_transactions(self, obj):
+        current = obj
+        transactions = []
+        while current is not None:
+            if current.credit_transaction is not None:
+                transactions.insert(0, {
+                    'id': current.credit_transaction.id,
+                    'credits': current.credit_transaction.number_of_credits,
+                    'type': current.credit_transaction.type.the_type,
+                    'supplemental': current.supplements is not None
+                })
+            current = current.supplements
+
+        return transactions
 
     def get_display_name(self, obj):
         if obj.nickname is not None and obj.nickname is not '':
@@ -482,7 +499,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
-                  'is_supplemental', 'total_previous_credit_reductions']
+                  'is_supplemental', 'total_previous_credit_reductions',
+                  'credit_transactions']
 
 
 class ComplianceReportValidator:

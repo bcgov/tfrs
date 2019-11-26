@@ -268,6 +268,10 @@ table.supplementalTable {
 
 .report-history-panel {
 
+  &.indented {
+    margin-left: 1rem;
+  }
+
   .title {
     text-decoration: underline;
     color: $link-color;
@@ -281,4 +285,3 @@ table.supplementalTable {
     }
   }
 }
-
