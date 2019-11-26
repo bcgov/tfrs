@@ -1055,3 +1055,58 @@ class TestCreditTradeOperations(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_sell_with_insufficient_credits_counting_pending(self):
+        """
+        This will test submitting a credit transfer with total credits going
+        over the current credit balance.
+        The code should take into account Pending transactions,
+        so submitted and reviewed transactions.
+        It should return a Validation Error and tell you that your
+        organization has insufficient credits
+        """
+        # First time should work, since the organization has 100000
+        # credits
+        payload = {
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.users['fs_user_1'].organization_id,
+            'numberOfCredits': 55000,
+            'respondent': 3,
+            'status': self.statuses['submitted'].id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': self.credit_trade_types['sell'].id,
+            'zeroReason': None
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # This should fail, since the organization only has 45000
+        # left, after the submitted transactions
+        payload = {
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.users['fs_user_1'].organization_id,
+            'numberOfCredits': 55000,
+            'respondent': 3,
+            'status': self.statuses['submitted'].id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': self.credit_trade_types['sell'].id,
+            'zeroReason': None
+        }
+
+        response = self.clients['fs_user_1'].post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('insufficientCredits',
+                      json.loads(response.content.decode('utf-8')))

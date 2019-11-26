@@ -25,7 +25,6 @@ from enum import Enum
 from rest_framework import permissions
 
 from api.models.ComplianceReport import ComplianceReport
-from api.models.CreditTrade import CreditTrade
 from api.services.CreditTradeService import CreditTradeService
 
 

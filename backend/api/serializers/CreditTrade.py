@@ -185,16 +185,20 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                  Q(is_rescinded=False))
             ).aggregate(total_credits=Sum('number_of_credits'))
 
-            temp_balance = balance
-            temp_balance -= pending_trades['total_credits']
-            temp_balance -= number_of_credits
+            if pending_trades['total_credits'] is not None:
+                print(pending_trades)
+                temp_balance = balance
+                temp_balance -= pending_trades['total_credits']
+                temp_balance -= number_of_credits
 
-            if temp_balance < 0:
-                raise serializers.ValidationError({
-                    'insufficientCredits': "{} does not have enough credits "
-                                           "for the proposal.".format(
-                                               request.user.organization.name)
-                })
+                if temp_balance < 0:
+                    raise serializers.ValidationError({
+                        'insufficientCredits':
+                        "{} does not have enough credits "
+                        "for the proposal.".format(
+                            request.user.organization.name
+                        )
+                    })
 
         if request.user.organization.actions_type.the_type == 'None':
             raise serializers.ValidationError({
@@ -509,12 +513,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             ).only('id')
         )
 
-        if (self.instance.initiator == request.user.organization and
+        if ((self.instance.initiator == request.user.organization and
                 credit_trade_status in draft_propose_statuses and
-                credit_trade_type == sell_type) or \
+                credit_trade_type == sell_type) or
             (self.instance.respondent == request.user.organization and
              credit_trade_status == accepted_status and
-             credit_trade_type == buy_type):
+             credit_trade_type == buy_type)) and \
+                data.get('is_rescinded') is not True:
             if balance < number_of_credits:
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
@@ -537,17 +542,19 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                  Q(is_rescinded=False))
             ).aggregate(total_credits=Sum('number_of_credits'))
 
-            temp_balance = balance
-            temp_balance -= pending_trades['total_credits']
-            temp_balance -= number_of_credits
+            if pending_trades['total_credits'] is not None:
+                temp_balance = balance
+                temp_balance -= pending_trades['total_credits']
+                temp_balance -= number_of_credits
 
-            if temp_balance < 0:
-                raise serializers.ValidationError({
-                    'insufficientCredits':
-                    "{} does not have enough credits for the proposal.".format(
-                        request.user.organization.name
-                    )
-                })
+                if temp_balance < 0:
+                    raise serializers.ValidationError({
+                        'insufficientCredits':
+                        "{} does not have enough credits for the "
+                        "proposal.".format(
+                            request.user.organization.name
+                        )
+                    })
 
         return data
 
