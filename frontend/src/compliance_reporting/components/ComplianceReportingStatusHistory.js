@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 class ComplianceReportingStatusHistory extends Component {
 
@@ -74,6 +74,8 @@ class ComplianceReportingStatusHistory extends Component {
       c => (c.complianceReport === this.props.complianceReport.id)
     ).length === 0);
 
+    const {deltas} = this.props.complianceReport;
+
     const distinctReports = this.props.complianceReport.history.reduce(
       (m, value) => {
         if (!m.some(v => {
@@ -95,36 +97,59 @@ class ComplianceReportingStatusHistory extends Component {
       <div className={'panel-group'}>
         {showCurrent &&
         <div className="panel panel-default report-history-panel">
-          <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1)}>
+          <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1, 'snapshot')}>
             <span className={'title'}>{this.props.complianceReport.displayName}</span><br/>
-            <strong>Current Version</strong>
+            <strong>Draft</strong>
           </div>
         </div>
         }
         {distinctReports.length > 0 &&
         distinctReports.map(r => {
-          return (<div className="panel panel-default report-history-panel"
-                       key={r.displayName}
-                       onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id)}>
-              <div className="panel-body">
-                <span className={'title'}>{r.displayName}</span>
-                <ul>
-                  {r.history.map(h => {
-                    return (
+          const currentDelta = deltas ? deltas.find(f => f.ancestorDisplayName === r.displayName) : null;
+          let deltaPanel = null;
 
-                      <li key={h.id}>
-                        {ComplianceReportingStatusHistory.actionFor(h)}
-                      </li>
-                    );
-                  })}
-                </ul>
+          if (currentDelta && !this.props.hideChangelogs) {
+            deltaPanel = (
+              <div key={`delta-${r.id}`}
+                   className={'panel panel-default report-history-panel indented'}
+                   onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id, 'delta')}>
+                <div className="panel-body">
+                    <span className={'title'}>
+                      {`Changelog for ${currentDelta.ancestorDisplayName}`}
+                    </span>
+                  <ul>
+                    <li>
+                      {`${currentDelta.delta.length} records changed`}
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
+            );
+          }
+
+          return ([
+              deltaPanel
+              ,
+              <div className="panel panel-default report-history-panel"
+                   key={r.displayName}
+                   onClick={() => this.props.onSwitchHandler(r.id === currentId ? -1 : r.id, 'snapshot')}>
+                <div className="panel-body">
+                  <span className={'title'}>{r.displayName}</span>
+                  <ul>
+                    {r.history.map(h => {
+                      return (
+                        <li key={h.id}>
+                          {ComplianceReportingStatusHistory.actionFor(h)}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>]
           );
 
         })
         }
-
       </div>
     );
   }
@@ -142,7 +167,8 @@ ComplianceReportingStatusHistory.defaultProps = {
   },
   onSwitchHandler: () => {
   },
-  reportType: 'Compliance Report'
+  reportType: 'Compliance Report',
+  hideChangelogs: false
 };
 
 ComplianceReportingStatusHistory.propTypes = {
@@ -172,7 +198,8 @@ ComplianceReportingStatusHistory.propTypes = {
     })
   }),
   onSwitchHandler: PropTypes.func,
-  reportType: PropTypes.string
+  reportType: PropTypes.string,
+  hideChangelogs: PropTypes.bool
 };
 
 export default ComplianceReportingStatusHistory;

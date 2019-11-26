@@ -14,13 +14,6 @@ import SnapshotDisplay from "./ExclusionReportSnapshotDisplay";
 
 class Delta extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTab: 'snapshot'
-    }
-  }
-
   render() {
     const valueRenderer = row => {
       if (row.value === null) {
@@ -97,7 +90,7 @@ class Delta extends Component {
       ];
 
     let content = null;
-    switch (this.state.activeTab) {
+    switch (this.props.activeTab) {
       case 'snapshot':
         content = (
           <SnapshotDisplay
@@ -122,26 +115,9 @@ class Delta extends Component {
         break;
     }
     return (
-      <div>
-        <ul className="delta-tabs nav nav-tabs" role="tablist">
-          <li
-            role="presentation"
-            className={(this.state.activeTab === 'snapshot' ? 'active' : '')}
-          >
-            <a href='#' onClick={() => this.setState({activeTab: 'snapshot'})}>Snapshot</a>
-          </li>
-          <li
-            role="presentation"
-            className={(this.state.activeTab === 'delta' ? 'active' : '')}
-          >
-            <a href='#' onClick={() => this.setState({activeTab: 'delta'})}>Differences
-              ({this.props.delta ? this.props.delta.length : 0})</a>
-          </li>
-        </ul>
         <div>
           {content}
         </div>
-      </div>
     )
   }
 }
@@ -166,22 +142,24 @@ class ReportHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeDelta: -1
+      activeReport: -1,
+      activeTab: 'snapshot'
     };
-    this.handleDeltaSelection = this.handleDeltaSelection.bind(this);
+    this.handleHistorySelection = this.handleHistorySelection.bind(this);
   }
 
-  handleDeltaSelection(id) {
+  handleHistorySelection(id, tab) {
     this.setState({
-      activeDelta: id
+      activeReport: id,
+      activeTab: tab
     });
 
   }
 
   render() {
     const {deltas} = this.props;
-    const {activeDelta} = this.state;
-    
+    const {activeReport, activeTab} = this.state;
+
     let currentSnapshot = this.props.snapshot;
     let currentSnapshotComputed = false;
     if (!currentSnapshot) {
@@ -190,13 +168,13 @@ class ReportHistory extends Component {
     }
 
     let title;
-    switch (String(activeDelta)) {
+    switch (String(activeReport)) {
       case '-1':
         title = this.props.exclusionReport.displayName;
         break;
       default:
         try {
-          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeDelta))).ancestorDisplayName;
+          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeReport))).ancestorDisplayName;
         } catch (e) {
           title = "Current Report";
         }
@@ -209,55 +187,34 @@ class ReportHistory extends Component {
 
         <ExclusionReportingStatusHistory
           complianceReport={this.props.exclusionReport}
-          onSwitchHandler={this.handleDeltaSelection}
+          onSwitchHandler={this.handleHistorySelection}
         />
 
-        <div className="history-container">
-          <div className="history-list panel panel-default">
-            <div className="panel-body">
-              <h3>Revisions</h3>
-              <ul>
-                <li
-                  className={String(activeDelta) === '-1' ? "active" : ""}
-                  onClick={() => this.handleDeltaSelection(-1)}
-                >
-                  {this.props.exclusionReport.displayName}
-                </li>
-                {
-                  deltas.map(d => (
-                      <li key={d.ancestorId}
-                          className={String(activeDelta) === String(d.ancestorId) ? "active" : ""}
-                          onClick={() => this.handleDeltaSelection(d.ancestorId)}
-                      >
-                        {d.ancestorDisplayName}
-                      </li>
-                    )
-                  )
-                }
-              </ul>
-            </div>
-          </div>
-          <div className="history-content panel">
-            <div className="panel-body">
-              <h1>{title}</h1>
-              {(String(activeDelta) === '-1') &&
-              <Current snapshot={currentSnapshot}
-                       computedWarning={false}
-                       dirtyWarning
-              />
-              || deltas.map(d => {
+        <div className="history-content panel">
+          <div className="panel-body">
+            <h1>{title}</h1>
+            {(String(activeReport) === '-1') &&
+            <Current snapshot={currentSnapshot}
+                     computedWarning={currentSnapshotComputed}
+            />
 
-                  if (String(activeDelta) === String(d.ancestorId)) {
-                    return (
-                      <Delta key={d.ancestorId} delta={d.delta} snapshot={d.snapshot}/>
-                    )
-                  } else {
-                    return null;
-                  }
+            || deltas.map(d => {
+
+                if (String(activeReport) === String(d.ancestorId)) {
+                  return (
+                    <Delta
+                      key={d.ancestorId}
+                      delta={d.delta}
+                      snapshot={d.snapshot}
+                      activeTab={activeTab}
+                    />
+                  )
+                } else {
+                  return null;
                 }
-              )
               }
-            </div>
+            )
+            }
           </div>
         </div>
       </div>

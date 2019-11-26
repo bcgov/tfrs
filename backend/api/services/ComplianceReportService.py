@@ -79,7 +79,7 @@ class ComplianceReportService(object):
         blacklist_keys = ['id', 'deltas', 'timestamp', 'status',
                           'read_only', 'actions', 'version', 'timestamp',
                           'history', 'actor', 'has_snapshot', 'is_supplemental',
-                          'display_name', 'nickname']
+                          'display_name', 'nickname', 'supplemental_note']
 
         if snapshot is None and ancestor_snapshot is not None:
             differences += [Delta(path='.'.join(path),
@@ -266,7 +266,7 @@ class ComplianceReportService(object):
                 desired_net_credit_balance_change = Decimal(lines['26'])*Decimal(-1.0)
 
         required_credit_transaction = desired_net_credit_balance_change - \
-                                      (total_previous_validation + total_previous_reduction)
+                                      (total_previous_validation - total_previous_reduction)
 
         if settings.DEVELOPMENT:
             print('line 25 of current report: {}'.format(lines['25']))

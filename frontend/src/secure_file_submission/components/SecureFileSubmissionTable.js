@@ -4,7 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';

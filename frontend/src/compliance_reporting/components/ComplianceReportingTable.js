@@ -1,10 +1,10 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { ReactTableDefaults } from 'react-table';
+import moment from 'moment-timezone';
+import {ReactTableDefaults} from 'react-table';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import 'react-table/react-table.css';
 
@@ -16,39 +16,13 @@ import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
 
 class ComplianceReportingTable extends Component {
-  constructor (props) {
-    super(props);
 
-    this.state = {
-      expanded: this.computeExpanded(props)
-    };
-  }
-
-  componentWillReceiveProps (nextProps) {
-    this.setState({ expanded: this.computeExpanded(nextProps) });
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  computeExpanded (props) {
-    const newExpanded = {};
-    if (props.items) {
-      for (let i = 0; i < props.items.length; i += 1) {
-        // just expand everything
-        newExpanded[i] = true;
-      }
-    }
-    return newExpanded;
-  }
-
-  render () {
+  render() {
     const customDefaults = {
       ...ReactTableDefaults.column
     };
 
     const columns = [{
-      expander: true,
-      show: false
-    }, {
       accessor: item => (item.groupId),
       className: 'col-groupId',
       Header: 'Group ID',
@@ -75,30 +49,11 @@ class ComplianceReportingTable extends Component {
       show: this.props.loggedInUser.isGovernmentUser
     }, {
       accessor: (item) => {
-        if (item.supplements !== null) {
-          return ([
-            <FontAwesomeIcon
-              className="fa-rotate-90"
-              style={{
-                marginLeft: '16px',
-                marginRight: '8px'
-              }}
-              icon="level-up-alt"
-            />,
-            item.displayName
-          ]);
-        }
         return (item.displayName);
       },
       className: 'col-displayname',
       Header: 'Display Name',
       id: 'displayname',
-      minWidth: 75
-    }, {
-      accessor: item => (item.type),
-      className: 'col-type',
-      Header: 'Type',
-      id: 'type',
       minWidth: 75
     }, {
       accessor: ComplianceReportStatus,
@@ -123,18 +78,22 @@ class ComplianceReportingTable extends Component {
       id: 'supplemental-status',
       minWidth: 75
     }, {
-      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+      accessor: item => (item.sortDate ? item.sortDate : null),
       className: 'col-date',
       Header: 'Last Updated On',
       id: 'updateTimestamp',
-      minWidth: 95
-    }, {
-      accessor: item => (item.supplements ? '' : moment(item.sortDate).format('YYYY-MM-DD')),
-      className: 'col-sdate',
-      Header: 'Last Activity',
-      id: 'sortDate',
       minWidth: 95,
-      show: false // in discussion
+      filterMethod: (filter, row) => {
+        const displayedValue = row.updateTimestamp ?
+          moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';
+
+        return displayedValue.includes(filter.value);
+      },
+      Cell: row => (<span>
+        {row.original.sortDate ?
+          moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-'
+        }
+      </span>)
     }];
 
     const filterMethod = (filter, row, column) => {
@@ -147,7 +106,7 @@ class ComplianceReportingTable extends Component {
 
     const findExpanded = data => (
       data.map((row, i) => (
-        { i: true }
+        {i: true}
       ))
     );
 
@@ -159,10 +118,6 @@ class ComplianceReportingTable extends Component {
         className="searchable complianceReportListTable"
         columns={columns}
         data={this.props.items}
-        expanded={this.state.expanded}
-        onExpandedChange={(expanded, index, event) => {
-          this.setState({ expanded });
-        }}
         defaultFilterMethod={filterMethod}
         defaultPageSize={10}
         defaultSorted={[{
@@ -180,8 +135,8 @@ class ComplianceReportingTable extends Component {
 
                 if (row.original.status &&
                   (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
-                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
-                  ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
+                    ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
+                    ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
                   tab = 'schedule-assessment';
                 }
 

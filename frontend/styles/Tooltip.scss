@@ -9,13 +9,13 @@
 }
 
 .tooltip {
-  z-index: 99;
+  z-index: 9999999;
 
   &.danger {
     .tooltip-arrow {
       border-top-color: $dark-red !important;
     }
-  
+
     .tooltip-inner {
       background-color: $dark-red;
       max-width: 500px;
@@ -25,7 +25,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }  
+    }
   }
 
   &.left .tooltip-inner {
