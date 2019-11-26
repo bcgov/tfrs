@@ -22,7 +22,7 @@ class ComplianceReportingTable extends Component {
       ...ReactTableDefaults.column
     };
 
-    const columns = [ {
+    const columns = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
       Header: 'Group ID',
@@ -83,6 +83,12 @@ class ComplianceReportingTable extends Component {
       Header: 'Last Updated On',
       id: 'updateTimestamp',
       minWidth: 95,
+      filterMethod: (filter, row) => {
+        const displayedValue = row.updateTimestamp ?
+          moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';
+
+        return displayedValue.includes(filter.value);
+      },
       Cell: row => (<span>
         {row.original.sortDate ?
           moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-'
