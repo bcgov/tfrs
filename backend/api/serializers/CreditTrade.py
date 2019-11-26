@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from datetime import datetime
+from django.db.models import Q, Sum
 
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -160,7 +161,35 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             balance = request.user.organization.organization_balance[
                 'validated_credits']
 
-            if balance < data.get('number_of_credits'):
+            number_of_credits = data.get('number_of_credits')
+
+            if balance < number_of_credits:
+                raise serializers.ValidationError({
+                    'insufficientCredits': "{} does not have enough credits "
+                                           "for the proposal.".format(
+                                               request.user.organization.name)
+                })
+
+            pending_trades = CreditTrade.objects.filter(
+                (Q(status__status__in=[
+                    "Submitted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Sell") &
+                 Q(initiator_id=request.user.organization_id) &
+                 Q(is_rescinded=False)) |
+                (Q(status__status__in=[
+                    "Accepted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Buy") &
+                 Q(respondent_id=request.user.organization.id) &
+                 Q(is_rescinded=False))
+            ).aggregate(total_credits=Sum('number_of_credits'))
+
+            temp_balance = balance
+            temp_balance -= pending_trades['total_credits']
+            temp_balance -= number_of_credits
+
+            if temp_balance < 0:
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
@@ -491,6 +520,33 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
                                                request.user.organization.name)
+                })
+
+            pending_trades = CreditTrade.objects.filter(
+                (Q(status__status__in=[
+                    "Submitted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Sell") &
+                 Q(initiator_id=request.user.organization_id) &
+                 Q(is_rescinded=False)) |
+                (Q(status__status__in=[
+                    "Accepted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Buy") &
+                 Q(respondent_id=request.user.organization.id) &
+                 Q(is_rescinded=False))
+            ).aggregate(total_credits=Sum('number_of_credits'))
+
+            temp_balance = balance
+            temp_balance -= pending_trades['total_credits']
+            temp_balance -= number_of_credits
+
+            if temp_balance < 0:
+                raise serializers.ValidationError({
+                    'insufficientCredits':
+                    "{} does not have enough credits for the proposal.".format(
+                        request.user.organization.name
+                    )
                 })
 
         return data

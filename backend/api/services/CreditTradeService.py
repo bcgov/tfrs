@@ -54,14 +54,14 @@ class CreditTradeService(object):
             #   show "Submitted" and other transactions where the fuel
             #   supplier is the respondent
             credit_trades = CreditTrade.objects.filter((
-                    (
-                            (~Q(status__status__in=[
-                                "Recorded", "Cancelled"]) &
-                             Q(type__is_gov_only_type=False)) |
-                            (Q(status__status__in=[
-                                "Approved", "Declined"]) &
-                             Q(type__is_gov_only_type=True))
-                    ) &
+                    ((~Q(status__status__in=[
+                            "Recorded", "Cancelled"
+                        ]) &
+                      Q(type__is_gov_only_type=False)) |
+                     (Q(status__status__in=[
+                            "Approved", "Declined"
+                        ]) &
+                      Q(type__is_gov_only_type=True))) &
                     ((~Q(status__status__in=["Draft"]) &
                       Q(respondent=organization)) | Q(initiator=organization))
             ))

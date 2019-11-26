@@ -21,7 +21,6 @@
 """
 from collections import defaultdict
 from enum import Enum
-from django.db.models import Q, Sum
 
 from rest_framework import permissions
 
@@ -55,27 +54,6 @@ class SigningAuthorityConfirmationPermissions(permissions.BasePermission):
             relationship = SigningAuthorityConfirmationPermissions._Relationship.INITIATOR
         if credit_trade.respondent.id == user.organization.id:
             relationship = SigningAuthorityConfirmationPermissions._Relationship.RESPONDENT
-
-        pending_trades = CreditTrade.objects.filter(
-            (Q(status__status__in=[
-                "Submitted", "Recommended", "Not Recommended"
-            ]) &
-             Q(type__the_type="Sell") &
-             Q(initiator_id=user.organization_id) &
-             Q(is_rescinded=False)) |
-            (Q(status__status__in=[
-                "Accepted", "Recommended", "Not Recommended"
-            ]) &
-             Q(type__the_type="Buy") &
-             Q(respondent_id=user.organization.id) &
-             Q(is_rescinded=False))
-        ).aggregate(total_credits=Sum('number_of_credits'))
-
-        temp_balance = user.organization.organization_balance['validated_credits']
-        temp_balance -= pending_trades['total_credits']
-        temp_balance -= credit_trade.number_of_credits
-        if temp_balance < 0:
-            return False
 
         return SigningAuthorityConfirmationPermissions.action_mapping[(
             relationship,
