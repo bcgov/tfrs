@@ -1,11 +1,10 @@
 /*
  * Presentational component
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
-import {ReactTableDefaults} from 'react-table';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { ReactTableDefaults } from 'react-table';
 import 'react-table/react-table.css';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
@@ -16,8 +15,7 @@ import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
 
 class ComplianceReportingTable extends Component {
-
-  render() {
+  render () {
     const customDefaults = {
       ...ReactTableDefaults.column
     };
@@ -48,9 +46,7 @@ class ComplianceReportingTable extends Component {
       minWidth: 75,
       show: this.props.loggedInUser.isGovernmentUser
     }, {
-      accessor: (item) => {
-        return (item.displayName);
-      },
+      accessor: item => (item.displayName),
       className: 'col-displayname',
       Header: 'Display Name',
       id: 'displayname',
@@ -84,16 +80,18 @@ class ComplianceReportingTable extends Component {
       id: 'updateTimestamp',
       minWidth: 95,
       filterMethod: (filter, row) => {
-        const displayedValue = row.updateTimestamp ?
-          moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';
+        const displayedValue = row.updateTimestamp
+          ? moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';
 
         return displayedValue.includes(filter.value);
       },
-      Cell: row => (<span>
-        {row.original.sortDate ?
-          moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-'
-        }
-      </span>)
+      Cell: row => (
+        <span>
+          {row.original.sortDate
+            ? moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-'
+          }
+        </span>
+      )
     }];
 
     const filterMethod = (filter, row, column) => {
@@ -106,7 +104,7 @@ class ComplianceReportingTable extends Component {
 
     const findExpanded = data => (
       data.map((row, i) => (
-        {i: true}
+        { i: true }
       ))
     );
 
