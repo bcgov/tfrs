@@ -56,62 +56,68 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {props.complianceReport.creditTransactions.map(transaction => {
-        if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
-          return (
-            <p key={transaction.id}>
-              A
-              <strong>
-                {` validation of ${Number(transaction.credits)} credit(s) `}
-              </strong>
-              in accordance with section 8 (8) of the
-              <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-              and based on the information submitted by
-              <strong> {props.snapshot.organization.name} </strong>. These
-              credits may now be transferred to other Part 3 fuel suppliers in accordance with the
-              Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
-              requirements.
-            </p>
-          )
-        }
-        if (transaction.type === 'Credit Validation' && transaction.supplemental) {
-          return (<p key={transaction.id}>
+    {props.complianceReport.creditTransactions.map((transaction) => {
+      if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
+        return (
+          <p key={transaction.id}>
             A
             <strong>
               {` validation of ${Number(transaction.credits)} credit(s) `}
             </strong>
-            in accordance with section 8 (8) of the <em>
-            Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+            in accordance with section 8 (8) of the
+            <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
+            and based on the information submitted by
+            <strong> {props.snapshot.organization.name} </strong>. These
+            credits may now be transferred to other Part 3 fuel suppliers in accordance with the
+            Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
+            requirements.
+          </p>
+        );
+      }
+
+      if (transaction.type === 'Credit Validation' && transaction.supplemental) {
+        return (
+          <p key={transaction.id}>
+            A
+            <strong>
+              {` validation of ${Number(transaction.credits)} credit(s) `}
+            </strong>
+            in accordance with section 8 (8) of the
+            <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
             and based on the <strong>Supplemental Reporting</strong> information submitted by
-            <strong> {props.snapshot.organization.name} </strong>. These credits may now be transferred to other Part 3
-            fuel suppliers in accordance with
+            <strong> {props.snapshot.organization.name} </strong>. These credits may now be
+            transferred to other Part 3 fuel suppliers in accordance with
             the Renewable and Low Carbon Fuel Requirements Regulation or retained
             for future compliance requirements.
-          </p>)
-        }
-        if (transaction.type === 'Credit Reduction' && !transaction.supplemental) {
-          return (
-            <p key={transaction.id}>
-              <strong> {props.snapshot.organization.name} </strong> applied
-              {` ${Number(props.snapshot.summary.lines[26])} `}
-              {` credit(s) to `}
-              {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
-              {` offset a net debit balance in the `}
-              {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-            </p>
-          )
-        }
-        if (transaction.type === 'Credit Reduction' && transaction.supplemental) {
-          return (<p key={transaction.id}>
-            A <strong>reduction of {Number(transaction.credits)} credit(s)</strong> to either offset a net debit balance
-            or to correct a discrepancy in previous reporting for the
-            {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
-          </p>)
-        }
-        return null;
+          </p>
+        );
       }
-    )}
 
+      if (transaction.type === 'Credit Reduction' && !transaction.supplemental) {
+        return (
+          <p key={transaction.id}>
+            <strong> {props.snapshot.organization.name} </strong> applied
+            {` ${Number(props.snapshot.summary.lines[26])} `}
+            {` credit(s) to `}
+            {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
+            {` offset a net debit balance in the `}
+            {` ${props.snapshot.compliancePeriod.description} `} compliance period.
+          </p>
+        );
+      }
+
+      if (transaction.type === 'Credit Reduction' && transaction.supplemental) {
+        return (
+          <p key={transaction.id}>
+            A <strong>reduction of {Number(transaction.credits)} credit(s)</strong> to
+            either offset a net debit balance or to correct a discrepancy in previous
+            reporting for the
+            {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
+          </p>
+        );
+      }
+      return null;
+    })}
 
     {props.snapshot.summary && Number(props.snapshot.summary.lines[27]) < 0 &&
     <p>
