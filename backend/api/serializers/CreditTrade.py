@@ -45,6 +45,11 @@ from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
 
+INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate this Credit Transfer " \
+    "Proposal. Your organization either does not have enough " \
+    "validated credits or has pending Credit Transfer Proposal(s) that " \
+    "could result in an insufficient credit balance for this transfer."
+
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
@@ -107,8 +112,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({
                         'forbidden': "Please provide an explanation in the "
                                      "comments as to why the Credit Transfer "
-                                     "Proposal has a fair market value of zero "
-                                     "dollars per credit."
+                                     "Proposal has a fair market value of "
+                                     "zero dollars per credit."
                     })
 
         if credit_trade_status not in allowed_statuses:
@@ -165,12 +170,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
             if balance < number_of_credits:
                 raise serializers.ValidationError({
-                    'insufficientCredits':
-                    "Unable to initiate this Credit Transfer Proposal. "
-                    "Your organization either does not have enough "
-                    "validated credits or has pending Credit Transfer "
-                    "Proposal(s) that could result in an insufficient "
-                    "credit balance for this transfer."
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
 
             pending_trades = CreditTrade.objects.filter(
@@ -196,12 +196,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
                 if temp_balance < 0:
                     raise serializers.ValidationError({
-                        'insufficientCredits':
-                        "Unable to initiate this Credit Transfer Proposal. "
-                        "Your organization either does not have enough "
-                        "validated credits or has pending Credit Transfer "
-                        "Proposal(s) that could result in an insufficient "
-                        "credit balance for this transfer."
+                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                     })
 
         if request.user.organization.actions_type.the_type == 'None':
@@ -526,12 +521,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 data.get('is_rescinded') is not True:
             if balance < number_of_credits:
                 raise serializers.ValidationError({
-                    'insufficientCredits':
-                    "Unable to initiate this Credit Transfer Proposal. "
-                    "Your organization either does not have enough "
-                    "validated credits or has pending Credit Transfer "
-                    "Proposal(s) that could result in an insufficient "
-                    "credit balance for this transfer."
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
 
             pending_trades = CreditTrade.objects.filter(
@@ -556,12 +546,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
                 if temp_balance < 0:
                     raise serializers.ValidationError({
-                        'insufficientCredits':
-                        "Unable to initiate this Credit Transfer Proposal. "
-                        "Your organization either does not have enough "
-                        "validated credits or has pending Credit Transfer "
-                        "Proposal(s) that could result in an insufficient "
-                        "credit balance for this transfer."
+                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                     })
 
         return data
@@ -728,7 +713,9 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     def get_comment_actions(self, obj):
         """Attach available commenting actions"""
         request = self.context.get('request')
-        return CreditTradeCommentActions.available_comment_actions(request, obj)
+        return CreditTradeCommentActions.available_comment_actions(
+            request, obj
+        )
 
     def get_comments(self, obj):
         """
