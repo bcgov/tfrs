@@ -189,7 +189,6 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             ).aggregate(total_credits=Sum('number_of_credits'))
 
             if pending_trades['total_credits'] is not None:
-                print(pending_trades)
                 temp_balance = balance
                 temp_balance -= pending_trades['total_credits']
                 temp_balance -= number_of_credits
