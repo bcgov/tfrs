@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from datetime import datetime
+from django.db.models import Q, Sum
 
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -43,6 +44,11 @@ from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
+
+INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate this Credit Transfer " \
+    "Proposal. Your organization either does not have enough " \
+    "validated credits or has pending Credit Transfer Proposal(s) that " \
+    "could result in an insufficient credit balance for this transfer."
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -106,8 +112,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({
                         'forbidden': "Please provide an explanation in the "
                                      "comments as to why the Credit Transfer "
-                                     "Proposal has a fair market value of zero "
-                                     "dollars per credit."
+                                     "Proposal has a fair market value of "
+                                     "zero dollars per credit."
                     })
 
         if credit_trade_status not in allowed_statuses:
@@ -160,12 +166,37 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             balance = request.user.organization.organization_balance[
                 'validated_credits']
 
-            if balance < data.get('number_of_credits'):
+            number_of_credits = data.get('number_of_credits')
+
+            if balance < number_of_credits:
                 raise serializers.ValidationError({
-                    'insufficientCredits': "{} does not have enough credits "
-                                           "for the proposal.".format(
-                                               request.user.organization.name)
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
+
+            pending_trades = CreditTrade.objects.filter(
+                (Q(status__status__in=[
+                    "Submitted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Sell") &
+                 Q(initiator_id=request.user.organization_id) &
+                 Q(is_rescinded=False)) |
+                (Q(status__status__in=[
+                    "Accepted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Buy") &
+                 Q(respondent_id=request.user.organization.id) &
+                 Q(is_rescinded=False))
+            ).aggregate(total_credits=Sum('number_of_credits'))
+
+            if pending_trades['total_credits'] is not None:
+                temp_balance = balance
+                temp_balance -= pending_trades['total_credits']
+                temp_balance -= number_of_credits
+
+                if temp_balance < 0:
+                    raise serializers.ValidationError({
+                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
+                    })
 
         if request.user.organization.actions_type.the_type == 'None':
             raise serializers.ValidationError({
@@ -480,18 +511,42 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             ).only('id')
         )
 
-        if (self.instance.initiator == request.user.organization and
+        if ((self.instance.initiator == request.user.organization and
                 credit_trade_status in draft_propose_statuses and
-                credit_trade_type == sell_type) or \
+                credit_trade_type == sell_type) or
             (self.instance.respondent == request.user.organization and
              credit_trade_status == accepted_status and
-             credit_trade_type == buy_type):
+             credit_trade_type == buy_type)) and \
+                data.get('is_rescinded') is not True:
             if balance < number_of_credits:
                 raise serializers.ValidationError({
-                    'insufficientCredits': "{} does not have enough credits "
-                                           "for the proposal.".format(
-                                               request.user.organization.name)
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
+
+            pending_trades = CreditTrade.objects.filter(
+                (Q(status__status__in=[
+                    "Submitted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Sell") &
+                 Q(initiator_id=request.user.organization_id) &
+                 Q(is_rescinded=False)) |
+                (Q(status__status__in=[
+                    "Accepted", "Recommended", "Not Recommended"
+                ]) &
+                 Q(type__the_type="Buy") &
+                 Q(respondent_id=request.user.organization.id) &
+                 Q(is_rescinded=False))
+            ).aggregate(total_credits=Sum('number_of_credits'))
+
+            if pending_trades['total_credits'] is not None:
+                temp_balance = balance
+                temp_balance -= pending_trades['total_credits']
+                temp_balance -= number_of_credits
+
+                if temp_balance < 0:
+                    raise serializers.ValidationError({
+                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
+                    })
 
         return data
 
@@ -657,7 +712,9 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     def get_comment_actions(self, obj):
         """Attach available commenting actions"""
         request = self.context.get('request')
-        return CreditTradeCommentActions.available_comment_actions(request, obj)
+        return CreditTradeCommentActions.available_comment_actions(
+            request, obj
+        )
 
     def get_comments(self, obj):
         """

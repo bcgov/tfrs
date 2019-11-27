@@ -54,14 +54,14 @@ class CreditTradeService(object):
             #   show "Submitted" and other transactions where the fuel
             #   supplier is the respondent
             credit_trades = CreditTrade.objects.filter((
-                    (
-                            (~Q(status__status__in=[
-                                "Recorded", "Cancelled"]) &
-                             Q(type__is_gov_only_type=False)) |
-                            (Q(status__status__in=[
-                                "Approved", "Declined"]) &
-                             Q(type__is_gov_only_type=True))
-                    ) &
+                    ((~Q(status__status__in=[
+                            "Recorded", "Cancelled"
+                        ]) &
+                      Q(type__is_gov_only_type=False)) |
+                     (Q(status__status__in=[
+                            "Approved", "Declined"
+                        ]) &
+                      Q(type__is_gov_only_type=True))) &
                     ((~Q(status__status__in=["Draft"]) &
                       Q(respondent=organization)) | Q(initiator=organization))
             ))
@@ -215,10 +215,10 @@ class CreditTradeService(object):
                 get_temp_balance(temp_storage, credit_trade.credits_to.id)
 
             from_credits_remaining = from_starting_balance - \
-                                     credit_trade.number_of_credits
+                credit_trade.number_of_credits
 
             to_credits_remaining = to_starting_balance + \
-                                   credit_trade.number_of_credits
+                credit_trade.number_of_credits
 
             CreditTradeService.update_temp_balance(
                 temp_storage,
@@ -236,8 +236,10 @@ class CreditTradeService(object):
                 errors.append(
                     "[ID: {}] "
                     "Can't complete transaction,"
-                    "`{}` has insufficient credits.".
-                        format(credit_trade.id, credit_trade.credits_from.name))
+                    "`{}` has insufficient credits.".format(
+                        credit_trade.id, credit_trade.credits_from.name
+                    )
+                )
 
         if errors:
             raise PositiveIntegerException(errors)
@@ -247,7 +249,7 @@ class CreditTradeService(object):
         """
         Gets the credits of an organization stored in a temporary list
         This allows us to simulate credit transfers without actually
-        needing to write to the database. (e.g. Lets us find out if
+        needing to write to the database. (e.g. Lets find out if
         the organization has enough credits to do the transfer)
         """
         starting_balance = None
