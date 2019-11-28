@@ -47,7 +47,7 @@ class ComplianceReportingStatusHistory extends Component {
       <span>
         {action}
         <span> on </span>
-        {moment(h.createTimestamp).format('LL')}
+        {moment(h.createTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')}
         <span> by </span>
         <strong>{h.user.firstName} {h.user.lastName}</strong>
         {(!roleDisplay || roleDisplay.indexOf('Director') < 0) &&

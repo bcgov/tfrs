@@ -53,4 +53,4 @@ class ComplianceReportHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReportHistory
         fields = ('id', 'compliance_report', 'display_name', 'user',
-                  'status', 'user', 'user_role')
+                  'status', 'user', 'user_role', 'create_timestamp')
