@@ -1,6 +1,6 @@
 {
   "name": "tfrs",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -57,7 +57,7 @@
     "redux-thunk": "^2.3.0",
     "snyk": "^1.161.0",
     "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0",
+    "socket.io-client": "2.2.0",
     "socket.io-middleware": "^0.2.1",
     "webpack": "^4.28.3",
     "winston": "^3.2.1"
