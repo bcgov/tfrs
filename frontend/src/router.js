@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch, withRouter } from 'react-router';
-import { ConnectedRouter } from 'react-router-redux';
+import {Route, Switch, withRouter} from 'react-router';
+import {ConnectedRouter} from 'react-router-redux';
 
 import App from './app/App';
 import history from './app/History';
@@ -72,6 +72,8 @@ import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 import ComplianceReportingEditContainer from './compliance_reporting/ComplianceReportingEditContainer';
+import ComplianceReportingEditRedirector from "./compliance_reporting/ComplianceReportingEditRedirector";
+import ExclusionReportingEditRedirector from "./exclusion_reports/ExclusionReportingEditRedirector";
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -123,11 +125,11 @@ const Router = routerProps => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          render={properties => <OrganizationEditContainer {...properties} mode="add" />}
+          render={properties => <OrganizationEditContainer {...properties} mode="add"/>}
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          render={properties => <OrganizationEditContainer {...properties} mode="edit" />}
+          render={properties => <OrganizationEditContainer {...properties} mode="edit"/>}
         />
         <Route
           exact
@@ -339,6 +341,13 @@ const Router = routerProps => (
             component={withRouter(ComplianceReportingEditContainer)}
           />,
           <Route
+            key="compliance_reporting_edit_redirect"
+            path={COMPLIANCE_REPORTING.EDIT_REDIRECT}
+            exact={false}
+            strict={false}
+            component={withRouter(ComplianceReportingEditRedirector)}
+          />,
+          <Route
             key="compliance_reporting"
             path={COMPLIANCE_REPORTING.LIST}
             exact
@@ -360,6 +369,13 @@ const Router = routerProps => (
             exact={false}
             strict={false}
             component={withRouter(ExclusionReportEditContainer)}
+          />,
+          <Route
+            key="exclusion_reporting_edit_redirect"
+            path={EXCLUSION_REPORTS.EDIT_REDIRECT}
+            exact={false}
+            strict={false}
+            component={withRouter(ExclusionReportingEditRedirector)}
           />
         ]}
         <Route
@@ -367,7 +383,7 @@ const Router = routerProps => (
           exact
           component={withRouter(DashboardContainer)}
         />
-        <Route component={NotFound} />
+        <Route component={NotFound}/>
       </Switch>
     </App>
   </ConnectedRouter>

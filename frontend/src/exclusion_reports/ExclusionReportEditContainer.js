@@ -27,6 +27,7 @@ import ExclusionReportChangelogContainer from './ExclusionReportChangelogContain
 import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
+import EXCLUSION_REPORTS from "../constants/routes/ExclusionReports";
 
 class ExclusionReportEditContainer extends Component {
   static componentForTabName (tab) {
@@ -155,7 +156,7 @@ class ExclusionReportEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved();
         toastr.exclusionReports('Supplemental Created');
-        history.push(COMPLIANCE_REPORTING.LIST);
+        history.push(EXCLUSION_REPORTS.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
       }
     }
   }
@@ -538,7 +539,8 @@ ExclusionReportEditContainer.propTypes = {
     isCreating: PropTypes.bool,
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool,
-    success: PropTypes.bool
+    success: PropTypes.bool,
+    item: PropTypes.object
   }),
   exclusionReports: PropTypes.shape({
     isGetting: PropTypes.bool,
@@ -621,7 +623,8 @@ const
       success: state.rootReducer.complianceReporting.success,
       errorMessage: state.rootReducer.complianceReporting.errorMessage,
       snapshot: state.rootReducer.complianceReporting.snapshotItem,
-      snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot
+      snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot,
+      item: state.rootReducer.complianceReporting.item
     },
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
