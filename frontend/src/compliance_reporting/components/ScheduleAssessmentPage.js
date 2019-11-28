@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
+import {formatNumeric} from "../../utils/functions";
+
 
 const ScheduleAssessmentPage = props => (
   <div className="schedule-assessment">
@@ -62,7 +64,7 @@ const ScheduleAssessmentPage = props => (
           <p key={transaction.id}>
             A
             <strong>
-              {` validation of ${Number(transaction.credits)} credit(s) `}
+              {` validation of ${formatNumeric(Number(transaction.credits), 0)} credit(s) `}
             </strong>
             in accordance with section 8 (8) of the
             <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
@@ -80,7 +82,7 @@ const ScheduleAssessmentPage = props => (
           <p key={transaction.id}>
             A
             <strong>
-              {` validation of ${Number(transaction.credits)} credit(s) `}
+              {` validation of ${formatNumeric(Number(transaction.credits), 0)} credit(s) `}
             </strong>
             in accordance with section 8 (8) of the
             <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
@@ -97,7 +99,7 @@ const ScheduleAssessmentPage = props => (
         return (
           <p key={transaction.id}>
             <strong> {props.snapshot.organization.name} </strong> applied
-            {` ${Number(props.snapshot.summary.lines[26])} `}
+            {` ${formatNumeric(Number(props.snapshot.summary.lines[26]), 0)} `}
             {` credit(s) to `}
             {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
             {` offset a net debit balance in the `}
@@ -109,7 +111,7 @@ const ScheduleAssessmentPage = props => (
       if (transaction.type === 'Credit Reduction' && transaction.supplemental) {
         return (
           <p key={transaction.id}>
-            A <strong>reduction of {Number(transaction.credits)} credit(s)</strong> to
+            A <strong>reduction of {formatNumeric(Number(transaction.credits), 0)} credit(s)</strong> to
             either offset a net debit balance or to correct a discrepancy in previous
             reporting for the
             {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
@@ -123,7 +125,7 @@ const ScheduleAssessmentPage = props => (
     <p>
       There were
       <strong>
-        {` ${Number(props.snapshot.summary.lines[27]) * -1} `}
+        {` ${formatNumeric(Number(props.snapshot.summary.lines[27]) * -1, 0)} `}
         {` outstanding debits `}
       </strong>
       subject to an administrative penalty under section 10 of the
