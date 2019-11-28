@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import {formatNumeric} from "../../utils/functions";
-
+import { formatNumeric } from '../../utils/functions';
 
 const ScheduleAssessmentPage = props => (
   <div className="schedule-assessment">
