@@ -5,6 +5,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import DeltasDisplay from './components/ReportHistory';
 import Loading from '../app/components/Loading';
 
@@ -58,6 +60,24 @@ class ChangelogContainer extends Component {
     return (<Loading />);
   }
 }
+
+ChangelogContainer.defaultProps = {
+  isValidating: false,
+  recomputing: false,
+  recomputedTotals: null,
+  snapshot: null
+};
+
+ChangelogContainer.propTypes = {
+  complianceReport: PropTypes.shape({
+    hasSnapshot: PropTypes.bool
+  }).isRequired,
+  isValidating: PropTypes.bool,
+  recomputeRequest: PropTypes.func.isRequired,
+  recomputing: PropTypes.bool,
+  recomputedTotals: PropTypes.shape(),
+  snapshot: PropTypes.shape()
+};
 
 const mapStateToProps = state => ({});
 const mapDispatchToProps = {};

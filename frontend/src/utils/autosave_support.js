@@ -47,9 +47,9 @@ function autosaved (config) {
         const s = this.state;
         if (config.customPathGenerator) {
           return `autosave-${s.name}:${s.key}:${s.version}:${config.customPathGenerator(this.props)}`;
-        } else {
-          return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`;
         }
+
+        return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`;
       }
 
       invalidateAutosaved () {

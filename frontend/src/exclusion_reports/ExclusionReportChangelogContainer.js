@@ -7,11 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { complianceReporting } from '../actions/complianceReporting';
-import ExclusionReportStatusHistory from './components/ExclusionReportStatusHistory';
-import ExclusionReportSnapshotDisplay from './components/ExclusionReportSnapshotDisplay';
-
-import Loading from '../app/components/Loading';
-import ReportHistory from "./components/ReportHistory";
+import ReportHistory from './components/ReportHistory';
 
 class ExclusionReportChangelogContainer extends Component {
   componentDidMount () {
@@ -19,11 +15,11 @@ class ExclusionReportChangelogContainer extends Component {
 
   render () {
     return (
-        <ReportHistory
-          deltas={this.props.exclusionReport.deltas}
-          exclusionReport={this.props.exclusionReport}
-          snapshot={this.props.snapshot}
-        />
+      <ReportHistory
+        deltas={this.props.exclusionReport.deltas}
+        exclusionReport={this.props.exclusionReport}
+        snapshot={this.props.snapshot}
+      />
     );
   }
 }
