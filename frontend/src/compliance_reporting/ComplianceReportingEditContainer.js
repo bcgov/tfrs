@@ -3,15 +3,15 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { toastr as reduxToastr } from 'react-redux-toastr';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {toastr as reduxToastr} from 'react-redux-toastr';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
-import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
+import {addSigningAuthorityConfirmation} from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
-import { complianceReporting } from '../actions/complianceReporting';
+import {complianceReporting} from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
 import AddressBuilder from '../app/components/AddressBuilder';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
@@ -34,7 +34,7 @@ import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 
 class ComplianceReportingEditContainer extends Component {
-  static cleanSummaryValues (summary) {
+  static cleanSummaryValues(summary) {
     return {
       ...summary,
       creditsOffset: Number(summary.creditsOffset),
@@ -49,7 +49,7 @@ class ComplianceReportingEditContainer extends Component {
     };
   }
 
-  static componentForTabName (tab) {
+  static componentForTabName(tab) {
     let TabComponent;
 
     switch (tab) {
@@ -92,10 +92,10 @@ class ComplianceReportingEditContainer extends Component {
     return TabComponent;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.tabComponent = Loading;
-    const { tab } = props.match.params;
+    const {tab} = props.match.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     this.status = {
       fuelSupplierStatus: 'Draft'
@@ -130,7 +130,7 @@ class ComplianceReportingEditContainer extends Component {
     this._validate = this._validate.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.getSigningAuthorityAssertions({
       module: 'compliance_report'
     });
@@ -143,19 +143,19 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    const { tab } = nextProps.match.params;
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {tab} = nextProps.match.params;
 
     if (tab !== this.props.match.params.tab) {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
-      const { id } = this.props.match.params;
+      const {id} = this.props.match.params;
 
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
-        const { schedules } = this.state;
+        const {schedules} = this.state;
 
         if (schedules.summary && schedules.summary.dieselClassDeferred) {
           schedules.summary.dieselClassDeferred =
@@ -214,7 +214,8 @@ class ComplianceReportingEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved();
         toastr.complianceReporting('Supplemental Created');
-        history.push(COMPLIANCE_REPORTING.LIST);
+        history.push(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
+
       }
     }
 
@@ -249,10 +250,10 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _updateScheduleState (_mergedState) {
+  _updateScheduleState(_mergedState) {
     const mergedState = _mergedState;
-    const { schedules } = this.state;
-    const { id } = this.props.match.params;
+    const {schedules} = this.state;
+    const {id} = this.props.match.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
 
     if (schedules.summary && schedules.summary.dieselClassDeferred) {
@@ -345,11 +346,11 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleDelete () {
-    this.props.deleteComplianceReport({ id: this.props.match.params.id });
+  _handleDelete() {
+    this.props.deleteComplianceReport({id: this.props.match.params.id});
   }
 
-  _handleCreateSupplemental (event, compliancePeriodDescription) {
+  _handleCreateSupplemental(event, compliancePeriodDescription) {
     this.setState({
       createSupplementalCalled: true
     });
@@ -364,8 +365,8 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _addToFields (value) {
-    const { terms } = this.state;
+  _addToFields(value) {
+    const {terms} = this.state;
 
     const found = terms.find(term => term.id === value.id);
 
@@ -378,8 +379,8 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _toggleCheck (key) {
-    const { terms } = this.state;
+  _toggleCheck(key) {
+    const {terms} = this.state;
     const index = terms.findIndex(term => term.id === key);
     terms[index].value = !terms[index].value;
 
@@ -388,13 +389,13 @@ class ComplianceReportingEditContainer extends Component {
     });
   }
 
-  _handleSupplementalNoteUpdate (event) {
+  _handleSupplementalNoteUpdate(event) {
     this.setState({
       supplementalNote: event.target.value
     });
   }
 
-  _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
+  _handleSubmit(event, status = {fuelSupplierStatus: 'Draft'}) {
     // patch existing
     const payload = {
       status,
@@ -408,7 +409,7 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     if (payload.summary) {
-      const { summary } = payload;
+      const {summary} = payload;
 
       payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
     }
@@ -437,15 +438,15 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _handleRecomputeRequest () {
-    const { schedules } = this.state;
+  _handleRecomputeRequest() {
+    const {schedules} = this.state;
 
-    const { id } = this.props.match.params;
+    const {id} = this.props.match.params;
 
     if (!this.props.complianceReporting.validationMessages ||
       Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
 
-      const { summary } = schedules;
+      const {summary} = schedules;
 
       if (summary && !summary.dieselClassDeferred) {
         summary.dieselClassDeferred = 0;
@@ -495,17 +496,17 @@ class ComplianceReportingEditContainer extends Component {
     }
   }
 
-  _showPenaltyWarning (bool) {
+  _showPenaltyWarning(bool) {
     this.setState({
       ...this.state,
       showPenaltyWarning: bool
     });
   }
 
-  _validate (_payload) {
+  _validate(_payload) {
     const payload = _payload;
     if (payload.state && payload.state.summary) {
-      const { summary } = payload.state;
+      const {summary} = payload.state;
 
       payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
     }
@@ -513,21 +514,21 @@ class ComplianceReportingEditContainer extends Component {
     return this.props.validateComplianceReport(payload);
   }
 
-  render () {
+  render() {
     const TabComponent = this.tabComponent;
 
-    const { tab, id } = this.props.match.params;
+    const {tab, id} = this.props.match.params;
 
     if (!this.state.getCalled) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     if (this.props.complianceReporting.isGetting) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     let period = null;
@@ -542,10 +543,10 @@ class ComplianceReportingEditContainer extends Component {
     if (this.props.complianceReporting.item.hasSnapshot &&
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
-      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
+      ({organizationAddress} = this.props.complianceReporting.snapshot.organization);
     } else if (this.props.loggedInUser.organization.organizationAddress &&
       !this.props.loggedInUser.isGovernmentUser) {
-      ({ organizationAddress } = this.props.loggedInUser.organization);
+      ({organizationAddress} = this.props.loggedInUser.organization);
     }
 
     return ([
@@ -560,14 +561,14 @@ class ComplianceReportingEditContainer extends Component {
       </h2>,
       <p key="organization-address">
         {organizationAddress &&
-          AddressBuilder({
-            address_line_1: organizationAddress.addressLine_1,
-            address_line_2: organizationAddress.addressLine_2,
-            address_line_3: organizationAddress.addressLine_3,
-            city: organizationAddress.city,
-            state: organizationAddress.state,
-            postal_code: organizationAddress.postalCode
-          })
+        AddressBuilder({
+          address_line_1: organizationAddress.addressLine_1,
+          address_line_2: organizationAddress.addressLine_2,
+          address_line_3: organizationAddress.addressLine_3,
+          city: organizationAddress.city,
+          state: organizationAddress.state,
+          postal_code: organizationAddress.postalCode
+        })
         }
       </p>,
       <ScheduleTabs
@@ -619,56 +620,56 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental' })}
+        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Requested Supplemental'})}
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
       >
         Are you sure you want to request a supplemental compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Recommended' })}
+        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Recommended'})}
         id="confirmAnalystRecommendAcceptance"
         key="confirmAnalystRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Not Recommended' })}
+        handleSubmit={event => this._handleSubmit(event, {analystStatus: 'Not Recommended'})}
         id="confirmAnalystRecommendRejection"
         key="confirmAnalystRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Requested Supplemental' })}
+        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Requested Supplemental'})}
         id="confirmManagerRequestSupplemental"
         key="confirmManagerRequestSupplemental"
       >
         Are you sure you want to request a supplemental compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Recommended' })}
+        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Recommended'})}
         id="confirmManagerRecommendAcceptance"
         key="confirmManagerRecommendAcceptance"
       >
         Are you sure you want to recommend acceptance of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { managerStatus: 'Not Recommended' })}
+        handleSubmit={event => this._handleSubmit(event, {managerStatus: 'Not Recommended'})}
         id="confirmManagerRecommendRejection"
         key="confirmManagerRecommendRejection"
       >
         Are you sure you want to recommend rejection of the compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Rejected' })}
+        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Rejected'})}
         id="confirmDirectorReject"
         key="confirmDirectorReject"
       >
         Are you sure you want to reject this compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleSubmit(event, { directorStatus: 'Accepted' })}
+        handleSubmit={event => this._handleSubmit(event, {directorStatus: 'Accepted'})}
         id="confirmDirectorAccept"
         key="confirmDirectorAccept"
       >
@@ -693,24 +694,24 @@ class ComplianceReportingEditContainer extends Component {
           (this.state.supplementalNote.trim().length === 0)) ||
         (this.state.terms.filter(term => term.value === true).length <
           this.props.signingAuthorityAssertions.items.length)}
-        handleSubmit={event => this._handleSubmit(event, { fuelSupplierStatus: 'Submitted' })}
+        handleSubmit={event => this._handleSubmit(event, {fuelSupplierStatus: 'Submitted'})}
         id="confirmSubmit"
         key="confirmSubmit"
         title="Signing Authority Declaration"
         tooltipMessage="Please complete the Signing Authority declaration."
       >
         {this.state.showPenaltyWarning &&
-          <div className="alert alert-warning">
-            <p>
-              Based on the information contained within this report, your organization is not
-              compliant with the Part 2 and/or the Part 3 requirements.
-            </p>
-            <p>
-              Please be advised that payment of penalties must be submitted to the
-              Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
-              are to be made payable to the Minister of Finance.
-            </p>
-          </div>
+        <div className="alert alert-warning">
+          <p>
+            Based on the information contained within this report, your organization is not
+            compliant with the Part 2 and/or the Part 3 requirements.
+          </p>
+          <p>
+            Please be advised that payment of penalties must be submitted to the
+            Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
+            are to be made payable to the Minister of Finance.
+          </p>
+        </div>
         }
         <div id="signing-assertions">
           <h2>I, {this.props.loggedInUser.displayName}{this.props.loggedInUser.title ? `, ${this.props.loggedInUser.title}` : ''}:</h2>
@@ -735,7 +736,7 @@ class ComplianceReportingEditContainer extends Component {
           ))}
           {this.state.supplementalNoteRequired &&
           <div>
-            <hr />
+            <hr/>
             <label htmlFor="supplementalReasonInput">
               Supplemental Report Reason (Required)
             </label>
@@ -750,7 +751,7 @@ class ComplianceReportingEditContainer extends Component {
               placeholder="Use this field to provide a brief explanation for the supplemental report."
               required
             />
-            <hr />
+            <hr/>
           </div>
           }
           Are you sure you want to submit this Compliance Report to the
