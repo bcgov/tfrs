@@ -62,8 +62,6 @@ class ChangelogContainer extends Component {
 }
 
 ChangelogContainer.defaultProps = {
-  isValidating: false,
-  recomputing: false,
   recomputedTotals: null,
   snapshot: null
 };
@@ -72,9 +70,9 @@ ChangelogContainer.propTypes = {
   complianceReport: PropTypes.shape({
     hasSnapshot: PropTypes.bool
   }).isRequired,
-  isValidating: PropTypes.bool,
+  isValidating: PropTypes.bool.isRequired,
   recomputeRequest: PropTypes.func.isRequired,
-  recomputing: PropTypes.bool,
+  recomputing: PropTypes.bool.isRequired,
   recomputedTotals: PropTypes.shape(),
   snapshot: PropTypes.shape()
 };
