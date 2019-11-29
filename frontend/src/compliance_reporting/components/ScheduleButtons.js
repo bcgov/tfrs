@@ -79,16 +79,6 @@ const ScheduleButtons = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
-      {props.actions.includes('CREATE_SUPPLEMENTAL') &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmCreateSupplemental"
-        data-toggle="modal"
-        type="button"
-      >
-        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
-      </button>
-      }
       {props.actions.includes('DELETE') &&
       <button
         className="btn btn-danger"
@@ -97,6 +87,35 @@ const ScheduleButtons = props => (
         type="button"
       >
         <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+      </button>
+      }
+      <button
+        className="btn btn-info"
+        id="download-report"
+        type="button"
+        onClick={(e) => {
+          const element = e.target;
+          const original = element.innerHTML;
+
+          element.firstChild.textContent = ' Downloading...';
+
+          const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
+
+          return download(url).then(() => {
+            element.innerHTML = original;
+          });
+        }}
+      >
+        <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+      </button>
+      {props.actions.includes('CREATE_SUPPLEMENTAL') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmCreateSupplemental"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
       </button>
       }
       {props.actions.includes('SUBMIT') && [
@@ -227,25 +246,6 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="check" /> {Lang.BTN_ACCEPT}
       </button>
       }
-      <button
-        className="btn btn-info"
-        id="download-report"
-        type="button"
-        onClick={(e) => {
-          const element = e.target;
-          const original = element.innerHTML;
-
-          element.firstChild.textContent = ' Downloading...';
-
-          const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
-
-          return download(url).then(() => {
-            element.innerHTML = original;
-          });
-        }}
-      >
-        <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
-      </button>
     </div>
   </div>
 );
