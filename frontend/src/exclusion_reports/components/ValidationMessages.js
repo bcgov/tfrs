@@ -79,7 +79,6 @@ class ValidationMessages extends Component {
           errorCount -= 1;
         }
 
-
         if ('quantityNotSold' in record) {
           const message = 'The quantity of fuel not sold cannot be negative, contain a decimal value, or be greater than the quantity.';
 
@@ -89,7 +88,6 @@ class ValidationMessages extends Component {
 
           errorCount -= 1;
         }
-
 
         // if we still have errors after checking
         // that means we're missing some columns (it's very tedious and unnecessary to check each

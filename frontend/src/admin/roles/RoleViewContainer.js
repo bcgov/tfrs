@@ -26,7 +26,7 @@ class RoleViewContainer extends Component {
 
   render () {
     return (
-      <RoleDetails role={this.props.role}/>
+      <RoleDetails role={this.props.role} />
     );
   }
 }
@@ -62,7 +62,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getRole: roles.get,
+  getRole: roles.get
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoleViewContainer);

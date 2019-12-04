@@ -211,6 +211,7 @@ const ExclusionReportButtons = props => (
 ExclusionReportButtons.defaultProps = {
   actions: [],
   actor: '',
+  id: null,
   validating: false,
   valid: true,
   validationMessages: {}

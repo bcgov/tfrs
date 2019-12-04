@@ -3,20 +3,20 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import moment from 'moment-timezone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class SnapshotDisplay extends Component {
-  static decimalViewer(digits = 2) {
+  static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
-  static buildExclusionAgreement(snapshot) {
+  static buildExclusionAgreement (snapshot) {
     const grid = [
       [{
         className: 'header underlined',
@@ -93,26 +93,26 @@ class SnapshotDisplay extends Component {
     return grid;
   }
 
-  render() {
-    const {snapshot} = this.props;
+  render () {
+    const { snapshot } = this.props;
 
     return (
       <div className="snapshot">
 
         {this.props.computedWarning &&
         <div className="panel panel-warning">
-          <FontAwesomeIcon icon="exclamation-triangle"/>Showing a live view of the data, not a snapshot.
+          <FontAwesomeIcon icon="exclamation-triangle" />Showing a live view of the data, not a snapshot.
         </div>
         }
         {this.props.dirtyWarning &&
         <div className="panel panel-warning">
-          <FontAwesomeIcon icon="exclamation-triangle"/>Showing the data as at last save. If you have made changes, they
+          <FontAwesomeIcon icon="exclamation-triangle" />Showing the data as at last save. If you have made changes, they
           will not be reflected until you save.
         </div>
         }
         {(snapshot.supplementalNote && snapshot.supplementalNote.length > 0) &&
-        <div className={'panel panel-default'}>
-          <div className={'panel-heading'}>
+        <div className="panel panel-default">
+          <div className="panel-heading">
             Supplemental Submission Explanation
           </div>
           <div
@@ -124,17 +124,18 @@ class SnapshotDisplay extends Component {
         </div>
         }
 
-        {this.props.showHeaders && <div>
+        {this.props.showHeaders &&
+        <div>
           <h1>Exclusion Report for {this.props.snapshot.compliancePeriod.description}</h1>
           <h3>{this.props.snapshot.organization.name}</h3>
           <h3>Submitted: {moment(this.props.snapshot.timestamp).format('YYYY-MM-DD')}</h3>
 
-          <hr/>
+          <hr />
         </div>}
         {snapshot.exclusionAgreement &&
         <div>
           <h1 className="schedule-header">Exclusion Agreement</h1>
-          <hr/>
+          <hr />
           <ReactDataSheet
             className="spreadsheet exclusion-agreement"
             data={SnapshotDisplay.buildExclusionAgreement(snapshot)}

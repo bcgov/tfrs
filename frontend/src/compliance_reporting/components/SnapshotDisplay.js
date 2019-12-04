@@ -871,8 +871,8 @@ class SnapshotDisplay extends Component {
         }
         <div>
           {(snapshot.supplementalNote && snapshot.supplementalNote.length > 0) &&
-          <div className={'panel panel-default'}>
-            <div className={'panel-heading'}>
+          <div className="panel panel-default">
+            <div className="panel-heading">
               Supplemental Submission Explanation
             </div>
             <div

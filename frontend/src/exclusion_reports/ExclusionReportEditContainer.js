@@ -27,7 +27,7 @@ import ExclusionReportChangelogContainer from './ExclusionReportChangelogContain
 import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
-import EXCLUSION_REPORTS from "../constants/routes/ExclusionReports";
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 
 class ExclusionReportEditContainer extends Component {
   static componentForTabName (tab) {

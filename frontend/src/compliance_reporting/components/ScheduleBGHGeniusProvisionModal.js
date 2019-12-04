@@ -61,7 +61,7 @@ class ScheduleBGHGeniusProvisionModal extends React.Component {
       </Modal>
     );
   }
-};
+}
 
 ScheduleBGHGeniusProvisionModal.defaultProps = {
   matchFuelType: null,

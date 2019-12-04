@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 const ExclusionAgreementPage = props => (
   <div className="spreadsheet-component">
@@ -93,7 +93,7 @@ ExclusionAgreementPage.propTypes = {
   validating: PropTypes.bool,
   valid: PropTypes.bool,
   validationMessages: PropTypes.shape(),
-  scheduleType: PropTypes.string,
+  scheduleType: PropTypes.string
 };
 
 export default ExclusionAgreementPage;

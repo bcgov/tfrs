@@ -3,23 +3,23 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Loading from '../app/components/Loading';
 import ScheduleAssessmentPage from './components/ScheduleAssessmentPage';
 
 class ScheduleAssessmentContainer extends Component {
-  componentDidMount() {
+  componentDidMount () {
   }
 
-  render() {
-    if (this.props.snapshotIsLoading
-      || !this.props.snapshot
-      || !this.props.snapshot.summary
-      || !this.props.complianceReport) {
-      return <Loading/>;
+  render () {
+    if (this.props.snapshotIsLoading ||
+      !this.props.snapshot ||
+      !this.props.snapshot.summary ||
+      !this.props.complianceReport) {
+      return <Loading />;
     }
 
     let part2Compliant = 'Did not supply Part 2 fuel';

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import Loading from '../../app/components/Loading';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Loading from '../../app/components/Loading';
+
 import ComplianceReportingService from './ComplianceReportingService';
 
 function getDisplayName (WrappedComponent) {
