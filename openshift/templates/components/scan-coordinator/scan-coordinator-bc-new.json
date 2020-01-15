@@ -1,0 +1,64 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "scan-coordinator-bc-new",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "TFRS_RELEASE_TAG",
+            "description": "The tag name for this release, sample value: v1.3.4",
+            "required": true
+        },
+        {
+            "name": "SCAN_COORDINATOR_IS_NAME",
+            "description": "The scan coordinator image stream name, valid values: scan_coordinator and scan_coordinator_develop",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "scan-coordinator-develop-new",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "${TFRS_RELEASE_TAG}"
+                    },
+                    "contextDir": "security-scan/scan-coordinator"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${SCAN_COORDINATOR_IS_NAME}:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
