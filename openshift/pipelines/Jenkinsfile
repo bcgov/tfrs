@@ -58,10 +58,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
                 resourceLimitCpu: '2000m',
                 resourceRequestMemory: '2Gi',
                 resourceLimitMemory: '6Gi',
-                workingDir: '/home/jenkins',
-                activeDeadlineSeconds: 3600,
-                slaveConnectTimeout: 3600,
-                timeoutSeconds: 3600,                  
+                workingDir: '/home/jenkins',             
                 command: '',
                 args: '${computer.jnlpmac} ${computer.name}'
             )
