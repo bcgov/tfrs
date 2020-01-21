@@ -45,7 +45,7 @@ const ExclusionReportTabs = (props) => {
         className={`${(props.active === 'exclusion-agreement') && 'active'}`}
       >
         <Link id="navbar-administration" to={urls.exclusionAgreement}>
-          Exclusion Agreement
+          Exclusion Agreements
         </Link>
       </li>
       {showAssessment &&

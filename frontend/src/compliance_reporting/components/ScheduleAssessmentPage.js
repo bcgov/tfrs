@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import { formatNumeric } from '../../utils/functions';
 
 const ScheduleAssessmentPage = props => (
@@ -11,8 +10,8 @@ const ScheduleAssessmentPage = props => (
       complianceReport={props.complianceReport}
       hideChangelogs
     />
-
-    {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.APPROVE) &&
+    {['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0 &&
+    props.complianceReport.status.directorStatus === 'Unreviewed' &&
     <h2>
       Upon acceptance the following information will become visible to
       {` ${props.snapshot.organization.name} `}

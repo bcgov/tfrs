@@ -207,7 +207,7 @@ class ExclusionAgreementContainer extends Component {
         readOnly: true,
         value: this.rowNumber
       }, {
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => !this.props.transactionTypes.isFetching &&
           this.props.transactionTypes.items,
@@ -216,7 +216,7 @@ class ExclusionAgreementContainer extends Component {
           value: 'theType'
         }
       }, { // fuel type
-        className: 'text',
+        className: 'text dropdown-indicator',
         dataEditor: Select,
         getOptions: () => this.props.referenceData.approvedFuels.filter(fuel => (
           fuel.creditCalculationOnly === false
