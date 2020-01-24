@@ -458,7 +458,7 @@ class ExclusionAgreementContainer extends Component {
         exclusionReport={this.props.exclusionReport}
         handleCellsChanged={this._handleCellsChanged}
         key="spreadsheet"
-        title="Exclusion Report"
+        title="Exclusion Agreements"
         totals={this.state.totals}
         valid={this.props.valid !== false}
         validating={this.props.validating}

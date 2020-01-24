@@ -10,7 +10,8 @@ const ScheduleAssessmentPage = props => (
       complianceReport={props.complianceReport}
       hideChangelogs
     />
-    {['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0 &&
+    {(props.complianceReport.status.analystStatus === 'Recommended' ||
+    props.complianceReport.status.managerStatus === 'Recommended') &&
     props.complianceReport.status.directorStatus === 'Unreviewed' &&
     <h2>
       Upon acceptance the following information will become visible to
@@ -56,7 +57,7 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {props.complianceReport.creditTransactions.map((transaction) => {
+    {props.complianceReport.creditTransactions && props.complianceReport.creditTransactions.map((transaction) => {
       if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
         return (
           <p key={transaction.id}>
