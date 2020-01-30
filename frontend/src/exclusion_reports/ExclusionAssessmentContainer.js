@@ -16,9 +16,9 @@ const ExclusionAssessmentContainer = (props) => {
 
   return (
     <ExclusionAssessmentPage
-      exclusionReport={this.props.exclusionReport}
-      loggedInUser={this.props.loggedInUser}
-      snapshot={this.props.snapshot}
+      exclusionReport={props.exclusionReport}
+      loggedInUser={props.loggedInUser}
+      snapshot={props.snapshot}
     />
   );
 };

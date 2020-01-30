@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import { formatNumeric } from '../../utils/functions';
 
 const ScheduleAssessmentPage = props => (
@@ -11,8 +10,9 @@ const ScheduleAssessmentPage = props => (
       complianceReport={props.complianceReport}
       hideChangelogs
     />
-
-    {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.APPROVE) &&
+    {(props.complianceReport.status.analystStatus === 'Recommended' ||
+    props.complianceReport.status.managerStatus === 'Recommended') &&
+    props.complianceReport.status.directorStatus === 'Unreviewed' &&
     <h2>
       Upon acceptance the following information will become visible to
       {` ${props.snapshot.organization.name} `}
@@ -57,7 +57,7 @@ const ScheduleAssessmentPage = props => (
       for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
     </p>
 
-    {props.complianceReport.creditTransactions.map((transaction) => {
+    {props.complianceReport.creditTransactions && props.complianceReport.creditTransactions.map((transaction) => {
       if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
         return (
           <p key={transaction.id}>
