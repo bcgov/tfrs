@@ -1,8 +1,7 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.6.10"
+tfrsRelease="v1.6.11"
 
-/**** comment out as jenkins agent issue
 podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -47,7 +46,6 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
-******/
         
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
