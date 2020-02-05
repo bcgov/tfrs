@@ -102,12 +102,18 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         for _kid, key in keys:
             try:
+                print("key=", key)
+                print("token=", token)
+                print("audience=", settings.KEYCLOAK['AUDIENCE'])
+                print("issuer=", settings.KEYCLOAK['ISSUER'])
                 user_token = jwt.decode(token,
                                         key=str(key),
                                         audience=settings.KEYCLOAK['AUDIENCE'],
                                         issuer=settings.KEYCLOAK['ISSUER'])
+                print("user_token=", user_token)
                 break
             except InvalidTokenError as error:
+                print("error=", error)
                 token_validation_errors.append(error)
 
         if not user_token:
