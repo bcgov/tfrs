@@ -26,7 +26,7 @@ class ScheduleAssessmentContainer extends Component {
       mostRecentlyReviewed = this.props.complianceReport.snapshot;
     } else if (this.props.complianceReport && this.props.complianceReport.history) {
 
-      const historyEntry = this.props.complianceReport.history.slice().reverse().find(h =>
+      const historyEntry = this.props.complianceReport.history.find(h =>
         (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
       if (historyEntry) {
 
