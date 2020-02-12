@@ -122,7 +122,7 @@ class ComplianceReportingStatusHistory extends Component {
                   </span>
                   <ul>
                     <li>
-                      {`${currentDelta.delta.length} records changed`}
+                      {`${currentDelta.delta.length > 0 ? 'records changed':'no changes recorded'}`}
                     </li>
                   </ul>
                 </div>
