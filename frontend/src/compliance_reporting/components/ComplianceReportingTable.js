@@ -49,14 +49,19 @@ class ComplianceReportingTable extends Component {
       accessor: item => (item.displayName),
       className: 'col-displayname',
       Header: 'Display Name',
-      id: 'displayname',
+      id: 'displayname'
+    }, {
+      accessor: item => (item.type),
+      className: 'col-type text-center',
+      Header: 'Report Type',
+      id: 'type',
       minWidth: 75
     }, {
       accessor: ComplianceReportStatus,
       className: 'col-status',
       Header: 'Original Status',
       id: 'status',
-      minWidth: 75
+      minWidth: 100
     }, {
       accessor: (item) => {
         if (item.supplementalReports == null || item.supplementalReports.length === 0) {
@@ -72,7 +77,7 @@ class ComplianceReportingTable extends Component {
       className: 'col-supplemental-status',
       Header: 'Supplemental Status',
       id: 'supplemental-status',
-      minWidth: 75
+      minWidth: 100
     }, {
       accessor: (item) => {
         let report = item;
@@ -91,13 +96,13 @@ class ComplianceReportingTable extends Component {
       className: 'col-status',
       Header: 'Current Status',
       id: 'current-status',
-      minWidth: 75
+      minWidth: 100
     }, {
       accessor: item => (item.sortDate ? item.sortDate : null),
       className: 'col-date',
       Header: 'Last Updated On',
       id: 'updateTimestamp',
-      minWidth: 95,
+      minWidth: 75,
       filterMethod: (filter, row) => {
         const displayedValue = row.updateTimestamp
           ? moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';

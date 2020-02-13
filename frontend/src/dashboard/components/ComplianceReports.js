@@ -79,7 +79,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Compliance Report'
                 }, {
                   id: 'current-status',
@@ -100,7 +100,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Compliance Report'
                 }, {
                   id: 'current-status',
@@ -121,7 +121,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Compliance Report'
                 }, {
                   id: 'current-status',
@@ -152,7 +152,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Exclusion Report'
                 }, {
                   id: 'current-status',
@@ -173,7 +173,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Exclusion Report'
                 }, {
                   id: 'current-status',
@@ -194,7 +194,7 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'displayname',
+                  id: 'type',
                   value: 'Exclusion Report'
                 }, {
                   id: 'current-status',
