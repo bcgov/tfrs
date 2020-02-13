@@ -6,12 +6,82 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import ReactJson from 'react-json-view';
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
-import ScheduleDeltas, { SummaryDelta } from './ScheduleDeltas';
 import SnapshotDisplay from './SnapshotDisplay';
 
 const Delta = (props) => {
+  const valueRenderer = (row) => {
+    if (row.value === null) {
+      return (<em>null</em>);
+    }
+
+    if (row.value instanceof Object) {
+      return (
+        <ReactJson
+          src={row.value}
+          theme="grayscale:inverted"
+          iconStyle="triangle"
+          style={{
+            fontFamily: ['Source Code Pro', 'monospace'],
+            fontSize: '10px'
+          }}
+          displayDataTypes={false}
+          enableClipboard={false}
+          sortKeys
+        />
+      );
+    }
+
+    return (<span>{row.value}</span>);
+  };
+
+  const columns = [{
+    id: 'field',
+    Header: 'Field',
+    accessor: (item) => {
+      let result;
+      if (Number.isInteger(item.field)) {
+        result = `[${item.field}]`;
+      } else {
+        result = `.${item.field}`;
+      }
+      if (item.path !== null && item.path !== '') {
+        return item.path + result;
+      }
+
+      return item.field;
+    }
+  }, {
+    id: 'action',
+    Header: 'Action',
+    accessor: item => (item.action)
+  }, {
+    id: 'oldvalue',
+    Header: 'Old Value',
+    accessor: item => (item.oldValue),
+    Cell: valueRenderer
+  }, {
+    id: 'newvalue',
+    Header: 'New Value',
+    accessor: item => (item.newValue),
+    Cell: valueRenderer
+  }, {
+    id: 'delta',
+    Header: 'Delta',
+    accessor: (item) => {
+      const ov = Number.parseFloat(item.oldValue);
+      const nv = Number.parseFloat(item.newValue);
+
+      if (Number.isNaN(ov) || Number.isNaN(nv)) {
+        return 'N/A';
+      }
+
+      return nv - ov;
+    }
+  }];
 
   let content = null;
 
@@ -27,7 +97,15 @@ const Delta = (props) => {
       break;
     case 'delta':
       content = (
-        <ScheduleDeltas deltas={props.delta} />
+        (props.delta.length === 0) &&
+        <p>No changes</p> ||
+        <ReactTable
+          columns={columns}
+          data={props.delta}
+          filterable
+          sortable
+          defaultPageSize={props.delta.length}
+        />
       );
       break;
     default:
@@ -73,7 +151,7 @@ Current.propTypes = {
 };
 
 class ReportHistory extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       activeReport: -1,
@@ -82,14 +160,14 @@ class ReportHistory extends Component {
     this.handleHistorySelection = this.handleHistorySelection.bind(this);
   }
 
-  handleHistorySelection(id, tab) {
+  handleHistorySelection (id, tab) {
     this.setState({
       activeReport: id,
       activeTab: tab
     });
   }
 
-  render() {
+  render () {
     const { deltas } = this.props;
     const { activeReport, activeTab } = this.state;
 
