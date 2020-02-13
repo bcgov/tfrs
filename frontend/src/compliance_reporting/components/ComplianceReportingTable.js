@@ -54,7 +54,7 @@ class ComplianceReportingTable extends Component {
     }, {
       accessor: ComplianceReportStatus,
       className: 'col-status',
-      Header: 'Status',
+      Header: 'Original Status',
       id: 'status',
       minWidth: 75
     }, {
@@ -72,6 +72,25 @@ class ComplianceReportingTable extends Component {
       className: 'col-supplemental-status',
       Header: 'Supplemental Status',
       id: 'supplemental-status',
+      minWidth: 75
+    }, {
+      accessor: (item) => {
+        let report = item;
+        const { supplementalReports } = item;
+
+        if (supplementalReports.length > 0) {
+          [report] = supplementalReports;
+        }
+
+        while (report.supplementalReports && report.supplementalReports.length > 0) {
+          [report] = report.supplementalReports;
+        }
+
+        return ComplianceReportStatus(report);
+      },
+      className: 'col-status',
+      Header: 'Current Status',
+      id: 'current-status',
       minWidth: 75
     }, {
       accessor: item => (item.sortDate ? item.sortDate : null),

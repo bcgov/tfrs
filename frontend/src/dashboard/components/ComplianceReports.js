@@ -28,44 +28,35 @@ const ComplianceReports = (props) => {
   };
 
   items.forEach((item) => {
-    if (item.type === 'Compliance Report') {
-      if (item.status.fuelSupplierStatus === 'Submitted' &&
-      item.status.analystStatus === 'Unreviewed') {
-        awaitingReview.complianceReports.analyst += 1;
-        awaitingReview.complianceReports.total += 1;
-      }
+    let { status } = item;
+    const { supplementalReports, type } = item;
+    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports';
 
-      if (['Not Recommended', 'Recommended'].indexOf(item.status.analystStatus) >= 0 &&
-      item.status.managerStatus === 'Unreviewed') {
-        awaitingReview.complianceReports.manager += 1;
-        awaitingReview.complianceReports.total += 1;
-      }
+    if (supplementalReports.length > 0) {
+      let [deepestSupplementalReport] = supplementalReports;
 
-      if (['Not Recommended', 'Recommended'].indexOf(item.status.managerStatus) >= 0 &&
-      item.status.directorStatus === 'Unreviewed') {
-        awaitingReview.complianceReports.director += 1;
-        awaitingReview.complianceReports.total += 1;
+      while (deepestSupplementalReport.supplementalReports &&
+        deepestSupplementalReport.supplementalReports.length > 0) {
+        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
       }
+      ({ status } = deepestSupplementalReport);
     }
 
-    if (item.type === 'Exclusion Report') {
-      if (item.status.fuelSupplierStatus === 'Submitted' &&
-      item.status.analystStatus === 'Unreviewed') {
-        awaitingReview.exclusionReports.analyst += 1;
-        awaitingReview.exclusionReports.total += 1;
-      }
+    if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed') {
+      awaitingReview[reportType].analyst += 1;
+      awaitingReview[reportType].total += 1;
+    }
 
-      if (['Not Recommended', 'Recommended'].indexOf(item.status.analystStatus) >= 0 &&
-      item.status.managerStatus === 'Unreviewed') {
-        awaitingReview.exclusionReports.manager += 1;
-        awaitingReview.exclusionReports.total += 1;
-      }
+    if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
+    status.managerStatus === 'Unreviewed') {
+      awaitingReview[reportType].manager += 1;
+      awaitingReview[reportType].total += 1;
+    }
 
-      if (['Not Recommended', 'Recommended'].indexOf(item.status.managerStatus) >= 0 &&
-      item.status.directorStatus === 'Unreviewed') {
-        awaitingReview.exclusionReports.director += 1;
-        awaitingReview.exclusionReports.total += 1;
-      }
+    if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
+    status.directorStatus === 'Unreviewed') {
+      awaitingReview[reportType].director += 1;
+      awaitingReview[reportType].total += 1;
     }
   });
 
@@ -88,10 +79,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
@@ -109,10 +100,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Analyst'
                 }], 'compliance-reporting');
 
@@ -130,10 +121,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Manager'
                 }], 'compliance-reporting');
 
@@ -161,10 +152,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
@@ -182,10 +173,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Analyst'
                 }], 'compliance-reporting');
 
@@ -203,10 +194,10 @@ const ComplianceReports = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Manager'
                 }], 'compliance-reporting');
 
