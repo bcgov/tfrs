@@ -1,4 +1,4 @@
-tfrsRelease="v1.6.13"
+tfrsRelease="v1.6.13-testfix"
         
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
