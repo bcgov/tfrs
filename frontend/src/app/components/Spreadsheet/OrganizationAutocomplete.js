@@ -54,6 +54,11 @@ class OrganizationAutocomplete extends PureComponent {
         onSelectEvent={(item) => {
           this.props.cell.attributes.address = item.organization_address;
           onCommit(item.name);
+          this.handleChange({
+            target: {
+              value: item.name
+            }
+          });
         }}
         renderItem={(item, isHighlighted) => (
           <div
