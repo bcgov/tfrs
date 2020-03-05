@@ -11,10 +11,10 @@ import Loading from '../app/components/Loading';
 import ScheduleAssessmentPage from './components/ScheduleAssessmentPage';
 
 class ScheduleAssessmentContainer extends Component {
-  componentDidMount() {
+  componentDidMount () {
   }
 
-  render() {
+  render () {
     if (this.props.snapshotIsLoading ||
       !this.props.complianceReport) {
       return <Loading />;
@@ -23,15 +23,13 @@ class ScheduleAssessmentContainer extends Component {
     let mostRecentlyReviewed = null;
     if (this.props.complianceReport &&
       ['Accepted', 'Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
-      mostRecentlyReviewed = this.props.complianceReport.snapshot;
+      mostRecentlyReviewed = this.props.snapshot;
     } else if (this.props.complianceReport && this.props.complianceReport.history) {
-
       const historyEntry = this.props.complianceReport.history.find(h =>
         (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
       if (historyEntry) {
-
-        //at least one prior version was accepted
-        //we have the id, now find the snapshot in deltas
+        // at least one prior version was accepted
+        // we have the id, now find the snapshot in deltas
         mostRecentlyReviewed = this.props.complianceReport.deltas.find(d =>
           (d.ancestorId === historyEntry.complianceReport)).snapshot.data;
       }
@@ -39,9 +37,11 @@ class ScheduleAssessmentContainer extends Component {
 
     const snap = mostRecentlyReviewed;
 
-    if (snap === null) {
-      return null;
+    if (!snap) {
+      return <Loading />;
     }
+
+    console.log(snap);
 
     let part2Compliant = 'Did not supply Part 2 fuel';
     let foundInScheduleB = false;
