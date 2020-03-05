@@ -4,52 +4,6 @@ tfrsRelease="v1.6.13-testfix"
 
 def runFunctionalTest = input id: 'runFunctionalTest', message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
-podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
-    containers: [
-        containerTemplate(
-            name: 'jnlp',
-            image: 'docker-registry.default.svc:5000/openshift/jenkins-slave-python-rhel7',
-            resourceRequestCpu: '500m',
-            resourceLimitCpu: '2000m',
-            resourceRequestMemory: '2Gi',
-            resourceLimitMemory: '6Gi',
-            workingDir: '/home/jenkins',
-            activeDeadlineSeconds: 3600,
-            slaveConnectTimeout: 3600,
-            timeoutSeconds: 3600,
-            command: '',
-            args: '${computer.jnlpmac} ${computer.name}',
-		    envVars: [
-                envVar(key: 'DATABASE_SERVICE_NAME', value: 'postgresql96-unittest'), 
-                envVar(key: 'DATABASE_ENGINE', value: 'postgresql'),
-                envVar(key: 'DATABASE_NAME', value: 'test_tfrs'),
-                envVar(key: 'DATABASE_USER', value: 'tfrstest'),
-                envVar(key: 'DATABASE_PASSWORD', value: 'tfrstest'),
-                envVar(key: 'DJANGO_DEBUG', value: 'true')
-		    ]
-        )
-    ]
-){    
-    
-    node("develop-backend-python-${env.BUILD_NUMBER}") {
-        //checkout code in order to load groovy scripts
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-
-        //load prepareOtherStages.groovy
-        def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
-
-        //unit test stage
-        prepareOtherStages.unitTestStage().call()
-    }
-}
-
-echo "result is ${result}"
-if (result != 0) {
-    echo "[FAILURE] Unit Test stage failed"
-    currentBuild.result = 'FAILURE'
-    return
-}
-
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
@@ -80,7 +34,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //Sonarqube stage
-        prepareOtherStages.sonarqubeStage().call()
+        //prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages('dev')
@@ -107,13 +61,13 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         }
 
         //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
-        prepareOtherStages.checkBackupSpace("mem-tfrs-dev").call()
+        //prepareOtherStages.checkBackupSpace("mem-tfrs-dev").call()
 
         //Bring up Maintenance Page
-        prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev").call()
+        //prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev").call()
 
         //Datebase Backup
-        prepareOtherStages.databaseBackupStage("mem-tfrs-dev", tfrsRelease).call()
+        //prepareOtherStages.databaseBackupStage("mem-tfrs-dev", tfrsRelease).call()
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
@@ -131,19 +85,19 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 
         //Functional Test
-        if(runFunctionalTest == 'Yes') {
-            echo "confirmed to run functional test"
-            prepareOtherStages.functionalTestStage().call()
-        }
+        //if(runFunctionalTest == 'Yes') {
+            //echo "confirmed to run functional test"
+            //prepareOtherStages.functionalTestStage().call()
+        //}
 
         //Ask for confirmation before taking down maintenance page.
-        prepareOtherStages.confirmStage("Please confirm to take down the maintenance page").call()
+        //prepareOtherStages.confirmStage("Please confirm to take down the maintenance page").call()
         
         //Take down Maintenance Page
-        prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
+        //prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
 
         //Refresh SchemaSpy
-        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
+        //prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
 
     } //end of node
 
