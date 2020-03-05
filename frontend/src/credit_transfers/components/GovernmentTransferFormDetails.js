@@ -21,7 +21,7 @@ const GovernmentTransferFormDetails = props => (
 
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="respondent">Credits From/To:
+          <label htmlFor="respondent">Credits To:
             <select
               className="form-control"
               id="respondent"
