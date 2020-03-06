@@ -21,14 +21,14 @@ class ScheduleAssessmentContainer extends Component {
     }
 
     let mostRecentlyReviewed = null;
-    console.log(this.props);
+
     if (this.props.complianceReport &&
       ['Accepted', 'Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
       mostRecentlyReviewed = this.props.snapshot;
     } else if (this.props.complianceReport && this.props.complianceReport.history) {
       const historyEntry = this.props.complianceReport.history.find(h =>
         (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
-      console.log(historyEntry);
+
       if (historyEntry) {
         // at least one prior version was accepted
         // we have the id, now find the snapshot in deltas
@@ -42,9 +42,8 @@ class ScheduleAssessmentContainer extends Component {
     }
 
     const snap = mostRecentlyReviewed;
-    console.log(snap);
 
-    if (!snap) {
+    if (!snap || !snap.summary) {
       return <Loading />;
     }
 
