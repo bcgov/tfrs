@@ -20,7 +20,7 @@ const ExclusionReportTabs = (props) => {
   }
 
   let showAssessment = false;
-  if (props.exclusionReport && ['Accepted', 'Rejected'].indexOf(props.exclusionReport.status.directorStatus) >= 0) {
+  if (props.exclusionReport && ['Accepted'].indexOf(props.exclusionReport.status.directorStatus) >= 0) {
     showAssessment = true;
   }
 

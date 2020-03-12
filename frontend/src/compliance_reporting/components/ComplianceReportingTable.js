@@ -151,7 +151,7 @@ class ComplianceReportingTable extends Component {
                 let tab = 'intro';
 
                 if (row.original.status &&
-                  (['Accepted', 'Rejected'].indexOf(row.original.status.directorStatus) >= 0 ||
+                  (['Accepted'].indexOf(row.original.status.directorStatus) >= 0 ||
                     ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
                     ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
                   tab = 'schedule-assessment';

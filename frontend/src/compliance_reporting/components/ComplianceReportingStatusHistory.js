@@ -93,6 +93,8 @@ class ComplianceReportingStatusHistory extends Component {
       []
     );
 
+    let mainReport;
+
     return (
       <div className="panel-group">
         {showCurrent &&
@@ -118,17 +120,19 @@ class ComplianceReportingStatusHistory extends Component {
               >
                 <div className="panel-body">
                   <span className="title">
-                    {`Changelog for ${currentDelta.ancestorDisplayName}`}
+                    {`Changelog for ${mainReport && mainReport.displayName}`}
                   </span>
                   <ul>
                     <li>
-                      {`${currentDelta.delta.length > 0 ? 'records changed':'no changes recorded'}`}
+                      {`${currentDelta.delta.length > 0 ? 'records changed' : 'no changes recorded'}`}
                     </li>
                   </ul>
                 </div>
               </div>
             );
           }
+
+          mainReport = r;
 
           return ([
             deltaPanel,
