@@ -18,21 +18,24 @@ const ScheduleTabs = (props) => {
   };
 
   let showAssessment = false;
-  if (props.complianceReport && ['Accepted'].indexOf(props.complianceReport.status.directorStatus) >= 0) {
-    showAssessment = true;
-  } else if (props.complianceReport &&
-    props.complianceReport.history &&
-    props.complianceReport.history.find(h =>
-      (['Accepted'].indexOf(h.status.directorStatus) >= 0))
-  ) {
-    // at least one prior version was accepted
-    showAssessment = true;
-  }
 
-  if (props.loggedInUser.isGovernmentUser &&
-    (['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.analystStatus) >= 0 ||
-      ['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0)) {
-    showAssessment = true;
+  if (props.complianceReport.status.directorStatus !== 'Rejected') {
+    if (props.complianceReport && ['Accepted'].indexOf(props.complianceReport.status.directorStatus) >= 0) {
+      showAssessment = true;
+    } else if (props.complianceReport &&
+      props.complianceReport.history &&
+      props.complianceReport.history.find(h =>
+        (['Accepted'].indexOf(h.status.directorStatus) >= 0))
+    ) {
+      // at least one prior version was accepted
+      showAssessment = true;
+    }
+
+    if (props.loggedInUser.isGovernmentUser &&
+      (['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.analystStatus) >= 0 ||
+        ['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0)) {
+      showAssessment = true;
+    }
   }
 
   return (

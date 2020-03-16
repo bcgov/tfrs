@@ -149,19 +149,32 @@ class ComplianceReportingTable extends Component {
             return {
               onClick: (e) => {
                 let tab = 'intro';
+                let { status } = row.original;
+                const { groupId, supplementalReports, type } = row.original;
 
-                if (row.original.status &&
-                  (['Accepted'].indexOf(row.original.status.directorStatus) >= 0 ||
-                    ['Recommended', 'Not Recommended'].indexOf(row.original.status.analystStatus) >= 0 ||
-                    ['Recommended', 'Not Recommended'].indexOf(row.original.status.managerStatus) >= 0)) {
+                if (supplementalReports.length > 0) {
+                  let [deepestSupplementalReport] = supplementalReports;
+
+                  while (deepestSupplementalReport.supplementalReports &&
+                    deepestSupplementalReport.supplementalReports.length > 0) {
+                    [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
+                  }
+                  ({ status } = deepestSupplementalReport);
+                }
+
+                if (status &&
+                  (status.directorStatus !== 'Rejected' &&
+                    (['Accepted'].indexOf(status.directorStatus) >= 0 ||
+                    ['Recommended', 'Not Recommended'].indexOf(status.analystStatus) >= 0 ||
+                    ['Recommended', 'Not Recommended'].indexOf(status.managerStatus) >= 0))) {
                   tab = 'schedule-assessment';
                 }
 
-                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.groupId)
+                let viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', groupId)
                   .replace(':tab', tab);
 
-                if (row.original.type === 'Exclusion Report') {
-                  viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', row.original.groupId)
+                if (type === 'Exclusion Report') {
+                  viewUrl = EXCLUSION_REPORTS.EDIT.replace(':id', groupId)
                     .replace(':tab', tab);
                 }
 

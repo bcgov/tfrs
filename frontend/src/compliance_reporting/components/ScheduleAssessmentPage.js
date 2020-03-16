@@ -10,11 +10,9 @@ const ScheduleAssessmentPage = props => (
       complianceReport={props.complianceReport}
       hideChangelogs
     />
-    {(props.complianceReport.status.analystStatus === 'Recommended' ||
-    props.complianceReport.status.managerStatus === 'Recommended') &&
-    props.complianceReport.status.directorStatus === 'Unreviewed' &&
+    {props.complianceReport.status.directorStatus === 'Unreviewed' &&
     <h2>
-      Upon acceptance the following information will become visible to
+      If accepted the following information will become visible to
       {` ${props.snapshot.organization.name} `}
     </h2>
     }

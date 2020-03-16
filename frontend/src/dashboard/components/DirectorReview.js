@@ -36,14 +36,27 @@ const DirectorReview = (props) => {
   typeof props.loggedInUser.hasPermission === 'function' &&
   props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
     complianceReports.forEach((item) => {
-      if (['Not Recommended', 'Recommended'].indexOf(item.status.managerStatus) >= 0 &&
-      item.status.directorStatus === 'Unreviewed') {
-        if (item.type === 'Compliance Report') {
+      let { status } = item;
+      const { supplementalReports, type } = item;
+
+      if (supplementalReports.length > 0) {
+        let [deepestSupplementalReport] = supplementalReports;
+
+        while (deepestSupplementalReport.supplementalReports &&
+          deepestSupplementalReport.supplementalReports.length > 0) {
+          [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
+        }
+        ({ status } = deepestSupplementalReport);
+      }
+
+      if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
+      status.directorStatus === 'Unreviewed') {
+        if (type === 'Compliance Report') {
           awaitingReview.complianceReports += 1;
           awaitingReview.total += 1;
         }
 
-        if (item.type === 'Exclusion Report' && CONFIG.COMPLIANCE_REPORTING.ENABLED) {
+        if (type === 'Exclusion Report' && CONFIG.COMPLIANCE_REPORTING.ENABLED) {
           awaitingReview.exclusionReports += 1;
           awaitingReview.total += 1;
         }
@@ -116,10 +129,10 @@ const DirectorReview = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Manager'
                 }], 'compliance-reporting');
 
@@ -142,7 +155,7 @@ const DirectorReview = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
                   id: 'status',
