@@ -283,6 +283,12 @@ class ComplianceReportPermissions(permissions.BasePermission):
         if request.user.is_government_user:
             return request.method not in ('POST',)
 
+        if request.method == 'GET':
+            return request.user.has_perm('VIEW_COMPLIANCE_REPORT')
+
+        if request.user.has_perm('SIGN_COMPLIANCE_REPORT'):
+            return True
+
         return request.user.has_perm('COMPLIANCE_REPORT_MANAGE')
 
     def has_object_permission(self, request, view, obj):
