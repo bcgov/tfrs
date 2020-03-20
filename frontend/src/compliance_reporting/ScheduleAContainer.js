@@ -131,6 +131,10 @@ class ScheduleAContainer extends Component {
       source = this.props.complianceReport.scheduleA;
     }
 
+    if (!source && this.props.complianceReport && this.props.complianceReport.scheduleA) {
+      source = this.props.complianceReport.scheduleA;
+    }
+
     if (!source) {
       return;
     }

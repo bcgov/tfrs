@@ -158,7 +158,7 @@ const DirectorReview = (props) => {
                   id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Manager'
                 }], 'compliance-reporting');
 

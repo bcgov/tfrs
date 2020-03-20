@@ -289,6 +289,10 @@ class ComplianceReportPermissions(permissions.BasePermission):
         if request.user.has_perm('SIGN_COMPLIANCE_REPORT'):
             return True
 
+        if request.user.has_perm('VIEW_COMPLIANCE_REPORT') and \
+                view.action == 'compute_totals':
+            return True
+
         return request.user.has_perm('COMPLIANCE_REPORT_MANAGE')
 
     def has_object_permission(self, request, view, obj):

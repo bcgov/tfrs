@@ -84,6 +84,10 @@ class ScheduleDContainer extends Component {
       source = this.props.complianceReport.scheduleD;
     }
 
+    if (!source && this.props.complianceReport && this.props.complianceReport.scheduleD) {
+      source = this.props.complianceReport.scheduleD;
+    }
+
     if (source && source.sheets) {
       if ((sheets.length) < source.sheets.length) {
         this._addSheet(source.sheets.length - (sheets.length));

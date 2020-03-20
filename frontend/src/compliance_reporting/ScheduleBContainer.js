@@ -348,7 +348,11 @@ class ScheduleBContainer extends Component {
 
     if (nextProps.snapshot && this.props.readOnly) {
       // just use the snapshot
-      const source = nextProps.snapshot.scheduleB;
+      let source = nextProps.snapshot.scheduleB;
+
+      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleB) {
+        source = this.props.complianceReport.scheduleB;
+      }
 
       if (!source || !source.records) {
         return;

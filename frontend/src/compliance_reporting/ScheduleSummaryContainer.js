@@ -199,7 +199,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentDidMount () {
-    if (this.props.snapshot && this.props.readOnly) {
+    if (this.props.complianceReport.hasSnapshot && this.props.snapshot && this.props.readOnly) {
       this.componentWillReceiveProps(this.props);
     } else {
       if (this.props.complianceReport && !this.props.complianceReport.hasSnapshot) {
@@ -216,7 +216,7 @@ class ScheduleSummaryContainer extends Component {
     const { diesel, gasoline } = this.state;
     let { part3, penalty, showModal } = this.state;
 
-    if (nextProps.snapshot && nextProps.readOnly) {
+    if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot;
 
       const cellFormatNumeric = cellValue => ({
@@ -804,7 +804,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   populateSchedules () {
-    if (this.props.snapshot && this.props.readOnly) {
+    if (this.props.complianceReport.hasSnapshot && this.props.snapshot && this.props.readOnly) {
       return;
     }
 
@@ -845,25 +845,45 @@ class ScheduleSummaryContainer extends Component {
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
       readOnly: gasoline[SCHEDULE_SUMMARY.LINE_2][2].value <=
-        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value
+        gasoline[SCHEDULE_SUMMARY.LINE_4][2].value || this.props.readOnly
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = {
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
       readOnly: gasoline[SCHEDULE_SUMMARY.LINE_4][2].value <=
-        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value
+        gasoline[SCHEDULE_SUMMARY.LINE_2][2].value || this.props.readOnly
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_7][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_7][2],
+      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_7][2].readOnly || this.props.readOnly
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_9][2] = {
+      ...gasoline[SCHEDULE_SUMMARY.LINE_9][2],
+      readOnly: gasoline[SCHEDULE_SUMMARY.LINE_9][2].readOnly || this.props.readOnly
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
       readOnly: diesel[SCHEDULE_SUMMARY.LINE_13][2].value <=
-        diesel[SCHEDULE_SUMMARY.LINE_15][2].value
+        diesel[SCHEDULE_SUMMARY.LINE_15][2].value || this.props.readOnly
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = {
       ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
       readOnly: diesel[SCHEDULE_SUMMARY.LINE_15][2].value <=
-        diesel[SCHEDULE_SUMMARY.LINE_13][2].value
+        diesel[SCHEDULE_SUMMARY.LINE_13][2].value || this.props.readOnly
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_18][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_18][2],
+      readOnly: diesel[SCHEDULE_SUMMARY.LINE_18][2].readOnly || this.props.readOnly
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_20][2] = {
+      ...diesel[SCHEDULE_SUMMARY.LINE_20][2],
+      readOnly: diesel[SCHEDULE_SUMMARY.LINE_20][2].readOnly || this.props.readOnly
     };
 
     penalty = this._calculateNonCompliancePayable(penalty);
