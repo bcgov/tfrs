@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import timedelta
 from django.db.models import Q
 from rest_framework import serializers
 
@@ -150,15 +151,24 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         """
         Gets the available fuel codes for the fuel type
         """
+        # This is a business decision, we need to add a year to the expiration
+        # date. As the fuel code, might be reported at a later date
+        # So even if technically, the fuel code has expired, we should allow an
+        # additional year for it to be used
+        # Note: THe code below is actually subtracting the expiration date
+        # this is to lessen the complicated logic of modifying the year in the
+        # filter
+        expiration_date = self.expiration_date - timedelta(hours=8784)
+
         fuel_codes = FuelCode.objects.filter(
             fuel_id=obj.id
         ).filter(
             Q(effective_date__gte=self.effective_date,
-              effective_date__lte=self.expiration_date) |
+              effective_date__lte=expiration_date) |
             Q(expiry_date__gte=self.effective_date,
-              expiry_date__lte=self.expiration_date) |
+              expiry_date__lte=expiration_date) |
             Q(effective_date__lte=self.effective_date,
-              expiry_date__gte=self.expiration_date)
+              expiry_date__gte=expiration_date)
         ).order_by(
             'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
         )
