@@ -17,7 +17,7 @@ class Tooltip extends Component {
 
   _hover () {
     this.setState({
-      hovering: this.state.hovering + 10000
+      hovering: 3000
     });
   }
 
@@ -32,7 +32,12 @@ class Tooltip extends Component {
       <OverlayTrigger
         delayHide={this.state.hovering}
         placement="top"
+        onBlur={this._hoverOut}
+        onMouseLeave={this._hoverOut}
+        onMouseOut={this._hoverOut}
         overlay={this._tooltip()}
+        rootClose
+        show={this.props.show}
       >
         <div className="overlay-trigger">
           {this.props.children}
