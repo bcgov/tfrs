@@ -16,9 +16,34 @@ class ScheduleAssessmentContainer extends Component {
 
   render () {
     if (this.props.snapshotIsLoading ||
-      !this.props.snapshot ||
-      !this.props.snapshot.summary ||
       !this.props.complianceReport) {
+      return <Loading />;
+    }
+
+    let mostRecentlyReviewed = null;
+
+    if (this.props.complianceReport &&
+      ['Accepted', 'Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
+      mostRecentlyReviewed = this.props.snapshot;
+    } else if (this.props.complianceReport && this.props.complianceReport.history) {
+      const historyEntry = this.props.complianceReport.history.find(h =>
+        (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
+
+      if (historyEntry) {
+        // at least one prior version was accepted
+        // we have the id, now find the snapshot in deltas
+        mostRecentlyReviewed = this.props.complianceReport.deltas.find(d =>
+          (d.ancestorId === historyEntry.complianceReport)).snapshot.data;
+      }
+    }
+
+    if (!mostRecentlyReviewed) {
+      mostRecentlyReviewed = this.props.snapshot;
+    }
+
+    const snap = mostRecentlyReviewed;
+
+    if (!snap || !snap.summary) {
       return <Loading />;
     }
 
@@ -26,8 +51,8 @@ class ScheduleAssessmentContainer extends Component {
     let foundInScheduleB = false;
     let foundInScheduleC = false;
 
-    if (this.props.snapshot && this.props.snapshot.scheduleB) {
-      foundInScheduleB = this.props.snapshot.scheduleB.records.findIndex(row => (
+    if (snap.scheduleB) {
+      foundInScheduleB = snap.scheduleB.records.findIndex(row => (
         [
           'Biodiesel', 'Ethanol', 'HDRD', 'Natural gas-based gasoline',
           'Petroleum-based diesel', 'Petroleum-based gasoline', 'Renewable diesel',
@@ -36,8 +61,8 @@ class ScheduleAssessmentContainer extends Component {
       )) >= 0;
     }
 
-    if (this.props.snapshot && this.props.snapshot.scheduleC) {
-      foundInScheduleC = this.props.snapshot.scheduleC.records.findIndex(row => (
+    if (snap.scheduleC) {
+      foundInScheduleC = snap.scheduleC.records.findIndex(row => (
         [
           'Biodiesel', 'Ethanol', 'HDRD', 'Natural gas-based gasoline',
           'Petroleum-based diesel', 'Petroleum-based gasoline', 'Renewable diesel',
@@ -47,8 +72,8 @@ class ScheduleAssessmentContainer extends Component {
     }
 
     if (foundInScheduleB || foundInScheduleC) {
-      if (Number(this.props.snapshot.summary.lines[11]) > 0 ||
-        Number(this.props.snapshot.summary.lines[22]) > 0) {
+      if (Number(snap.summary.lines[11]) > 0 ||
+        Number(snap.summary.lines[22]) > 0) {
         part2Compliant = 'Non-compliant';
       } else {
         part2Compliant = 'Compliant';
@@ -57,7 +82,7 @@ class ScheduleAssessmentContainer extends Component {
 
     let part3Compliant = 'Compliant';
 
-    if (Number(this.props.snapshot.summary.lines[27]) < 0) {
+    if (Number(snap.summary.lines[27]) < 0) {
       part3Compliant = 'Non-compliant';
     }
 
@@ -67,7 +92,7 @@ class ScheduleAssessmentContainer extends Component {
         loggedInUser={this.props.loggedInUser}
         part2Compliant={part2Compliant}
         part3Compliant={part3Compliant}
-        snapshot={this.props.snapshot}
+        snapshot={snap}
       />
     );
   }

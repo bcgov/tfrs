@@ -114,7 +114,7 @@ class Navbar extends Component {
             id="navbar-secure-document-upload"
             to={SECURE_DOCUMENT_UPLOAD.LIST}
           >
-            Part 3 Agreements
+            File Submissions
           </NavLink>
           }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
@@ -313,7 +313,7 @@ class Navbar extends Component {
               id="collapse-navbar-secure-document-upload"
               to={SECURE_DOCUMENT_UPLOAD.LIST}
             >
-              Part 3 Agreements
+              File Submissions
             </NavLink>
           </li>
           }

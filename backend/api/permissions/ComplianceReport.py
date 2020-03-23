@@ -53,7 +53,7 @@ class ComplianceReportPermissions(permissions.BasePermission):
 
     actions.append(ActionMap(
         _Relationship.FuelSupplier,
-        'Submitted', '.*', '.*', '(Unreviewed|Accepted)',
+        'Submitted', '.*', '.*', '(Unreviewed|Accepted|Rejected)',
         lambda c: ['CREATE_SUPPLEMENTAL']
         if len(c.supplemental_reports.exclude(
             status__fuel_supplier_status="Deleted"
@@ -282,6 +282,16 @@ class ComplianceReportPermissions(permissions.BasePermission):
 
         if request.user.is_government_user:
             return request.method not in ('POST',)
+
+        if request.method == 'GET':
+            return request.user.has_perm('VIEW_COMPLIANCE_REPORT')
+
+        if request.user.has_perm('SIGN_COMPLIANCE_REPORT'):
+            return True
+
+        if request.user.has_perm('VIEW_COMPLIANCE_REPORT') and \
+                view.action == 'compute_totals':
+            return True
 
         return request.user.has_perm('COMPLIANCE_REPORT_MANAGE')
 

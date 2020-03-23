@@ -14,6 +14,7 @@ import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertions
 import { complianceReporting } from '../actions/complianceReporting';
 import CheckBox from '../app/components/CheckBox';
 import AddressBuilder from '../app/components/AddressBuilder';
+import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import ScheduleAContainer from './ScheduleAContainer';
 import ScheduleAssessmentContainer from './ScheduleAssessmentContainer';
@@ -502,14 +503,18 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   _validate (_payload) {
-    const payload = _payload;
-    if (payload.state && payload.state.summary) {
-      const { summary } = payload.state;
+    if (this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)) {
+      const payload = _payload;
+      if (payload.state && payload.state.summary) {
+        const { summary } = payload.state;
 
-      payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+        payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+      }
+
+      return this.props.validateComplianceReport(payload);
     }
 
-    return this.props.validateComplianceReport(payload);
+    return false;
   }
 
   render () {
@@ -585,7 +590,7 @@ class ComplianceReportingEditContainer extends Component {
         key="tab-component"
         loggedInUser={this.props.loggedInUser}
         period={period}
-        readOnly={this.props.complianceReporting.item.readOnly}
+        readOnly={this.props.complianceReporting.item.readOnly || !this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)}
         recomputedTotals={this.props.complianceReporting.recomputeResult}
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
@@ -825,6 +830,7 @@ ComplianceReportingEditContainer.propTypes = {
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       organizationAddress: PropTypes.shape()

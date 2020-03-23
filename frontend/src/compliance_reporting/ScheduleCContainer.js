@@ -128,7 +128,11 @@ class ScheduleCContainer extends Component {
     const { grid } = this.state;
 
     if (nextProps.snapshot && this.props.readOnly) {
-      const source = nextProps.snapshot.scheduleC;
+      let source = nextProps.snapshot.scheduleC;
+
+      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleC) {
+        source = this.props.complianceReport.scheduleC;
+      }
 
       if (!source || !source.records) {
         return;

@@ -80,6 +80,7 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
       {props.actions.includes('DELETE') &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
       <button
         className="btn btn-danger"
         data-target="#confirmDelete"
@@ -109,6 +110,7 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
       </button>
       {props.actions.includes('CREATE_SUPPLEMENTAL') &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
       <button
         className="btn btn-primary"
         data-target="#confirmCreateSupplemental"
@@ -118,38 +120,40 @@ const ScheduleButtons = props => (
         <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
       </button>
       }
-      {props.actions.includes('SUBMIT') && [
-        <Tooltip
-          key="btn-save"
-          show={props.validating || !props.valid}
-          title="Please fix the issues identified before saving."
+      {props.actions.includes('SUBMIT') &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
+      <Tooltip
+        show={props.validating || !props.valid}
+        title="Please fix the issues identified before saving."
+      >
+        <button
+          className="btn btn-primary"
+          data-target="#confirmSave"
+          data-toggle="modal"
+          disabled={props.validating || !props.valid}
+          type="button"
         >
-          <button
-            className="btn btn-primary"
-            data-target="#confirmSave"
-            data-toggle="modal"
-            disabled={props.validating || !props.valid}
-            type="button"
-          >
-            <FontAwesomeIcon icon="save" /> Save
-          </button>
-        </Tooltip>,
-        <Tooltip
-          show={getValidationMessages(props) !== ''}
-          key="btn-submit"
-          title={getValidationMessages(props)}
+          <FontAwesomeIcon icon="save" /> Save
+        </button>
+      </Tooltip>
+      }
+      {props.actions.includes('SUBMIT') &&
+      props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN) &&
+      <Tooltip
+        show={getValidationMessages(props) !== ''}
+        title={getValidationMessages(props)}
+      >
+        <button
+          className="btn btn-primary"
+          data-target="#confirmSubmit"
+          data-toggle="modal"
+          disabled={getValidationMessages(props) !== ''}
+          type="button"
         >
-          <button
-            className="btn btn-primary"
-            data-target="#confirmSubmit"
-            data-toggle="modal"
-            disabled={getValidationMessages(props) !== ''}
-            type="button"
-          >
-            <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
-          </button>
-        </Tooltip>
-      ]}
+          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SUBMIT}
+        </button>
+      </Tooltip>
+      }
       {props.actor === 'ANALYST' &&
       props.actions.includes('REQUEST_SUPPLEMENTAL') &&
       <button

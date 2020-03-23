@@ -30,42 +30,35 @@ const ComplianceReportsBCEID = (props) => {
   };
 
   items.forEach((item) => {
-    if (item.type === 'Compliance Report') {
-      if (item.status.fuelSupplierStatus === 'Draft') {
-        awaitingReview.complianceReports.draft += 1;
-        awaitingReview.complianceReports.total += 1;
-      }
+    let { status } = item;
+    const { supplementalReports, type } = item;
+    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports';
 
-      if (item.status.fuelSupplierStatus === 'Submitted' &&
-      ['Accepted', 'Rejected'].indexOf(item.status.directorStatus) < 0) {
-        if (item.status.analystStatus === 'Requested Supplemental' ||
-        item.status.managerStatus === 'Requested Supplemental') {
-          awaitingReview.complianceReports.supplemental += 1;
-        } else {
-          awaitingReview.complianceReports.review += 1;
-        }
+    if (supplementalReports.length > 0) {
+      let [deepestSupplementalReport] = supplementalReports;
 
-        awaitingReview.complianceReports.total += 1;
+      while (deepestSupplementalReport.supplementalReports &&
+        deepestSupplementalReport.supplementalReports.length > 0) {
+        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
       }
+      ({ status } = deepestSupplementalReport);
     }
 
-    if (item.type === 'Exclusion Report') {
-      if (item.status.fuelSupplierStatus === 'Draft') {
-        awaitingReview.exclusionReports.draft += 1;
-        awaitingReview.exclusionReports.total += 1;
+    if (status.fuelSupplierStatus === 'Draft') {
+      awaitingReview[reportType].draft += 1;
+      awaitingReview[reportType].total += 1;
+    }
+
+    if (status.fuelSupplierStatus === 'Submitted' &&
+    ['Accepted', 'Rejected'].indexOf(status.directorStatus) < 0) {
+      if (status.analystStatus === 'Requested Supplemental' ||
+      status.managerStatus === 'Requested Supplemental') {
+        awaitingReview[reportType].supplemental += 1;
+      } else {
+        awaitingReview[reportType].review += 1;
       }
 
-      if (item.status.fuelSupplierStatus === 'Submitted' &&
-      ['Accepted', 'Rejected'].indexOf(item.status.directorStatus) < 0) {
-        if (item.status.analystStatus === 'Requested Supplemental' ||
-        item.status.managerStatus === 'Requested Supplemental') {
-          awaitingReview.exclusionReports.supplemental += 1;
-        } else {
-          awaitingReview.exclusionReports.review += 1;
-        }
-
-        awaitingReview.exclusionReports.total += 1;
-      }
+      awaitingReview[reportType].total += 1;
     }
   });
 
@@ -88,10 +81,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Draft'
                 }], 'compliance-reporting');
 
@@ -110,10 +103,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
@@ -132,10 +125,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Compliance Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
@@ -164,10 +157,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Draft'
                 }], 'compliance-reporting');
 
@@ -186,10 +179,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
@@ -208,10 +201,10 @@ const ComplianceReportsBCEID = (props) => {
                   id: 'compliance-period',
                   value: ''
                 }, {
-                  id: 'type',
+                  id: 'displayname',
                   value: 'Exclusion Report'
                 }, {
-                  id: 'status',
+                  id: 'current-status',
                   value: 'Submitted'
                 }], 'compliance-reporting');
 

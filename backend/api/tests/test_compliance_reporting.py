@@ -74,7 +74,7 @@ class TestComplianceReporting(BaseTestCase):
 
     def test_list_compliance_reports_unauthorized(self):
         response = self.clients['fs_user_2'].get('/api/compliance_reports')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_compliance_gov(self):
         response = self.clients['gov_analyst'].get('/api/compliance_reports')
@@ -91,7 +91,7 @@ class TestComplianceReporting(BaseTestCase):
     def test_get_compliance_report_details_unauthorized(self):
         rid = self._create_compliance_report()
         response = self.clients['fs_user_2'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_compliance_report_details_gov_authorized(self):
         response = self.clients['gov_analyst'].get('/api/compliance_reports/2')

@@ -140,6 +140,7 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     type = ComplianceReportTypeSerializer(read_only=True)
     deltas = serializers.SerializerMethodField()
     display_name = serializers.SerializerMethodField()
+    read_only = serializers.SerializerMethodField()
 
     skip_deltas = False
 
@@ -239,6 +240,15 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
             return serializer.data
         else:
             return None
+
+    def get_read_only(self, obj):
+        user = self.context['request'].user \
+            if 'request' in self.context else None
+
+        if not user.has_perm('COMPLIANCE_REPORT_MANAGE'):
+            return True
+
+        return obj.read_only
 
     class Meta:
         model = ComplianceReport
