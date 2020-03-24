@@ -65,6 +65,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             'status': status.HTTP_200_OK,
             'reason': 'Analyst should have read access to orgs'}
 
+        expected_results[('gov_manager',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Multi Role should have read access to orgs'}
+
         expected_results[('gov_multi_role',)] = {
             'status': status.HTTP_200_OK,
             'reason': 'Multi Role should have read access to orgs'}
@@ -77,6 +81,7 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             ):
                 response = self.clients[user].get(url)
                 logging.debug(response.content.decode('utf-8'))
+
                 self.assertEqual(
                     response.status_code,
                     expected_results[(user,)]['status'])
