@@ -81,12 +81,7 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             ):
                 response = self.clients[user].get(url)
                 logging.debug(response.content.decode('utf-8'))
-                print("user:")
-                print(user)
-                print("|")
-                print(response.status_code)
-                print("|")
-                print(expected_results[(user,)]['status'])
+
                 self.assertEqual(
                     response.status_code,
                     expected_results[(user,)]['status'])
