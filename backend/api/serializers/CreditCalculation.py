@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import timedelta
 from django.db.models import Q
 from rest_framework import serializers
 
