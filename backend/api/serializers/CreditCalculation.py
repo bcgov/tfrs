@@ -182,7 +182,11 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
                     fuel_code.extended_expiry_date >= self.expiration_date:
                 filtered_fuel_codes.append(fuel_code)
 
-        serializer = FuelCodeSerializer(fuel_codes, read_only=True, many=True)
+        serializer = FuelCodeSerializer(
+            filtered_fuel_codes,
+            read_only=True,
+            many=True
+        )
 
         return serializer.data
 
