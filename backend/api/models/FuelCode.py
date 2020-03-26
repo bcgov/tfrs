@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import timedelta
 from django.db import models
 from django.db.models import PROTECT
 
@@ -162,6 +163,18 @@ class FuelCode(Auditable):
         default=None,
         db_comment="If applicable, percentage of the fuel that is renewable."
     )
+
+    @property
+    def extended_expiry_date(self):
+        """
+        Expiry Date + 1 year
+        This is for Schedule B to allow us to use the fuel code after 1 year
+        past it's expiry.
+        This is a business decision
+        """
+        extended_expiry_date = self.expiry_date + timedelta(hours=8784)
+
+        return extended_expiry_date
 
     class Meta:
         db_table = 'fuel_code'
