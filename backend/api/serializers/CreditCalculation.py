@@ -170,11 +170,13 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
                     fuel_code.effective_date >= self.effective_date and \
                     fuel_code.effective_date <= self.expiration_date:
                 filtered_fuel_codes.append(fuel_code)
+                continue
 
             if fuel_code.extended_expiry_date and \
                     fuel_code.extended_expiry_date >= self.effective_date and \
                     fuel_code.extended_expiry_date <= self.expiration_date:
                 filtered_fuel_codes.append(fuel_code)
+                continue
 
             if fuel_code.effective_date and \
                     fuel_code.extended_expiry_date and \
