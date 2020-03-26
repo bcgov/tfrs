@@ -20,7 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import timedelta
+import datetime
 from django.db import models
 from django.db.models import PROTECT
 
@@ -172,9 +172,11 @@ class FuelCode(Auditable):
         past it's expiry.
         This is a business decision
         """
-        extended_expiry_date = self.expiry_date + timedelta(hours=8760)
-
-        return extended_expiry_date
+        return datetime.date(
+            self.expiry_date.year + 1,
+            self.expiry_date.month,
+            self.expiry_date.day
+        )
 
     class Meta:
         db_table = 'fuel_code'
