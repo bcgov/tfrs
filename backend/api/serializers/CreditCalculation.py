@@ -151,27 +151,37 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         """
         Gets the available fuel codes for the fuel type
         """
+        fuel_codes = FuelCode.objects.filter(
+            fuel_id=obj.id,
+            status__status="Approved"
+        ).order_by(
+            'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
+        )
+
+        filtered_fuel_codes = []
+
         # This is a business decision, we need to add a year to the expiration
         # date. As the fuel code, might be reported at a later date
         # So even if technically, the fuel code has expired, we should allow an
         # additional year for it to be used
-        # Note: THe code below is actually subtracting the expiration date
-        # this is to lessen the complicated logic of modifying the year in the
-        # filter
-        expiration_date = self.expiration_date - timedelta(hours=8784)
+        # extended_expiry_date is just a custom property of the model
+        # to make the code slightly easier to read
+        for fuel_code in fuel_codes:
+            if fuel_code.effective_date and \
+                    fuel_code.effective_date >= self.effective_date and \
+                    fuel_code.effective_date <= self.effective_date:
+                filtered_fuel_codes.append(fuel_code)
 
-        fuel_codes = FuelCode.objects.filter(
-            fuel_id=obj.id
-        ).filter(
-            Q(effective_date__gte=self.effective_date,
-              effective_date__lte=expiration_date) |
-            Q(expiry_date__gte=self.effective_date,
-              expiry_date__lte=expiration_date) |
-            Q(effective_date__lte=self.effective_date,
-              expiry_date__gte=expiration_date)
-        ).order_by(
-            'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
-        )
+            if fuel_code.extended_expiry_date and \
+                    fuel_code.extended_expiry_date >= self.effective_date and \
+                    fuel_code.extended_expiry_date <= self.effective_date:
+                filtered_fuel_codes.append(fuel_code)
+
+            if fuel_code.effective_date and \
+                    fuel_code.extended_expiry_date and \
+                    fuel_code.effective_date <= self.effective_date and \
+                    fuel_code.extended_expiry_date >= self.expiration_date:
+                filtered_fuel_codes.append(fuel_code)
 
         serializer = FuelCodeSerializer(fuel_codes, read_only=True, many=True)
 
