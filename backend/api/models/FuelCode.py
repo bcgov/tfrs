@@ -172,7 +172,7 @@ class FuelCode(Auditable):
         past it's expiry.
         This is a business decision
         """
-        extended_expiry_date = self.expiry_date + timedelta(hours=8784)
+        extended_expiry_date = self.expiry_date + timedelta(hours=8760)
 
         return extended_expiry_date
 
