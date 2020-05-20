@@ -1,0 +1,171 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "client-angular-app-dc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "displayName": "Environment name",
+            "description": "Valid values: dev, test and prod",
+            "required": true,
+            "value": "latest"
+        },
+        {
+            "name": "SOURCE_IS_NAME",
+            "displayName": "The source image stream name",
+            "description": "The image stream could trigger the deployment, valid values: client-develop and client",
+            "required": true,
+            "value": "client-develop-angular-app"
+        },
+        {
+            "name": "CPU_REQUEST",
+            "displayName": "Requested CPU",
+            "description": "Requested CPU",
+            "required": true,
+            "value": "500m"
+        },
+        {
+            "name": "CPU_LIMIT",
+            "displayName": "CPU upper limit",
+            "description": "CPU upper limit",
+            "required": true,
+            "value": "500m"
+        },
+        {
+            "name": "MEMORY_REQUEST",
+            "displayName": "Requested memory",
+            "description": "Requested memory",
+            "required": true,
+            "value": "1G"
+        },
+        {
+            "name": "MEMORY_LIMIT",
+            "displayName": "Memory upper limit",
+            "description": "Memory upper limit",
+            "required": true,
+            "value": "2G"
+        }
+    ],
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "client-angular",
+                "generation": 876,
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {},
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "client-angular"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "${SOURCE_IS_NAME}:${ENV_NAME}"
+                            },
+                            "lastTriggeredImage": ""
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "client-angular"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "client-angular",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "client-angular"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [],
+                        "containers": [
+                            {
+                                "name": "client-angular",
+                                "image": "",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "RealIpFrom"
+                                    },
+                                    {
+                                        "name": "AdditionalRealIpFromRules"
+                                    },
+                                    {
+                                        "name": "IpFilterRules"
+                                    },
+                                    {
+                                        "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "API_URL",
+                                        "value": "http://backend.mem-tfrs-${ENV_NAME}.svc.cluster.local:8080/api/"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "${CPU_LIMIT}",
+                                        "memory": "${MEMORY_LIMIT}"
+                                    },
+                                    "requests": {
+                                        "cpu": "${CPU_REQUEST}",
+                                        "memory": "${MEMORY_REQUEST}"
+                                    }
+                                },
+                                "volumeMounts": [],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}
