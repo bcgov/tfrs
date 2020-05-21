@@ -1,0 +1,27 @@
+{
+  "name": "pipeline",
+  "version": "1.0.0",
+  "description": "This a pipeliene script",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "clean": "node clean.js",
+    "deploy": "node deploy.js",
+    "test": "mocha",
+    "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BCDevOps/platform-services.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "pipeline-cli": "git+https://github.com/BCDevOps/pipeline-cli.git#v1.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
