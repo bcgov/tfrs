@@ -247,7 +247,7 @@
                   {
                     "name": "${BACKUP_VOLUME_NAME}",
                     "mountPath": "${BACKUP_DIR}",
-                    "subPath": "backup-container"
+                    "subPath": "patroni-backup"
                   },
                   {
                     "name": "${VERIFICATION_VOLUME_NAME}",
