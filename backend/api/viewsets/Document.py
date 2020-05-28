@@ -115,11 +115,6 @@ class DocumentViewSet(AuditableMixin,
         document = serializer.save()
         DocumentService.create_history(document)
 
-        if document.status.status != 'Draft':
-            document.status = DocumentStatus.objects.get(
-                status='Pending Submission')
-            document.save()
-
         DocumentService.send_notification(document, user)
 
     def perform_update(self, serializer):
@@ -127,11 +122,6 @@ class DocumentViewSet(AuditableMixin,
 
         document = serializer.save()
         DocumentService.create_history(document)
-
-        if document.status.status == 'Submitted':
-            document.status = DocumentStatus.objects.get(
-                status='Pending Submission')
-            document.save()
 
         DocumentService.send_notification(document, user)
 

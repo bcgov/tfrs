@@ -236,7 +236,7 @@ class SecureFileSubmissionFormDetails extends Component {
             <div className="row">
               <div className="form-group col-md-12 main-form">
                 <div>Files:
-                  <div className="file-submission-attachments">
+                  <div className="file-submission-attachments hide-security-scan">
                     <div className="row">
                       <div className="col-xs-6 header">Filename</div>
                       <div className="col-xs-2 size header">Size</div>

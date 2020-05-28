@@ -9,9 +9,9 @@ import axios from 'axios';
 import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
 
 const SecureFileSubmissionFileAttachments = props => (
-  <div className={`file-submission-attachments ${
+  <div className={`file-submission-attachments hide-security-scan ${
     ((props.status.status === 'Received' && props.availableActions.includes('Archived')) ||
-    props.status.status === 'Archived') ? 'hide-security-scan' : 'hide-trim'}`
+    props.status.status === 'Archived') ? '' : 'hide-trim'}`
   }
   >
     <div className="row">
