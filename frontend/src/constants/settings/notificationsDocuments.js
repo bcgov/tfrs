@@ -15,7 +15,7 @@ const DOCUMENT_NOTIFICATIONS = [{
   code: 'DOCUMENT_SCAN_FAILED',
   description: 'Security Scan Failed',
   key: 'failed',
-  recipients: ['fuel_supplier']
+  recipients: []
 }, {
   id: 4,
   code: 'DOCUMENT_RECEIVED',
