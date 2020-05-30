@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dbConnectionTest=$(python3 /etc/nagios3/commands/check_postgresql_connection.py)
+dbConnectionTest=$(python3 /etc/nagios3/commands/check_postgresql_liveness.py)
 echo $dbConnectionTest
 if [[ $dbConnectionTest == OK* ]];
 then

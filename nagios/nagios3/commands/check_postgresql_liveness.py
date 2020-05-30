@@ -20,8 +20,11 @@ try:
     )
  
 	# get a connection, if a connect cannot be made an exception will be raised here
+    print('conn_string is {conn_string}')
     psycopg2.connect(conn_string)
+    print('connected')
     psycopg2.close()
+    print('closed')
  
 	# conn.cursor will return a cursor object, you can use this cursor to perform queries
     print('OK - Database connection checking passed')
