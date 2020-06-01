@@ -284,8 +284,8 @@
                                         "name": "DATABASE_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-postgresql",
-                                                "key": "DATABASE_USER"
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-username"
                                             }
                                         }
                                     },
@@ -293,8 +293,8 @@
                                         "name": "DATABASE_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-postgresql",
-                                                "key": "DATABASE_PASSWORD"
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-password"
                                             }
                                         }
                                     },
