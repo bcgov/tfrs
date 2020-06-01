@@ -20,7 +20,7 @@ try:
     )
  
 	# get a connection, if a connect cannot be made an exception will be raised here
-    print('conn_string is {conn_string}')
+    print "conn_string is ", conn_string
     psycopg2.connect(conn_string)
     print('connected')
     psycopg2.close()
