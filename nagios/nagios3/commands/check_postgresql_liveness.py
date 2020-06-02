@@ -14,19 +14,14 @@ try:
 
     conn_string = "host='{database_service_name}' dbname='{database_name}' user='{database_user}' password='{database_password}'".format(
         database_service_name=DB['DATABASE_SERVICE_NAME'],
-        database_name=DB['DATABASE_USER'],
-        database_user=DB['DATABASE_PASSWORD'],
-        database_password=DB['DATABASE_NAME']
+        database_name=DB['DATABASE_NAME'],
+        database_user=DB['DATABASE_USER'],
+        database_password=DB['DATABASE_PASSWORD']
     )
  
-	# get a connection, if a connect cannot be made an exception will be raised here
-    print "conn_string is ", conn_string
-    psycopg2.connect(conn_string)
-    print('connected')
-    psycopg2.close()
-    print('closed')
+    conn=psycopg2.connect(conn_string)
+    conn.close()
  
-	# conn.cursor will return a cursor object, you can use this cursor to perform queries
     print('OK - Database connection checking passed')
  
 except Exception as error:
