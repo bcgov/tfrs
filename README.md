@@ -12,7 +12,7 @@ Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supportin
 ## Project Status
 * Develop Pipeline: [![Build Status](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools%2Fdevelop-pipeline)](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools/job/develop-pipeline/)
 * Master Pipeline: [![Build Status](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools%2Fmaster-pipeline)](https://jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools/job/master-pipeline/)
-* Functional Test: [![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=UFhGcjZ5cTJCSGRnb1R5ZWFNMGhEWnJhNlowRnJ4VzMyQUNma2hJeFo4bz0tLW9xZ1FMZ0x2Yy9jcmRtdkJiYkRBVVE9PQ==--40a2094e88439716ccc2e445e4bcefe2f2c386b6)](https://www.browserstack.com/automate/public-build/UFhGcjZ5cTJCSGRnb1R5ZWFNMGhEWnJhNlowRnJ4VzMyQUNma2hJeFo4bz0tLW9xZ1FMZ0x2Yy9jcmRtdkJiYkRBVVE9PQ==--40a2094e88439716ccc2e445e4bcefe2f2c386b6)
+
 
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
