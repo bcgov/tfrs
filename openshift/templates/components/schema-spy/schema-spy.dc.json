@@ -11,6 +11,12 @@
             "displayName": "Environment name",
             "description": "Valid values: dev, test and prod",
             "required": true
+        },
+        {
+            "name": "DATABASE_SERVICE_NAME",
+            "displayName": "database service name",
+            "description": "database service name",
+            "required": true
         }
     ],
     "objects": [
@@ -84,11 +90,16 @@
                                 "env": [
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
-                                        "value": "postgresql"
+                                        "value": "${DATABASE_SERVICE_NAME}"
                                     },
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "value": "tfrs"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-name"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
@@ -235,11 +246,16 @@
                                 "env": [
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
-                                        "value": "postgresql"
+                                        "value": "${DATABASE_SERVICE_NAME}"
                                     },
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "value": "tfrs"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-name"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",

@@ -17,6 +17,12 @@
             "displayName": "The source image stream name",
             "description": "The image stream could trigger the deployment, valid values: celery-develop and celery",
             "required": true
+        },
+        {
+            "name": "DATABASE_SERVICE_NAME",
+            "displayName": "database service name",
+            "description": "database service name",
+            "required": true
         }
     ],
     "objects": [
@@ -113,7 +119,7 @@
                                     },
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
-                                        "value": "postgresql"
+                                        "value": "${DATABASE_SERVICE_NAME}"
                                     },
                                     {
                                         "name": "DATABASE_ENGINE",
@@ -121,7 +127,12 @@
                                     },
                                     {
                                         "name": "DATABASE_NAME",
-                                        "value": "tfrs"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-name"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DATABASE_USER",

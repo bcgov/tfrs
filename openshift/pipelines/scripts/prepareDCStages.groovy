@@ -18,6 +18,7 @@ def backendDCStage (String envName) {
                     def CPU_LIMIT
                     def MEMORY_REQUEST
                     def MEMORY_LIMIT
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = "dev"
@@ -34,6 +35,7 @@ def backendDCStage (String envName) {
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = "test"
@@ -50,6 +52,7 @@ def backendDCStage (String envName) {
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = "prod"
@@ -66,6 +69,7 @@ def backendDCStage (String envName) {
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='postgresql'
                     }
                     openshift.withProject("${projectName}") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -136,18 +140,22 @@ def celeryDCStage (String envName) {
                     def projectName
                     def ENV_NAME
                     def SOURCE_IS_NAME
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'celery-develop'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'celery'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'celery'
+                        DATABASE_SERVICE_NAME='postgresql'
                     }
                     openshift.withProject("${projectName}") {
                         def celeryDCJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-dc.json'), 
@@ -230,6 +238,7 @@ def scanHandlerDCStage (String envName) {
                     def CPU_LIMIT
                     def MEMORY_REQUEST
                     def MEMORY_LIMIT
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
@@ -238,6 +247,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='100m'
                         MEMORY_REQUEST='120Mi'
                         MEMORY_LIMIT='200Mi'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
@@ -246,6 +256,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='100m'
                         MEMORY_REQUEST='120Mi'
                         MEMORY_LIMIT='200Mi'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
@@ -254,6 +265,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='250m'
                         MEMORY_REQUEST='256Mi'
                         MEMORY_LIMIT='512Mi'
+                        DATABASE_SERVICE_NAME='postgresql'
                     }
                     openshift.withProject("${projectName}") {
                         def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
