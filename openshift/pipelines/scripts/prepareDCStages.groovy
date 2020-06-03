@@ -87,7 +87,8 @@ def backendDCStage (String envName) {
                         "CPU_REQUEST=${CPU_REQUEST}",
                         "CPU_LIMIT=${CPU_LIMIT}",
                         "MEMORY_REQUEST=${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}",
+                        "DATABASE_SERVICE_NAME"=${DATABASE_SERVICE_NAME}
                         )
                         openshift.apply(backendDCJson)
                     }
@@ -161,7 +162,8 @@ def celeryDCStage (String envName) {
                         def celeryDCJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-dc.json'), 
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
-                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}"
+                        "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
+                        "DATABASE_SERVICE_NAME"=${DATABASE_SERVICE_NAME}
                         )
                         openshift.apply(celeryDCJson)
                     }
@@ -275,7 +277,8 @@ def scanHandlerDCStage (String envName) {
                         "CPU_REQUEST=${CPU_REQUEST}",
                         "CPU_LIMIT=${CPU_LIMIT}",
                         "MEMORY_REQUEST=${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}",
+                        "DATABASE_SERVICE_NAME"=${DATABASE_SERVICE_NAME}
                         )
                         openshift.apply(scanHandlerDCJson)
                     }
