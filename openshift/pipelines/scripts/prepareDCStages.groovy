@@ -95,6 +95,7 @@ def backendDCStage (String envName) {
                         "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}",
                         "DJANGO_DEBUG=${DJANGO_DEBUG}"
                         )
+                        print(backendDCJson)
                         openshift.apply(backendDCJson)
                     }
                 }
