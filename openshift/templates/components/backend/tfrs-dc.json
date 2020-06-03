@@ -380,7 +380,7 @@
                                         "name": "DJANGO_SECRET_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "djangoSecretKey",
+                                                "name": "django-secret-key",
                                                 "key": "DJANGO_SECRET_KEY"
                                             }
                                         }
