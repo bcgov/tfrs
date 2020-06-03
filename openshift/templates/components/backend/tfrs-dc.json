@@ -98,7 +98,14 @@
             "displayName": "database service name",
             "description": "database service name",
             "required": true
+        },
+        {
+            "name": "DJANGO_DEBUG",
+            "displayName": "dhangio debug",
+            "description": "value is True or False",
+            "required": true
         }
+        
     ],
     "objects": [
         {
@@ -384,6 +391,10 @@
                                                 "key": "DJANGO_SECRET_KEY"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "DJANGO_DEBUG",
+                                        "value": "${DJANGO_DEBUG}"
                                     }
                                 ],
                                 "resources": {

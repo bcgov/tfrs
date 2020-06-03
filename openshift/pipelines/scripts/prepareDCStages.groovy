@@ -19,6 +19,7 @@ def backendDCStage (String envName) {
                     def MEMORY_REQUEST
                     def MEMORY_LIMIT
                     def DATABASE_SERVICE_NAME
+                    def DJANGO_DEBUG
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = "dev"
@@ -36,6 +37,7 @@ def backendDCStage (String envName) {
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
                         DATABASE_SERVICE_NAME='patroni-master-dev'
+                        DJANGO_DEBUG='True'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = "test"
@@ -53,6 +55,7 @@ def backendDCStage (String envName) {
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
                         DATABASE_SERVICE_NAME='patroni-master-test'
+                        DJANGO_DEBUG='False'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = "prod"
@@ -70,6 +73,7 @@ def backendDCStage (String envName) {
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
                         DATABASE_SERVICE_NAME='postgresql'
+                        DJANGO_DEBUG='False'
                     }
                     openshift.withProject("${projectName}") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -88,7 +92,8 @@ def backendDCStage (String envName) {
                         "CPU_LIMIT=${CPU_LIMIT}",
                         "MEMORY_REQUEST=${MEMORY_REQUEST}",
                         "MEMORY_LIMIT=${MEMORY_LIMIT}",
-                        "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}"
+                        "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}",
+                        "DJANGO_DEBUG=${DJANGO_DEBUG}"
                         )
                         openshift.apply(backendDCJson)
                     }
