@@ -280,10 +280,6 @@ def scanHandlerDCStage (String envName) {
                         "-p", 
                         "ENV_NAME=${ENV_NAME}", 
                         "SOURCE_IS_NAME=${SOURCE_IS_NAME}",
-                        "CPU_REQUEST=${CPU_REQUEST}",
-                        "CPU_LIMIT=${CPU_LIMIT}",
-                        "MEMORY_REQUEST=${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT=${MEMORY_LIMIT}",
                         "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}"
                         )
                         openshift.apply(scanHandlerDCJson)
