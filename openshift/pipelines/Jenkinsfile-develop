@@ -37,6 +37,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds
+        /****
         backendBuildStages = prepareBuilds.backendBuildStages('dev')
         frontendBuildStages = prepareBuilds.frontendBuildStages('dev')
         for (builds in backendBuildStages) {
@@ -59,6 +60,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
+        ****/
 
         //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
         //prepareOtherStages.checkBackupSpace("mem-tfrs-dev").call()
