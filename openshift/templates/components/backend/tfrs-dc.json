@@ -274,12 +274,7 @@
                                     },
                                     {
                                         "name": "DATABASE_NAME",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "patroni-${ENV_NAME}",
-                                                "key": "app-db-name"
-                                            }
-                                        }
+                                        "value": "tfrs"
                                     },
                                     {
                                         "name": "APP_CONFIG",
