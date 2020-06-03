@@ -102,19 +102,6 @@
     ],
     "objects": [
         {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-              "name": "djangoSecretKey",
-              "labels": {
-                "app": "backend"
-              }
-            },
-            "stringData": {
-              "DJANGO_SECRET_KEY": "${DJANGO_SECRET_KEY}"
-            }
-        },
-        {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
