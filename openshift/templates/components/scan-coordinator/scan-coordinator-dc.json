@@ -160,8 +160,8 @@
                                         "name": "MINIO_ACCESS_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_ACCESS_KEY"
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
                                             }
                                         }
                                     },
@@ -169,8 +169,8 @@
                                         "name": "MINIO_SECRET_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_SECRET_KEY"
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
                                             }
                                         }
                                     }
