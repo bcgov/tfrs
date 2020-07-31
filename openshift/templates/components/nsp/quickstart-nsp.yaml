@@ -1,0 +1,47 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: tfrs-generic-policy
+metadata:
+  name: tfrs-generic-policy
+  creationTimestamp:
+parameters:
+  - name: ENV_NAME
+    displayName: Environment Name
+    description: Environment Name
+    required: true
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+    metadata:
+      name: egress-internet
+    spec:
+      description: |
+        allow the mem-tfrs-${ENV_NAME} namespace to talk to the internet.
+      source:
+        - - $namespace=mem-tfrs-${ENV_NAME}
+      destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+    metadata:
+      name: intra-namespace-comms
+    spec:
+      description: |
+        allow the mem-tfrs-${ENV_NAME} namespace to talk to itself
+      source:
+        - - $namespace=mem-tfrs-${ENV_NAME}
+      destination:
+        - - $namespace=mem-tfrs-${ENV_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+    metadata:
+      name: int-cluster-k8s-api-comms
+    spec:
+      description: |
+        allow mem-tfrs-${ENV_NAME} pods to talk to the k8s api
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+      source:
+        - - $namespace=mem-tfrs-${ENV_NAME}

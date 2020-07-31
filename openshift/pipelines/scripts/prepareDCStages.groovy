@@ -162,7 +162,7 @@ def celeryDCStage (String envName) {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'celery'
-                        DATABASE_SERVICE_NAME='postgresql'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def celeryDCJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-dc.json'), 
@@ -273,7 +273,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='250m'
                         MEMORY_REQUEST='256Mi'
                         MEMORY_LIMIT='512Mi'
-                        DATABASE_SERVICE_NAME='postgresql'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
@@ -364,18 +364,18 @@ def notificationServerOthersDCStage (String envName) {
                         ROUTE_HOST = 'dev-lowcarbonfuels.pathfinder.gov.bc.ca'
                     } else if(envName == 'test') {
                         projectName = 'mem-tfrs-test'
-                        ROUTE_NAME = 'dev-lowcarbonfuels-notification'
-                        ROUTE_HOST = 'dev-lowcarbonfuels.pathfinder.gov.bc.ca'
+                        ROUTE_NAME = 'test-lowcarbonfuels-notification'
+                        ROUTE_HOST = 'test-lowcarbonfuels.pathfinder.gov.bc.ca'
                     } else if(envName == 'prod') {
                         projectName = 'mem-tfrs-prod'
-                        ROUTE_NAME = 'dev-lowcarbonfuels-notification'
-                        ROUTE_HOST = 'dev-lowcarbonfuels.pathfinder.gov.bc.ca'
+                        ROUTE_NAME = 'lowcarbonfuels-notification'
+                        ROUTE_HOST = 'lowcarbonfuels.gov.bc.ca'
                     }
                     openshift.withProject("${projectName}") {
                         def notificationServerDCJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-others-dc.json'), 
                         "-p", 
-                        "ROUTE_NAME=dev-lowcarbonfuels-notification",
-                        "ROUTE_HOST=dev-lowcarbonfuels.pathfinder.gov.bc.ca"
+                        "ROUTE_NAME=${ROUTE_NAME}",
+                        "ROUTE_HOST=${ROUTE_HOST}"
                         )
                         openshift.apply(notificationServerDCJson)
                     }
@@ -446,44 +446,24 @@ def frontendDCOthersStage (String envName) {
             timeout(30) {
                 script {
                     def projectName
-                    def KEYCLOAK_AUTHORITY
-                    def KEYCLOAK_CLIENT_ID
-                    def KEYCLOAK_CALLBACK_URL
-                    def KEYCLOAK_LOGOUT_URL
                     def ROUTE_HOST_NAME
                     def ROUTE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
-                        KEYCLOAK_AUTHORITY = 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev'
-                        KEYCLOAK_CLIENT_ID = 'tfrs-dev'
-                        KEYCLOAK_CALLBACK_URL = 'https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback'
-                        KEYCLOAK_LOGOUT_URL = 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F'
                         ROUTE_HOST_NAME = 'dev-lowcarbonfuels.pathfinder.gov.bc.ca'
                         ROUTE_NAME = 'dev-lowcarbonfuels-frontend'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
-                        KEYCLOAK_AUTHORITY = 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs'
-                        KEYCLOAK_CLIENT_ID = 'tfrs'
-                        KEYCLOAK_CALLBACK_URL = 'https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback'
-                        KEYCLOAK_LOGOUT_URL = 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F'
                         ROUTE_HOST_NAME = 'test-lowcarbonfuels.pathfinder.gov.bc.ca'
                         ROUTE_NAME = 'test-lowcarbonfuels-frontend'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
-                        KEYCLOAK_AUTHORITY = 'https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs'
-                        KEYCLOAK_CLIENT_ID = 'tfrs'
-                        KEYCLOAK_CALLBACK_URL = 'https://lowcarbonfuels.gov.bc.ca/authCallback'
-                        KEYCLOAK_LOGOUT_URL = 'https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%lowcarbonfuels.gov.bc.ca%2F'
                         ROUTE_HOST_NAME = 'lowcarbonfuels.gov.bc.ca'
                         ROUTE_NAME = 'lowcarbonfuels-frontend'
                     }
                     openshift.withProject("${projectName}") {
                         def clientDCJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-dc-others.json'), 
                         "-p", 
-                        "KEYCLOAK_AUTHORITY=${KEYCLOAK_AUTHORITY}",
-                        "KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}",
-                        "KEYCLOAK_CALLBACK_URL=${KEYCLOAK_CALLBACK_URL}",
-                        "KEYCLOAK_LOGOUT_URL=${KEYCLOAK_LOGOUT_URL}",
                         "ROUTE_HOST_NAME=${ROUTE_HOST_NAME}",
                         "ROUTE_NAME=${ROUTE_NAME}"
                         )

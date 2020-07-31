@@ -2,8 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: jenkins
-  namespace: default
+  name: bcgov-jenkins-basic
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -11,49 +10,47 @@ objects:
     creationTimestamp: null
     labels:
       shared: "true"
-    name: jenkins-basic
+    name: bcgov-jenkins-basic
   spec:
     lookupPolicy:
-      local: false
+      local: true
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
     creationTimestamp: null
-    labels:
-      app: jenkins-basic-bc
-    name: jenkins-basic
+    name: bcgov-jenkins-basic
   spec:
     failedBuildsHistoryLimit: 2
     nodeSelector: null
     output:
       to:
         kind: ImageStreamTag
-        name: jenkins-basic:v1.0.0
+        name: bcgov-jenkins-basic:v2-20200303
     postCommit: {}
     resources:
       limits:
-        cpu: "1"
-        memory: 1Gi
+        cpu: "2"
+        memory: 6Gi
       requests:
         cpu: "1"
-        memory: 1Gi
+        memory: 2Gi
     runPolicy: SerialLatestOnly
     source:
-      contextDir: .jenkins/docker
+      contextDir: cicd/jenkins-basic/docker
       git:
-        ref: master
-        uri: https://github.com/bcgov/tfrs.git
+        ref: update-jenkins-rhel-atomic
+        uri: https://github.com/kuanfandevops/openshift-components.git
       type: Git
     strategy:
       dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: bcgov-jenkins-basic:v2-20200303
+          name: rhel-atomic:7.7-371
       type: Docker
-    successfulBuildsHistoryLimit: 2
+    successfulBuildsHistoryLimit: 5
     triggers:
+    - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-    - type: ConfigChange
   status:
     lastVersion: 0
