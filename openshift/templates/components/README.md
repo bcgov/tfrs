@@ -17,21 +17,21 @@ oc process -f openshift/templates/config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs-dev \
 KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F \
+KEYCLOAK_POST_LOGOUT_URL=https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca&retnow=1 \
 -n mem-tfrs-dev
 
 oc process -f openshift/templates/config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F \
+KEYCLOAK_POST_LOGOUT_URL=https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://test-lowcarbonfuels.pathfinder.gov.bc.ca&retnow=1 \
 -n mem-tfrs-test
 
 oc process -f openshift/templates/config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://lowcarbonfuels.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Flowcarbonfuels.gov.bc.ca%2F \
+KEYCLOAK_POST_LOGOUT_URL=https://logon7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://lowcarbonfuels.gov.bc.ca&retnow=1 \
 -n mem-tfrs-prod
 
 ## 4. Create postgresql for unit test
