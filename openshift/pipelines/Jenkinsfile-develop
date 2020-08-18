@@ -99,7 +99,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
 
         //Refresh SchemaSpy
-        prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
+        //prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
 
     } //end of node
 
