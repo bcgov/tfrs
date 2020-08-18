@@ -22,6 +22,10 @@ parameters:
     required: true
 objects:
 - apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: keycloak-config
   data:
     features.js: |
       window.tfrs_config = {
@@ -43,7 +47,4 @@ objects:
         "exclusion_reports.create_effective_date": "2019-01-01",
         "exclusion_reports.enabled": true
       };
-  kind: ConfigMap
-  metadata:
-    creationTimestamp: null
-    name: keycloak-config
+

@@ -27,11 +27,11 @@ $ oc create secret generic jenkins-basic-functional-test-users --from-file=funct
 1. Build jenkins-basic image
 $ oc process -f .jenkins/openshift/build.yaml -l app=jenkins-basic-bc | oc create -f -
 
-2. deoloy jenkins-basic
+2. deploy jenkins-basic
 $ oc process -f .jenkins/openshift/deploy.yaml \
 -l app=jenkins-basic-dc \
 NAME=jenkins-basic \
-ROUTE_HOST=jenkins-basic-mem-tfrs-tools-tools.pathfinder.gov.bc.ca \
+ROUTE_HOST=jenkins-basic.pathfinder.gov.bc.ca \
 | oc create -f -
 persistentvolumeclaim/jenkins-basic created
 serviceaccount/jenkins-basic created

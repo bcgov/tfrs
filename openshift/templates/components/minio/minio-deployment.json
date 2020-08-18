@@ -158,6 +158,7 @@
         }
       },
       "spec": {
+        "storageClassName": "netapp-file-standard",
         "accessModes": [
           "ReadWriteOnce"
         ],
@@ -253,7 +254,7 @@
       "name": "VOLUME_CAPACITY",
       "displayName": "Volume Capacity",
       "description": "Volume space available to Minio server for files, e.g. 512Mi, 2Gi.",
-      "value": "2Gi",
+      "value": "5G",
       "required": true
     },
     {

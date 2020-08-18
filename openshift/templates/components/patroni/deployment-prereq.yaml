@@ -97,6 +97,7 @@ parameters:
   name: NAME
   value: patroni
 - name: SUFFIX
+  description: for tfrs, the value is -dev, -test and -prod
   required: true
 - description: Username of the superuser account for initialization.
   displayName: Superuser Username

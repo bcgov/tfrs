@@ -22,7 +22,6 @@ parameters:
   required: true
 - name: NAMESPACE
   description: "OpenShift project (current namespace)"
-  value: tbiwaq-dev
   required: true
 - name: CLUSTER_NAME
   description: "Name of the RabbitMQ cluster"

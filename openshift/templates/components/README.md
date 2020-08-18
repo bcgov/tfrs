@@ -13,25 +13,25 @@ copy the files on jenkins-basic-builds and jenkins-basic from v3 to v4
 
 ## 3. keycloak-config on environment projects
 
-oc process -f openshift/templates/config/keycloak-config.yaml \
+oc process -f config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs-dev \
 KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca&retnow=1 \
--n mem-tfrs-dev
+KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%26retnow%3D1 \
+| oc create -f - -n mem-tfrs-dev
 
-oc process -f openshift/templates/config/keycloak-config.yaml \
+oc process -f config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://test-lowcarbonfuels.pathfinder.gov.bc.ca&retnow=1 \
+KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%26retnow%3D1 \
 -n mem-tfrs-test
 
-oc process -f openshift/templates/config/keycloak-config.yaml \
+oc process -f config/keycloak-config.yaml \
 KEYCLOAK_AUTHORITY=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://lowcarbonfuels.gov.bc.ca/authCallback \
-KEYCLOAK_POST_LOGOUT_URL=https://logon7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://lowcarbonfuels.gov.bc.ca&retnow=1 \
+KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogon7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Flowcarbonfuels.gov.bc.ca%26retnow%3D1 \
 -n mem-tfrs-prod
 
 ## 4. Create postgresql for unit test
@@ -43,19 +43,20 @@ openshift/templates/unittest/README.md
 openshift/templates/patroni/README.md
 secret patroni-[dev, test or prod] is created
 
-## 6. Rabbitmq setup
-
-openshift/templates/rabbitmq/README.md
-secret rabbitmq-tfrs is created
-
-## 7. Minio setup
+## 6. Minio setup
 
 openshift/templates/minio/README.md
 secret minio is created
 
+## 7. Rabbitmq setup
+
+openshift/templates/rabbitmq-cluster/README.md
+tfrs-dev-rabbitmq-cluster-secret is created
+create rabbitmq-tfrs with TFRS_PASSWORD inside only from tfrs-dev-rabbitmq-cluster-secret, make sure TFRS_PASSWORD has same value as tfrs-dev-rabbitmq-cluster-secret.password
+
 ## 8. Clamav setup
 
-openshift/templates/clamav/README.md
+openshift/templates/document-security-scan/README.md
 
 ## 9. nginx-runtim
 

@@ -7,7 +7,7 @@ celery-dc.json deplyment config
 
 Make sure the following secrets created:
 rabbitmq-tfrs
-patroni-prod
+patroni-dev
 minio (it has same value as secret tfrs-minio-secret)
 
 ### After pipeline completes
