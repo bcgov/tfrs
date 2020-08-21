@@ -18,7 +18,7 @@ oc tag mem-tfrs-tools/patroni:v10-stable mem-tfrs-dev/patroni:v10-stable
 
 4. Deploy patroni
 oc process -f ./deployment-prereq.yaml NAME=patroni SUFFIX=-dev PATRONI_SUPERUSER_USERNAME=postgres PATRONI_REPLICATION_USERNAME=replication | oc create -f - -n mem-tfrs-dev
-oc process -f ./deployment.yaml NAME=patroni SUFFIX=-dev IMAGE_STREAM_NAMESPACE=mem-tfrs-dev PVC_SIZE=2G REPLICA=1 | oc create -f - -n mem-tfrs-dev
+oc process -f ./deployment.yaml NAME=patroni SUFFIX=-dev IMAGE_STREAM_NAMESPACE=mem-tfrs-dev PVC_SIZE=5G REPLICA=1 | oc create -f - -n mem-tfrs-dev
 
 
 ### Database Migration from Openshift v3 to Openshift 4
