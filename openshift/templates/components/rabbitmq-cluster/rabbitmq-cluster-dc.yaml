@@ -22,7 +22,6 @@ parameters:
   required: true
 - name: NAMESPACE
   description: "OpenShift project (current namespace)"
-  value: tbiwaq-dev
   required: true
 - name: CLUSTER_NAME
   description: "Name of the RabbitMQ cluster"
@@ -163,7 +162,8 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: ${NAME}${SUFFIX}-${CLUSTER_NAME}
+    # name: ${NAME}${SUFFIX}-${CLUSTER_NAME} for pr based pipeline
+    name: rabbit
   spec:
     selector:
       app: ${NAME}${SUFFIX}-${CLUSTER_NAME}

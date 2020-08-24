@@ -6,7 +6,7 @@ notification-server-others-dc.json create service and route, pipeline doesn't us
 
 ### Before trigging pipeline
 
-make sure password abbitmq-tfrs exists
+make sure password rabbitmq-tfrs exists
 
 ### After pipeline completes
 

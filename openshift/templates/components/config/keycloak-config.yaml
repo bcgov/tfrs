@@ -22,13 +22,17 @@ parameters:
     required: true
 objects:
 - apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: keycloak-config
   data:
     features.js: |
       window.tfrs_config = {
         "keycloak.enabled": true,
         "keycloak.authority": "${KEYCLOAK_AUTHORITY}",
         "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
-        "keycloak.callback_url": ${KEYCLOAK_CALLBACK_URL}",
+        "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
         "keycloak.post_logout_url": "${KEYCLOAK_POST_LOGOUT_URL}",
         "debug.enabled": false,
         "secure_document_upload.enabled": true,
@@ -43,7 +47,4 @@ objects:
         "exclusion_reports.create_effective_date": "2019-01-01",
         "exclusion_reports.enabled": true
       };
-  kind: ConfigMap
-  metadata:
-    creationTimestamp: null
-    name: keycloak-config
+

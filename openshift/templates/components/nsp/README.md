@@ -5,10 +5,10 @@
 ### Apply to name spaces before anything else
 
 * oc process -f ./nsp-tools.yaml | oc create -f - -n mem-tfrs-tools
-* oc process -f ./quickstart-nsp.yaml | oc create -f - -n mem-tfrs-tools
-* oc process -f ./quickstart-nsp.yaml | oc create -f - -n mem-tfrs-dev
-* oc process -f ./quickstart-nsp.yaml | oc create -f - -n mem-tfrs-test
-* oc process -f ./quickstart-nsp.yaml | oc create -f - -n mem-tfrs-prod
+* oc process -f ./quickstart-nsp.yaml ENV_NAME=tools | oc create -f - -n mem-tfrs-tools
+* oc process -f ./quickstart-nsp.yaml ENV_NAME=dev | oc create -f - -n mem-tfrs-dev
+* oc process -f ./quickstart-nsp.yaml ENV_NAME=test | oc create -f - -n mem-tfrs-test
+* oc process -f ./quickstart-nsp.yaml ENV_NAME=prod | oc create -f - -n mem-tfrs-prod
 
 ### Add role to users, check if the settings already exist before running the grant
 

@@ -96,9 +96,15 @@
           "spec": {
             "volumes": [
               {
-                "name": "${BACKUP_VOLUME_NAME}",
+                "name": "nfs-backup",
                 "persistentVolumeClaim": {
                   "claimName": "${BACKUP_VOLUME_NAME}"
+                }
+              },
+              {
+                "name": "minio-data",
+                "persistentVolumeClaim": {
+                  "claimName": "${MINIO_DATA_VOLUME_NAME}"
                 }
               },
               {
@@ -245,9 +251,18 @@
                 },
                 "volumeMounts": [
                   {
-                    "name": "${BACKUP_VOLUME_NAME}",
-                    "mountPath": "${BACKUP_DIR}",
-                    "subPath": "patroni-backup"
+                    "name": "nfs-backup",
+                    "subpath": "patroni-backup",
+                    "mountPath": "${BACKUP_DIR}"
+                  },
+                  {
+                    "name": "nfs-backup",
+                    "subpath": "minio-backup",
+                    "mountPath": "${MINIO_BACKUP_DIR}"
+                  },
+                  {
+                    "name": "minio-data",
+                    "mountPath": "/minio-data"
                   },
                   {
                     "name": "${VERIFICATION_VOLUME_NAME}",
@@ -403,9 +418,16 @@
     {
       "name": "BACKUP_DIR",
       "displayName": "The root backup directory",
-      "description": "The name of the root backup directory.  The backup volume will be mounted to this directory.",
+      "description": "The name of the root backup directory.",
       "required": true,
-      "value": "/backups/"
+      "value": "/backups/patroni-backup/"
+    },
+    {
+      "name": "MINIO_BACKUP_DIR",
+      "displayName": "The minio backup directory",
+      "description": "The name of the minio backup directory.",
+      "required": true,
+      "value": "/backups-minio/"
     },
     {
       "name": "NUM_BACKUPS",
@@ -503,28 +525,34 @@
       "displayName": "Resources CPU Request",
       "description": "The resources CPU request (in cores) for this build.",
       "required": true,
-      "value": "0"
+      "value": "100m"
     },
     {
       "name": "CPU_LIMIT",
       "displayName": "Resources CPU Limit",
       "description": "The resources CPU limit (in cores) for this build.",
       "required": true,
-      "value": "0"
+      "value": "150m"
     },
     {
       "name": "MEMORY_REQUEST",
       "displayName": "Resources Memory Request",
       "description": "The resources Memory request (in Mi, Gi, etc) for this build.",
       "required": true,
-      "value": "0Mi"
+      "value": "100M"
     },
     {
       "name": "MEMORY_LIMIT",
       "displayName": "Resources Memory Limit",
       "description": "The resources Memory limit (in Mi, Gi, etc) for this build.",
       "required": true,
-      "value": "0Mi"
+      "value": "150M"
+    },
+    {
+      "name": "MINIO_DATA_VOLUME_NAME",
+      "displayName": "Minio data pvc name",
+      "description": "Minio data pvc name.",
+      "required": true
     }
   ]
 }

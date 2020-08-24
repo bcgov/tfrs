@@ -5,7 +5,7 @@ scan-hendler-dc.json deployment config
 
 ### Before triggering pipeline
 
-make sure secret rabbitmq-tfrs and patroni-prod exist
+make sure secret rabbitmq-tfrs and patroni-dev exist
 
 ### After pipeline completes
 

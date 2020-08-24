@@ -10,5 +10,6 @@ oc tag tfrs-clamav:latest tfrs-clamav:dev
 oc tag tfrs-clamav:latest tfrs-clamav:test
 oc tag tfrs-clamav:latest tfrs-clamav:prod
 
-oc process -f ./clamav-dc.json ENV_NAME=[dev, test or prod] | oc create -f - -n mem-tfrs-[dev, test or prod]
+oc process -f ./clamav-dc.json ENV_NAME=dev | oc create -f - -n mem-tfrs-dev
+note: if virus database download failed, run build on tools project and tag it to dev
 
