@@ -212,7 +212,32 @@
         "minioAccessKey": "${MINIO_ACCESS_KEY}",
         "minioSecretKey": "${MINIO_SECRET_KEY}"
       }
-    }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "route.openshift.io/v1",
+      "metadata": {
+          "name": "docs",
+          "creationTimestamp": null
+      },
+      "spec": {
+          "host": "${MINIO_HOST_NAME}",
+          "to": {
+              "kind": "Service",
+              "name": "minio",
+              "weight": 100
+          },
+          "port": {
+              "targetPort": "9000-tcp"
+          },
+          "tls": {
+              "termination": "edge",
+              "insecureEdgeTerminationPolicy": "Redirect"
+          },
+          "wildcardPolicy": "None"
+      },
+      "status": {}
+  }    
   ],
   "parameters": [
     {
@@ -280,6 +305,12 @@
       "displayName": "Memory upper limit",
       "description": "Memory upper limit",
       "required": true
-    }
+    },
+    {
+      "name": "MINIO_HOST_NAME",
+      "displayName": "Minio hostname",
+      "description": "Minio hostname",
+      "required": true
+    }    
   ]
 }

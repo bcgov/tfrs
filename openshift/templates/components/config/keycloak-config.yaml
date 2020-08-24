@@ -32,7 +32,7 @@ objects:
         "keycloak.enabled": true,
         "keycloak.authority": "${KEYCLOAK_AUTHORITY}",
         "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
-        "keycloak.callback_url": ${KEYCLOAK_CALLBACK_URL}",
+        "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
         "keycloak.post_logout_url": "${KEYCLOAK_POST_LOGOUT_URL}",
         "debug.enabled": false,
         "secure_document_upload.enabled": true,

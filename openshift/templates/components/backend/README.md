@@ -13,8 +13,9 @@ Make sure the following secrets created:
 * patroni-dev: created when setup patroni
 * rabbitmq-tfrs: created when setup rabbitmq
 * minio: created when detup minio
-* django-secret-key: create by tfrs-dc-others.json
+* django-secret-key
 
 #### After pipeline completes
 
-After pipeline completes, create autoscaler for backend
+oc process -f ./tfrs-dc-others.json ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca ROUTE_NAME=dev-lowcarbonfuels-backend | oc create -f - -n mem-tfrs-dev
+After pipeline completes, create autoscaler for backend and check DJANGO_DEBUG is set to false on prod

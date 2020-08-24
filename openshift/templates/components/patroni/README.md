@@ -14,6 +14,7 @@ oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
 oc process -f ./build.yaml | oc create -f - -n [tools namespace]
 
 3. tag patrini image from tool to project
+oc tag mem-tfrs-tools/patroni:v10-latest mem-tfrs-tools/patroni:v10-stable
 oc tag mem-tfrs-tools/patroni:v10-stable mem-tfrs-dev/patroni:v10-stable
 
 4. Deploy patroni

@@ -20,14 +20,6 @@
             "displayName": "Route name",
             "description": "Valid values: dev-lowcarbonfuels-backend, test-lowcarbonfuels-backend, lowcarbonfuels-backend",
             "required": true
-        },
-        {
-            "name": "DJANGO_SECRET_KEY",
-            "displayName": "Random secret key used by django",
-            "description": "Random secret key used by django",
-            "generate": "expression",
-            "from": "[a-zA-Z0-9]{50}",
-            "required": true
         }
     ],
     "objects": [
@@ -79,19 +71,6 @@
                     "termination": "edge"
                 },
                 "wildcardPolicy": "None"
-            }
-        },
-        {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-              "name": "django-secret-key",
-              "labels": {
-                "app": "backend"
-              }
-            },
-            "stringData": {
-              "DJANGO_SECRET_KEY": "${DJANGO_SECRET_KEY}"
             }
         }
     ]

@@ -16,15 +16,15 @@ Create client service and routeby using client-dc-others.json
 
 oc process -f ./client-dc-others.json \
 ROUTE_NAME=dev-lowcarbonfuels-frontend \
-ROUTE_HOST_NAME=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca \
+ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca \
 | oc create -f - -n mem-tfrs-dev
 
 oc process -f ./client-dc-others.json \
 ROUTE_NAME=test-lowcarbonfuels-frontend \
-ROUTE_HOST_NAME=https://test-lowcarbonfuels.pathfinder.gov.bc.ca \
+ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca \
 | oc create -f - -n mem-tfrs-test
 
 oc process -f ./client-dc-others.json \
 ROUTE_NAME=lowcarbonfuels-frontend \
-ROUTE_HOST_NAME=https://lowcarbonfuels.gov.bc.ca \
+ROUTE_HOST_NAME=lowcarbonfuels.gov.bc.ca \
 | oc create -f - -n mem-tfrs-prod
