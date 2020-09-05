@@ -252,13 +252,7 @@
                 "volumeMounts": [
                   {
                     "name": "nfs-backup",
-                    "subpath": "patroni-backup",
-                    "mountPath": "${BACKUP_DIR}"
-                  },
-                  {
-                    "name": "nfs-backup",
-                    "subpath": "minio-backup",
-                    "mountPath": "${MINIO_BACKUP_DIR}"
+                    "mountPath": "/backups"
                   },
                   {
                     "name": "minio-data",
@@ -421,13 +415,6 @@
       "description": "The name of the root backup directory.",
       "required": true,
       "value": "/backups/patroni-backup/"
-    },
-    {
-      "name": "MINIO_BACKUP_DIR",
-      "displayName": "The minio backup directory",
-      "description": "The name of the minio backup directory.",
-      "required": true,
-      "value": "/backups-minio/"
     },
     {
       "name": "NUM_BACKUPS",
