@@ -25,7 +25,7 @@ chmod 770 /bk-nfs/*
 6. create deployment config for backup container
 6.1 for dev
 BACKUP_VOLUME_NAME is nfs storage name, for example bk-mem-tfrs-dev-51gffzadghxs
-oc -n mem-tfrs-prod process -f ./templates/backup/backup-deploy.json \
+oc -n mem-tfrs-prod process -f ./backup-deploy.json \
   -p NAME=patroni-backup \
   -p SOURCE_IMAGE_NAME=patroni-backup \
   -p IMAGE_NAMESPACE=mem-tfrs-tools \
@@ -45,9 +45,9 @@ oc -n mem-tfrs-prod process -f ./templates/backup/backup-deploy.json \
   -p VERIFICATION_VOLUME_NAME=backup-verification \
   -p VERIFICATION_VOLUME_SIZE=2G \
   -p VERIFICATION_VOLUME_CLASS=netapp-file-standard \
-  -p ENVIRONMENT_FRIENDLY_NAME='tfrs Database Backup' \
+  -p ENVIRONMENT_FRIENDLY_NAME='tfrs dev' \
   -p ENVIRONMENT_NAME=tfrs-dev \
-  -p MINIO_DATA_VOLUME_NAME=minio-pv-claim | \
+  -p MINIO_DATA_VOLUME_NAME=minio-data | \
   oc create -f - -n mem-tfrs-dev
 6.2 for production
 BACKUP_VOLUME_NAME is the nfs storage name, for example bk-mem-tfrs-prod-s9fvzvwddd
@@ -77,3 +77,36 @@ oc -n mem-tfrs-prod process -f ./templates/backup/backup-deploy.json \
   oc create -f - -n mem-tfrs-prod
 7. If need to remove, only keeps configmap/backup-conf and the the nfs storage
 oc -n mem-tfrs-prod delete secret/patroni-backup secret/ftp-secret dc/patroni-backup pvc/backup-verification 
+
+## Backup Minio data to NFS storage
+
+1. Update minio storage from RWO (Read-Write-Once) to RWX (Read-Write-Many)
+Create a new RWM storage same as current minio storage. The old one is called minio-pv-claim, the new one will be called minio-data.
+
+2. scale up maintenance page 
+
+3. Scale down minio instance
+
+4. Scale up  httpd instance and mount
+    minio-pv-claim -> /minio-pv-claim     Read-Write-Once
+    minio-data -> /minio-data             Read-Write-Many
+
+5. copy everything on /minio-pv-claim to /minio-data
+
+6. Update minio dc to mount minio-data (replace minio-pv-claim)
+
+7. Scale up minio and verify it through login to docs link
+
+8. update httpd to mount nfs to /backups
+verify and create if needed
+drwxrwx---. 3 65534 65534 22 Sep  2 11:10 minio-backup
+drwxrwx---. 5 65534 65534 48 Jun  7 21:00 patroni-backup
+drwxrwx---. 2 65534 65534  6 Aug 18 11:31 postgresql-backup
+drwxrwx---. 2 65534 65534  6 Aug 18 11:31 rabbitmq-backup 
+
+8. Run Setup Backup container 6.1 on dev
+
+9. update backup.conf
+
+
+

@@ -68,7 +68,7 @@
               {
                 "name": "${NAME}-vol",
                 "persistentVolumeClaim": {
-                  "claimName": "${NAME}-pv-claim"
+                  "claimName": "${NAME}-data"
                 }
               }
             ],
@@ -152,7 +152,7 @@
       "kind": "PersistentVolumeClaim",
       "apiVersion": "v1",
       "metadata": {
-        "name": "${NAME}-pv-claim",
+        "name": "${NAME}-data",
         "labels": {
           "app": "${NAME}"
         }
@@ -160,7 +160,7 @@
       "spec": {
         "storageClassName": "netapp-file-standard",
         "accessModes": [
-          "ReadWriteOnce"
+          "ReadWriteMany"
         ],
         "resources": {
           "requests": {
