@@ -78,6 +78,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //run all the builds for test
         backendBuildStages = prepareBuilds.backendBuildStages('prod')
         frontendBuildStages = prepareBuilds.frontendBuildStages('prod')
+	/***
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -88,6 +89,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
                 }
             }
         }
+	***/
         for (builds in frontendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -126,7 +128,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Test, this is the last chance to quit.").call()
 
         //Deploy Backend, tag the latest to env tag
-        prepareOtherStages.deployBackendStage("mem-tfrs-test").call()
+        //prepareOtherStages.deployBackendStage("mem-tfrs-test").call()
     
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-test").call()
@@ -170,7 +172,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         prepareOtherStages.deployBackendStage("mem-tfrs-prod").call()
     
         //Deploy Frontend, tag the latest to env tag
-        prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
+        //prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
 
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Prod. If there are operational scripts to run, this is the time.").call()
