@@ -98,14 +98,29 @@
             "displayName": "database service name",
             "description": "database service name",
             "required": true
-        }
+        },
+        {
+            "name": "DJANGO_DEBUG",
+            "displayName": "dhangio debug",
+            "description": "value is True or False",
+            "required": true
+        },
+        {
+            "name": "DJANGO_SECRET_KEY",
+            "displayName": "Random secret key used by django",
+            "description": "Random secret key used by django",
+            "generate": "expression",
+            "from": "[a-zA-Z0-9]{50}",
+            "required": true
+        }        
+        
     ],
     "objects": [
         {
             "kind": "Secret",
             "apiVersion": "v1",
             "metadata": {
-              "name": "djangoSecretKey",
+              "name": "django-secret-key",
               "labels": {
                 "app": "backend"
               }
@@ -113,7 +128,7 @@
             "stringData": {
               "DJANGO_SECRET_KEY": "${DJANGO_SECRET_KEY}"
             }
-        },
+        },        
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
@@ -280,12 +295,7 @@
                                     },
                                     {
                                         "name": "DATABASE_NAME",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "patroni-${ENV_NAME}",
-                                                "key": "app-db-name"
-                                            }
-                                        }
+                                        "value": "tfrs"
                                     },
                                     {
                                         "name": "APP_CONFIG",
@@ -393,10 +403,14 @@
                                         "name": "DJANGO_SECRET_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "djangoSecretKey",
+                                                "name": "django-secret-key",
                                                 "key": "DJANGO_SECRET_KEY"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "DJANGO_DEBUG",
+                                        "value": "${DJANGO_DEBUG}"
                                     }
                                 ],
                                 "resources": {

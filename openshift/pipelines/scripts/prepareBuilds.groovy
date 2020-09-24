@@ -2,7 +2,8 @@ def backendBuildStages(String envName) {
     def buildBackendList = []
     def buildBackendStages = [:]
     buildBackendStages.put('Build Backend', prepareBuildBackend(envName))
-    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator(envName))
+    //comment it out as coordinator failed when build v1.6.22, no idea why at that moment
+    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator(envName))
     buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler(envName))
     buildBackendStages.put('Build Celery', prepareBuildCelery(envName))
     buildBackendList.add(buildBackendStages)

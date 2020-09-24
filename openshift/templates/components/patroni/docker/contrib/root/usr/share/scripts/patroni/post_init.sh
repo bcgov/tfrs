@@ -10,6 +10,7 @@ if [[ (! -z "$APP_USER") &&  (! -z "$APP_PASSWORD") && (! -z "$APP_DATABASE")]];
 
   echo "Creating extensions" 
   psql -U postgres -q -d "${APP_DATABASE}" -c 'create extension if not exists hstore'
+  psql -U postgres -q -d "${APP_DATABASE}" -c 'create extension if not exists pg_trgm'
 
 else
   echo "Skipping user creation"

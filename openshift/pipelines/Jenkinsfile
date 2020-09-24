@@ -147,14 +147,13 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         prepareOtherStages.confirmStage("Please confirm to continue the deployment on Prod").call()
 
         //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
-        //removed as backup-container is used
-        //prepareOtherStages.checkBackupSpace("mem-tfrs-prod").call()        
+        prepareOtherStages.checkBackupSpace("mem-tfrs-prod").call()        
         
         //Bring up Maintenance Page
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-prod").call()
 
-        //Datebase Backup, removed as backup-container is used
-        //prepareOtherStages.databaseBackupStage("mem-tfrs-prod", tfrsRelease).call()
+        //Datebase Backup
+        prepareOtherStages.databaseBackupStage("mem-tfrs-prod", tfrsRelease).call()
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.

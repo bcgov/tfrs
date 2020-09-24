@@ -262,7 +262,7 @@
                                         "valueFrom": {
                                             "secretKeyRef": {
                                                 "name": "patroni-${ENV_NAME}",
-                                                "key": "DATABASE_USER"
+                                                "key": "app-db-username"
                                             }
                                         }
                                     },
@@ -271,7 +271,7 @@
                                         "valueFrom": {
                                             "secretKeyRef": {
                                                 "name": "patroni-${ENV_NAME}",
-                                                "key": "DATABASE_PASSWORD"
+                                                "key": "app-db-password"
                                             }
                                         }
                                     },
