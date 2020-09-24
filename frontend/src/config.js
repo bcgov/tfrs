@@ -10,6 +10,7 @@ const getConfig = (value, def) => {
 };
 
 const CONFIG = {
+  API_BASE: getConfig('api_base', `${window.location.protocol}//${window.location.host}/api`),
   KEYCLOAK: {
     ENABLED: true,
     AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
