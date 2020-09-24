@@ -39,6 +39,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages('dev')
         frontendBuildStages = prepareBuilds.frontendBuildStages('dev')
+        /***
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -49,6 +50,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
+        ***/
         for (builds in frontendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -79,7 +81,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //prepareDCStages.frontendDCStage("dev").call()
 
         //Deploy Backend, tag the latest to env tag
-        prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()
+        //prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()
     
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
