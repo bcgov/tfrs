@@ -1,4 +1,4 @@
-tfrsRelease="v1.6.22"
+tfrsRelease="v1.6.22.1"
         
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -54,7 +54,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         prepareOtherStages.confirmStage("Please verify the database backup and confirm the deployment on Prod. Will tag prod from test tags. This is the last chance to quit.").call()
 
         //Deploy Backend, tag the latest to env tag
-        prepareOtherStages.deployBackendToProdStage().call()
+        //prepareOtherStages.deployBackendToProdStage().call()
     
         //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendToProdStage().call()
