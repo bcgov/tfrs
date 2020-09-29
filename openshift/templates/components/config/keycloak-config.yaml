@@ -4,6 +4,10 @@ metadata:
   creationTimestamp: null
   name: keycloak-config
 parameters:
+  - name: ENV_NAME
+    displayName: Environment name
+    description: the value is dev, test or prod
+    required: true  
   - name: KEYCLOAK_AUTHORITY
     displayName: KEYCLOAK_AUTHORITY
     description: ''
@@ -45,6 +49,7 @@ objects:
         "compliance_reporting.starting_year": 2017,
         "compliance_reporting.create_effective_date": "2019-01-01",
         "exclusion_reports.create_effective_date": "2019-01-01",
-        "exclusion_reports.enabled": true
+        "exclusion_reports.enabled": true,
+        "api_base": "https://${ENV_NAME}-lowcarbonfuels-backend.pathfinder.gov.bc.ca/api"
       };
 

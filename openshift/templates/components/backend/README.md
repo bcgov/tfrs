@@ -17,5 +17,7 @@ Make sure the following secrets created:
 
 #### After pipeline completes
 
-oc process -f ./tfrs-dc-others.json ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca ROUTE_NAME=dev-lowcarbonfuels-backend | oc create -f - -n mem-tfrs-dev
+oc process -f ./tfrs-dc-others.json ROUTE_HOST_NAME=dev-lowcarbonfuels-backend.pathfinder.gov.bc.ca ROUTE_NAME=dev-lowcarbonfuels-backend | oc create -f - -n mem-tfrs-dev
+oc process -f ./tfrs-dc-others.json ROUTE_HOST_NAME=test-lowcarbonfuels-backend.pathfinder.gov.bc.ca ROUTE_NAME=test-lowcarbonfuels-backend | oc create -f - -n mem-tfrs-test
+oc process -f ./tfrs-dc-others.json ROUTE_HOST_NAME=prod-lowcarbonfuels-backend.pathfinder.gov.bc.ca ROUTE_NAME=prod-lowcarbonfuels-backend | oc create -f - -n mem-tfrs-prod
 After pipeline completes, create autoscaler for backend and check DJANGO_DEBUG is set to false on prod
