@@ -171,7 +171,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareOtherStages.deployBackendStage("mem-tfrs-prod").call()
     
         //Deploy Frontend, tag the latest to env tag
-        //prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
+        prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
 
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Prod. If there are operational scripts to run, this is the time.").call()
