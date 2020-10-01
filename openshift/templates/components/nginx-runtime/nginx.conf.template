@@ -63,6 +63,7 @@ http {
         add_header Strict-Transport-Security "max-age=86400; includeSubDomains";
         add_header X-Content-Type-Options "nosniff";
         add_header X-XSS-Protection 1;
+        add_header Access-Control-Expose-Headers "Content-Disposition";
 
         # serve our app here
         location / {
