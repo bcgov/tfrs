@@ -1,0 +1,14 @@
+celery              python:3.6.8-slim-stretch
+clamav              debian:buster
+client              nodejs:8
+jenkins             rhel-atomic:7.7-371
+nginx               nginx:mainline
+notification-server	nodejs:8
+patroni	            postgres:10
+patroni-backup      backup-container:2.0.0
+rabbitmq            rabbitmq:3.8.3-management
+scan-coordinator    golang:1.12
+scan-handler        python:3.6.8-slim-stretch
+tfrs                python:3.6
+minio               registry.access.redhat.com/rhel7/rhel
+schema-spy          openjdk:jre-alpine

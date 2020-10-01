@@ -1,0 +1,55 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: keycloak-config
+parameters:
+  - name: ENV_NAME
+    displayName: Environment name
+    description: the value is dev, test or prod
+    required: true  
+  - name: KEYCLOAK_AUTHORITY
+    displayName: KEYCLOAK_AUTHORITY
+    description: ''
+    required: true
+  - name: KEYCLOAK_CLIENT_ID
+    displayName: KEYCLOAK_CLIENT_ID
+    description: ''
+    required: true
+  - name: KEYCLOAK_CALLBACK_URL
+    displayName: KEYCLOAK_CALLBACK_URL
+    description: ''
+    required: true
+  - name: KEYCLOAK_POST_LOGOUT_URL
+    displayName: KEYCLOAK_POST_LOGOUT_URL
+    description: ''
+    required: true
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: keycloak-config
+  data:
+    features.js: |
+      window.tfrs_config = {
+        "keycloak.enabled": true,
+        "keycloak.authority": "${KEYCLOAK_AUTHORITY}",
+        "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
+        "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
+        "keycloak.post_logout_url": "${KEYCLOAK_POST_LOGOUT_URL}",
+        "debug.enabled": false,
+        "secure_document_upload.enabled": true,
+        "secure_document_upload.max_file_size": 50000000,
+        "fuel_codes.enabled": true,
+        "keycloak.custom_login": true,
+        "credit_transfer.enabled": true,
+        "compliance_reporting.enabled": true,
+        "credit_calculation_api.enabled": true,
+        "compliance_reporting.starting_year": 2017,
+        "compliance_reporting.create_effective_date": "2019-01-01",
+        "exclusion_reports.create_effective_date": "2019-01-01",
+        "exclusion_reports.enabled": true,
+        "api_base": "https://${ENV_NAME}-lowcarbonfuels-backend.pathfinder.gov.bc.ca/api"
+      };
+

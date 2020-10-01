@@ -1,7 +1,4 @@
 
-
-
-
 /postgresql-backup is mounted to both 9.5 and 9.6 pod, it is shared pvc "RWX (Read-Write-Many)"
 
 * 1. oc project to the environment project

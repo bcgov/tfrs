@@ -1,0 +1,38 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: patroni-backup
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: patroni-backup
+    name: patroni-backup
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: patroni-backup:2.0.0
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: /docker
+      git:
+        ref: 2.0.0
+        uri: https://github.com/BCDevOps/backup-container.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      type: Docker
+    successfulBuildsHistoryLimit: 5
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0

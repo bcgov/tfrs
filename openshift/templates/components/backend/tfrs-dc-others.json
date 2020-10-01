@@ -12,19 +12,13 @@
         {
             "name": "ROUTE_HOST_NAME",
             "displayName": "Route host name",
-            "description": "Valid values: dev-lowcarbonfuels.pathfinder.gov.bc.ca, test-lowcarbonfuels.pathfinder.gov.bc.ca, lowcarbonfuels.gov.bc.ca",
+            "description": "Valid values: dev-lowcarbonfuels-backend.pathfinder.gov.bc.ca, test-lowcarbonfuels-backend.pathfinder.gov.bc.ca, prod-lowcarbonfuels-backend.pathfinder.gov.bc.ca",
             "required": true
         },
         {
             "name": "ROUTE_NAME",
             "displayName": "Route name",
-            "description": "Valid values: dev-lowcarbonfuels-backend, test-lowcarbonfuels-backend, lowcarbonfuels-backend",
-            "required": true
-        },
-        {
-            "name": "DJANGO_SECRET_KEY",
-            "displayName": "Random secret key used by django",
-            "description": "Random secret key used by django",
+            "description": "Valid values: dev-lowcarbonfuels-backend, test-lowcarbonfuels-backend, prod-lowcarbonfuels-backend",
             "required": true
         }
     ],
@@ -64,7 +58,6 @@
             },
             "spec": {
                 "host": "${ROUTE_HOST_NAME}",
-                "path": "/api",
                 "to": {
                     "kind": "Service",
                     "name": "backend",
@@ -77,19 +70,6 @@
                     "termination": "edge"
                 },
                 "wildcardPolicy": "None"
-            }
-        },
-        {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-              "name": "django-secret-key",
-              "labels": {
-                "app": "backend"
-              }
-            },
-            "stringData": {
-              "DJANGO_SECRET_KEY": "${DJANGO_SECRET_KEY}"
             }
         }
     ]

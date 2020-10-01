@@ -11,21 +11,24 @@ objects:
     creationTimestamp: null
     labels:
       shared: "true"
-    name: ${NAME}
+    name: jenkins-basic
   spec:
     lookupPolicy:
       local: false
-- apiVersion: v1
+- apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
     creationTimestamp: null
-    name: ${NAME}${SUFFIX}
+    labels:
+      app: jenkins-basic-bc
+    name: jenkins-basic
   spec:
     failedBuildsHistoryLimit: 2
+    nodeSelector: null
     output:
       to:
         kind: ImageStreamTag
-        name: ${NAME}:${VERSION}
+        name: jenkins-basic:v1.0.0
     postCommit: {}
     resources:
       limits:
@@ -38,44 +41,19 @@ objects:
     source:
       contextDir: .jenkins/docker
       git:
-        ref: ${SOURCE_REPOSITORY_REF}
-        uri: ${SOURCE_REPOSITORY_URL}
+        ref: master
+        uri: https://github.com/bcgov/tfrs.git
       type: Git
     strategy:
       dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: ${SOURCE_IMAGE_STREAM_TAG}
-          namespace: ${SOURCE_IMAGE_STREAM_NAMESPACE}
+          name: bcgov-jenkins-basic:v2-20200303
       type: Docker
     successfulBuildsHistoryLimit: 2
     triggers:
-    - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-parameters:
-- description: A name used for all objects
-  displayName: Name
-  name: NAME
-  required: true
-  value: jenkins
-- description: A name suffix used for all objects
-  displayName: Suffix
-  name: SUFFIX
-  required: false
-  value: ""
-- description: A version used for the image tags
-  displayName: version
-  name: VERSION
-  required: true
-  value: v1.0.0
-- name: SOURCE_IMAGE_STREAM_NAMESPACE
-  required: true
-  value: bcgov
-- name: SOURCE_IMAGE_STREAM_TAG
-  required: true
-  value: jenkins-basic:v2-latest
-- name: SOURCE_REPOSITORY_URL
-  required: true
-- name: SOURCE_REPOSITORY_REF
-  required: true
+    - type: ConfigChange
+  status:
+    lastVersion: 0

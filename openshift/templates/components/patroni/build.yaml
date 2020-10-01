@@ -22,7 +22,7 @@ parameters:
   - name: GIT_URI
     value: https://github.com/bcgov/tfrs.git
   - name: GIT_REF
-    value: master
+    value: try-migration-to-v4
   - name: POSTGRES_VERSION
     value: "10"
 objects:
