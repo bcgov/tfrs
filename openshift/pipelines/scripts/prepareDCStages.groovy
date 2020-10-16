@@ -304,8 +304,8 @@ def notificationServerDCStage (String envName) {
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'notification-server-develop'
                         KEYCLOAK_CERTS_URL = 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs'
-                        CPU_REQUEST='10m'
-                        CPU_LIMIT='30m'
+                        CPU_REQUEST='50m'
+                        CPU_LIMIT='100m'
                         MEMORY_REQUEST='110Mi'
                         MEMORY_LIMIT='200Mi'
                     } else if(envName == 'test') {
@@ -313,8 +313,8 @@ def notificationServerDCStage (String envName) {
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'notification-server'
                         KEYCLOAK_CERTS_URL = 'https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
-                        CPU_REQUEST='10m'
-                        CPU_LIMIT='30m'
+                        CPU_REQUEST='50m'
+                        CPU_LIMIT='100m'
                         MEMORY_REQUEST='110Mi'
                         MEMORY_LIMIT='200Mi'                    
                     } else if(envName == 'prod') {
