@@ -21,7 +21,7 @@
         {
             "name": "KEYCLOAK_CERTS_URL",
             "displayName": "KEYCLOAK_CERTS_URL",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
             "required": true
         },
         {

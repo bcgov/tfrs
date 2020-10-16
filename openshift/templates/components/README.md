@@ -44,14 +44,14 @@ ENV_NAME=dev \
 SOURCE_IS_NAME=tfrs-develop \
 ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca \
 ROUTE_NAME=dev-lowcarbonfuels-backend \
-KEYCLOAK_SA_BASEURL=https://sso-dev.pathfinder.gov.bc.ca \
+KEYCLOAK_SA_BASEURL=https://dev.oidc.gov.bc.ca \
 KEYCLOAK_SA_CLIENT_ID=tfrs-dev-django-sa \
 KEYCLOAK_SA_REALM=tfrs-dev \
 KEYCLOAK_AUDIENCE=tfrs-dev \
-KEYCLOAK_CERTS_URL=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs \
+KEYCLOAK_CERTS_URL=https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs \
 KEYCLOAK_CLIENT_ID=tfrs-dev \
-KEYCLOAK_ISSUER=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
-KEYCLOAK_REALM=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_ISSUER=https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_REALM=https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev \
 | oc create -f - -n mem-tfrs-dev --dry-run=true
 
 ## 5. Clamav restore
@@ -70,7 +70,7 @@ KEYCLOAK_REALM=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
 * oc process -f ./client-dc.json \
 ENV_NAME=dev \
 SOURCE_IS_NAME=client-develop \
-KEYCLOAK_AUTHORITY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs-dev \
 KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
 KEYCLOAK_LOGOUT_URL=https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca ROUTE_NAME=dev-lowcarbonfuels-frontend -n mem-tfrs-dev | oc create -f - --dry-run=true
