@@ -146,7 +146,7 @@
                                     }
                                 ],
                                 "resources": {
-                                    "request": {
+                                    "requests": {
                                         "cpu": "${CPU_REQUEST}",
                                         "memory": "${MEMORY_REQUEST}"
                                     },
