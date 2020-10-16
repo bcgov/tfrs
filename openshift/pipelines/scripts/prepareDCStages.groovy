@@ -69,7 +69,7 @@ def backendDCStage (String envName) {
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
-                        DATABASE_SERVICE_NAME='postgresql'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -87,7 +87,8 @@ def backendDCStage (String envName) {
                         "CPU_REQUEST=${CPU_REQUEST}",
                         "CPU_LIMIT=${CPU_LIMIT}",
                         "MEMORY_REQUEST=${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}",
+                        "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}"
                         )
                         openshift.apply(backendDCJson)
                     }
