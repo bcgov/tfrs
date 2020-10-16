@@ -17,7 +17,7 @@ copy the files on jenkins-basic-builds and jenkins-basic from v3 to v4
 
 oc process -f config/keycloak-config.yaml \
 ENV_NAME=dev \
-KEYCLOAK_AUTHORITY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs-dev \
 KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
 KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%26retnow%3D1 \
@@ -25,7 +25,7 @@ KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.c
 
 oc process -f config/keycloak-config.yaml \
 ENV_NAME=test \
-KEYCLOAK_AUTHORITY=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_AUTHORITY=https://test.oidc.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback \
 KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%26retnow%3D1 \
@@ -33,7 +33,7 @@ KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogontest7.gov.bc.ca%2Fclp-cgi%2Flogoff.c
 
 oc process -f config/keycloak-config.yaml \
 ENV_NAME=prod \
-KEYCLOAK_AUTHORITY=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs-dev \
+KEYCLOAK_AUTHORITY=https://oidc.gov.bc.ca/auth/realms/tfrs-dev \
 KEYCLOAK_CLIENT_ID=tfrs \
 KEYCLOAK_CALLBACK_URL=https://lowcarbonfuels.gov.bc.ca/authCallback \
 KEYCLOAK_POST_LOGOUT_URL=https%3A%2F%2Flogon7.gov.bc.ca%2Fclp-cgi%2Flogoff.cgi%3Freturl%3Dhttps%3A%2F%2Flowcarbonfuels.gov.bc.ca%26retnow%3D1 \
