@@ -26,9 +26,7 @@ class RemoveBCEIDUsers(OperationalDataScript):
             "GBhatia",
             "GBhatia2",
             "KMack",
-            "SStener",
-            "test1.phone",
-            "rpi"
+            "SStener"
         ]
 
         users = UserCreationRequest.objects.filter(
