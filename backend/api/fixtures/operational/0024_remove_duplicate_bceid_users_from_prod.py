@@ -18,19 +18,8 @@ class RemoveBCEIDUsers(OperationalDataScript):
 
     @transaction.atomic
     def run(self):
-        user_list = [
-            "idemitsuapollo",
-            "iacdavid",
-            "BHumphreys",
-            "DHudema",
-            "GBhatia",
-            "GBhatia2",
-            "KMack",
-            "SStener"
-        ]
-
         users = UserCreationRequest.objects.filter(
-            external_username__in=user_list
+            user_id__in=[123, 124, 125, 126, 128, 131, 158, 159]
         )
 
         for user in users:
