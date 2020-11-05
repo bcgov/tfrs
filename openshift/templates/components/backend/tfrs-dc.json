@@ -243,7 +243,7 @@
                                     },
                                     {
                                         "name": "EMAIL_FROM_ADDRESS",
-                                        "value": "tfrs@gov.bc.ca"
+                                        "value": "donotreply@gov.bc.ca"
                                     },
                                     {
                                         "name": "EMAIL_SENDING_ENABLED",
