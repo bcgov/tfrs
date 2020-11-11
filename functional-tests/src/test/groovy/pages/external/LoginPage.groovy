@@ -4,7 +4,7 @@ import geb.Page
 
 class LoginPage extends Page {
 
-  static url = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/auth?response_type=token&client_id=tfrs-dev&redirect_uri=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca"
+  static url = "https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/auth?response_type=token&client_id=tfrs-dev&redirect_uri=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca"
 
   static at = {
     // Regex being used to temporarily cover the differences between dev and keycloak login pages
