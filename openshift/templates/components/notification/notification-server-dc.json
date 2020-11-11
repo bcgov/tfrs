@@ -21,7 +21,7 @@
         {
             "name": "KEYCLOAK_CERTS_URL",
             "displayName": "KEYCLOAK_CERTS_URL",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
             "required": true
         },
         {
@@ -146,7 +146,7 @@
                                     }
                                 ],
                                 "resources": {
-                                    "request": {
+                                    "requests": {
                                         "cpu": "${CPU_REQUEST}",
                                         "memory": "${MEMORY_REQUEST}"
                                     },
@@ -155,13 +155,21 @@
                                         "memory": "${MEMORY_LIMIT}"
                                     }
                                 },
-                                "readinessProbe": {
-                                    "httpGet": {
-                                        "path": "/",
-                                        "port": 3000,
-                                        "scheme": "HTTP"
+                                "livenessProbe": {
+                                    "tcpSocket": {
+                                        "port": 3000
                                     },
-                                    "initialDelaySeconds": 10,
+                                    "initialDelaySeconds": 35,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "tcpSocket": {
+                                        "port": 3000
+                                    },
+                                    "initialDelaySeconds": 30,
                                     "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,

@@ -7,6 +7,30 @@
     },
     "parameters": [
         {
+            "name": "KEYCLOAK_AUTHORITY",
+            "displayName": "keycloak.authority",
+            "description": "Values https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev https://test.oidc.gov.bc.ca/auth/realms/tfrs https://oidc.gov.bc.ca/auth/realms/tfrs",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_CLIENT_ID",
+            "displayName": "keycloak.client_id",
+            "description": "Values tfrs-dev tfrs tfrs",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_CALLBACK_URL",
+            "displayName": "keycloak.callback_url",
+            "description": "Values https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://lowcarbonfuels.gov.bc.ca/authCallback",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_LOGOUT_URL",
+            "displayName": "keycloak.post_logout_url",
+            "description": "Values https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Flowcarbonfuels.gov.bc.ca%2F",
+            "required": true
+        },
+        {
             "name": "ROUTE_HOST_NAME",
             "displayName": "Route host name",
             "description": "values dev-lowcarbonfuels.pathfinder.gov.bc.ca test-lowcarbonfuels.pathfinder.gov.bc.ca lowcarbonfuels.gov.bc.ca",
@@ -71,6 +95,17 @@
                     "insecureEdgeTerminationPolicy": "Redirect"
                 },
                 "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "keycloak-config",
+                "creationTimestamp": null
+            },
+            "data": {
+                "features.js": "window.tfrs_config = {\n  \"keycloak.enabled\": true,\n  \"keycloak.authority\": \"https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev\" ,\n  \"keycloak.client_id\": \"tfrs-dev\",\n  \"keycloak.callback_url\": \"https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback\",\n  \"keycloak.post_logout_url\": \"https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F\",\n  \"debug.enabled\": false,\n  \"secure_document_upload.enabled\": true,\n  \"secure_document_upload.max_file_size\": 50000000,\n  \"fuel_codes.enabled\": true,\n  \"keycloak.custom_login\": true,\n  \"credit_transfer.enabled\": true,\n  \"compliance_reporting.enabled\": true,\n  \"credit_calculation_api.enabled\": true,\n  \"compliance_reporting.starting_year\": 2017,\n  \"compliance_reporting.create_effective_date\": \"2019-01-01\",\n  \"exclusion_reports.create_effective_date\": \"2019-01-01\",\n  \"exclusion_reports.enabled\": true\n};\n"
             }
         }
     ]
