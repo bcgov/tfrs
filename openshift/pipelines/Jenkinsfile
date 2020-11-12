@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.6.22.2"
+tfrsRelease="v1.6.22.3"
 
 podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
@@ -76,9 +76,10 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds for test
+    /***
         backendBuildStages = prepareBuilds.backendBuildStages('prod')
         frontendBuildStages = prepareBuilds.frontendBuildStages('prod')
-	/***
+	
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -89,7 +90,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
                 }
             }
         }
-	***/
+	
         for (builds in frontendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -100,6 +101,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
                 }
             }
         }
+        ***/
 
         //===== deploy on test =====
         //Please confirm to continue the deployment on Test
@@ -117,11 +119,11 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("test").call()
+        prepareDCStages.backendDCStage("test").call()
         //prepareDCStages.celeryDCStage("test").call()
         //prepareDCStages.scanCoordinatorDCStage("test").call()
         //prepareDCStages.scanHandlerDCStage("test").call()
-        //prepareDCStages.notificationServerDCStage("test").call()
+        prepareDCStages.notificationServerDCStage("test").call()
         //prepareDCStages.frontendDCStage("test").call()
 
         //last chance to quit Test deployment
@@ -131,7 +133,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareOtherStages.deployBackendStage("mem-tfrs-test").call()
     
         //Deploy Frontend, tag the latest to env tag
-        prepareOtherStages.deployFrontendStage("mem-tfrs-test").call()
+        //prepareOtherStages.deployFrontendStage("mem-tfrs-test").call()
 
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Test. If there are operational scripts to run, this is the time.").call()
@@ -147,21 +149,22 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         prepareOtherStages.confirmStage("Please confirm to continue the deployment on Prod").call()
 
         //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
-        prepareOtherStages.checkBackupSpace("mem-tfrs-prod").call()        
+        //removed as backup-container is used
+        //prepareOtherStages.checkBackupSpace("mem-tfrs-prod").call()        
         
         //Bring up Maintenance Page
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-prod").call()
 
-        //Datebase Backup
-        prepareOtherStages.databaseBackupStage("mem-tfrs-prod", tfrsRelease).call()
+        //Datebase Backup, removed as backup-container is used
+        //prepareOtherStages.databaseBackupStage("mem-tfrs-prod", tfrsRelease).call()
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("prod").call()
+        prepareDCStages.backendDCStage("prod").call()
         //prepareDCStages.celeryDCStage("prod").call()
         //prepareDCStages.scanCoordinatorDCStage("prod").call()
         //prepareDCStages.scanHandlerDCStage("prod").call()
-        //prepareDCStages.notificationServerDCStage("prod").call()
+        prepareDCStages.notificationServerDCStage("prod").call()
         //prepareDCStages.frontendDCStage("prod").call()
 
         //last chance to quit prod deployment
@@ -171,7 +174,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         //prepareOtherStages.deployBackendStage("mem-tfrs-prod").call()
     
         //Deploy Frontend, tag the latest to env tag
-        prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
+        //prepareOtherStages.deployFrontendStage("mem-tfrs-prod").call()
 
         //Ask for confirmation before take down maintenance page.
         prepareOtherStages.confirmStage("Please confirm to take down the maintenance page on Prod. If there are operational scripts to run, this is the time.").call()

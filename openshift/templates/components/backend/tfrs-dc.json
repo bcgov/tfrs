@@ -24,7 +24,7 @@
         {
             "name": "KEYCLOAK_SA_BASEURL",
             "displayName": "KEYCLOAK_SA_BASEURL",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca, https://sso-test.pathfinder.gov.bc.ca, https://sso.pathfinder.gov.bc.ca",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca, https://test.oidc.gov.bc.ca, https://oidc.gov.bc.ca",
             "required": true
         },
         {
@@ -48,7 +48,7 @@
         {
             "name": "KEYCLOAK_CERTS_URL",
             "displayName": "KEYCLOAK_CERTS_URL",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
             "required": true
         },
         {
@@ -60,13 +60,13 @@
         {
             "name": "KEYCLOAK_ISSUER",
             "displayName": "KEYCLOAK_ISSUER",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs, https://oidc.gov.bc.ca/auth/realms/tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_REALM",
             "displayName": "KEYCLOAK_REALM",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs, https://oidc.gov.bc.ca/auth/realms/tfrs",
             "required": true
         },
         {
@@ -98,37 +98,9 @@
             "displayName": "database service name",
             "description": "database service name",
             "required": true
-        },
-        {
-            "name": "DJANGO_DEBUG",
-            "displayName": "dhangio debug",
-            "description": "value is True or False",
-            "required": true
-        },
-        {
-            "name": "DJANGO_SECRET_KEY",
-            "displayName": "Random secret key used by django",
-            "description": "Random secret key used by django",
-            "generate": "expression",
-            "from": "[a-zA-Z0-9]{50}",
-            "required": true
-        }        
-        
+        }
     ],
     "objects": [
-        {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-              "name": "django-secret-key",
-              "labels": {
-                "app": "backend"
-              }
-            },
-            "stringData": {
-              "DJANGO_SECRET_KEY": "${DJANGO_SECRET_KEY}"
-            }
-        },        
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
@@ -271,7 +243,7 @@
                                     },
                                     {
                                         "name": "EMAIL_FROM_ADDRESS",
-                                        "value": "tfrs@gov.bc.ca"
+                                        "value": "donotreply@gov.bc.ca"
                                     },
                                     {
                                         "name": "EMAIL_SENDING_ENABLED",
@@ -295,7 +267,12 @@
                                     },
                                     {
                                         "name": "DATABASE_NAME",
-                                        "value": "tfrs"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-name"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "APP_CONFIG",
@@ -407,10 +384,6 @@
                                                 "key": "DJANGO_SECRET_KEY"
                                             }
                                         }
-                                    },
-                                    {
-                                        "name": "DJANGO_DEBUG",
-                                        "value": "${DJANGO_DEBUG}"
                                     }
                                 ],
                                 "resources": {
