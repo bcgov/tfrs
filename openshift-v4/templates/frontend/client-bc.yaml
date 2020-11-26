@@ -2,7 +2,7 @@
 kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
-  name: client-angular-app
+  name: client-bc
   creationTimestamp: 
 parameters:
 - name: NAME
@@ -25,58 +25,50 @@ parameters:
 - name: GIT_REF
   displayName:
   description: tfrs branch name of the pr
-  required: true    
+  required: true   
 objects:
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      description: Keeps track of changes in the client / frontend image
-    labels:
-      shared: "true"
-    creationTimestamp: null
-    generation: 643
-    name: ${NAME}-client-angular-app
-  spec:
-    lookupPolicy:
-      local: false
-  status:
-    dockerImageRepository: ""  
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    name: ${NAME}-client-angular-app${SUFFIX}
+    name: ${NAME}-client${SUFFIX}
     creationTimestamp: 
+    annotations:
+      description: Defines how to build the client / front end image
   spec:
-    triggers: []
+    triggers:
+    - type: ImageChange
+      imageChange: {}
+    - type: ConfigChange
     runPolicy: Serial
     source:
-      type: Git
-      git:
-        uri: ${GIT_URL}
-        ref: ${GIT_REF}
-      contextDir: frontend
+      type: Dockerfile
+      dockerfile: |-
+        FROM tfrs-client-angular-app:build-1.0.0-1696
+        COPY * /tmp/app/dist/
+        CMD  /usr/libexec/s2i/run
+      images:
+      - from:
+          kind: ImageStreamTag
+          name: ${NAME}-client-angular-app${SUFFIX}:${VERSION}
+        as: 
+        paths:
+        - sourcePath: "/opt/app-root/src/public/."
+          destinationDir: tmp
     strategy:
-      type: Source
-      sourceStrategy:
+      type: Docker
+      dockerStrategy:
         from:
           kind: ImageStreamTag
-          namespace: openshift
-          name: nodejs:8
+          name: nginx-runtime:latest
     output:
       to:
         kind: ImageStreamTag
-        name: ${NAME}-client-angular-app:${VERSION}
+        name: ${NAME}-client${SUFFIX}:${VERSION}
     resources:
       limits:
-        cpu: '1'
-        memory: 4G
-      requests:
-        cpu: 300m
-        memory: 2G
+        cpu: '2'
+        memory: 4Gi
     postCommit: {}
     nodeSelector: 
-    successfulBuildsHistoryLimit: 5
-    failedBuildsHistoryLimit: 5
   status:
     lastVersion: 0
