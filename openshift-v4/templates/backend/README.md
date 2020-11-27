@@ -1,7 +1,6 @@
 ### Files included
 
-tfrs-bc.json build config
-tfrs-bc-pr.json not being used
+backend-bc.json build config
 tfrs-dc.json deployment config
 tfrs-dc-others create service, route and django-secret-key
 tfrs-dc-pr.json not being used

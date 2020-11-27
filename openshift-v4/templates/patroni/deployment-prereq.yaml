@@ -123,7 +123,7 @@ parameters:
   generate: expression
   from: '[a-zA-Z0-9]{32}'
 - name: APP_DB_USERNAME
-  from: zeva[A-Z]{3}
+  from: zeva[a-z]{3}
   generate: expression
 - name: APP_DB_NAME
   value: zeva

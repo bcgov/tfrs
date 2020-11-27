@@ -4,6 +4,20 @@ metadata:
   creationTimestamp: null
   name: nginx-runtime
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: image stream for nginx
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: nginx-runtime
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -21,7 +35,7 @@ objects:
     resources: {}
     runPolicy: Serial
     source:
-      contextDir: openshift/templates/nginx-runtime
+      contextDir: openshift-v4/templates/nginx-runtime
       git:
         ref: master
         uri: https://github.com/bcgov/tfrs.git

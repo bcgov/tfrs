@@ -14,7 +14,7 @@ oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
 oc process -f ./build.yaml | oc create -f - -n [tools namespace]
 
 3. tag the patroni image to environment
-oc tag e52f12-tools/patroni:v10-latest e52f12-[env]]/patroni:v10-stable
+oc tag mem-tfrs-tools/patroni:v10-latest mem-tfrs-[env]]/patroni:v10-stable
 
 ### Database Migration from Openshift v3 to Openshift 4
 
@@ -76,14 +76,3 @@ the admin command can get from the patroni-staging secret
 
 4. update bacckend dc to connect to staging database
 
-
-  dev: {namespace:'e52f12-dev', transient:true, name: `${name}`, ssoSuffix:'-dev', 
-        ssoName:'dev.oidc.gov.bc.ca', phase: 'dev'  , changeId:`${changeId}`, suffix: `-dev-${changeId}`, 
-        instance: `${name}-dev-${changeId}`  , version:`${version}-${changeId}`, tag:`dev-${version}-${changeId}`, 
-        host: `zeva-dev-${changeId}.${ocpName}.gov.bc.ca`, djangoDebug: 'True',
-        frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 1,
-        backendCpuRequest: '300m', backendCpuLimit: '600m', backendMemoryRequest: '1G', backendMemoryLimit: '2G', backendHealthCheckDelay: 30, backendHost: `zeva-backend-dev-${changeId}.${ocpName}.gov.bc.ca`, backendReplicas: 1,
-        minioCpuRequest: '100m', minioCpuLimit: '200m', minioMemoryRequest: '200M', minioMemoryLimit: '500M', minioPvcSize: '1G',
-        schemaspyCpuRequest: '50m', schemaspyCpuLimit: '200m', schemaspyMemoryRequest: '150M', schemaspyMemoryLimit: '300M', schemaspyHealthCheckDelay: 160,
-        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500M', rabbitmqMemoryLimit: '1G', rabbitmqPvcSize: '1G', rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard',
-        patroniCpuRequest: '200m', patroniCpuLimit: '400m', patroniMemoryRequest: '250M', patroniMemoryLimit: '500M', patroniPvcSize: '2G', patroniReplica: 2, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`},
