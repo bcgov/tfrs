@@ -19,8 +19,9 @@ oc tag [tools namespace]/clamav:latest [tools namespace]/clamav:prod
 ## 4. Setup Nginx
 
 oc process -f ./templates/clamav/nginx-runtime.yaml | oc create -f - -n [tools namespace]
+oc tag [tools namespace]/nginx-runtime:latest [tools namespace]/nginx-runtime:dev
 
-## 4. Setup RabbitMQ
+## 5. Setup RabbitMQ
 
 
 
