@@ -37,7 +37,7 @@ objects:
     source:
       contextDir: openshift-v4/templates/nginx-runtime
       git:
-        ref: master
+        ref: openshift-v4-migration
         uri: https://github.com/bcgov/tfrs.git
       type: Git
     strategy:
