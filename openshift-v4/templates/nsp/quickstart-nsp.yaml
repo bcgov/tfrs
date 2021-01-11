@@ -9,7 +9,7 @@ metadata:
 parameters:
   - name: NAMESPACE_PREFIX
     displayName: Namespace prefix
-    description: either tbiwaq or e52f12
+    description: either 0ab226-tools
     required: true     
   - name: ENV_NAME
     displayName: Environment name

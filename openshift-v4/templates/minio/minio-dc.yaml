@@ -1,0 +1,223 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: minio
+  annotations:
+    description: Minio with persistent storage. By BC Gov.
+    openshift.io/display-name: BC Gov Minio
+parameters:
+  - name: NAME
+    value: zeva
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -pr-0
+    required: true
+  - name: ENV_NAME
+    value: dev
+    required: true
+  - name: PVC_SIZE
+    displayName: Volume Capacity
+    description: Volume space available to Minio server for files, e.g. 512Mi, 2Gi.
+    value: 5G
+    required: true
+  - name: CPU_REQUEST
+    displayName: Requested CPU
+    description: Requested CPU
+    required: true
+    value: '100m'
+  - name: CPU_LIMIT
+    displayName: CPU upper limit
+    description: CPU upper limit
+    required: true
+    value: '200m'
+  - name: MEMORY_REQUEST
+    displayName: Requested memory
+    description: Requested memory
+    required: true
+    value: '200M'
+  - name: MEMORY_LIMIT
+    displayName: Memory upper limit
+    description: Memory upper limit
+    required: true
+    value: '500M'    
+  - name: MINIO_ACCESS_KEY
+    description: Minio access key
+    from: "[a-zA-Z0-9]{8}"
+    generate: expression
+    required: true
+  - name: MINIO_SECRET_KEY
+    description: Minio secret key
+    from: "[a-zA-Z0-9]{16}"
+    generate: expression
+    required: true      
+  - name: OCP_NAME
+    displayName: Openshift Name
+    description: Openshift Name
+    required: true
+objects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${NAME}-minio${SUFFIX}
+    stringData:
+       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-minio${SUFFIX}
+      annotations:
+        volume.beta.kubernetes.io/storage-class: netapp-file-standard
+        template.openshift.io.bcgov/create: 'true'
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: ${PVC_SIZE}
+    status: {}
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-minio${SUFFIX}
+      creationTimestamp:
+      labels:
+        name: minio
+        app: zeva
+        role: minio
+        env: ${ENV_NAME}
+    spec:
+      ports:
+        - name: 9000-tcp
+          protocol: TCP
+          port: 9000
+          targetPort: 9000
+      selector:
+        deploymentconfig: ${NAME}-minio${SUFFIX}
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: zeva
+        role: minio
+        env: ${ENV_NAME}
+      name: ${NAME}-minio${SUFFIX}
+    spec:
+      host: ${NAME}-minio${SUFFIX}.${OCP_NAME}.gov.bc.ca
+      port:
+        targetPort: 9000-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${NAME}-minio${SUFFIX}
+        weight: 100
+      wildcardPolicy: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-minio${SUFFIX}
+      labels:
+        name: minio
+    spec:
+      strategy:
+        type: Recreate
+        resources: {}
+        activeDeadlineSeconds: 21600
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - minio
+            from:
+              kind: ImageStreamTag
+              namespace: e52f12-tools
+              name: minio:20200309
+      replicas: 1
+      test: false
+      selector:
+        app: ${NAME}-minio${SUFFIX}
+      template:
+        metadata:
+          creationTimestamp:
+          labels:
+            app: ${NAME}-minio${SUFFIX}
+        spec:
+          volumes:
+            - name: minio-data
+              persistentVolumeClaim:
+                claimName: ${NAME}-minio${SUFFIX}
+          containers:
+            - name: minio
+              image:
+              ports:
+                - containerPort: 9000
+                  protocol: TCP
+              env:
+                - name: MINIO_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-minio${SUFFIX}
+                      key: MINIO_ACCESS_KEY
+                - name: MINIO_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-minio${SUFFIX}
+                      key: MINIO_SECRET_KEY
+                - name: MINIO_CONFIG_DIR
+                  value: "/tmp"
+                - name: MINIO_DATA_DIR
+                  value: "/data"
+              resources:
+                limits:
+                  cpu: '${CPU_LIMIT}'
+                  memory: '${MEMORY_LIMIT}'
+                requests:
+                  cpu: '${CPU_REQUEST}'
+                  memory: '${MEMORY_REQUEST}'
+              volumeMounts:
+                - name: minio-data
+                  mountPath: /data
+              livenessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 35
+                periodSeconds: 10
+                successThreshold: 1
+                tcpSocket:
+                  port: 9000
+                timeoutSeconds: 3
+              readinessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - '-c'
+                    - mkdir -p /data/zeva
+                failureThreshold: 3
+                initialDelaySeconds: 25
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              terminationMessagePath: "/dev/termination-log"
+              terminationMessagePolicy: File
+              imagePullPolicy: Always
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+    status:
+      latestVersion: 0
+      observedGeneration: 0
+      replicas: 0
+      updatedReplicas: 0
+      availableReplicas: 0
+      unavailableReplicas: 0

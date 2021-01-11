@@ -3,7 +3,7 @@
 
 ## 1. Create generic network policies
 
-oc process -f ./templates/nsp/quickstart-nsp.yaml NAMESPACE_PREFIX= ENV_NAME= API_VERSION=security.devops.gov.bc.ca/v1alpha1 | oc create -f - -n [env namespace]
+openshift-v4/templates/nsp/README.MD
 
 ## 2. Setup Minio
 
