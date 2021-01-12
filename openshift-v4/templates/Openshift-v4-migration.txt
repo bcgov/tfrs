@@ -7,19 +7,12 @@ openshift-v4/templates/nsp/README.MD
 
 ## 2. Setup Minio
 
-reuse the exising
-
 ## 3. setup Clamav
-
-oc process -f ./templates/clamav/clamav-bc.yaml | oc create -f - -n [tools namespace]
-oc tag [tools namespace]/clamav:latest [tools namespace]/clamav:dev
-oc tag [tools namespace]/clamav:latest [tools namespace]/clamav:test
-oc tag [tools namespace]/clamav:latest [tools namespace]/clamav:prod
 
 ## 4. Setup Nginx
 
-oc process -f ./templates/clamav/nginx-runtime.yaml | oc create -f - -n [tools namespace]
-oc tag [tools namespace]/nginx-runtime:latest [tools namespace]/nginx-runtime:dev
+??oc process -f ./templates/clamav/nginx-runtime.yaml | oc create -f - -n [tools namespace]
+??oc tag [tools namespace]/nginx-runtime:latest [tools namespace]/nginx-runtime:dev
 
 ## 5. Setup RabbitMQ
 

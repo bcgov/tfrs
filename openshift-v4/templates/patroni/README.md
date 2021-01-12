@@ -14,7 +14,7 @@ oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
 oc process -f ./build.yaml | oc create -f - -n [tools namespace]
 
 3. tag the patroni image to environment
-oc tag mem-tfrs-tools/patroni:v10-latest mem-tfrs-[env]]/patroni:v10-stable
+oc tag [tools namspace]/patroni:v10-latest [env namspace]/patroni:v10-stable
 
 ### Database Migration from Openshift v3 to Openshift 4
 

@@ -1,0 +1,1 @@
+oc process -f ./nginx-runtime.yaml -n 0ab226-tools
