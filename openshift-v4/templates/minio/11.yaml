@@ -1,0 +1,13 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: jenkins
+objects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: wwww
+    stringData:
+       MINIO_ACCESS_KEY: wwww
+       MINIO_SECRET_KEY: www

@@ -7,7 +7,7 @@ metadata:
     openshift.io/display-name: BC Gov Minio
 parameters:
   - name: NAME
-    value: zeva
+    value: tfrs
     required: true
   - name: SUFFIX
     displayName:
@@ -19,7 +19,7 @@ parameters:
   - name: PVC_SIZE
     displayName: Volume Capacity
     description: Volume space available to Minio server for files, e.g. 512Mi, 2Gi.
-    value: 5G
+    value: 5Gi
     required: true
   - name: CPU_REQUEST
     displayName: Requested CPU
@@ -82,11 +82,6 @@ objects:
     metadata:
       name: ${NAME}-minio${SUFFIX}
       creationTimestamp:
-      labels:
-        name: minio
-        app: zeva
-        role: minio
-        env: ${ENV_NAME}
     spec:
       ports:
         - name: 9000-tcp
@@ -103,10 +98,6 @@ objects:
     kind: Route
     metadata:
       creationTimestamp: null
-      labels:
-        app: zeva
-        role: minio
-        env: ${ENV_NAME}
       name: ${NAME}-minio${SUFFIX}
     spec:
       host: ${NAME}-minio${SUFFIX}.${OCP_NAME}.gov.bc.ca
@@ -124,8 +115,6 @@ objects:
     apiVersion: v1
     metadata:
       name: ${NAME}-minio${SUFFIX}
-      labels:
-        name: minio
     spec:
       strategy:
         type: Recreate
@@ -140,8 +129,8 @@ objects:
               - minio
             from:
               kind: ImageStreamTag
-              namespace: e52f12-tools
-              name: minio:20200309
+              namespace: 0ab226-tools
+              name: minio:20210111
       replicas: 1
       test: false
       selector:
@@ -200,7 +189,7 @@ objects:
                   command:
                     - /bin/sh
                     - '-c'
-                    - mkdir -p /data/zeva
+                    - mkdir -p /data/tfrs
                 failureThreshold: 3
                 initialDelaySeconds: 25
                 periodSeconds: 10

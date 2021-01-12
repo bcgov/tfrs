@@ -31,7 +31,7 @@ objects:
     source:
       type: Git
       git:
-        ref: clamav-0.101.2-on-buster
+        ref: add-ca-cert
         uri: https://github.com/bcgov/docker-clamav.git
     strategy:
       type: Docker
