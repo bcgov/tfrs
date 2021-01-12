@@ -32,7 +32,7 @@ module.exports = settings => {
       'CPU_LIMIT': phases[phase].patroniCpuLimit,
       'MEMORY_REQUEST': phases[phase].patroniMemoryRequest,
       'MEMORY_LIMIT': phases[phase].patroniMemoryLimit,
-      'IMAGE_REGISTRY': 'mage-registry.openshift-image-registry.svc:5000',
+      'IMAGE_REGISTRY': 'image-registry.openshift-image-registry.svc:5000',
       'IMAGE_STREAM_NAMESPACE': phases[phase].namespace,
       'IMAGE_STREAM_TAG': 'patroni:v10-stable',
       'REPLICA': phases[phase].patroniReplica,
