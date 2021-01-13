@@ -15,7 +15,7 @@ module.exports = settings => {
   console.log(phases[phase].frontendHostName)
   // The deployment of your cool app goes here ▼▼▼
 
-
+/****** keep this block
   //deploy Patroni
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
     'param': {
@@ -62,46 +62,31 @@ module.exports = settings => {
       'STORAGE_CLASS': phases[phase].storageClass
     }
   }))
-
-//'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
-
-  //deploy frontend
-  /*
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/client-dc-others.yaml`, {
-    'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'KEYCLOAK_AUTHORITY': phases[phase].keycloakAuthority,
-      'KEYCLOAK_CLIENT_ID': phases[phase].keycloakClientId,
-      'KEYCLOAK_CALLBACK_URL': phases[phase].keycloakCallbackUrl,
-      'KEYCLOAK_LOGOUT_URL': phases[phase].keycloakLogoutUrl,
-      'FRONTEND_HOST_NAME': phases[phase].frontendHostName
-    }
-  }))    
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/client-dc.yaml`, {
-    'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'REPLICAS': phases[phase].frontendReplicas,
-      'CPU_REQUEST': phases[phase].frontendCpuRequest,
-      'CPU_LIMIT': phases[phase].frontendCpuLimit,
-      'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
-      'MEMORY_LIMIT': phases[phase].frontendMemoryLimit
-    }
-  }))   
-  */  
-
-
-  /**
- objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
+  ***/
+  
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
-      'BACKEND_HOST_NAME': phases[phase].backendHostName
+      'ENV_NAME': phases[phase].phase,
+      'NAMESPACE': phases[phase].namespace,
+      'VERSION': phases[phase].tag,
+      'KEYCLOAK_SA_BASEURL': phases[phase].backendKeycloakSaBaseurl,
+      'KEYCLOAK_SA_CLIENT_ID': phases[phase].backendKeycloakSaClientId,
+      'KEYCLOAK_SA_REALM': phases[phase].backendKeycloakSaRealm,
+      'KEYCLOAK_AUDIENCE': phases[phase].backendKeycloakAudience,
+      'KEYCLOAK_CERTS_URL': phases[phase].backendKeycloakCertsUrl,
+      'KEYCLOAK_CLIENT_ID': phases[phase].backendKeycloakClientId,
+      'KEYCLOAK_ISSUER': phases[phase].backendKeycloakIssuer,
+      'KEYCLOAK_REALM':phases[phase].backendKeycloakRealm,
+      'CPU_REQUEST':phases[phase].backendCpuRequest,
+      'CPU_LIMIT':phases[phase].backendCpuLimit,
+      'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].backendMemoryLimit
     }
   }))
-  */
+
+//'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
 
   oc.applyRecommendedLabels(
     objects,

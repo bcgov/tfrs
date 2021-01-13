@@ -7,12 +7,11 @@ tfrs-dc-pr.json not being used
 
 #### Before triggering pipeline
 
-Make sure the following secrets created:
-* keycloak-sa-client-secret
-* patroni-dev: created when setup patroni
-* rabbitmq-tfrs: created when setup rabbitmq
-* minio: created when detup minio
-* django-secret-key
+* create keycloak-sa-client-secret and django-secret-key
+oc process -f ./backend-secrets.yaml KEYCLOAK_SA_CLIENT_SECRET= | oc create -f - -n [env namespace]
+
+* Make sure the following secrets created:
+minio: created when detup minio
 
 #### After pipeline completes
 

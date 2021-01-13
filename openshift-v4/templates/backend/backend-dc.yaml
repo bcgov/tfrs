@@ -3,19 +3,31 @@ kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
   name: tfrs-dc
-  creationTimestamp: 
+  creationTimestamp:
 labels:
   template: tfrs-backend-template
 parameters:
+- name: NAME
+  displayName: App name
+  description: App name
+  value: tfrs
+  required: true
+- name: SUFFIX
+  displayName: suffix
+  description: such as -dev-1696, -dev ane etc.
+  required: true  
 - name: ENV_NAME
+  displayName: environment name
+  description: such as dev, test and prod
+  required: true    
+- name: NAMESPACE
   displayName: Environment name
-  description: 'Sample values: dev, test and prod'
+  description: 'Sample values: 0ab226-dev, 0ab226-test and 0ab226-prod'
   required: true
-- name: SOURCE_IS_NAME
-  displayName: The source image stream name
-  description: 'The image stream could trigger the deployment, sample values: tfrs-develop
-    and tfrs'
-  required: true
+- name: VERSION
+  displayName: null
+  description: image tag name for output
+  required: true  
 - name: KEYCLOAK_SA_BASEURL
   displayName: KEYCLOAK_SA_BASEURL
   description: 'Valid values: https://dev.oidc.gov.bc.ca, https://test.oidc.gov.bc.ca,
@@ -68,16 +80,12 @@ parameters:
   displayName: Memory upper limit
   description: Memory upper limit
   required: true
-- name: DATABASE_SERVICE_NAME
-  displayName: database service name
-  description: database service name
-  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
     annotations:
-      description: Keeps track of changes in the client / frontend image
+      description: Keeps track of changes in the backend image
     labels:
       shared: "true"
     creationTimestamp: null
@@ -86,15 +94,15 @@ objects:
     lookupPolicy:
       local: false
   status:
-    dockerImageRepository: ""
+    dockerImageRepository: ''
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
   metadata:
     name: ${NAME}-backend${SUFFIX}
     generation: 1
-    creationTimestamp: 
+    creationTimestamp:
     labels:
-      template: tfrs-app-environment
+      app: ${NAME}-backend${SUFFIX}
     annotations:
       description: Defines how to deploy the application server
   spec:
@@ -126,11 +134,11 @@ objects:
     replicas: 1
     test: false
     selector:
-      name: ${NAME}-backend${SUFFIX}
+      name: tfrs
     template:
       metadata:
-        name: ${NAME}-backend${SUFFIX}
-        creationTimestamp: 
+        name: tfrs
+        creationTimestamp:
         labels:
           name: tfrs
       spec:
@@ -165,9 +173,12 @@ objects:
                 name: keycloak-sa-client-secret
                 key: KEYCLOAK_SA_CLIENT_SECRET
           - name: AMQP_HOST
-            value: rabbit.mem-tfrs-${ENV_NAME}.svc
+            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: AMQP_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: username
           - name: AMQP_VHOST
             value: "/tfrs"
           - name: BYPASS_CLAMAV
@@ -187,33 +198,36 @@ objects:
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: patroni-${SUFFIX}
+                name: patroni${SUFFIX}
                 key: app-db-name
           - name: APP_CONFIG
             value: "/opt/app-root/src/gunicorn.cfg"
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: patroni-${SUFFIX}
+                name: patroni${SUFFIX}
                 key: app-db-username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni-${SUFFIX}
+                name: patroni${SUFFIX}
                 key: app-db-password
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: username
           - name: RABBITMQ_VHOST
             value: "/tfrs"
           - name: RABBITMQ_HOST
-            value: rabbit.mem-tfrs-${ENV_NAME}.svc
+            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-tfrs
-                key: TFRS_PASSWORD
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: password
           - name: MINIO_ENDPOINT
-            value: docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443
+            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
           - name: MINIO_USE_SSL
             value: 'true'
           - name: DOCUMENTS_API_ENABLED
@@ -221,20 +235,20 @@ objects:
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: minio
-                key: minioAccessKey
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_ACCESS_KEY
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: minio
-                key: minioSecretKey
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_SECRET_KEY
           - name: AMQP_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-tfrs
-                key: TFRS_PASSWORD
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: password
           - name: CLAMAV_HOST
-            value: rabbit.mem-tfrs-${ENV_NAME}.svc
+            value: clamav.apps.silver.devops.gov.bc.ca
           - name: FUEL_CODES_API_ENABLED
             value: 'true'
           - name: CREDIT_CALCULATION_API_ENABLED
