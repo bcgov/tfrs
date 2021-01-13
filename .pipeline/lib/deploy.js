@@ -41,6 +41,29 @@ module.exports = settings => {
     }
   }))
 
+   //deploy rabbitmq, use docker image directly
+  //POST_START_SLEEP is harded coded in the rabbitmq template, replacement was not successful
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/rabbitmq/rabbitmq-cluster-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'ENV_NAME': phases[phase].phase,
+      'SUFFIX': phases[phase].suffix,
+      'NAMESPACE': phases[phase].namespace,
+      'CLUSTER_NAME': 'rabbitmq-cluster',
+      'ISTAG': 'rabbitmq:3.8.3-management',
+      'SERVICE_ACCOUNT': 'rabbitmq-discovery',
+      'VOLUME_SIZE': phases[phase].rabbitmqPvcSize,
+      'CPU_REQUEST': phases[phase].rabbitmqCpuRequest,
+      'CPU_LIMIT': phases[phase].rabbitmqCpuLimit,
+      'MEMORY_REQUEST': phases[phase].rabbitmqMemoryRequest,
+      'MEMORY_LIMIT': phases[phase].rabbitmqMemoryLimit,
+      'REPLICA': phases[phase].rabbitmqReplica,
+      'POST_START_SLEEP': phases[phase].rabbitmqPostStartSleep,
+      'STORAGE_CLASS': phases[phase].storageClass
+    }
+  }))
+
+//'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
 
   //deploy frontend
   /*
@@ -71,28 +94,6 @@ module.exports = settings => {
 
 
   /**
- //deploy rabbitmq, use docker image directly
-  //POST_START_SLEEP is harded coded in the rabbitmq template, replacement was not successful
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/rabbitmq/rabbitmq-cluster-dc.yaml`, {
-    'param': {
-      'NAME': phases[phase].name,
-      'ENV_NAME': phases[phase].phase,
-      'SUFFIX': phases[phase].suffix,
-      'NAMESPACE': phases[phase].namespace,
-      'CLUSTER_NAME': 'rabbitmq-cluster',
-      'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
-      'SERVICE_ACCOUNT': 'rabbitmq-discovery',
-      'VOLUME_SIZE': phases[phase].rabbitmqPvcSize,
-      'CPU_REQUEST': phases[phase].rabbitmqCpuRequest,
-      'CPU_LIMIT': phases[phase].rabbitmqCpuLimit,
-      'MEMORY_REQUEST': phases[phase].rabbitmqMemoryRequest,
-      'MEMORY_LIMIT': phases[phase].rabbitmqMemoryLimit,
-      'REPLICA': phases[phase].rabbitmqReplica,
-      'POST_START_SLEEP': phases[phase].rabbitmqPostStartSleep,
-      'STORAGE_CLASS': phases[phase].storageClass
-    }
-  }))
-
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
       'NAME': phases[phase].name,

@@ -16,9 +16,9 @@ const phases = {
             frontendHostName: `tfrs-lowcarbonfuels-dev-${changeId}.${ocpName}.gov.bc.ca`,
         backendCpuRequest: '300m', backendCpuLimit: '600m', backendMemoryRequest: '1G', backendMemoryLimit: '2G', backendHealthCheckDelay: 30, 
             backendHostName: `tfrs-backend-dev-${changeId}.${ocpName}.gov.bc.ca`, backendReplicas: 1,
-        patroniCpuRequest: '200m', patroniCpuLimit: '400m', patroniMemoryRequest: '250M', patroniMemoryLimit: '500M', patroniPvcSize: '2G', 
+        patroniCpuRequest: '200m', patroniCpuLimit: '400m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '500Mi', patroniPvcSize: '2Gi', 
             patroniReplica: 1, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
-        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500M', rabbitmqMemoryLimit: '1G', rabbitmqPvcSize: '1G', 
+        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
             rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard'
         },
   test: {namespace:'0ab226-test'    , name: `${name}`, phase: 'test'  , changeId:changeId, suffix: `-test`  , instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`},

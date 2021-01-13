@@ -15,6 +15,17 @@ module.exports = settings => {
   console.log( oc.git.http_url);
   console.log( oc.git.ref);
 
+  //build backend
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-bc.yaml`, {
+    'param':{
+      'NAME': 'tfrs',
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'GIT_URL': oc.git.http_url,
+      'GIT_REF': oc.git.ref
+    }
+  }))
+  
   /****
   //build frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/client-angular-app-bc.yaml`, {
@@ -35,18 +46,6 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))    
-  
-
-  //build backend
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-bc.yaml`, {
-    'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'GIT_URL': oc.git.http_url,
-      'GIT_REF': oc.git.ref
-    }
-  }))
 
   */
 

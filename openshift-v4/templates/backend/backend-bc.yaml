@@ -7,7 +7,7 @@ metadata:
 parameters:
 - name: NAME
   displayName:
-  description: the module name entered when run yo bcdk:pipeline, which is zeva
+  description: the module name entered when run yo bcdk:pipeline, which is tfrs
   required: true
 - name: SUFFIX
   displayName:

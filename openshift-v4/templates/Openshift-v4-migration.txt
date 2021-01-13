@@ -11,10 +11,9 @@ openshift-v4/templates/nsp/README.MD
 
 ## 4. Setup Nginx
 
-??oc process -f ./templates/clamav/nginx-runtime.yaml | oc create -f - -n [tools namespace]
-??oc tag [tools namespace]/nginx-runtime:latest [tools namespace]/nginx-runtime:dev
-
 ## 5. Setup RabbitMQ
+
+## 6. Setup backend
 
 
 
