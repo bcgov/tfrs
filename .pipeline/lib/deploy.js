@@ -16,13 +16,12 @@ module.exports = settings => {
   // The deployment of your cool app goes here ▼▼▼
 
   //deploy Patroni
-  /*
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
+    objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
     'param': {
       'NAME': 'patroni',
       'SUFFIX': phases[phase].suffix
     }
-  }))*/
+  }))
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment.yaml`, {
     'param': {
       'NAME': 'patroni',
