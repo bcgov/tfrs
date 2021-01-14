@@ -331,7 +331,7 @@ parameters:
 - name: STORAGE_CLASS
   value: netapp-block-standard
 - name: IMAGE_REGISTRY
-  value: docker-registry.default.svc:5000
+  value: image-registry.openshift-image-registry.svc:5000
   retuired: true
 - name: REPLICA
   value: '2'

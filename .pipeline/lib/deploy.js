@@ -15,14 +15,14 @@ module.exports = settings => {
   console.log(phases[phase].frontendHostName)
   // The deployment of your cool app goes here ▼▼▼
 
-/****** keep this block
   //deploy Patroni
+  /*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
     'param': {
       'NAME': 'patroni',
       'SUFFIX': phases[phase].suffix
     }
-  }))
+  }))*/
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment.yaml`, {
     'param': {
       'NAME': 'patroni',
@@ -41,6 +41,7 @@ module.exports = settings => {
     }
   }))
 
+  /*
    //deploy rabbitmq, use docker image directly
   //POST_START_SLEEP is harded coded in the rabbitmq template, replacement was not successful
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/rabbitmq/rabbitmq-cluster-dc.yaml`, {
@@ -62,8 +63,9 @@ module.exports = settings => {
       'STORAGE_CLASS': phases[phase].storageClass
     }
   }))
-  ***/
-  
+  */
+
+  /*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -84,7 +86,7 @@ module.exports = settings => {
       'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
       'MEMORY_LIMIT':phases[phase].backendMemoryLimit
     }
-  }))
+  }))*/
 
 //'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
 

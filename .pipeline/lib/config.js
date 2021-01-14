@@ -24,7 +24,7 @@ const phases = {
             backendKeycloakClientId: 'tfrs-dev',
             backendKeycloakIssuer: 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev',
             backendKeycloakRealm: 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev',
-        patroniCpuRequest: '200m', patroniCpuLimit: '400m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '500Mi', patroniPvcSize: '2Gi', 
+        patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '2Gi', 
             patroniReplica: 1, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
         rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
             rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard'
