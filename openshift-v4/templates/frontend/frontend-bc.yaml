@@ -5,21 +5,34 @@ metadata:
   name: client-bc
   creationTimestamp:
 parameters:
-- name: CLIENT_IS_NAME
-  description: 'The client image stream name, valid values: client and client-develop'
+- name: NAME
+  description: tfrs
+  value: tfrs
   required: true
-- name: CLIENT_ANGULAR_APP_IS_NAME
-  description: 'The client angular app image stream name, valid values: client-angular-app
-    and client-develop-angular-app'
+- name: SUFFIX
+  displayName:
+  description: sample is -pr-0
+  required: true
+- name: VERSION
+  displayName:
+  description:  image tag name for output
+  required: true
+- name: GIT_URL
+  displayName:
+  description: tfrs repo
+  required: true
+- name: GIT_REF
+  displayName:
+  description: tfrs branch name of the pr
   required: true
 objects:
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    name: "${CLIENT_IS_NAME}"
+    name: ${NAME}-frontend${SUFFIX}
     creationTimestamp:
     annotations:
-      description: Defines how to build the client / front end image
+      description: Defines how to build the front end image
   spec:
     triggers:
     - type: ImageChange
@@ -29,13 +42,13 @@ objects:
     source:
       type: Dockerfile
       dockerfile: |-
-        FROM client-angular-app:latest
+        FROM ${{NAME}}-frontend-angular-app${{SUFFIX}}:${{VERSION}}
         COPY * /tmp/app/dist/
         CMD  /usr/libexec/s2i/run
       images:
       - from:
           kind: ImageStreamTag
-          name: "${CLIENT_ANGULAR_APP_IS_NAME}:latest"
+          name: ${NAME}-frontend-angular-app${SUFFIX}:${VERSION}
         as:
         paths:
         - sourcePath: "/opt/app-root/src/public/."
@@ -45,14 +58,14 @@ objects:
       dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: nginx-runtime:latest
+          name: nginx-runtime:20210115
     output:
       to:
         kind: ImageStreamTag
-        name: "${CLIENT_IS_NAME}:latest"
+        name: ${NAME}-frontend${SUFFIX}:${VERSION}
     resources:
       limits:
-        cpu: '2'
+        cpu: '1'
         memory: 4Gi
     postCommit: {}
     nodeSelector:
