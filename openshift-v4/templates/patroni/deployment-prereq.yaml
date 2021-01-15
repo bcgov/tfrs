@@ -18,6 +18,23 @@ labels:
 objects:
 # move ServiceAccount and Role to here, otherwise image pulled may fail because ServiceAccount hasn't been created
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    labels:
+      app: ${NAME}${SUFFIX}
+      cluster-name: ${NAME}${SUFFIX}
+    annotations:
+      as-copy-of: "template.${NAME}-patroni"
+    name: ${NAME}${SUFFIX}
+  stringData:
+    replication-username: ${PATRONI_REPLICATION_USERNAME}
+    replication-password: ${PATRONI_REPLICATION_PASSWORD}
+    superuser-username: ${PATRONI_SUPERUSER_USERNAME}
+    superuser-password: ${PATRONI_SUPERUSER_PASSWORD}
+    app-db-name: ${APP_DB_NAME}
+    app-db-username: ${APP_DB_USERNAME}
+    app-db-password: ${APP_DB_PASSWORD}
+- apiVersion: v1
   kind: ServiceAccount
   metadata:
     labels:

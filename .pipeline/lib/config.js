@@ -10,6 +10,7 @@ const phases = {
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev-${changeId}`  , 
         instance: `${name}-dev-${changeId}`  , version:`${version}-${changeId}`, tag:`dev-${version}-${changeId}`,
+        host: `tfrs-dev-${changeId}.${ocpName}.gov.bc.ca`,
         frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 1,
             keycloakAuthority: 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev', keycloakClientId: 'tfrs-dev', keycloakCallbackUrl: 'https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback',
             keycloakLogoutUrl: 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F', 

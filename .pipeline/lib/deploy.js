@@ -1,6 +1,7 @@
 "use strict";
 const { OpenShiftClientX } = require("@bcgov/pipeline-cli");
 const path = require("path");
+const KeyCloakClient = require('./keycloak');
 
 module.exports = settings => {
   const phases = settings.phases;
@@ -15,6 +16,7 @@ module.exports = settings => {
   console.log(phases[phase].frontendHostName)
   // The deployment of your cool app goes here ▼▼▼
 
+  /*
   //deploy Patroni
     objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
     'param': {
@@ -39,8 +41,9 @@ module.exports = settings => {
       'STORAGE_CLASS': phases[phase].storageClass
     }
   }))
+  */
 
-  /*
+/*
    //deploy rabbitmq, use docker image directly
   //POST_START_SLEEP is harded coded in the rabbitmq template, replacement was not successful
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/rabbitmq/rabbitmq-cluster-dc.yaml`, {
@@ -62,9 +65,9 @@ module.exports = settings => {
       'STORAGE_CLASS': phases[phase].storageClass
     }
   }))
-  */
+*/
 
-  /*
+/*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -85,9 +88,10 @@ module.exports = settings => {
       'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
       'MEMORY_LIMIT':phases[phase].backendMemoryLimit
     }
-  }))*/
+  }))
+*/
 
-//'ISTAG': `image-registry.openshift-image-registry.svc:5000/${phases[phase].namespace}/rabbitmq:3.8.9-management`,
+
 
   oc.applyRecommendedLabels(
     objects,

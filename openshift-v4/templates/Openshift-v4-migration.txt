@@ -5,25 +5,30 @@
 
 openshift-v4/templates/nsp/README.MD
 
-## 2. Setup Minio
+## 2 Setup Keycloak
 
-## 3. setup Clamav
+openshift-v4/templates/keycloak/README.MD
 
-## 4. Setup Nginx
+## 3. Setup Minio
 
-## 5. Setup RabbitMQ
+## 4. setup Clamav
 
-## 6. Setup backend
+## 5. Setup Nginx
 
+## 6. Setup RabbitMQ
 
 
 ## 5. Pipeline
 
-### 5.1 Frontend
-
 ### 5.2 Patroni
 
+if patroni can't start, make sure the two configmaps are depleted.
+
 ### 5.3 Backend
+
+### 5.4 frontend
+
+oc tag e52f12-tools/nodejs:12-1-45 0ab226-tools/nodejs:12-1-45
 
 ### 5.4 Celery
 

@@ -7,7 +7,7 @@ module.exports = class KeyCloakClient {
         this.phases = settings.phases;
         this.options = settings.options;
         this.oc = oc;
-        this.zevaHost = this.phases.dev.host;
+        this.appHost = this.phases.dev.host;
     }
 
     async init() {
@@ -15,7 +15,7 @@ module.exports = class KeyCloakClient {
         this.getSecrets();
 
         this.apiTokenPath = `/auth/realms/${this.realmId}/protocol/openid-connect/token`;
-        this.zevaPublicClientPath = `auth/admin/realms/${this.realmId}/clients/${this.zevaClientId}`;
+        this.tfrsPublicClientPath = `auth/admin/realms/${this.realmId}/clients/${this.tfrsClientId}`;
 
         this.api = axios.create({
             baseURL: `https://${this.ssoHost}`
@@ -31,7 +31,7 @@ module.exports = class KeyCloakClient {
     getSecrets() {
         const keycloakSecret = this.oc.raw("get", [
             "secret",
-            "zeva-keycloak",
+            "tfrs-keycloak",
             "-o",
             "json"
         ]);
@@ -39,11 +39,11 @@ module.exports = class KeyCloakClient {
 
         this.clientId = Buffer.from(secret.clientId, "base64").toString();
         this.clientSecret = Buffer.from(secret.clientSecret, "base64").toString();
-        this.zevaClientId = Buffer.from(secret.zevaPublic, "base64").toString();
+        this.tfrsClientId = Buffer.from(secret.tfrsPublic, "base64").toString();
         this.realmId = Buffer.from(secret.realmId, "base64").toString();
         this.ssoHost = Buffer.from(secret.host, "base64").toString();
 
-        if (!this.clientId || !this.clientSecret || !this.zevaClientId)
+        if (!this.clientId || !this.clientSecret || !this.tfrsClientId)
             throw new Error(
                 "Unable to retrieve Keycloak service account info from OpenShift"
             );
@@ -71,8 +71,11 @@ module.exports = class KeyCloakClient {
 
     async getUris() {
 
-        const response = await this.api.get(this.zevaPublicClientPath);
+        console.log("in getURis this.tfrsPublicClientPath=", this.tfrsPublicClientPath)
 
+        const response = await this.api.get(this.tfrsPublicClientPath);
+
+        console.log("in getURis 000000")
         const data = { ...response.data };
         const redirectUris = data.redirectUris;
 
@@ -82,24 +85,30 @@ module.exports = class KeyCloakClient {
     async addUris() {
         await this.init();
 
-        console.log("Attempting to add RedirectUri and WebOrigins");
+        console.log("111Attempting to add RedirectUri and WebOrigins");
 
         const { data, redirectUris} = await this.getUris();
 
+        console.log("2222");
+
         const putData = { id: data.id, clientId: data.clientId };
 
+        console.log("3333");
+
         const hasRedirectUris = redirectUris.find(item =>
-            item.includes(this.zevaHost)
+            item.includes(this.appHost)
         );
 
+        console.log("4444");
+
         if (!hasRedirectUris) {
-            redirectUris.push(`https://${this.zevaHost}/*`);
+            redirectUris.push(`https://${this.appHost}/*`);
             putData.redirectUris = redirectUris;
         }
 
         if (!(hasRedirectUris)) {
             this.api
-                .put(this.zevaPublicClientPath, putData)
+                .put(this.tfrsPublicClientPath, putData)
                 .then(() => console.log("RedirectUri and WebOrigins added."));
         } else {
             console.log("RedirectUri and WebOrigins add skipped.");
@@ -116,18 +125,18 @@ module.exports = class KeyCloakClient {
         const putData = { id: data.id, clientId: data.clientId };
 
         const hasRedirectUris = redirectUris.find(item =>
-            item.includes(this.zevaHost)
+            item.includes(this.appHost)
         );
 
         if (hasRedirectUris) {
             putData.redirectUris = redirectUris.filter(
-                item => !item.includes(this.zevaHost)
+                item => !item.includes(this.appHost)
             );
         }
 
         if (hasRedirectUris) {
             this.api
-                .put(this.zevaPublicClientPath, putData)
+                .put(this.tfrsPublicClientPath, putData)
                 .then(() => console.log("RedirectUri and WebOrigins removed."));
         } else {
             console.log("RedirectUri and WebOrigins remove skipped.");
