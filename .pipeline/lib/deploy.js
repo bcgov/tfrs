@@ -68,6 +68,7 @@ module.exports = settings => {
 */
 
 /*
+  //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -91,7 +92,31 @@ module.exports = settings => {
   }))
 */
 
-
+  //deploy ffrontend
+  /*
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-others.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'KEYCLOAK_AUTHORITY': phases[phase].frontendKeycloakAuthority,
+      'KEYCLOAK_CLIENT_ID': phases[phase].frontendKeycloakClientId,
+      'KEYCLOAK_CALLBACK_URL': phases[phase].frontendKeycloakCallbackUrl,
+      'KEYCLOAK_LOGOUT_URL': phases[phase].frontendKeycloakLogoutUrl,
+      'FRONTEND_HOST_NAME': phases[phase].frontendHostName
+    }
+  }))
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'CPU_REQUEST': phases[phase].frontendCpuRequest,
+      'CPU_LIMIT': phases[phase].frontendCpuLimit,
+      'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
+      'MEMORY_LIMIT': phases[phase].frontendMemoryLimit
+    }
+  }))  */
 
   oc.applyRecommendedLabels(
     objects,

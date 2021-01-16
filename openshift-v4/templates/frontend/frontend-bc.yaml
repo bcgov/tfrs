@@ -26,6 +26,21 @@ parameters:
   description: tfrs branch name of the pr
   required: true
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the frontend angular image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    generation: 643
+    name: ${NAME}-frontend
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
@@ -42,13 +57,13 @@ objects:
     source:
       type: Dockerfile
       dockerfile: |-
-        FROM ${{NAME}}-frontend-angular-app${{SUFFIX}}:${{VERSION}}
+        FROM tfrs-frontend-angular-app:thisLineToBeReplace
         COPY * /tmp/app/dist/
         CMD  /usr/libexec/s2i/run
       images:
       - from:
           kind: ImageStreamTag
-          name: ${NAME}-frontend-angular-app${SUFFIX}:${VERSION}
+          name: ${NAME}-frontend-angular-app:${VERSION}
         as:
         paths:
         - sourcePath: "/opt/app-root/src/public/."
@@ -62,7 +77,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: ${NAME}-frontend${SUFFIX}:${VERSION}
+        name: ${NAME}-frontend:${VERSION}
     resources:
       limits:
         cpu: '1'
