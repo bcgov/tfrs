@@ -57,6 +57,9 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
+        from:
+            kind: DockerImage
+            name: docker.io/golang:1.13
         noCache: true
         forcePull: true
     output:
