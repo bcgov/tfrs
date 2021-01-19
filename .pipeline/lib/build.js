@@ -38,7 +38,7 @@ module.exports = settings => {
       'GIT_URL': oc.git.http_url,
       'GIT_REF': oc.git.ref
     }
-  }))*/
+  }))
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc.yaml`, {
     'param':{
       'NAME': phases[phase].name,
@@ -47,21 +47,45 @@ module.exports = settings => {
       'GIT_URL': oc.git.http_url,
       'GIT_REF': oc.git.ref
     }
-  }))  
-
-  /*
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/client-bc.yaml`, {
-    'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'GIT_URL': oc.git.http_url,
-      'GIT_REF': oc.git.ref
-    }
-  }))    
-
+  }))
   */
 
+/*
+ //build celery
+ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
+  'param':{
+    'NAME': phases[phase].name,
+    'SUFFIX': phases[phase].suffix,
+    'VERSION': phases[phase].tag,
+    'GIT_URL': oc.git.http_url,
+    'RELEASE_BRANCH': phases[phase].releaseBranch
+  }
+}))
+*/
+
+/*
+ //build notification server
+ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-bc.yaml`, {
+  'param':{
+    'NAME': phases[phase].name,
+    'SUFFIX': phases[phase].suffix,
+    'VERSION': phases[phase].tag,
+    'GIT_URL': oc.git.http_url,
+    'GIT_REF': oc.git.ref
+  }
+}))
+*/
+
+ //build notification server
+ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-bc.yaml`, {
+  'param':{
+    'NAME': phases[phase].name,
+    'SUFFIX': phases[phase].suffix,
+    'VERSION': phases[phase].tag,
+    'GIT_URL': oc.git.http_url,
+    'GIT_REF': oc.git.ref
+  }
+}))
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

@@ -118,6 +118,38 @@ module.exports = settings => {
     }
   }))  */
 
+  /*
+  //deploy celery
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'ENV_NAME': phases[phase].phase,
+      'NAMESPACE': phases[phase].namespace,
+      'CPU_REQUEST': phases[phase].celeryCpuRequest,
+      'CPU_LIMIT': phases[phase].celeryCpuLimit,
+      'MEMORY_REQUEST': phases[phase].celeryMemoryRequest,
+      'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
+    }
+  })) 
+  */
+
+  //deploy notification server
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'NAMESPACE': phases[phase].namespace,
+      'VERSION': phases[phase].tag,
+      'KEYCLOAK_CERTS_URL': phases[phase].backendKeycloakCertsUrl,
+      'CPU_REQUEST':phases[phase].notificationServerCpuRequest,
+      'CPU_LIMIT':phases[phase].notificationServerCpuLimit,
+      'MEMORY_REQUEST':phases[phase].notificationServerMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
+    }
+  }))
+ 
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,
