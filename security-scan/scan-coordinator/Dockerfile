@@ -1,4 +1,4 @@
-FROM golang:1.12.17
+FROM golang:1.12-buster
 
 WORKDIR /go/src/scan-coordinator
 COPY . .
