@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.11.7
+FROM docker.io/golang:1.14
 
 WORKDIR /go/src/scan-coordinator
 COPY . .

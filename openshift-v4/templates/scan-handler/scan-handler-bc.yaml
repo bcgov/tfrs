@@ -1,0 +1,62 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: scan-handler-bc
+  creationTimestamp:
+parameters:
+- name: TFRS_RELEASE_TAG
+  description: 'The tag name for this release, sample value: v1.3.4'
+  required: true
+- name: SCAN_HANDLER_IS_NAME
+  description: 'The scan handler image stream name, valid values: scan-handler-develop
+    and scan-handler'
+  required: true
+objects:
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    name: "${SCAN_HANDLER_IS_NAME}"
+    creationTimestamp:
+  spec:
+    triggers: []
+    runPolicy: Serial
+    source:
+      type: Dockerfile
+      dockerfile: |
+        FROM python:3.6.8-slim-stretch
+        RUN apt-get update \
+            && apt-get install -y git \
+            && apt-get install -y supervisor
+        WORKDIR /app
+        RUN git clone https://github.com/bcgov/tfrs.git
+        WORKDIR /app/tfrs
+        RUN git checkout ${tfrs_release}
+        RUN pip install --upgrade pip \
+            && pip install -r backend/requirements.txt
+        RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d
+        RUN chgrp -R root /var/log/supervisor
+        RUN chmod -R g+w /var/log/supervisor
+        RUN chmod -R g+w /run
+        RUN chmod -R g+w /app
+        # RUN sed -i "s/chmod=0700/chmod=0770/g" /etc/supervisor/supervisord.conf
+        CMD ["supervisord"]
+    strategy:
+      type: Docker
+      dockerStrategy:
+        noCache: true
+        env:
+        - name: tfrs_release
+          value: "${TFRS_RELEASE_TAG}"
+        forcePull: true
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${SCAN_HANDLER_IS_NAME}:latest"
+    resources: {}
+    postCommit: {}
+    nodeSelector:
+    successfulBuildsHistoryLimit: 5
+    failedBuildsHistoryLimit: 5
+  status:
+    lastVersion: 0
