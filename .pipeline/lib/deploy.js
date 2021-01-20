@@ -135,6 +135,7 @@ module.exports = settings => {
   })) 
   */
 
+  /*
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -149,6 +150,36 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
+ */
+  //deploy scan coordinator
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'NAMESPACE': phases[phase].namespace,
+      'VERSION': phases[phase].tag,
+      'ENV_NAME': phases[phase].phase,
+      'CPU_REQUEST':phases[phase].scanCoordinatorCpuRequest,
+      'CPU_LIMIT':phases[phase].scanCoordinatorCpuLimit,
+      'MEMORY_REQUEST':phases[phase].scanCoordinatorMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
+    }
+  }))
+/*
+  //deploy scan handler
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'NAMESPACE': phases[phase].namespace,
+      'VERSION': phases[phase].tag,
+      'CPU_REQUEST':phases[phase].scanHandlerCpuRequest,
+      'CPU_LIMIT':phases[phase].scanHandlerServerCpuLimit,
+      'MEMORY_REQUEST':phases[phase].scanHandlerServerMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].scanHandlerServerMemoryLimit
+    }
+  }))
+  */
  
   oc.applyRecommendedLabels(
     objects,

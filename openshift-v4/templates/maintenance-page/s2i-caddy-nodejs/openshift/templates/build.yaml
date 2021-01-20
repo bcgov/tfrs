@@ -1,0 +1,66 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${NAME}
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      name: ${NAME}
+    name: ${NAME}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      name: ${NAME}
+    name: ${NAME}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}:${OUTPUT_IMAGE_TAG}
+    runPolicy: Serial
+    source:
+      contextDir: ${SOURCE_CONTEXT_DIR}
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_REPO_URL}
+      type: Git
+    strategy:
+      type: Docker
+    triggers:
+    - type: ConfigChange
+parameters:
+- name: NAME
+  displayName: Name
+  description: |
+    The name assigned to all of the frontend objects defined in
+    this template. You should keep this as default unless your
+    know what your doing.
+  required: true
+  value: caddy-s2i-builder
+- name: GIT_REPO_URL
+  displayName: Git Repo URL
+  description: |
+    The URL to your GIT repo, you can use this as the default value
+    without issue; in may be prefered in many cases.
+  required: true
+  value: https://github.com/bcgov/s2i-caddy-nodejs.git
+- name: GIT_REF
+  displayName: Git Reference
+  description: The git reference or branch.
+  required: true
+  value: master
+- name: SOURCE_CONTEXT_DIR
+  displayName: Source Context Directory
+  description: |
+    The source context directory. Change this if you are using your own
+    repo and the Dockerfile is located in a subdirectory.
+  required: true
+  value: /
+- name: OUTPUT_IMAGE_TAG
+  displayName: Output Image Tag
+  description: The tag given to the built image.
+  required: true
+  value: latest

@@ -5,14 +5,26 @@ metadata:
   name: scan-coordinator-dc
   creationTimestamp:
 parameters:
+- name: NAME
+  displayName: App name
+  description: App name
+  value: tfrs
+  required: true
+- name: SUFFIX
+  displayName: suffix
+  description: such as -dev-1696, -dev ane etc.
+  required: true  
+- name: NAMESPACE
+  displayName: Environment name
+  description: 'Sample values: 0ab226-dev, 0ab226-test and 0ab226-prod'
+  required: true
+- name: VERSION
+  displayName: null
+  description: image tag name for output
+  required: true
 - name: ENV_NAME
   displayName: Environment name
   description: 'Valid values: dev, test and prod'
-  required: true
-- name: SOURCE_IS_NAME
-  displayName: The source image stream name
-  description: 'The image stream could trigger the deployment, valid values: scan-coordinator-develop
-    and scan-coordinator'
   required: true
 - name: CPU_REQUEST
   displayName: Requested CPU
@@ -31,16 +43,27 @@ parameters:
   description: Memory upper limit
   required: true
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the scan coordinator image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: ${NAME}-scan-coordinator
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ''
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
   metadata:
-    name: scan-coordinator
-    generation: 62
+    name: ${NAME}-scan-coordinator${SUFFIX}
     creationTimestamp:
     labels:
-      app: scan-coordinator
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
+      app: ${NAME}-scan-coordinator${SUFFIX}
   spec:
     strategy:
       type: Recreate
@@ -56,24 +79,19 @@ objects:
         - scan-coordinator
         from:
           kind: ImageStreamTag
-          namespace: mem-tfrs-tools
-          name: "${SOURCE_IS_NAME}:${ENV_NAME}"
+          name: ${NAME}-scan-coordinator:${VERSION}
         lastTriggeredImage: ''
     - type: ConfigChange
     replicas: 1
     revisionHistoryLimit: 10
     test: false
     selector:
-      app: scan-coordinator
-      deploymentconfig: scan-coordinator
+      app: ${NAME}-scan-coordinator${SUFFIX}
     template:
       metadata:
         creationTimestamp:
         labels:
-          app: scan-coordinator
-          deploymentconfig: scan-coordinator
-        annotations:
-          openshift.io/generated-by: OpenShiftWebConsole
+          app: ${NAME}-scan-coordinator${SUFFIX}
       spec:
         containers:
         - name: scan-coordinator
@@ -82,43 +100,46 @@ objects:
           - name: BYPASS_CLAMAV
             value: 'false'
           - name: CLAMAV_HOST
-            value: clamav.mem-tfrs-${ENV_NAME}.svc
+            value: clamav.${NAMESPACE}.svc.cluster.local
           - name: CLAMAV_PORT
             value: '3310'
           - name: AMQP_HOST
-            value: rabbit.mem-tfrs-${ENV_NAME}.svc
+            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: AMQP_VHOST
             value: "/tfrs"
           - name: AMQP_PORT
             value: '5672'
           - name: AMQP_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: username
           - name: MINIO_ENDPOINT
-            value: docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443
+            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca
           - name: MINIO_USE_SSL
             value: 'true'
           - name: AMQP_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-tfrs
-                key: TFRS_PASSWORD
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: password
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: minio
-                key: minioAccessKey
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_ACCESS_KEY
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: minio
-                key: minioSecretKey
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_SECRET_KEY
           resources:
             requests:
-              cpu: "${CPU_REQUEST}"
-              memory: "${MEMORY_REQUEST}"
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
             limits:
-              cpu: "${CPU_LIMIT}"
-              memory: "${MEMORY_LIMIT}"
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
           imagePullPolicy: Always

@@ -28,6 +28,8 @@ const phases = {
             backendKeycloakIssuer: 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev',
             backendKeycloakRealm: 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev',
         celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
+        scanHandlerCpuRequest: '100m', scanHandlerCpuLimit: '250m', scanHandlerMemoryRequest: '255Mi', scanHandlerMemoryLimit: '512Mi',
+        scanCoordinatorCpuRequest: '100m', scanCoordinatorCpuLimit: '250m', scanCoordinatorMemoryRequest: '255Mi', scanCoordinatorMemoryLimit: '512Mi',
         notificationServerCpuRequest: '100m', notificationServerCpuLimit: '400m', notificationServerMemoryRequest: '256Mi', notificationServerMemoryLimit: '512Mi',
         patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '2Gi', 
             patroniReplica: 1, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
