@@ -5,30 +5,65 @@ metadata:
   name: scan-handler-dc
   creationTimestamp:
 parameters:
-- name: ENV_NAME
+- name: NAME
+  displayName: App name
+  description: App name
+  value: tfrs
+  required: true
+- name: SUFFIX
+  displayName: suffix
+  description: such as -dev-1696, -dev ane etc.
+  required: true  
+- name: NAMESPACE
   displayName: Environment name
-  description: 'Sample values: dev, test and prod'
+  description: 'Sample values: 0ab226-dev, 0ab226-test and 0ab226-prod'
   required: true
-- name: SOURCE_IS_NAME
-  displayName: The source image stream name
-  description: 'The image stream could trigger the deployment, sample values: scan-handler-develop
-    and scan-handler'
+- name: VERSION
+  displayName: null
+  description: image tag name for output
   required: true
-- name: DATABASE_SERVICE_NAME
-  displayName: database service name
-  description: database service name
+- description: Starting amount of CPU the container can use.
+  displayName: CPU REQUEST
+  name: CPU_REQUEST
+  value: '100m'
   required: true
+- description: Maximum amount of CPU the container can use.
+  displayName: CPU Limit
+  name: CPU_LIMIT
+  value: '250m'
+  required: true
+- description: Starting amount of memory the container can use.
+  displayName: Memory Request
+  name: MEMORY_REQUEST
+  value: 256Mi
+  required: true
+- description: Maximum amount of memory the container can use.
+  displayName: Memory Limit
+  name: MEMORY_LIMIT
+  value: 512Mi    
+  required: true  
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the scan handler image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: ${NAME}-scan-handler
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ''
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
   metadata:
-    name: scan-handler
-    generation: 90
+    name: ${NAME}-scan-handler${SUFFIX}
     creationTimestamp:
     labels:
-      app: scan-handler
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
+      app: ${NAME}-scan-handler${SUFFIX}
   spec:
     strategy:
       type: Recreate
@@ -44,24 +79,19 @@ objects:
         - scan-handler
         from:
           kind: ImageStreamTag
-          namespace: mem-tfrs-tools
-          name: "${SOURCE_IS_NAME}:${ENV_NAME}"
+          name: ${NAME}-scan-handler:${VERSION}
         lastTriggeredImage: ''
     - type: ConfigChange
     replicas: 1
     revisionHistoryLimit: 10
     test: false
     selector:
-      app: scan-handler
-      deploymentconfig: scan-handler
+      app: ${NAME}-scan-handler${SUFFIX}
     template:
       metadata:
         creationTimestamp:
         labels:
-          app: scan-handler
-          deploymentconfig: scan-handler
-        annotations:
-          openshift.io/generated-by: OpenShiftWebConsole
+          app: ${NAME}-scan-handler${SUFFIX}
       spec:
         containers:
         - name: scan-handler
@@ -70,34 +100,37 @@ objects:
           - name: RABBITMQ_VHOST
             value: "/tfrs"
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: username
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-tfrs
-                key: TFRS_PASSWORD
+                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
+                key: password
           - name: RABBITMQ_HOST
-            value: rabbit.mem-tfrs-${ENV_NAME}.svc
+            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PORT
             value: '5672'
           - name: DATABASE_SERVICE_NAME
-            value: "${DATABASE_SERVICE_NAME}"
+            value: patroni-master${SUFFIX}
           - name: DATABASE_ENGINE
             value: postgresql
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-name
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-password
           resources:
             limits:

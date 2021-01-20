@@ -76,6 +76,7 @@ module.exports = settings => {
 }))
 */
 
+/*
  //build notification server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-bc.yaml`, {
   'param':{
@@ -86,6 +87,16 @@ module.exports = settings => {
     'GIT_REF': oc.git.ref
   }
 }))
+*/
+objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-bc.yaml`, {
+  'param':{
+    'NAME': phases[phase].name,
+    'SUFFIX': phases[phase].suffix,
+    'VERSION': phases[phase].tag,
+    'RELEASE_BRANCH': phases[phase].releaseBranch
+  }
+}))
+
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

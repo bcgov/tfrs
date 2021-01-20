@@ -5,18 +5,41 @@ metadata:
   name: scan-handler-bc
   creationTimestamp:
 parameters:
-- name: TFRS_RELEASE_TAG
-  description: 'The tag name for this release, sample value: v1.3.4'
+- name: NAME
+  displayName:
+  description: the module name entered when run yo bcdk:pipeline, which is tfrs
   required: true
-- name: SCAN_HANDLER_IS_NAME
-  description: 'The scan handler image stream name, valid values: scan-handler-develop
-    and scan-handler'
+- name: SUFFIX
+  displayName:
+  description: sample is -pr-0
   required: true
+- name: VERSION
+  displayName:
+  description:  image tag name for output
+  required: true
+- name: RELEASE_BRANCH
+  displayName:
+  description: the release branch name
+  required: true  
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the celery image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: ${NAME}-scan-handler
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    name: "${SCAN_HANDLER_IS_NAME}"
+    name: ${NAME}-scan-handler${SUFFIX}
     creationTimestamp:
   spec:
     triggers: []
@@ -37,7 +60,7 @@ objects:
         RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d
         RUN chgrp -R root /var/log/supervisor
         RUN chmod -R g+w /var/log/supervisor
-        RUN chmod -R g+w /run
+        RUN chmod -R g+w /run || :
         RUN chmod -R g+w /app
         # RUN sed -i "s/chmod=0700/chmod=0770/g" /etc/supervisor/supervisord.conf
         CMD ["supervisord"]
@@ -47,12 +70,12 @@ objects:
         noCache: true
         env:
         - name: tfrs_release
-          value: "${TFRS_RELEASE_TAG}"
+          value: ${RELEASE_BRANCH}
         forcePull: true
     output:
       to:
         kind: ImageStreamTag
-        name: "${SCAN_HANDLER_IS_NAME}:latest"
+        name: ${NAME}-scan-handler:${VERSION}
     resources: {}
     postCommit: {}
     nodeSelector:
