@@ -57,9 +57,8 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
-        from:
-            kind: DockerImage
-            name: docker.io/golang:1.13
+        pullSecret:
+          name: docker-creds
         noCache: true
         forcePull: true
     output:
