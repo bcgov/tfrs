@@ -1,0 +1,80 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: tfrs-bc
+  creationTimestamp: 
+parameters:
+- name: NAME
+  displayName:
+  description: the module name entered when run yo bcdk:pipeline, which is tfrs
+  required: true
+- name: SUFFIX
+  displayName:
+  description: sample is -pr-0
+  required: true
+- name: VERSION
+  displayName:
+  description:  image tag name for output
+  required: true
+- name: GIT_URL
+  displayName:
+  description: zeva repo
+  required: true
+- name: GIT_REF
+  displayName:
+  description: zeva branch name of the pr
+  required: true
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the backend image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    generation: 643
+    name: ${NAME}-backend
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    name: ${NAME}-backend${SUFFIX}
+    creationTimestamp: 
+    annotations:
+      description: Defines how to build the application
+  spec:
+    triggers:
+    - type: ImageChange
+      imageChange: {}
+    - type: ConfigChange
+    runPolicy: SerialLatestOnly
+    source:
+      type: Git
+      git:
+        uri: ${GIT_URL}
+        ref: ${GIT_REF}
+      contextDir: backend
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: openshift
+          name: python:3.6
+        env:
+        - name: PIP_INDEX_URL
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}-backend:${VERSION}
+    resources: {}
+    postCommit: {}
+    nodeSelector: 
+  status:
+    lastVersion: 0

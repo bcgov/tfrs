@@ -1,0 +1,48 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: nginx-runtime
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: image stream for nginx
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: nginx-runtime
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: nginx-runtime
+    name: nginx-runtime
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: nginx-runtime:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: openshift-v4/templates/nginx-runtime
+      git:
+        ref: openshift-v4-migration
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers: []
+  status:
+    lastVersion: 0

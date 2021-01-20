@@ -11,8 +11,27 @@ const download = (url, params = {}) => (
     responseType: 'blob',
     params
   }).then((response) => {
-    let filename = response.headers['content-disposition'].replace('attachment; filename=', '');
-    filename = filename.replace(/"/g, '');
+    let filename;
+    if (!response || !response.headers || !response.headers['content-disposition']) {
+      const currentDate = new Date();
+      const { pathname } = window.location;
+      let module = pathname.substr(1); // get the first path
+
+      if (pathname.indexOf('/', 1) > 0) {
+        module = module.substr(0, pathname.indexOf('/', 1));
+      }
+
+      if (module === 'admin/') { // if the first pathname is admin, get the second pathname instead
+        module = pathname.substr(pathname.indexOf('/', 1) + 1);
+        module = module.replace('/', '');
+      }
+
+      const extension = url.substring(url.lastIndexOf('/') + 1);
+      filename = `BC-LCFS_${module}_${currentDate.toISOString().substr(0, 10)}.${extension}`;
+    } else {
+      filename = response.headers['content-disposition'].replace('attachment; filename=', '');
+      filename = filename.replace(/"/g, '');
+    }
 
     const objectURL = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');

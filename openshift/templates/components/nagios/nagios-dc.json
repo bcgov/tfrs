@@ -31,13 +31,13 @@
         {
             "name": "KEYCLOAK_SA_BASEURL",
             "displayName": "KEYCLOAK_SA_BASEURL",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca, https://sso-test.pathfinder.gov.bc.ca, https://sso.pathfinder.gov.bc.ca",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca, https://test.oidc.gov.bc.ca, https://oidc.gov.bc.ca",
             "required": true
         },
         {
             "name": "KEYCLOAK_REALM",
             "displayName": "KEYCLOAK_REALM",
-            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+            "description": "Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs, https://oidc.gov.bc.ca/auth/realms/tfrs",
             "required": true
         },
         {
@@ -45,6 +45,12 @@
             "displayName": "SMTP_SERVER_HOST",
             "description": "All environment use same email server",
             "value": "apps.smtp.gov.bc.ca",
+            "required": true
+        },
+        {
+            "name": "DATABASE_SERVICE_NAME",
+            "displayName": "database service name",
+            "description": "database service name",
             "required": true
         }
     ],
@@ -236,6 +242,37 @@
                                     {
                                         "name": "SMTP_SERVER_HOST",
                                         "value": "${SMTP_SERVER_HOST}"
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "${DATABASE_SERVICE_NAME}"
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-name"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-username"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "patroni-${ENV_NAME}",
+                                                "key": "app-db-password"
+                                            }
+                                        }
                                     }
                                 ],
                                 "resources": {

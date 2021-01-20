@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: rabbitmq-web-route
+  annotations:
+    description: "Deploys a RabbitMQ web route"
+    iconClass: icon-rabbitmq
+    tags: rabbitmq,mq,messaging
+parameters:
+- name: NAME
+  displayName: the module name
+  description: the module name entered when run yo bcdk:pipeline, which is zeva
+  required: true
+- name: ENV_NAME
+  displayName: environment name
+  description: sample is dev, test and prod
+  required: true  
+- name: SUFFIX
+  displayName: suffix 
+  description: sample is -dev-161
+  required: true  
+- name: CLUSTER_NAME
+  displayName: rabbitmq cluster name
+  description: rabbitmq cluster name
+  value: rabbitmq-cluster
+  required: true   
+- name: OCP_NAME
+  displayName: openshift name
+  description: openshift name
+  required: true    
+objects:
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    labels:
+      name: rabbitmq
+      app: zeva
+      role: rabbitmq
+      env: ${ENV_NAME}
+    name: ${NAME}-rabbitmq-web${SUFFIX}
+  spec:
+    host: ${NAME}-rabbitmq-web${SUFFIX}.${OCP_NAME}.gov.bc.ca
+    port:
+      targetPort: web
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: ${NAME}${SUFFIX}-${CLUSTER_NAME}
+      weight: 100
+    wildcardPolicy: None

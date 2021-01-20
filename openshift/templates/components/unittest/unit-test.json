@@ -7,24 +7,14 @@
     },
     "objects": [
         {
-            "kind": "PersistentVolumeClaim",
             "apiVersion": "v1",
+            "kind": "PersistentVolumeClaim",
             "metadata": {
                 "name": "postgresql96-unittest",
-                "creationTimestamp": null,
-                "labels": {
-                    "template": "tfrs-postgresql96-unittest"
-                },
                 "annotations": {
-                    "pv.kubernetes.io/bind-completed": "yes",
-                    "pv.kubernetes.io/bound-by-controller": "yes",
-                    "template.openshift.io.bcgov/create": "true",
-                    "volume.beta.kubernetes.io/storage-class": "gluster-file-db",
-                    "volume.beta.kubernetes.io/storage-provisioner": "kubernetes.io/glusterfs"
-                },
-                "finalizers": [
-                    "kubernetes.io/pvc-protection"
-                ]
+                    "volume.beta.kubernetes.io/storage-class": "netapp-block-standard",
+                    "template.openshift.io.bcgov/create": "true"
+                }
             },
             "spec": {
                 "accessModes": [
@@ -32,12 +22,10 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "1Gi"
+                    "storage": "1G"
                     }
-                },
-                "volumeName": "pvc-69dcc421-e48b-11e9-aa2d-005056832285"
-            },
-            "status": {}
+                }
+            }
         },
         {
             "kind": "DeploymentConfig",

@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.6.21"
+tfrsRelease="v1.6.22.3"
 
 def runFunctionalTest = input id: 'runFunctionalTest', message: 'Do you want to run functional test?', parameters: [choice(choices: ['Yes', 'No'], description: 'Option for running functional test', name: 'runFunctionalTest')]
 
@@ -37,8 +37,10 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //prepareOtherStages.sonarqubeStage().call()
 
         //run all the builds
+        /***
         backendBuildStages = prepareBuilds.backendBuildStages('dev')
         frontendBuildStages = prepareBuilds.frontendBuildStages('dev')
+        
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -49,6 +51,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
+        
         for (builds in frontendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -59,6 +62,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
+        ***/
 
         //check postgresql-backup space, it needs to be less than 80% full, otherwise pipeline will be pending for cleanup
         //prepareOtherStages.checkBackupSpace("mem-tfrs-dev").call()
@@ -71,18 +75,18 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         //apply deployment configs
         //if there is an new environment variable added to the invoked template, the stage needs to be applied.
-        //prepareDCStages.backendDCStage("dev").call()
+        prepareDCStages.backendDCStage("dev").call()
         //prepareDCStages.celeryDCStage("dev").call()
         //prepareDCStages.scanCoordinatorDCStage("dev").call()
         //prepareDCStages.scanHandlerDCStage("dev").call()
-        //prepareDCStages.notificationServerDCStage("dev").call()
+        prepareDCStages.notificationServerDCStage("dev").call()
         //prepareDCStages.frontendDCStage("dev").call()
 
         //Deploy Backend, tag the latest to env tag
-        prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()
+        //prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()
     
         //Deploy Frontend, tag the latest to env tag
-        prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
+        //prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 
         //Functional Test
         //if(runFunctionalTest == 'Yes') {

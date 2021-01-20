@@ -18,54 +18,58 @@ def backendDCStage (String envName) {
                     def CPU_LIMIT
                     def MEMORY_REQUEST
                     def MEMORY_LIMIT
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = "dev"
                         SOURCE_IS_NAME = 'tfrs-develop'
-                        KEYCLOAK_SA_BASEURL = "https://sso-dev.pathfinder.gov.bc.ca"
+                        KEYCLOAK_SA_BASEURL = "https://dev.oidc.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-dev-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs-dev"
                         KEYCLOAK_AUDIENCE = "tfrs-dev"
-                        KEYCLOAK_CERTS_URL = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs"
+                        KEYCLOAK_CERTS_URL = "https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs"
                         KEYCLOAK_CLIENT_ID = "tfrs-dev"
-                        KEYCLOAK_ISSUER = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
-                        KEYCLOAK_REALM = "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
+                        KEYCLOAK_ISSUER = "https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev"
+                        KEYCLOAK_REALM = "https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev"
                         CPU_REQUEST='100m'
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = "test"
                         SOURCE_IS_NAME = 'tfrs'
-                        KEYCLOAK_SA_BASEURL = "https://sso-test.pathfinder.gov.bc.ca"
+                        KEYCLOAK_SA_BASEURL = "https://test.oidc.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs"
                         KEYCLOAK_AUDIENCE = "tfrs"
-                        KEYCLOAK_CERTS_URL = "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs"
+                        KEYCLOAK_CERTS_URL = "https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs"
                         KEYCLOAK_CLIENT_ID = "tfrs"
-                        KEYCLOAK_ISSUER = "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs"
-                        KEYCLOAK_REALM = "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs"
+                        KEYCLOAK_ISSUER = "https://test.oidc.gov.bc.ca/auth/realms/tfrs"
+                        KEYCLOAK_REALM = "https://test.oidc.gov.bc.ca/auth/realms/tfrs"
                         CPU_REQUEST='100m'
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = "prod"
                         SOURCE_IS_NAME = 'tfrs'
-                        KEYCLOAK_SA_BASEURL = "https://sso.pathfinder.gov.bc.ca"
+                        KEYCLOAK_SA_BASEURL = "https://oidc.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs"
                         KEYCLOAK_AUDIENCE = "tfrs"
-                        KEYCLOAK_CERTS_URL = "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs"
+                        KEYCLOAK_CERTS_URL = "https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs"
                         KEYCLOAK_CLIENT_ID = "tfrs"
-                        KEYCLOAK_ISSUER = "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs"
-                        KEYCLOAK_REALM = "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs"
+                        KEYCLOAK_ISSUER = "https://oidc.gov.bc.ca/auth/realms/tfrs"
+                        KEYCLOAK_REALM = "https://oidc.gov.bc.ca/auth/realms/tfrs"
                         CPU_REQUEST='400m'
                         CPU_LIMIT='600m'
                         MEMORY_REQUEST='700Mi'
                         MEMORY_LIMIT='2Gi'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -83,7 +87,8 @@ def backendDCStage (String envName) {
                         "CPU_REQUEST=${CPU_REQUEST}",
                         "CPU_LIMIT=${CPU_LIMIT}",
                         "MEMORY_REQUEST=${MEMORY_REQUEST}",
-                        "MEMORY_LIMIT=${MEMORY_LIMIT}"
+                        "MEMORY_LIMIT=${MEMORY_LIMIT}",
+                        "DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}"
                         )
                         openshift.apply(backendDCJson)
                     }
@@ -136,18 +141,22 @@ def celeryDCStage (String envName) {
                     def projectName
                     def ENV_NAME
                     def SOURCE_IS_NAME
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'celery-develop'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'celery'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'celery'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def celeryDCJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-dc.json'), 
@@ -230,6 +239,7 @@ def scanHandlerDCStage (String envName) {
                     def CPU_LIMIT
                     def MEMORY_REQUEST
                     def MEMORY_LIMIT
+                    def DATABASE_SERVICE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
@@ -238,6 +248,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='100m'
                         MEMORY_REQUEST='120Mi'
                         MEMORY_LIMIT='200Mi'
+                        DATABASE_SERVICE_NAME='patroni-master-dev'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
@@ -246,6 +257,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='100m'
                         MEMORY_REQUEST='120Mi'
                         MEMORY_LIMIT='200Mi'
+                        DATABASE_SERVICE_NAME='patroni-master-test'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
@@ -254,6 +266,7 @@ def scanHandlerDCStage (String envName) {
                         CPU_LIMIT='250m'
                         MEMORY_REQUEST='256Mi'
                         MEMORY_LIMIT='512Mi'
+                        DATABASE_SERVICE_NAME='patroni-master-prod'
                     }
                     openshift.withProject("${projectName}") {
                         def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
@@ -290,25 +303,25 @@ def notificationServerDCStage (String envName) {
                         projectName = 'mem-tfrs-dev'
                         ENV_NAME = 'dev'
                         SOURCE_IS_NAME = 'notification-server-develop'
-                        KEYCLOAK_CERTS_URL = 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs'
-                        CPU_REQUEST='10m'
-                        CPU_LIMIT='30m'
+                        KEYCLOAK_CERTS_URL = 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs'
+                        CPU_REQUEST='50m'
+                        CPU_LIMIT='100m'
                         MEMORY_REQUEST='110Mi'
                         MEMORY_LIMIT='200Mi'
                     } else if(envName == 'test') {
                         projectName = 'mem-tfrs-test'
                         ENV_NAME = 'test'
                         SOURCE_IS_NAME = 'notification-server'
-                        KEYCLOAK_CERTS_URL = 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
-                        CPU_REQUEST='10m'
-                        CPU_LIMIT='30m'
+                        KEYCLOAK_CERTS_URL = 'https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
+                        CPU_REQUEST='50m'
+                        CPU_LIMIT='100m'
                         MEMORY_REQUEST='110Mi'
                         MEMORY_LIMIT='200Mi'                    
                     } else if(envName == 'prod') {
                         projectName = 'mem-tfrs-prod'
                         ENV_NAME = 'prod'
                         SOURCE_IS_NAME = 'notification-server'
-                        KEYCLOAK_CERTS_URL = 'https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
+                        KEYCLOAK_CERTS_URL = 'https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
                         CPU_REQUEST='100m'
                         CPU_LIMIT='400m'
                         MEMORY_REQUEST='256Mi'
@@ -437,7 +450,7 @@ def frontendDCOthersStage (String envName) {
                     def ROUTE_NAME
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
-                        KEYCLOAK_AUTHORITY = 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev'
+                        KEYCLOAK_AUTHORITY = 'https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev'
                         KEYCLOAK_CLIENT_ID = 'tfrs-dev'
                         KEYCLOAK_CALLBACK_URL = 'https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback'
                         KEYCLOAK_LOGOUT_URL = 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F'
@@ -445,7 +458,7 @@ def frontendDCOthersStage (String envName) {
                         ROUTE_NAME = 'dev-lowcarbonfuels-frontend'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
-                        KEYCLOAK_AUTHORITY = 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs'
+                        KEYCLOAK_AUTHORITY = 'https://test.oidc.gov.bc.ca/auth/realms/tfrs'
                         KEYCLOAK_CLIENT_ID = 'tfrs'
                         KEYCLOAK_CALLBACK_URL = 'https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback'
                         KEYCLOAK_LOGOUT_URL = 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F'
@@ -453,7 +466,7 @@ def frontendDCOthersStage (String envName) {
                         ROUTE_NAME = 'test-lowcarbonfuels-frontend'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
-                        KEYCLOAK_AUTHORITY = 'https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs'
+                        KEYCLOAK_AUTHORITY = 'https://oidc.gov.bc.ca/auth/realms/tfrs'
                         KEYCLOAK_CLIENT_ID = 'tfrs'
                         KEYCLOAK_CALLBACK_URL = 'https://lowcarbonfuels.gov.bc.ca/authCallback'
                         KEYCLOAK_LOGOUT_URL = 'https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%lowcarbonfuels.gov.bc.ca%2F'

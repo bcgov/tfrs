@@ -143,10 +143,6 @@
                                     },
                                     {
                                         "name": "HTTP_BASIC"
-                                    },
-                                    {
-                                        "name": "API_URL",
-                                        "value": "http://backend.mem-tfrs-${ENV_NAME}.svc.cluster.local:8080/api/"
                                     }
                                 ],
                                 "resources": {

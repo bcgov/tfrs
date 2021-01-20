@@ -45,5 +45,6 @@ RUN chown -R nagios.nagios /var/lib/nagios/.kube \
     && chmod -R g+w /var/log/nagios3 \
     && mkdir /.kube \
     && chgrp -R root /.kube \
-    && chmod -R g+w /.kube
+    && chmod -R g+w /.kube \
+    && chmod +w /
 CMD supervisord
