@@ -11,10 +11,10 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: clamav
+    name: tfrs-clamav-${ENV_NAME}
     creationTimestamp:
     labels:
-      app: clamav
+      app: tfrs-clamav-${ENV_NAME}
     annotations:
       openshift.io/generated-by: OpenShiftWebConsole
   spec:
@@ -24,7 +24,7 @@ objects:
       port: 3310
       targetPort: 3310
     selector:
-      deploymentconfig: clamav
+      app: tfrs-clamav-${ENV_NAME}
     type: ClusterIP
     sessionAffinity: None
   status:
@@ -32,13 +32,11 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: clamav
+    name: tfrs-clamav-${ENV_NAME}
     generation: 1
     creationTimestamp:
     labels:
-      app: clamav
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
+      app: tfrs-clamav-${ENV_NAME}
   spec:
     strategy:
       type: Rolling
@@ -57,14 +55,12 @@ objects:
     replicas: 1
     test: false
     selector:
-      app: clamav
-      deploymentconfig: clamav
+      app: tfrs-clamav-${ENV_NAME}
     template:
       metadata:
         creationTimestamp:
         labels:
-          app: clamav
-          deploymentconfig: clamav
+          app: tfrs-clamav-${ENV_NAME}
         annotations:
           openshift.io/generated-by: OpenShiftWebConsole
       spec:

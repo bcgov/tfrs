@@ -248,7 +248,7 @@ objects:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
                 key: password
           - name: CLAMAV_HOST
-            value: clamav.apps.silver.devops.gov.bc.ca
+            value: ${NAME}-clamav-${ENV_NAME}.${NAMESPACE}.svc.cluster.local
           - name: FUEL_CODES_API_ENABLED
             value: 'true'
           - name: CREDIT_CALCULATION_API_ENABLED

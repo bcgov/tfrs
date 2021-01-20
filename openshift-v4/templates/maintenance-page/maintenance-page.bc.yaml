@@ -46,7 +46,8 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: caddy-s2i-builder:latest
+          namespace: openshift
+          name: bcgov-s2i-caddy:latest
     output:
       to:
         kind: ImageStreamTag

@@ -100,7 +100,7 @@ objects:
           - name: BYPASS_CLAMAV
             value: 'false'
           - name: CLAMAV_HOST
-            value: clamav.${NAMESPACE}.svc.cluster.local
+            value: ${NAME}-clamav-${ENV_NAME}.${NAMESPACE}.svc.cluster.local
           - name: CLAMAV_PORT
             value: '3310'
           - name: AMQP_HOST
