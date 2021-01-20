@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/url"
 	"strings"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"github.com/streadway/amqp"
 	"github.com/dutchcoders/go-clamd"
 	"github.com/minio/minio-go"
+	"github.com/minio/minio-go/pkg/credentials"
 	"io"
 )
 
@@ -147,15 +149,15 @@ func testClamAVConnection(conf *config) {
 func testMinioConnection(conf *config) {
 	log.Printf("Verifying Minio connection")
 
-	client, err := minio.New(conf.MinioEndpoint,
-		conf.MinioAccessKey,
-		conf.MinioSecretKey,
-		conf.MinioSecure)
+	client, err := minio.New(conf.MinioEndpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
+		Secure: conf.MinioSecure,
+	})
 	if err != nil {
 		panic(err)
 	}
 
-	_, err = client.ListBuckets()
+	_, err = client.ListBuckets(context.Background())
 	if err != nil {
 		panic(err)
 	}
@@ -188,16 +190,16 @@ func handleRequest(conf *config, body []byte) (response ScanResponse) {
 		bucket := tokens[1]
 		obj := tokens[2]
 
-		client, err := minio.New(conf.MinioEndpoint,
-			conf.MinioAccessKey,
-			conf.MinioSecretKey,
-			conf.MinioSecure)
+		client, err := minio.New(conf.MinioEndpoint, &minio.Options{
+			Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
+			Secure: conf.MinioSecure,
+		})
 		if err != nil {
 			log.Print(err)
 			return
 		}
 
-		resp, err := client.GetObject(bucket, obj, minio.GetObjectOptions{})
+		resp, err := client.GetObject(context.Background(), bucket, obj, minio.GetObjectOptions{})
 		if err != nil {
 			log.Print(err)
 			return
