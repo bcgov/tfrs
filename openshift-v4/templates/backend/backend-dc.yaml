@@ -80,6 +80,10 @@ parameters:
   displayName: Memory upper limit
   description: Memory upper limit
   required: true
+- name: REPLICAS
+  displayName: replicas
+  description: replicas
+  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -131,7 +135,7 @@ objects:
           name: ${NAME}-backend:${VERSION}
         lastTriggeredImage: ''
     - type: ConfigChange
-    replicas: 1
+    replicas: ${{REPLICAS}}
     test: false
     selector:
       name: tfrs

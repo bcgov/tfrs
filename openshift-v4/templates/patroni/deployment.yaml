@@ -204,14 +204,14 @@ objects:
             value: 0.0.0.0:5432
           - name: PATRONI_RESTAPI_LISTEN
             value: 0.0.0.0:8008
-          - name: PATRONI_LOG_LEVEL
-            value: DEBUG
-          - name: PATRONI_LOG_DIR
-            value: /tmp
-          - name: PATRONI_LOG_FILE_SIZE
-            value: '50000000'
-          - name: PATRONI_LOG_FILE_NUM
-            value: '4'
+#          - name: PATRONI_LOG_LEVEL
+#            value: DEBUG
+#          - name: PATRONI_LOG_DIR
+#            value: /tmp
+#          - name: PATRONI_LOG_FILE_SIZE
+#            value: '50000000'
+#         - name: PATRONI_LOG_FILE_NUM
+#            value: '4'
           image: ${IMAGE_REGISTRY}/${IMAGE_STREAM_NAMESPACE}/${IMAGE_STREAM_TAG}
           # Because we are using image reference to a tag, we need to always pull the image otherwise
           #   we end up with outdated/out-of-sync image depending on the node where it is running
@@ -332,6 +332,5 @@ parameters:
   value: netapp-block-standard
 - name: IMAGE_REGISTRY
   value: image-registry.openshift-image-registry.svc:5000
-  retuired: true
 - name: REPLICA
   value: '2'

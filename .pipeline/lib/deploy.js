@@ -13,10 +13,9 @@ module.exports = settings => {
   const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, "../../openshift-v4"));
   var objects = [];
 
-  console.log(phases[phase].frontendHostName)
-  // The deployment of your cool app goes here ▼▼▼
+    // The deployment of your cool app goes here ▼▼▼
 
-  /*
+  
   //deploy Patroni
     objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
     'param': {
@@ -24,6 +23,8 @@ module.exports = settings => {
       'SUFFIX': phases[phase].suffix
     }
   }))
+
+
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment.yaml`, {
     'param': {
       'NAME': 'patroni',
@@ -41,7 +42,6 @@ module.exports = settings => {
       'STORAGE_CLASS': phases[phase].storageClass
     }
   }))
-  */
 
 /*
    //deploy rabbitmq, use docker image directly
@@ -66,7 +66,6 @@ module.exports = settings => {
     }
   }))
 */
-
 /*
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
@@ -87,12 +86,13 @@ module.exports = settings => {
       'CPU_REQUEST':phases[phase].backendCpuRequest,
       'CPU_LIMIT':phases[phase].backendCpuLimit,
       'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
-      'MEMORY_LIMIT':phases[phase].backendMemoryLimit
+      'MEMORY_LIMIT':phases[phase].backendMemoryLimit,
+      'REPLICAS':phases[phase].backendReplicas
     }
   }))
 */
 
-  //deploy ffrontend
+  //deploy frontend
   /*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-others.yaml`, {
     'param': {
@@ -114,7 +114,8 @@ module.exports = settings => {
       'CPU_REQUEST': phases[phase].frontendCpuRequest,
       'CPU_LIMIT': phases[phase].frontendCpuLimit,
       'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
-      'MEMORY_LIMIT': phases[phase].frontendMemoryLimit
+      'MEMORY_LIMIT': phases[phase].frontendMemoryLimit,
+      'REPLICAS':phases[phase].frontendReplicas
     }
   }))  */
 
@@ -151,6 +152,7 @@ module.exports = settings => {
     }
   }))
  */
+/*
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -165,6 +167,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
     }
   }))
+  */
 /*
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
