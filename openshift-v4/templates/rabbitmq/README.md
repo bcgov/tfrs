@@ -9,11 +9,8 @@
 1. Create template.rabbitmq-secret
 oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
 
+2. create zeva-${ENV}-rabbitmq-cluster-config
+
+
 ### After pipeline completes
 
-1. Create route for gui when needed, remove it when no longer need it
-oc process -f ./rabbitmq-web-route.yaml NAME=tfrs \
-ENV_NAME=dev \
-SUFFIX=-dev-1696 \
-OCP_NAME=apps.silver.devops \
-| oc create -f - -n [environment namespace]

@@ -34,7 +34,9 @@ const phases = {
         patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '2Gi', 
             patroniReplica: 1, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
         rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
-            rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard'
+            rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard',
+        schemaSpyPublicCpuRequest: '50m', schemaSpyPublicCpuLimit: '500m', schemaSpyPublicMemoryRequest: '512Mi', schemaSpyPublicMemoryLimit: '2Gi', 
+        schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
         },
   test: {namespace:'0ab226-test'    , name: `${name}`, phase: 'test'  , changeId:changeId, suffix: `-test`  , 
         instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`,
@@ -58,9 +60,9 @@ const phases = {
         scanHandlerCpuRequest: '100m', scanHandlerCpuLimit: '250m', scanHandlerMemoryRequest: '255Mi', scanHandlerMemoryLimit: '512Mi',
         scanCoordinatorCpuRequest: '100m', scanCoordinatorCpuLimit: '250m', scanCoordinatorMemoryRequest: '255Mi', scanCoordinatorMemoryLimit: '512Mi',
         notificationServerCpuRequest: '100m', notificationServerCpuLimit: '400m', notificationServerMemoryRequest: '256Mi', notificationServerMemoryLimit: '512Mi',
-        patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '5Gi', 
+        patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '3Gi', 
             patroniReplica: 2, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
-        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
+        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '500m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
             rabbitmqReplica: 2, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard'      
       },
   prod: {namespace:'0ab226-prod'    , name: `${name}`, phase: 'prod'  , changeId:changeId, suffix: `-prod`  , 
@@ -87,7 +89,7 @@ const phases = {
         notificationServerCpuRequest: '200m', notificationServerCpuLimit: '400m', notificationServerMemoryRequest: '256Mi', notificationServerMemoryLimit: '512Mi',
         patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '500Mi', patroniMemoryLimit: '2Gi', patroniPvcSize: '10Gi', 
             patroniReplica: 3, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
-        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '2Gi', rabbitmqPvcSize: '2Gi', 
+        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '500m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '2Gi', rabbitmqPvcSize: '1Gi', 
             rabbitmqReplica: 2, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard'      
       },
 };

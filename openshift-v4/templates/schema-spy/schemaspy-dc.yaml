@@ -1,0 +1,366 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: schema-spy-dc
+  creationTimestamp:
+parameters:
+- name: NAME
+  displayName: App name
+  description: App name
+  value: tfrs
+  required: true
+- name: SUFFIX
+  displayName: suffix
+  description: such as -dev-1696, -dev ane etc.
+  required: true  
+- name: ENV_NAME
+  displayName: environment name
+  description: such as dev, test and prod
+  required: true    
+- description: Starting amount of CPU the container can use.
+  displayName: CPU REQUEST
+  name: CPU_REQUEST_PUBLIC
+  value: 50m
+  required: true
+- description: Maximum amount of CPU the container can use.
+  displayName: CPU Limit
+  name: CPU_LIMIT_PUBLIC
+  value: 1000m
+  required: true
+- description: Starting amount of memory the container can use.
+  displayName: Memory Request
+  name: MEMORY_REQUEST_PUBLIC
+  value: 512Mi
+  required: true
+- description: Maximum amount of memory the container can use.
+  displayName: Memory Limit
+  name: MEMORY_LIMIT_PUBLIC
+  value: 2Gi    
+  required: true
+- description: Starting amount of CPU the container can use.
+  displayName: CPU REQUEST
+  name: CPU_REQUEST_AUDIT
+  value: 50m
+  required: true
+- description: Maximum amount of CPU the container can use.
+  displayName: CPU Limit
+  name: CPU_LIMIT_AUDIT
+  value: 500m
+  required: true
+- description: Starting amount of memory the container can use.
+  displayName: Memory Request
+  name: MEMORY_REQUEST_AUDIT
+  value: 256Mi
+  required: true
+- description: Maximum amount of memory the container can use.
+  displayName: Memory Limit
+  name: MEMORY_LIMIT_AUDIT
+  value: 1Gi    
+  required: true
+objects:
+- kind: DeploymentConfig
+  apiVersion: apps.openshift.io/v1
+  metadata:
+    name: ${NAME}-schema-spy-public${SUFFIX}
+    generation: 92
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+    annotations:
+      description: Defines how to deploy the schemaspy.
+  spec:
+    strategy:
+      type: Recreate
+      recreateParams:
+        timeoutSeconds: 1800
+      resources: {}
+      activeDeadlineSeconds: 21600
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy-public
+        from:
+          kind: ImageStreamTag
+          namespace: 0ab226-tools
+          name: schema-spy:latest
+        lastTriggeredImage: 
+    - type: ConfigChange
+    replicas: 1
+    test: false
+    selector:
+      name: ${NAME}schema-spy-public${SUFFIX}
+    template:
+      metadata:
+        name: ${NAME}schema-spy-public${SUFFIX}
+        creationTimestamp:
+        labels:
+          name: ${NAME}schema-spy-public${SUFFIX}
+      spec:
+#        initContainers:
+#          - name: wait-for-database
+#            image: toschneck/wait-for-it:latest
+#            command: ['sh', '-c', './wait-for-it.sh -t 0 ${NAME}-backend${SUFFIX}.0ab226-${ENV_NAME}.svc.cluster.local:8080']      
+        containers:
+        - name: schema-spy-public
+          image: image-registry.openshift-image-registry.svc:5000/0ab226-tools/schema-spy:latest
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          env:
+          - name: DATABASE_SERVICE_NAME
+            value: patroni-master${SUFFIX}
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-name
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-username
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-password
+          resources:
+            limits:
+              cpu: ${CPU_LIMIT_PUBLIC}
+              memory: ${MEMORY_LIMIT_PUBLIC}
+            requests:
+              cpu: ${CPU_REQUEST_PUBLIC}
+              memory: ${MEMORY_REQUEST_PUBLIC}
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1750
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1750
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+        schedulerName: default-scheduler
+  status:
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    updatedReplicas: 0
+    availableReplicas: 0
+    unavailableReplicas: 0
+- kind: DeploymentConfig
+  apiVersion: apps.openshift.io/v1
+  metadata:
+    name: ${NAME}schema-spy-audit${SUFFIX}
+    generation: 81
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+    annotations:
+      description: Defines how to deploy the container.
+  spec:
+    strategy:
+      type: Recreate
+      recreateParams:
+        timeoutSeconds: 1800
+      resources: {}
+      activeDeadlineSeconds: 21600
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy-audit
+        from:
+          kind: ImageStreamTag
+          namespace: 0ab226-tools
+          name: schema-spy:latest
+        lastTriggeredImage: 
+    - type: ConfigChange
+    replicas: 1
+    test: false
+    selector:
+      name: ${NAME}schema-spy-audit${SUFFIX}
+    template:
+      metadata:
+        name: ${NAME}schema-spy-audit${SUFFIX}
+        creationTimestamp:
+        labels:
+          name: ${NAME}schema-spy-audit${SUFFIX}
+      spec:
+#        initContainers:
+#          - name: wait-for-database
+#            image: toschneck/wait-for-it:latest
+#            command: ['sh', '-c', './wait-for-it.sh -t 0 ${NAME}-backend${SUFFIX}.0ab226-${ENV_NAME}.svc.cluster.local:8080']       
+        containers:
+        - name: schema-spy-audit
+          image: image-registry.openshift-image-registry.svc:5000/0ab226-tools/schema-spy:latest
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          env:
+          - name: DATABASE_SERVICE_NAME
+            value: patroni-master${SUFFIX}
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-name
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-username
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: patroni-${ENV_NAME}
+                key: app-db-password
+          - name: DATABASE_SCHEMA
+            value: tfrs_audit
+          resources:
+            limits:
+              cpu: ${CPU_LIMIT_AUDIT}
+              memory: ${MEMORY_LIMIT_AUDIT}
+            requests:
+              cpu: ${CPU_REQUEST_AUDIT}
+              memory: ${MEMORY_REQUEST_AUDIT}
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 90
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 90
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+        schedulerName: default-scheduler
+  status:
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    updatedReplicas: 0
+    availableReplicas: 0
+    unavailableReplicas: 0
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${NAME}-schema-spy-public${SUFFIX}
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+    annotations:
+      description: Exposes and load balances the application pods
+  spec:
+    ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: ${NAME}-schema-spy-public${SUFFIX}
+    type: ClusterIP
+    sessionAffinity: None
+  status:
+    loadBalancer: {}
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${NAME}-schema-spy-audit${SUFFIX}
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+    annotations:
+      description: Exposes and load balances the application pods
+  spec:
+    ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: ${NAME}-schema-spy-audit${SUFFIX}
+    type: ClusterIP
+    sessionAffinity: None
+  status:
+    loadBalancer: {}
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: ${NAME}-schema-spy-public${SUFFIX}
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+  spec:
+    host: ${NAME}-schema-spy-public${SUFFIX}.apps.silver.devops.gov.bc.ca
+    to:
+      kind: Service
+      name: ${NAME}-schema-spy-public${SUFFIX}
+      weight: 100
+    port:
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Allow
+    wildcardPolicy: None
+  status:
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: ${NAME}schema-spy-audit${SUFFIX}
+    creationTimestamp:
+    labels:
+      template: schema-spy-public-template
+  spec:
+    host: ${NAME}schema-spy-audit${SUFFIX}.apps.silver.devops.gov.bc.ca
+    to:
+      kind: Service
+      name: ${NAME}schema-spy-audit${SUFFIX}
+      weight: 100
+    port:
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Allow
+    wildcardPolicy: None
+  status:
+

@@ -9,15 +9,12 @@ metadata:
 parameters:
 - name: NAME
   displayName: the module name
-  description: the module name entered when run yo bcdk:pipeline, which is zeva
+  description: the module name entered when run yo bcdk:pipeline, which is /tfrs
+  value: tfrs
   required: true
-- name: ENV_NAME
-  displayName: environment name
-  description: sample is dev, test and prod
-  required: true  
 - name: SUFFIX
   displayName: suffix 
-  description: sample is -dev-161
+  description: sample is -dev-1696
   required: true  
 - name: CLUSTER_NAME
   displayName: rabbitmq cluster name
@@ -27,6 +24,7 @@ parameters:
 - name: OCP_NAME
   displayName: openshift name
   description: openshift name
+  value: apps.silver.devops
   required: true    
 objects:
 - apiVersion: route.openshift.io/v1
@@ -34,10 +32,7 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      name: rabbitmq
-      app: zeva
-      role: rabbitmq
-      env: ${ENV_NAME}
+      name: ${NAME}-rabbitmq-web${SUFFIX}
     name: ${NAME}-rabbitmq-web${SUFFIX}
   spec:
     host: ${NAME}-rabbitmq-web${SUFFIX}.${OCP_NAME}.gov.bc.ca

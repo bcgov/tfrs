@@ -1,0 +1,47 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: schemaspy-bc
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the schemaspy image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: "" 
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: schema-spy
+    name: schema-spy
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: schema-spy:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/bcgov/SchemaSpy.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
