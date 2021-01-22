@@ -14,7 +14,6 @@ module.exports = settings => {
   var objects = [];
 
     // The deployment of your cool app goes here ▼▼▼
-  /*
   if(phase === 'dev') {
     //deploy Patroni
       objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/patroni/deployment-prereq.yaml`, {
@@ -42,9 +41,7 @@ module.exports = settings => {
       }
     }))
   }
-  */
-/*
-  //if(phase === 'dev') {
+  if(phase === 'dev') {
     //deploy rabbitmq, use docker image directly
     //POST_START_SLEEP is harded coded in the rabbitmq template, replacement was not successful
     objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/rabbitmq/rabbitmq-cluster-dc.yaml`, {
@@ -66,9 +63,8 @@ module.exports = settings => {
         'STORAGE_CLASS': phases[phase].storageClass
       }
     }))
-  //}
-*/
-/*
+  }
+
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -92,10 +88,8 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-*/
 
   //deploy frontend
-  /*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-others.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -119,9 +113,8 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].frontendMemoryLimit,
       'REPLICAS':phases[phase].frontendReplicas
     }
-  }))  */
+  }))
 
-  /*
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -136,9 +129,7 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
     }
   })) 
-  */
 
-  /*
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -153,8 +144,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
- */
-/*
+ 
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -169,8 +159,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
     }
   }))
-  */
-/*
+
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
     'param': {
@@ -184,7 +173,6 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanHandlerServerMemoryLimit
     }
   }))
-  */
  
   //deploy schemaspy
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/schema-spy/schemaspy-dc.yaml`, {

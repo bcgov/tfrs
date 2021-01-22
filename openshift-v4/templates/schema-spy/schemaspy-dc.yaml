@@ -85,19 +85,19 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: 0ab226-tools
-          name: schema-spy:latest
+          name: schema-spy:prod
         lastTriggeredImage: 
     - type: ConfigChange
     replicas: 1
     test: false
     selector:
-      name: ${NAME}schema-spy-public${SUFFIX}
+      name: ${NAME}-schema-spy-public${SUFFIX}
     template:
       metadata:
-        name: ${NAME}schema-spy-public${SUFFIX}
+        name: ${NAME}-schema-spy-public${SUFFIX}
         creationTimestamp:
         labels:
-          name: ${NAME}schema-spy-public${SUFFIX}
+          name: ${NAME}-schema-spy-public${SUFFIX}
       spec:
 #        initContainers:
 #          - name: wait-for-database
@@ -105,7 +105,7 @@ objects:
 #            command: ['sh', '-c', './wait-for-it.sh -t 0 ${NAME}-backend${SUFFIX}.0ab226-${ENV_NAME}.svc.cluster.local:8080']      
         containers:
         - name: schema-spy-public
-          image: image-registry.openshift-image-registry.svc:5000/0ab226-tools/schema-spy:latest
+          image: 
           ports:
           - containerPort: 8080
             protocol: TCP
@@ -115,17 +115,17 @@ objects:
           - name: POSTGRESQL_DATABASE
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-name
           - name: POSTGRESQL_USER
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-username
           - name: POSTGRESQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-password
           resources:
             limits:
@@ -149,7 +149,7 @@ objects:
               path: "/"
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 1750
+            initialDelaySeconds: 420
             timeoutSeconds: 5
             periodSeconds: 10
             successThreshold: 1
@@ -172,7 +172,7 @@ objects:
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
   metadata:
-    name: ${NAME}schema-spy-audit${SUFFIX}
+    name: ${NAME}-schema-spy-audit${SUFFIX}
     generation: 81
     creationTimestamp:
     labels:
@@ -195,19 +195,19 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: 0ab226-tools
-          name: schema-spy:latest
+          name: schema-spy:prod
         lastTriggeredImage: 
     - type: ConfigChange
     replicas: 1
     test: false
     selector:
-      name: ${NAME}schema-spy-audit${SUFFIX}
+      name: ${NAME}-schema-spy-audit${SUFFIX}
     template:
       metadata:
-        name: ${NAME}schema-spy-audit${SUFFIX}
+        name: ${NAME}-schema-spy-audit${SUFFIX}
         creationTimestamp:
         labels:
-          name: ${NAME}schema-spy-audit${SUFFIX}
+          name: ${NAME}-schema-spy-audit${SUFFIX}
       spec:
 #        initContainers:
 #          - name: wait-for-database
@@ -215,7 +215,7 @@ objects:
 #            command: ['sh', '-c', './wait-for-it.sh -t 0 ${NAME}-backend${SUFFIX}.0ab226-${ENV_NAME}.svc.cluster.local:8080']       
         containers:
         - name: schema-spy-audit
-          image: image-registry.openshift-image-registry.svc:5000/0ab226-tools/schema-spy:latest
+          image: 
           ports:
           - containerPort: 8080
             protocol: TCP
@@ -225,17 +225,17 @@ objects:
           - name: POSTGRESQL_DATABASE
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-name
           - name: POSTGRESQL_USER
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-username
           - name: POSTGRESQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni-${ENV_NAME}
+                name: patroni${SUFFIX}
                 key: app-db-password
           - name: DATABASE_SCHEMA
             value: tfrs_audit
@@ -346,15 +346,15 @@ objects:
 - kind: Route
   apiVersion: route.openshift.io/v1
   metadata:
-    name: ${NAME}schema-spy-audit${SUFFIX}
+    name: ${NAME}-schema-spy-audit${SUFFIX}
     creationTimestamp:
     labels:
       template: schema-spy-public-template
   spec:
-    host: ${NAME}schema-spy-audit${SUFFIX}.apps.silver.devops.gov.bc.ca
+    host: ${NAME}-schema-spy-audit${SUFFIX}.apps.silver.devops.gov.bc.ca
     to:
       kind: Service
-      name: ${NAME}schema-spy-audit${SUFFIX}
+      name: ${NAME}-schema-spy-audit${SUFFIX}
       weight: 100
     port:
       targetPort: 8080-tcp
