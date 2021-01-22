@@ -2,7 +2,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: "${APP_NAME}"
+  name: maintenance-page
 parameters:
 - name: NAME
   displayName: Name
@@ -46,8 +46,8 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          namespace: openshift
-          name: bcgov-s2i-caddy:latest
+          namespace: 0ab226-tools
+          name: s2i-caddy:latest
     output:
       to:
         kind: ImageStreamTag

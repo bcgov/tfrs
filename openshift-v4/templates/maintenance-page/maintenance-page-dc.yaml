@@ -36,20 +36,18 @@ objects:
         - maintenance-page
         from:
           kind: ImageStreamTag
-          namespace: mem-tfrs-tools
-          name: maintenance-page:latest
+          namespace: 0ab226-tools
+          name: maintenance-page:prod
     replicas: 1
     revisionHistoryLimit: 10
     test: false
     selector:
       app: maintenance-page
-      deploymentconfig: maintenance-page
     template:
       metadata:
         creationTimestamp:
         labels:
           app: maintenance-page
-          deploymentconfig: maintenance-page
         annotations:
           openshift.io/generated-by: OpenShiftNewApp
       spec:
@@ -89,7 +87,6 @@ objects:
       targetPort: 2015
     selector:
       app: maintenance-page
-      deploymentconfig: maintenance-page
     type: ClusterIP
     sessionAffinity: None
 - kind: Route
@@ -102,7 +99,7 @@ objects:
     annotations:
       openshift.io/host.generated: 'true'
   spec:
-    host: maintenance-page-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca
+    host: maintenance-page-${ENV_NAME}.apps.silver.devops.gov.bc.ca
     to:
       kind: Service
       name: maintenance-page
