@@ -4,13 +4,4 @@ root * /var/www/html
 
 log stdout
 
-rewrite / {
-  regexp .*
-  to /maintenance.html
-}
-
-header / {
-  Cache-Control "no-cache, no-store, must-revalidate"
-  Pragma "no-cache"
-  Expires "0"
-}
+rewrite * /maintenance.html
