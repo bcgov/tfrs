@@ -40,14 +40,14 @@ objects:
       contextDir: "/maintenance"
       git:
         uri: https://github.com/bcgov/tfrs.git
-        ref: master
+        ref: openshift-v4-migration
     strategy:
       type: Source
       sourceStrategy:
         from:
           kind: ImageStreamTag
           namespace: 0ab226-tools
-          name: s2i-caddy:latest
+          name: s2i-caddy:prod
     output:
       to:
         kind: ImageStreamTag
