@@ -4,8 +4,6 @@ root * /var/www/html
 
 log stdout
 
-errors stdout
-
 rewrite / {
   regexp .*
   to /maintenance.html
