@@ -63,7 +63,7 @@ objects:
     name: ${NAME}-scan-coordinator${SUFFIX}
     creationTimestamp:
     labels:
-      app: ${NAME}-scan-coordinator${SUFFIX}
+      name: ${NAME}-scan-coordinator${SUFFIX}
   spec:
     strategy:
       type: Recreate
@@ -86,12 +86,12 @@ objects:
     revisionHistoryLimit: 10
     test: false
     selector:
-      app: ${NAME}-scan-coordinator${SUFFIX}
+      name: ${NAME}-scan-coordinator${SUFFIX}
     template:
       metadata:
         creationTimestamp:
         labels:
-          app: ${NAME}-scan-coordinator${SUFFIX}
+          name: ${NAME}-scan-coordinator${SUFFIX}
       spec:
         containers:
         - name: scan-coordinator

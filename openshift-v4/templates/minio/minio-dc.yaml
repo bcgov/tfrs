@@ -89,7 +89,7 @@ objects:
           port: 9000
           targetPort: 9000
       selector:
-        deploymentconfig: ${NAME}-minio${SUFFIX}
+        name: ${NAME}-minio${SUFFIX}
       type: ClusterIP
       sessionAffinity: None
     status:
@@ -134,12 +134,12 @@ objects:
       replicas: 1
       test: false
       selector:
-        app: ${NAME}-minio${SUFFIX}
+        name: ${NAME}-minio${SUFFIX}
       template:
         metadata:
           creationTimestamp:
           labels:
-            app: ${NAME}-minio${SUFFIX}
+            name: ${NAME}-minio${SUFFIX}
         spec:
           volumes:
             - name: minio-data

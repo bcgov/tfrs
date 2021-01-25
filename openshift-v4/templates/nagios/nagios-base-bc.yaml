@@ -1,0 +1,38 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: nagios-base-bc
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    name: nagios-base
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: nagios-base:latest
+        namespace: 0ab226-tools
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: openshift-v4/templates/nagios
+      git:
+        ref: openshift-v4-migration
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: Dockerfile-base
+        forcePull: true
+        noCache: true
+      type: Docker
+    successfulBuildsHistoryLimit: 5
+    triggers: []
+  status:
+    lastVersion: 0

@@ -106,7 +106,7 @@ objects:
     generation: 1
     creationTimestamp:
     labels:
-      app: ${NAME}-backend${SUFFIX}
+      name: ${NAME}-backend${SUFFIX}
     annotations:
       description: Defines how to deploy the application server
   spec:
@@ -138,13 +138,13 @@ objects:
     replicas: ${{REPLICAS}}
     test: false
     selector:
-      name: tfrs
+      name: ${NAME}-backend${SUFFIX}
     template:
       metadata:
         name: tfrs
         creationTimestamp:
         labels:
-          name: tfrs
+          name: ${NAME}-backend${SUFFIX}
       spec:
         containers:
         - name: tfrs-app

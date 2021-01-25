@@ -63,7 +63,7 @@ objects:
     name: ${NAME}-scan-handler${SUFFIX}
     creationTimestamp:
     labels:
-      app: ${NAME}-scan-handler${SUFFIX}
+      name: ${NAME}-scan-handler${SUFFIX}
   spec:
     strategy:
       type: Recreate
@@ -86,12 +86,12 @@ objects:
     revisionHistoryLimit: 10
     test: false
     selector:
-      app: ${NAME}-scan-handler${SUFFIX}
+      name: ${NAME}-scan-handler${SUFFIX}
     template:
       metadata:
         creationTimestamp:
         labels:
-          app: ${NAME}-scan-handler${SUFFIX}
+          name: ${NAME}-scan-handler${SUFFIX}
       spec:
         containers:
         - name: scan-handler

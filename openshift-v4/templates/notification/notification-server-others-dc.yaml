@@ -1,0 +1,49 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: notification-server-dc
+  creationTimestamp:
+parameters:
+- name: NAME
+  displayName: App name
+  description: App name
+  value: tfrs
+  required: true
+- name: SUFFIX
+  displayName: suffix
+  description: such as -dev-1696, -dev ane etc.
+  required: true  
+objects:
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${NAME}-notification-server${SUFFIX}
+    creationTimestamp:
+  spec:
+    ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 3000
+    selector:
+      name: ${NAME}-notification-server${SUFFIX}
+    type: ClusterIP
+    sessionAffinity: None
+  status:
+    loadBalancer: {}
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: ${NAME}-notification-server${SUFFIX}
+    creationTimestamp:
+  spec:
+    host: ${NAME}-notification-server${SUFFIX}.apps.silver.devops.gov.bc.ca
+    path: /socket.io
+    to:
+      kind: Service
+      name: ${NAME}-notification-server${SUFFIX}
+      weight: 100
+    tls:
+      termination: edge
+    wildcardPolicy: None
+  status: {}

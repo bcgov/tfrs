@@ -63,7 +63,6 @@ objects:
   apiVersion: apps.openshift.io/v1
   metadata:
     name: ${NAME}-schema-spy-public${SUFFIX}
-    generation: 92
     creationTimestamp:
     labels:
       template: schema-spy-public-template
@@ -173,10 +172,9 @@ objects:
   apiVersion: apps.openshift.io/v1
   metadata:
     name: ${NAME}-schema-spy-audit${SUFFIX}
-    generation: 81
     creationTimestamp:
     labels:
-      template: schema-spy-public-template
+      template: schema-spy-audit-template
     annotations:
       description: Defines how to deploy the container.
   spec:

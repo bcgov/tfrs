@@ -181,7 +181,7 @@ objects:
                   - /bin/sh
                   - '-c'
                   - |-
-                    sleep 120
+                    sleep 90
                     rabbitmqctl list_users | grep guest  2> /dev/null
                     if [ $? -ne 0 ];
                     then
@@ -215,19 +215,19 @@ objects:
             requests:
               cpu: ${CPU_REQUEST}
               memory: ${MEMORY_REQUEST}
-          livenessProbe:
-            exec:
-              command: ["rabbitmqctl", "node_health_check", "--timeout", "30"]
-            failureThreshold: 3
-            initialDelaySeconds: 45
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 10
+#          livenessProbe:
+#            exec:
+#              command: ["rabbitmqctl", "node_health_check", "--timeout", "10"]
+#            failureThreshold: 3
+#            initialDelaySeconds: 120
+#            periodSeconds: 10
+#            successThreshold: 1
+#            timeoutSeconds: 10
           readinessProbe:
             exec:
-              command: ["rabbitmqctl", "node_health_check", "--timeout", "9"]
+              command: ["rabbitmqctl", "node_health_check", "--timeout", "10"]
             failureThreshold: 3
-            initialDelaySeconds: 45
+            initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10

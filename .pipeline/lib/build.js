@@ -79,6 +79,7 @@ module.exports = settings => {
   }
 }))
 
+//build scan handler server
 objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-bc.yaml`, {
   'param':{
     'NAME': phases[phase].name,

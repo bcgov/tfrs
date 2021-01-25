@@ -17,8 +17,7 @@ parameters:
   required: true
 - name: BACKEND_HOST_NAME
   displayName: Route host name
-  description: 'Valid values: dev-lowcarbonfuels-backend.pathfinder.gov.bc.ca, test-lowcarbonfuels-backend.pathfinder.gov.bc.ca,
-    prod-lowcarbonfuels-backend.pathfinder.gov.bc.ca'
+  description: Route host name
   required: true
 objects:
 - kind: Service

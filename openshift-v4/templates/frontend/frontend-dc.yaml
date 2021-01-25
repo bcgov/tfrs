@@ -58,7 +58,7 @@ objects:
     name: ${NAME}-frontend${SUFFIX}
     creationTimestamp:
     labels:
-      app: ${NAME}-frontend${SUFFIX}
+      name: ${NAME}-frontend${SUFFIX}
     annotations:
       description: Defines how to deploy the frontend
   spec:

@@ -1,0 +1,271 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: nagios-dc
+parameters:
+  - name: NAME
+    value: zeva
+    required: true
+  - name: ENV_NAME
+    displayName: env name
+    description: 'dev, test and prod'
+    required: true
+  - name: NAGIOS_PVC_SIZE
+    displayName: nagios pvc size
+    description: nagios pvc size
+    required: true
+  - name: CPU_REQUEST
+    value: 50m
+    displayName: Requested CPU
+    description: Requested CPU
+    required: true
+  - name: CPU_LIMIT
+    value: 200m
+    displayName: CPU upper limit
+    description: CPU upper limit
+    required: true
+  - name: MEMORY_REQUEST
+    value: 50M
+    displayName: Requested memory
+    description: Requested memory
+    required: true
+  - name: MEMORY_LIMIT
+    value: 200M
+    displayName: Memory upper limit
+    description: Memory upper limit
+    required: true
+  - name: OCP_NAME
+    displayName: Openshift Name
+    description: Openshift Name, v3 is pathfinder, v4 is apps.silver.devops
+    required: true    
+objects:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: nagios
+    annotations:
+      volume.beta.kubernetes.io/storage-class: netapp-file-standard
+      template.openshift.io.bcgov/create: 'true'
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${NAGIOS_PVC_SIZE}
+- kind: ServiceAccount
+  apiVersion: v1
+  metadata:
+    name: nagios
+    creationTimestamp: 
+    labels:
+      app: nagios
+    annotations:
+      serviceaccounts.openshift.io/oauth-redirectreference.nagios: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"nagios"}}'
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      app: nagios
+    name: nagios
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: nagios
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: nagios
+    name: nagios
+  spec:
+    host: nagios-${NAME}-${ENV_NAME}.${OCP_NAME}.gov.bc.ca
+    path: /
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: nagios
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    generation: 25
+    labels:
+      app: nagios
+    name: nagios
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: nagios
+      deploymentconfig: nagios
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftWebConsole
+        creationTimestamp: null
+        labels:
+          app: nagios
+          deploymentconfig: nagios
+      spec:
+        containers:
+        - env:
+          - name: AMQP_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: rabbitmq_host
+          - name: AMQP_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: rabbitmq_port
+          - name: AMQP_USER
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-${ENV_NAME}-rabbitmq-cluster-secret
+                key: username
+          - name: AMQP_VHOST
+            value: /zeva
+          - name: AMQP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-${ENV_NAME}-rabbitmq-cluster-secret
+                key: password 
+          - name: MINIO_ENDPOINT
+            value: docs-mem-${NAME}-${ENV_NAME}.${OCP_NAME}.gov.bc.ca:443
+          - name: MINIO_USE_SSL
+            value: "true"
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_ACCESS_KEY
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_SECRET_KEY
+          - name: KEYCLOAK_SA_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: zeva-keycloak
+                key: KEYCLOAK_SA_CLIENT_SECRET
+          - name: KEYCLOAK_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: keycloak_client_id
+          - name: KEYCLOAK_SA_REALM
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: keycloak_sa_realm
+          - name: KEYCLOAK_SA_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: keycloak_sa_client_id
+          - name: KEYCLOAK_SA_BASEURL
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: keycloak_sa_baseurl
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: keycloak_realm
+          - name: DATABASE_SERVICE_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-config-${ENV_NAME}
+                key: database_service_name
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: app-db-username
+                name: patroni-${ENV_NAME}
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: app-db-password
+                name: patroni-${ENV_NAME}
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                key: app-db-name
+                name: patroni-${ENV_NAME}
+          image: 
+          imagePullPolicy: Always
+          name: nagios
+          resources:
+            limits:
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
+            requests:
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/log/nagios3
+            name: nagios-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: nagios
+        serviceAccountName: nagios
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: nagios-data
+          persistentVolumeClaim:
+            claimName: nagios
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - nagios
+        from:
+          kind: ImageStreamTag
+          name: nagios:${ENV_NAME}
+          namespace: e52f12-${ENV_NAME}
+        lastTriggeredImage: 
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0

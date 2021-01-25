@@ -64,7 +64,7 @@ objects:
     name: ${NAME}-notification-server${SUFFIX}
     creationTimestamp:
     labels:
-      app: ${NAME}-notification-server${SUFFIX}
+      name: ${NAME}-notification-server${SUFFIX}
   spec:
     strategy:
       type: Recreate
