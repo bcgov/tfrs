@@ -1,4 +1,4 @@
-FROM docker-registry.default.svc:5000/mem-tfrs-tools/nagios-base:latest
+FROM image-registry.openshift-image-registry.svc:5000/0ab226-tools/nagios-base:latest
 EXPOSE 8080
 RUN mkdir /var/run/apache2-supervisord \
     && chown -R nagios.nagios /var/run/apache2-supervisord \
