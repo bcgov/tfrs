@@ -35,3 +35,13 @@ SMTP_SERVER_HOST=apps.smtp.gov.bc.ca \
 DATABASE_SERVICE_NAME=patroni-master-test \
 | oc create -f - -n 0ab226-test
 
+oc process -f ./nagios-dc.yaml \
+ENV_NAME=prod \
+KEYCLOAK_CLIENT_ID=tfrs \
+KEYCLOAK_SA_REALM=tfrs \
+KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa \
+KEYCLOAK_SA_BASEURL=https://oidc.gov.bc.ca \
+KEYCLOAK_REALM=https://oidc.gov.bc.ca/auth/realms/tfrs \
+SMTP_SERVER_HOST=apps.smtp.gov.bc.ca \
+DATABASE_SERVICE_NAME=patroni-master-prod \
+| oc create -f - -n 0ab226-prod
