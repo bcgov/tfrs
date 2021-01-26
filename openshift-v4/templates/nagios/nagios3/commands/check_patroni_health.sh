@@ -1,8 +1,5 @@
 #!/bin/bash
 
-PATRONI_SERVICE_NAME=$1
-NAMESPACE=$2
-
 ## the value must be running
 master_node_state=`curl --silent --show-error http://$DATABASE_SERVICE_NAME.$OPENSHIFT_BUILD_NAMESPACE.svc.cluster.local:8008/patroni | jq --raw-output .state`
 if [ $master_node_state != "running" ]; then
