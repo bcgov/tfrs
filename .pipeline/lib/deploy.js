@@ -65,6 +65,8 @@ module.exports = settings => {
     }))
   }
 
+  /*
+
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -104,6 +106,7 @@ module.exports = settings => {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
+      'ENV_NAME': phases[phase].phase,
       'KEYCLOAK_AUTHORITY': phases[phase].frontendKeycloakAuthority,
       'KEYCLOAK_CLIENT_ID': phases[phase].frontendKeycloakClientId,
       'KEYCLOAK_CALLBACK_URL': phases[phase].frontendKeycloakCallbackUrl,
@@ -111,6 +114,9 @@ module.exports = settings => {
       'FRONTEND_HOST_NAME': phases[phase].frontendHostName
     }
   }))
+
+  */
+
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -124,6 +130,7 @@ module.exports = settings => {
     }
   }))
 
+  /*
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -207,6 +214,7 @@ module.exports = settings => {
       'MEMORY_LIMIT_AUDIT': phases[phase].schemaSpyAuditMemoryLimit
     }
   }))
+  */
 
   oc.applyRecommendedLabels(
     objects,

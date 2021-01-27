@@ -13,6 +13,10 @@ parameters:
   displayName:
   description: sample is -pr-0
   required: true
+- name: ENV_NAME
+  displayName: environment name
+  description: such as dev, test and prod
+  required: true  
 - name: VERSION
   displayName:
   description:  image tag name for output
@@ -97,5 +101,6 @@ objects:
         "compliance_reporting.starting_year": 2017,
         "compliance_reporting.create_effective_date": "2019-01-01",
         "exclusion_reports.create_effective_date": "2019-01-01",
-        "exclusion_reports.enabled": true
+        "exclusion_reports.enabled": true,
+        "api_base": "https://tfrs-backend-${ENV_NAME}.apps.silver.devops.gov.bc.ca/api"
       };
