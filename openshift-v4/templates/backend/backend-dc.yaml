@@ -141,7 +141,7 @@ objects:
       name: ${NAME}-backend${SUFFIX}
     template:
       metadata:
-        name: tfrs
+        name: ${NAME}-backend${SUFFIX}
         creationTimestamp:
         labels:
           name: ${NAME}-backend${SUFFIX}

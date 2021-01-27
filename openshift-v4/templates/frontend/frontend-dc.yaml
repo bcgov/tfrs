@@ -85,7 +85,7 @@ objects:
       name: ${NAME}-frontend${SUFFIX}
     template:
       metadata:
-        name: client
+        name: ${NAME}-frontend${SUFFIX}
         creationTimestamp:
         labels:
           name: ${NAME}-frontend${SUFFIX}

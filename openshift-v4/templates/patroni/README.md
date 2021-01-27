@@ -7,8 +7,9 @@
 
 ### Before triggering pipeline
 
-1. Create template.patroni-patroni secret
-oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
+1. Create template.patroni-patroni secret, make sure the secretes are same as Openshift V3
+oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]	
+Note, when patroni is deployed, the username will be changed to all lowercase, read next section for details for Openshift v4 Migration
 
 2. Build patroni image
 oc process -f ./build.yaml | oc create -f - -n [tools namespace]
@@ -18,15 +19,12 @@ oc tag [tools namspace]/patroni:v10-latest [env namspace]/patroni:v10-stable
 
 ### Database Migration from Openshift v3 to Openshift 4
 
-1. Openshift v4 - Update zeva database user same as the one on Openshift v3
-    For example, Openshift v3 zeva db user name is userABC and opassword is pwpwpwpwpw
+1. On Openshift V4, update the secrets in template.patroni-patroni same a Openshift V3
+
+2. 	For example, Openshift v3 tfrs db user name is userABC and password is pwpwpwpwpw
 	create user "userABC" with password 'pwpwpwpwpw'; //password is same with secret
-	ALTER DATABASE zeva OWNER TO "userABC";
-	DROP USER usershh;   //usershh is the old user on Openshift v4
-
-2. Openshift v4 - Update secrets patroni-prod and template.patroni-patroni
-
-Update app-db-username and app-db-password same as the one on Openshift v3
+	ALTER DATABASE tfrs OWNER TO "userABC";
+	DROP USER userabc;   //userabc is the old user on Openshift v4
 
 3. Openshift v3 - Create backup
 login to patroni-backup pod and run backup.sh -1
@@ -37,7 +35,8 @@ login to patroni-backup pod and run backup.sh -1
 
 5. Recover the backup to paroni database on Openshift v4
 login patroini-backup pod on Openshift v4, run the following command
-./backup.sh -r patroni-master-prod/zeva -f /backups/fromv3/postgresql-zeva_2020-08-28_19-06-28.sql.gz
+./backup.sh -r patroni-master-prod/tfrs -f /backups/fromv3
+Notes, yes, folder name only
 
 6. Verify the database on Openshift v3 and v4 to make sure they are same
 

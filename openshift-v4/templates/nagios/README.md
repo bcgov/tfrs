@@ -4,6 +4,8 @@
 * nagios-bc.yaml nagios image build config
 * nagios-dc.yaml nagios deployment config
 * nagios-secret.yaml create nagios-secret
+* Dockerfile-base: build nagios base image to be used by Dockerfile
+* Dockerfile: build final nagios image
 
 ### Build and deploy nagios
 
@@ -23,7 +25,7 @@ oc process -f ./nagios-bc.yaml ENV_NAME=prod | oc create -f - -n [prod namespace
 oc tag [test namespace]/nagios:latest [test namespace]/nagios:test
 oc tag [prod namespace]/nagios:latest [prod namespace]/nagios:prod
 
-4. Deploy nagios for environment
+5. Deploy nagios for environment
 oc process -f ./nagios-dc.yaml \
 ENV_NAME=test \
 KEYCLOAK_CLIENT_ID=tfrs \

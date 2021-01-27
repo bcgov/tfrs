@@ -65,7 +65,7 @@ module.exports = settings => {
     }))
   }
 
-  /*
+
 
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
@@ -90,7 +90,7 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-
+  /*
   //deploy backend others
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
@@ -99,7 +99,8 @@ module.exports = settings => {
       'BACKEND_HOST_NAME':phases[phase].backendHostName
     }
   }))
-
+  */
+ /*
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-others.yaml`, {
     'param': {
@@ -114,8 +115,8 @@ module.exports = settings => {
       'FRONTEND_HOST_NAME': phases[phase].frontendHostName
     }
   }))
+*/
 
-  */
 
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
     'param': {
@@ -132,7 +133,7 @@ module.exports = settings => {
 
   /*
   //deploy celery
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates-v4/celery/celery-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
