@@ -106,15 +106,12 @@ objects:
           - name: RABBITMQ_VHOST
             value: "/tfrs"
           - name: RABBITMQ_USER
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: username
+            value: tfrs
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: password
+                key: tfrs_password
           - name: NPM_RUN
             value: start:notifications
           - name: KEYCLOAK_CERTS_URL

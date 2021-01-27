@@ -154,23 +154,23 @@ objects:
             protocol: TCP
           env:
           - name: KEYCLOAK_SA_BASEURL
-            value: "${KEYCLOAK_SA_BASEURL}"
+            value: ${KEYCLOAK_SA_BASEURL}
           - name: KEYCLOAK_SA_CLIENT_ID
-            value: "${KEYCLOAK_SA_CLIENT_ID}"
+            value: ${KEYCLOAK_SA_CLIENT_ID}
           - name: KEYCLOAK_SA_REALM
-            value: "${KEYCLOAK_SA_REALM}"
+            value: ${KEYCLOAK_SA_REALM}
           - name: KEYCLOAK_AUDIENCE
-            value: "${KEYCLOAK_AUDIENCE}"
+            value: ${KEYCLOAK_AUDIENCE}
           - name: KEYCLOAK_CERTS_URL
-            value: "${KEYCLOAK_CERTS_URL}"
+            value: ${KEYCLOAK_CERTS_URL}
           - name: KEYCLOAK_CLIENT_ID
-            value: "${KEYCLOAK_CLIENT_ID}"
+            value: ${KEYCLOAK_CLIENT_ID}
           - name: KEYCLOAK_ENABLED
             value: 'true'
           - name: KEYCLOAK_ISSUER
-            value: "${KEYCLOAK_ISSUER}"
+            value: ${KEYCLOAK_ISSUER}
           - name: KEYCLOAK_REALM
-            value: "${KEYCLOAK_REALM}"
+            value: ${KEYCLOAK_REALM}
           - name: KEYCLOAK_SA_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
@@ -179,10 +179,7 @@ objects:
           - name: AMQP_HOST
             value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: AMQP_USER
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: username
+            value: tfrs
           - name: AMQP_VHOST
             value: "/tfrs"
           - name: BYPASS_CLAMAV
@@ -229,7 +226,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: password
+                key: tfrs_password
           - name: MINIO_ENDPOINT
             value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
           - name: MINIO_USE_SSL
@@ -250,7 +247,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: password
+                key: tfrs_password
           - name: CLAMAV_HOST
             value: ${NAME}-clamav-${ENV_NAME}.${NAMESPACE}.svc.cluster.local
           - name: FUEL_CODES_API_ENABLED

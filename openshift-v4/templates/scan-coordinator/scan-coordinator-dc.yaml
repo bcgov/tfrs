@@ -110,10 +110,7 @@ objects:
           - name: AMQP_PORT
             value: '5672'
           - name: AMQP_USER
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: username
+            value: tfrs
           - name: MINIO_ENDPOINT
             value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca
           - name: MINIO_USE_SSL
@@ -122,7 +119,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: password
+                key: tfrs_password
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:

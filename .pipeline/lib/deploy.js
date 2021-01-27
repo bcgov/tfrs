@@ -64,9 +64,7 @@ module.exports = settings => {
       }
     }))
   }
-
-
-
+/*
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -90,7 +88,7 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-  /*
+  
   //deploy backend others
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
@@ -99,8 +97,7 @@ module.exports = settings => {
       'BACKEND_HOST_NAME':phases[phase].backendHostName
     }
   }))
-  */
- /*
+ 
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-others.yaml`, {
     'param': {
@@ -115,8 +112,6 @@ module.exports = settings => {
       'FRONTEND_HOST_NAME': phases[phase].frontendHostName
     }
   }))
-*/
-
 
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
     'param': {
@@ -131,7 +126,7 @@ module.exports = settings => {
     }
   }))
 
-  /*
+
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates-v4/celery/celery-dc.yaml`, {
     'param': {
@@ -198,25 +193,26 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanHandlerServerMemoryLimit
     }
   }))
- 
-  //deploy schemaspy
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/schema-spy/schemaspy-dc.yaml`, {
-    'param': {
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'ENV_NAME': phases[phase].phase,
-      'CPU_REQUEST_PUBLIC': phases[phase].schemaSpyPublicCpuRequest,
-      'CPU_LIMIT_PUBLIC': phases[phase].schemaSpyPublicCpuLimit,
-      'MEMORY_REQUEST_PUBLIC': phases[phase].schemaSpyPublicMemoryRequest,
-      'MEMORY_LIMIT_PUBLIC': phases[phase].schemaSpyPublicMemoryLimit,
-      'CPU_REQUEST_AUDIT': phases[phase].schemaSpyAuditCpuRequest,
-      'CPU_LIMIT_AUDIT': phases[phase].schemaSpyAuditCpuLimit,
-      'MEMORY_REQUEST_AUDIT': phases[phase].schemaSpyAuditMemoryRequest,
-      'MEMORY_LIMIT_AUDIT': phases[phase].schemaSpyAuditMemoryLimit
-    }
-  }))
-  */
 
+  //only deploy schemaspy for test and prod
+  if(phases[phase].phase === 'test' || phases[phase].phase === 'prod') {
+    objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/schema-spy/schemaspy-dc.yaml`, {
+      'param': {
+        'NAME': phases[phase].name,
+        'SUFFIX': phases[phase].suffix,
+        'ENV_NAME': phases[phase].phase,
+        'CPU_REQUEST_PUBLIC': phases[phase].schemaSpyPublicCpuRequest,
+        'CPU_LIMIT_PUBLIC': phases[phase].schemaSpyPublicCpuLimit,
+        'MEMORY_REQUEST_PUBLIC': phases[phase].schemaSpyPublicMemoryRequest,
+        'MEMORY_LIMIT_PUBLIC': phases[phase].schemaSpyPublicMemoryLimit,
+        'CPU_REQUEST_AUDIT': phases[phase].schemaSpyAuditCpuRequest,
+        'CPU_LIMIT_AUDIT': phases[phase].schemaSpyAuditCpuLimit,
+        'MEMORY_REQUEST_AUDIT': phases[phase].schemaSpyAuditMemoryRequest,
+        'MEMORY_LIMIT_AUDIT': phases[phase].schemaSpyAuditMemoryLimit
+      }
+    }))
+  }
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

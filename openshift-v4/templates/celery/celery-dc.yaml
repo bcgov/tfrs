@@ -108,16 +108,12 @@ objects:
           - name: RABBITMQ_VHOST
             value: "/tfrs"
           - name: RABBITMQ_USER
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: username
-            #value: tfrs  this is the old value from Openshift v3
+            value: tfrs
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: password
+                key: tfrs_password
           - name: RABBITMQ_HOST
             value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PORT
