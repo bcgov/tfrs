@@ -14,6 +14,10 @@ parameters:
   displayName: suffix
   description: such as -dev-1696, -dev ane etc.
   required: true  
+- name: FRONTEND_HOST
+  displayName: frontend host name
+  description: 
+  required: true  
 objects:
 - kind: Service
   apiVersion: v1
@@ -37,7 +41,7 @@ objects:
     name: ${NAME}-notification-server${SUFFIX}
     creationTimestamp:
   spec:
-    host: ${NAME}-notification-server${SUFFIX}.apps.silver.devops.gov.bc.ca
+    host: ${FRONTEND_HOST}
     path: /socket.io
     to:
       kind: Service

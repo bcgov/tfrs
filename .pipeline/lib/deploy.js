@@ -14,7 +14,7 @@ module.exports = settings => {
   var objects = [];
 
   //The deployment of your cool app goes here ▼▼▼
-
+/*
   if(phases[phase].phase === 'dev') {
   
     //deploy Patroni
@@ -64,7 +64,8 @@ module.exports = settings => {
       }
     }))
   }
-/*
+  */
+
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -88,13 +89,13 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-  
+  /*
   //deploy backend others
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
-      'BACKEND_HOST_NAME':phases[phase].backendHostName
+      'BACKEND_HOST':phases[phase].backendHost
     }
   }))
  
@@ -104,12 +105,12 @@ module.exports = settings => {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
-      'ENV_NAME': phases[phase].phase,
       'KEYCLOAK_AUTHORITY': phases[phase].frontendKeycloakAuthority,
       'KEYCLOAK_CLIENT_ID': phases[phase].frontendKeycloakClientId,
       'KEYCLOAK_CALLBACK_URL': phases[phase].frontendKeycloakCallbackUrl,
       'KEYCLOAK_LOGOUT_URL': phases[phase].frontendKeycloakLogoutUrl,
-      'FRONTEND_HOST_NAME': phases[phase].frontendHostName
+      'FRONTEND_HOST': phases[phase].frontendHost,
+      'BACKEND_HOST': phases[phase].backendHost
     }
   }))
 
@@ -128,7 +129,7 @@ module.exports = settings => {
 
 
   //deploy celery
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates-v4/celery/celery-dc.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
@@ -146,7 +147,8 @@ module.exports = settings => {
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-others-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix
+      'SUFFIX': phases[phase].suffix,
+      'FRONTEND_HOST': phases[phase].frontendHost
     }
   }))
 

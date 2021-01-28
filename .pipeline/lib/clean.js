@@ -66,7 +66,7 @@ module.exports = settings => {
           }
         });
       });
-
+/* do not delete the stateful sets
       //get all statefulsets before they are deleted
       const statefulsets = oc.get("statefulset", {
         selector: `app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`,
@@ -97,20 +97,7 @@ module.exports = settings => {
           wait: "true",
           namespace: phase.namespace,
         });
-        /***
-        //delete PVCs mounted in statfulset
-        let statefulsetPVCs = oc.get("pvc", {
-          selector: `statefulset=${statefulset.metadata.name}`,
-          namespace: phase.namespace,
-        });
-        statefulsetPVCs.forEach(statefulsetPVC => {
-          oc.delete([`pvc/${statefulsetPVC.metadata.name}`], {
-            "ignore-not-found": "true",
-            wait: "true",
-            namespace: phase.namespace,
-          });
-        })
-        ****/
+
         //delete configmaps create by patroni
         let patroniConfigmaps = oc.get("configmap", {
           selector: `app.kubernetes.io/name=patroni,cluster-name=${statefulset.metadata.name}`,
@@ -129,7 +116,7 @@ module.exports = settings => {
           );        
         }
       });
-
+*/
       //remove all custom security policies create for specific pull request
       const nsps = oc.get("networksecuritypolicies", {
         selector: `app=${phase.name}${phase.suffix}`,

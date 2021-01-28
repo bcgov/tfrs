@@ -20,9 +20,36 @@ oc -n 0ab226-prod create configmap backup-conf --from-file=./config/backup.conf
 5. mount the netapp-file-backup storage to frontend pod and create /patroni-backup, /minio-backup and /rabbitmq-backup. remove the mount later
 
 6. create deployment config for backup container
+6.1 for dev
+BACKUP_VOLUME_NAME is pvc name
+oc -n 0ab226-test process -f ./templates/backup/backup-deploy.yaml \
+  -p NAME=patroni-backup \
+  -p SOURCE_IMAGE_NAME=patroni-backup \
+  -p IMAGE_NAMESPACE=0ab226-tools \
+  -p TAG_NAME=2.2.1 \
+  -p DATABASE_SERVICE_NAME=patroni-master-dev-1696 \
+  -p DATABASE_NAME=tfrs \
+  -p DATABASE_DEPLOYMENT_NAME=patroni-dev-1696 \
+  -p DATABASE_USER_KEY_NAME=app-db-username \
+  -p DATABASE_PASSWORD_KEY_NAME=app-db-password \
+  -p TABLE_SCHEMA=public \
+  -p BACKUP_STRATEGY=rolling \
+  -p DAILY_BACKUPS=31 \
+  -p WEEKLY_BACKUPS=12 \
+  -p MONTHLY_BACKUPS=3 \
+  -p BACKUP_PERIOD=1d \
+  -p BACKUP_VOLUME_NAME=backup-tfrs-dev \
+  -p VERIFICATION_VOLUME_NAME=backup-verification \
+  -p VERIFICATION_VOLUME_SIZE=2G \
+  -p VERIFICATION_VOLUME_CLASS=netapp-file-standard \
+  -p ENVIRONMENT_FRIENDLY_NAME='TFRS Database Backup' \
+  -p ENVIRONMENT_NAME=tfrs-dev \
+  -p MINIO_DATA_VOLUME_NAME=tfrs-minio-dev | \
+  oc create -f - -n 0ab226-dev
+
 6.1 for test
 BACKUP_VOLUME_NAME is pvc name
-oc -n e52f12-test process -f ./templates/backup/backup-deploy.yaml \
+oc -n 0ab226-test process -f ./templates/backup/backup-deploy.yaml \
   -p NAME=patroni-backup \
   -p SOURCE_IMAGE_NAME=patroni-backup \
   -p IMAGE_NAMESPACE=0ab226-tools \

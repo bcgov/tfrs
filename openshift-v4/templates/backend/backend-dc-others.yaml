@@ -15,7 +15,7 @@ parameters:
   displayName:
   description: sample is -pr-0
   required: true
-- name: BACKEND_HOST_NAME
+- name: BACKEND_HOST
   displayName: Route host name
   description: Route host name
   required: true
@@ -43,7 +43,7 @@ objects:
     creationTimestamp: 
     annotations: {}
   spec:
-    host: ${BACKEND_HOST_NAME}
+    host: ${BACKEND_HOST}
     to:
       kind: Service
       name: ${NAME}-backend${SUFFIX}

@@ -13,10 +13,6 @@ parameters:
   displayName:
   description: sample is -pr-0
   required: true
-- name: ENV_NAME
-  displayName: environment name
-  description: such as dev, test and prod
-  required: true  
 - name: VERSION
   displayName:
   description:  image tag name for output
@@ -36,10 +32,14 @@ parameters:
   displayName: keycloak.post_logout_url
   description: 
   required: true
-- name: FRONTEND_HOST_NAME
-  displayName: Route host name
+- name: FRONTEND_HOST
+  displayName: Frontend route host name
   description: 
   required: true
+- name: BACKEND_HOST
+  displayName: Backend route host name
+  description: 
+  required: true  
 objects:
 - kind: Service
   apiVersion: v1
@@ -66,7 +66,7 @@ objects:
       frontend: 'true'
     annotations: {}
   spec:
-    host: ${FRONTEND_HOST_NAME}
+    host: ${FRONTEND_HOST}
     to:
       kind: Service
       name: ${NAME}-frontend${SUFFIX}
@@ -102,5 +102,5 @@ objects:
         "compliance_reporting.create_effective_date": "2019-01-01",
         "exclusion_reports.create_effective_date": "2019-01-01",
         "exclusion_reports.enabled": true,
-        "api_base": "https://tfrs-backend-${ENV_NAME}.apps.silver.devops.gov.bc.ca/api"
+        "api_base": "https://${BACKEND_HOST}/api"
       };
