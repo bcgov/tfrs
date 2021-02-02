@@ -2,9 +2,9 @@
 kind: Template
 apiVersion: v1
 labels:
-  template: zeva-generic-policy
+  template: tfrs-generic-policy
 metadata:
-  name: zeva-generic-policy
+  name: tfrs-generic-policy
   creationTimestamp:
 parameters:
   - name: NAMESPACE_PREFIX

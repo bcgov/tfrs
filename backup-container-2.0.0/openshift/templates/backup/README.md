@@ -57,7 +57,7 @@ oc -n mem-tfrs-prod process -f ./templates/backup/backup-deploy.json \
   -p IMAGE_NAMESPACE=mem-tfrs-tools \
   -p TAG_NAME=2.0.0 \
   -p DATABASE_SERVICE_NAME=patroni-master-prod \
-  -p DATABASE_NAME=zeva \
+  -p DATABASE_NAME=tfrs \
   -p DATABASE_DEPLOYMENT_NAME=patroni-prod \
   -p DATABASE_USER_KEY_NAME=app-db-username \
   -p DATABASE_PASSWORD_KEY_NAME=app-db-password \
@@ -72,8 +72,8 @@ oc -n mem-tfrs-prod process -f ./templates/backup/backup-deploy.json \
   -p VERIFICATION_VOLUME_SIZE=2G \
   -p VERIFICATION_VOLUME_CLASS=netapp-file-standard \
   -p ENVIRONMENT_FRIENDLY_NAME='ZEVA Database Backup' \
-  -p ENVIRONMENT_NAME=zeva-prod \
-  -p MINIO_DATA_VOLUME_NAME=zeva-minio-prod | \
+  -p ENVIRONMENT_NAME=tfrs-prod \
+  -p MINIO_DATA_VOLUME_NAME=tfrs-minio-prod | \
   oc create -f - -n mem-tfrs-prod
 7. If need to remove, only keeps configmap/backup-conf and the the nfs storage
 oc -n mem-tfrs-prod delete secret/patroni-backup secret/ftp-secret dc/patroni-backup pvc/backup-verification 

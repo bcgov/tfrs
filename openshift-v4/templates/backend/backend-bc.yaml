@@ -19,11 +19,11 @@ parameters:
   required: true
 - name: GIT_URL
   displayName:
-  description: zeva repo
+  description: tfrs repo
   required: true
 - name: GIT_REF
   displayName:
-  description: zeva branch name of the pr
+  description: tfrs branch name of the pr
   required: true
 objects:
 - apiVersion: image.openshift.io/v1

@@ -2,9 +2,9 @@
 kind: Template
 apiVersion: v1
 labels:
-  template: zeva-nsp
+  template: tfrs-nsp
 metadata:
-  name: zeva-nsp
+  name: tfrs-nsp
   creationTimestamp:
 parameters:  
   - name: NAME
@@ -378,3 +378,25 @@ objects:
         - - app=${NAME}${SUFFIX}-rabbitmq-cluster
       destination:
         - - app=${NAME}${SUFFIX}-rabbitmq-cluster                     
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-clamav-to-external
+    spec:
+     description: |
+       allow clamav to talk to external.
+     source:
+        - - name=${NAME}-clamav-${ENV_NAME}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-coordinator-to-external
+    spec:
+     description: |
+       allow scan-coordinator to talk to external.
+     source:
+        - - name=${NAME}-scan-coordinator${SUFFIX}
+     destination:
+        - - ext:network=any           
