@@ -23,7 +23,13 @@ oc process -f ./minio-dc.yaml \
 NAME=tfrs ENV_NAME=test SUFFIX=-test OCP_NAME=apps.silver.devops PVC_SIZE=2Gi \
 | oc create -f - -n 0ab226-test
 
-
 oc process -f ./minio-dc.yaml \
 NAME=tfrs ENV_NAME=prod SUFFIX=-prod OCP_NAME=apps.silver.devops PVC_SIZE=3Gi \
 | oc create -f - -n 0ab226-prod
+
+#### Minio data migration from Openshift V3 to V4
+
+on V4, mount minio data storage to nagios /minio, then in minio pod, it has /minio/tfrs
+on V4 nagios pod, oc rsync minio data from V3 to V4 /minio/tfrs
+on V4, verify the files through minio web interface and make sure the files can be downloaded and opened.
+on V4, remove the minio mount on nagios

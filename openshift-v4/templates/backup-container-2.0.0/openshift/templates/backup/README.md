@@ -7,6 +7,7 @@ follow https://github.com/BCDevOps/provision-nfs-apb/blob/master/docs/usage-gui.
 patroni-master-test:5432/tfrs
 0 21 * * * default ./backup.sh -s
 0 22 * * * default ./backup.sh -s -v all
+Notes: modify each line in the backup.conf before deploy to dev, test and prod environment
 
 3. Build patroni-backup image
 oc -n 0ab226-tools process -f openshift/templates/backup/backup-build.yaml \

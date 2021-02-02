@@ -48,11 +48,17 @@ func main() {
 		MinioSecure:    getEnvBool("MINIO_USE_SSL", false),
 	}
 
+	log.Printf("1111")
+
 	if !conf.BypassMode {
 		testClamAVConnection(&conf)
 	}
 
+	log.Printf("2222")
+
 	testMinioConnection(&conf)
+
+	log.Printf("3333")
 
 	//connect to rabbit
 	conn, err := amqp.Dial(getAMQPConnectionString(&conf))
@@ -61,11 +67,15 @@ func main() {
 	}
 	defer conn.Close()
 
+	log.Printf("4444")
+
 	ch, err := conn.Channel()
 	if err != nil {
 		panic(err)
 	}
 	defer ch.Close()
+
+	log.Printf("5555")
 
 	//declare queues (idempotent)
 	q, err := ch.QueueDeclare(
@@ -80,6 +90,8 @@ func main() {
 		panic(err)
 	}
 
+	log.Printf("6666")
+
 	q2, err := ch.QueueDeclare(
 		"security-scan-responses",
 		false,
@@ -91,6 +103,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	log.Printf("7777")
 
 	msgs, err := ch.Consume(
 		q.Name,
@@ -104,6 +118,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	log.Printf("8888")
 
 	forever := make(chan bool)
 
