@@ -21,7 +21,9 @@ openshift-v4/templates/clamav/README.md
 
 openshift-v4/templates/nginx-runtime/Readme.md
 
-## 5. Pipeline
+## 5. Pipeline prepare
+
+Only deploy patroni and rabbitmq through the pipeline first, disable the other deployments in deploy.js
 
 ## 5.1 . Setup RabbitMQ
 
@@ -33,38 +35,39 @@ Note: remember to create tfrs user after rabbitmq is up and running
 openshift-v4/templates/patroni/README.md
 NoteL remember to sync the passwords in template same as V3
 
-### 5.3 Backend
+## 6. Pipeline
+### 6.1 Backend
 
 openshift-v4/templates/backend/README.md
 
-### 5.4 frontend
+### 6.2 frontend
 
 openshift-v4/templates/frontend/README.md
 
-### 5.4 Celery
+### 6.3 Celery
 
 openshift-v4/templates/celery/README.md
 
-### 5.5 Notification Server
+### 6.4 Notification Server
 
 openshift-v4/templates/notification/README.md
 
-### 5.6 Scan Coordinator
+### 6.6 Scan Coordinator
 
 openshift-v4/templates/scan-coordinator/README.md
 
-### 5.7 Scan Handler
+### 6.7 Scan Handler
 
 openshift-v4/templates/scan-handler/README.md
 
-### 5.8 SchemaSpy
+### 6.8 SchemaSpy
 
 openshift-v4/templates/schema-spy/README.md
 
-## 6 Backup container
+## 7 Backup container
 
 openshift-v4/templates/backup-container-2.0.0/openshift/templates/backup/README.md
 
-## 7 Nagios
+## 8 Nagios
 
 openshift-v4/templates/nagios/README.md

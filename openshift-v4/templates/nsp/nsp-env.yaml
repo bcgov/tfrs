@@ -1,0 +1,380 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: zeva-nsp
+metadata:
+  name: zeva-nsp
+  creationTimestamp:
+parameters:  
+  - name: NAME
+    displayName: App Name
+    description: App Name
+    value: 'tfrs'
+    required: true
+  - name: ENV_NAME
+    displayName: Environment Name
+    description: Environment Name
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -dev-365, -test and -prod
+    value: ""
+    required: true    
+  - name: API_VERSION
+    displayName: Api version
+    description: Api version, either secops.pathfinder.gov.bc.ca/v1alpha1 or security.devops.gov.bc.ca/v1alpha1
+    required: true
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-frontend-to-internet
+    spec:
+     description: |
+       allow frontend to talk to the internet.
+     source:
+        - - name=${NAME}-frontend${SUFFIX}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-frontend-to-backend
+    spec:
+      description: |
+        Allow frontend to communicate with backend.
+      source:
+        - - name=${NAME}-frontend${SUFFIX}
+      destination:
+        - - name=${NAME}-backend${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-notification-server-to-internet
+    spec:
+     description: |
+       allow notification-server to talk to the internet.
+     source:
+        - - name=${NAME}-notification-server${SUFFIX}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-notification-server-to-rabbitmq
+    spec:
+     description: |
+       allow notification-server to talk to rabbitmq.
+     source:
+        - - name=${NAME}-notification-server${SUFFIX}
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backend-to-internet
+    spec:
+     description: |
+       allow backend to talk to the internet.
+     source:
+        - - name=${NAME}-backend${SUFFIX}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backend-to-minio
+    spec:
+     description: |
+       allow backend to talk to minio.
+     source:
+        - - name=${NAME}-backend${SUFFIX}
+     destination:
+        - - name=${NAME}-minio-${ENV_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backend-to-patroni
+    spec:
+     description: |
+       allow backend to talk to patroni.
+     source:
+        - - name=${NAME}-backend${SUFFIX}
+     destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backend-to-rabbitmq
+    spec:
+     description: |
+       allow backend to talk to rabbitmq.
+     source:
+        - - name=${NAME}-backend${SUFFIX}
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backend-to-clamav
+    spec:
+     description: |
+       allow backend to talk to clamav.
+     source:
+        - - name=${NAME}-backend${SUFFIX}
+     destination:
+        - - name=${NAME}-clamav-${ENV_NAME}        
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-handler-to-rabbitmq
+    spec:
+     description: |
+       allow scan-handler to talk to rabbitmq.
+     source:
+        - - name=${NAME}-scan-handler${SUFFIX}
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-handler-to-patroni
+    spec:
+     description: |
+       allow scan-handler to talk to patroni.
+     source:
+        - - name=${NAME}-scan-handler${SUFFIX}
+     destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-rabbitmq-to-external
+    spec:
+     description: |
+       allow rabbitmq to talk to external.
+     source:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-minio-to-external
+    spec:
+     description: |
+       allow minio to talk to external.
+     source:
+        - - name=${NAME}-minio-${ENV_NAME}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-celery-to-external
+    spec:
+     description: |
+       allow celery to talk to external.
+     source:
+        - - name=${NAME}-celery${SUFFIX}
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-celery-to-minio
+    spec:
+     description: |
+       allow celery to talk to minio.
+     source:
+        - - name=${NAME}-celery${SUFFIX}
+     destination:
+        - - name=${NAME}-minio-${ENV_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-celery-to-patroni
+    spec:
+     description: |
+       allow celery to talk to patroni.
+     source:
+        - - name=${NAME}-celery${SUFFIX}
+     destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-celery-to-rabbitmq
+    spec:
+     description: |
+       allow celery to talk to rabbitmq.
+     source:
+        - - name=${NAME}-celery${SUFFIX}
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-nagios-to-external
+    spec:
+     description: |
+       allow nagios to talk to external.
+     source:
+        - - app=nagios
+     destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-nagio-to-rabbitmq
+    spec:
+     description: |
+       allow cenagiolery to talk to rabbitmq.
+     source:
+        - - app=nagios
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster        
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-nagios-to-minio
+    spec:
+     description: |
+       allow nagios to talk to minio.
+     source:
+        - - app=nagios
+     destination:
+        - - name=${NAME}-minio-${ENV_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-nagios-to-patroni
+    spec:
+     description: |
+       allow nagios to talk to patroni.
+     source:
+        - - app=nagios
+     destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-coordinator-to-minio
+    spec:
+     description: |
+       allow scan-coordinator to talk to minio.
+     source:
+        - - name=${NAME}-scan-coordinator${SUFFIX}
+     destination:
+        - - name=${NAME}-minio-${ENV_NAME}        
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-coordinator-to-clamav
+    spec:
+     description: |
+       allow scan-coordinator to talk to clamav.
+     source:
+        - - name=${NAME}-scan-coordinator${SUFFIX}
+     destination:
+        - - name=${NAME}-clamav-${ENV_NAME}                
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-scan-coordinator-to-rabbitmq
+    spec:
+     description: |
+       allow scan-coordinator to talk to rabbitmq.
+     source:
+        - - name=${NAME}-scan-coordinator${SUFFIX}
+     destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster         
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backup-container-to-patroni
+    spec:
+     description: |
+       allow backup-container to talk to patroni.
+     source:
+        - - name=patroni-backup
+     destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-patroni-to-patroni-itself
+    spec:
+      description: |
+        Allow patroni pods to communicate in patroni cluster.
+      source:
+        - - cluster-name=patroni${SUFFIX}
+      destination:
+        - - cluster-name=patroni${SUFFIX}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-backendmidlifecyclepod-to-patroni
+    spec:
+      description: |
+        Allow backend mid lifecycle pod to run django migrations against patroni.
+      source:
+        - - openshift.io/deployer-pod.type=hook-mid
+      destination:
+        - - cluster-name=patroni${SUFFIX}  
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-schemaspy-public-to-patroni
+    spec:
+      description: |
+        Allow schemaspy public to communicate with patroni.
+      source:
+        - - name=${NAME}-schema-spy-public${SUFFIX}
+      destination:
+        - - cluster-name=patroni${SUFFIX}                
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-schemaspy-audit-to-patroni
+    spec:
+      description: |
+        Allow schemaspy audit to communicate with patroni.
+      source:
+        - - name=${NAME}-schema-spy-audit${SUFFIX}
+      destination:
+        - - cluster-name=patroni${SUFFIX}                  
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-schemaspy-public-to-internet
+    spec:
+      description: |
+        allow schemaspy public to talk to the internet.
+      source:
+        - - name=${NAME}-schema-spy-public${SUFFIX}
+      destination:
+        - - ext:network=any        
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-schemaspy-audit-to-internet
+    spec:
+      description: |
+        allow schemaspy audit to talk to the internet.
+      source:
+        - - name=${NAME}-schema-spy-public${SUFFIX}
+      destination:
+        - - ext:network=any        
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: ${NAME}${SUFFIX}-custom-rabbitmq-to-rabbitmq-itself
+    spec:
+      description: |
+        Allow rabbitmq pods to communicate in rabbitmq cluster.
+      source:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster
+      destination:
+        - - app=${NAME}${SUFFIX}-rabbitmq-cluster                     

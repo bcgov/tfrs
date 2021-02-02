@@ -34,7 +34,7 @@ login to patroni-backup pod and run backup.sh -1
 	  for example: moved to /backups/fromv3/postgresql-zeva_2020-08-28_19-06-28.sql.gz
 
 5. Recover the backup to paroni database on Openshift v4
-login patroini-backup pod on Openshift v4, run the following command
+login patroni-backup pod on Openshift v4, run the following command
 ./backup.sh -r patroni-master-prod/tfrs -f /backups/fromv3
 Notes, yes, folder name only
 

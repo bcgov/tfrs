@@ -112,7 +112,7 @@ objects:
           - name: AMQP_USER
             value: tfrs
           - name: MINIO_ENDPOINT
-            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca
+            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
           - name: MINIO_USE_SSL
             value: 'true'
           - name: AMQP_PASSWORD

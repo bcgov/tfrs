@@ -8,7 +8,9 @@
   "scripts": {
     "build": "node build.js",
     "clean": "node clean.js",
+    "clean-nsps": "node clean-nsps.js",
     "deploy": "node deploy.js",
+    "deploy-nsps": "node deploy-nsps.js",
     "deploy-unittest": "node deploy-unittest.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },

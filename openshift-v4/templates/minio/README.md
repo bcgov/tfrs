@@ -14,16 +14,16 @@ oc process -f ./minio-bc.yaml | oc create -f - -n 0ab226-tools
 ### One minio instance serve all PRs on Dev
 
 oc process -f ./minio-dc.yaml \
-NAME=tfrs ENV_NAME=dev SUFFIX=-dev OCP_NAME=apps.silver.devops \
+NAME=tfrs ENV_NAME=dev SUFFIX=-dev OCP_NAME=apps.silver.devops PVC_SIZE=2Gi \
 | oc create -f - -n 0ab226-dev
 
 #### Test and Prod Minio setup
 
 oc process -f ./minio-dc.yaml \
-NAME=tfrs ENV_NAME=test SUFFIX=-test OCP_NAME=apps.silver.devops \
+NAME=tfrs ENV_NAME=test SUFFIX=-test OCP_NAME=apps.silver.devops PVC_SIZE=2Gi \
 | oc create -f - -n 0ab226-test
 
 
 oc process -f ./minio-dc.yaml \
-NAME=tfrs ENV_NAME=prod SUFFIX=-prod OCP_NAME=apps.silver.devops \
+NAME=tfrs ENV_NAME=prod SUFFIX=-prod OCP_NAME=apps.silver.devops PVC_SIZE=3Gi \
 | oc create -f - -n 0ab226-prod

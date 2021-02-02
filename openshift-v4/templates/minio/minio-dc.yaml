@@ -56,13 +56,14 @@ parameters:
     description: Openshift Name
     required: true
 objects:
-  - apiVersion: v1
-    kind: Secret
-    metadata:
-      name: ${NAME}-minio${SUFFIX}
-    stringData:
-       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+# only create once
+#  - apiVersion: v1
+#    kind: Secret
+#    metadata:
+#      name: ${NAME}-minio${SUFFIX}
+#    stringData:
+#       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+#       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
