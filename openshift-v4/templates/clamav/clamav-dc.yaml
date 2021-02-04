@@ -39,7 +39,7 @@ objects:
       name: tfrs-clamav-${ENV_NAME}
   spec:
     strategy:
-      type: Rolling
+      type: Recreate
       activeDeadlineSeconds: 21600
     triggers:
     - type: ImageChange

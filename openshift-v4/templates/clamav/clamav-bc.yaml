@@ -36,7 +36,10 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
+        pullSecret:
+          name: docker-creds      
         forcePull: true
+        noCache: true
     output:
       to:
         kind: ImageStreamTag

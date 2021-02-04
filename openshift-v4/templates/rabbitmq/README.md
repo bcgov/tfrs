@@ -17,7 +17,11 @@ oc process -f ./secret-template.yaml | oc create -f - -n [environment namespace]
     rabbitmqctl add_user tfrs [password]    ## password refers to secret tfrs-dev-1696-rabbitmq-cluster-secret.tfrs_password
     rabbitmqctl add_vhost /tfrs     ## yes, it is /tfrs
 
-2. login rabbitmq admin web and go to Admin tab and set as below:
+2. create web route
+
+    oc process -f ./rabbitmq-web-route.yaml SUFFIX= | oc create -f - -n [env name]
+
+3. login rabbitmq admin web and go to Admin tab and set as below:
     * Name | Tags | Can access virtual hosts | Has password
     * rabbitmq | administrator | No Access | ●
     * tfrs | | /tfrs | ●

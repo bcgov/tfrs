@@ -43,6 +43,8 @@ objects:
       type: Git
     strategy:
       dockerStrategy:
+        pullSecret:
+          name: docker-creds      
         env:
         - name: NAGIOS_USER
           valueFrom:

@@ -33,7 +33,7 @@ Note: remember to create tfrs user after rabbitmq is up and running
 ### 5.2 Patroni
 
 openshift-v4/templates/patroni/README.md
-NoteL remember to sync the passwords in template same as V3
+Notes remember to sync the passwords in template same as V3
 
 ## 6. Pipeline
 ### 6.1 Backend

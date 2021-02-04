@@ -64,7 +64,7 @@ module.exports = settings => {
       }
     }))
   }
-
+/*
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -150,7 +150,7 @@ module.exports = settings => {
       'FRONTEND_HOST': phases[phase].frontendHost
     }
   }))
-
+*/
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -165,7 +165,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
- 
+ /*
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -213,7 +213,7 @@ module.exports = settings => {
       }
     }))
   }
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

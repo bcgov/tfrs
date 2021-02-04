@@ -86,9 +86,9 @@ const phases = {
         scanHandlerCpuRequest: '200m', scanHandlerCpuLimit: '300m', scanHandlerMemoryRequest: '255Mi', scanHandlerMemoryLimit: '512Mi',
         scanCoordinatorCpuRequest: '200m', scanCoordinatorCpuLimit: '300m', scanCoordinatorMemoryRequest: '255Mi', scanCoordinatorMemoryLimit: '512Mi',
         notificationServerCpuRequest: '200m', notificationServerCpuLimit: '400m', notificationServerMemoryRequest: '256Mi', notificationServerMemoryLimit: '512Mi',
-        patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '500Mi', patroniMemoryLimit: '2Gi', patroniPvcSize: '10Gi', 
+        patroniCpuRequest: '300m', patroniCpuLimit: '600m', patroniMemoryRequest: '500Mi', patroniMemoryLimit: '2Gi', patroniPvcSize: '10Gi', 
             patroniReplica: 3, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
-        rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '500m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '2Gi', rabbitmqPvcSize: '1Gi', 
+        rabbitmqCpuRequest: '200m', rabbitmqCpuLimit: '400m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '2Gi', rabbitmqPvcSize: '1Gi', 
             rabbitmqReplica: 2, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard' ,
         schemaSpyPublicCpuRequest: '50m', schemaSpyPublicCpuLimit: '500m', schemaSpyPublicMemoryRequest: '512Mi', schemaSpyPublicMemoryLimit: '2Gi', 
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'

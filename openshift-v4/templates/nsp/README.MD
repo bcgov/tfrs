@@ -12,6 +12,10 @@ oc process -f ./quickstart-nsp.yaml API_VERSION=security.devops.gov.bc.ca/v1alph
 oc process -f ./quickstart-nsp.yaml API_VERSION=security.devops.gov.bc.ca/v1alpha1 NAMESPACE_PREFIX=0ab226 ENV_NAME=test | oc create -f - -n 0ab226-test  
 oc process -f ./quickstart-nsp.yaml API_VERSION=security.devops.gov.bc.ca/v1alpha1 NAMESPACE_PREFIX=0ab226 ENV_NAME=prod | oc create -f - -n 0ab226-prod  
 
+### Apply specific nsps
+
+only keep int-cluster-k8s-api-comms
+./pipeline/npm run deploy-nsps -- --pr=1696 --env=prod
 
 ### Add role to users, check if the settings already exist before run the grant
 
