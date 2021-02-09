@@ -214,10 +214,7 @@ objects:
                 name: patroni${SUFFIX}
                 key: app-db-password
           - name: RABBITMQ_USER
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: username
+            value: tfrs
           - name: RABBITMQ_VHOST
             value: "/tfrs"
           - name: RABBITMQ_HOST
