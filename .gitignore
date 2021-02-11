@@ -106,3 +106,5 @@ openshift/templates/projects/mem-tfrs-prod/*
 # dev
 dev/
 node_modules/
+
+.sql.gz
