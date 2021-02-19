@@ -26,7 +26,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -106,3 +105,6 @@ openshift/templates/projects/mem-tfrs-prod/*
 
 # dev
 dev/
+node_modules/
+
+.sql.gz

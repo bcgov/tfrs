@@ -1,0 +1,64 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  creationTimestamp: null
+  name: minio
+parameters:
+  - name: GIT_URL
+    displayName: Zeva Git Repo URL
+    description: The URL to your GIT repo
+    required: true
+    value: https://github.com/bcgov/tfrs.git
+  - name: GIT_REF
+    displayName: Git Reference
+    description: The git reference or branch.
+    required: true
+    value: openshift-v4-migration
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: minio
+      creationTimestamp:
+      labels:
+        shared: 'true'
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: ''
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      creationTimestamp: null
+      name: minio
+    spec:
+      failedBuildsHistoryLimit: 5
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: minio:latest
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        contextDir: openshift-v4/templates/minio/docker
+        git:
+          ref: ${GIT_REF}
+          uri: ${GIT_URL}
+        type: Git
+      strategy:
+        dockerStrategy:
+          from:
+            kind: ImageStreamTag
+            name: rhel7:7.7-481
+        type: Docker
+      successfulBuildsHistoryLimit: 5
+      triggers:
+        - imageChange: {}
+          type: ImageChange
+        - type: ConfigChange
+    status:
+      lastVersion: 0

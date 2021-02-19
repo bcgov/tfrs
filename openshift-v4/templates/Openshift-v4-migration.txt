@@ -1,0 +1,73 @@
+
+# TFRS Openshift Setup - migration from Openshift v3 to v4
+
+## 1. Create generic network policies
+
+openshift-v4/templates/nsp/README.MD
+
+## 2 Setup Keycloak secret used by pipeline
+
+openshift-v4/templates/keycloak/README.MD
+
+## 3. Setup Minio
+
+openshift-v4/templates/minio/README.md
+
+## 4. setup Clamav
+
+openshift-v4/templates/clamav/README.md
+
+## 5. Setup Nginx
+
+openshift-v4/templates/nginx-runtime/Readme.md
+
+## 5. Pipeline prepare
+
+Only deploy patroni and rabbitmq through the pipeline first, disable the other deployments in deploy.js
+
+## 5.1 . Setup RabbitMQ
+
+openshift-v4/templates/rabbitmq/README.md
+Note: remember to create tfrs user after rabbitmq is up and running
+
+### 5.2 Patroni
+
+openshift-v4/templates/patroni/README.md
+Notes remember to sync the passwords in template same as V3
+
+## 6. Pipeline
+### 6.1 Backend
+
+openshift-v4/templates/backend/README.md
+
+### 6.2 frontend
+
+openshift-v4/templates/frontend/README.md
+
+### 6.3 Celery
+
+openshift-v4/templates/celery/README.md
+
+### 6.4 Notification Server
+
+openshift-v4/templates/notification/README.md
+
+### 6.6 Scan Coordinator
+
+openshift-v4/templates/scan-coordinator/README.md
+
+### 6.7 Scan Handler
+
+openshift-v4/templates/scan-handler/README.md
+
+### 6.8 SchemaSpy
+
+openshift-v4/templates/schema-spy/README.md
+
+## 7 Backup container
+
+openshift-v4/templates/backup-container-2.0.0/openshift/templates/backup/README.md
+
+## 8 Nagios
+
+openshift-v4/templates/nagios/README.md

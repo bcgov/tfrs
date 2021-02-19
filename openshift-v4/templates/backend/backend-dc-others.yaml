@@ -1,0 +1,55 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: tfrs-dc-others
+  creationTimestamp: 
+labels:
+  template: tfrs-backend-template
+parameters:
+- name: NAME
+  displayName:
+  description: the module name entered when run yo bcdk:pipeline, which is tfrs
+  required: true
+- name: SUFFIX
+  displayName:
+  description: sample is -pr-0
+  required: true
+- name: BACKEND_HOST
+  displayName: Route host name
+  description: Route host name
+  required: true
+objects:
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${NAME}-backend${SUFFIX}
+  spec:
+    ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: ${NAME}-backend${SUFFIX}
+    type: ClusterIP
+    sessionAffinity: None
+  status:
+    loadBalancer: {}
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: ${NAME}-backend${SUFFIX}
+    creationTimestamp: 
+    annotations: {}
+  spec:
+    host: ${BACKEND_HOST}
+    to:
+      kind: Service
+      name: ${NAME}-backend${SUFFIX}
+      weight: 100
+    port:
+      targetPort: web
+    tls:
+      termination: edge
+    wildcardPolicy: None

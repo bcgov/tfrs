@@ -1,0 +1,110 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: clamav
+  creationTimestamp:
+parameters:
+- name: ENV_NAME
+  required: true
+objects:
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: tfrs-clamav-${ENV_NAME}
+    creationTimestamp:
+    labels:
+      name: tfrs-clamav-${ENV_NAME}
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+  spec:
+    ports:
+    - name: 3310-tcp
+      protocol: TCP
+      port: 3310
+      targetPort: 3310
+    selector:
+      name: tfrs-clamav-${ENV_NAME}
+    type: ClusterIP
+    sessionAffinity: None
+  status:
+    loadBalancer: {}
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: tfrs-clamav-${ENV_NAME}
+    generation: 1
+    creationTimestamp:
+    labels:
+      name: tfrs-clamav-${ENV_NAME}
+  spec:
+    strategy:
+      type: Recreate
+      activeDeadlineSeconds: 21600
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - clamav
+        from:
+          kind: ImageStreamTag
+          namespace: 0ab226-tools
+          name: clamav:${ENV_NAME}
+    - type: ConfigChange
+    replicas: 1
+    test: false
+    selector:
+      name: tfrs-clamav-${ENV_NAME}
+    template:
+      metadata:
+        creationTimestamp:
+        labels:
+          name: tfrs-clamav-${ENV_NAME}
+        annotations:
+          openshift.io/generated-by: OpenShiftWebConsole
+      spec:
+        containers:
+        - name: clamav
+          image: image-registry.openshift-image-registry.svc:5000/0ab226-tools/clamav:${ENV_NAME}
+          ports:
+          - containerPort: 3310
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          livenessProbe:
+            tcpSocket:
+              port: 3310
+            initialDelaySeconds: 240
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 3310
+            initialDelaySeconds: 240
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+        schedulerName: default-scheduler
+  status:
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    updatedReplicas: 0
+    availableReplicas: 0
+    unavailableReplicas: 0

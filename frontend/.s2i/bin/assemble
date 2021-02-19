@@ -77,6 +77,9 @@ echo "---> Building your Node application from source"
 # -d means --loglevel info
 npm install -d
 
+# fix vulnerabilities
+npm audit fix
+
 # run webpack
 # create public/build folder under /opt/app-root/src
 # /opt/app-root/src/public/build has bundle.js and tokenRenewl.js

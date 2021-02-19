@@ -1,0 +1,55 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: tfrs-generic-policy
+metadata:
+  name: tfrs-generic-policy
+  creationTimestamp:
+parameters:
+  - name: NAMESPACE_PREFIX
+    displayName: Namespace prefix
+    description: either 0ab226-tools
+    required: true     
+  - name: ENV_NAME
+    displayName: Environment name
+    description: values are tools, dev, test or prod
+    required: true         
+  - name: API_VERSION
+    displayName: Api version
+    description: Api version, either secops.pathfinder.gov.bc.ca/v1alpha1 or security.devops.gov.bc.ca/v1alpha1
+    required: true    
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: egress-internet
+    spec:
+      description: |
+        allow the ${NAMESPACE_PREFIX}-${ENV_NAME} namespace to talk to the internet.
+      source:
+        - - $namespace=${NAMESPACE_PREFIX}-${ENV_NAME}
+      destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: intra-namespace-comms
+    spec:
+      description: |
+        allow the ${NAMESPACE_PREFIX}-${ENV_NAME} namespace to talk to itself
+      source:
+        - - $namespace=${NAMESPACE_PREFIX}-${ENV_NAME}
+      destination:
+        - - $namespace=${NAMESPACE_PREFIX}-${ENV_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: ${API_VERSION}
+    metadata:
+      name: int-cluster-k8s-api-comms
+    spec:
+      description: |
+        allow ${NAMESPACE_PREFIX}-${ENV_NAME} pods to talk to the k8s api
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+      source:
+        - - $namespace=${NAMESPACE_PREFIX}-${ENV_NAME}

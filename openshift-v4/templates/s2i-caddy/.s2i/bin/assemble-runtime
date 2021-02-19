@@ -1,0 +1,2 @@
+#!/bin/sh -e
+echo no assemble-runtime needed

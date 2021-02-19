@@ -1,0 +1,109 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: maintenance-page-dc
+parameters:
+- name: ENV_NAME
+  displayName: Environment name
+  description: The environment name
+  required: true
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: maintenance-page
+    creationTimestamp:
+    labels:
+      app: maintenance-page
+  spec:
+    strategy:
+      type: Rolling
+      rollingParams:
+        updatePeriodSeconds: 1
+        intervalSeconds: 1
+        timeoutSeconds: 600
+        maxUnavailable: 25%
+        maxSurge: 25%
+      resources: {}
+      activeDeadlineSeconds: 21600
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - maintenance-page
+        from:
+          kind: ImageStreamTag
+          namespace: 0ab226-tools
+          name: maintenance-page:prod
+    replicas: 1
+    revisionHistoryLimit: 10
+    test: false
+    selector:
+      app: maintenance-page
+    template:
+      metadata:
+        creationTimestamp:
+        labels:
+          app: maintenance-page
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+      spec:
+        containers:
+        - name: maintenance-page
+          image: " "
+          ports:
+          - containerPort: 2015
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+        schedulerName: default-scheduler
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: maintenance-page
+    creationTimestamp:
+    labels:
+      app: maintenance-page
+  spec:
+    ports:
+    - name: 2015-tcp
+      protocol: TCP
+      port: 2015
+      targetPort: 2015
+    selector:
+      app: maintenance-page
+    type: ClusterIP
+    sessionAffinity: None
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: maintenance-page
+    creationTimestamp:
+    labels:
+      app: maintenance-page
+    annotations:
+      openshift.io/host.generated: 'true'
+  spec:
+    host: maintenance-page-${ENV_NAME}.apps.silver.devops.gov.bc.ca
+    to:
+      kind: Service
+      name: maintenance-page
+      weight: 100
+    port:
+      targetPort: 2015-tcp
+    wildcardPolicy: None

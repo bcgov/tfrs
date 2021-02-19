@@ -1,0 +1,27 @@
+{
+  "@bcgov/generator-bcdk": {
+    "promptValues": {
+      "modules": {
+        "tfrs": {
+          "name": "tfrs",
+          "version": "1.0.0",
+          "path": ".",
+          "environments": {
+            "build": {
+              "namespace": "mem-tfrs-tools"
+            },
+            "dev": {
+              "namespace": "mem-tfrs-dev"
+            },
+            "test": {
+              "namespace": "mem-tfrs-test"
+            },
+            "prod": {
+              "namespace": "mem-tfrs-prod"
+            }
+          }
+        }
+      }
+    }
+  }
+}

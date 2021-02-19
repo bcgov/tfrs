@@ -1,0 +1,29 @@
+{
+  "name": "pipeline",
+  "version": "1.0.0",
+  "description": "This a pipeliene script",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "clean": "node clean.js",
+    "clean-nsps": "node clean-nsps.js",
+    "deploy": "node deploy.js",
+    "deploy-nsps": "node deploy-nsps.js",
+    "deploy-unittest": "node deploy-unittest.js",
+    "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/ocp-sso.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@bcgov/gh-deploy": "^1.1.4",
+    "@bcgov/pipeline-cli": "^1.0.1-0",
+    "axios": "^0.21.1",
+    "lodash": "^4.17.15"
+  }
+}
