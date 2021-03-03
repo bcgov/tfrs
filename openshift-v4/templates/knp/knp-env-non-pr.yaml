@@ -1,0 +1,30 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: tfrs-network-policy
+metadata:
+  name: tfrs-network-policy
+parameters:
+  - name: ENVIRONMENT
+    displayName: null
+    description: such as dev, test or prod
+    required: true  
+objects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-minio-accepts-nagios
+    spec:
+      ## Allow minio to accept communication from nagios
+      podSelector:
+        matchLabels:
+          app: tfrs-minio-${ENVIRONMENT}
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: nagios
+          ports:
+            - protocol: TCP
+              port: 9000                

@@ -29,12 +29,12 @@ module.exports = settings => {
       oc.namespace(phase.namespace);
       
       //remove all custom security policies create for specific pull request
-      const nsps = oc.get("networksecuritypolicies", {
+      const knps = oc.get("networkpolicies", {
         selector: `app=${phase.name}${phase.suffix}`,
         namespace: phase.namespace,
       });   
-      nsps.forEach(nsp => {
-        oc.delete([`networksecuritypolicy/${nsp.metadata.name}`], {
+      knps.forEach(knp => {
+        oc.delete([`networkpolicy/${knp.metadata.name}`], {
             "ignore-not-found": "true",
             wait: "true",
             namespace: phase.namespace,

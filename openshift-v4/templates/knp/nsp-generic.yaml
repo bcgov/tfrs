@@ -1,0 +1,43 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: quickstart-network-security-policy
+metadata:
+  name: quickstart-network-security-policy
+objects:
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: any-to-any
+    spec:
+      description: |
+        allow all pods to communicate
+      source:
+        - - "$namespace=${NAMESPACE_PREFIX}-${ENVIRONMENT}"
+      destination:
+        - - "$namespace=*"
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: any-to-external
+    spec:
+      description: |
+        Allow all pods to talk to external systems
+      source:
+        - - "$namespace=${NAMESPACE_PREFIX}-${ENVIRONMENT}"
+      destination:
+        - - "ext:network=any"
+parameters:
+  - name: NAMESPACE_PREFIX
+    displayName: Namespace Prefix
+    description: |
+      The prefix (a.k.a license plate) of the namespace this policy
+      is being deployed to;
+    required: true
+  - name: ENVIRONMENT
+    displayName: Environment Name
+    description: |
+      The environment (i.e dev/test/prod/tools) this policy is 
+      being deployed to.
+    required: true
