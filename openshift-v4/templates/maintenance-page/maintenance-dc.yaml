@@ -37,7 +37,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: 0ab226-tools
-          name: maintenance-page:latest
+          name: maintenance-page:prod
     replicas: 1
     revisionHistoryLimit: 10
     test: false
