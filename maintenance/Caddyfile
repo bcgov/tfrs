@@ -1,7 +1,0 @@
-0.0.0.0:2015
-
-root * /var/www/html
-
-log stdout
-
-rewrite * /maintenance.html
