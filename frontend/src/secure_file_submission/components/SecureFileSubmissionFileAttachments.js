@@ -30,8 +30,8 @@ const SecureFileSubmissionFileAttachments = props => (
             className="text"
             onClick={() => {
               axios.get(attachment.url, {
-                headers: {
-                  Authorization: null
+                transformRequest: (data, headers) => {
+                  headers.Authorization = null;
                 },
                 responseType: 'blob'
               }).then((response) => {
