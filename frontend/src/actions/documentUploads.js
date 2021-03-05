@@ -286,8 +286,8 @@ const updateDocumentUploadSuccess = response => ({
 const uploadDocument = (url, blob, callback = null) => dispatch => (
   axios.put(url, blob, {
     'content-type': 'multipart/form-data',
-    headers: {
-      Authorization: null
+    transformRequest: (data, headers) => {
+      headers.Authorization = null;
     },
     onUploadProgress: (progressEvent) => {
       if (callback) {
