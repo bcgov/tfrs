@@ -71,6 +71,8 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
+        pullSecret:
+          name: docker-creds                 
         from:
           kind: ImageStreamTag
           name: nginx-runtime:20210115

@@ -71,6 +71,8 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
+        pullSecret:
+          name: docker-creds              
         noCache: true
         env:
         - name: tfrs_release

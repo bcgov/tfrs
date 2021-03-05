@@ -98,6 +98,8 @@ objects:
       type: Git
     strategy:
       dockerStrategy:
+        pullSecret:
+          name: docker-creds                 
         from:
           kind: ImageStreamTag
           name: postgres:${POSTGRES_VERSION}
