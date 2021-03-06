@@ -55,7 +55,7 @@ objects:
         - name: maintenance-page
           image: " "
           ports:
-          - containerPort: 2015
+          - containerPort: 8080
             protocol: TCP
           resources:
             limits:
@@ -81,10 +81,10 @@ objects:
       app: maintenance-page
   spec:
     ports:
-    - name: 2015-tcp
+    - name: 8080-tcp
       protocol: TCP
-      port: 2015
-      targetPort: 2015
+      port: 8080
+      targetPort: 8080
     selector:
       app: maintenance-page
     type: ClusterIP
@@ -105,5 +105,5 @@ objects:
       name: maintenance-page
       weight: 100
     port:
-      targetPort: 2015-tcp
+      targetPort: 8080-tcp
     wildcardPolicy: None

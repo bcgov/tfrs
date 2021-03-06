@@ -8,10 +8,11 @@
   "scripts": {
     "build": "node build.js",
     "clean": "node clean.js",
-    "clean-nsps": "node clean-nsps.js",
+    "clean-knps": "node clean-knps.js",
     "deploy": "node deploy.js",
-    "deploy-nsps": "node deploy-nsps.js",
+    "deploy-knps": "node deploy-knps.js",
     "deploy-unittest": "node deploy-unittest.js",
+    "deploy-db": "node deploy-db.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
   "repository": {

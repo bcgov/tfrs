@@ -15,12 +15,10 @@ module.exports = settings => {
 
   //The deployment of your cool app goes here ▼▼▼
 
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/nsp/nsp-env.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/knp/knp-env-pr.yaml`, {
     'param': {
-      'NAME': phases[phase].name,
-      'ENV_NAME': phases[phase].phase,
-      'SUFFIX': phases[phase].suffix,
-      'API_VERSION': 'security.devops.gov.bc.ca/v1alpha1'
+      'ENVIRONMENT': phases[phase].phase,
+      'SUFFIX': phases[phase].suffix
     }
   }))
   

@@ -37,17 +37,17 @@ objects:
     runPolicy: SerialLatestOnly
     source:
       type: Git
-      contextDir: "/maintenance"
+      contextDir: "openshift-v4/templates/maintenance-page"
       git:
         uri: https://github.com/bcgov/tfrs.git
-        ref: openshift-v4-migration
+        ref: Maintenance-page
     strategy:
-      type: Source
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          namespace: 0ab226-tools
-          name: s2i-caddy:prod
+      dockerStrategy:
+        pullSecret:
+          name: docker-creds  
+        forcePull: true
+        noCache: true
+      type: Docker
     output:
       to:
         kind: ImageStreamTag
