@@ -33,6 +33,13 @@ const OrganizationsTable = (props) => {
     id: 'creditBalance',
     minWidth: 100
   }, {
+    accessor: item => item.organizationBalance.deductions,
+    Cell: row => numeral(row.value).format(NumberFormat.INT),
+    className: 'col-deductions',
+    Header: 'In Reserve',
+    id: 'inreserve',
+    minWidth: 100
+  }, {
     accessor: item => Object.values(ORGANIZATION_STATUSES)
       .find(element => element.id === item.status).description,
     className: 'col-status-display',
