@@ -1,4 +1,4 @@
-.page_schedule, .schedule-summary {
+.page_schedule, smary {
   #transaction-history-header {
     color: $blue;
   }
@@ -459,4 +459,20 @@
   .total, .header {
     font-weight: bold;
   }
+}
+
+.schedule-header {
+  float: left;
+}
+
+.schedule-available-credit-balance {
+  text-align: right;
+
+  @media (max-width: 1000px) {
+    clear: both;
+  }
+}
+
+.schedule-organization-address {
+  clear: both;
 }
