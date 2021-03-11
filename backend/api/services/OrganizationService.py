@@ -54,6 +54,4 @@ class OrganizationService(object):
             if supplemental_report and supplemental_report.summary:
                 deductions += supplemental_report.summary.credits_offset
 
-        print(deductions)
-
         return deductions
