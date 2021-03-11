@@ -173,6 +173,8 @@ objects:
       spec:
         serviceAccountName: ${NAME}${SUFFIX}-${SERVICE_ACCOUNT}
         terminationGracePeriodSeconds: 30
+        imagePullSecrets:
+          - name: docker-creds        
         containers:
         - name: rabbitmq
           lifecycle:
