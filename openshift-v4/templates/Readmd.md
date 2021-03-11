@@ -18,12 +18,12 @@ npm run deploy-db -- --pr= --env=dev
 * Update user and restore the backup to database
 Refer to the last section of openshift-v4/templates/patroni/README.md, remember to verify the Dev database user
 * Add tfrs user and /tfrs vhost to rabbitmq
-Refer to the last section of penshift-v4/templates/rabbitmq
+Refer to the last section of openshift-v4/templates/rabbitmq
 * Deploy PR 
 npm run deploy -- --pr= --env=dev
 
 ### deploy database for the PR on Test or Prod
 * Only need to deploy compiled components, nothing else as all others are already there
 npm run deploy -- --pr= --env=test
-npm run deploy -- --pr= --env=prod
+
 

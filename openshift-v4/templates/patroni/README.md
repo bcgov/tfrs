@@ -62,15 +62,15 @@ Notes, yes, folder name only
 	STORAGE_CLASS=netapp-block-standard \
 	| oc create -f - -n mem-tfrs-test
 
-3. restore
+3. restore - on Dev
 
 login to patroni-master-staging pod:
-    create user "userSRU" with password ''; //password to find in patroni-staging secret
-    ALTER DATABASE tfrs OWNER TO "userSRU";
-    DROP USER usersru; 
+    create user "userUQL" with password ''; //password to find in patroni-staging secret
+    ALTER DATABASE tfrs OWNER TO "userUQL";
+    DROP USER useruql; 
 				
 on backup pod in test env:
-./backup.sh -r patroni-master-staging:5430/tfrs -f /backups/2020-10-30-prod/patroni-master-prod-tfrs_2020-10-30_12-29-48.sql.gz
+./backup.sh -r patroni-master-dev-1713:5432/tfrs -f /backups/patroni-backup/forRecovery/
 the admin command can get from the patroni-staging secret
 
 4. update bacckend dc to connect to staging database

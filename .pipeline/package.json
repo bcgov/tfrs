@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@bcgov/gh-deploy": "^1.1.4",
-    "@bcgov/pipeline-cli": "^1.0.1-0",
+    "@bcgov/pipeline-cli": "^1.0.1",
     "axios": "^0.21.1",
     "lodash": "^4.17.15"
   }
