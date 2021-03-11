@@ -83,6 +83,8 @@ class Organization(Auditable):
 
     @property
     def organization_balance(self):
+        from api.services.OrganizationService import OrganizationService
+
         data = {
             'credit_trade_id': None,
             'validated_credits': 0
@@ -95,6 +97,12 @@ class Organization(Auditable):
         if organization_balance:
             data['credit_trade_id'] = organization_balance.credit_trade_id
             data['validated_credits'] = organization_balance.validated_credits
+
+            deductions = OrganizationService.get_pending_deductions(
+                self
+            )
+
+            data['deductions'] = deductions
 
         return data
 

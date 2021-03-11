@@ -10,6 +10,7 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import history from '../../app/History';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
+import Tooltip from '../../app/components/Tooltip';
 
 const OrganizationDetails = props => (
   <div className="page_organization">
@@ -21,6 +22,22 @@ const OrganizationDetails = props => (
             numeral(props.organization.organizationBalance.validatedCredits)
               .format(NumberFormat.INT)
           }
+          <div className="reserved">
+            (In Reserve: {numeral(props.organization.organizationBalance.deductions)
+              .format(NumberFormat.INT)
+            }){` `}
+            <Tooltip
+              className="info"
+              show
+              title="Reserved credits are the portion of credits in your credit balance that are
+              currently pending the completion of a credit transaction. For example, selling
+              credits to another organization (i.e. Credit Transfer) or being used to offset
+              outstanding debits in a compliance period. Reserved credits cannot be transferred
+              or otherwise used until the pending credit transaction has been completed."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
         </h3>
         }
       </div>
@@ -106,6 +123,7 @@ OrganizationDetails.propTypes = {
       country: PropTypes.string
     }),
     organizationBalance: PropTypes.shape({
+      deductions: PropTypes.number,
       validatedCredits: PropTypes.number
     }),
     statusDisplay: PropTypes.string

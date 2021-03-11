@@ -80,7 +80,11 @@ class CreditTransferVisualRepresentation extends Component {
           <div className="credit-balance">
             Credit Balance:
             {this.props.creditsFrom.organizationBalance &&
-              ` ${numeral(this.props.creditsFrom.organizationBalance.validatedCredits).format(NumberFormat.INT)}`}
+              ` ${numeral(this.props.creditsFrom.organizationBalance.validatedCredits).format(NumberFormat.INT)} `}
+            ({
+              numeral(this.props.creditsFrom.organizationBalance.deductions)
+                .format(NumberFormat.INT)
+            })
           </div>
           }
         </div>
@@ -154,6 +158,7 @@ CreditTransferVisualRepresentation.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number,
     organizationBalance: PropTypes.shape({
+      deductions: PropTypes.number,
       validatedCredits: PropTypes.number
     })
   }),
