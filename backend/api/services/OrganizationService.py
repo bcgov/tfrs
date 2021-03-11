@@ -1,3 +1,4 @@
+import datetime
 from django.db.models import Q, Sum, Count
 
 from api.models.ComplianceReport import ComplianceReport
@@ -55,3 +56,55 @@ class OrganizationService(object):
                 deductions += supplemental_report.summary.credits_offset
 
         return deductions
+
+    @staticmethod
+    def get_max_credit_offset(organization, compliance_year):
+        effective_date_deadline = datetime.date(int(compliance_year), 3, 31)
+
+        credits = CreditTrade.objects.filter(
+            (Q(status__status="Approved") &
+                Q(type__the_type="Sell") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(status__status="Approved") &
+                Q(type__the_type="Buy") &
+                Q(initiator_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Part 3 Award") &
+                Q(status__status="Approved") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Credit Validation") &
+                Q(status__status="Approved") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(compliance_period__description=compliance_year))
+        ).aggregate(total=Sum('number_of_credits'))
+
+        debits = CreditTrade.objects.filter(
+            (Q(status__status__in=[
+                "Submitted", "Recommended", "Not Recommended", "Approved"
+            ]) &
+                Q(type__the_type="Sell") &
+                Q(initiator_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(status__status__in=[
+                "Accepted", "Recommended", "Not Recommended", "Approved"
+            ]) &
+                Q(type__the_type="Buy") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Credit Reduction") &
+                Q(status__status="Approved") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(trade_effective_date__lte=effective_date_deadline))
+        ).aggregate(total=Sum('number_of_credits'))
+
+        total = credits['total'] - debits['total']
+        return total

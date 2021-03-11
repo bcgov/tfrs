@@ -51,6 +51,7 @@ from api.serializers.Organization import OrganizationMinSerializer, \
     OrganizationDisplaySerializer
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
+from api.services.OrganizationService import OrganizationService
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -225,6 +226,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     display_name = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
     credit_transactions = SerializerMethodField()
+    max_credit_offset = SerializerMethodField()
 
     skip_deltas = False
 
@@ -263,7 +265,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         )
 
     def get_total_previous_credit_reductions(self, obj):
-        # Return the total numner of credits for all previous reductions for
+        # Return the total number of credits for all previous reductions for
         # supplemental reports
         previous_transactions = []
         current = obj
@@ -342,6 +344,12 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             current = current.supplements
 
         return deltas
+
+    def get_max_credit_offset(self, obj):
+        return OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description
+        )
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -500,7 +508,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
-                  'credit_transactions']
+                  'credit_transactions', 'max_credit_offset']
 
 
 class ComplianceReportValidator:
