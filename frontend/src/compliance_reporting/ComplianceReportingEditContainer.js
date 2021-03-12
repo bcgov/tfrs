@@ -8,7 +8,10 @@ import { connect } from 'react-redux';
 import { toastr as reduxToastr } from 'react-redux-toastr';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import * as NumberFormat from '../constants/numeralFormats';
 import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import { complianceReporting } from '../actions/complianceReporting';
@@ -33,6 +36,7 @@ import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
+import Tooltip from '../app/components/Tooltip';
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -553,7 +557,7 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     return ([
-      <h2 key="main-header">
+      <h2 className="schedule-header" key="main-header">
         {this.props.complianceReporting.item.organization.name}
         {` -- `}
         {typeof this.props.complianceReporting.item.type === 'string' && this.props.complianceReporting.item.type}
@@ -562,7 +566,21 @@ class ComplianceReportingEditContainer extends Component {
         {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
         {this.props.complianceReporting.item.compliancePeriod.description}
       </h2>,
-      <p key="organization-address">
+      <h3 className="schedule-available-credit-balance" key="available-credit-balance">
+      Available Credit Balance at March 31, {this.props.complianceReporting.item.compliancePeriod.description}:
+        {` ${numeral(this.props.complianceReporting.item.maxCreditOffset).format(NumberFormat.INT)} `}
+        <Tooltip
+          className="info"
+          show
+          title="The available credit balance is the amount of credits that can be used to
+          offset outstanding debits in this compliance period. Available credits are credits
+          that were validated, issued or acquired on or before the March 31 deadline of the
+          calendar year following this compliance period."
+        >
+          <FontAwesomeIcon icon="info-circle" />
+        </Tooltip>
+      </h3>,
+      <p className="schedule-organization-address" key="organization-address">
         {organizationAddress &&
         AddressBuilder({
           address_line_1: organizationAddress.addressLine_1,
@@ -799,6 +817,10 @@ ComplianceReportingEditContainer.propTypes = {
       hasSnapshot: PropTypes.bool,
       id: PropTypes.number,
       isSupplemental: PropTypes.bool,
+      maxCreditOffset: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
       organization: PropTypes.shape(),
       readOnly: PropTypes.bool,
       status: PropTypes.shape(),

@@ -721,16 +721,20 @@ class ScheduleSummaryContainer extends Component {
     let maxValue = '';
 
     if (netTotal < 0) {
-      const { organizationBalance } = this.props.loggedInUser.organization;
+      const {
+        maxCreditOffset,
+        totalPreviousCreditReduction
+      } = this.props.complianceReport;
+
       maxValue = Math.round(netTotal * -1);
 
-      if (organizationBalance.validatedCredits < maxValue) {
-        maxValue = organizationBalance.validatedCredits;
+      if (maxCreditOffset < maxValue) {
+        maxValue = maxCreditOffset;
       }
 
       let previousReductionTotal = 0;
-      if (this.props.complianceReport.totalPreviousCreditReduction) {
-        previousReductionTotal = this.props.complianceReport.totalPreviousCreditReduction;
+      if (totalPreviousCreditReduction) {
+        previousReductionTotal = totalPreviousCreditReduction;
       }
 
       maxValue += previousReductionTotal;
@@ -1137,6 +1141,10 @@ ScheduleSummaryContainer.propTypes = {
         PropTypes.string
       ])
     }),
+    maxCreditOffset: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
     totalPreviousCreditReduction: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string
