@@ -1030,6 +1030,7 @@ class ComplianceReportUpdateSerializer(
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
+    max_credit_offset = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1050,6 +1051,12 @@ class ComplianceReportUpdateSerializer(
         )
         return ComplianceReportPermissions.get_available_actions(
             obj, relationship
+        )
+
+    def get_max_credit_offset(self, obj):
+        return OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description
         )
 
     def update(self, instance, validated_data):
@@ -1250,6 +1257,18 @@ class ComplianceReportUpdateSerializer(
         if 'summary' in validated_data and not self.strip_summary:
             summary_data = validated_data.pop('summary')
 
+            offset = summary_data.get('credits_offset')
+
+            max_credit_offset = OrganizationService.get_max_credit_offset(
+                instance.organization,
+                instance.compliance_period.description
+            )
+
+            if offset > max_credit_offset:
+                raise (serializers.ValidationError(
+                    'Not enough credits!'
+                ))
+
             if instance.summary:
                 ScheduleSummary.objects.filter(id=instance.summary.id).delete()
 
@@ -1301,10 +1320,11 @@ class ComplianceReportUpdateSerializer(
         fields = ('status', 'type', 'compliance_period', 'organization',
                   'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
                   'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
-                  'display_name', 'supplemental_note', 'is_supplemental')
+                  'display_name', 'supplemental_note', 'is_supplemental',
+                  'max_credit_offset')
         read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
                             'organization', 'actions', 'actor', 'display_name',
-                            'is_supplemental')
+                            'is_supplemental', 'max_credit_offset')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
