@@ -30,11 +30,6 @@ class OrganizationService(object):
         if pending_trades['total_credits'] is not None:
             deductions += pending_trades['total_credits']
 
-        # Fetch compliance reports
-        # The initial call only fetches all reports that ARE NOT supplemental
-        # reports. As we're looping that's when we check if there are
-        # supplemental reports by calling group_id (group_id will just return
-        # the same id if it doesn't have any supplemental report)
         compliance_report = ComplianceReport.objects.annotate(
             Count('supplements')
         ).filter(
