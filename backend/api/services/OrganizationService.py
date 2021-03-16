@@ -108,10 +108,10 @@ class OrganizationService(object):
         ).aggregate(total=Sum('number_of_credits'))
 
         total = 0
-        if credits:
+        if credits and credits.get('total') is not None:
             total = credits.get('total')
 
-        if debits:
+        if debits and debits.get('total') is not None:
             total -= debits.get('total')
 
         pending_deductions = OrganizationService.get_pending_deductions(
