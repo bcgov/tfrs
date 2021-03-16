@@ -107,7 +107,12 @@ class OrganizationService(object):
                 Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
 
-        total = credits['total'] - debits['total']
+        total = 0
+        if credits:
+            total = credits.get('total')
+
+        if debits:
+            total -= debits.get('total')
 
         pending_deductions = OrganizationService.get_pending_deductions(
             organization,

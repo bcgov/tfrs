@@ -1267,15 +1267,15 @@ class ComplianceReportUpdateSerializer(
         if 'summary' in validated_data and not self.strip_summary:
             summary_data = validated_data.pop('summary')
 
-            max_credit_offset = OrganizationService.get_max_credit_offset(
-                instance.organization,
-                instance.compliance_period.description
-            )
+            # max_credit_offset = OrganizationService.get_max_credit_offset(
+            #     instance.organization,
+            #     instance.compliance_period.description
+            # )
 
-            if max_credit_offset < 0:
-                raise (serializers.ValidationError(
-                    'Not enough credits from the balance. Please adjust the credit offset.'
-                ))
+            # if max_credit_offset < 0:
+            #     raise (serializers.ValidationError(
+            #         'Not enough credits from the balance. Please adjust the credit offset.'
+            #     ))
 
             if instance.summary:
                 ScheduleSummary.objects.filter(id=instance.summary.id).delete()
