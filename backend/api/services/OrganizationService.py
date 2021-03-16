@@ -121,7 +121,4 @@ class OrganizationService(object):
 
         total -= pending_deductions
 
-        if total < 0:
-            total = 0
-
         return total

@@ -346,10 +346,15 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         return deltas
 
     def get_max_credit_offset(self, obj):
-        return OrganizationService.get_max_credit_offset(
+        max_credit_offset = OrganizationService.get_max_credit_offset(
             obj.organization,
             obj.compliance_period.description
         )
+
+        if max_credit_offset < 0:
+            max_credit_offset = 0
+
+        return max_credit_offset
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -1054,10 +1059,15 @@ class ComplianceReportUpdateSerializer(
         )
 
     def get_max_credit_offset(self, obj):
-        return OrganizationService.get_max_credit_offset(
+        max_credit_offset = OrganizationService.get_max_credit_offset(
             obj.organization,
             obj.compliance_period.description
         )
+
+        if max_credit_offset < 0:
+            max_credit_offset = 0
+
+        return max_credit_offset
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
@@ -1257,16 +1267,14 @@ class ComplianceReportUpdateSerializer(
         if 'summary' in validated_data and not self.strip_summary:
             summary_data = validated_data.pop('summary')
 
-            offset = summary_data.get('credits_offset')
-
             max_credit_offset = OrganizationService.get_max_credit_offset(
                 instance.organization,
                 instance.compliance_period.description
             )
 
-            if offset > max_credit_offset:
+            if max_credit_offset < 0:
                 raise (serializers.ValidationError(
-                    'Not enough credits!'
+                    'Not enough credits from the balance. Please adjust the credit offset.'
                 ))
 
             if instance.summary:
