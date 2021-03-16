@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import numeral from 'numeral';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import { getUpdatedLoggedInUser } from '../actions/userActions';
 import * as NumberFormat from '../constants/numeralFormats';
 import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
@@ -225,7 +226,8 @@ class ComplianceReportingEditContainer extends Component {
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
-        reduxToastr.error('Error saving');
+        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving';
+        reduxToastr.error(errorMessage);
       } else {
         if (this.status.fuelSupplierStatus) {
           toastr.complianceReporting(this.status.fuelSupplierStatus);
@@ -352,6 +354,10 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.match.params.id });
+
+    setTimeout(() => {
+      this.props.getUpdatedLoggedInUser();
+    }, 2000);
   }
 
   _handleCreateSupplemental (event, compliancePeriodDescription) {
@@ -367,6 +373,10 @@ class ComplianceReportingEditContainer extends Component {
       compliancePeriod: compliancePeriodDescription,
       supplements: Number(this.props.match.params.id)
     });
+
+    setTimeout(() => {
+      this.props.getUpdatedLoggedInUser();
+    }, 2000);
   }
 
   _addToFields (value) {
@@ -440,6 +450,10 @@ class ComplianceReportingEditContainer extends Component {
     if (data.length > 0) {
       this.props.addSigningAuthorityConfirmation(data);
     }
+
+    setTimeout(() => {
+      this.props.getUpdatedLoggedInUser();
+    }, 2000);
   }
 
   _handleRecomputeRequest () {
@@ -567,7 +581,10 @@ class ComplianceReportingEditContainer extends Component {
         {this.props.complianceReporting.item.compliancePeriod.description}
       </h2>,
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
-      Available Credit Balance at March 31, {this.props.complianceReporting.item.compliancePeriod.description}:
+      Available Credit Balance at March 31,
+        {` `}
+        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
+        {this.props.complianceReporting.item.compliancePeriod.description}:
         {` ${numeral(this.props.complianceReporting.item.maxCreditOffset).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
@@ -801,6 +818,7 @@ ComplianceReportingEditContainer.defaultProps = {
 ComplianceReportingEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
+    errorMessage: PropTypes.arrayOf(PropTypes.string),
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
     isRemoving: PropTypes.bool,
@@ -848,6 +866,7 @@ ComplianceReportingEditContainer.propTypes = {
   getComplianceReports: PropTypes.func.isRequired,
   getSnapshotRequest: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
@@ -888,7 +907,8 @@ const
     getSnapshotRequest: complianceReporting.getSnapshot,
     recomputeTotals: complianceReporting.recompute,
     updateComplianceReport: complianceReporting.update,
-    validateComplianceReport: complianceReporting.validate
+    validateComplianceReport: complianceReporting.validate,
+    getUpdatedLoggedInUser
   };
 
 const
