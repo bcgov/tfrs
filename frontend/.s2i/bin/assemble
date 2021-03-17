@@ -75,9 +75,7 @@ fi
 echo "---> Building your Node application from source"
 
 # -d means --loglevel info
-# npm install -d
-npm cache clean --force
-npm install --unsafe-perm
+npm install -d
 
 # fix vulnerabilities
 # npm audit fix
