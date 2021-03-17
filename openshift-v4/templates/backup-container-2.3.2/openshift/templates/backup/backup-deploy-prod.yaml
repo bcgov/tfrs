@@ -1,0 +1,334 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${NAME}-deployment-template
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+      labels:
+        name: ${NAME}
+        app: backup-container
+        role: backup-container
+        env: ${TAG_NAME}
+    type: Opaque
+    stringData:
+      webhook-url: ${WEBHOOK_URL}
+      webhook-url-host: ${WEBHOOK_URL_HOST}
+
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${FTP_SECRET_KEY}
+      labels:
+        name: ${NAME}
+        app: backup-container
+        role: backup-container
+        env: ${TAG_NAME}
+    type: Opaque
+    stringData:
+      ftp-url: ${FTP_URL}
+      ftp-user: ${FTP_USER}
+      ftp-password: ${FTP_PASSWORD}
+      ftp-url-host: ${FTP_URL_HOST}
+
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+      labels:
+        name: ${NAME}
+        app: backup-container
+        role: backup-container
+        env: ${TAG_NAME}
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}
+            from:
+              kind: ImageStreamTag
+              namespace: ${IMAGE_NAMESPACE}
+              name: ${SOURCE_IMAGE_NAME}:${TAG_NAME}
+      replicas: 1
+      selector:
+        name: ${NAME}
+      template:
+        metadata:
+          name: ${NAME}
+          labels:
+            name: ${NAME}
+            app: backup-container
+            role: backup-container
+            env: ${TAG_NAME}
+        spec:
+          volumes:
+            - name: ${BACKUP_VOLUME_NAME}
+              persistentVolumeClaim:
+                claimName: ${BACKUP_VOLUME_NAME}
+            - name: ${VERIFICATION_VOLUME_NAME}
+              persistentVolumeClaim:
+                claimName: ${VERIFICATION_VOLUME_NAME}
+            - name: ${NAME}-config-volume
+              configMap:
+                name: ${CONFIG_MAP_NAME}
+                items:
+                  - key: ${CONFIG_FILE_NAME}
+                    path: ${CONFIG_FILE_NAME}
+            - name: minio-data
+              persistentVolumeClaim:
+                claimName: ${MINIO_DATA_VOLUME_NAME}
+          containers:
+            - name: ${NAME}
+              image: ""
+              ports: []
+              env:
+                - name: BACKUP_STRATEGY
+                  value: ${BACKUP_STRATEGY}
+                - name: BACKUP_DIR
+                  value: ${BACKUP_DIR}
+                - name: NUM_BACKUPS
+                  value: ${NUM_BACKUPS}
+                - name: DAILY_BACKUPS
+                  value: ${DAILY_BACKUPS}
+                - name: WEEKLY_BACKUPS
+                  value: ${WEEKLY_BACKUPS}
+                - name: MONTHLY_BACKUPS
+                  value: ${MONTHLY_BACKUPS}
+                - name: BACKUP_PERIOD
+                  value: ${BACKUP_PERIOD}
+                - name: MONGODB_AUTHENTICATION_DATABASE
+                  value: ${MONGODB_AUTHENTICATION_DATABASE}
+                - name: TABLE_SCHEMA
+                  value: ${TABLE_SCHEMA}
+                - name: FTP_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${FTP_SECRET_KEY}
+                      key: ftp-url
+                - name: FTP_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${FTP_SECRET_KEY}
+                      key: ftp-user
+                - name: FTP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${FTP_SECRET_KEY}
+                      key: ftp-password
+                - name: WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}
+                      key: webhook-url
+                - name: ENVIRONMENT_FRIENDLY_NAME
+                  value: ${ENVIRONMENT_FRIENDLY_NAME}
+                - name: ENVIRONMENT_NAME
+                  value: ${ENVIRONMENT_NAME}
+                - name: PATRONI_MASTER_PROD_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: patroni-prod
+                      key: app-db-username
+                - name: PATRONI_MASTER_PROD_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: patroni-prod
+                      key: app-db-password
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+              volumeMounts:
+                - name: ${BACKUP_VOLUME_NAME}
+                  mountPath: /backups
+                - name: ${VERIFICATION_VOLUME_NAME}
+                  mountPath: ${VERIFICATION_VOLUME_MOUNT_PATH}
+                - name: ${NAME}-config-volume
+                  mountPath: ${CONFIG_MOUNT_PATH}${CONFIG_FILE_NAME}
+                  subPath: ${CONFIG_FILE_NAME}
+                - name: minio-data
+                  mountPath: /minio-data
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all of the resources.  Use 'backup-{database name}' depending on your database provider
+    required: true
+    value: backup-postgres
+  - name: SOURCE_IMAGE_NAME
+    displayName: Source Image Name
+    description: The name of the image to use for this resource.  Use 'backup-{database name}' depending on your database provider
+    required: true
+    value: backup-postgres
+  - name: IMAGE_NAMESPACE
+    displayName: Image Namespace
+    description: The namespace of the OpenShift project containing the imagestream for the application.
+    required: true
+    value: backup-container
+  - name: TAG_NAME
+    displayName: Environment TAG name
+    description: The TAG name for this environment, e.g., dev, test, prod
+    required: true
+    value: dev
+  - name: MONGODB_AUTHENTICATION_DATABASE
+    displayName: MongoDB Authentication Database
+    description: This is only required if you are backing up mongo database with a separate authentication database.
+    required: false
+    value: ""
+  - name: MSSQL_SA_PASSWORD
+    displayName: MSSQL SA Password
+    description: The database password to use for the local backup database.
+    required: false
+  - name: TABLE_SCHEMA
+    displayName: Table Schema
+    description: The table schema for your database.  Used for Postgres backups.
+    required: true
+    value: public
+  - name: BACKUP_STRATEGY
+    displayName: Backup Strategy
+    description: The strategy to use for backups; for example daily, or rolling.
+    required: true
+    value: rolling
+  - name: FTP_SECRET_KEY
+    displayName: FTP Secret Key
+    description: The FTP secret key is used to wire up the credentials associated to the FTP.
+    required: false
+    value: ftp-secret
+  - name: FTP_URL
+    displayName: FTP Server URL
+    description: The URL of the backup FTP server
+    required: false
+    value: ""
+  - name: FTP_URL_HOST
+    displayName: Ftp URL Hostname
+    description: Ftp URL Hostname.  The backup-deploy.overrides.sh will parse this from the supplied FTP_URL, and fetch it from a secret for updates.
+    required: false
+    value:
+  - name: FTP_USER
+    displayName: FTP user name
+    description: FTP user name
+    required: false
+    value: ""
+  - name: FTP_PASSWORD
+    displayName: FTP password
+    description: FTP password
+    required: false
+    value: ""
+  - name: WEBHOOK_URL
+    displayName: Webhook URL
+    description: The URL of the webhook to use for notifications.  If not specified, the webhook integration feature is disabled.
+    required: false
+    value: ""
+  - name: WEBHOOK_URL_HOST
+    displayName: Webhook URL Hostname
+    description: Webhook URL Hostname.  The backup-deploy.overrides.sh will parse this from the supplied WEBHOOK_URL, and fetch it from a secret for updates.
+    required: false
+    value:
+  - name: ENVIRONMENT_FRIENDLY_NAME
+    displayName: Friendly Environment Name
+    description: The human readable name of the environment.  This variable is used by the webhook integration to identify the environment in which the backup notifications originate.
+    required: false
+    value: ""
+  - name: ENVIRONMENT_NAME
+    displayName: Environment Name (Environment Id)
+    description: The name or Id of the environment.  This variable is used by the webhook integration and by the NetworkSecurityPolicies to identify the environment in which the backup notifications originate.
+    required: true
+    value: ""
+  - name: BACKUP_DIR
+    displayName: The root backup directory
+    description: The name of the root backup directory.  The backup volume will be mounted to this directory.
+    required: true
+    value: /backups/patroni-backup/
+  - name: NUM_BACKUPS
+    displayName: The number of backup files to be retained
+    description: Used for backward compatibility only.  Ignored when using the recommended `rolling` backup strategy.  The number of backup files to be retained.  Used for the `daily` backup strategy.
+    required: false
+    value: ""
+  - name: DAILY_BACKUPS
+    displayName: Number of Daily Backups to Retain
+    description: The number of daily backup files to be retained.  Used for the `rolling` backup strategy.
+    required: false
+    value: ""
+  - name: WEEKLY_BACKUPS
+    displayName: Number of Weekly Backups to Retain
+    description: The number of weekly backup files to be retained.  Used for the `rolling` backup strategy.
+    required: false
+    value: ""
+  - name: MONTHLY_BACKUPS
+    displayName: Number of Monthly Backups to Retain
+    description: The number of monthly backup files to be retained.  Used for the `rolling` backup strategy.
+    required: false
+    value: ""
+  - name: BACKUP_PERIOD
+    displayName: Period (d,m,s) between backups in a format used by the sleep command
+    description: Used for backward compatibility only.  Ignored when using the recommended `backup.conf` and cron backup strategy.  Period (d,m,s) between backups in a format used by the sleep command
+    required: false
+    value: ""
+  - name: CONFIG_FILE_NAME
+    displayName: Config File Name
+    description: The name of the configuration file.
+    required: true
+    value: backup.conf
+  - name: CONFIG_MAP_NAME
+    displayName: Config Map Name
+    description: The name of the configuration map.
+    required: true
+    value: backup-conf
+  - name: CONFIG_MOUNT_PATH
+    displayName: Config Mount Path
+    description: The path to use to mount the config file.
+    required: true
+    value: /
+  - name: BACKUP_VOLUME_NAME
+    displayName: Backup Volume Name
+    description: The name of the persistent volume used to store the backups.
+    required: true
+    value: backup
+  - name: VERIFICATION_VOLUME_NAME
+    displayName: Verification Volume Name
+    description: The name for the verification volume, used for restoring and verifying backups.
+    required: false
+    value: backup-verification
+  - name: VERIFICATION_VOLUME_MOUNT_PATH
+    displayName: Verification Volume Mount Path
+    description: The path on which to mount the verification volume.  This is used by the database server to contain the database configuration and data files. For Mongo, please use /var/lib/mongodb/data . For MSSQL, please use /var/opt/mssql/data. For MariaDB, please use /var/lib/mysql/data
+    required: true
+    value: /var/lib/pgsql/data
+  - name: CPU_REQUEST
+    displayName: Resources CPU Request
+    description: The resources CPU request (in cores) for this build.
+    required: true
+    value: 100m
+  - name: CPU_LIMIT
+    displayName: Resources CPU Limit
+    description: The resources CPU limit (in cores) for this build.
+    required: true
+    value: 200m
+  - name: MEMORY_REQUEST
+    displayName: Resources Memory Request
+    description: The resources Memory request (in Mi, Gi, etc) for this build.
+    required: true
+    value: 100Mi
+  - name: MEMORY_LIMIT
+    displayName: Resources Memory Limit
+    description: The resources Memory limit (in Mi, Gi, etc) for this build.
+    required: true
+    value: 200Mi
+  - name: MINIO_DATA_VOLUME_NAME
+    displayName: Minio data volume name
+    description: Minio pvc claim name
+    required: true
+    value: ""
