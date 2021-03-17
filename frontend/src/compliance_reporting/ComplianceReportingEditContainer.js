@@ -583,8 +583,8 @@ class ComplianceReportingEditContainer extends Component {
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
       Available Credit Balance at March 31,
         {` `}
-        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
-        {this.props.complianceReporting.item.compliancePeriod.description}:
+        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && (parseInt(this.props.complianceReporting.item.compliancePeriod, 10) + 1)}
+        {parseInt(this.props.complianceReporting.item.compliancePeriod.description, 10) + 1}:
         {` ${numeral(this.props.complianceReporting.item.maxCreditOffset).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"

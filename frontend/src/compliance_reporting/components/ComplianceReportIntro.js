@@ -32,7 +32,7 @@ const ComplianceReportIntro = (props) => {
         which they refer.
         </p>
         <p>
-        Payment of penalties must be sent to the Ministry of Energy, Mines and Petroleum Resources
+        Payment of penalties must be sent to the Ministry of Energy, Mines and Low Carbon Innovation
         at the same time as this report is submitted.
         </p>
         <p>
