@@ -93,7 +93,7 @@ sonar-runner/.settings/
 minio.env
 
 # package-lock
-package-lock.json
+# package-lock.json
 supervisord.pid
 celerybeat.pid
 
