@@ -74,6 +74,10 @@ fi
 
 echo "---> Building your Node application from source"
 
+# pull node packages from artifactory
+npm config set registry https://artifacts.developer.gov.bc.ca/artifactory/api/npm/npm-remote/
+curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD https://artifacts.developer.gov.bc.ca/artifactory/api/npm/auth >> ~/.npmrc
+
 # -d means --loglevel info
 npm install -d
 
