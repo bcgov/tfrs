@@ -115,7 +115,7 @@ class ScheduleSummaryPart3 {
         ...numericInput,
         attributes: {
           addCommas: true,
-          additionalTooltip: 'The value entered here cannot be more than your organization\'s credit balance or the net debit balance in Line 25.',
+          additionalTooltip: 'The value entered here cannot be more than your organization\'s available credit balance for this compliance period or the net debit balance in Line 25.',
           dataNumberToFixed: 0,
           maxLength: '20',
           placement: 'right',

@@ -589,10 +589,12 @@ class ComplianceReportingEditContainer extends Component {
         <Tooltip
           className="info"
           show
-          title="The available credit balance is the amount of credits that can be used to
-          offset outstanding debits in this compliance period. Available credits are credits
-          that were validated, issued or acquired on or before the March 31 deadline of the
-          calendar year following this compliance period."
+          title="The available credit balance is the amount of credits in your credit balance
+          that can be used to offset outstanding debits in this compliance period. Available
+          credits are credits that were validated, issued or acquired on or before the March
+          31 deadline of the calendar year following this compliance period. Credits that are
+          in reserve (i.e. pending a credit transaction) are not included in the available
+          credit balance."
         >
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>

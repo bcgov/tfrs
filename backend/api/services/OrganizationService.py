@@ -14,7 +14,7 @@ class OrganizationService(object):
         deductions = 0
         pending_trades = CreditTrade.objects.filter(
             (Q(status__status__in=[
-                "Submitted", "Recommended", "Not Recommended"
+                "Submitted", "Accepted", "Recommended", "Not Recommended"
             ]) &
                 Q(type__the_type="Sell") &
                 Q(initiator_id=organization.id) &

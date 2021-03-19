@@ -30,7 +30,7 @@ const SettingsDetails = props => (
           for various options by the system.
         </p>
         <p>
-          Simply use the checkboxes to select which notifications you would like to receive.
+          Simply use the checkboxes to select which notifications you would like to receive and then click the Save button to save your preferences.
         </p>
       </div>
       {(props.subscriptions.isFetching || !props.subscriptions.success) &&
