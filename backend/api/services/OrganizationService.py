@@ -64,7 +64,12 @@ class OrganizationService(object):
 
     @staticmethod
     def get_max_credit_offset(organization, compliance_year):
-        effective_date_deadline = datetime.date(int(compliance_year) + 1, 3, 31)
+        effective_date_deadline = datetime.date(
+            int(compliance_year) + 1, 3, 31
+        )
+        compliance_period_effective_date = datetime.date(
+            int(compliance_year), 1, 1
+        )
 
         credits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
@@ -86,7 +91,7 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(compliance_period__description=compliance_year))
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
 
         debits = CreditTrade.objects.filter(

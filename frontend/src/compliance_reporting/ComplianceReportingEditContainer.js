@@ -539,6 +539,7 @@ class ComplianceReportingEditContainer extends Component {
     const TabComponent = this.tabComponent;
 
     const { tab, id } = this.props.match.params;
+    const { item } = this.props.complianceReporting;
 
     if (!this.state.getCalled) {
       return (<Loading />);
@@ -553,15 +554,15 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     let period = null;
-    if (typeof (this.props.complianceReporting.item.compliancePeriod) === 'string') {
-      period = this.props.complianceReporting.item.compliancePeriod;
+    if (typeof (item.compliancePeriod) === 'string') {
+      period = item.compliancePeriod;
     } else {
-      period = this.props.complianceReporting.item.compliancePeriod.description;
+      period = item.compliancePeriod.description;
     }
 
     let organizationAddress = null;
 
-    if (this.props.complianceReporting.item.hasSnapshot &&
+    if (item.hasSnapshot &&
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
       ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
@@ -572,20 +573,22 @@ class ComplianceReportingEditContainer extends Component {
 
     return ([
       <h2 className="schedule-header" key="main-header">
-        {this.props.complianceReporting.item.organization.name}
+        {item.organization.name}
         {` -- `}
-        {typeof this.props.complianceReporting.item.type === 'string' && this.props.complianceReporting.item.type}
-        {this.props.complianceReporting.item.type.theType}
+        {typeof item.type === 'string' && item.type}
+        {item.type.theType}
         {` for `}
-        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
-        {this.props.complianceReporting.item.compliancePeriod.description}
+        {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
+        {item.compliancePeriod.description}
       </h2>,
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
       Available Credit Balance at March 31,
         {` `}
-        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && (parseInt(this.props.complianceReporting.item.compliancePeriod, 10) + 1)}
-        {parseInt(this.props.complianceReporting.item.compliancePeriod.description, 10) + 1}:
-        {` ${numeral(this.props.complianceReporting.item.maxCreditOffset).format(NumberFormat.INT)} `}
+        {typeof item.compliancePeriod === 'string' && (parseInt(item.compliancePeriod, 10) + 1)}
+        {item.compliancePeriod && item.compliancePeriod.description && (
+          parseInt(item.compliancePeriod.description, 10) + 1
+        )}:
+        {` ${numeral(item.maxCreditOffset).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
           show
@@ -616,7 +619,7 @@ class ComplianceReportingEditContainer extends Component {
         compliancePeriod={period}
         complianceReport={this.props.complianceReporting.item}
         edit={this.edit}
-        hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
+        hasSnapshot={item.hasSnapshot}
         id={id}
         key="nav"
         loggedInUser={this.props.loggedInUser}
@@ -627,7 +630,7 @@ class ComplianceReportingEditContainer extends Component {
         key="tab-component"
         loggedInUser={this.props.loggedInUser}
         period={period}
-        readOnly={this.props.complianceReporting.item.readOnly || !this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)}
+        readOnly={item.readOnly || !this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)}
         recomputedTotals={this.props.complianceReporting.recomputeResult}
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
@@ -642,8 +645,8 @@ class ComplianceReportingEditContainer extends Component {
       />,
       <ScheduleButtons
         id={this.props.match.params.id}
-        actions={this.props.complianceReporting.item.actions}
-        actor={this.props.complianceReporting.item.actor}
+        actions={item.actions}
+        actor={item.actor}
         compliancePeriod={period}
         complianceReport={this.props.complianceReporting.item}
         complianceReports={{
