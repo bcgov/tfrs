@@ -74,7 +74,9 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: artifacts-tfrs-artifactory-service-account-wofwpt
-                key: password       
+                key: password
+        forcePull: true
+        noCache: true
     output:
       to:
         kind: ImageStreamTag
