@@ -84,7 +84,13 @@ objects:
       to:
         kind: ImageStreamTag
         name: ${NAME}-backend:${VERSION}
-    resources: {}
+    resources:
+      limits:
+        cpu: '1'
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
     postCommit: {}
     nodeSelector: 
   status:

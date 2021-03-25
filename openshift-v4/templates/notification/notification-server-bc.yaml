@@ -60,6 +60,10 @@ objects:
         from:
           kind: ImageStreamTag
           name: nodejs:12-1-45
+        pullSecret:
+          name: tfrs-image-pull-secret
+        forcePull: true
+        noCache: true   
         env:
           - name: ARTIFACTORY_USER
             valueFrom:
@@ -71,8 +75,6 @@ objects:
               secretKeyRef:
                 name: artifacts-tfrs-artifactory-service-account-wofwpt
                 key: password  
-        forcePull: true
-        noCache: true                        
     output:
       to:
         kind: ImageStreamTag
