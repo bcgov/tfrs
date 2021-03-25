@@ -36,6 +36,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
+  
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc.yaml`, {
     'param':{
       'NAME': phases[phase].name,
