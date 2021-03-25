@@ -71,12 +71,12 @@ objects:
           - name: ARTIFACTORY_USER
             valueFrom:
               secretKeyRef:
-                name: artifacts-zeva-artifactory-service-account-xgchey
+                name: artifacts-tfrs-artifactory-service-account-wofwpt
                 key: username
           - name: ARTIFACTORY_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: artifacts-zeva-artifactory-service-account-xgchey
+                name: artifacts-tfrs-artifactory-service-account-wofwpt
                 key: password
         forcePull: true
         noCache: true
