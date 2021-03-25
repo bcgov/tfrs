@@ -109,7 +109,7 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(trade_effective_date__lte=effective_date_deadline))
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
 
         total = 0
