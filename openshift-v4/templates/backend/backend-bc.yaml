@@ -68,7 +68,18 @@ objects:
           namespace: openshift
           name: python:3.6
         env:
-        - name: PIP_INDEX_URL
+          - name: ARTIFACTORY_USER
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-zeva-artifactory-service-account-xgchey
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-zeva-artifactory-service-account-xgchey
+                key: password
+        forcePull: true
+        noCache: true
     output:
       to:
         kind: ImageStreamTag
