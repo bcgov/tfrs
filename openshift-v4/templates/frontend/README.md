@@ -7,6 +7,12 @@ frontend-dc-others.yaml create client service, route and configmap(to be mounted
 
 ### Before triggering pipeline
 
+oc -n 0ab226-tools create secret docker-registry tfrs-image-pull-secret \
+    --docker-server=registry.redhat.io \
+    --docker-username=<RedHat Registry Service Account user>\
+    --docker-password=<password> \
+    --docker-email=<email>
+
 oc tag e52f12-tools/nodejs:12-1-45 0ab226-tools/nodejs:12-1-45
 Make sure nginx-runtime image has been built
 
