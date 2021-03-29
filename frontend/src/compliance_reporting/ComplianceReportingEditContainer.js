@@ -582,22 +582,21 @@ class ComplianceReportingEditContainer extends Component {
         {item.compliancePeriod.description}
       </h2>,
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
-      Available Credit Balance at March 31,
-        {` `}
-        {typeof item.compliancePeriod === 'string' && (parseInt(item.compliancePeriod, 10) + 1)}
-        {item.compliancePeriod && item.compliancePeriod.description && (
-          parseInt(item.compliancePeriod.description, 10) + 1
-        )}:
+      Available Credit Balance for this compliance period:
         {` ${numeral(item.maxCreditOffset).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
+          placement="bottom"
           show
-          title="The available credit balance is the amount of credits in your credit balance
-          that can be used to offset outstanding debits in this compliance period. Available
-          credits are credits that were validated, issued or acquired on or before the March
-          31 deadline of the calendar year following this compliance period. Credits that are
-          in reserve (i.e. pending a credit transaction) are not included in the available
-          credit balance."
+          title="The Available Credit Balance is the amount of credits in your credit balance
+          that can be used to offset outstanding debits in the compliance period for which this
+          report relates. Available credits include: (1) validated credits that were generated
+          from the supply of Part 3 fuel in this compliance period or in previous compliance
+          periods; and (2) credits issued under Part 3 Agreements or acquired through Credit
+          Transfers on or before the March 31 deadline of the calendar year following the
+          compliance period for which this report relates. Credits that are In Reserve (i.e.
+            pending a credit transaction) are not considered available and are therefore not
+            included in the Available Credit Balance."
         >
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>
@@ -751,7 +750,7 @@ class ComplianceReportingEditContainer extends Component {
           </p>
           <p>
             Please be advised that payment of penalties must be submitted to the
-            Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
+            Ministry of Energy, Mines and Low Carbon Innovation; cheques or money orders
             are to be made payable to the Minister of Finance.
           </p>
         </div>
