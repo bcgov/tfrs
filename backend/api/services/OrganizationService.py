@@ -124,13 +124,16 @@ class OrganizationService(object):
             ignore_pending_supplemental=False
         )
 
-        total -= pending_deductions
-
         current_balance = organization.organization_balance.get(
             'validated_credits', 0
         )
 
         if current_balance < total:
             total = current_balance
+
+        total -= pending_deductions
+
+        if total < 0:
+            total = 0
 
         return total
