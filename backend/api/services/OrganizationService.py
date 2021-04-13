@@ -33,8 +33,8 @@ class OrganizationService(object):
         compliance_report = ComplianceReport.objects.annotate(
             Count('supplements')
         ).filter(
-                supplements__count=0,
-                organization_id=organization.id
+            supplements__count=0,
+            organization_id=organization.id
         ).filter(
             ~Q(status__fuel_supplier_status__status__in=[
                 "Draft", "Deleted"
