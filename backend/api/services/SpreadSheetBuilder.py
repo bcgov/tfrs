@@ -86,8 +86,7 @@ class SpreadSheetBuilder(object):
                                 col.value_accessor(fuel_code),
                                 col.format)
 
-
-    def add_credit_transfers(self, credit_trades):
+    def add_credit_transfers(self, credit_trades, user):
         """
         Adds a spreadsheet for credit transfers
         """
@@ -143,11 +142,17 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 8, credit_trade.trade_effective_date,
                             date_format)
 
+            comments = credit_trade.unprivileged_comments
+
+            if user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
+                comments = credit_trade.comments
+
             comment = "\n".join(
                 '{}: "{}"'.format(
                     comment.create_user.display_name, comment.comment
-                ) for comment in credit_trade.comments
+                ) for comment in comments
             )
+
             worksheet.write(row_index, 9, comment, comment_format)
 
         # set the widths for the columns that we expect to be longer

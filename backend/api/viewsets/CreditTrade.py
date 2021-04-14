@@ -260,7 +260,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             )
 
         workbook = SpreadSheetBuilder()
-        workbook.add_credit_transfers(credit_trades)
+        workbook.add_credit_transfers(credit_trades, request.user)
 
         if request.user.is_government_user:
             fuel_suppliers = Organization.objects.extra(
