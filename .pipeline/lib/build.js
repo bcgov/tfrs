@@ -45,7 +45,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-
+/*
  //build celery
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
   'param':{
@@ -88,7 +88,7 @@ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/
     'RELEASE_BRANCH': phases[phase].releaseBranch
   }
 }))
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,
