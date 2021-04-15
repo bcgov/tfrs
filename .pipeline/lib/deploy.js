@@ -39,6 +39,7 @@ module.exports = settings => {
     }
   }))
 
+  //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -52,7 +53,7 @@ module.exports = settings => {
     }
   }))
 
-
+/** 
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -164,7 +165,7 @@ module.exports = settings => {
       }
     }))
   }
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,
