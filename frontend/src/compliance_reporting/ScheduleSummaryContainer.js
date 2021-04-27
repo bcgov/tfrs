@@ -853,7 +853,7 @@ class ScheduleSummaryContainer extends Component {
 
       part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
         ...part3[SCHEDULE_SUMMARY.LINE_26_B][2],
-        readOnly: (netTotal >= 0 || this.props.readOnly || maxValue < 0),
+        readOnly: (netTotal >= 0 || this.props.readOnly || maxValue <= 0),
         attributes: {
           ...part3[SCHEDULE_SUMMARY.LINE_26_B][2].attributes,
           maxValue

@@ -54,6 +54,27 @@ from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
 
 
+class ComplianceReportBaseSerializer:
+    def get_total_previous_credit_reductions(self, obj):
+        # Return the total number of credits for all previous reductions for
+        # supplemental reports
+        previous_transactions = []
+        current = obj
+        while current.supplements is not None:
+            current = current.supplements
+            if current.credit_transaction is not None:
+                previous_transactions.append(current.credit_transaction)
+
+        total_previous_reduction = Decimal(0.0)
+
+        for transaction in previous_transactions:
+            if transaction.type.the_type in ['Credit Reduction']:
+                total_previous_reduction += transaction.number_of_credits
+            elif transaction.type.the_type in ['Credit Validation']:
+                total_previous_reduction -= transaction.number_of_credits
+
+        return total_previous_reduction
+
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
     """
     Default serializer for the Compliance Report Type
@@ -206,7 +227,9 @@ class ComplianceReportMinSerializer(serializers.ModelSerializer):
         fields = ('id', 'type', 'compliance_period')
 
 
-class ComplianceReportDetailSerializer(serializers.ModelSerializer):
+class ComplianceReportDetailSerializer(
+        serializers.ModelSerializer, ComplianceReportBaseSerializer
+):
     """
     Detail Serializer for the Compliance Report
     """
@@ -263,26 +286,6 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         return ComplianceReportPermissions.get_available_actions(
             obj, relationship
         )
-
-    def get_total_previous_credit_reductions(self, obj):
-        # Return the total number of credits for all previous reductions for
-        # supplemental reports
-        previous_transactions = []
-        current = obj
-        while current.supplements is not None:
-            current = current.supplements
-            if current.credit_transaction is not None:
-                previous_transactions.append(current.credit_transaction)
-
-        total_previous_reduction = Decimal(0.0)
-
-        for transaction in previous_transactions:
-            if transaction.type.the_type in ['Credit Reduction']:
-                total_previous_reduction += transaction.number_of_credits
-            elif transaction.type.the_type in ['Credit Validation']:
-                total_previous_reduction -= transaction.number_of_credits
-
-        return total_previous_reduction
 
     def get_deltas(self, obj):
 
@@ -1021,7 +1024,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ComplianceReportUpdateSerializer(
-    serializers.ModelSerializer, ComplianceReportValidator
+    serializers.ModelSerializer, ComplianceReportValidator,
+    ComplianceReportBaseSerializer
 ):
     """
     Update Serializer for the Compliance Report
@@ -1078,26 +1082,6 @@ class ComplianceReportUpdateSerializer(
             max_credit_offset = 0
 
         return max_credit_offset
-
-    def get_total_previous_credit_reductions(self, obj):
-        # Return the total number of credits for all previous reductions for
-        # supplemental reports
-        previous_transactions = []
-        current = obj
-        while current.supplements is not None:
-            current = current.supplements
-            if current.credit_transaction is not None:
-                previous_transactions.append(current.credit_transaction)
-
-        total_previous_reduction = Decimal(0.0)
-
-        for transaction in previous_transactions:
-            if transaction.type.the_type in ['Credit Reduction']:
-                total_previous_reduction += transaction.number_of_credits
-            elif transaction.type.the_type in ['Credit Validation']:
-                total_previous_reduction -= transaction.number_of_credits
-
-        return total_previous_reduction
 
     def update(self, instance, validated_data):
         request = self.context.get('request')

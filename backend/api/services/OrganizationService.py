@@ -44,7 +44,7 @@ class OrganizationService(object):
         for report in compliance_report:
             group_id = report.group_id(filter_drafts=False)
 
-            supplemental_report = ComplianceReport.objects.filter(
+            compliance_report = ComplianceReport.objects.filter(
                 ~Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
                 ]) &
@@ -53,8 +53,11 @@ class OrganizationService(object):
                 ])
             ).filter(id=group_id).first()
 
-            if supplemental_report and supplemental_report.summary:
-                deductions += supplemental_report.summary.credits_offset
+            if compliance_report and compliance_report.summary:
+                if compliance_report.supplements_id > 0:
+                    deductions += compliance_report.summary.credits_offset_b
+                else:
+                    deductions += compliance_report.summary.credits_offset
 
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
