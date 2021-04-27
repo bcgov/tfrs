@@ -124,6 +124,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         If it is, use the appropriate serializer. Otherwise,
         use the default.
         """
+
         instance = self.get_object()
 
         if request.method == 'PATCH':

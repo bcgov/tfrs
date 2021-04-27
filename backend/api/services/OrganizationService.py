@@ -56,9 +56,9 @@ class OrganizationService(object):
             if supplemental_report and supplemental_report.summary:
                 deductions += supplemental_report.summary.credits_offset
 
-            if report.status.director_status_id == 'Accepted' and \
-                    ignore_pending_supplemental:
-                deductions -= report.summary.credits_offset
+            # if report.status.director_status_id == 'Accepted' and \
+            #         ignore_pending_supplemental:
+            #     deductions -= report.summary.credits_offset
 
         return deductions
 

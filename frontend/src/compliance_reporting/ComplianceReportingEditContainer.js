@@ -44,6 +44,8 @@ class ComplianceReportingEditContainer extends Component {
     return {
       ...summary,
       creditsOffset: Number(summary.creditsOffset),
+      creditsOffsetA: Number(summary.creditsOffsetA),
+      creditsOffsetB: Number(summary.creditsOffsetB),
       dieselClassDeferred: Number(summary.dieselClassDeferred),
       dieselClassObligation: Number(summary.dieselClassObligation),
       dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
@@ -460,9 +462,10 @@ class ComplianceReportingEditContainer extends Component {
     const { schedules } = this.state;
 
     const { id } = this.props.match.params;
+    const { complianceReporting: report } = this.props;
 
-    if (!this.props.complianceReporting.validationMessages ||
-      Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
+    if (!complianceReporting.validationMessages ||
+      Object.keys(complianceReporting.validationMessages).length === 0) {
       const { summary } = schedules;
 
       if (summary && !summary.dieselClassDeferred) {
@@ -499,6 +502,16 @@ class ComplianceReportingEditContainer extends Component {
 
       if (summary && !summary.creditsOffset) {
         summary.creditsOffset = 0;
+      }
+
+      const { isSupplemental, totalPreviousCreditReductions } = report.item;
+
+      if (isSupplemental && summary && !summary.creditsOffsetA) {
+        summary.creditsOffsetA = totalPreviousCreditReductions;
+      }
+
+      if (isSupplemental && summary && !summary.creditsOffsetB) {
+        summary.creditsOffsetB = 0;
       }
 
       this.props.recomputeTotals({
@@ -822,7 +835,10 @@ ComplianceReportingEditContainer.defaultProps = {
 ComplianceReportingEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
-    errorMessage: PropTypes.arrayOf(PropTypes.string),
+    errorMessage: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.shape()
+    ]),
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
     isRemoving: PropTypes.bool,

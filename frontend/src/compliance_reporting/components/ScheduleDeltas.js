@@ -626,6 +626,46 @@ class ScheduleDeltas extends Component {
       }], [{
         className: 'strong center',
         readOnly: true,
+        value: 'Line 26a'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Previous Reports'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26A').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26A').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26A')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 26b'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Supplemental Report'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26B').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26B').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26B')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
         value: 'Line 27'
       }, {
         className: 'left',
