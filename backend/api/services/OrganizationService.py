@@ -78,6 +78,9 @@ class OrganizationService(object):
             #         ignore_pending_supplemental:
             #     deductions -= report.summary.credits_offset
 
+        if deductions < 0:
+            deductions = 0
+
         return deductions
 
     @staticmethod
