@@ -59,11 +59,25 @@ class ComplianceReportBaseSerializer:
         # Return the total number of credits for all previous reductions for
         # supplemental reports
         previous_transactions = []
+        submitted_reports = []
         current = obj
+        submitted_reports_end = False
+
         while current.supplements is not None:
+            if current.status.director_status_id in [
+                    "Accepted", "Rejected"
+            ]:
+                submitted_reports_end = True
             current = current.supplements
+
             if current.credit_transaction is not None:
                 previous_transactions.append(current.credit_transaction)
+            elif current.status.fuel_supplier_status_id == "Submitted" and \
+                    not submitted_reports_end and \
+                    current.status.director_status_id not in [
+                        "Accepted", "Rejected"
+                    ]:
+                submitted_reports.append(current)
 
         total_previous_reduction = Decimal(0.0)
 
@@ -73,7 +87,12 @@ class ComplianceReportBaseSerializer:
             elif transaction.type.the_type in ['Credit Validation']:
                 total_previous_reduction -= transaction.number_of_credits
 
+        for report in submitted_reports:
+            if report.summary:
+                total_previous_reduction += report.summary.credits_offset_b
+
         return total_previous_reduction
+
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
     """
@@ -1100,9 +1119,16 @@ class ComplianceReportUpdateSerializer(
             instance.compliance_period.description
         )
 
-        if summary_data.get('credits_offset', 0) > max_credit_offset:
+        if summary_data and instance.supplements_id is None and \
+                summary_data.get('credits_offset', 0) > max_credit_offset:
             raise (serializers.ValidationError(
                 'Insufficient available credit balance. Please adjust Line 26.'
+            ))
+
+        if summary_data and instance.supplements_id and \
+                summary_data.get('credits_offset_b', 0) > max_credit_offset:
+            raise (serializers.ValidationError(
+                'Insufficient available credit balance. Please adjust Line 26b.'
             ))
 
         if 'status' in validated_data:

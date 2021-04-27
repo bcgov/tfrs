@@ -359,6 +359,7 @@ class ScheduleSummaryContainer extends Component {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
       part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
       part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
+
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
 
       if (!isSupplemental) {

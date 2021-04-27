@@ -54,8 +54,23 @@ class OrganizationService(object):
             ).filter(id=group_id).first()
 
             if compliance_report and compliance_report.summary:
-                if compliance_report.supplements_id > 0:
-                    deductions += compliance_report.summary.credits_offset_b
+                if compliance_report.supplements_id and \
+                        compliance_report.supplements_id > 0:
+                    current_offset = compliance_report.summary.credits_offset
+                    previous_offset = 0
+                    current = compliance_report
+                    supplements_end = False
+
+                    while current.supplements is not None and not supplements_end:
+                        current = current.supplements
+
+                        previous_offset = current.summary.credits_offset
+                        if current.status.director_status_id in [
+                                "Accepted", "Rejected"
+                        ]:
+                            supplements_end = True
+
+                    deductions += (current_offset - previous_offset)
                 else:
                     deductions += compliance_report.summary.credits_offset
 
