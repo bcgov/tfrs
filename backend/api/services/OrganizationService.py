@@ -49,7 +49,7 @@ class OrganizationService(object):
                     "Accepted", "Rejected"
                 ]) &
                 ~Q(status__fuel_supplier_status__status__in=[
-                    "Draft", "Deleted"
+                    "Deleted"
                 ])
             ).filter(id=group_id).first()
 
@@ -69,9 +69,9 @@ class OrganizationService(object):
                                 "Accepted", "Rejected"
                         ]:
                             supplements_end = True
-
                     deductions += (current_offset - previous_offset)
-                else:
+                elif compliance_report.status.fuel_supplier_status_id not in \
+                        ['Draft']:
                     deductions += compliance_report.summary.credits_offset
 
             # if report.status.director_status_id == 'Accepted' and \
