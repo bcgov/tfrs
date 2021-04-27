@@ -88,10 +88,20 @@ class ComplianceReportBaseSerializer:
                 total_previous_reduction -= transaction.number_of_credits
 
         for report in submitted_reports:
-            if report.summary:
+            if report.summary and report.summary.credits_offset_b:
                 total_previous_reduction += report.summary.credits_offset_b
 
         return total_previous_reduction
+
+    def get_supplemental_number(self, obj):
+        current = obj
+        supplemental_number = 0
+
+        while current.supplements is not None:
+            current = current.supplements
+            supplemental_number += 1
+
+        return supplemental_number
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -269,6 +279,7 @@ class ComplianceReportDetailSerializer(
     total_previous_credit_reductions = SerializerMethodField()
     credit_transactions = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
+    supplemental_number = SerializerMethodField()
 
     skip_deltas = False
 
@@ -543,7 +554,8 @@ class ComplianceReportDetailSerializer(
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
-                  'credit_transactions', 'max_credit_offset']
+                  'credit_transactions', 'max_credit_offset',
+                  'supplemental_number']
 
 
 class ComplianceReportValidator:
@@ -1069,6 +1081,7 @@ class ComplianceReportUpdateSerializer(
     display_name = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
+    supplemental_number = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1120,12 +1133,14 @@ class ComplianceReportUpdateSerializer(
         )
 
         if summary_data and instance.supplements_id is None and \
+                summary_data.get('credits_offset', 0) and \
                 summary_data.get('credits_offset', 0) > max_credit_offset:
             raise (serializers.ValidationError(
                 'Insufficient available credit balance. Please adjust Line 26.'
             ))
 
         if summary_data and instance.supplements_id and \
+                summary_data.get('credits_offset_b', 0) and \
                 summary_data.get('credits_offset_b', 0) > max_credit_offset:
             raise (serializers.ValidationError(
                 'Insufficient available credit balance. Please adjust Line 26b.'
@@ -1398,15 +1413,20 @@ class ComplianceReportUpdateSerializer(
 
     class Meta:
         model = ComplianceReport
-        fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
-                  'display_name', 'supplemental_note', 'is_supplemental',
-                  'max_credit_offset', 'total_previous_credit_reductions')
-        read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
-                            'organization', 'actions', 'actor', 'display_name',
-                            'is_supplemental', 'max_credit_offset',
-                            'total_previous_credit_reductions')
+        fields = (
+            'status', 'type', 'compliance_period', 'organization',
+            'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
+            'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+            'display_name', 'supplemental_note', 'is_supplemental',
+            'max_credit_offset', 'total_previous_credit_reductions',
+            'supplemental_number'
+        )
+        read_only_fields = (
+            'compliance_period', 'read_only', 'has_snapshot', 'organization',
+            'actions', 'actor', 'display_name', 'is_supplemental',
+            'max_credit_offset', 'total_previous_credit_reductions',
+            'supplemental_number'
+        )
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

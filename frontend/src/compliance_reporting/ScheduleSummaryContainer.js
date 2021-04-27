@@ -298,6 +298,46 @@ class ScheduleSummaryContainer extends Component {
       penalty[SCHEDULE_PENALTY.LINE_22][2] = cellFormatTotal(summary.lines['22']);
       penalty[SCHEDULE_PENALTY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
       penalty[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = cellFormatTotal(summary.totalPayable);
+
+      const { isSupplemental, supplementalNumber } = this.props.complianceReport;
+  
+      if (!isSupplemental) {
+        part3[SCHEDULE_SUMMARY.LINE_26][0].value = 'Banked credits used to offset outstanding debits (if applicable)';
+        part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
+          <div>
+            {`Line 26 `}
+            <Tooltip
+              className="info"
+              show
+              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        );
+  
+        part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
+          ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
+          additionalTooltip: 'The value entered here cannot be more than your organization\'s available credit balance for this compliance period or the net debit balance in Line 25.'
+        };
+  
+        part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden';
+      } else { // is supplemental
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
+      }
     } else {
       // read-write
       if (nextProps.validating || !nextProps.valid) {
@@ -320,7 +360,11 @@ class ScheduleSummaryContainer extends Component {
         return;
       }
 
-      const { isSupplemental, totalPreviousCreditReductions } = this.props.complianceReport;
+      const {
+        isSupplemental,
+        totalPreviousCreditReductions,
+        supplementalNumber
+      } = this.props.complianceReport;
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -400,6 +444,7 @@ class ScheduleSummaryContainer extends Component {
         };
         part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden';
       } else { // is supplemental
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
         const debits = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) * -1;
 
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
