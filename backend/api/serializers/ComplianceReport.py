@@ -1092,6 +1092,19 @@ class ComplianceReportUpdateSerializer(
 
         previous_director_status = instance.status.director_status.status
 
+        # validate if they have enough credits
+        summary_data = validated_data.get('summary')
+
+        max_credit_offset = OrganizationService.get_max_credit_offset(
+            instance.organization,
+            instance.compliance_period.description
+        )
+
+        if summary_data.get('credits_offset', 0) > max_credit_offset:
+            raise (serializers.ValidationError(
+                'Insufficient available credit balance. Please adjust Line 26.'
+            ))
+
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
             can_change = ComplianceReportPermissions.user_can_change_status(
