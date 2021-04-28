@@ -1275,6 +1275,8 @@ class ComplianceReportUpdateSerializer(
 
                     schedule_d.sheets.add(sheet)
                     schedule_d.save()
+            else:
+                instance.schedule_d = None
 
             instance.save()
 
