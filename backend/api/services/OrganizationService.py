@@ -33,8 +33,8 @@ class OrganizationService(object):
         compliance_report = ComplianceReport.objects.annotate(
             Count('supplements')
         ).filter(
-                supplements__count=0,
-                organization_id=organization.id
+            supplements__count=0,
+            organization_id=organization.id
         ).filter(
             ~Q(status__fuel_supplier_status__status__in=[
                 "Draft", "Deleted"
@@ -44,21 +44,42 @@ class OrganizationService(object):
         for report in compliance_report:
             group_id = report.group_id(filter_drafts=False)
 
-            supplemental_report = ComplianceReport.objects.filter(
+            compliance_report = ComplianceReport.objects.filter(
                 ~Q(status__director_status__status__in=[
                     "Accepted", "Rejected"
                 ]) &
                 ~Q(status__fuel_supplier_status__status__in=[
-                    "Draft", "Deleted"
+                    "Deleted"
                 ])
             ).filter(id=group_id).first()
 
-            if supplemental_report and supplemental_report.summary:
-                deductions += supplemental_report.summary.credits_offset
+            if compliance_report and compliance_report.summary:
+                if compliance_report.supplements_id and \
+                        compliance_report.supplements_id > 0:
+                    current_offset = compliance_report.summary.credits_offset
+                    previous_offset = 0
+                    current = compliance_report
+                    supplements_end = False
 
-            if report.status.director_status_id == 'Accepted' and \
-                    ignore_pending_supplemental:
-                deductions -= report.summary.credits_offset
+                    while current.supplements is not None and not supplements_end:
+                        current = current.supplements
+
+                        previous_offset = current.summary.credits_offset
+                        if current.status.director_status_id in [
+                                "Accepted", "Rejected"
+                        ]:
+                            supplements_end = True
+                    deductions += (current_offset - previous_offset)
+                elif compliance_report.status.fuel_supplier_status_id not in \
+                        ['Draft']:
+                    deductions += compliance_report.summary.credits_offset
+
+            # if report.status.director_status_id == 'Accepted' and \
+            #         ignore_pending_supplemental:
+            #     deductions -= report.summary.credits_offset
+
+        if deductions < 0:
+            deductions = 0
 
         return deductions
 

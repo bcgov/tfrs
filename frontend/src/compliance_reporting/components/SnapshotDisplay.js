@@ -759,6 +759,30 @@ class SnapshotDisplay extends Component {
       }], [{
         className: 'strong center',
         readOnly: true,
+        value: 'Line 26a'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Previous Reports'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['26A'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 26b'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Supplemental Report'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['26B'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
         value: 'Line 27'
       }, {
         className: 'left',
