@@ -442,9 +442,6 @@ class ScheduleDContainer extends Component {
   _gridStateToPayload (state) {
     const sheets = [];
 
-    console.error('gridstatetopayload');
-    console.error(state);
-
     for (let i = 0; i < state.sheets.length; i += 1) {
       const sheet = state.sheets[i];
 
