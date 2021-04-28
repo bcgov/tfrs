@@ -105,7 +105,7 @@ class ScheduleSummaryPart3 {
             <Tooltip
               className="info"
               show
-              title="The quantity of banked credits used to offset debits accrued in the compliance period, if applicable."
+              title="The quantity of banked credits used to offset debits accrued in the compliance period, if applicable. This value is the total quantity of banked credits used to offset debits and is informed from all compliance reports for this compliance period (i.e. initial report and supplemental reports)."
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>
@@ -115,7 +115,7 @@ class ScheduleSummaryPart3 {
         ...numericInput,
         attributes: {
           addCommas: true,
-          additionalTooltip: 'This value is the total quantity of banked credits used to offset debits and is informed from all compliance reports for this compliance period (i.e. initial report and supplemental reports).',
+          additionalTooltip: '',
           dataNumberToFixed: 0,
           maxLength: '20',
           placement: 'right',
