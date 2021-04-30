@@ -44,7 +44,8 @@ class ScheduleDContainer extends Component {
 
     this.state = {
       activeSheet: 0,
-      sheets: []
+      sheets: [],
+      loaded: false
     };
 
     this.rowNumber = 1;
@@ -73,7 +74,7 @@ class ScheduleDContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    const { sheets } = this.state;
+    const { sheets, loaded } = this.state;
 
     let source = nextProps.scheduleState.scheduleD;
 
@@ -88,7 +89,7 @@ class ScheduleDContainer extends Component {
       source = this.props.complianceReport.scheduleD;
     }
 
-    if (source && source.sheets) {
+    if (source && source.sheets && !loaded) {
       if ((sheets.length) < source.sheets.length) {
         this._addSheet(source.sheets.length - (sheets.length));
       }
@@ -161,7 +162,7 @@ class ScheduleDContainer extends Component {
         }
       }
 
-      this.setState({ sheets });
+      this.setState({ sheets, loaded: true });
     }
   }
 
@@ -322,7 +323,7 @@ class ScheduleDContainer extends Component {
           className: 'text dropdown-indicator',
           readOnly: this.props.readOnly,
           dataEditor: Select,
-          getOptions: () => this.props.referenceData.approvedFuels,
+          getOptions: () => this.props.referenceData.approvedFuels.filter(fuelType => !fuelType.creditCalculationOnly),
           mapping: {
             key: 'id',
             value: 'name'
@@ -366,11 +367,24 @@ class ScheduleDContainer extends Component {
     const index = sheets.findIndex(sheet => (sheet.id === activeSheet));
     sheets.splice(index, 1);
 
+    if (sheets.length === 0) {
+      const sheet = this._addHeaders(sheets.length);
+
+      sheets.push(sheet);
+    }
+
     const { id } = sheets[0]; // default to the first one
 
     this.setState({
-      activeSheet: id
+      activeSheet: id,
+      sheets
     });
+
+    setTimeout(() => {
+      this._gridStateToPayload({
+        sheets
+      });
+    }, 1000);
   }
 
   _getFuelClasses (row, id) {

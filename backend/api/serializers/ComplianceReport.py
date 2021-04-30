@@ -58,34 +58,32 @@ class ComplianceReportBaseSerializer:
     def get_total_previous_credit_reductions(self, obj):
         # Return the total number of credits for all previous reductions for
         # supplemental reports
-        previous_transactions = []
+        # previous_transactions = []
         submitted_reports = []
         current = obj
         submitted_reports_end = False
 
-        while current.supplements is not None:
+        while current.supplements is not None and not submitted_reports_end:
+            current = current.supplements
             if current.status.director_status_id in [
                     "Accepted", "Rejected"
             ]:
                 submitted_reports_end = True
-            current = current.supplements
 
-            if current.credit_transaction is not None:
-                previous_transactions.append(current.credit_transaction)
-            elif current.status.fuel_supplier_status_id == "Submitted" and \
-                    not submitted_reports_end and \
-                    current.status.director_status_id not in [
-                        "Accepted", "Rejected"
-                    ]:
+            # if current.credit_transaction is not None and \
+            #         current.status.director_status_id not in ["Rejected"]:
+            #     previous_transactions.append(current.credit_transaction)
+            if current.status.fuel_supplier_status_id == "Submitted" and \
+                    not submitted_reports_end:
                 submitted_reports.append(current)
 
         total_previous_reduction = Decimal(0.0)
 
-        for transaction in previous_transactions:
-            if transaction.type.the_type in ['Credit Reduction']:
-                total_previous_reduction += transaction.number_of_credits
-            elif transaction.type.the_type in ['Credit Validation']:
-                total_previous_reduction -= transaction.number_of_credits
+        # for transaction in previous_transactions:
+        #     if transaction.type.the_type in ['Credit Reduction']:
+        #         total_previous_reduction += transaction.number_of_credits
+        #     elif transaction.type.the_type in ['Credit Validation']:
+        #         total_previous_reduction -= transaction.number_of_credits
 
         for report in submitted_reports:
             if report.summary and report.summary.credits_offset_b:
@@ -1275,6 +1273,8 @@ class ComplianceReportUpdateSerializer(
 
                     schedule_d.sheets.add(sheet)
                     schedule_d.save()
+            else:
+                instance.schedule_d = None
 
             instance.save()
 
