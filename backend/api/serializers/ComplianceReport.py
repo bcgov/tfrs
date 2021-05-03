@@ -62,11 +62,19 @@ class ComplianceReportBaseSerializer:
         submitted_reports = []
         current = obj
         submitted_reports_end = False
+        rejected_found = False
+
+        total_previous_reduction = Decimal(0.0)
 
         while current.supplements is not None and not submitted_reports_end:
             current = current.supplements
             if current.status.director_status_id in [
-                    "Accepted", "Rejected"
+                    "Rejected"
+            ]:
+                rejected_found = True
+
+            if current.status.director_status_id in [
+                    "Accepted"
             ]:
                 submitted_reports_end = True
 
@@ -74,10 +82,14 @@ class ComplianceReportBaseSerializer:
             #         current.status.director_status_id not in ["Rejected"]:
             #     previous_transactions.append(current.credit_transaction)
             if current.status.fuel_supplier_status_id == "Submitted" and \
-                    not submitted_reports_end:
+                    not submitted_reports_end and \
+                    not rejected_found:
                 submitted_reports.append(current)
 
-        total_previous_reduction = Decimal(0.0)
+            if rejected_found and submitted_reports_end and current.summary:
+                # Clear the submitted reports and we only care about the
+                # last accepted one
+                total_previous_reduction = current.summary.credits_offset
 
         # for transaction in previous_transactions:
         #     if transaction.type.the_type in ['Credit Reduction']:
@@ -85,9 +97,10 @@ class ComplianceReportBaseSerializer:
         #     elif transaction.type.the_type in ['Credit Validation']:
         #         total_previous_reduction -= transaction.number_of_credits
 
-        for report in submitted_reports:
-            if report.summary and report.summary.credits_offset_b:
-                total_previous_reduction += report.summary.credits_offset_b
+        if not rejected_found:
+            for report in submitted_reports:
+                if report.summary and report.summary.credits_offset_b:
+                    total_previous_reduction += report.summary.credits_offset_b
 
         return total_previous_reduction
 
@@ -1016,6 +1029,21 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
                 summary.credits_offset_a = original_summary.credits_offset
+
+                if original_report.status.director_status_id == 'Rejected':
+                    current = original_report
+                    accepted_found = False
+
+                    while current.supplements is not None and not accepted_found:
+                        current = current.supplements
+
+                        if current.status.director_status_id in [
+                                "Accepted"
+                        ]:
+                            summary.credits_offset = current.summary.credits_offset
+                            summary.credits_offset_a = current.summary.credits_offset
+                            accepted_found = True
+
                 summary.save()
 
             if original_report.exclusion_agreement is not None:

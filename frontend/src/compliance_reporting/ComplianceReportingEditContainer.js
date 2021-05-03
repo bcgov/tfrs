@@ -246,6 +246,7 @@ class ComplianceReportingEditContainer extends Component {
         this.props.invalidateAutosaved();
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
+          this.props.getUpdatedLoggedInUser();
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
@@ -452,10 +453,6 @@ class ComplianceReportingEditContainer extends Component {
     if (data.length > 0) {
       this.props.addSigningAuthorityConfirmation(data);
     }
-
-    setTimeout(() => {
-      this.props.getUpdatedLoggedInUser();
-    }, 2000);
   }
 
   _handleRecomputeRequest () {
