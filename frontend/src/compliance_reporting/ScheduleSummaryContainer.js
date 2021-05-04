@@ -505,7 +505,7 @@ class ScheduleSummaryContainer extends Component {
           diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
           gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
           gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
-          part3[SCHEDULE_SUMMARY.LINE_26_B][2].value < summary.creditsOffsetB)) {
+          (part3[SCHEDULE_SUMMARY.LINE_26_B][2].value > 0 && (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0))) {
         showModal = true;
 
         this.props.updateScheduleState({

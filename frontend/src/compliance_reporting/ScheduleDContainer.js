@@ -664,6 +664,7 @@ class ScheduleDContainer extends Component {
           active={this.state.activeSheet}
           addSheet={this._addSheet}
           addSheetEnabled={!this.props.readOnly}
+          complianceReport={this.props.complianceReport}
           sheets={sheets}
           setActiveSheet={this._setActiveSheet}
         />

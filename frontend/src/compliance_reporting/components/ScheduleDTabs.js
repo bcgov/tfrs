@@ -2,14 +2,34 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import Tooltip from '../../app/components/Tooltip';
 import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/scheduleColumns';
 
 const ScheduleDTabs = (props) => {
+  const {
+    addSheet,
+    addSheetEnabled,
+    complianceReport,
+    setActiveSheet,
+    sheets
+  } = props;
+
   const renderTabs = (active) => {
     const elements = [];
 
-    for (let x = props.sheets.length - 1; x >= 0; x -= 1) {
-      const sheet = props.sheets[x];
+    const { scheduleB } = complianceReport;
+    let inUsed = false;
+
+    if (scheduleB.records.length > 0) {
+      scheduleB.records.forEach((record) => {
+        if (record.scheduleD_sheetIndex !== null && record.scheduleD_sheetIndex !== '') {
+          inUsed = true;
+        }
+      });
+    }
+
+    for (let x = sheets.length - 1; x >= 0; x -= 1) {
+      const sheet = sheets[x];
       const fuelType = sheet.input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value;
 
       let label = `Fuel ${sheet.id}`;
@@ -32,8 +52,9 @@ const ScheduleDTabs = (props) => {
           role="presentation"
         >
           <div>
-            <button type="button" onClick={() => props.setActiveSheet(sheet.id)}>{label}</button>
+            <button type="button" onClick={() => setActiveSheet(sheet.id)}>{label}</button>
             {(active === sheet.id) &&
+            !inUsed &&
             <button
               className="delete"
               data-toggle="modal"
@@ -42,6 +63,21 @@ const ScheduleDTabs = (props) => {
             >
               <FontAwesomeIcon icon="minus-circle" />
             </button>
+            }
+            {(active === sheet.id) &&
+            inUsed &&
+            <Tooltip
+              show
+              title="Fuel Code currently in-use, please select a different option in Schedule B before deleting a code"
+            >
+              <button
+                className="disabled"
+                disabled
+                type="button"
+              >
+                <FontAwesomeIcon icon="minus-circle" />
+              </button>
+            </Tooltip>
             }
           </div>
         </li>);
@@ -56,8 +92,8 @@ const ScheduleDTabs = (props) => {
         role="presentation"
       >
         <div>
-          {props.addSheetEnabled &&
-            <button type="button" onClick={() => props.addSheet()}>Add Fuel</button>
+          {addSheetEnabled &&
+            <button type="button" onClick={() => addSheet()}>Add Fuel</button>
           }
         </div>
       </li>
@@ -67,13 +103,15 @@ const ScheduleDTabs = (props) => {
 };
 
 ScheduleDTabs.defaultProps = {
-  addSheetEnabled: true
+  addSheetEnabled: true,
+  complianceReport: {}
 };
 
 ScheduleDTabs.propTypes = {
   active: PropTypes.number.isRequired,
   addSheet: PropTypes.func.isRequired,
   addSheetEnabled: PropTypes.bool,
+  complianceReport: PropTypes.shape(),
   setActiveSheet: PropTypes.func.isRequired,
   sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
