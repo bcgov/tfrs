@@ -56,15 +56,20 @@ class OrganizationService(object):
             if compliance_report and compliance_report.summary:
                 if compliance_report.supplements_id and \
                         compliance_report.supplements_id > 0:
+                    previous_offset = 0
+                    supplements_end = False
+
                     if compliance_report.status.fuel_supplier_status_id in [
                         "Draft"
                     ]:
                         compliance_report = compliance_report.supplements
+                        if compliance_report.status.director_status_id in [
+                                "Accepted"
+                        ]:
+                            previous_offset = compliance_report.summary.credits_offset
 
                     current_offset = compliance_report.summary.credits_offset
-                    previous_offset = 0
                     current = compliance_report
-                    supplements_end = False
 
                     while current.supplements is not None and not supplements_end:
                         current = current.supplements

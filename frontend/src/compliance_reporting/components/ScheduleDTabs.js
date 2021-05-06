@@ -9,7 +9,7 @@ const ScheduleDTabs = (props) => {
   const {
     addSheet,
     addSheetEnabled,
-    complianceReport,
+    scheduleB,
     setActiveSheet,
     sheets
   } = props;
@@ -17,10 +17,9 @@ const ScheduleDTabs = (props) => {
   const renderTabs = (active) => {
     const elements = [];
 
-    const { scheduleB } = complianceReport;
     let inUsed = false;
 
-    if (scheduleB.records.length > 0) {
+    if (scheduleB && scheduleB.records && scheduleB.records.length > 0) {
       scheduleB.records.forEach((record) => {
         if (record.scheduleD_sheetIndex !== null && record.scheduleD_sheetIndex !== '') {
           inUsed = true;
@@ -68,7 +67,7 @@ const ScheduleDTabs = (props) => {
             inUsed &&
             <Tooltip
               show
-              title="Fuel Code currently in-use, please select a different option in Schedule B before deleting a code"
+              title="A Schedule D entry is currently in-use in Schedule B. To delete this Schedule D entry, please first delete all fuel entry rows in Schedule B that rely on the “GHGenius modelled” provision of the Act \[Section 6 (5) (d) (ii) (A)\] and then save the compliance report."
             >
               <button
                 className="disabled"
@@ -93,7 +92,7 @@ const ScheduleDTabs = (props) => {
       >
         <div>
           {addSheetEnabled &&
-            <button type="button" onClick={() => addSheet()}>Add Fuel</button>
+            <button type="button" onClick={() => addSheet(1, true)}>Add Fuel</button>
           }
         </div>
       </li>
@@ -104,14 +103,14 @@ const ScheduleDTabs = (props) => {
 
 ScheduleDTabs.defaultProps = {
   addSheetEnabled: true,
-  complianceReport: {}
+  scheduleB: null
 };
 
 ScheduleDTabs.propTypes = {
   active: PropTypes.number.isRequired,
   addSheet: PropTypes.func.isRequired,
   addSheetEnabled: PropTypes.bool,
-  complianceReport: PropTypes.shape(),
+  scheduleB: PropTypes.shape(),
   setActiveSheet: PropTypes.func.isRequired,
   sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
