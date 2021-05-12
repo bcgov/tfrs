@@ -1,0 +1,22 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: clamav-pvc
+  annotations:
+    description: Clamav with persistent storage.
+    openshift.io/display-name: Clamav
+objects:
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: clamav
+      annotations:
+        volume.beta.kubernetes.io/storage-class: netapp-file-standard
+        template.openshift.io.bcgov/create: "true"
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+    status: {}
