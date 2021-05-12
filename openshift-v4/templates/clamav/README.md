@@ -14,6 +14,7 @@ oc process -f ./clamav-bc.yaml | oc create -f - -n 0ab226-tools
 oc process -f ./clamav-dc-pvc.yaml | oc create -f - -n 0ab226-[ENV_NAME]
 
 Mount the pvc to a pod and add the Clamav database files to the PVC just created
+This PVC will be mounted to /var/lib/clamav in clamav-dc.yaml
 
 #### Deploy Clamav
 
