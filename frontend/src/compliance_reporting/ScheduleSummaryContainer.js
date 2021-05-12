@@ -927,10 +927,19 @@ class ScheduleSummaryContainer extends Component {
 
       let max26BValue = 0;
 
+<<<<<<< HEAD
       // we only have a max value for LINE 26 B if we're in a deficit, if it's positive
       // that means we're getting a credit and there's no point in enabling LINE_26_B
       if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
         max26BValue = (part3[SCHEDULE_SUMMARY.LINE_25][2].value + part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) * -1;
+=======
+      let max26BValue = 0;
+
+      // we only have a max value for LINE 26 B if we're in a deficit, if it's positive
+      // that means we're getting a credit and there's no point in enabling LINE_26_B
+      if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
+        max26BValue = (part3[SCHEDULE_SUMMARY.LINE_25][2].value + part3[SCHEDULE_SUMMARY.LINE_26][2].value) * -1;
+>>>>>>> upstream/release-1.6.24
       }
 
       if (max26BValue < maxValue) {
