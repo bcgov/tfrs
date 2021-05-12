@@ -63,10 +63,17 @@ class OrganizationService(object):
                         "Draft"
                     ]:
                         compliance_report = compliance_report.supplements
+
+                        if compliance_report.status.director_status_id in [
+                                "Rejected"
+                        ]:
+                            supplements_end = True
+
                         if compliance_report.status.director_status_id in [
                                 "Accepted"
                         ]:
                             previous_offset = compliance_report.summary.credits_offset
+                            supplements_end = True
 
                     current_offset = compliance_report.summary.credits_offset
                     current = compliance_report

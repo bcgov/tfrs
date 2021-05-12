@@ -427,7 +427,6 @@ class ComplianceReportingEditContainer extends Component {
 
     if (payload.summary) {
       const { summary } = payload;
-
       payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
     }
 

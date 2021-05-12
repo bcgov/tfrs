@@ -55,6 +55,23 @@ from api.services.OrganizationService import OrganizationService
 
 
 class ComplianceReportBaseSerializer:
+    def get_last_accepted_offset(self, obj):
+        current = obj
+        last_accepted = None
+
+        while current.supplements is not None and not last_accepted:
+            current = current.supplements
+
+            if current.status.director_status_id in [
+                    "Accepted"
+            ]:
+                last_accepted = current
+
+        if last_accepted:
+            return current.summary.credits_offset
+
+        return None
+
     def get_total_previous_credit_reductions(self, obj):
         # Return the total number of credits for all previous reductions for
         # supplemental reports
@@ -65,6 +82,19 @@ class ComplianceReportBaseSerializer:
         rejected_found = False
 
         total_previous_reduction = Decimal(0.0)
+
+        # this is an attempt to simplify the process of calculation previous
+        # credit reductions
+        # If the last supplemental report was submitted we can just use the
+        # credit offset there as our previous reduction (which is credit offset A)
+        if current.supplements and current.supplements.status and \
+                current.supplements.status.fuel_supplier_status_id in [
+                    "Submitted"
+                ] and current.supplements.status.director_status_id in [
+                    "Unreviewed"
+                ]:
+            total_previous_reduction = current.supplements.summary.credits_offset
+            submitted_reports_end = True
 
         while current.supplements is not None and not submitted_reports_end:
             current = current.supplements
@@ -291,6 +321,7 @@ class ComplianceReportDetailSerializer(
     credit_transactions = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
     supplemental_number = SerializerMethodField()
+    last_accepted_offset = SerializerMethodField()
 
     skip_deltas = False
 
@@ -566,7 +597,7 @@ class ComplianceReportDetailSerializer(
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
                   'credit_transactions', 'max_credit_offset',
-                  'supplemental_number']
+                  'supplemental_number', 'last_accepted_offset']
 
 
 class ComplianceReportValidator:
@@ -1108,6 +1139,7 @@ class ComplianceReportUpdateSerializer(
     max_credit_offset = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
     supplemental_number = SerializerMethodField()
+    last_accepted_offset = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1447,13 +1479,13 @@ class ComplianceReportUpdateSerializer(
             'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
             'display_name', 'supplemental_note', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number'
+            'supplemental_number', 'last_accepted_offset'
         )
         read_only_fields = (
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
             'actions', 'actor', 'display_name', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number'
+            'supplemental_number', 'last_accepted_offset'
         )
 
 
