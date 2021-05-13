@@ -363,8 +363,11 @@ class ScheduleSummaryContainer extends Component {
       const {
         isSupplemental,
         totalPreviousCreditReductions,
-        supplementalNumber
+        supplementalNumber,
+        lastAcceptedOffset,
       } = this.props.complianceReport;
+
+      let updateCreditsOffsetA = false;
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -401,8 +404,6 @@ class ScheduleSummaryContainer extends Component {
       gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
 
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
-      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
-      part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
 
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
 
@@ -444,8 +445,31 @@ class ScheduleSummaryContainer extends Component {
         };
         part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden';
       } else { // is supplemental
+        part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
+
         part3[SCHEDULE_SUMMARY.LINE_26_B][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
-        const debits = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) * -1;
+        const debits = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) !== 0 ? Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) * -1 : 0;
+
+        // if we result in a positive credit offset
+        if (lastAcceptedOffset > debits && debits > 0 &&
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+        }
+
+        // if after adjustments we still end up in a debit position
+        if (lastAcceptedOffset <= debits && debits > 0 && (totalPreviousCreditReductions - debits) <= 0 &&
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== totalPreviousCreditReductions) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+        }
+
+        // if we still dont have LINE26A at this point, let's use the total credit reductions so far
+        if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
+        }
 
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
           part3[SCHEDULE_SUMMARY.LINE_26_B][2].value;
@@ -454,6 +478,10 @@ class ScheduleSummaryContainer extends Component {
 
         if (creditsOffset > 0 && debits > 0 && creditsOffset > debits) {
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+        }
+
+        if (debits < 0 && creditsOffset > 0 && lastAcceptedOffset <= debits) {
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
         }
 
         const max26BValue = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value;
@@ -498,6 +526,14 @@ class ScheduleSummaryContainer extends Component {
             dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
             gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
             gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        });
+      } else if (updateCreditsOffsetA) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
           }
         });
       } else if (isSupplemental &&
@@ -889,14 +925,12 @@ class ScheduleSummaryContainer extends Component {
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
       }
 
-      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
-
       let max26BValue = 0;
 
       // we only have a max value for LINE 26 B if we're in a deficit, if it's positive
       // that means we're getting a credit and there's no point in enabling LINE_26_B
       if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
-        max26BValue = (part3[SCHEDULE_SUMMARY.LINE_25][2].value + part3[SCHEDULE_SUMMARY.LINE_26][2].value) * -1;
+        max26BValue = (part3[SCHEDULE_SUMMARY.LINE_25][2].value + part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) * -1;
       }
 
       if (max26BValue < maxValue) {
@@ -1097,7 +1131,14 @@ class ScheduleSummaryContainer extends Component {
       }
 
       if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26_B)) {
-        const numericValue = Number(String(value).replace(/,/g, ''));
+        let numericValue = Number(String(value).replace(/,/g, ''));
+
+        const { maxValue } = grid[row][col].attributes;
+
+        if (numericValue > maxValue) {
+          numericValue = maxValue;
+        }
+
         grid[row][col] = {
           ...grid[row][col],
           value: numericValue
@@ -1349,7 +1390,11 @@ ScheduleSummaryContainer.propTypes = {
       PropTypes.number,
       PropTypes.string
     ]),
-    isSupplemental: PropTypes.bool
+    isSupplemental: PropTypes.bool,
+    supplementalNumber: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ])
   }),
   creditCalculation: PropTypes.shape({
     isFetching: PropTypes.bool,

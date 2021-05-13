@@ -20,28 +20,29 @@ class ScheduleAssessmentContainer extends Component {
       return <Loading />;
     }
 
-    let mostRecentlyReviewed = null;
+    // let mostRecentlyReviewed = null;
 
-    if (this.props.complianceReport &&
-      ['Accepted', 'Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
-      mostRecentlyReviewed = this.props.snapshot;
-    } else if (this.props.complianceReport && this.props.complianceReport.history) {
-      const historyEntry = this.props.complianceReport.history.find(h =>
-        (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
+    // if (this.props.complianceReport &&
+    //   ['Accepted', 'Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
+    //   mostRecentlyReviewed = this.props.snapshot;
+    // } else if (this.props.complianceReport && this.props.complianceReport.history) {
+    //   const historyEntry = this.props.complianceReport.history.find(h =>
+    //     (['Accepted', 'Rejected'].indexOf(h.status.directorStatus) >= 0));
 
-      if (historyEntry) {
-        // at least one prior version was accepted
-        // we have the id, now find the snapshot in deltas
-        mostRecentlyReviewed = this.props.complianceReport.deltas.find(d =>
-          (d.ancestorId === historyEntry.complianceReport)).snapshot.data;
-      }
-    }
+    //   if (historyEntry) {
+    //     // at least one prior version was accepted
+    //     // we have the id, now find the snapshot in deltas
+    //     mostRecentlyReviewed = this.props.complianceReport.deltas.find(d =>
+    //       (d.ancestorId === historyEntry.complianceReport)).snapshot.data;
+    //   }
+    // }
 
-    if (!mostRecentlyReviewed) {
-      mostRecentlyReviewed = this.props.snapshot;
-    }
+    // if (!mostRecentlyReviewed) {
+    //   mostRecentlyReviewed = this.props.snapshot;
+    // }
 
-    const snap = mostRecentlyReviewed;
+    // const snap = mostRecentlyReviewed;
+    const snap = this.props.snapshot;
 
     if (!snap || !snap.summary) {
       return <Loading />;

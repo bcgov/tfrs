@@ -93,10 +93,12 @@ const ScheduleAssessmentPage = props => (
       }
 
       if (transaction.type === 'Credit Reduction' && !transaction.supplemental) {
+        const credits = (props.snapshot.summary.lines['26A'] > 0) ? props.snapshot.summary.lines['26A'] : props.snapshot.summary.lines[26];
+
         return (
           <p key={transaction.id}>
             <strong> {props.snapshot.organization.name} </strong> applied
-            {` ${formatNumeric(Number(props.snapshot.summary.lines[26]), 0)} `}
+            {` ${formatNumeric(Number(credits), 0)} `}
             {` credit(s) to `}
             {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
             {` offset a net debit balance in the `}
