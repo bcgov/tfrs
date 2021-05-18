@@ -187,7 +187,8 @@ class ScheduleSummaryContainer extends Component {
       totals: {
         diesel: 0,
         gasoline: 0
-      }
+      },
+      alreadyUpdated: false
     };
 
     this.rowNumber = 1;
@@ -452,7 +453,7 @@ class ScheduleSummaryContainer extends Component {
 
         // if we result in a positive credit offset
         if (lastAcceptedOffset !== null && lastAcceptedOffset > debits && debits > 0 &&
-          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset) {
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset && !this.state.alreadyUpdated) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
@@ -461,11 +462,11 @@ class ScheduleSummaryContainer extends Component {
         // if after adjustments we still end up in a debit position
         if (lastAcceptedOffset !== null && lastAcceptedOffset <= debits && debits > 0 &&
           (totalPreviousCreditReductions - debits) <= 0 &&
-        [totalPreviousCreditReductions, lastAcceptedOffset].indexOf(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) <= 0) {
+        [totalPreviousCreditReductions, lastAcceptedOffset].indexOf(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) <= 0 && !this.state.alreadyUpdated) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
-        } else if (lastAcceptedOffset !== null && lastAcceptedOffset > debits && debits > 0 && (lastAcceptedOffset - debits) > 0 &&
+        } else if (lastAcceptedOffset !== null && lastAcceptedOffset > debits && debits > 0 && !this.state.alreadyUpdated && (lastAcceptedOffset - debits) > 0 &&
           (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset ||
           part3[SCHEDULE_SUMMARY.LINE_26][2].value !== debits)
         ) {
@@ -543,6 +544,10 @@ class ScheduleSummaryContainer extends Component {
             creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
             creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
           }
+        });
+        this.setState({
+          ...this.state,
+          alreadyUpdated: true
         });
       } else if (isSupplemental &&
         (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
