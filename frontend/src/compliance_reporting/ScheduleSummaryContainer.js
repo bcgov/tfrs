@@ -300,7 +300,7 @@ class ScheduleSummaryContainer extends Component {
       penalty[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = cellFormatTotal(summary.totalPayable);
 
       const { isSupplemental, supplementalNumber } = this.props.complianceReport;
-  
+
       if (!isSupplemental) {
         part3[SCHEDULE_SUMMARY.LINE_26][0].value = 'Banked credits used to offset outstanding debits (if applicable)';
         part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
@@ -315,12 +315,12 @@ class ScheduleSummaryContainer extends Component {
             </Tooltip>
           </div>
         );
-  
+
         part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
           ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
           additionalTooltip: 'The value entered here cannot be more than your organization\'s available credit balance for this compliance period or the net debit balance in Line 25.'
         };
-  
+
         part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden';
         part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden';
         part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
@@ -364,7 +364,7 @@ class ScheduleSummaryContainer extends Component {
         isSupplemental,
         totalPreviousCreditReductions,
         supplementalNumber,
-        lastAcceptedOffset,
+        lastAcceptedOffset
       } = this.props.complianceReport;
 
       let updateCreditsOffsetA = false;
@@ -460,15 +460,22 @@ class ScheduleSummaryContainer extends Component {
 
         // if after adjustments we still end up in a debit position
         if (lastAcceptedOffset <= debits && debits > 0 && (totalPreviousCreditReductions - debits) <= 0 &&
-          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== totalPreviousCreditReductions) {
+        [totalPreviousCreditReductions, lastAcceptedOffset].indexOf(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) <= 0) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+        } else if (lastAcceptedOffset > debits && debits > 0 && (lastAcceptedOffset - debits) > 0 &&
+          (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset ||
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value !== debits)
+        ) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
         }
 
         // if we still dont have LINE26A at this point, let's use the total credit reductions so far
         if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
-          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset || totalPreviousCreditReductions || summary.creditsOffsetA;
         }
 
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
@@ -587,7 +594,7 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassPreviouslyRetained: src.gasolineClassPreviouslyRetained,
         gasolineClassRetained: src.gasolineClassRetained,
         creditsOffset: src.creditsOffset,
-        creditsOffsetA: src.creditsOffsetA,
+        // creditsOffsetA: src.creditsOffsetA,
         creditsOffsetB: src.creditsOffsetB
       };
       this.props.updateScheduleState({
@@ -866,7 +873,6 @@ class ScheduleSummaryContainer extends Component {
     const { summary } = this.props.scheduleState;
     const {
       maxCreditOffset,
-      totalPreviousCreditReductions,
       isSupplemental
     } = this.props.complianceReport;
 
@@ -1233,7 +1239,7 @@ class ScheduleSummaryContainer extends Component {
       'dieselClassPreviouslyRetained', 'dieselClassObligation',
       'gasolineClassDeferred', 'gasolineClassRetained',
       'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
-      'creditsOffset', 'creditsOffsetA', 'creditsOffsetB'
+      'creditsOffset', 'creditsOffsetB'
     ];
 
     const nextState = {
@@ -1247,7 +1253,7 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassPreviouslyRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_7][2].value,
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-        creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
+        // creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
         creditsOffsetB: state.part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
       }
     };
@@ -1341,6 +1347,10 @@ ScheduleSummaryContainer.propTypes = {
     ]),
     hasSnapshot: PropTypes.bool,
     history: PropTypes.arrayOf(PropTypes.shape()),
+    lastAcceptedOffset: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
     scheduleC: PropTypes.shape(),
