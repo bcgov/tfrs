@@ -42,6 +42,19 @@ const ScheduleAssessmentPage = (props) => {
     supplementalCredits = Number(props.snapshot.summary.lines[25]) > 0
       ? Number(props.snapshot.summary.lines[25])
       : props.snapshot.summary.lines[26] * -1;
+  } else if (status.directorStatus === 'Rejected' && isSupplemental) {
+    supplementalCredits = originalCredits;
+
+    props.complianceReport.creditTransactions.forEach((transaction) => {
+      if (transaction.supplemental) {
+        const { credits } = transaction;
+        if (transaction.type === 'Credit Reduction') {
+          supplementalCredits -= credits;
+        } else if (transaction.type === 'Credit Validation') {
+          supplementalCredits += credits;
+        }
+      }
+    });
   }
 
   let credits = 0;
@@ -59,17 +72,9 @@ const ScheduleAssessmentPage = (props) => {
     credits += originalCredits;
 
   // if they were previously had a debit, but still had a debit after
-  } else if (supplementalCredits < 0 && originalCredits < 0) {
-    credits = originalCredits - supplementalCredits;
-    if (credits > 0) {
-      credits *= -1; // if it results into a positive value, that means the debit grew
-    }
-  // if they had a credit before, and now still had a credit
-  } else if (supplementalCredits > 0 && originalCredits > 0) {
-    credits = originalCredits - supplementalCredits;
-    if (credits < 0) {
-      credits *= -1; // if it results into a negative value, that means the credit grew
-    }
+  // or if they were in a credit and was still in a credit after
+  } else {
+    credits = supplementalCredits - originalCredits;
   }
 
   return (
