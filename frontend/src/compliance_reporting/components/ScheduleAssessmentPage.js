@@ -72,22 +72,6 @@ const ScheduleAssessmentPage = (props) => {
     }
   }
 
-  // const summaryCredits = (Number(props.snapshot.summary.lines[26]) > 0) ? props.snapshot.summary.lines[26] : 0;
-  // let creditsB = (Number(props.snapshot.summary.lines['26B']) > 0 && status.directorStatus === 'Unreviewed' && [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) ? props.snapshot.summary.lines['26B'] : 0;
-  // let addCredits = 0;
-  // let ignoreOtherTransactions = false;
-
-  // if (!isSupplemental && Number(props.snapshot.summary.lines[25]) > 0 && status.directorStatus === 'Unreviewed' && [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) {
-  //   addCredits = Number(props.snapshot.summary.lines[25]);
-  // }
-
-  // if (Number(props.snapshot.summary.lines['26A']) > 0 && Number(props.snapshot.summary.lines[25]) < 0 &&
-  // ((Number(props.snapshot.summary.lines['26A']) + Number(props.snapshot.summary.lines[25]))) > 0 &&
-  // status.directorStatus === 'Unreviewed' && [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) {
-  //   addCredits = (Number(props.snapshot.summary.lines['26A']) + Number(props.snapshot.summary.lines[25]));
-  // }
-  // creditsB -= addCredits;
-
   return (
     <div className="schedule-assessment">
       <ComplianceReportingStatusHistory
@@ -195,85 +179,6 @@ const ScheduleAssessmentPage = (props) => {
           {` ${props.snapshot.compliancePeriod.description} `} compliance period.
         </p>
       )}
-
-      {/* {props.complianceReport.creditTransactions && props.complianceReport.creditTransactions.map((transaction) => {
-        if (transaction.type === 'Credit Validation' && !transaction.supplemental) {
-          if (isSupplemental && Number(props.snapshot.summary.lines[25]) > 0 && status.directorStatus === 'Unreviewed' && [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) {
-            creditsB = Number(transaction.credits);
-            creditsB += Number(props.snapshot.summary.lines[25]) * -1;
-
-            if (creditsB <= 0) {
-              ignoreOtherTransactions = true;
-            }
-          }
-          return (
-            <p key={transaction.id}>
-              A
-              <strong>
-                {` validation of ${formatNumeric(Number(transaction.credits), 0)} credit(s) `}
-              </strong>
-              in accordance with section 8 (8) of the
-              <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-              and based on the information submitted by
-              <strong> {props.snapshot.organization.name} </strong>. These
-              credits may now be transferred to other Part 3 fuel suppliers in accordance with the
-              Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
-              requirements.
-            </p>
-          );
-        } */}
-
-        {/* if (transaction.type === 'Credit Validation' && transaction.supplemental) {
-          if (!ignoreOtherTransactions) {
-            creditsB -= Number(transaction.credits);
-          } */}
-          {/* // return (
-          //   <p key={transaction.id}>
-          //     A
-          //     <strong>
-          //       {` validation of ${formatNumeric(Number(transaction.credits), 0)} credit(s) `}
-          //     </strong>
-          //     in accordance with section 8 (8) of the
-          //     <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-          //     and based on the <strong>Supplemental Reporting</strong> information submitted by
-          //     <strong> {props.snapshot.organization.name} </strong>. These credits may now be
-          //     transferred to other Part 3 fuel suppliers in accordance with
-          //     the Renewable and Low Carbon Fuel Requirements Regulation or retained
-          //     for future compliance requirements.
-          //   </p>
-          // );
-        } */}
-
-        {/* if (transaction.type === 'Credit Reduction' && !transaction.supplemental) {
-          const { credits } = transaction;
-
-          return (
-            <p key={transaction.id}>
-              <strong> {props.snapshot.organization.name} </strong> applied
-              {` ${formatNumeric(Number(credits), 0)} `}
-              {` credit(s) to `}
-              {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
-              {` offset a net debit balance in the `}
-              {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-            </p>
-          );
-        } */}
-
-        {/* if (transaction.type === 'Credit Reduction' && transaction.supplemental) {
-          if (!ignoreOtherTransactions) {
-            creditsB += Number(transaction.credits);
-          } */}
-          {/* // return (
-          //   <p key={transaction.id}>
-          //     A <strong>reduction of {formatNumeric(Number(transaction.credits), 0)} credit(s)</strong> to
-          //     either offset a net debit balance or to correct a discrepancy in previous
-          //     reporting for the
-          //     {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
-          //   </p>
-          // );
-        }
-        return null;
-      })} */}
 
       {credits < 0 && (
         <p>
