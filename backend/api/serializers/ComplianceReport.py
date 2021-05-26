@@ -1253,6 +1253,9 @@ class ComplianceReportUpdateSerializer(
                                 'credits_offset_b', 0
                             )
 
+                    if not credits_offset:
+                        credits_offset = 0
+
                     if credits_offset > max_credit_offset:
                         raise (serializers.ValidationError(
                             'Insufficient available credit balance. '

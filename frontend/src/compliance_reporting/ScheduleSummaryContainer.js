@@ -475,13 +475,28 @@ class ScheduleSummaryContainer extends Component {
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
         }
 
-        // if we still dont have LINE26A at this point, let's use the total credit reductions so far
-        if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
-          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset || totalPreviousCreditReductions || summary.creditsOffsetA;
+        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
         }
 
-        part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
-          part3[SCHEDULE_SUMMARY.LINE_26_B][2].value;
+        // if we still dont have LINE26A at this point, let's use the total credit reductions so far
+        if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
+        }
+
+        let creditsOffsetA = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value);
+        if (isNaN(creditsOffsetA)) {
+          creditsOffsetA = 0;
+        }
+
+        let creditsOffsetB = Number(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value);
+        if (isNaN(creditsOffsetB)) {
+          creditsOffsetB = 0;
+        }
+
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value = creditsOffsetA + creditsOffsetB;
 
         const creditsOffset = part3[SCHEDULE_SUMMARY.LINE_26][2].value;
 
@@ -1259,7 +1274,7 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassPreviouslyRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_7][2].value,
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-        // creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
+        creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
         creditsOffsetB: state.part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
       }
     };

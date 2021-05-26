@@ -44,7 +44,7 @@ class ComplianceReportingEditContainer extends Component {
     return {
       ...summary,
       creditsOffset: Number(summary.creditsOffset),
-      // creditsOffsetA: Number(summary.creditsOffsetA),
+      creditsOffsetA: Number(summary.creditsOffsetA),
       creditsOffsetB: Number(summary.creditsOffsetB),
       dieselClassDeferred: Number(summary.dieselClassDeferred),
       dieselClassObligation: Number(summary.dieselClassObligation),

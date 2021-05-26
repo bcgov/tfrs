@@ -90,9 +90,11 @@ class OrganizationService(object):
                         ]:
                             previous_offset = current.summary.credits_offset
                             supplements_end = True
+
                     if current.status.director_status_id not in [
                         "Rejected"
-                    ] and previous_offset < current_offset:
+                    ] and current_offset and previous_offset and \
+                            previous_offset < current_offset:
                         deductions += (current_offset - previous_offset)
                 elif compliance_report.status.director_status_id not in \
                         ["Rejected"]:
