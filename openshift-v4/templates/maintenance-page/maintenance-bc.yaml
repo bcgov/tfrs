@@ -40,11 +40,11 @@ objects:
       contextDir: "openshift-v4/templates/maintenance-page"
       git:
         uri: https://github.com/bcgov/tfrs.git
-        ref: Maintenance-page
+        ref: master
     strategy:
       dockerStrategy:
         pullSecret:
-          name: docker-creds  
+          name: docker-artifactory-secret  
         forcePull: true
         noCache: true
       type: Docker

@@ -1,4 +1,4 @@
-FROM golang:1.15
+FROM docker-remote.artifacts.developer.gov.bc.ca/golang:1.15
 
 WORKDIR /go/src/scan-coordinator
 COPY . .

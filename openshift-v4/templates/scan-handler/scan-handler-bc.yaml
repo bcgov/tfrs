@@ -47,7 +47,7 @@ objects:
     source:
       type: Dockerfile
       dockerfile: |
-        FROM python:3.6.8-slim-stretch
+        FROM docker-remote.artifacts.developer.gov.bc.ca/python:3.6.8-slim-stretch
         RUN apt-get update \
             && apt-get install -y git \
             && apt-get install -y supervisor
@@ -68,7 +68,7 @@ objects:
       type: Docker
       dockerStrategy:
         pullSecret:
-          name: docker-creds      
+          name: docker-artifactory-secret     
         noCache: true
         env:
         - name: tfrs_release
