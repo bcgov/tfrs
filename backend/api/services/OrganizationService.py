@@ -63,6 +63,7 @@ class OrganizationService(object):
                         "Draft"
                     ]:
                         compliance_report = compliance_report.supplements
+
                         if compliance_report.status.director_status_id in [
                                 "Accepted"
                         ]:
@@ -93,7 +94,8 @@ class OrganizationService(object):
 
                     if current.status.director_status_id not in [
                         "Rejected"
-                    ] and current_offset and previous_offset and \
+                    ] and current_offset is not None and \
+                            previous_offset is not None and \
                             previous_offset < current_offset:
                         deductions += (current_offset - previous_offset)
                 elif compliance_report.status.director_status_id not in \

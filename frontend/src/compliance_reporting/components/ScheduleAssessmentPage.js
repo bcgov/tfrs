@@ -128,36 +128,6 @@ const ScheduleAssessmentPage = (props) => {
         for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
       </p>
 
-      {(!isSupplemental && status.directorStatus === 'Unreviewed' &&
-      [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) &&
-      Number(originalCredits) > 0 && (
-        <p>
-          <strong> {props.snapshot.organization.name} </strong> applied
-          {` ${formatNumeric(Number(originalCredits), 0)} `}
-          {` credit(s) to `}
-          {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
-          {` offset a net debit balance in the `}
-          {` ${props.snapshot.compliancePeriod.description} `} compliance period.
-        </p>
-      )}
-
-      {(!isSupplemental && status.directorStatus === 'Unreviewed' &&
-      [status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0) &&
-      Number(originalCredits) < 0 && (
-        <p>
-          <strong>
-            {` validation of ${formatNumeric(Number(originalCredits) * -1, 0)} credit(s) `}
-          </strong>
-          in accordance with section 8 (8) of the
-          <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act </em>
-          and based on the information submitted by
-          <strong> {props.snapshot.organization.name} </strong>. These
-          credits may now be transferred to other Part 3 fuel suppliers in accordance with the
-          Renewable and Low Carbon Fuel Requirements Regulation or retained for future compliance
-          requirements.
-        </p>
-      )}
-
       {originalCredits > 0 && (
         <p>
           A
@@ -185,7 +155,7 @@ const ScheduleAssessmentPage = (props) => {
         </p>
       )}
 
-      {credits < 0 && (
+      {credits < 0 && isSupplemental && (
         <p>
           A <strong>reduction of {formatNumeric(Number(credits) * -1, 0)} credit(s)</strong> to
           either offset a net debit balance or to correct a discrepancy in previous
@@ -193,7 +163,7 @@ const ScheduleAssessmentPage = (props) => {
           {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
         </p>
       )}
-      {credits > 0 && (
+      {credits > 0 && isSupplemental && (
         <p>
           A
           <strong>
