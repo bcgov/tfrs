@@ -58,7 +58,7 @@ objects:
       type: Docker
       dockerStrategy:
         pullSecret:
-          name: docker-creds
+          name: docker-artifactory-secret
         noCache: true
         forcePull: true
     output:
