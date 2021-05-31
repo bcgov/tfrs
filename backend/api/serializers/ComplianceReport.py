@@ -1059,7 +1059,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_previously_retained
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
-                summary.credits_offset_a = original_summary.credits_offset
+                summary.credits_offset_a = original_summary.credits_offset_a or \
+                    original_summary.credits_offset
 
                 if original_report.status.director_status_id == 'Rejected':
                     current = original_report
