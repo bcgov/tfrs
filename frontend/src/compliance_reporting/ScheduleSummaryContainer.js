@@ -365,7 +365,9 @@ class ScheduleSummaryContainer extends Component {
         isSupplemental,
         totalPreviousCreditReductions,
         supplementalNumber,
-        lastAcceptedOffset
+        lastAcceptedOffset,
+        history,
+        status
       } = this.props.complianceReport;
 
       let updateCreditsOffsetA = false;
@@ -473,6 +475,13 @@ class ScheduleSummaryContainer extends Component {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+        }
+
+        // was the previous supplemental, submitted and hasnt been accepted/rejected yet?
+        if (status.fuelSupplierStatus === 'Draft' && history && history[0].status.fuelSupplierStatus === 'Submitted' && !history[0].status.directorStatus && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
         }
 
         if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
