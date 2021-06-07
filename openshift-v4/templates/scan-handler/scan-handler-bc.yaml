@@ -47,7 +47,7 @@ objects:
     source:
       type: Dockerfile
       dockerfile: |
-        FROM python:3.6.8-slim-stretch
+        FROM docker-remote.artifacts.developer.gov.bc.ca/python:3.6.8-slim-stretch
         RUN apt-get update \
             && apt-get install -y git \
             && apt-get install -y supervisor
@@ -57,18 +57,18 @@ objects:
         RUN git checkout ${tfrs_release}
         RUN pip install --upgrade pip \
             && pip install -r backend/requirements.txt
-        RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d
-        RUN chgrp -R root /var/log/supervisor
-        RUN chmod -R g+w /var/log/supervisor
-        RUN chmod -R g+w /run || :
-        RUN chmod -R g+w /app
+        RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d && \
+            chgrp -R root /var/log/supervisor && \
+            chmod -R g+w /var/log/supervisor && \
+            chmod -R g+w /run || : && \
+            chmod -R g+w /app
         # RUN sed -i "s/chmod=0700/chmod=0770/g" /etc/supervisor/supervisord.conf
         CMD ["supervisord"]
     strategy:
       type: Docker
       dockerStrategy:
         pullSecret:
-          name: docker-creds      
+          name: docker-artifactory-secret     
         noCache: true
         env:
         - name: tfrs_release
