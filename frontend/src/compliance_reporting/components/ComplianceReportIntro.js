@@ -4,6 +4,14 @@ import PropTypes from 'prop-types';
 const ComplianceReportIntro = (props) => {
   const complianceReportDueDate = `20${Number(props.period.substr(-2)) + 1}`;
 
+  let litresText = ' 75 million ';
+
+  if (Number(props.period) === 2021) {
+    litresText = ' 25 million ';
+  } else if (Number(props.period) > 2021) {
+    litresText = ' 200,000 litres ';
+  }
+
   return (
     <div className="page-compliance-reporting-intro">
       <div>
@@ -32,16 +40,14 @@ const ComplianceReportIntro = (props) => {
         which they refer.
         </p>
         <p>
-        Payment of penalties must be sent to the Ministry of Energy, Mines and Petroleum Resources
-        at the same time as this report is submitted.
-        </p>
-        <p>
-        Cheques or money orders are to be made payable to the Minister of Finance.
+        An administrative penalty must be made payable to the Minister of Finance. Payment is due
+        March 31 following each compliance period. For more information please contact the Low
+        Carbon Fuels Branch via email at <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a>.
         </p>
 
         <h3>Small  Fuel Supplier Exemption</h3>
         <p>
-        Fuel suppliers and their affiliates who supplied less than a total of 75 million litres of
+        Fuel suppliers and their affiliates who supplied less than a total of {litresText} litres of
         gasoline and diesel class fuels (combined) in the {props.period} compliance period
         may apply to be exempted from Part 2 and/or Part 3 requirements.  A Part 2 or Part 3 fuel
         supplier who applies to be exempted must submit an Exemption Report, available from (
