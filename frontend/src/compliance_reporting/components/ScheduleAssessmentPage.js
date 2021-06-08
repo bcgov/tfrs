@@ -55,6 +55,19 @@ const ScheduleAssessmentPage = (props) => {
         }
       }
     });
+  } else if (status.fuelSupplierStatus === 'Submitted' &&
+    (status.directorStatus === 'Unreviewed' || !status.directorStatus) && isSupplemental) {
+    supplementalCredits = originalCredits;
+    props.complianceReport.creditTransactions.forEach((transaction) => {
+      if (transaction.supplemental) {
+        const { credits } = transaction;
+        if (transaction.type === 'Credit Reduction') {
+          supplementalCredits -= credits;
+        } else if (transaction.type === 'Credit Validation') {
+          supplementalCredits += credits;
+        }
+      }
+    });
   }
 
   let credits = 0;
