@@ -371,6 +371,7 @@ class ScheduleSummaryContainer extends Component {
       } = this.props.complianceReport;
 
       let updateCreditsOffsetA = false;
+      let skipFurtherUpdateCreditsOffsetA = false;
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -482,9 +483,10 @@ class ScheduleSummaryContainer extends Component {
           updateCreditsOffsetA = true;
 
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+          skipFurtherUpdateCreditsOffsetA = true;
         }
 
-        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0) {
+        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !skipFurtherUpdateCreditsOffsetA) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
         }
@@ -521,7 +523,8 @@ class ScheduleSummaryContainer extends Component {
         }
 
         // if (debits < 0 && creditsOffset > 0 && lastAcceptedOffset <= debits) {
-        if (debits < 0 && creditsOffset > 0) {
+        const netTotal = Number(part3[SCHEDULE_SUMMARY.LINE_23][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_24][2].value);
+        if (netTotal > 0 && creditsOffset > 0 && !skipFurtherUpdateCreditsOffsetA) {
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
         }
 
@@ -970,7 +973,7 @@ class ScheduleSummaryContainer extends Component {
     };
 
     if (isSupplemental) {
-      if (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value > 0) {
+      if ((part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0) {
         part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
       }
 
@@ -1282,7 +1285,7 @@ class ScheduleSummaryContainer extends Component {
       'dieselClassPreviouslyRetained', 'dieselClassObligation',
       'gasolineClassDeferred', 'gasolineClassRetained',
       'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
-      'creditsOffset', 'creditsOffsetB'
+      'creditsOffset', 'creditsOffsetA', 'creditsOffsetB'
     ];
 
     const nextState = {
