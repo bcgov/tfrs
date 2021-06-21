@@ -1141,6 +1141,7 @@ class ComplianceReportUpdateSerializer(
     total_previous_credit_reductions = SerializerMethodField()
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
+    history = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1173,6 +1174,34 @@ class ComplianceReportUpdateSerializer(
             max_credit_offset = 0
 
         return max_credit_offset
+
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the compliance report
+        """
+
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+        user = self.context['request'].user \
+            if 'request' in self.context else None
+
+        if user and user.is_government_user:
+            history = obj.get_history(include_government_statuses=True)
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        elif user and not user.is_government_user:
+            history = obj.get_history()
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        else:
+            return None
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
@@ -1483,13 +1512,13 @@ class ComplianceReportUpdateSerializer(
             'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
             'display_name', 'supplemental_note', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number', 'last_accepted_offset'
+            'supplemental_number', 'last_accepted_offset', 'history'
         )
         read_only_fields = (
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
             'actions', 'actor', 'display_name', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number', 'last_accepted_offset'
+            'supplemental_number', 'last_accepted_offset', 'history'
         )
 
 
