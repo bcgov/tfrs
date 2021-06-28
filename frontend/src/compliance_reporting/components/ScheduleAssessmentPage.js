@@ -86,8 +86,8 @@ const ScheduleAssessmentPage = (props) => {
   // this is for the reverse situation where they originally had a debit, but
   // are now getting credits
   } else if (supplementalCredits > 0 && originalCredits < 0) {
-    credits = supplementalCredits * -1;
-    credits += originalCredits;
+    credits = supplementalCredits;
+    credits += originalCredits * -1;
 
   // if they were previously had a debit, but still had a debit after
   // or if they were in a credit and was still in a credit after
