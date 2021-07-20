@@ -367,7 +367,8 @@ class ScheduleSummaryContainer extends Component {
         supplementalNumber,
         lastAcceptedOffset,
         history,
-        status
+        status,
+        previousReportWasCredit,
       } = this.props.complianceReport;
 
       let updateCreditsOffsetA = false;
@@ -466,6 +467,7 @@ class ScheduleSummaryContainer extends Component {
         if (lastAcceptedOffset !== null && lastAcceptedOffset <= debits && debits > 0 &&
           (totalPreviousCreditReductions - debits) <= 0 &&
         [totalPreviousCreditReductions, lastAcceptedOffset].indexOf(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) <= 0 && !this.state.alreadyUpdated) {
+
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
@@ -486,18 +488,24 @@ class ScheduleSummaryContainer extends Component {
           skipFurtherUpdateCreditsOffsetA = true;
         }
 
-        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !skipFurtherUpdateCreditsOffsetA) {
+        if (previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > 0 && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = 0;
+          skipFurtherUpdateCreditsOffsetA = true;
+        }
+
+        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !skipFurtherUpdateCreditsOffsetA && !this.state.alreadyUpdated) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
         }
 
         // if we still dont have LINE26A at this point, let's use the total credit reductions so far
-        if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !this.state.alreadyUpdated) {
+        if (!previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !this.state.alreadyUpdated) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
         }
 
-        if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && summary.creditsOffsetA > 0 && !this.state.alreadyUpdated) {
+        if (!previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && summary.creditsOffsetA > 0 && !this.state.alreadyUpdated) {
           updateCreditsOffsetA = true;
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = summary.creditsOffsetA;
         }

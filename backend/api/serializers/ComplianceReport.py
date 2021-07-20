@@ -72,6 +72,19 @@ class ComplianceReportBaseSerializer:
 
         return None
 
+    def get_previous_report_was_credit(self, obj):
+        previous_report = obj.supplements
+        
+        if previous_report is not None and \
+                previous_report.status.director_status_id == 'Accepted':
+
+            if previous_report.schedule_b:
+                credits = previous_report.schedule_b.total_credits - \
+                    previous_report.schedule_b.total_debits
+                return True if credits > 0 else False
+
+        return False
+
     def get_total_previous_credit_reductions(self, obj):
         # Return the total number of credits for all previous reductions for
         # supplemental reports
@@ -322,6 +335,7 @@ class ComplianceReportDetailSerializer(
     max_credit_offset = SerializerMethodField()
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
+    previous_report_was_credit = SerializerMethodField()
 
     skip_deltas = False
 
@@ -597,7 +611,8 @@ class ComplianceReportDetailSerializer(
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
                   'credit_transactions', 'max_credit_offset',
-                  'supplemental_number', 'last_accepted_offset']
+                  'supplemental_number', 'last_accepted_offset',
+                  'previous_report_was_credit']
 
 
 class ComplianceReportValidator:
@@ -1142,6 +1157,7 @@ class ComplianceReportUpdateSerializer(
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
     history = SerializerMethodField()
+    previous_report_was_credit = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1512,7 +1528,8 @@ class ComplianceReportUpdateSerializer(
             'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
             'display_name', 'supplemental_note', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number', 'last_accepted_offset', 'history'
+            'supplemental_number', 'last_accepted_offset', 'history',
+            'previous_report_was_credit'
         )
         read_only_fields = (
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
