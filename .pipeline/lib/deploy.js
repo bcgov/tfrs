@@ -15,7 +15,6 @@ module.exports = settings => {
 
   //The deployment of your cool app goes here ▼▼▼
 
-  /*
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -39,7 +38,7 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-  */
+  
 
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
@@ -55,7 +54,7 @@ module.exports = settings => {
     }
   }))
 
-/** 
+ 
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -70,7 +69,7 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
     }
   })) 
-*/
+
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -85,7 +84,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
- /*
+ 
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -148,7 +147,7 @@ module.exports = settings => {
       }
     }))  
   }
-
+/*
   //only deploy schemaspy for test and prod
   if(phases[phase].phase === 'test' || phases[phase].phase === 'prod') {
     objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/schema-spy/schemaspy-dc.yaml`, {
