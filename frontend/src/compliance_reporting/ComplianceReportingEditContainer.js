@@ -8,7 +8,11 @@ import { connect } from 'react-redux';
 import { toastr as reduxToastr } from 'react-redux-toastr';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import { getUpdatedLoggedInUser } from '../actions/userActions';
+import * as NumberFormat from '../constants/numeralFormats';
 import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import { complianceReporting } from '../actions/complianceReporting';
@@ -33,12 +37,15 @@ import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
+import Tooltip from '../app/components/Tooltip';
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
     return {
       ...summary,
       creditsOffset: Number(summary.creditsOffset),
+      creditsOffsetA: Number(summary.creditsOffsetA),
+      creditsOffsetB: Number(summary.creditsOffsetB),
       dieselClassDeferred: Number(summary.dieselClassDeferred),
       dieselClassObligation: Number(summary.dieselClassObligation),
       dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
@@ -221,7 +228,8 @@ class ComplianceReportingEditContainer extends Component {
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
-        reduxToastr.error('Error saving');
+        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving';
+        reduxToastr.error(errorMessage);
       } else {
         if (this.status.fuelSupplierStatus) {
           toastr.complianceReporting(this.status.fuelSupplierStatus);
@@ -238,6 +246,7 @@ class ComplianceReportingEditContainer extends Component {
         this.props.invalidateAutosaved();
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
+          this.props.getUpdatedLoggedInUser();
           history.push(COMPLIANCE_REPORTING.LIST);
         }
       }
@@ -348,6 +357,10 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.match.params.id });
+
+    setTimeout(() => {
+      this.props.getUpdatedLoggedInUser();
+    }, 2000);
   }
 
   _handleCreateSupplemental (event, compliancePeriodDescription) {
@@ -363,6 +376,10 @@ class ComplianceReportingEditContainer extends Component {
       compliancePeriod: compliancePeriodDescription,
       supplements: Number(this.props.match.params.id)
     });
+
+    setTimeout(() => {
+      this.props.getUpdatedLoggedInUser();
+    }, 2000);
   }
 
   _addToFields (value) {
@@ -410,7 +427,6 @@ class ComplianceReportingEditContainer extends Component {
 
     if (payload.summary) {
       const { summary } = payload;
-
       payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
     }
 
@@ -442,9 +458,10 @@ class ComplianceReportingEditContainer extends Component {
     const { schedules } = this.state;
 
     const { id } = this.props.match.params;
+    const { complianceReporting: report } = this.props;
 
-    if (!this.props.complianceReporting.validationMessages ||
-      Object.keys(this.props.complianceReporting.validationMessages).length === 0) {
+    if (!complianceReporting.validationMessages ||
+      Object.keys(complianceReporting.validationMessages).length === 0) {
       const { summary } = schedules;
 
       if (summary && !summary.dieselClassDeferred) {
@@ -481,6 +498,16 @@ class ComplianceReportingEditContainer extends Component {
 
       if (summary && !summary.creditsOffset) {
         summary.creditsOffset = 0;
+      }
+
+      const { isSupplemental } = report.item;
+
+      // if (isSupplemental && summary && !summary.creditsOffsetA) {
+      //   summary.creditsOffsetA = totalPreviousCreditReductions;
+      // }
+
+      if (isSupplemental && summary && !summary.creditsOffsetB) {
+        summary.creditsOffsetB = 0;
       }
 
       this.props.recomputeTotals({
@@ -521,6 +548,7 @@ class ComplianceReportingEditContainer extends Component {
     const TabComponent = this.tabComponent;
 
     const { tab, id } = this.props.match.params;
+    const { item } = this.props.complianceReporting;
 
     if (!this.state.getCalled) {
       return (<Loading />);
@@ -535,15 +563,15 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     let period = null;
-    if (typeof (this.props.complianceReporting.item.compliancePeriod) === 'string') {
-      period = this.props.complianceReporting.item.compliancePeriod;
+    if (typeof (item.compliancePeriod) === 'string') {
+      period = item.compliancePeriod;
     } else {
-      period = this.props.complianceReporting.item.compliancePeriod.description;
+      period = item.compliancePeriod.description;
     }
 
     let organizationAddress = null;
 
-    if (this.props.complianceReporting.item.hasSnapshot &&
+    if (item.hasSnapshot &&
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
       ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
@@ -553,16 +581,36 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     return ([
-      <h2 key="main-header">
-        {this.props.complianceReporting.item.organization.name}
+      <h2 className="schedule-header" key="main-header">
+        {item.organization.name}
         {` -- `}
-        {typeof this.props.complianceReporting.item.type === 'string' && this.props.complianceReporting.item.type}
-        {this.props.complianceReporting.item.type.theType}
+        {typeof item.type === 'string' && item.type}
+        {item.type.theType}
         {` for `}
-        {typeof this.props.complianceReporting.item.compliancePeriod === 'string' && this.props.complianceReporting.item.compliancePeriod}
-        {this.props.complianceReporting.item.compliancePeriod.description}
+        {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
+        {item.compliancePeriod.description}
       </h2>,
-      <p key="organization-address">
+      <h3 className="schedule-available-credit-balance" key="available-credit-balance">
+      Available Credit Balance for this compliance period:
+        {` ${numeral(item.maxCreditOffset).format(NumberFormat.INT)} `}
+        <Tooltip
+          className="info"
+          placement="bottom"
+          show
+          title="The Available Credit Balance is the amount of credits in your credit balance
+          that can be used to offset outstanding debits in the compliance period for which this
+          report relates. Available credits include: (1) validated credits that were generated
+          from the supply of Part 3 fuel in this compliance period or in previous compliance
+          periods; and (2) credits issued under Part 3 Agreements or acquired through Credit
+          Transfers on or before the March 31 deadline of the calendar year following the
+          compliance period for which this report relates. Credits that are In Reserve (i.e.
+            pending a credit transaction) are not considered available and are therefore not
+            included in the Available Credit Balance."
+        >
+          <FontAwesomeIcon icon="info-circle" />
+        </Tooltip>
+      </h3>,
+      <p className="schedule-organization-address" key="organization-address">
         {organizationAddress &&
         AddressBuilder({
           address_line_1: organizationAddress.addressLine_1,
@@ -579,7 +627,7 @@ class ComplianceReportingEditContainer extends Component {
         compliancePeriod={period}
         complianceReport={this.props.complianceReporting.item}
         edit={this.edit}
-        hasSnapshot={this.props.complianceReporting.item.hasSnapshot}
+        hasSnapshot={item.hasSnapshot}
         id={id}
         key="nav"
         loggedInUser={this.props.loggedInUser}
@@ -590,7 +638,7 @@ class ComplianceReportingEditContainer extends Component {
         key="tab-component"
         loggedInUser={this.props.loggedInUser}
         period={period}
-        readOnly={this.props.complianceReporting.item.readOnly || !this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)}
+        readOnly={item.readOnly || !this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)}
         recomputedTotals={this.props.complianceReporting.recomputeResult}
         recomputeRequest={this._handleRecomputeRequest}
         recomputing={this.props.complianceReporting.isRecomputing}
@@ -605,8 +653,8 @@ class ComplianceReportingEditContainer extends Component {
       />,
       <ScheduleButtons
         id={this.props.match.params.id}
-        actions={this.props.complianceReporting.item.actions}
-        actor={this.props.complianceReporting.item.actor}
+        actions={item.actions}
+        actor={item.actor}
         compliancePeriod={period}
         complianceReport={this.props.complianceReporting.item}
         complianceReports={{
@@ -711,7 +759,7 @@ class ComplianceReportingEditContainer extends Component {
           </p>
           <p>
             Please be advised that payment of penalties must be submitted to the
-            Ministry of Energy, Mines and Petroleum Resources; cheques or money orders
+            Ministry of Energy, Mines and Low Carbon Innovation; cheques or money orders
             are to be made payable to the Minister of Finance.
           </p>
         </div>
@@ -783,6 +831,10 @@ ComplianceReportingEditContainer.defaultProps = {
 ComplianceReportingEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
+    errorMessage: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.shape()
+    ]),
     isCreating: PropTypes.bool,
     isGetting: PropTypes.bool,
     isRemoving: PropTypes.bool,
@@ -799,6 +851,10 @@ ComplianceReportingEditContainer.propTypes = {
       hasSnapshot: PropTypes.bool,
       id: PropTypes.number,
       isSupplemental: PropTypes.bool,
+      maxCreditOffset: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
       organization: PropTypes.shape(),
       readOnly: PropTypes.bool,
       status: PropTypes.shape(),
@@ -826,6 +882,7 @@ ComplianceReportingEditContainer.propTypes = {
   getComplianceReports: PropTypes.func.isRequired,
   getSnapshotRequest: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape({
@@ -866,7 +923,8 @@ const
     getSnapshotRequest: complianceReporting.getSnapshot,
     recomputeTotals: complianceReporting.recompute,
     updateComplianceReport: complianceReporting.update,
-    validateComplianceReport: complianceReporting.validate
+    validateComplianceReport: complianceReporting.validate,
+    getUpdatedLoggedInUser
   };
 
 const

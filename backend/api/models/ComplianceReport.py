@@ -251,7 +251,8 @@ class ComplianceReport(Auditable):
                 current = ComplianceReport.objects.get(id=current_id)
 
                 # don't count non-supplement reports (really should just be the root)
-                if current.supplements is not None:
+                if current.supplements is not None and \
+                        not current.status.fuel_supplier_status_id == "Deleted":
                     i += 1
 
                 if current_id == self.id:

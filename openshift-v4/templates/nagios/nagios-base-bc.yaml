@@ -23,7 +23,7 @@ objects:
     source:
       contextDir: openshift-v4/templates/nagios
       git:
-        ref: openshift-v4-migration
+        ref: master
         uri: https://github.com/bcgov/tfrs.git
       type: Git
     strategy:

@@ -44,6 +44,10 @@
 
   .credit_balance {
     float: right;
+
+    .reserved {
+      margin-top: 1rem;
+    }
   }
 }
 
@@ -61,7 +65,7 @@
       text-align: center;
     }
 
-    .col-credit-balance, .col-id, .col-last-transaction {
+    .col-credit-balance, .col-deductions, .col-id, .col-last-transaction {
       text-align: right;
     }
   }

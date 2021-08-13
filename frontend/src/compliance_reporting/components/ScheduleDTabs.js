@@ -2,14 +2,33 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import Tooltip from '../../app/components/Tooltip';
 import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/scheduleColumns';
 
 const ScheduleDTabs = (props) => {
+  const {
+    addSheet,
+    addSheetEnabled,
+    scheduleB,
+    setActiveSheet,
+    sheets
+  } = props;
+
   const renderTabs = (active) => {
     const elements = [];
 
-    for (let x = props.sheets.length - 1; x >= 0; x -= 1) {
-      const sheet = props.sheets[x];
+    let inUsed = false;
+
+    if (scheduleB && scheduleB.records && scheduleB.records.length > 0) {
+      scheduleB.records.forEach((record) => {
+        if (record.scheduleD_sheetIndex !== null && record.scheduleD_sheetIndex !== '') {
+          inUsed = true;
+        }
+      });
+    }
+
+    for (let x = sheets.length - 1; x >= 0; x -= 1) {
+      const sheet = sheets[x];
       const fuelType = sheet.input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value;
 
       let label = `Fuel ${sheet.id}`;
@@ -32,8 +51,9 @@ const ScheduleDTabs = (props) => {
           role="presentation"
         >
           <div>
-            <button type="button" onClick={() => props.setActiveSheet(sheet.id)}>{label}</button>
+            <button type="button" onClick={() => setActiveSheet(sheet.id)}>{label}</button>
             {(active === sheet.id) &&
+            !inUsed &&
             <button
               className="delete"
               data-toggle="modal"
@@ -42,6 +62,21 @@ const ScheduleDTabs = (props) => {
             >
               <FontAwesomeIcon icon="minus-circle" />
             </button>
+            }
+            {(active === sheet.id) &&
+            inUsed &&
+            <Tooltip
+              show
+              title="A Schedule D entry is currently in-use in Schedule B. To delete this Schedule D entry, please first delete all fuel entry rows in Schedule B that rely on the “GHGenius modelled” provision of the Act \[Section 6 (5) (d) (ii) (A)\] and then save the compliance report."
+            >
+              <button
+                className="disabled"
+                disabled
+                type="button"
+              >
+                <FontAwesomeIcon icon="minus-circle" />
+              </button>
+            </Tooltip>
             }
           </div>
         </li>);
@@ -56,8 +91,8 @@ const ScheduleDTabs = (props) => {
         role="presentation"
       >
         <div>
-          {props.addSheetEnabled &&
-            <button type="button" onClick={() => props.addSheet()}>Add Fuel</button>
+          {addSheetEnabled &&
+            <button type="button" onClick={() => addSheet(1, true)}>Add Fuel</button>
           }
         </div>
       </li>
@@ -67,13 +102,15 @@ const ScheduleDTabs = (props) => {
 };
 
 ScheduleDTabs.defaultProps = {
-  addSheetEnabled: true
+  addSheetEnabled: true,
+  scheduleB: null
 };
 
 ScheduleDTabs.propTypes = {
   active: PropTypes.number.isRequired,
   addSheet: PropTypes.func.isRequired,
   addSheetEnabled: PropTypes.bool,
+  scheduleB: PropTypes.shape(),
   setActiveSheet: PropTypes.func.isRequired,
   sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };

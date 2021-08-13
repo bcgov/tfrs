@@ -51,6 +51,111 @@ from api.serializers.Organization import OrganizationMinSerializer, \
     OrganizationDisplaySerializer
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
+from api.services.OrganizationService import OrganizationService
+
+
+class ComplianceReportBaseSerializer:
+    def get_last_accepted_offset(self, obj):
+        current = obj
+        last_accepted = None
+
+        while current.supplements is not None and not last_accepted:
+            current = current.supplements
+
+            if current.status.director_status_id in [
+                    "Accepted"
+            ]:
+                last_accepted = current
+
+        if last_accepted:
+            return current.summary.credits_offset
+
+        return None
+
+    def get_previous_report_was_credit(self, obj):
+        previous_report = obj.supplements
+        
+        if previous_report is not None and \
+                previous_report.status.director_status_id == 'Accepted':
+
+            if previous_report.schedule_b:
+                credits = previous_report.schedule_b.total_credits - \
+                    previous_report.schedule_b.total_debits
+                return True if credits > 0 else False
+
+        return False
+
+    def get_total_previous_credit_reductions(self, obj):
+        # Return the total number of credits for all previous reductions for
+        # supplemental reports
+        # previous_transactions = []
+        submitted_reports = []
+        current = obj
+        submitted_reports_end = False
+        rejected_found = False
+
+        total_previous_reduction = Decimal(0.0)
+
+        # this is an attempt to simplify the process of calculation previous
+        # credit reductions
+        # If the last supplemental report was submitted we can just use the
+        # credit offset there as our previous reduction (which is credit offset A)
+        if current.supplements and current.supplements.status and \
+                current.supplements.status.fuel_supplier_status_id in [
+                    "Submitted"
+                ] and current.supplements.status.director_status_id in [
+                    "Unreviewed"
+                ]:
+            total_previous_reduction = current.supplements.summary.credits_offset
+            submitted_reports_end = True
+
+        while current.supplements is not None and not submitted_reports_end:
+            current = current.supplements
+            if current.status.director_status_id in [
+                    "Rejected"
+            ]:
+                rejected_found = True
+
+            if current.status.director_status_id in [
+                    "Accepted"
+            ]:
+                submitted_reports_end = True
+
+            # if current.credit_transaction is not None and \
+            #         current.status.director_status_id not in ["Rejected"]:
+            #     previous_transactions.append(current.credit_transaction)
+            if current.status.fuel_supplier_status_id == "Submitted" and \
+                    not submitted_reports_end and \
+                    not rejected_found:
+                submitted_reports.append(current)
+
+            if rejected_found and submitted_reports_end and current.summary:
+                # Clear the submitted reports and we only care about the
+                # last accepted one
+                total_previous_reduction = current.summary.credits_offset
+
+        # for transaction in previous_transactions:
+        #     if transaction.type.the_type in ['Credit Reduction']:
+        #         total_previous_reduction += transaction.number_of_credits
+        #     elif transaction.type.the_type in ['Credit Validation']:
+        #         total_previous_reduction -= transaction.number_of_credits
+
+        if not rejected_found:
+            for report in submitted_reports:
+                if report.summary and report.summary.credits_offset_b:
+                    total_previous_reduction += report.summary.credits_offset_b
+
+        return total_previous_reduction
+
+    def get_supplemental_number(self, obj):
+        current = obj
+        supplemental_number = 0
+
+        while current.supplements is not None:
+            current = current.supplements
+            supplemental_number += 1
+
+        return supplemental_number
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -205,7 +310,9 @@ class ComplianceReportMinSerializer(serializers.ModelSerializer):
         fields = ('id', 'type', 'compliance_period')
 
 
-class ComplianceReportDetailSerializer(serializers.ModelSerializer):
+class ComplianceReportDetailSerializer(
+        serializers.ModelSerializer, ComplianceReportBaseSerializer
+):
     """
     Detail Serializer for the Compliance Report
     """
@@ -225,6 +332,10 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     display_name = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
     credit_transactions = SerializerMethodField()
+    max_credit_offset = SerializerMethodField()
+    supplemental_number = SerializerMethodField()
+    last_accepted_offset = SerializerMethodField()
+    previous_report_was_credit = SerializerMethodField()
 
     skip_deltas = False
 
@@ -261,24 +372,6 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         return ComplianceReportPermissions.get_available_actions(
             obj, relationship
         )
-
-    def get_total_previous_credit_reductions(self, obj):
-        # Return the total numner of credits for all previous reductions for
-        # supplemental reports
-        previous_transactions = []
-        current = obj
-        while current.supplements is not None:
-            current = current.supplements
-            if current.credit_transaction is not None:
-                previous_transactions.append(current.credit_transaction)
-
-        total_previous_reduction = Decimal(0.0)
-
-        for transaction in previous_transactions:
-            if transaction.type.the_type in ['Credit Reduction']:
-                total_previous_reduction += transaction.number_of_credits
-
-        return total_previous_reduction
 
     def get_deltas(self, obj):
 
@@ -343,6 +436,17 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
 
         return deltas
 
+    def get_max_credit_offset(self, obj):
+        max_credit_offset = OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description
+        )
+
+        if max_credit_offset < 0:
+            max_credit_offset = 0
+
+        return max_credit_offset
+
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
         total_petroleum_gasoline = Decimal(0)
@@ -382,6 +486,10 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                 else Decimal(0)
             lines['26'] = obj.summary.credits_offset \
                 if obj.summary.credits_offset is not None else Decimal(0)
+            lines['26A'] = obj.summary.credits_offset_a \
+                if obj.summary.credits_offset_a is not None else Decimal(0)
+            lines['26B'] = obj.summary.credits_offset_b \
+                if obj.summary.credits_offset_b is not None else Decimal(0)
         else:
             lines['6'] = Decimal(0)
             lines['7'] = Decimal(0)
@@ -392,6 +500,8 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
             lines['19'] = Decimal(0)
             lines['20'] = Decimal(0)
             lines['26'] = Decimal(0)
+            lines['26A'] = Decimal(0)
+            lines['26B'] = Decimal(0)
 
         if obj.schedule_a:
             net_gasoline_class_transferred += \
@@ -500,7 +610,9 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
-                  'credit_transactions']
+                  'credit_transactions', 'max_credit_offset',
+                  'supplemental_number', 'last_accepted_offset',
+                  'previous_report_was_credit']
 
 
 class ComplianceReportValidator:
@@ -962,6 +1074,23 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_previously_retained
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
+                summary.credits_offset_a = original_summary.credits_offset_a or \
+                    original_summary.credits_offset
+
+                if original_report.status.director_status_id == 'Rejected':
+                    current = original_report
+                    accepted_found = False
+
+                    while current.supplements is not None and not accepted_found:
+                        current = current.supplements
+
+                        if current.status.director_status_id in [
+                                "Accepted"
+                        ]:
+                            summary.credits_offset = current.summary.credits_offset
+                            summary.credits_offset_a = current.summary.credits_offset
+                            accepted_found = True
+
                 summary.save()
 
             if original_report.exclusion_agreement is not None:
@@ -999,7 +1128,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ComplianceReportUpdateSerializer(
-    serializers.ModelSerializer, ComplianceReportValidator
+    serializers.ModelSerializer, ComplianceReportValidator,
+    ComplianceReportBaseSerializer
 ):
     """
     Update Serializer for the Compliance Report
@@ -1022,6 +1152,12 @@ class ComplianceReportUpdateSerializer(
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
+    max_credit_offset = SerializerMethodField()
+    total_previous_credit_reductions = SerializerMethodField()
+    supplemental_number = SerializerMethodField()
+    last_accepted_offset = SerializerMethodField()
+    history = SerializerMethodField()
+    previous_report_was_credit = SerializerMethodField()
 
     strip_summary = False
     disregard_status = False
@@ -1044,6 +1180,45 @@ class ComplianceReportUpdateSerializer(
             obj, relationship
         )
 
+    def get_max_credit_offset(self, obj):
+        max_credit_offset = OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description
+        )
+
+        if max_credit_offset < 0:
+            max_credit_offset = 0
+
+        return max_credit_offset
+
+    def get_history(self, obj):
+        """
+        Returns all the previous status changes for the compliance report
+        """
+
+        from .ComplianceReportHistory import ComplianceReportHistorySerializer
+        user = self.context['request'].user \
+            if 'request' in self.context else None
+
+        if user and user.is_government_user:
+            history = obj.get_history(include_government_statuses=True)
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        elif user and not user.is_government_user:
+            history = obj.get_history()
+
+            serializer = ComplianceReportHistorySerializer(
+                history, many=True, context=self.context
+            )
+
+            return serializer.data
+        else:
+            return None
+
     def update(self, instance, validated_data):
         request = self.context.get('request')
 
@@ -1052,6 +1227,28 @@ class ComplianceReportUpdateSerializer(
             raise PermissionDenied('Cannot modify this compliance report')
 
         previous_director_status = instance.status.director_status.status
+
+        # validate if they have enough credits
+        summary_data = validated_data.get('summary')
+
+        max_credit_offset = OrganizationService.get_max_credit_offset(
+            instance.organization,
+            instance.compliance_period.description
+        )
+
+        if summary_data and instance.supplements_id is None and \
+                summary_data.get('credits_offset', 0) and \
+                summary_data.get('credits_offset', 0) > max_credit_offset:
+            raise (serializers.ValidationError(
+                'Insufficient available credit balance. Please adjust Line 26.'
+            ))
+
+        if summary_data and instance.supplements_id and \
+                summary_data.get('credits_offset_b', 0) and \
+                summary_data.get('credits_offset_b', 0) > max_credit_offset:
+            raise (serializers.ValidationError(
+                'Insufficient available credit balance. Please adjust Line 26b.'
+            ))
 
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
@@ -1078,6 +1275,39 @@ class ComplianceReportUpdateSerializer(
                 instance.status.fuel_supplier_status = status_data[
                     'fuel_supplier_status'
                 ]
+
+                if instance.status.fuel_supplier_status.status in [
+                        'Submitted'
+                ]:
+                    # validate if they have enough credits
+                    summary_data = validated_data.get('summary')
+
+                    max_credit_offset = OrganizationService.get_max_credit_offset(
+                        instance.organization,
+                        instance.compliance_period.description
+                    )
+
+                    credits_offset = 0
+
+                    if summary_data:
+                        if not instance.is_supplemental:
+                            credits_offset = summary_data.get(
+                                'credits_offset', 0
+                            )
+                        elif 'credits_offset_b' in summary_data.keys():
+                            credits_offset = summary_data.get(
+                                'credits_offset_b', 0
+                            )
+
+                    if not credits_offset:
+                        credits_offset = 0
+
+                    if credits_offset > max_credit_offset:
+                        raise (serializers.ValidationError(
+                            'Insufficient available credit balance. '
+                            'Please adjust Line 26.'
+                        ))
+
                 if instance.supplements is not None and \
                         instance.status.fuel_supplier_status.status in [
                             'Submitted'
@@ -1152,6 +1382,8 @@ class ComplianceReportUpdateSerializer(
 
                     schedule_d.sheets.add(sheet)
                     schedule_d.save()
+            else:
+                instance.schedule_d = None
 
             instance.save()
 
@@ -1290,13 +1522,21 @@ class ComplianceReportUpdateSerializer(
 
     class Meta:
         model = ComplianceReport
-        fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-                  'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
-                  'display_name', 'supplemental_note', 'is_supplemental')
-        read_only_fields = ('compliance_period', 'read_only', 'has_snapshot',
-                            'organization', 'actions', 'actor', 'display_name',
-                            'is_supplemental')
+        fields = (
+            'status', 'type', 'compliance_period', 'organization',
+            'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
+            'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+            'display_name', 'supplemental_note', 'is_supplemental',
+            'max_credit_offset', 'total_previous_credit_reductions',
+            'supplemental_number', 'last_accepted_offset', 'history',
+            'previous_report_was_credit'
+        )
+        read_only_fields = (
+            'compliance_period', 'read_only', 'has_snapshot', 'organization',
+            'actions', 'actor', 'display_name', 'is_supplemental',
+            'max_credit_offset', 'total_previous_credit_reductions',
+            'supplemental_number', 'last_accepted_offset', 'history'
+        )
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):

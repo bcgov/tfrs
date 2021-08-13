@@ -23,7 +23,7 @@ import {
 } from '../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
-import { getLoggedInUser } from '../actions/userActions';
+import { getLoggedInUser, getUpdatedLoggedInUser } from '../actions/userActions';
 import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
@@ -162,6 +162,7 @@ class CreditTransferEditContainer extends Component {
         this.props.addSigningAuthorityConfirmation(confirmations);
       }
 
+      this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(status.id, this.props.item);
@@ -174,6 +175,7 @@ class CreditTransferEditContainer extends Component {
 
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
+      this.props.getUpdatedLoggedInUser();
       history.push(CREDIT_TRANSACTIONS.LIST);
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, this.props.item);
     });
@@ -524,6 +526,7 @@ CreditTransferEditContainer.propTypes = {
   getFuelSuppliers: PropTypes.func.isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   isFetching: PropTypes.bool.isRequired,
@@ -595,6 +598,7 @@ const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch),
+  getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),

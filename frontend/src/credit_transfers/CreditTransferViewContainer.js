@@ -27,7 +27,7 @@ import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
-import { getLoggedInUser } from '../actions/userActions';
+import { getLoggedInUser, getUpdatedLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
 import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
@@ -229,6 +229,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
+      this.props.getUpdatedLoggedInUser();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(status.id, item, successMessage);
@@ -573,6 +574,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
+      this.props.getUpdatedLoggedInUser();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
@@ -674,6 +676,7 @@ CreditTransferViewContainer.propTypes = {
   errors: PropTypes.shape({}),
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
@@ -761,6 +764,7 @@ const mapDispatchToProps = dispatch => ({
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>

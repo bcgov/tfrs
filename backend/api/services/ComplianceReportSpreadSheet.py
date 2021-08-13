@@ -274,6 +274,8 @@ class ComplianceReportSpreadsheet(object):
             '24': 'Total debits from fuel supplied (from Schedule B)',
             '25': 'Net credit or debit balance for compliance period',
             '26': 'Banked credits used to offset outstanding debits (if applicable)',
+            '26A': 'Banked credits used to offset outstanding debits - Previous Reports',
+            '26B': 'Banked credits used to offset outstanding debits - Supplemental Report',
             '27': 'Outstanding debit balance',
             '28': 'Part 3 non-compliance penalty payable'
         }

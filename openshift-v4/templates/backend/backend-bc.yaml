@@ -68,12 +68,29 @@ objects:
           namespace: openshift
           name: python:3.6
         env:
-        - name: PIP_INDEX_URL
+          - name: ARTIFACTORY_USER
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-tfrs-artifactory-service-account-wofwpt
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-tfrs-artifactory-service-account-wofwpt
+                key: password
+        forcePull: true
+        noCache: true
     output:
       to:
         kind: ImageStreamTag
         name: ${NAME}-backend:${VERSION}
-    resources: {}
+    resources:
+      limits:
+        cpu: '1'
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
     postCommit: {}
     nodeSelector: 
   status:

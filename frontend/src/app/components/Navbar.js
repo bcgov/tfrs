@@ -64,6 +64,8 @@ class Navbar extends Component {
   }
 
   render () {
+    const { organization } = this.props.loggedInUser;
+
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container-fluid">
@@ -476,16 +478,18 @@ class Navbar extends Component {
               <div className="pull-right">
                 <div>
                   <h5 id="organization-name">
-                    {this.props.loggedInUser.organization &&
-                      this.props.loggedInUser.organization.name}
+                    {organization && organization.name}
                   </h5>
                   {this.props.loggedInUser.roles &&
                   !this.props.loggedInUser.isGovernmentUser &&
                   <span id="organization-balance">
                       Credit Balance: {
-                      numeral(this.props.loggedInUser.organization.organizationBalance.validatedCredits)
+                      numeral(organization.organizationBalance.validatedCredits)
                         .format(NumberFormat.INT)
-                    }
+                    } ({
+                      numeral(organization.organizationBalance.deductions)
+                        .format(NumberFormat.INT)
+                    })
                   </span>
                   }
                 </div>

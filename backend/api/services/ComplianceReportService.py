@@ -226,6 +226,11 @@ class ComplianceReportService(object):
         """
         previous_transactions = []
         current = compliance_report
+        is_supplemental = False
+
+        if current.supplements:
+            is_supplemental = True
+
         while current.supplements is not None:
             current = current.supplements
             if current.credit_transaction is not None:
@@ -261,9 +266,8 @@ class ComplianceReportService(object):
 
         if Decimal(lines['25']) > Decimal(0):
             desired_net_credit_balance_change = Decimal(lines['25'])
-        else:
-            if Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
-                desired_net_credit_balance_change = Decimal(lines['26'])*Decimal(-1.0)
+        elif Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
+            desired_net_credit_balance_change = Decimal(lines['26']) * Decimal(-1.0)
 
         required_credit_transaction = desired_net_credit_balance_change - \
                                       (total_previous_validation - total_previous_reduction)
@@ -272,6 +276,10 @@ class ComplianceReportService(object):
             print('line 25 of current report: {}'.format(lines['25']))
             print('desired credit balance change: {}'.format(desired_net_credit_balance_change))
             print('required transaction to effect change: {}'.format(required_credit_transaction))
+
+        if is_supplemental and Decimal(lines['25']) < 0 and \
+                (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
+            required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
 
         if required_credit_transaction > Decimal(0):
             # do validation for Decimal(lines['25'])

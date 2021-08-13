@@ -44,10 +44,12 @@ class ScheduleDContainer extends Component {
 
     this.state = {
       activeSheet: 0,
-      sheets: []
+      sheets: [],
+      loaded: false
     };
 
     this.rowNumber = 1;
+    this.scheduleB = null;
 
     this._addHeaders = this._addHeaders.bind(this);
     this._addSheet = this._addSheet.bind(this);
@@ -73,9 +75,13 @@ class ScheduleDContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    const { sheets } = this.state;
+    const { sheets, loaded } = this.state;
 
     let source = nextProps.scheduleState.scheduleD;
+
+    if (nextProps.scheduleState && nextProps.scheduleState.scheduleB) {
+      this.scheduleB = nextProps.scheduleState.scheduleB;
+    }
 
     if (nextProps.snapshot && this.props.readOnly) {
       source = nextProps.snapshot.scheduleD;
@@ -88,7 +94,7 @@ class ScheduleDContainer extends Component {
       source = this.props.complianceReport.scheduleD;
     }
 
-    if (source && source.sheets) {
+    if (source && source.sheets && !loaded) {
       if ((sheets.length) < source.sheets.length) {
         this._addSheet(source.sheets.length - (sheets.length));
       }
@@ -161,7 +167,13 @@ class ScheduleDContainer extends Component {
         }
       }
 
-      this.setState({ sheets });
+      this.setState({ sheets, loaded: true });
+    } else if (source && source.sheets && loaded) {
+      if (!this.props.snapshot && !this.props.validating) {
+        for (let i = 0; i < source.sheets.length; i += 1) {
+          sheets[i] = this._validate(sheets[i], i);
+        }
+      }
     }
   }
 
@@ -322,7 +334,7 @@ class ScheduleDContainer extends Component {
           className: 'text dropdown-indicator',
           readOnly: this.props.readOnly,
           dataEditor: Select,
-          getOptions: () => this.props.referenceData.approvedFuels,
+          getOptions: () => this.props.referenceData.approvedFuels.filter(fuelType => !fuelType.creditCalculationOnly),
           mapping: {
             key: 'id',
             value: 'name'
@@ -346,13 +358,19 @@ class ScheduleDContainer extends Component {
     };
   }
 
-  _addSheet (sheetsToAdd = 1) {
+  _addSheet (sheetsToAdd = 1, newSheet = false) {
     const { sheets } = this.state;
 
     for (let i = 0; i < sheetsToAdd; i += 1) {
       const sheet = this._addHeaders(sheets.length);
 
       sheets.push(sheet);
+
+      if (newSheet) {
+        for (let j = 0; j < sheet.output.length; j += 1) {
+          sheet.output[j][1].value = 0;
+        }
+      }
     }
 
     this.setState({
@@ -366,11 +384,24 @@ class ScheduleDContainer extends Component {
     const index = sheets.findIndex(sheet => (sheet.id === activeSheet));
     sheets.splice(index, 1);
 
+    if (sheets.length === 0) {
+      const sheet = this._addHeaders(sheets.length);
+
+      sheets.push(sheet);
+    }
+
     const { id } = sheets[0]; // default to the first one
 
     this.setState({
-      activeSheet: id
+      activeSheet: id,
+      sheets
     });
+
+    setTimeout(() => {
+      this._gridStateToPayload({
+        sheets
+      });
+    }, 1000);
   }
 
   _getFuelClasses (row, id) {
@@ -650,6 +681,7 @@ class ScheduleDContainer extends Component {
           active={this.state.activeSheet}
           addSheet={this._addSheet}
           addSheetEnabled={!this.props.readOnly}
+          scheduleB={this.scheduleB}
           sheets={sheets}
           setActiveSheet={this._setActiveSheet}
         />

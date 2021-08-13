@@ -4,10 +4,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import Errors from '../../app/components/Errors';
+import Tooltip from '../../app/components/Tooltip';
 import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferProgress from './CreditTransferProgress';
@@ -28,6 +30,23 @@ const CreditTransferForm = props => (
             numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
               .format(NumberFormat.INT)
           }
+          <div className="reserved">
+            (In Reserve: {
+              numeral(props.loggedInUser.organization.organizationBalance.deductions)
+                .format(NumberFormat.INT)
+            }){` `}
+            <Tooltip
+              className="info"
+              show
+              title="Reserved credits are the portion of credits in your credit balance that are
+              currently pending the completion of a credit transaction. For example, selling
+              credits to another organization (i.e. Credit Transfer) or being used to offset
+              outstanding debits in a compliance period. Reserved credits cannot be transferred
+              or otherwise used until the pending credit transaction has been completed."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
         </h3>
       }
     </div>
@@ -187,6 +206,7 @@ CreditTransferForm.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
+        deductions: PropTypes.number,
         validatedCredits: PropTypes.number
       })
     }),

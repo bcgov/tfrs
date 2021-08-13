@@ -3,49 +3,47 @@ kind: Template
 apiVersion: v1
 metadata:
   name: clamav
-  creationTimestamp: 
+  creationTimestamp:
 objects:
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    name: clamav
-    generation: 1
-    creationTimestamp: 
-  spec:
-    lookupPolicy:
-      local: false
-  status:
-    dockerImageRepository: ''
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: clamav
-    creationTimestamp: 
-    labels:
-      app: clamav
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
       name: clamav
-      template: clamav
-  spec:
-    triggers: []
-    runPolicy: Serial
-    source:
-      type: Git
-      git:
-        ref: add-ca-cert
-        uri: https://github.com/bcgov/docker-clamav.git
-    strategy:
-      type: Docker
-      dockerStrategy:
-        pullSecret:
-          name: docker-creds      
-        forcePull: true
-        noCache: true
-    output:
-      to:
-        kind: ImageStreamTag
-        name: clamav:latest
-    resources: {}
-    postCommit: {}
-    nodeSelector: {}
-  status:
-    lastVersion: 0
+      generation: 1
+      creationTimestamp:
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: ""
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: clamav
+      creationTimestamp:
+      labels:
+        app: clamav
+        name: clamav
+        template: clamav
+    spec:
+      triggers: []
+      runPolicy: Serial
+      source:
+        type: Git
+        git:
+          ref: master
+          uri: https://github.com/bcgov/docker-clamav.git
+      strategy:
+        type: Docker
+        dockerStrategy:
+          pullSecret:
+            name: docker-artifactory-secret
+      output:
+        to:
+          kind: ImageStreamTag
+          name: clamav:latest
+      resources: {}
+      postCommit: {}
+      nodeSelector: {}
+    status:
+      lastVersion: 0

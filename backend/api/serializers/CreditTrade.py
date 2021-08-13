@@ -21,11 +21,13 @@
     limitations under the License.
 """
 from datetime import datetime
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
+from api.models.ComplianceReport import ComplianceReport
+from api.models.ComplianceReportSchedules import ScheduleSummary
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeComment import CreditTradeComment
 from api.models.CreditTradeStatus import CreditTradeStatus
@@ -36,6 +38,7 @@ from api.serializers.DocumentCreditTrade import DocumentAuxiliarySerializer
 from api.services.CreditTradeActions import CreditTradeActions
 from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 from api.services.CreditTradeService import CreditTradeService
+from api.services.OrganizationService import OrganizationService
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
@@ -173,30 +176,18 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
 
-            pending_trades = CreditTrade.objects.filter(
-                (Q(status__status__in=[
-                    "Submitted", "Recommended", "Not Recommended"
-                ]) &
-                 Q(type__the_type="Sell") &
-                 Q(initiator_id=request.user.organization_id) &
-                 Q(is_rescinded=False)) |
-                (Q(status__status__in=[
-                    "Accepted", "Recommended", "Not Recommended"
-                ]) &
-                 Q(type__the_type="Buy") &
-                 Q(respondent_id=request.user.organization.id) &
-                 Q(is_rescinded=False))
-            ).aggregate(total_credits=Sum('number_of_credits'))
+            temp_balance = balance - number_of_credits
 
-            if pending_trades['total_credits'] is not None:
-                temp_balance = balance
-                temp_balance -= pending_trades['total_credits']
-                temp_balance -= number_of_credits
+            deductions = OrganizationService.get_pending_deductions(
+                request.user.organization
+            )
 
-                if temp_balance < 0:
-                    raise serializers.ValidationError({
-                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
-                    })
+            temp_balance -= deductions
+
+            if temp_balance < 0:
+                raise serializers.ValidationError({
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
+                })
 
         if request.user.organization.actions_type.the_type == 'None':
             raise serializers.ValidationError({
@@ -523,30 +514,18 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
                 })
 
-            pending_trades = CreditTrade.objects.filter(
-                (Q(status__status__in=[
-                    "Submitted", "Recommended", "Not Recommended"
-                ]) &
-                 Q(type__the_type="Sell") &
-                 Q(initiator_id=request.user.organization_id) &
-                 Q(is_rescinded=False)) |
-                (Q(status__status__in=[
-                    "Accepted", "Recommended", "Not Recommended"
-                ]) &
-                 Q(type__the_type="Buy") &
-                 Q(respondent_id=request.user.organization.id) &
-                 Q(is_rescinded=False))
-            ).aggregate(total_credits=Sum('number_of_credits'))
+            temp_balance = balance - number_of_credits
 
-            if pending_trades['total_credits'] is not None:
-                temp_balance = balance
-                temp_balance -= pending_trades['total_credits']
-                temp_balance -= number_of_credits
+            deductions = OrganizationService.get_pending_deductions(
+                request.user.organization
+            )
 
-                if temp_balance < 0:
-                    raise serializers.ValidationError({
-                        'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
-                    })
+            temp_balance -= deductions
+
+            if temp_balance < 0:
+                raise serializers.ValidationError({
+                    'insufficientCredits': INSUFFICIENT_CREDITS_MESSAGE
+                })
 
         return data
 

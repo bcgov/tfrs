@@ -4,21 +4,21 @@ import ReactDataSheet from 'react-datasheet';
 
 class ScheduleDeltas extends Component {
 
-  static decimalViewer(digits = 2) {
+  static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
-  static buildSummaryGrid(deltas) {
+  static buildSummaryGrid (deltas) {
     const findMatchingDelta = (field) => {
-      let found = deltas.find(d => d.field === field);
+      const found = deltas.find(d => d.field === field);
       if (!!found) {
         return found;
       }
       return {
         newValue: null,
         oldValue: null
-      }
+      };
     };
     const difference = (delta) => {
       if (delta.newValue == null) {
@@ -47,17 +47,15 @@ class ScheduleDeltas extends Component {
         className: 'header underlined',
         disableEvents: true,
         value: 'New Value'
-      },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Old Value'
-        },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Delta'
-        }], [{
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Old Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Delta'
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 1'
@@ -69,17 +67,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('1').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('1').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('1')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('1').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('1')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 2'
@@ -91,17 +87,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('2').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('2').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('2')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('2').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('2')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 3'
@@ -113,17 +107,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('3').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('3').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('3')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('3').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('3')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 4'
@@ -135,17 +127,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('4').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('4').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('4')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('4').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('4')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 5'
@@ -157,17 +147,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('5').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('5').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('5')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('5').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('5')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 6'
@@ -179,17 +167,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('6').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('6').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('6')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('6').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('6')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 7'
@@ -201,17 +187,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('7').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('7').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('7')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('7').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('7')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 8'
@@ -223,17 +207,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('8').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('8').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('8')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('8').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('8')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 9'
@@ -245,17 +227,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('9').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('9').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('9')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('9').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('9')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 10'
@@ -267,17 +247,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('10').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('10').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('10')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('10').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('10')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 11'
@@ -289,17 +267,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('11').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('11').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('11')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{ // p2 diesel
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('11').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('11')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{ // p2 diesel
         className: 'header',
         colSpan: 5,
         value: 'Part 2 - Diesel'
@@ -315,17 +291,15 @@ class ScheduleDeltas extends Component {
         className: 'header underlined',
         disableEvents: true,
         value: 'New Value'
-      },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Old Value'
-        },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Delta'
-        }], [{
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Old Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Delta'
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 12'
@@ -337,17 +311,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('12').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('12').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('12')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('12').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('12')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 13'
@@ -359,17 +331,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('13').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('13').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('13')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('13').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('13')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 14'
@@ -381,17 +351,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('14').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('14').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('14')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('14').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('14')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 15'
@@ -403,17 +371,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('15').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('15').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('15')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('15').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('15')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 16'
@@ -425,17 +391,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('16').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('16').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('16')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('16').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('16')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 17'
@@ -447,17 +411,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('17').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('17').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('17')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('17').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('17')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 18'
@@ -469,17 +431,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('18').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('18').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('18')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('18').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('18')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 19'
@@ -491,17 +451,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('19').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('19').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('19')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('19').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('19')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 20'
@@ -513,17 +471,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('20').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('20').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('20')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('20').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('20')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 21'
@@ -535,17 +491,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('21').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('21').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('21')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('21').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('21')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 22'
@@ -557,17 +511,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('22').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('22').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('22')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{ // p3
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('22').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('22')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{ // p3
         className: 'header',
         colSpan: 5,
         value: 'Part 3 - Low Carbon Fuel Requirement Summary'
@@ -583,17 +535,15 @@ class ScheduleDeltas extends Component {
         className: 'header underlined',
         disableEvents: true,
         value: 'New Value'
-      },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Old Value'
-        },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Delta'
-        }], [{
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Old Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Delta'
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 23'
@@ -605,17 +555,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('23').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('23').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('23')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('23').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('23')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 24'
@@ -627,17 +575,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('24').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('24').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('24')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('24').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('24')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 25'
@@ -649,17 +595,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('25').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('25').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('25')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('25').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('25')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 26'
@@ -671,17 +615,55 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('26').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('26').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('26')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 26a'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Previous Reports'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26A').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26A').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26A')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 26b'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Supplemental Report'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26B').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26B').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26B')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 27'
@@ -693,17 +675,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('27').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('27').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('27')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('27').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('27')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 28'
@@ -715,18 +695,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('28').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('28').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('28')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-      ], [{ // penalty
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('28').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('28')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{ // penalty
         className: 'header',
         colSpan: 5,
         value: 'Part 2 and Part 3 Non-compliance Penalty Payable Summary'
@@ -742,17 +719,15 @@ class ScheduleDeltas extends Component {
         className: 'header underlined',
         disableEvents: true,
         value: 'New Value'
-      },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Old Value'
-        },
-        {
-          className: 'header underlined',
-          disableEvents: true,
-          value: 'Delta'
-        }], [{
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Old Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Delta'
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 11'
@@ -764,18 +739,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('11').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('11').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('11')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-      ], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('11').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('11')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 22'
@@ -791,12 +763,11 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('22').oldValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('22')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        }], [{
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('22')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 28'
@@ -808,17 +779,15 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('28').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: findMatchingDelta('28').oldValue,
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('28')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        }], [{
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('28').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('28')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
         className: 'strong',
         colSpan: 2,
         readOnly: true,
@@ -831,43 +800,42 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: findMatchingDelta('total_payable').oldValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      },
-        {
-          readOnly: true,
-          value: difference(findMatchingDelta('total_payable')),
-          valueViewer: ScheduleDeltas.decimalViewer(2)
-        }]
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('total_payable')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }]
     ];
 
     return grid;
   }
 
-  render() {
+  render () {
     const { deltas } = this.props;
 
     if (!deltas) {
       return null;
     }
 
-    const schedule_a_deltas = deltas.filter(d => /^schedule_a/.test(d.path));
-    const schedule_b_deltas = deltas.filter(d => /^schedule_b/.test(d.path));
-    const schedule_c_deltas = deltas.filter(d => /^schedule_c/.test(d.path));
-    const schedule_d_deltas = deltas.filter(d => /^schedule_d/.test(d.path));
-    const summary_deltas = deltas.filter(d => /^summary/.test(d.path));
+    const scheduleADeltas = deltas.filter(d => /^schedule_a/.test(d.path));
+    const scheduleBDeltas = deltas.filter(d => /^schedule_b/.test(d.path));
+    const scheduleCDeltas = deltas.filter(d => /^schedule_c/.test(d.path));
+    const scheduleDDeltas = deltas.filter(d => /^schedule_d/.test(d.path));
+    const summaryDeltas = deltas.filter(d => /^summary/.test(d.path));
 
     return (
       <div className="delta">
         <div>
-          {schedule_a_deltas.length > 0 &&
+          {scheduleADeltas.length > 0 &&
           <p><strong>Schedule A</strong> has been modified</p>
           }
-          {schedule_b_deltas.length > 0 &&
+          {scheduleBDeltas.length > 0 &&
           <p><strong>Schedule B</strong> has been modified</p>
           }
-          {schedule_c_deltas.length > 0 &&
+          {scheduleCDeltas.length > 0 &&
           <p><strong>Schedule C</strong> has been modified</p>
           }
-          {schedule_d_deltas.length > 0 &&
+          {scheduleDDeltas.length > 0 &&
           <p><strong>Schedule D</strong> has been modified</p>
           }
         </div>
@@ -877,7 +845,7 @@ class ScheduleDeltas extends Component {
           <hr />
           <ReactDataSheet
             className="spreadsheet summary snapshot_summary"
-            data={ScheduleDeltas.buildSummaryGrid(summary_deltas)}
+            data={ScheduleDeltas.buildSummaryGrid(summaryDeltas)}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -887,16 +855,16 @@ class ScheduleDeltas extends Component {
   }
 }
 
-ScheduleDeltas.defaultProps = {};
+ScheduleDeltas.defaultProps = {
+  deltas: []
+};
 
 ScheduleDeltas.propTypes = {
   deltas: PropTypes.arrayOf(PropTypes.shape({
-      action: PropTypes.string,
-      oldValue: PropTypes.any,
-      newValue: PropTypes.any
-    })
-  )
+    action: PropTypes.string,
+    oldValue: PropTypes.any,
+    newValue: PropTypes.any
+  }))
 };
 
 export default ScheduleDeltas;
-

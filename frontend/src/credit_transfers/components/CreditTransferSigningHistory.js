@@ -49,21 +49,10 @@ class CreditTransferSigningHistory extends Component {
     return (
       <p key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
-        {(CreditTransferSigningHistory.recordedFound(this.props.history) ||
-        !roleDisplay) &&
-          <span>
-            on {moment(this.props.tradeEffectiveDate).format('LL')} by the
-            <strong> Director </strong> under the
-          </span>
-        }
-        {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
-        roleDisplay &&
-          <span>
-            on {moment(history.createTimestamp).format('LL')} by
-            <strong> {history.user.firstName} {history.user.lastName}</strong>
-            <strong>{roleDisplay && `, ${roleDisplay}`} </strong> under the
-          </span>
-        }
+        <span>
+          on {moment(this.props.tradeEffectiveDate).format('LL')} by the
+          <strong> Director </strong> under the
+        </span>
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
       </p>
     );

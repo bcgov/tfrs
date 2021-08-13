@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import 'react-datasheet/lib/react-datasheet.css';
 
@@ -20,6 +21,7 @@ import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/sched
 import { formatNumeric } from '../utils/functions';
 import CallableModal from '../app/components/CallableModal';
 import Loading from '../app/components/Loading';
+import Tooltip from '../app/components/Tooltip';
 import * as Lang from '../constants/langEnUs';
 
 class ScheduleSummaryContainer extends Component {
@@ -142,6 +144,7 @@ class ScheduleSummaryContainer extends Component {
   static calculatePart3Payable (part3) {
     const grid = part3;
     let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value);
+
     const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
 
     let outstandingBalance = 0;
@@ -184,7 +187,8 @@ class ScheduleSummaryContainer extends Component {
       totals: {
         diesel: 0,
         gasoline: 0
-      }
+      },
+      alreadyUpdated: false
     };
 
     this.rowNumber = 1;
@@ -286,6 +290,8 @@ class ScheduleSummaryContainer extends Component {
       part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24']);
       part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25']);
       part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26']);
+      part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A']);
+      part3[SCHEDULE_SUMMARY.LINE_26_B][2] = cellFormatNumeric(summary.lines['26B']);
       part3[SCHEDULE_SUMMARY.LINE_27][2] = cellFormatNumeric(summary.lines['27'] < 0 ? summary.lines['27'] : 0);
       part3[SCHEDULE_SUMMARY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
 
@@ -293,6 +299,46 @@ class ScheduleSummaryContainer extends Component {
       penalty[SCHEDULE_PENALTY.LINE_22][2] = cellFormatTotal(summary.lines['22']);
       penalty[SCHEDULE_PENALTY.LINE_28][2] = cellFormatTotal(summary.lines['28']);
       penalty[SCHEDULE_PENALTY.TOTAL_NON_COMPLIANCE][2] = cellFormatTotal(summary.totalPayable);
+
+      const { isSupplemental, supplementalNumber } = this.props.complianceReport;
+
+      if (!isSupplemental) {
+        part3[SCHEDULE_SUMMARY.LINE_26][0].value = 'Banked credits used to offset outstanding debits (if applicable)';
+        part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
+          <div>
+            {`Line 26 `}
+            <Tooltip
+              className="info"
+              show
+              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        );
+
+        part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
+          ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
+          additionalTooltip: 'The value entered here cannot be more than your organization\'s available credit balance for this compliance period or the net debit balance in Line 25.'
+        };
+
+        part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden';
+      } else { // is supplemental
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
+      }
     } else {
       // read-write
       if (nextProps.validating || !nextProps.valid) {
@@ -314,6 +360,19 @@ class ScheduleSummaryContainer extends Component {
       if (!summary) {
         return;
       }
+
+      const {
+        isSupplemental,
+        totalPreviousCreditReductions,
+        supplementalNumber,
+        lastAcceptedOffset,
+        history,
+        status,
+        previousReportWasCredit,
+      } = this.props.complianceReport;
+
+      let updateCreditsOffsetA = false;
+      let skipFurtherUpdateCreditsOffsetA = false;
 
       const line15percent = diesel[SCHEDULE_SUMMARY.LINE_15][2].value * 0.05;
       diesel[SCHEDULE_SUMMARY.LINE_17][2].value = summary.dieselClassRetained;
@@ -350,10 +409,142 @@ class ScheduleSummaryContainer extends Component {
       gasoline[SCHEDULE_SUMMARY.LINE_9][2].value = summary.gasolineClassObligation;
 
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+
       const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
 
-      if (line25value && line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
-        part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+      if (!isSupplemental) {
+        if (line25value && line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+        }
+        part3[SCHEDULE_SUMMARY.LINE_26][0].value = 'Banked credits used to offset outstanding debits (if applicable)';
+        part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
+          <div>
+            {`Line 26 `}
+            <Tooltip
+              className="info"
+              show
+              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        );
+
+        part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
+          ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
+          additionalTooltip: 'The value entered here cannot be more than your organization\'s available credit balance for this compliance period or the net debit balance in Line 25.'
+        };
+
+        part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = 'hidden';
+        part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+          className: 'hidden',
+          value: ''
+        };
+        part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden';
+      } else { // is supplemental
+        part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
+
+        part3[SCHEDULE_SUMMARY.LINE_26_B][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
+        const debits = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) !== 0 ? Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) * -1 : 0;
+
+        // if we result in a positive credit offset
+        if (lastAcceptedOffset !== null && lastAcceptedOffset > debits && debits > 0 &&
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+        }
+
+        // if after adjustments we still end up in a debit position
+        if (lastAcceptedOffset !== null && lastAcceptedOffset <= debits && debits > 0 &&
+          (totalPreviousCreditReductions - debits) <= 0 &&
+        [totalPreviousCreditReductions, lastAcceptedOffset].indexOf(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) <= 0 && !this.state.alreadyUpdated) {
+
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+        } else if (lastAcceptedOffset !== null && lastAcceptedOffset > debits && debits > 0 && !this.state.alreadyUpdated && (lastAcceptedOffset - debits) > 0 &&
+          (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset ||
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value !== debits)
+        ) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+        }
+
+        // was the previous supplemental, submitted and hasnt been accepted/rejected yet?
+        if (status.fuelSupplierStatus === 'Draft' && history && history[0].status.fuelSupplierStatus === 'Submitted' && !history[0].status.directorStatus && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+          skipFurtherUpdateCreditsOffsetA = true;
+        }
+
+        if (previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > 0 && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = 0;
+          skipFurtherUpdateCreditsOffsetA = true;
+        }
+
+        if (lastAcceptedOffset !== null && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !skipFurtherUpdateCreditsOffsetA && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+        }
+
+        // if we still dont have LINE26A at this point, let's use the total credit reductions so far
+        if (!previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions || summary.creditsOffsetA;
+        }
+
+        if (!previousReportWasCredit && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 && summary.creditsOffsetA > 0 && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+          part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = summary.creditsOffsetA;
+        }
+
+        let creditsOffsetA = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value);
+        if (isNaN(creditsOffsetA)) {
+          creditsOffsetA = 0;
+        }
+
+        let creditsOffsetB = Number(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value);
+        if (isNaN(creditsOffsetB)) {
+          creditsOffsetB = 0;
+        }
+
+        const previousLine26 = part3[SCHEDULE_SUMMARY.LINE_26][2].value;
+
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value = creditsOffsetA + creditsOffsetB;
+
+        const creditsOffset = part3[SCHEDULE_SUMMARY.LINE_26][2].value;
+
+        if (creditsOffset > 0 && debits > 0 && creditsOffset > debits) {
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+        }
+
+        // if (debits < 0 && creditsOffset > 0 && lastAcceptedOffset <= debits) {
+        const netTotal = Number(part3[SCHEDULE_SUMMARY.LINE_23][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_24][2].value);
+        if (netTotal > 0 && creditsOffset > 0 && !skipFurtherUpdateCreditsOffsetA) {
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+        }
+
+        if (Number(previousLine26) !== Number(part3[SCHEDULE_SUMMARY.LINE_26][2].value) && !this.state.alreadyUpdated) {
+          updateCreditsOffsetA = true;
+        }
+
+        const max26BValue = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value;
+
+        if (max26BValue > 0) {
+          part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = 0;
+        }
       }
 
       part3 = ScheduleSummaryContainer.calculatePart3Payable(part3);
@@ -375,11 +566,12 @@ class ScheduleSummaryContainer extends Component {
 
       penalty = this._calculateNonCompliancePayable(penalty);
 
-      if (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
-        diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
-        gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
-        gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
-        part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
+      if (!isSupplemental &&
+        (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+          diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+          gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+          gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset)) {
         showModal = true;
 
         this.props.updateScheduleState({
@@ -390,6 +582,45 @@ class ScheduleSummaryContainer extends Component {
             dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
             gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
             gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        });
+      } else if (updateCreditsOffsetA) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
+          }
+        });
+
+        this.setState({
+          ...this.state,
+          alreadyUpdated: true
+        });
+      } else if (isSupplemental &&
+        (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+          diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+          gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+          gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+          (part3[SCHEDULE_SUMMARY.LINE_26_B][2].value > 0 && (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0))) {
+        showModal = true;
+
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
+            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        });
+      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
           }
         });
       }
@@ -416,7 +647,9 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassObligation: src.gasolineClassObligation,
         gasolineClassPreviouslyRetained: src.gasolineClassPreviouslyRetained,
         gasolineClassRetained: src.gasolineClassRetained,
-        creditsOffset: src.creditsOffset
+        creditsOffset: src.creditsOffset,
+        creditsOffsetA: src.creditsOffsetA,
+        creditsOffsetB: src.creditsOffsetB
       };
       this.props.updateScheduleState({
         summary: initialState
@@ -431,7 +664,9 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassObligation: 0,
         gasolineClassPreviouslyRetained: 0,
         gasolineClassRetained: 0,
-        creditsOffset: 0
+        creditsOffset: 0,
+        creditsOffsetA: 0,
+        creditsOffsetB: 0
       };
       this.props.updateScheduleState({
         summary: initialState
@@ -690,6 +925,10 @@ class ScheduleSummaryContainer extends Component {
     const { part3 } = this.state;
     let { penalty } = this.state;
     const { summary } = this.props.scheduleState;
+    const {
+      maxCreditOffset,
+      isSupplemental
+    } = this.props.complianceReport;
 
     let totalCredits = 0;
     let totalDebits = 0;
@@ -699,6 +938,10 @@ class ScheduleSummaryContainer extends Component {
 
     if (summary.creditsOffset) {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+    }
+
+    if (summary.creditsOffsetB) {
+      part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
     }
 
     part3[SCHEDULE_SUMMARY.LINE_23][2] = {
@@ -721,29 +964,49 @@ class ScheduleSummaryContainer extends Component {
     let maxValue = '';
 
     if (netTotal < 0) {
-      const { organizationBalance } = this.props.loggedInUser.organization;
       maxValue = Math.round(netTotal * -1);
 
-      if (organizationBalance.validatedCredits < maxValue) {
-        maxValue = organizationBalance.validatedCredits;
+      if (maxCreditOffset < maxValue) {
+        maxValue = maxCreditOffset;
       }
-
-      let previousReductionTotal = 0;
-      if (this.props.complianceReport.totalPreviousCreditReduction) {
-        previousReductionTotal = this.props.complianceReport.totalPreviousCreditReduction;
-      }
-
-      maxValue += previousReductionTotal;
     }
 
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2],
-      readOnly: (netTotal >= 0 || this.props.readOnly),
+      readOnly: (netTotal >= 0 || this.props.readOnly || isSupplemental),
       attributes: {
         ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
         maxValue
       }
     };
+
+    if (isSupplemental) {
+      if ((part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0) {
+        part3[SCHEDULE_SUMMARY.LINE_26][2].value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
+      }
+
+      let max26BValue = 0;
+
+      // we only have a max value for LINE 26 B if we're in a deficit, if it's positive
+      // that means we're getting a credit and there's no point in enabling LINE_26_B
+      if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
+        max26BValue = (part3[SCHEDULE_SUMMARY.LINE_25][2].value + part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) * -1;
+      }
+
+      if (max26BValue < maxValue) {
+        maxValue = max26BValue;
+      }
+
+      part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_26_B][2],
+        readOnly: (netTotal >= 0 || this.props.readOnly || maxValue <= 0),
+        attributes: {
+          ...part3[SCHEDULE_SUMMARY.LINE_26_B][2].attributes,
+          maxValue
+        },
+        value: maxValue <= 0 ? 0 : part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
+      };
+    }
 
     penalty[SCHEDULE_PENALTY.LINE_28][2] = {
       ...penalty[SCHEDULE_PENALTY.LINE_28][2],
@@ -910,12 +1173,40 @@ class ScheduleSummaryContainer extends Component {
         value
       };
 
-      if (gridName === 'part3' && row === SCHEDULE_SUMMARY.LINE_26) {
+      if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26)) {
         const numericValue = Number(String(value).replace(/,/g, ''));
         grid[row][col] = {
           ...grid[row][col],
           value: numericValue
         };
+
+        grid = ScheduleSummaryContainer.calculatePart3Payable(grid);
+
+        penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+          ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+          value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
+        };
+
+        penalty = this._calculateNonCompliancePayable(penalty);
+      }
+
+      if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26_B)) {
+        let numericValue = Number(String(value).replace(/,/g, ''));
+
+        const { maxValue } = grid[row][col].attributes;
+
+        if (numericValue > maxValue) {
+          numericValue = maxValue;
+        }
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: numericValue
+        };
+
+        const creditOffsetA = Number(String(grid[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''));
+
+        grid[SCHEDULE_SUMMARY.LINE_26][2].value = creditOffsetA + numericValue;
 
         grid = ScheduleSummaryContainer.calculatePart3Payable(grid);
 
@@ -1002,7 +1293,7 @@ class ScheduleSummaryContainer extends Component {
       'dieselClassPreviouslyRetained', 'dieselClassObligation',
       'gasolineClassDeferred', 'gasolineClassRetained',
       'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
-      'creditsOffset'
+      'creditsOffset', 'creditsOffsetA', 'creditsOffsetB'
     ];
 
     const nextState = {
@@ -1015,7 +1306,9 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassObligation: state.gasoline[SCHEDULE_SUMMARY.LINE_9][2].value,
         gasolineClassPreviouslyRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_7][2].value,
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
-        creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value
+        creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+        creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
+        creditsOffsetB: state.part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
       }
     };
 
@@ -1108,6 +1401,10 @@ ScheduleSummaryContainer.propTypes = {
     ]),
     hasSnapshot: PropTypes.bool,
     history: PropTypes.arrayOf(PropTypes.shape()),
+    lastAcceptedOffset: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
     scheduleC: PropTypes.shape(),
@@ -1135,9 +1432,30 @@ ScheduleSummaryContainer.propTypes = {
       creditsOffset: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
+      ]),
+      creditsOffsetA: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
+      creditsOffsetB: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
       ])
     }),
+    maxCreditOffset: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
     totalPreviousCreditReduction: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
+    totalPreviousCreditReductions: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
+    isSupplemental: PropTypes.bool,
+    supplementalNumber: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string
     ])

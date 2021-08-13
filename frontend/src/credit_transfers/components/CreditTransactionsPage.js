@@ -9,6 +9,7 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
+import Tooltip from '../../app/components/Tooltip';
 import CreditTransferTable from './CreditTransferTable';
 import { download } from '../../utils/functions';
 
@@ -29,6 +30,23 @@ const CreditTransactionsPage = (props) => {
               numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
                 .format(NumberFormat.INT)
             }
+            <div className="reserved">
+              (In Reserve: {
+                numeral(props.loggedInUser.organization.organizationBalance.deductions)
+                  .format(NumberFormat.INT)
+              }){` `}
+              <Tooltip
+                className="info"
+                show
+                title="Reserved credits are the portion of credits in your credit balance that are
+                currently pending the completion of a credit transaction. For example, selling
+                credits to another organization (i.e. Credit Transfer) or being used to offset
+                outstanding debits in a compliance period. Reserved credits cannot be transferred
+                or otherwise used until the pending credit transaction has been completed."
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </Tooltip>
+            </div>
           </h3>
         }
         {!isFetching &&
@@ -52,7 +70,10 @@ const CreditTransactionsPage = (props) => {
                 Credit Balance: {
                   numeral(props.organization.organizationBalance.validatedCredits)
                     .format(NumberFormat.INT)
-                }
+                } ({
+                  numeral(props.organization.organizationBalance.deductions)
+                    .format(NumberFormat.INT)
+                })
               </h3>
             </div>,
             <div className="form-group organization_filter" key="organization-filter">
@@ -154,6 +175,7 @@ CreditTransactionsPage.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
+        deductions: PropTypes.number,
         validatedCredits: PropTypes.number
       }),
       statusDisplay: PropTypes.string
@@ -167,6 +189,7 @@ CreditTransactionsPage.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
+        deductions: PropTypes.number,
         validatedCredits: PropTypes.number
       })
     })

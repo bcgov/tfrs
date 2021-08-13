@@ -31,7 +31,7 @@ class Tooltip extends Component {
     return (
       <OverlayTrigger
         delayHide={this.state.hovering}
-        placement="top"
+        placement={this.props.placement}
         onBlur={this._hoverOut}
         onMouseLeave={this._hoverOut}
         onMouseOut={this._hoverOut}
@@ -77,6 +77,7 @@ class Tooltip extends Component {
 
 Tooltip.defaultProps = {
   className: 'danger',
+  placement: 'top',
   show: false
 };
 
@@ -86,6 +87,7 @@ Tooltip.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
+  placement: PropTypes.string,
   show: PropTypes.bool,
   title: PropTypes.oneOfType([
     PropTypes.string,

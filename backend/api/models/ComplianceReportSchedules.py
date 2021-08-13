@@ -803,6 +803,18 @@ class ScheduleSummary(Commentable):
         null=True,
         db_comment="Credits used to off set debits (if applicable)"
     )
+    credits_offset_a = models.IntegerField(
+        blank=True,
+        null=True,
+        db_comment="Banked credits used to offset outstanding debits "
+                   "- Previous Reports"
+    )
+    credits_offset_b = models.IntegerField(
+        blank=True,
+        null=True,
+        db_comment="Banked credits used to offset outstanding debits "
+                   "- Supplemental Report"
+    )
 
     class Meta:
         db_table = 'compliance_report_summary'

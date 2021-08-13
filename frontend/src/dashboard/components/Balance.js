@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import Tooltip from '../../app/components/Tooltip';
 import * as NumberFormat from '../../constants/numeralFormats';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
 
@@ -23,6 +25,20 @@ const Balance = props => (
       <h1 key="label">credit balance</h1>,
       <div className="value" key="value">
         {numeral(props.organization.organizationBalance.validatedCredits).format(NumberFormat.INT)}
+      </div>,
+      <div className="value smaller-text" key="in-reserve">
+        ({numeral(props.organization.organizationBalance.deductions).format(NumberFormat.INT)} in reserve)
+        <Tooltip
+          className="info"
+          show
+          title="Reserved credits are the portion of credits in your credit balance that are
+          currently pending the completion of a credit transaction. For example, selling
+          credits to another organization (i.e. Credit Transfer) or being used to offset
+          outstanding debits in a compliance period. Reserved credits cannot be transferred
+          or otherwise used until the pending credit transaction has been completed."
+        >
+          <FontAwesomeIcon icon="info-circle" />
+        </Tooltip>
       </div>
     ]}
 

@@ -13,7 +13,7 @@ import GovernmentTransferForm from './components/GovernmentTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import { getFuelSuppliers } from '../actions/organizationActions';
-import { getLoggedInUser } from '../actions/userActions';
+import { getLoggedInUser, getUpdatedLoggedInUser } from '../actions/userActions';
 import {
   addCommentToCreditTransfer,
   addCreditTransfer,
@@ -156,6 +156,7 @@ class CreditTransferAddContainer extends Component {
         this.props.addSigningAuthorityConfirmation(confirmations);
       }
 
+      this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfers();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
@@ -406,6 +407,7 @@ CreditTransferAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
@@ -439,6 +441,7 @@ const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch),
+  getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>

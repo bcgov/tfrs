@@ -95,7 +95,7 @@ class ScheduleSummaryPart3 {
       [{ // line 26
         className: 'text',
         readOnly: true,
-        value: 'Banked credits used to offset outstanding debits (if applicable)'
+        value: 'Total banked credits used to offset outstanding debits (if applicable)'
       }, {
         className: 'line',
         readOnly: true,
@@ -105,7 +105,7 @@ class ScheduleSummaryPart3 {
             <Tooltip
               className="info"
               show
-              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if there is a net debit balance in the compliance period, as indicated in Line 25."
+              title="The quantity of banked credits used to offset debits accrued in the compliance period, if applicable. This value is the total quantity of banked credits used to offset debits and is informed from all compliance reports for this compliance period (i.e. initial report and supplemental reports)."
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>
@@ -115,7 +115,7 @@ class ScheduleSummaryPart3 {
         ...numericInput,
         attributes: {
           addCommas: true,
-          additionalTooltip: 'The value entered here cannot be more than your organization\'s credit balance or the net debit balance in Line 25.',
+          additionalTooltip: '',
           dataNumberToFixed: 0,
           maxLength: '20',
           placement: 'right',
@@ -127,6 +127,63 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Credits'
       }], // line 26
+      [{ // line 26a
+        className: 'text',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Previous Reports'
+      }, {
+        className: 'line',
+        readOnly: true,
+        value: (
+          <div>
+            {`Line 26a `}
+            <Tooltip
+              className="info"
+              show
+              title="The quantity of banked credits used to offset debits from previously submitted compliance report(s) for this compliance period."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        )
+      }, numericColumn, {
+        readOnly: true,
+        value: 'Credits'
+      }], // line 26a
+      [{ // line 26b
+        className: 'text',
+        readOnly: true,
+        value: 'Banked credits used to offset outstanding debits - Supplemental Report'
+      }, {
+        className: 'line',
+        readOnly: true,
+        value: (
+          <div>
+            {`Line 26b `}
+            <Tooltip
+              className="info"
+              show
+              title="Enter the quantity of banked credits used to offset debits accrued in the compliance period. This line is only available if the net debit balance has increased as a result of changes to Schedule B in this supplemental report."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        )
+      }, {
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '20',
+          placement: 'right',
+          step: '1'
+        },
+        className: 'tooltip-large number',
+        readOnly: true
+      }, {
+        readOnly: true,
+        value: 'Credits'
+      }], // line 26b
       [{ // line 27
         className: 'text total',
         readOnly: true,

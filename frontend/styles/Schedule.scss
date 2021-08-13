@@ -321,6 +321,11 @@
       display: none;
       margin-left: 1rem;
     }
+
+    .disabled {
+      color: $grey;
+      margin-left: 1rem;
+    }
   }
 }
 
@@ -459,4 +464,20 @@
   .total, .header {
     font-weight: bold;
   }
+}
+
+.schedule-header {
+  float: left;
+}
+
+.schedule-available-credit-balance {
+  text-align: right;
+
+  @media (max-width: 1000px) {
+    clear: both;
+  }
+}
+
+.schedule-organization-address {
+  clear: both;
 }
