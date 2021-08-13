@@ -1,0 +1,42 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: tfrs-network-policy
+metadata:
+  name: tfrs-network-policy
+objects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-postgresql-staging-accepts-backend
+    spec:
+      ## Allow minio to accept communication from nagios
+      podSelector:
+        matchLabels:
+          name: postgresql10
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-backend-test
+          ports:
+            - protocol: TCP
+              port: 5432           
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-postgresql-staging-accepts-backendmid
+    spec:
+      ## Allow patroni to accept communications from backend mid lifecycle pod
+      podSelector:
+        matchLabels:
+          name: postgresql10
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  openshift.io/deployer-pod.type: hook-mid
+          ports:
+            - protocol: TCP
+              port: 5432              
