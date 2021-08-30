@@ -108,7 +108,7 @@ class ComplianceReportingContainer extends Component {
   }
 
   render () {
-    const currentEffectiveDate = `${this.currentYear}-01-01`;
+    const currentEffectiveDate = `${this.currentYear + 1}-01-01`;
 
     return ([
       <ComplianceReportingPage
