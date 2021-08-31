@@ -67,6 +67,8 @@ const ComplianceReportIntro = (props) => {
 
         <h3>About this form</h3>
         <p>
+        The values and calculations provided in this report are for informational purposes only and
+        are subject to change at any time as a result of administrative and legislative changes.
         The Declaration &amp; Summary section of this Compliance Report compiles information from
         the other schedules of this report. This is the last section users should complete.
         </p>
