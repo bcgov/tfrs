@@ -383,7 +383,7 @@ class ScheduleBRecord(Commentable):
                 self.fuel_code.renewable_percentage is not None:
             fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
 
-        renewable_fuels = ["Ethanol", "Renewable gasoline"]
+        renewable_fuels = ["Ethanol", "Renewable gasoline", "Renewable Naphtha"]
         if self.fuel_type.name in renewable_fuels:
             if self.fuel_class.fuel_class == 'Gasoline':
                 return self.quantity * fraction
