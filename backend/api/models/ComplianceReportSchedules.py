@@ -377,17 +377,25 @@ class ScheduleBRecord(Commentable):
 
     @property
     def renewable_gasoline_volume(self):
-        fraction = 1
-
         if self.fuel_code is not None and \
                 self.fuel_code.renewable_percentage is not None:
             fraction = self.fuel_code.renewable_percentage / decimal.Decimal(100.0)
 
-        renewable_fuels = ["Ethanol", "Renewable gasoline", "Renewable naphtha"]
-
-        if self.fuel_type.name in renewable_fuels:
-            if self.fuel_class.fuel_class == 'Gasoline':
+            if self.fuel_type.name in [
+                "Ethanol",
+                "Natural gas-based gasoline",
+                "Renewable gasoline",
+                "Renewable naphtha"
+            ]:
                 return self.quantity * fraction
+
+        if self.fuel_type.name in [
+            "Ethanol",
+            "Renewable gasoline",
+            "Renewable naphtha"
+        ]:
+            if self.fuel_class.fuel_class == 'Gasoline':
+                return self.quantity
 
         return 0
 
@@ -430,6 +438,7 @@ class ScheduleBRecord(Commentable):
 
             if self.fuel_type.name in [
                 "Ethanol",
+                "Natural gas-based gasoline",
                 "Renewable gasoline",
                 "Renewable naphtha"
             ]:
