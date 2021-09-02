@@ -23,7 +23,7 @@ class ScheduleSummaryDiesel {
       [{ // line 12
         className: 'text',
         readOnly: true,
-        value: 'Volume of petroleum-based diesel supplied'
+        value: 'Volume of diesel class non-renewable fuel supplied'
       }, {
         className: 'line',
         readOnly: true,
@@ -33,7 +33,7 @@ class ScheduleSummaryDiesel {
             <Tooltip
               className="info"
               show
-              title="This line displays the total volume of petroleum-based diesel supplied for the compliance period as reported in Schedule B and Schedule C with an expected use of heating oil.  This is the sum of all petroleum-based diesel that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
+              title="This line displays the total volume of diesel class non-renewable Part 2 fuel supplied for the compliance period as reported in Schedule B and Schedule C. For example, petroleum-based diesel."
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>

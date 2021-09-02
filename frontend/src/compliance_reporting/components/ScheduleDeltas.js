@@ -62,7 +62,7 @@ class ScheduleDeltas extends Component {
       }, {
         className: 'left',
         readOnly: true,
-        value: 'Volume of petroleum-based gasoline supplied'
+        value: 'Volume of gasoline class non-renewable fuel supplied'
       }, {
         readOnly: true,
         value: findMatchingDelta('1').newValue,
@@ -306,7 +306,7 @@ class ScheduleDeltas extends Component {
       }, {
         className: 'left',
         readOnly: true,
-        value: 'Volume of petroleum-based diesel supplied'
+        value: 'Volume of diesel class non-renewable fuel supplied'
       }, {
         readOnly: true,
         value: findMatchingDelta('12').newValue,
