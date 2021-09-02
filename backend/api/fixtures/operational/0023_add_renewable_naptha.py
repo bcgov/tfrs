@@ -16,7 +16,7 @@ from api.models.ApprovedFuelProvision import ApprovedFuelProvision
 
 class AddRenewableNaptha(OperationalDataScript):
     is_revertable = False
-    comment = 'Add renewable naptha as approved fuel'
+    comment = 'Add renewable naphtha as approved fuel'
 
     def check_run_preconditions(self):
         return True
@@ -43,7 +43,7 @@ class AddRenewableNaptha(OperationalDataScript):
         ).first()
 
         fuel = ApprovedFuel.objects.create(
-            name="Renewable Naphtha",
+            name="Renewable naphtha",
             description="Naphtha produced from biomass",
             credit_calculation_only=False,
             default_carbon_intensity_category=carbon_intensity_category,

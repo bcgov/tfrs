@@ -23,7 +23,7 @@ class ScheduleSummaryGasoline {
       [{ // line 1
         className: 'text',
         readOnly: true,
-        value: 'Volume of petroleum-based gasoline supplied'
+        value: 'Volume of gasoline class non-renewable fuel supplied'
       }, {
         className: 'line',
         readOnly: true,

@@ -419,7 +419,7 @@ class SnapshotDisplay extends Component {
       }, {
         className: 'left',
         readOnly: true,
-        value: 'Volume of petroleum-based gasoline supplied'
+        value: 'Volume of gasoline class non-renewable fuel supplied'
       }, {
         readOnly: true,
         value: snapshot.summary.lines['1'],
@@ -567,7 +567,7 @@ class SnapshotDisplay extends Component {
       }, {
         className: 'left',
         readOnly: true,
-        value: 'Volume of petroleum-based diesel supplied'
+        value: 'Volume of diesel class non-renewable fuel supplied'
       }, {
         readOnly: true,
         value: snapshot.summary.lines['12'],
