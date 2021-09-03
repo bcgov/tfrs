@@ -47,6 +47,7 @@ class AddRenewableNaptha(OperationalDataScript):
             description="Naphtha produced from biomass",
             credit_calculation_only=False,
             default_carbon_intensity_category=carbon_intensity_category,
+            effective_date="2022-01-01",
             energy_density_category=energy_density_category,
             energy_effectiveness_ratio_category=energy_effective_ratio_category,
             unit_of_measure=unit_of_measure,

@@ -64,9 +64,10 @@ class ApprovedFuelSerializer(serializers.ModelSerializer):
         model = ApprovedFuel
         fields = 'id', 'name', 'description', 'fuel_classes', \
             'credit_calculation_only', 'is_partially_renewable', \
-            'provisions', 'unit_of_measure'
+            'provisions', 'unit_of_measure', 'effective_date'
 
         read_only_fields = (
             'id', 'name', 'description', 'credit_calculation_only',
-            'is_partially_renewable', 'provisions', 'unit_of_measure'
+            'is_partially_renewable', 'provisions', 'unit_of_measure',
+            'effective_date'
         )

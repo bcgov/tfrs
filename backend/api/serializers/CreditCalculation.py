@@ -221,5 +221,6 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'carbon_intensity_limit', 'default_carbon_intensity',
             'energy_density', 'energy_effectiveness_ratio', 'fuel_codes',
-            'fuel_classes', 'provisions', 'unit_of_measure'
+            'fuel_classes', 'provisions', 'unit_of_measure',
+            'effective_date'
         )

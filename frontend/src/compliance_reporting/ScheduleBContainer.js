@@ -588,6 +588,8 @@ class ScheduleBContainer extends Component {
   _addRow (numberOfRows = 1) {
     const { grid } = this.state;
 
+    const { compliancePeriod } = this.props.complianceReport;
+
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{ // id
         className: 'row-number',
@@ -597,7 +599,7 @@ class ScheduleBContainer extends Component {
         className: 'text dropdown-indicator',
         readOnly: this.props.readOnly,
         dataEditor: Select,
-        getOptions: () => this.props.referenceData.data.approvedFuels,
+        getOptions: () => this.props.referenceData.data.approvedFuels.filter(fuelType => (fuelType.effectiveDate <= compliancePeriod.effectiveDate)),
         mapping: {
           key: 'id',
           value: 'name'
@@ -1038,6 +1040,7 @@ ScheduleBContainer.propTypes = {
     isFetching: PropTypes.bool
   }).isRequired,
   complianceReport: PropTypes.shape({
+    compliancePeriod: PropTypes.shape(),
     scheduleB: PropTypes.shape()
   }),
   // eslint-disable-next-line react/forbid-prop-types

@@ -212,6 +212,8 @@ class ScheduleDContainer extends Component {
       id = this.state.sheets[this.state.sheets.length - 1].id + 1;
     }
 
+    const { compliancePeriod } = this.props.complianceReport;
+
     return {
       grid: [
         [{
@@ -334,7 +336,10 @@ class ScheduleDContainer extends Component {
           className: 'text dropdown-indicator',
           readOnly: this.props.readOnly,
           dataEditor: Select,
-          getOptions: () => this.props.referenceData.approvedFuels.filter(fuelType => !fuelType.creditCalculationOnly),
+          getOptions: () => this.props.referenceData.approvedFuels.filter(fuelType => (
+            !fuelType.creditCalculationOnly &&
+            fuelType.effectiveDate <= compliancePeriod.effectiveDate
+          )),
           mapping: {
             key: 'id',
             value: 'name'
