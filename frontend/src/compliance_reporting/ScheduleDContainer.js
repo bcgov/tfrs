@@ -738,6 +738,7 @@ ScheduleDContainer.defaultProps = {
 
 ScheduleDContainer.propTypes = {
   complianceReport: PropTypes.shape({
+    compliancePeriod: PropTypes.shape(),
     scheduleD: PropTypes.shape()
   }),
   match: PropTypes.shape({}),
