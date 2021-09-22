@@ -23,7 +23,7 @@ class ScheduleSummaryGasoline {
       [{ // line 1
         className: 'text',
         readOnly: true,
-        value: 'Volume of petroleum-based gasoline supplied'
+        value: 'Volume of gasoline class non-renewable fuel supplied'
       }, {
         className: 'line',
         readOnly: true,
@@ -33,7 +33,7 @@ class ScheduleSummaryGasoline {
             <Tooltip
               className="info"
               show
-              title="This line displays the total volume of petroleum-based gasoline supplied for the compliance period as reported in Schedule B.  This is the sum of all petroleum-based gasoline that was imported, manufactured, or acquired under an agreement described in section 6 of the Regulation, and then sold or used."
+              title="This line displays the total volume of gasoline class non-renewable Part 2 fuel supplied for the compliance period as reported in Schedule B and Schedule C. For example, petroleum-based gasoline."
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>

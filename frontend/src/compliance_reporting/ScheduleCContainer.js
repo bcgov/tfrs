@@ -232,6 +232,8 @@ class ScheduleCContainer extends Component {
   _addRow (numberOfRows = 1) {
     const { grid } = this.state;
 
+    const { compliancePeriod } = this.props.complianceReport;
+
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
         {
@@ -242,7 +244,7 @@ class ScheduleCContainer extends Component {
           className: 'text dropdown-indicator',
           readOnly: this.props.readOnly,
           dataEditor: Select,
-          getOptions: () => this.props.referenceData.approvedFuels,
+          getOptions: () => this.props.referenceData.approvedFuels.filter(fuelType => (fuelType.effectiveDate <= compliancePeriod.effectiveDate)),
           mapping: {
             key: 'id',
             value: 'name'
@@ -617,6 +619,7 @@ ScheduleCContainer.propTypes = {
     isFetching: PropTypes.bool
   }).isRequired,
   complianceReport: PropTypes.shape({
+    compliancePeriod: PropTypes.shape(),
     scheduleC: PropTypes.shape()
   }),
   period: PropTypes.string.isRequired,

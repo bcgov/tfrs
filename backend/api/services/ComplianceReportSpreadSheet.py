@@ -244,7 +244,7 @@ class ComplianceReportSpreadsheet(object):
         description_format = xlwt.easyxf('align: wrap on')
 
         line_details = {
-            '1': 'Volume of petroleum-based gasoline supplied',
+            '1': 'Volume of gasoline class non-renewable fuel supplied',
             '2': 'Volume of gasoline class renewable fuel supplied',
             '3': 'Total volume of gasoline class fuel supplied (Line 1 + Line 2)',
             '4': 'Volume of Part 2 gasoline class renewable fuel required (5% of Line 3)',
@@ -257,7 +257,7 @@ class ComplianceReportSpreadsheet(object):
             '10': 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 2 + Line 5 - Line 6 '
                   '+ Line 7 + Line 8 - Line 9)',
             '11': 'Gasoline class non-compliance payable (Line 4 - Line 10) x $0.30/L',
-            '12': 'Volume of petroleum-based diesel supplied',
+            '12': 'Volume of diesel class non-renewable fuel supplied',
             '13': 'Volume of diesel class renewable fuel supplied',
             '14': 'Total volume of diesel class fuel supplied (Line 12 + Line 13)',
             '15': 'Volume of Part 2 diesel class renewable fuel required (4% of Line 14)',
