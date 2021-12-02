@@ -40,6 +40,13 @@ Notes, yes, folder name only
 
 6. Verify the database on Openshift v3 and v4 to make sure they are same
 
+### Create read only user for metabase conection
+CREATE USER metabaseuser WITH PASSWORD '[password]';
+GRANT CONNECT ON DATABASE tfrs TO metabaseuser;
+GRANT USAGE ON SCHEMA public TO metabaseuser;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO metabaseuser;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO metabaseuser;
+
 ### Create staging patroni in order to test the operational scripts
 
 1. backup prod database and rsync to test env ex. /backups/2020-10-30-prod/patroni-master-prod-tfrs_2020-10-30_12-29-48.sql.gz
