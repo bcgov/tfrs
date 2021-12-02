@@ -28,3 +28,24 @@ objects:
           ports:
             - protocol: TCP
               port: 9000                
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-patroni-accepts-cthub-metabase-${ENVIRONMENT}
+    spec:
+      ## Allow patroni to accept communications from cthub metabase
+      podSelector:
+        matchLabels:
+          cluster-name: patroni-${ENVIRONMENT}
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  name: 0ab226
+                  environment: ${ENVIRONMENT}
+            - podSelector:
+                matchLabels:
+                  app: metabase
+          ports:
+            - protocol: TCP
+              port: 5432                         
