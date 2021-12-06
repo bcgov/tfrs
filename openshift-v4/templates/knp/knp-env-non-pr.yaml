@@ -41,7 +41,7 @@ objects:
         - from:
             - namespaceSelector:
                 matchLabels:
-                  name: 0ab226
+                  name: 30b186
                   environment: ${ENVIRONMENT}
             - podSelector:
                 matchLabels:
