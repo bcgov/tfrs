@@ -1,7 +1,9 @@
+import xlwt
+
 from collections import namedtuple, defaultdict
 from decimal import Decimal
 
-import xlwt
+from api.models.FuelCode import FuelCode
 
 
 class ComplianceReportSpreadsheet(object):
@@ -114,7 +116,15 @@ class ComplianceReportSpreadsheet(object):
             worksheet.write(row_index, 1, record['fuel_class'])
             worksheet.write(row_index, 2, record['provision_of_the_act'])
             if record['fuel_code'] is not None:
-                worksheet.write(row_index, 3, record['fuel_code'])
+                fuel_code_id = record['fuel_code']
+                fuel_code = FuelCode.objects.filter(id=fuel_code_id).first()
+                if fuel_code:
+                    fuel_code_string = fuel_code.fuel_code + \
+                        str(fuel_code.fuel_code_version) + '.' + \
+                        str(fuel_code.fuel_code_version_minor)
+                    worksheet.write(row_index, 3, fuel_code_string)
+                else:
+                    worksheet.write(row_index, 3, record['fuel_code'])
             else:
                 if record['schedule_d_sheet_index'] is not None:
                     worksheet.write(row_index, 3, 'From Schedule D')

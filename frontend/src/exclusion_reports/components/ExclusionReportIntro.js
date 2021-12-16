@@ -33,7 +33,7 @@ const ExclusionReportIntro = (props) => {
 
         <h3>Questions?</h3>
         <p>
-        Please contact <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a> with any questions you
+        Please contact <a href="mailto:lcfs@gov.bc.ca">lcfs@gov.bc.ca</a> with any questions you
         may have about this form.
         </p>
       </div>
