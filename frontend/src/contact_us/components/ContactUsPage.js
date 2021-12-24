@@ -5,7 +5,7 @@ const ContactUsPage = props => (
     <h1>Contact Us</h1>
     <h3>Need help with TFRS?</h3>
     <p>
-      Contact the Low Carbon Fuels Branch at <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a>
+      Contact the Low Carbon Fuels Branch at <a href="mailto:lcfs@gov.bc.ca">lcfs@gov.bc.ca</a>
     </p>
     <h3>Need help with BCeID?</h3>
     <p>
