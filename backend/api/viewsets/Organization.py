@@ -3,7 +3,7 @@ import datetime
 from django.http import HttpResponse
 
 from rest_framework import viewsets, mixins
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from api.models.OrganizationStatus import OrganizationStatus
@@ -75,7 +75,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def search(self, request):
         """
@@ -83,7 +83,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
         return self.list(request)
 
-    @detail_route()
+    @action(detail=True)
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def balance(self, request, pk=None):
         """
@@ -97,7 +97,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def fuel_suppliers(self, request):
         """
         Returns a list of organizations that's marked as fuel suppliers
@@ -113,7 +113,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def actions_types(self, request):
         """
             Reference Data for UI
@@ -126,7 +126,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def statuses(self, request):
         """
             Reference data for UI
@@ -139,7 +139,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def types(self, request):
         """
             Reference data for UI
@@ -152,7 +152,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def mine(self, request):
         """
         Provides a shortcut to retrieve the logged-in user's
@@ -166,7 +166,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(organization)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def members(self, request):
         """
         Returns a list of users that belongs to the
@@ -178,7 +178,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def users(self, request, pk=None):
         """
@@ -193,7 +193,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def xls(self, request):
         """

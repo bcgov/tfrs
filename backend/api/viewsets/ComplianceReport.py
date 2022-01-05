@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models import Count
 from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, mixins, filters, status
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -162,7 +162,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(sorted_qs, many=True, context={'request': request})
         return Response(serializer.data)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def types(self, request):
         """
         Gets the list of types that a compliance report can be
@@ -174,7 +174,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def validate_partial(self, request, pk=None):
         instance = self.get_object()
 
@@ -188,7 +188,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(serializer.errors)
 
-    @detail_route(methods=['GET'])
+    @action(detail=True, methods=['GET'])
     def snapshot(self, request, pk=None):
         obj = self.get_object()
 
@@ -198,7 +198,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(snapshot.snapshot)
 
-    @detail_route(methods=['patch'])
+    @action(detail=True, methods=['patch'])
     def compute_totals(self, request, pk=None):
         """
         This works much like a regular PATCH, but rolls back the transaction
@@ -232,7 +232,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(result)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def xls(self, request, pk=None):
         """
         Exports the compliance report as a spreadsheet

@@ -1,5 +1,5 @@
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import F, Q
 
@@ -47,7 +47,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return self.serializer_classes['default']
 
-    @detail_route()
+    @action(detail=True)
     def history(self, request, pk=None):
         """
         Function to get the user's activity.
@@ -170,7 +170,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         return Response(headers=headers,
                         data=serializer.data)
 
-    @list_route()
+    @action(detail=False)
     def current(self, request):
         """
         Get the current user
@@ -184,7 +184,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     @permission_required('USER_MANAGEMENT')
     def by_username(self, request):
 
@@ -200,7 +200,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(result.first())
         return Response(serializer.data)
 
-    @list_route()
+    @action(detail=False)
     @permission_required('USER_MANAGEMENT')
     def search(self, request, organizations=None, surname=None,
                include_inactive=None, username=None):
