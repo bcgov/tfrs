@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 
 from rest_framework import viewsets, serializers, mixins, status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from api.models.NotificationMessage import NotificationMessage
@@ -65,7 +65,7 @@ class NotificationViewSet(AuditableMixin,
         ).all()
 
     @never_cache
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def count(self, request):
         user = self.request.user
 
@@ -89,20 +89,20 @@ class NotificationViewSet(AuditableMixin,
         """
         return super().list(self, request, *args, **kwargs)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def subscribe(self, request):
         token = NotificationToken()
         serializer = NotificationTokenSerializer(token)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def subscriptions(self, request):
         user = request.user
         data = AMQPNotificationService.compute_effective_subscriptions(user)
         serializer = EffectiveSubscriptionSerializer(data, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['put'])
+    @action(detail=False, methods=['put'])
     def statuses(self, request):
         """
         Expects an array of id's
@@ -142,7 +142,7 @@ class NotificationViewSet(AuditableMixin,
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @list_route(methods=['post'])
+    @action(detail=False, methods=['post'])
     def update_subscription(self, request):
         """
         Updates the User's subscriptions to specified notification types

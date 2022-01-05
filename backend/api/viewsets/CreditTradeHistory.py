@@ -21,7 +21,7 @@
 """
 from django.db.models import Q
 from rest_framework import filters, mixins, viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from api.models.CreditTradeHistory import CreditTradeHistory

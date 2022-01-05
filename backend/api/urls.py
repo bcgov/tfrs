@@ -72,15 +72,15 @@ ROUTER.register(r'signing_authority_confirmations',
 ROUTER.register(r'users', UserViewSet)
 ROUTER.register(r'notifications',
                 NotificationViewSet,
-                base_name='notification')
+                basename='notification')
 
 ROUTER.register(r'autocomplete',
                 AutocompleteViewSet,
-                base_name='autocomplete')
+                basename='autocomplete')
 
 ROUTER.register(r'autosave',
                 AutosaveViewSet,
-                base_name='autosave')
+                basename='autosave')
 
 if DOCUMENTS_API['ENABLED'] or TESTING:
     ROUTER.register(r'documents', DocumentViewSet)

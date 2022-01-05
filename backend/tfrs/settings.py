@@ -70,18 +70,18 @@ INSTALLED_APPS = (
     'django_nose',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'api.nocache.NoCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware')
+    'whitenoise.middleware.WhiteNoiseMiddleware'
+]
 
 # Auth User
 AUTH_USER_MODEL = 'api.User'
@@ -270,3 +270,5 @@ CACHES = {
 #         },
 #     }
 # }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

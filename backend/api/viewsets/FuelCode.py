@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, status, mixins
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -80,7 +80,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(None, status=status.HTTP_200_OK)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def filter(self, request):
         """
         Retrieves all the fuel codes that matches the parameters
@@ -102,7 +102,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def latest(self, request):
         """
         Retrieves the latest fuel code that matches the version provided
@@ -124,7 +124,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def statuses(self, request):
         """
         Gets the list of statuses that can be applied to a fuel code
@@ -136,7 +136,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def transport_modes(self, request):
         """
         Gets the list of transport modes
@@ -148,7 +148,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def approved_fuels(self, request):
         """
         Gets the list of transport modes
@@ -160,7 +160,7 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def xls(self, request):
         """
         Exports the fuel codes table as a spreadsheet

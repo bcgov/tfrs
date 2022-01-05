@@ -56,14 +56,17 @@ class ComplianceReportWorkflowState(Auditable):
         # limit_choices_to=['Draft', 'Submitted', 'Deleted'],
         related_name='+',
         to_field='status',
-        default='Draft')
+        default='Draft',
+        on_delete=models.DO_NOTHING
+    )
 
     analyst_status = models.ForeignKey(
         ComplianceReportStatus,
         null=False,
         related_name='+',
         to_field='status',
-        default='Unreviewed'
+        default='Unreviewed',
+        on_delete=models.DO_NOTHING
     )
 
     manager_status = models.ForeignKey(
@@ -71,7 +74,8 @@ class ComplianceReportWorkflowState(Auditable):
         null=False,
         related_name='+',
         to_field='status',
-        default='Unreviewed'
+        default='Unreviewed',
+        on_delete=models.DO_NOTHING
     )
 
     director_status = models.ForeignKey(
@@ -79,7 +83,8 @@ class ComplianceReportWorkflowState(Auditable):
         null=False,
         related_name='+',
         to_field='status',
-        default='Unreviewed'
+        default='Unreviewed',
+        on_delete=models.DO_NOTHING
     )
 
     class Meta:
