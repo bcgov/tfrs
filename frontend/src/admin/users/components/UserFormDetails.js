@@ -269,16 +269,6 @@ const UserFormDetails = props => (
                 return role.isGovernmentRole;
               }
 
-              const fileSubmissionRole = role.permissions.findIndex(permission =>
-                permission.code === 'DOCUMENTS_CREATE_DRAFT') >= 0;
-
-              if (fileSubmissionRole &&
-                props.fields.organization &&
-                props.fields.organization.status &&
-                props.fields.organization.status.status === 'Archived') {
-                return false;
-              }
-
               return !role.isGovernmentRole;
             }).map(role => (
               <div className="col-sm-4 checkbox-group" key={role.id}>

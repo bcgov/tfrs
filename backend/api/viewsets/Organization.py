@@ -1,6 +1,7 @@
 import datetime
 
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
@@ -8,7 +9,7 @@ from rest_framework.response import Response
 
 from api.models.OrganizationStatus import OrganizationStatus
 from api.serializers.OrganizationType import OrganizationTypeSerializer
-from api.decorators import permission_required
+from api.decorators.PermissionRequired import permission_required
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationType import OrganizationType
@@ -61,7 +62,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return self.serializer_classes['default']
 
-    @permission_required('VIEW_FUEL_SUPPLIERS')
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def list(self, request, *args, **kwargs):
         """
         Returns a list of Fuel Suppliers
@@ -76,7 +77,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def search(self, request):
         """
         Returns a list of organization based on a search term provided
@@ -84,7 +85,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         return self.list(request)
 
     @action(detail=True)
-    @permission_required('VIEW_FUEL_SUPPLIERS')
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def balance(self, request, pk=None):
         """
         Get the organization balance
@@ -179,7 +180,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def users(self, request, pk=None):
         """
         Returns a list of users that belongs to the
@@ -194,7 +195,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def xls(self, request):
         """
         Exports the Fuel Suppliers as a spreadsheet
