@@ -1,6 +1,7 @@
 import uuid
 
 from django.db.models import Q
+from django.utils.decorators import method_decorator
 from minio import Minio
 
 from rest_framework import viewsets, status, mixins
@@ -126,7 +127,7 @@ class DocumentViewSet(AuditableMixin,
         DocumentService.send_notification(document, user)
 
     @action(detail=True, methods=['put'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def link(self, request, pk=None):
         """
         Link a credit trade to this document
@@ -162,7 +163,7 @@ class DocumentViewSet(AuditableMixin,
         return Response(None)
 
     @action(detail=True, methods=['put'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def unlink(self, request, pk=None):
         """
         Unlink a credit trade from this document
@@ -224,7 +225,7 @@ class DocumentViewSet(AuditableMixin,
         })
 
     @action(detail=True, methods=['get'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def linkable_credit_transactions(self, request, pk=None):
         """
         Returns all the credit transactions that are available for the
