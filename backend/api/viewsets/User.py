@@ -107,10 +107,6 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
                     sort_by=sort_by
                 )
             )
-
-            # history = credit_trade_history.union(
-            #     compliance_report_history, all=True
-            # )
         else:
             credit_trade_history = obj.get_history(
                 Q(status__status__in=[
@@ -133,10 +129,6 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
                     sort_by=sort_by
                 )
             )
-
-            # history = credit_trade_history.union(
-            #     compliance_report_history, all=True
-            # )
 
         # I am probably misusing the F expression here
         # But for the ordering to work, I have to keep the fields in order
