@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
@@ -20,7 +20,8 @@ class ComplianceReportSnapshot(Auditable):
 
     compliance_report = models.OneToOneField(
         'ComplianceReport',
-        related_name=None
+        related_name=None,
+        on_delete=models.DO_NOTHING
     )
 
     class Meta:

@@ -1,7 +1,8 @@
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import F, Q
+from django.db.models import F, Q, Value
+from django.utils.decorators import method_decorator
 
 from api.decorators import permission_required, exceptions
 from api.models.User import User
@@ -47,7 +48,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return self.serializer_classes['default']
 
-    @detail_route()
+    @action(detail=True)
     def history(self, request, pk=None):
         """
         Function to get the user's activity.
@@ -106,10 +107,6 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
                     sort_by=sort_by
                 )
             )
-
-            history = credit_trade_history.union(
-                compliance_report_history, all=True
-            )
         else:
             credit_trade_history = obj.get_history(
                 Q(status__status__in=[
@@ -133,18 +130,14 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
                 )
             )
 
-            history = credit_trade_history.union(
-                compliance_report_history, all=True
-            )
-
         # I am probably misusing the F expression here
         # But for the ordering to work, I have to keep the fields in order
         # and rename them (check the user model, the select has different
         # names)
         # It also needs to reference a field, (you'll notice there are two
         # id's, This is to bypass the check to the model)
-        history = history.values(
-            type=F('type'),
+        history = credit_trade_history.values(
+            type=Value('Credit Trade'),
             id=F('id'),
             object_id=F('credit_trade_id'),
             status_id=F('status_id'),
@@ -152,6 +145,18 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         ).order_by('{sort_direction}{sort_by}'.format(
             sort_direction=sort_direction, sort_by=sort_by
         ))
+
+        history = history.union(
+            compliance_report_history.values(
+                type=Value('Compliance Report'),
+                id=F('id'),
+                object_id=F('compliance_report_id'),
+                status_id=F('status_id'),
+                create_timestamp=F('create_timestamp')
+            ).order_by('{sort_direction}{sort_by}'.format(
+                sort_direction=sort_direction, sort_by=sort_by
+            )), all=True
+        )
 
         total = history.count()
 
@@ -170,7 +175,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         return Response(headers=headers,
                         data=serializer.data)
 
-    @list_route()
+    @action(detail=False)
     def current(self, request):
         """
         Get the current user
@@ -178,14 +183,14 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
-    @permission_required('USER_MANAGEMENT')
+    @method_decorator(permission_required('USER_MANAGEMENT'))
     def list(self, request, *args, **kwargs):
         result = User.objects.all()
         serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
-    @permission_required('USER_MANAGEMENT')
+    @action(detail=False, methods=['get'])
+    @method_decorator(permission_required('USER_MANAGEMENT'))
     def by_username(self, request):
 
         if 'username' not in request.GET:
@@ -200,8 +205,8 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(result.first())
         return Response(serializer.data)
 
-    @list_route()
-    @permission_required('USER_MANAGEMENT')
+    @action(detail=False)
+    @method_decorator(permission_required('USER_MANAGEMENT'))
     def search(self, request, organizations=None, surname=None,
                include_inactive=None, username=None):
         result = User.objects.all()

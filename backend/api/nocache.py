@@ -1,9 +1,10 @@
 import re
 
 from django.utils.cache import add_never_cache_headers
+from django.utils.deprecation import MiddlewareMixin
 
 
-class NoCacheMiddleware(object):
+class NoCacheMiddleware(MiddlewareMixin):
     """Add No-cache headers to all responses if detect IE UA"""
 
     IE_DETECTION_RE = [

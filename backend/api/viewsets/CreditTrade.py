@@ -3,10 +3,11 @@ import hashlib
 
 from django.db.models import Q
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters
 
@@ -76,7 +77,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return CreditTradeService.get_organization_credit_trades(
             user.organization)
 
-    @permission_required('VIEW_CREDIT_TRANSFERS')
+    @method_decorator(permission_required('VIEW_CREDIT_TRANSFERS'))
     def list(self, request, *args, **kwargs):
         """
         Shows the credit transfers for the current organization.
@@ -151,7 +152,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             CreditTradeService.dispatch_notifications(
                 previous_state, credit_trade)
 
-    @detail_route(methods=['put'])
+    @action(detail=True, methods=['put'])
     def delete(self, request, pk=None):
         """
         Marks the Credit Trade as Cancelled
@@ -163,8 +164,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(None, status=status.HTTP_200_OK)
 
-    @detail_route(methods=['put'])
-    @permission_required('APPROVE_CREDIT_TRANSFER')
+    @action(detail=True, methods=['put'])
+    @method_decorator(permission_required('APPROVE_CREDIT_TRANSFER'))
     def approve(self, request, pk=None):
         """
         Marks the Credit Trade as Approved
@@ -192,8 +193,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @list_route(methods=['get'])
-    @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
+    @action(detail=False, methods=['get'])
+    @method_decorator(permission_required('VIEW_APPROVED_CREDIT_TRANSFERS'))
     def list_recorded(self, request):
         """
         Returns a list of Recorded Credit Trades only
@@ -207,8 +208,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['put'])
-    @permission_required('USE_HISTORICAL_DATA_ENTRY')
+    @action(detail=False, methods=['put'])
+    @method_decorator(permission_required('USE_HISTORICAL_DATA_ENTRY'))
     def batch_process(self, request):
         """
         Call the approve function on multiple Credit Trades
@@ -231,8 +232,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                              "Approved credit transactions have been processed."},
                         status=status.HTTP_200_OK)
 
-    @list_route(methods=['get'])
-    @permission_required('VIEW_CREDIT_TRANSFERS')
+    @action(detail=False, methods=['get'])
+    @method_decorator(permission_required('VIEW_CREDIT_TRANSFERS'))
     def xls(self, request):
         """
         Exports the credit transfers and organizations table

@@ -1,10 +1,11 @@
 import uuid
 
 from django.db.models import Q
+from django.utils.decorators import method_decorator
 from minio import Minio
 
 from rest_framework import viewsets, status, mixins
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -61,7 +62,7 @@ class DocumentViewSet(AuditableMixin,
     queryset = Document.objects.all()
     ordering = ('-id',)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def categories(self, request):
         """
         Reference Data for UI
@@ -125,8 +126,8 @@ class DocumentViewSet(AuditableMixin,
 
         DocumentService.send_notification(document, user)
 
-    @detail_route(methods=['put'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @action(detail=True, methods=['put'])
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def link(self, request, pk=None):
         """
         Link a credit trade to this document
@@ -143,7 +144,7 @@ class DocumentViewSet(AuditableMixin,
 
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
-    @detail_route(methods=['put'])
+    @action(detail=True, methods=['put'])
     def scan_attachments(self, request, pk=None):
         """
         Sends a request to ClamAV to scan the attachments for a specific
@@ -161,8 +162,8 @@ class DocumentViewSet(AuditableMixin,
 
         return Response(None)
 
-    @detail_route(methods=['put'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @action(detail=True, methods=['put'])
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def unlink(self, request, pk=None):
         """
         Unlink a credit trade from this document
@@ -184,7 +185,7 @@ class DocumentViewSet(AuditableMixin,
 
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
-    @list_route(methods=['get'], permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def statuses(self, request):
         """
         Gets the list of statuses that can be applied to a document
@@ -196,7 +197,7 @@ class DocumentViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def upload_url(self, request):
         """
         Generates the presigned URL for uploading and retrieving
@@ -223,8 +224,8 @@ class DocumentViewSet(AuditableMixin,
             'get': get_url
         })
 
-    @detail_route(methods=['get'])
-    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    @action(detail=True, methods=['get'])
+    @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def linkable_credit_transactions(self, request, pk=None):
         """
         Returns all the credit transactions that are available for the

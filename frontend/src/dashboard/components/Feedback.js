@@ -9,11 +9,11 @@ const Feedback = props => (
       We are always striving to improve TFRS. <br />
       {` Please send your suggestions and feedback to `}
       <a
-        href="mailto:lcfrr@gov.bc.ca"
+        href="mailto:lcfs@gov.bc.ca"
         rel="noopener noreferrer"
         target="_blank"
       >
-        lcfrr@gov.bc.ca
+        lcfs@gov.bc.ca
       </a>
     </p>
   </div>

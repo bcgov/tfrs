@@ -42,7 +42,7 @@ const ComplianceReportIntro = (props) => {
         <p>
         An administrative penalty must be made payable to the Minister of Finance. Payment is due
         March 31 following each compliance period. For more information please contact the Low
-        Carbon Fuels Branch via email at <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a>.
+        Carbon Fuels Branch via email at <a href="mailto:lcfs@gov.bc.ca">lcfs@gov.bc.ca</a>.
         </p>
 
         <h3>Small  Fuel Supplier Exemption</h3>
@@ -75,7 +75,7 @@ const ComplianceReportIntro = (props) => {
 
         <h3>Questions?</h3>
         <p>
-        Please contact <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a> with any questions you
+        Please contact <a href="mailto:lcfs@gov.bc.ca">lcfs@gov.bc.ca</a> with any questions you
         may have about this form.
         </p>
       </div>

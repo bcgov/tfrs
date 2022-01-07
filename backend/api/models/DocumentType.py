@@ -52,7 +52,8 @@ class DocumentType(Auditable, EffectiveDates):
         blank=False,
         null=False,
         unique=False,
-        related_name='types'
+        related_name='types',
+        on_delete=models.DO_NOTHING
     )
 
     objects = TheTypeManager()
