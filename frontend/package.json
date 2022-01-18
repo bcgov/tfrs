@@ -18,7 +18,7 @@
     "express-history-api-fallback": "^2.2.1",
     "history": "^4.6.1",
     "http-proxy": "^1.17.0",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.0",
     "jwks-rsa": "^1.4.0",
     "moment-timezone": "^0.5.27",
