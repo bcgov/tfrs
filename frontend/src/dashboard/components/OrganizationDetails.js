@@ -20,11 +20,11 @@ const OrganizationDetails = props => (
       {props.loggedInUser.organization.name}
       {props.loggedInUser.organization.organizationAddress &&
       <dl>
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_1}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine1}</dd>
         <dt />
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_2}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine2}</dd>
         <dt />
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_3}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine3}</dd>
         <dt />
         <dd>{props.loggedInUser.organization.organizationAddress.city && `${props.loggedInUser.organization.organizationAddress.city}, `}
           {props.loggedInUser.organization.organizationAddress.postalCode && `${props.loggedInUser.organization.organizationAddress.postalCode}`}
