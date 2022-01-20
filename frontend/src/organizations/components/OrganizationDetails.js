@@ -63,11 +63,11 @@ const OrganizationDetails = props => (
       <div className="address">
         <dl className="dl-horizontal">
           <dt>Address:</dt>
-          <dd>{props.organization.organizationAddress.addressLine_1}</dd>
+          <dd>{props.organization.organizationAddress.addressLine1}</dd>
           <dt />
-          <dd>{props.organization.organizationAddress.addressLine_2}</dd>
+          <dd>{props.organization.organizationAddress.addressLine2}</dd>
           <dt />
-          <dd>{props.organization.organizationAddress.addressLine_3}</dd>
+          <dd>{props.organization.organizationAddress.addressLine3}</dd>
           <dt />
           <dd>{props.organization.organizationAddress.city && `${props.organization.organizationAddress.city}, `}
             {props.organization.organizationAddress.postalCode && `${props.organization.organizationAddress.postalCode}, `}
@@ -114,9 +114,9 @@ OrganizationDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     organizationAddress: PropTypes.shape({
-      addressLine_1: PropTypes.string,
-      addressLine_2: PropTypes.string,
-      addressLine_3: PropTypes.string,
+      addressLine1: PropTypes.string,
+      addressLine2: PropTypes.string,
+      addressLine3: PropTypes.string,
       city: PropTypes.string,
       postalCode: PropTypes.string,
       state: PropTypes.string,

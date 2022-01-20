@@ -96,9 +96,9 @@ OrganizationDetails.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationAddress: PropTypes.shape({
-        addressLine_1: PropTypes.string,
-        addressLine_2: PropTypes.string,
-        addressLine_3: PropTypes.string,
+        addressLine1: PropTypes.string,
+        addressLine2: PropTypes.string,
+        addressLine3: PropTypes.string,
         city: PropTypes.string,
         postalCode: PropTypes.string,
         state: PropTypes.string

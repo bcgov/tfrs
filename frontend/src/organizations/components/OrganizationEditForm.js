@@ -83,9 +83,9 @@ const OrganizationEditForm = props => (
               <input
                 className="form-control"
                 id="organization-address-line-1"
-                name="addressLine_1"
+                name="addressLine1"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_1 || ''}
+                value={props.fields.addressLine1 || ''}
               />
             </label>
           </div>
@@ -99,9 +99,9 @@ const OrganizationEditForm = props => (
               <input
                 className="form-control"
                 id="organization-address-line-2"
-                name="addressLine_2"
+                name="addressLine2"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_2 || ''}
+                value={props.fields.addressLine2 || ''}
               />
             </label>
           </div>
@@ -113,9 +113,9 @@ const OrganizationEditForm = props => (
               <input
                 className="form-control"
                 id="organization-address-line-3"
-                name="addressLine_3"
+                name="addressLine3"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_3 || ''}
+                value={props.fields.addressLine3 || ''}
               />
             </label>
           </div>
@@ -232,9 +232,9 @@ OrganizationEditForm.defaultProps = {
 OrganizationEditForm.propTypes = {
   fields: PropTypes.shape({
     name: PropTypes.string,
-    addressLine_1: PropTypes.string,
-    addressLine_2: PropTypes.string,
-    addressLine_3: PropTypes.string,
+    addressLine1: PropTypes.string,
+    addressLine2: PropTypes.string,
+    addressLine3: PropTypes.string,
     city: PropTypes.string,
     postalCode: PropTypes.string,
     state: PropTypes.string,
