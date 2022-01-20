@@ -331,9 +331,9 @@ class ExclusionReportEditContainer extends Component {
       <p key="organization-address">
         {organizationAddress &&
           AddressBuilder({
-            address_line_1: organizationAddress.addressLine_1,
-            address_line_2: organizationAddress.addressLine_2,
-            address_line_3: organizationAddress.addressLine_3,
+            address_line_1: organizationAddress.addressLine1,
+            address_line_2: organizationAddress.addressLine2,
+            address_line_3: organizationAddress.addressLine3,
             city: organizationAddress.city,
             state: organizationAddress.state,
             postal_code: organizationAddress.postalCode
