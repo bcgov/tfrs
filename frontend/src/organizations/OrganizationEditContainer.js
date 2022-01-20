@@ -162,9 +162,9 @@ class OrganizationEditContainer extends Component {
       actionsType: this.state.fields.actionsType,
       status: this.state.fields.status,
       organizationAddress: {
-        addressLine_1: this.state.fields.addressLine_1,
-        addressLine_2: this.state.fields.addressLine_2,
-        addressLine_3: this.state.fields.addressLine_3,
+        addressLine_1: this.state.fields.addressLine1,
+        addressLine_2: this.state.fields.addressLine2,
+        addressLine_3: this.state.fields.addressLine3,
         city: this.state.fields.city,
         postalCode: this.state.fields.postalCode,
         state: this.state.fields.state,
