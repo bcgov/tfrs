@@ -28,9 +28,9 @@ oc -n 0ab226-test process -f ./backup-deploy-test.yaml \
   -p ENVIRONMENT_FRIENDLY_NAME='ZEVA Database Backup' \
   -p ENVIRONMENT_NAME=0ab226-test \
   -p BACKUP_DIR=/backups/patroni-backup/ \
-  -p DAILY_BACKUPS=10 \
-  -p WEEKLY_BACKUPS=12 \
-  -p MONTHLY_BACKUPS=3 \
+  -p DAILY_BACKUPS=4 \
+  -p WEEKLY_BACKUPS=2 \
+  -p MONTHLY_BACKUPS=1 \
   -p CONFIG_MAP_NAME=backup-conf \
   -p CONFIG_MOUNT_PATH=/ \
   -p BACKUP_VOLUME_NAME=backup-tfrs-test \
@@ -50,9 +50,9 @@ oc -n 0ab226-prod process -f ./backup-deploy-prod.yaml \
   -p ENVIRONMENT_FRIENDLY_NAME='ZEVA Database Backup' \
   -p ENVIRONMENT_NAME=0ab226-prod \
   -p BACKUP_DIR=/backups/patroni-backup/ \
-  -p DAILY_BACKUPS=10 \
-  -p WEEKLY_BACKUPS=12 \
-  -p MONTHLY_BACKUPS=3 \
+  -p DAILY_BACKUPS=14 \
+  -p WEEKLY_BACKUPS=4 \
+  -p MONTHLY_BACKUPS=2 \
   -p CONFIG_MAP_NAME=backup-conf \
   -p CONFIG_MOUNT_PATH=/ \
   -p BACKUP_VOLUME_NAME=backup-tfrs-prod \
