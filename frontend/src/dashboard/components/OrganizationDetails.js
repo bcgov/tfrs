@@ -20,11 +20,11 @@ const OrganizationDetails = props => (
       {props.loggedInUser.organization.name}
       {props.loggedInUser.organization.organizationAddress &&
       <dl>
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_1}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine1}</dd>
         <dt />
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_2}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine2}</dd>
         <dt />
-        <dd>{props.loggedInUser.organization.organizationAddress.addressLine_3}</dd>
+        <dd>{props.loggedInUser.organization.organizationAddress.addressLine3}</dd>
         <dt />
         <dd>{props.loggedInUser.organization.organizationAddress.city && `${props.loggedInUser.organization.organizationAddress.city}, `}
           {props.loggedInUser.organization.organizationAddress.postalCode && `${props.loggedInUser.organization.organizationAddress.postalCode}`}
@@ -96,9 +96,9 @@ OrganizationDetails.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationAddress: PropTypes.shape({
-        addressLine_1: PropTypes.string,
-        addressLine_2: PropTypes.string,
-        addressLine_3: PropTypes.string,
+        addressLine1: PropTypes.string,
+        addressLine2: PropTypes.string,
+        addressLine3: PropTypes.string,
         city: PropTypes.string,
         postalCode: PropTypes.string,
         state: PropTypes.string
