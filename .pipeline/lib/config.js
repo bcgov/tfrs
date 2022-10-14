@@ -4,6 +4,12 @@ const changeId = options.pr //aka pull-request
 const version = '2.0.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
+
+options.git.owner='bcgov'
+//Have to set options.git.repository to be zeva otherwise an error will be thrown as the label github-repo 
+//will contain https://github.com/bcgov/zeva which is not allowed as a valid label
+options.git.repository='tfrs'
+
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
