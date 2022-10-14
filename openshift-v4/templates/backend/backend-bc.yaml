@@ -65,8 +65,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          namespace: openshift
-          name: python:3.6
+          name: python-39:1-74
         env:
           - name: ARTIFACTORY_USER
             valueFrom:
@@ -86,11 +85,11 @@ objects:
         name: ${NAME}-backend:${VERSION}
     resources:
       limits:
-        cpu: '1'
-        memory: 4Gi
-      requests:
-        cpu: 500m
+        cpu: 2000m
         memory: 2Gi
+      requests:
+        cpu: 1000m
+        memory: 1Gi
     postCommit: {}
     nodeSelector: 
   status:

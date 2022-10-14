@@ -38,3 +38,9 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
 
+      ## Run build on Openshift
+      - name: Run build
+        run: |
+          cd .pipeline
+          npm install
+          npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
