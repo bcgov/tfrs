@@ -1,18 +1,18 @@
 ## For each release, the value of workflow name, branches and PR_NUMBER need to be adjusted accordingly
 
-name: TFRS release-2.0.0
+name: TFRS pipeline-2.0.0
 
 on:
   push:
-    branches: [ release-2.0.0 ]
+    branches: [ pipeline-2.0.0 ]
   workflow_dispatch:
   workflow_call:
 
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 1824
-  RELEASE_NAME: release-2.0.0
+  PR_NUMBER: 1825
+  RELEASE_NAME: pipeline-2.0.0
 
 jobs:
 
