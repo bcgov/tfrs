@@ -56,6 +56,7 @@ objects:
       type: Git
     strategy:
       dockerStrategy:
+        type: Docker      
         env:
           - name: ARTIFACTORY_USER
             valueFrom:
@@ -67,7 +68,9 @@ objects:
               secretKeyRef:
                 name: artifacts-default-cgcynz
                 key: password
-      type: Docker
+        forcePull: true
+        noCache: true
+        imageOptimizationPolicy: SkipLayers
     triggers:
     - type: ConfigChange
     - type: ImageChange    
