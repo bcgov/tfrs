@@ -5,4 +5,6 @@ RUN mkdir /run/clamav && \
     ls -l /run && \
     ls -l /var/lib && \
     chmod 777 /var/lib/clamav && \
+    ls -l /var/lib && \
+    chown root:root /var/lib/clamav && \
     ls -l /var/lib
