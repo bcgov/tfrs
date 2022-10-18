@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: image-registry.openshift-image-registry.svc:5000/ac294c-tools/itvr-clamav
+  repository: image-registry.openshift-image-registry.svc:5000/0ab226-tools/tfrs-clamav
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.105_base"
