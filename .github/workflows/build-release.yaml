@@ -44,3 +44,24 @@ jobs:
           cd .pipeline
           npm install
           npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
+
+  deploy-on-dev:
+
+    name: Deploy TFRS on Dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    needs: build
+
+    steps:
+
+      ## it will checkout to /home/runner/work/itvr/itvr
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    

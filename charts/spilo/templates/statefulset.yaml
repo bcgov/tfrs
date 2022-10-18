@@ -1,0 +1,251 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "spilo.fullname" . }}
+  labels: {{ include "spilo.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "spilo.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{ include "spilo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: {{ template "spilo.fullname" . }}
+      labels: {{ include "spilo.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ template "spilo.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: PGPASSWORD_SUPERUSER
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.credentials.useExistingSecret }}
+              name: {{ .Values.credentials.existingSecret.name }}
+              key: {{ .Values.credentials.existingSecret.superuserKey }}
+              {{- else }}
+              name: {{ template "spilo.fullname" . }}
+              key: password-superuser
+              {{- end }}
+        - name: PGPASSWORD_ADMIN
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.credentials.useExistingSecret }}
+              name: {{ .Values.credentials.existingSecret.name }}
+              key: {{ .Values.credentials.existingSecret.adminKey }}              
+              {{- else }}
+              name: {{ template "spilo.fullname" . }}
+              key: password-admin
+              {{- end }}              
+        - name: PGPASSWORD_STANDBY
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.credentials.useExistingSecret }}
+              name: {{ .Values.credentials.existingSecret.name }}
+              key: {{ .Values.credentials.existingSecret.standbyKey }}   
+              {{- else }}
+              name: {{ template "spilo.fullname" . }}
+              key: password-standby                 
+              {{- end }}     
+        - name: DCS_ENABLE_KUBERNETES_API
+          value: "true"
+        - name: KUBERNETES_LABELS
+          value: {{ (printf "{ \"app.kubernetes.io/instance\": \"%s\"}" (include "spilo.fullname" .)) | quote }}
+        - name: KUBERNETES_SCOPE_LABEL
+          value: "app.kubernetes.io/instance"
+        - name: KUBERNETES_USE_CONFIGMAPS
+          value: "true"
+        - name: SCOPE
+          value: {{ template "spilo.fullname" . }}
+        - name: PGVERSION
+          value: {{ .Values.postgresMajorVersion | quote }}
+        {{- if .Values.continuousArchive.enabled }}
+        - name: USE_WALG
+          value: 'true'
+        - name: USE_WALG_BACKUP
+          value: 'true'
+        - name: USE_WALG_RESTORE
+          value: 'true'
+        {{- if .Values.continuousArchive.scheduleCronJob }}
+        - name: BACKUP_SCHEDULE
+          value: {{ .Values.continuousArchive.scheduleCronJob | quote}}
+        {{- end }}
+        {{- if .Values.continuousArchive.retainBackups }}
+        - name: BACKUP_NUM_TO_RETAIN
+          value: {{ .Values.continuousArchive.retainBackups | quote}}
+        {{- end }}
+        {{- if eq .Values.continuousArchive.storage "s3"}}
+        - name: WAL_S3_BUCKET
+          value: {{ .Values.continuousArchive.s3.bucket | quote }}
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Values.continuousArchive.s3.secretName }}
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Values.continuousArchive.s3.secretName }}
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_ENDPOINT
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Values.continuousArchive.s3.secretName }}
+              key: AWS_ENDPOINT
+        {{- end }}
+        {{- if eq .Values.continuousArchive.storage "gcs"}}
+        - name: WAL_GS_BUCKET
+          value: {{ .Values.continuousArchive.gcs.bucket | quote }}
+        - name: WALE_GS_PREFIX
+          value: gs://{{ .Values.continuousArchive.gcs.bucket }}/{{ .Values.continuousArchive.gcs.bucketBackupLocation }}
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/etc/credentials/credentials.json"
+        {{- end }}
+        {{- if eq .Values.continuousArchive.storage "pvc"}}
+        - name: WALG_FILE_PREFIX
+          value: /home/postgres/archive
+        {{- end }}
+        {{- else }}
+        - name: USE_WALE
+          value: ""
+        {{- end }}
+        {{- if .Values.shipLogs.enabled }}
+        - name: LOG_S3_BUCKET
+          value: {{ .Values.shipLogs.s3.bucket | quote }}
+        - name: LOG_SHIP_SCHEDULE
+          value: {{ .Values.shipLogs.s3.shipSchedule | quote }}
+        {{- end }}
+        - name: PGROOT
+          value: "{{ .Values.persistentVolume.mountPath }}/pgroot"
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: ALLOW_NOSSL
+          value: "true"
+        {{- if .Values.env }}
+        {{- range $key, $val := .Values.env }}
+        - name: {{  $key | quote | upper }}
+          value: {{ $val | quote }}
+        {{- end }}
+        {{- end }}
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /usr/bin/env
+                - bash
+                - -c
+                - |
+                  # switch leader pod if the current pod is the leader
+                  if curl --fail http://localhost:8008/read-write; then
+                    patronictl switchover --force
+                  fi
+        ports:
+        - containerPort: 8008
+        - containerPort: 5432
+          name: postgresql
+        volumeMounts:
+        - name: storage-volume
+          mountPath: "{{ .Values.persistentVolume.mountPath }}"
+          subPath: "{{ .Values.persistentVolume.subPath }}"
+        - mountPath: /etc/spilo
+          name: spilo-config
+          readOnly: true
+        {{- if and (.Values.continuousArchive.enabled) (eq .Values.continuousArchive.storage "pvc") }}
+        - mountPath: /home/postgres/archive
+          name: archive-volume
+        {{- end }}
+        {{- if .Values.continuousArchive.enabled }}
+        {{- if .Values.continuousArchive.gcs.kubernetesSecret }}
+        - name: archive-gcs-credentials
+          mountPath: /etc/credentials
+          readOnly: true
+        {{- end }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        {{- if .Values.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /liveness
+            port: 8008
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        {{- end }}
+        {{- if .Values.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /readiness
+            port: 8008
+          initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+        {{- end }}
+      affinity:
+        # Make sure we don't schedule multiple pods on the same node
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels: {{ include "spilo.selectorLabels" . | nindent 26 }}
+      volumes:
+      - name: spilo-config
+        secret:
+          {{- if .Values.credentials.useExistingSecret }}
+          secretName: {{ .Values.credentials.existingSecret.name }}        
+          {{- else }}
+          secretName: {{ template "spilo.fullname" . }}
+          {{- end }}
+      {{- if .Values.continuousArchive.enabled }}
+      {{- if .Values.continuousArchive.gcs.kubernetesSecret }}
+      - name: archive-gcs-credentials
+        secret:
+          secretName: {{ .Values.continuousArchive.gcs.kubernetesSecret }}
+      {{- end }}
+      {{- end }}
+      {{- if not .Values.persistentVolume.enabled }}
+      - name: storage-volume
+        emptyDir: {}
+      {{- end }}
+      {{- if and (.Values.continuousArchive.enabled) (eq .Values.continuousArchive.storage "pvc") }}
+      - name: archive-volume
+        persistentVolumeClaim:
+          claimName: {{ template "spilo.fullname" . }}-archive
+      {{- end }}
+  {{- if .Values.persistentVolume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage-volume
+        annotations:
+        {{- if .Values.persistentVolume.annotations }}
+{{ toYaml .Values.persistentVolume.annotations | indent 8 }}
+        {{- end }}
+        labels: {{ include "spilo.labels" . | nindent 10 }}
+      spec:
+        accessModes:
+{{ toYaml .Values.persistentVolume.accessModes | indent 8 }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolume.size }}"
+      {{- if .Values.persistentVolume.storageClass }}
+      {{- if (eq "-" .Values.persistentVolume.storageClass) }}
+        storageClassName: ""
+      {{- else }}
+        storageClassName: "{{ .Values.persistentVolume.storageClass }}"
+      {{- end }}
+      {{- end }}
+  {{- end }}
