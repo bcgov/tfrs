@@ -91,7 +91,7 @@ const CarbonIntensityLimitDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(CREDIT_CALCULATIONS.CARBON_INTENSITIES_EDIT.replace(':id', props.item.id))}
+        onClick={() => props.navigate(CREDIT_CALCULATIONS.CARBON_INTENSITIES_EDIT.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>

@@ -11,7 +11,6 @@ import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails';
 import Errors from '../../app/components/Errors';
 import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import DOCUMENT_STATUSES from '../../constants/documentStatuses';
 
@@ -45,7 +44,7 @@ class SecureFileSubmissionForm extends Component {
             <div className="btn-container">
               <button
                 className="btn btn-default"
-                onClick={() => history.goBack()}
+                onClick={() => this.props.navigate(-1)}
                 type="button"
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

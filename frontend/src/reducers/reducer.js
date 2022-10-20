@@ -1,4 +1,3 @@
-import { routerReducer as routing } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
 import { approvedCreditTransfers, creditTransfer, creditTransfers } from './creditTransferReducer';
@@ -47,7 +46,6 @@ const rootReducer = combineReducers({
   organizationRequest,
   organizations,
   referenceData,
-  routing,
   sessionTimeout,
   signingAuthorityAssertions,
   subscriptions,

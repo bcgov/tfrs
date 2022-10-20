@@ -6,13 +6,13 @@ eslint class-methods-use-this: [
 ]
 */
 
-import React from 'react';
-import { ItemAdapter } from 'react-bootstrap-autosuggest';
+// import React from 'react';
+// import { ItemAdapter } from 'react-bootstrap-autosuggest';
 
-class FuelSupplierAdapter extends ItemAdapter {
-  renderItem (item) {
-    return <div>{item.name}</div>;
-  }
-}
+// class FuelSupplierAdapter extends ItemAdapter {
+//   renderItem (item) {
+//     return <div>{item.name}</div>;
+//   }
+// }
 
-export default FuelSupplierAdapter;
+// export default FuelSupplierAdapter;

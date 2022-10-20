@@ -2,36 +2,41 @@ const Webpack = require('webpack');
 const packageJson = require('./package.json');
 const path = require('path');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
 const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
 
-console.log('using dev');
-
 const config = {
-  // Makes sure errors in console map to the correct file
-  // and line numbe
-  // devtool: 'eval',
   mode: 'development',
   entry: {
     bundle: [
-      // Polyfill for Object.assign on IE11, etc
-      'babel-polyfill',
-
       // For hot style updates
       'webpack/hot/dev-server',
-
       // The script refreshing the browser on none hot updates
-      'webpack-dev-server/client?http://localhost:8080',
-
+      'webpack-dev-server/client/index.js?hot=true&live-reload=true',
+      '@babel/polyfill',
       // Our application
       mainPath
     ],
-    tokenRenewal: [
-      'babel-polyfill',
-      tokenRenewalPath
-    ]
+    // tokenRenewal: [
+    //   'babel-polyfill',
+    //   tokenRenewalPath
+    // ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   },
   output: {
     // We need to give Webpack a path. It does not actually need it,
@@ -44,10 +49,13 @@ const config = {
 
     // Everything related to Webpack should go through a build path,
     // localhost:3000/build. That makes proxying easier to handle
-    publicPath: '/build/'
+    publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      'react-dom': '@hot-loader/react-dom'
+    }
   },
   module: {
     rules: [
@@ -55,52 +63,68 @@ const config = {
       // ES6/7 syntax and JSX transpiling out of the box
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
         exclude: [nodeModulesPath],
-        query: {
-          presets: ['react', 'env'],
-          plugins: ['transform-object-rest-spread']
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react', '@babel/preset-env'],
+            plugins: [
+              '@babel/plugin-proposal-object-rest-spread',
+              'react-hot-loader/babel'
+            ]
+          }
         }
       },
-
-      // Let us also add the style-loader and css-loader, which you can
-      // expand with less-loader etc
       {
-        test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
-      },
-      {
-        test: /\.css$/,
-        exclude: /node_modules/,
-        loader:
-          'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]'
-      },
-      {
-        test: /\.css$/,
-        include: /node_modules/,
-        loader:
-          'style-loader!css-loader'
-      },
+        test: /\.(s?)css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {}
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
+      },      
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loaders: ['file?name=[name].[ext]']
+        type: 'asset/resource'
       },
       {
         test: /\.(otf|eot|svg|ttf|woff|woff2)$/i,
-        loader: 'file?name=./public/assets/fonts/[name].[ext]',
-        query: {
-          limit: 10000
-        }
+        type: 'asset/resource'
       }
     ]
   },
   devServer: {
     historyApiFallback: true
   },
-  devtool: 'cheap-module-eval-source-map', // 'source-map', // debug
+  devtool: 'source-map',
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    }),
+    new HtmlWebpackPlugin({
+      title: 'TFRS',
+      chunks: ['bundle', 'vendor'],
+      filename: 'index.html',
+      inject: true,
+      favicon: './favicon.ico',
+      template: './template.html'
+    }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
       __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),

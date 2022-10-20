@@ -20,7 +20,6 @@ import {
   updateCreditTransfer
 } from '../../actions/creditTransfersActions';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import history from '../../app/History';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
@@ -90,7 +89,7 @@ class HistoricalDataEntryEditContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(HISTORICAL_DATA_ENTRY.LIST);
+      this.props.navigate(HISTORICAL_DATA_ENTRY.LIST);
     });
 
     return false;

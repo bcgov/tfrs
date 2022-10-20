@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
@@ -32,7 +31,7 @@ const ExclusionReportButtons = props => (
     <div className="right">
       <button
         className="btn btn-default"
-        onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
+        onClick={() => props.navigate(COMPLIANCE_REPORTING.LIST)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

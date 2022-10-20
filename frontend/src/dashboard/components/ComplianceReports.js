@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
 const ComplianceReports = (props) => {
@@ -86,7 +85,7 @@ const ComplianceReports = (props) => {
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -107,7 +106,7 @@ const ComplianceReports = (props) => {
                   value: 'Analyst'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -128,7 +127,7 @@ const ComplianceReports = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -159,7 +158,7 @@ const ComplianceReports = (props) => {
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -180,7 +179,7 @@ const ComplianceReports = (props) => {
                   value: 'Analyst'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -201,7 +200,7 @@ const ComplianceReports = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -225,7 +224,7 @@ const ComplianceReports = (props) => {
                   value: currentYear.toString()
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -239,7 +238,7 @@ const ComplianceReports = (props) => {
                   value: ''
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >

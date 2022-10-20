@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
@@ -41,7 +40,7 @@ const OrganizationMembers = (props) => {
                   addUrl = ORGANIZATIONS.ADD_USER.replace(':organizationId', props.organizationId);
                 }
 
-                history.push(addUrl);
+                props.navigate(addUrl);
               }}
               type="button"
             >

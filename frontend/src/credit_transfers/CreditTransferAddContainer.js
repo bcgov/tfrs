@@ -158,7 +158,7 @@ class CreditTransferAddContainer extends Component {
 
       this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
 
@@ -184,7 +184,7 @@ class CreditTransferAddContainer extends Component {
       this._saveComment(response.data.id, comment, isCreatingPrivilegedComment);
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
 

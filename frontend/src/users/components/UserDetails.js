@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
@@ -31,7 +30,7 @@ const UserDetails = props => (
                   editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id);
                 }
 
-                history.push(editUrl);
+                props.navigate(editUrl);
               }}
               type="button"
               id="edit-user"
@@ -81,7 +80,7 @@ const UserDetails = props => (
     <div className="btn-container">
       <button
         className="btn btn-default"
-        onClick={() => history.goBack()}
+        onClick={() => props.navigate(-1)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

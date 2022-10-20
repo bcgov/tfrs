@@ -4,12 +4,17 @@ import userManager from './oidc-usermanager';
 import { getLoggedInUser } from '../actions/userActions';
 import CONFIG from '../config';
 
+
 const LOGIN_TRIGGERING_ACTIONS = [
   'redux-oidc/USER_EXPIRED'
 ];
 
 function triggerLoginFlow (store) {
-  const { routing } = store.getState();
+  // const { routing } = store.getState();
+  // TODO NEED TO GET LOCATION HERE FROM REACT ROUTER V6
+  // TEMPORARY FIX
+  let routing = { location: { pathname: '/' }}
+  const pathname = window.location.pathname
 
   if (routing.location &&
     routing.location.pathname !== '/authCallback') {
@@ -33,9 +38,17 @@ function * getBackendUser (store) {
 export default function * authenticationStateSaga (store) {
   userManager.clearStaleState();
 
-  const { routing } = store.getState();
+  // console.log(store.getState())
 
-  if (!routing.location || routing.location.pathname !== '/authCallback') {
+  // const { routing } = store.getState();
+
+  // TODO NEED TO GET LOCATION HERE FROM REACT ROUTER V6
+  // TEMPORARY FIX
+  const pathname = window.location.pathname
+  // let routing = { location: { pathname: '/' }}
+
+  if (pathname !== '/authCallback') {
+    console.log("loading user")
     loadUser(store, userManager);
   }
 

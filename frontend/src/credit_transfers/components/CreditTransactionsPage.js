@@ -7,7 +7,6 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Tooltip from '../../app/components/Tooltip';
 import CreditTransferTable from './CreditTransferTable';
@@ -115,7 +114,7 @@ const CreditTransactionsPage = (props) => {
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
-              onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
+              onClick={() => props.navigate(CREDIT_TRANSACTIONS.ADD)}
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_TRANSFER}
             </button>

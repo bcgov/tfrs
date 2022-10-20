@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { energyDensities } from '../../actions/energyDensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import EnergyDensityForm from './components/EnergyDensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
@@ -41,7 +40,7 @@ class EnergyDensityEditContainer extends Component {
   componentWillReceiveProps (props) {
     if (this.props.energyDensity.isUpdating && !props.energyDensity.isUpdating) {
       if (props.energyDensity.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Energy densities saved.');
       }
       return;

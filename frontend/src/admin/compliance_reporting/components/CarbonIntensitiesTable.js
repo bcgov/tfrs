@@ -6,9 +6,7 @@ import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-
 import ReactTable from '../../../app/components/StateSavingReactTable';
-import history from '../../../app/History';
 
 const CarbonIntensitiesTable = (props) => {
   const columns = [{
@@ -74,8 +72,7 @@ const CarbonIntensitiesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = props.viewUrl.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              props.navigate(viewUrl)
             },
             className: 'clickable'
           };

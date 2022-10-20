@@ -148,7 +148,7 @@ class OrganizationEditContainer extends Component {
     this.props.updateOrganization(data, this.props.match.params.id).then(() => {
       // update the session for the logged in user (in case the user information got updated)
       this.props.getUpdatedLoggedInUser();
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.organizationSuccess();
     });
 
@@ -175,7 +175,7 @@ class OrganizationEditContainer extends Component {
 
     this.props.addOrganization(data).then((id) => {
       const viewUrl = ORGANIZATION.DETAILS.replace(':id', id);
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.organizationSuccess('Organization created.');
     });
 

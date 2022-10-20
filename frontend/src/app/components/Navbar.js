@@ -8,7 +8,6 @@ import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
 import { signUserOut } from '../../actions/userActions';
-import history from '../../app/History';
 import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
@@ -195,7 +194,7 @@ class Navbar extends Component {
                   <MenuItem
                     className="dropdown-hidden-item"
                     onClick={() => {
-                      history.push(Routes.NOTIFICATIONS.LIST);
+                      this.props.navigate(Routes.NOTIFICATIONS.LIST);
                     }}
                   >
                     <FontAwesomeIcon icon="bell" /> Notifications
@@ -204,7 +203,7 @@ class Navbar extends Component {
                     }
                   </MenuItem>
                   <MenuItem onClick={() => {
-                    history.push(Routes.SETTINGS);
+                    this.props.navigate(Routes.SETTINGS);
                   }}
                   >
                     <FontAwesomeIcon icon="cog" /> Settings
@@ -539,6 +538,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}), mapDispatchToProps, null, {
-  pure: false
-})(Navbar);
+}), mapDispatchToProps, null, {})(Navbar);

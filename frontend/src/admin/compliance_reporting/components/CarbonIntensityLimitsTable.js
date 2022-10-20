@@ -8,7 +8,6 @@ import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
-import history from '../../../app/History';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
 const CarbonIntensityLimitsTable = (props) => {
@@ -114,8 +113,7 @@ const CarbonIntensityLimitsTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              props.navigate(viewUrl)
             },
             className: 'clickable'
           };

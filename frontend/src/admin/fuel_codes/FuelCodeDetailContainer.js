@@ -10,7 +10,6 @@ import Loading from '../../app/components/Loading';
 
 import { deleteFuelCode, getFuelCode } from '../../actions/fuelCodes';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import FuelCodeDetails from './components/FuelCodeDetails';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
@@ -37,7 +36,7 @@ class FuelCodeDetailContainer extends Component {
     const { id } = this.props.fuelCode.item;
 
     this.props.deleteFuelCode(id).then(() => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess('Cancelled');
     });
 

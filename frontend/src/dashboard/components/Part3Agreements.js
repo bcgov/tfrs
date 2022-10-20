@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import history from '../../app/History';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
@@ -45,7 +44,7 @@ const Part3Agreements = props => (
           onClick={() => {
             const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '');
 
-            return history.push(route);
+            return props.navigate(route);
           }}
           type="button"
         >

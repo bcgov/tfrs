@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 
 const FuelCodes = (props) => {
@@ -44,7 +43,7 @@ const FuelCodes = (props) => {
                   value: 'Draft'
                 }], 'fuel-codes');
 
-                return history.push(FUEL_CODES.LIST);
+                return props.navigate(FUEL_CODES.LIST);
               }}
               type="button"
             >
@@ -63,7 +62,7 @@ const FuelCodes = (props) => {
                 value: ''
               }], 'fuel-codes');
 
-              return history.push(FUEL_CODES.LIST);
+              return props.navigate(FUEL_CODES.LIST);
             }}
             type="button"
           >

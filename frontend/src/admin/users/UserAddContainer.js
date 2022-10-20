@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
 import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
@@ -155,7 +154,7 @@ class UserAddContainer extends Component {
         viewUrl = ADMIN_USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
       }
 
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.userSuccess('User created.');
     });
 

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import moment from 'moment-timezone';
 
-import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import ReactTable from '../../app/components/StateSavingReactTable';
 
@@ -117,7 +116,7 @@ const SecureFileSubmissionTable = (props) => {
             onClick: (e) => {
               const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id);
 
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: `clickable ${securityScanFailed && 'scan-failed'}`
           };

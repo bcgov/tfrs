@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import CarbonIntensityForm from './components/CarbonIntensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
@@ -40,7 +39,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   componentWillReceiveProps (props) {
     if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
       if (props.defaultCarbonIntensity.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Default Carbon Intensity saved.');
       }
       return;

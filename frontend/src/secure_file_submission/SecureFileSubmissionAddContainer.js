@@ -251,7 +251,7 @@ class SecureFileSubmissionAddContainer extends Component {
         this.props.scanDocumentAttachments(id);
 
         this.setState({ uploadState: 'success' });
-        history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+        this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       }).catch((reason) => {
         this.setState({

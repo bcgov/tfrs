@@ -209,8 +209,7 @@ const FuelCodesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = FUEL_CODES.DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             onMouseOver: (e) => {
               let message = '';

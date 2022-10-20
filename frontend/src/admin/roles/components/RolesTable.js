@@ -46,7 +46,7 @@ const RolesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: 'clickable'
           };

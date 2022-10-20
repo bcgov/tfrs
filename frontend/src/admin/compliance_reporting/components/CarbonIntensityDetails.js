@@ -55,7 +55,7 @@ const CarbonIntensityDetails = props => (
     <div className="btn-container">
       <button
         className="btn btn-default"
-        onClick={() => history.goBack()}
+        onClick={() => props.navigate(-1)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -63,7 +63,7 @@ const CarbonIntensityDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(props.editUrl.replace(':id', props.item.id))}
+        onClick={() => props.navigate(props.editUrl.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>

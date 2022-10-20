@@ -5,7 +5,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
-import history from '../../app/History';
 import Tooltip from '../../app/components/Tooltip';
 
 const CreditTransferFormButtons = props => (
@@ -13,7 +12,7 @@ const CreditTransferFormButtons = props => (
     <div className="btn-container">
       <button
         className="btn btn-default"
-        onClick={() => history.goBack()}
+        onClick={() => props.navigate(-1)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -36,7 +35,7 @@ const CreditTransferFormButtons = props => (
         <button
           className="btn btn-default"
           show={props.isCommenting}
-          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+          onClick={() => props.navigate(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
           <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT_DRAFT}
@@ -46,7 +45,7 @@ const CreditTransferFormButtons = props => (
       {props.actions.includes(Lang.BTN_EDIT_PVR_DRAFT) &&
         <button
           className="btn btn-default"
-          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+          onClick={() => props.navigate(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
           <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT_DRAFT}

@@ -118,8 +118,7 @@ const EnergyEffectivenessRatiosTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: 'clickable'
           };

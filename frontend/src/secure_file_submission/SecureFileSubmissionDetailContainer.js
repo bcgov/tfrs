@@ -94,7 +94,7 @@ class SecureFileSubmissionDetailContainer extends Component {
 
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(null, 'Draft deleted.');
     });
   }
@@ -160,7 +160,7 @@ class SecureFileSubmissionDetailContainer extends Component {
     }
 
     this.props.partialUpdateDocument(id, data).then((response) => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(status.status);
     });
 

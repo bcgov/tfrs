@@ -164,7 +164,7 @@ class CreditTransferEditContainer extends Component {
 
       this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(status.id, this.props.item);
     }, () => {
       // Failed to update
@@ -176,7 +176,7 @@ class CreditTransferEditContainer extends Component {
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      this.props.navigate(CREDIT_TRANSACTIONS.LIST);
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, this.props.item);
     });
   }
@@ -198,7 +198,7 @@ class CreditTransferEditContainer extends Component {
     this.props.updateCreditTransfer(id, data).then((response) => {
       this._saveComment(comment, isCreatingPrivilegedComment);
 
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(status.id, this.props.item);
     });
 

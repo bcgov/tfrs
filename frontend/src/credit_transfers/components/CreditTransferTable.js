@@ -7,7 +7,6 @@ import 'react-table/react-table.css';
 import moment from 'moment-timezone';
 import numeral from 'numeral';
 
-import history from '../../app/History';
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
@@ -160,7 +159,7 @@ const CreditTransferTable = (props) => {
               } else {
                 viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
               }
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: `clickable ${(row && row.original.id.toString() === props.highlight) && 'highlight'}`
           };

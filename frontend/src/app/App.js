@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-
 import KeycloakAwareApp from './KeycloakAwareApp';
+import { useNavigate } from "react-router-dom";
 
-const App = props => (
-  <KeycloakAwareApp>{props.children}</KeycloakAwareApp>
-);
+const App = props => {
+  let navigate = useNavigate();
+  return (
+    <KeycloakAwareApp navigate={navigate}>{props.children}</KeycloakAwareApp>
+  )
+};
 
 App.propTypes = {
   children: PropTypes.oneOfType([
@@ -17,4 +18,4 @@ App.propTypes = {
   ]).isRequired
 };
 
-export default withRouter(connect(state => ({}))(App));
+export default connect(state => ({}))(App);

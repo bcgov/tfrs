@@ -8,7 +8,6 @@ import 'react-table/react-table.css';
 import axios from 'axios';
 
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import history from '../../app/History';
 import ComplianceReportStatus from '../../compliance_reporting/components/ComplianceReportStatus';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -150,7 +149,7 @@ class UserHistoryTable extends React.Component {
                   viewUrl = viewUrl.replace(/:tab/gi, 'intro');
                 }
 
-                history.push(viewUrl);
+                this.props.navigate(viewUrl);
               },
               className: 'clickable'
             };

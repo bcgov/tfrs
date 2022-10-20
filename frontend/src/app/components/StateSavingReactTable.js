@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import connect from 'react-redux/es/connect/connect';
+import { connect } from 'react-redux';
 import saveTableState from '../../actions/stateSavingReactTableActions';
 
 class ModifiedReactTable extends ReactTable {

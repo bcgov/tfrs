@@ -6,7 +6,6 @@ import Loading from '../../app/components/Loading';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
 import * as Routes from '../../constants/routes';
-import history from '../../app/History';
 import { download } from '../../utils/functions';
 
 const OrganizationsPage = (props) => {
@@ -20,7 +19,7 @@ const OrganizationsPage = (props) => {
           id="create-organization"
           className="btn btn-primary"
           type="button"
-          onClick={() => history.push(ORGANIZATIONS.ADD)}
+          onClick={() => props.navigate(ORGANIZATIONS.ADD)}
         >
           <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>

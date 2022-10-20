@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CONFIG from '../../config';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -109,7 +108,7 @@ const DirectorReview = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return props.navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -136,7 +135,7 @@ const DirectorReview = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -162,7 +161,7 @@ const DirectorReview = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -187,7 +186,7 @@ const DirectorReview = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return props.navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >

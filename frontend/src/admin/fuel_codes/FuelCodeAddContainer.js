@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { addFuelCode, filterFuelCodes, getLatestFuelCode } from '../../actions/fuelCodes';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CallableModal from '../../app/components/CallableModal';
 import FuelCodeForm from './components/FuelCodeForm';
@@ -188,7 +187,7 @@ class FuelCodeAddContainer extends Component {
     });
 
     this.props.addFuelCode(data).then((response) => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess(status);
     });
 

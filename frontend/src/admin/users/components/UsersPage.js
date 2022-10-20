@@ -29,7 +29,7 @@ const UsersPage = (props) => {
             <button
               id="new-user"
               className="btn btn-primary"
-              onClick={() => history.push(ADMIN_USERS.ADD)}
+              onClick={() => props.navigate(ADMIN_USERS.ADD)}
               type="button"
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
@@ -41,7 +41,7 @@ const UsersPage = (props) => {
             <ul className="dropdown-menu">
               <li>
                 <button
-                  onClick={() => history.push(USERS.ADD)}
+                  onClick={() => props.navigate(USERS.ADD)}
                   type="button"
                 >
                   <FontAwesomeIcon icon="user" /> Add Fuel Supplier User

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import connect from 'react-redux/es/connect/connect';
-import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import ReduxToastr from 'react-redux-toastr';
 
 import StatusInterceptor from './components/StatusInterceptor';
@@ -152,7 +151,7 @@ KeycloakAwareApp.propTypes = {
   })
 };
 
-export default withRouter(connect(state => ({
+export default connect(state => ({
   errorRequest: {
     error: state.rootReducer.errorRequest.errorMessage,
     hasErrors: state.rootReducer.errorRequest.hasErrors
@@ -169,4 +168,4 @@ export default withRouter(connect(state => ({
     isFetching: state.oidc.isLoadingUser
   },
   unreadNotificationsCount: state.rootReducer.notifications.count.unreadCount
-}))(KeycloakAwareApp));
+}))(KeycloakAwareApp);

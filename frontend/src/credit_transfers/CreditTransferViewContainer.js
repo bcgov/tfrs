@@ -101,7 +101,7 @@ class CreditTransferViewContainer extends Component {
 
   _approveCreditTransfer (id) {
     this.props.approveCreditTransfer(id).then(() => {
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.approved.id, this.props.item);
     });
   }
@@ -230,7 +230,7 @@ class CreditTransferViewContainer extends Component {
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(status.id, item, successMessage);
     }, () => {
@@ -256,7 +256,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.deleteCreditTransfer(id).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      this.props.navigate(CREDIT_TRANSACTIONS.LIST);
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, item);
     });
   }
@@ -575,7 +575,7 @@ class CreditTransferViewContainer extends Component {
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
     }, () => {

@@ -27,8 +27,7 @@ const FuelCodesPage = (props) => {
             className="btn btn-primary"
             onClick={() => {
               const route = FUEL_CODES.ADD.replace(':type', '');
-
-              history.push(route);
+              props.navigate(route);
             }}
             type="button"
           >

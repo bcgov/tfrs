@@ -116,13 +116,13 @@ class ExclusionReportEditContainer extends Component {
         this.props.invalidateAutosaved();
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
-          history.push(COMPLIANCE_REPORTING.LIST);
+          this.props.navigate(COMPLIANCE_REPORTING.LIST);
         }
       }
     }
 
     if (this.props.exclusionReports.isRemoving && !nextProps.exclusionReports.isRemoving) {
-      history.push(COMPLIANCE_REPORTING.LIST);
+      this.props.navigate(COMPLIANCE_REPORTING.LIST);
       toastr.exclusionReports('Cancelled');
       this.props.invalidateAutosaved();
     }
@@ -156,7 +156,7 @@ class ExclusionReportEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved();
         toastr.exclusionReports('Supplemental Created');
-        history.push(EXCLUSION_REPORTS.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
+        this.props.navigate(EXCLUSION_REPORTS.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
       }
     }
   }

@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 
 import { filterFuelCodes, getFuelCode, updateFuelCode } from '../../actions/fuelCodes';
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
@@ -180,7 +179,7 @@ class FuelCodeEditContainer extends Component {
     });
 
     this.props.updateFuelCode(id, data).then((response) => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess(status, 'Fuel code updated.');
     });
 

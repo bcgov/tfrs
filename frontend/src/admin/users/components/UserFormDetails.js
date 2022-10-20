@@ -4,10 +4,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import Autosuggest from 'react-bootstrap-autosuggest';
+// import Autosuggest from 'react-bootstrap-autosuggest';
 
 import CheckBox from '../../../app/components/CheckBox';
-import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
+// import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
 
 const UserFormDetails = props => (
   <div className="user-details">
@@ -185,7 +185,7 @@ const UserFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="organization" id="organization">Fuel Supplier:
-              {props.loggedInUser.isGovernmentUser &&
+              {/* {props.loggedInUser.isGovernmentUser &&
               document.location.pathname.indexOf('/users/add') === 0 &&
                 <Autosuggest
                   datalist={props.fuelSuppliers}
@@ -206,7 +206,7 @@ const UserFormDetails = props => (
                   value={props.fields.organization}
                   valueIsItem
                 />
-              }
+              } */}
               {props.fields.organization &&
               props.loggedInUser.isGovernmentUser &&
               (document.location.pathname.indexOf('/users/edit') === 0 ||

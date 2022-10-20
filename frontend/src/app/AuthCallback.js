@@ -15,7 +15,7 @@ class AuthCallback extends React.Component {
   success (user) {
     const target = this.props.targetPath;
 
-    history.push(target);
+    this.props.navigate(target);
   }
 
   error (e) { // state is most likely empty, redirect back to try the authentication again

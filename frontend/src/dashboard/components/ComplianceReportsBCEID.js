@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 
@@ -88,7 +87,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Draft'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -110,7 +109,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -132,7 +131,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -164,7 +163,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Draft'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -186,7 +185,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Supplemental Requested'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -208,7 +207,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: 'Submitted'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -232,7 +231,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: currentYear.toString()
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -246,7 +245,7 @@ const ComplianceReportsBCEID = (props) => {
                   value: ''
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return props.navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -260,7 +259,7 @@ const ComplianceReportsBCEID = (props) => {
       <div className="add-button">
         <FontAwesomeIcon icon="play" /> {` `}
         <button
-          onClick={() => (history.push(COMPLIANCE_REPORTING.LIST))}
+          onClick={() => (props.navigate(COMPLIANCE_REPORTING.LIST))}
           type="button"
         >
           Start a new compliance report or exclusion report

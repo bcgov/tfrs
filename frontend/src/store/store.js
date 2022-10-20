@@ -1,11 +1,10 @@
 import createSagaMiddleware from 'redux-saga';
-import { createStore, compose, applyMiddleware } from 'redux';
+import { compose } from 'redux';
+import { configureStore } from "@reduxjs/toolkit";
 import persistState from 'redux-localstorage';
 import { createLogger } from 'redux-logger';
 import { reducer as OIDCReducer } from 'redux-oidc';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createSocketIoMiddleware from 'redux-socket.io';
-import thunk from 'redux-thunk';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import io from 'socket.io-client';
 
@@ -34,7 +33,6 @@ import autosaveSaga from './autosaveStore';
 import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
 
-const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
 
 const socket = io(SOCKETIO_URL);
@@ -47,28 +45,25 @@ const combinedReducers = (state = {}, action) => {
   return {
     toastr: toastrReducer(state.toastr, action),
     oidc: OIDCReducer(state.oidc, action),
-    routing: routerReducer(state.routing, action),
     targetPath: persistTargetPathReducer(state.targetPath, { ...action, currentRoute }),
     rootReducer: rootReducer(state.rootReducer, action)
   };
 };
 
 const allMiddleware = [
-  thunk,
   socketIoMiddleware,
-  sagaMiddleware,
-  middleware
+  sagaMiddleware
 ];
 
 if (CONFIG.DEBUG.ENABLED) {
   allMiddleware.push(createLogger());
 }
 
-const store = createStore(
-  combinedReducers,
-  applyMiddleware(...allMiddleware),
-  enhancer
-);
+const store = configureStore({
+  reducer: combinedReducers,
+  middleware: [...allMiddleware],
+  enhancers: [enhancer]
+});
 
 sagaMiddleware.run(sessionTimeoutSaga);
 sagaMiddleware.run(notificationsSaga, store);

@@ -44,7 +44,7 @@ class ComplianceReportingContainer extends Component {
   componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
-        history.push(COMPLIANCE_REPORTING.EDIT
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
           .replace(':tab', 'intro'));
         toastr.complianceReporting('Created');
@@ -55,7 +55,7 @@ class ComplianceReportingContainer extends Component {
 
     if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
       if (nextProps.exclusionReports.success) {
-        history.push(EXCLUSION_REPORTS.EDIT
+        this.props.navigate(EXCLUSION_REPORTS.EDIT
           .replace(':id', nextProps.exclusionReports.item.id)
           .replace(':tab', 'intro'));
         toastr.exclusionReports('Created');

@@ -135,7 +135,7 @@ class CreditTradeHistoryTable extends React.Component {
             return {
               onClick: (e) => {
                 const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.creditTrade.id);
-                history.push(viewUrl);
+                this.props.navigate(viewUrl);
               },
               className: 'clickable'
             };

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const FileSubmissions = (props) => {
@@ -52,7 +51,7 @@ const FileSubmissions = (props) => {
                   value: 'Submitted'
                 }], 'sfs');
 
-                return history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+                return props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
               }}
               type="button"
             >
@@ -69,7 +68,7 @@ const FileSubmissions = (props) => {
                   value: 'Received'
                 }], 'sfs');
 
-                return history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+                return props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
               }}
               type="button"
             >

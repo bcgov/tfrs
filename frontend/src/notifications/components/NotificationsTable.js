@@ -8,7 +8,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment-timezone';
 
 import CheckBox from '../../app/components/CheckBox';
-import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
@@ -66,7 +65,7 @@ const NotificationsTable = (props) => {
             props.updateNotification(row.original.id, { isRead: true });
 
             if (viewUrl) {
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             }
           }}
         >
@@ -122,7 +121,7 @@ const NotificationsTable = (props) => {
           onClick={() => {
             props.updateNotification(row.original.id, { isRead: true });
 
-            history.push(viewUrl);
+            props.navigate(viewUrl);
           }}
         >
           {row.value}

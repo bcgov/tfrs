@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import CarbonIntensityForm from './components/CarbonIntensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
@@ -40,7 +39,7 @@ class PetroleumCarbonIntensityEditContainer extends Component {
   componentWillReceiveProps (props) {
     if (this.props.carbonIntensity.isUpdating && !props.carbonIntensity.isUpdating) {
       if (props.carbonIntensity.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Carbon Intensity saved.');
       }
       return;

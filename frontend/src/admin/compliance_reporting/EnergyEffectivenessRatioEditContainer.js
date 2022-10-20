@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import EnergyEffectivenessRatioForm from './components/EnergyEffectivenessRatioForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
@@ -44,7 +43,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     if (this.props.energyEffectivenessRatio.isUpdating &&
       !props.energyEffectivenessRatio.isUpdating) {
       if (this.props.energyEffectivenessRatio.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Energy effectiveness ratios saved.');
       }
 

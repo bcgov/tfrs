@@ -10,7 +10,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import Errors from '../../app/components/Errors';
 import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
@@ -64,7 +63,7 @@ class GovernmentTransferForm extends Component {
             <div className="btn-container">
               <button
                 className="btn btn-default"
-                onClick={() => history.goBack()}
+                onClick={() => this.props.navigate(-1)}
                 type="button"
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

@@ -13,16 +13,21 @@ import '../styles/index.scss';
 
 import configureAxios from './store/authorizationInterceptor';
 import userManager from './store/oidc-usermanager';
-
-// Inject the keycloak provider
+import { BrowserRouter } from 'react-router-dom';
+import App from './app/App';
 
 configureAxios();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <OidcProvider store={store} userManager={userManager}>
-      <Router />
-    </OidcProvider>
-  </Provider>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <OidcProvider store={store} userManager={userManager}>
+        <App>
+          <Router />
+        </App>
+      </OidcProvider>
+    </Provider>
+  </BrowserRouter>
+  ,
   document.getElementById('root')
 );

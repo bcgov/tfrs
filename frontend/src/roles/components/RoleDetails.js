@@ -7,7 +7,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import PermissionsTable from './PermissionsTable';
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 
 const RoleDetails = props => (
@@ -29,7 +28,7 @@ const RoleDetails = props => (
         <div className="btn-container">
           <button
             className="btn btn-default"
-            onClick={() => history.goBack()}
+            onClick={() => props.navigate(-1)}
             type="button"
           >
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

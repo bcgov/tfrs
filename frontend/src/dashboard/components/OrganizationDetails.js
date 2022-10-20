@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import history from '../../app/History';
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
@@ -39,7 +38,7 @@ const OrganizationDetails = props => (
       <div className="content">
         <button
           type="button"
-          onClick={() => history.push(ORGANIZATIONS.EDIT.replace(':id', props.loggedInUser.organization.id))}
+          onClick={() => props.navigate(ORGANIZATIONS.EDIT.replace(':id', props.loggedInUser.organization.id))}
         >
           Edit Address
         </button>

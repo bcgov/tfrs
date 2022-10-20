@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { clearUsersRequestError, getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
@@ -161,7 +160,7 @@ class UserEditContainer extends Component {
 
     this.props.updateUser(id, data).then(() => {
       // redirect
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.userSuccess();
     });
 

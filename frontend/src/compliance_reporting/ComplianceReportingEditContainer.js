@@ -222,7 +222,7 @@ class ComplianceReportingEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved();
         toastr.complianceReporting('Supplemental Created');
-        history.push(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
       }
     }
 
@@ -247,14 +247,14 @@ class ComplianceReportingEditContainer extends Component {
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
           this.props.getUpdatedLoggedInUser();
-          history.push(COMPLIANCE_REPORTING.LIST);
+          this.props.navigate(COMPLIANCE_REPORTING.LIST);
         }
       }
     }
 
     if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
       this.props.invalidateAutosaved();
-      history.push(COMPLIANCE_REPORTING.LIST);
+      this.props.navigate(COMPLIANCE_REPORTING.LIST);
       toastr.complianceReporting('Cancelled');
     }
   }

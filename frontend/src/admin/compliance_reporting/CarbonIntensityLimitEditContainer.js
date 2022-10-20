@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { carbonIntensities } from '../../actions/carbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import CarbonIntensityLimitForm from './components/CarbonIntensityLimitForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
@@ -43,7 +42,7 @@ class CarbonIntensityLimitEditContainer extends Component {
   componentWillReceiveProps (props) {
     if (this.props.carbonIntensityLimit.isUpdating && !props.carbonIntensityLimit.isUpdating) {
       if (props.carbonIntensityLimit.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Carbon intensity limits saved.');
       }
 

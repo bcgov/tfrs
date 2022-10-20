@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 import OrganizationDetails from './OrganizationDetails';
@@ -32,7 +31,7 @@ const OrganizationPage = (props) => {
         >
           <button
             className="btn btn-default"
-            onClick={() => history.goBack()}
+            onClick={() => props.navigate(-1)}
             type="button"
           >
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

@@ -7,7 +7,6 @@ import numeral from 'numeral';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import history from '../../app/History';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
 import Tooltip from '../../app/components/Tooltip';
@@ -53,7 +52,7 @@ const OrganizationDetails = props => (
           id="edit-organization"
           className="btn btn-info"
           type="button"
-          onClick={() => history.push(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}
+          onClick={() => props.navigate(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}
         >
           <FontAwesomeIcon icon="edit" /> Edit
         </button>

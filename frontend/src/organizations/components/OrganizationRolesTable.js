@@ -8,7 +8,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import 'react-table/react-table.css';
 
 import { ROLES } from '../../constants/routes/Admin';
-import history from '../../app/History';
 import ReactTable from '../../app/components/StateSavingReactTable';
 
 const OrganizationRolesTable = (props) => {
@@ -49,7 +48,7 @@ const OrganizationRolesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: 'clickable'
           };

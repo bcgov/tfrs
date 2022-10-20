@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -52,7 +51,7 @@ const CreditTransactions = (props) => {
                   value: 'Proposed,Signed'
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return props.navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -76,7 +75,7 @@ const CreditTransactions = (props) => {
                   value: currentYear.toString()
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return props.navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -90,7 +89,7 @@ const CreditTransactions = (props) => {
                   value: ''
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return props.navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -126,7 +125,7 @@ const CreditTransactions = (props) => {
       <div className="add-button">
         <FontAwesomeIcon icon="play" /> {` `}
         <button
-          onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
+          onClick={() => props.navigate(CREDIT_TRANSACTIONS.ADD)}
           type="button"
         >
           Start a new credit transfer proposal

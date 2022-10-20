@@ -8,7 +8,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import Errors from '../../app/components/Errors';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
 import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import LinkedCreditTransactions from './LinkedCreditTransactions';
@@ -167,7 +166,7 @@ const SecureFileSubmissionDetails = props => (
     <div className="btn-container">
       <button
         className="btn btn-default"
-        onClick={() => history.goBack()}
+        onClick={() => props.navigate(-1)}
         type="button"
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -187,7 +186,7 @@ const SecureFileSubmissionDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
+        onClick={() => props.navigate(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>

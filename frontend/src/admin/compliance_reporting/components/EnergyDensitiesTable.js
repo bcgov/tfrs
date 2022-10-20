@@ -76,8 +76,7 @@ const EnergyDensitiesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.ENERGY_DENSITIES_DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              props.navigate(viewUrl);
             },
             className: 'clickable'
           };

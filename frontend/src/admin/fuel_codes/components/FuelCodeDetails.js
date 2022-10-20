@@ -194,7 +194,7 @@ const FuelCodeDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(FUEL_CODES.EDIT.replace(':id', props.item.id))}
+        onClick={() => props.navigate(FUEL_CODES.EDIT.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
