@@ -4,11 +4,12 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
-const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
+// const tokenRenewalPath = path.resolve(__dirname, 'public', 'config', 'tokenRenewal.js');
 
 const config = {
   mode: 'development',
@@ -23,7 +24,7 @@ const config = {
       mainPath
     ],
     // tokenRenewal: [
-    //   'babel-polyfill',
+    //   '@babel/polyfill',
     //   tokenRenewalPath
     // ]
   },
@@ -113,6 +114,12 @@ const config = {
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "public/config/" },
+        { from: "public/assets/", to: "assets/" }
+      ],
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'

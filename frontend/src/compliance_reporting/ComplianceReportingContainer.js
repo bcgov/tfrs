@@ -12,7 +12,6 @@ import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
 import CallableModal from '../app/components/CallableModal';
-import history from '../app/History';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
 import CONFIG from '../config';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';

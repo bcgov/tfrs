@@ -14,7 +14,6 @@ import { exclusionReports } from '../actions/exclusionReports';
 import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
-import history from '../app/History';
 import DashboardPage from './components/DashboardPage';
 import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';

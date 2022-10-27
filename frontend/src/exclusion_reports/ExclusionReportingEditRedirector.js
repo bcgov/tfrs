@@ -1,4 +1,3 @@
-import history from '../app/History';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 
 const ExclusionReportingEditRedirector = (props) => {

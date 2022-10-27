@@ -15,7 +15,6 @@ import {
   getLinkableCreditTransactions
 } from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import SecureFileSubmissionDetails from './components/SecureFileSubmissionDetails';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import * as Lang from '../constants/langEnUs';

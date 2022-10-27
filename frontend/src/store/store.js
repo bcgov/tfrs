@@ -1,9 +1,9 @@
 import createSagaMiddleware from 'redux-saga';
 import { compose } from 'redux';
+import thunk from "redux-thunk" 
 import { configureStore } from "@reduxjs/toolkit";
 import persistState from 'redux-localstorage';
 import { createLogger } from 'redux-logger';
-import { reducer as OIDCReducer } from 'redux-oidc';
 import createSocketIoMiddleware from 'redux-socket.io';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import io from 'socket.io-client';
@@ -44,7 +44,6 @@ const combinedReducers = (state = {}, action) => {
   const currentRoute = state.routing || {};
   return {
     toastr: toastrReducer(state.toastr, action),
-    oidc: OIDCReducer(state.oidc, action),
     targetPath: persistTargetPathReducer(state.targetPath, { ...action, currentRoute }),
     rootReducer: rootReducer(state.rootReducer, action)
   };
@@ -52,7 +51,8 @@ const combinedReducers = (state = {}, action) => {
 
 const allMiddleware = [
   socketIoMiddleware,
-  sagaMiddleware
+  sagaMiddleware,
+  thunk
 ];
 
 if (CONFIG.DEBUG.ENABLED) {
@@ -65,7 +65,7 @@ const store = configureStore({
   enhancers: [enhancer]
 });
 
-sagaMiddleware.run(sessionTimeoutSaga);
+// sagaMiddleware.run(sessionTimeoutSaga); // TODO fix sessiontimeout with new keycloak login
 sagaMiddleware.run(notificationsSaga, store);
 sagaMiddleware.run(authenticationStateSaga, store);
 sagaMiddleware.run(socketAuthenticationSaga, store);

@@ -9,7 +9,7 @@ export const SETTINGS_PROFILE = '/settings/profile';
 
 // API Routes
 export const BASE_URL = CONFIG.API_BASE;
-export const SOCKETIO_URL = `${window.location.protocol}//${window.location.host}/`;
+export const SOCKETIO_URL = `${window.location.protocol}//${window.location.host}:5002/`;
 
 export const AUTOSAVE_API = `/autosave`;
 

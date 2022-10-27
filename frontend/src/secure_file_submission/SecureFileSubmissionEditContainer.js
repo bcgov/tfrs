@@ -18,7 +18,6 @@ import {
   scanDocumentAttachments,
   uploadDocument
 } from '../actions/documentUploads';
-import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';

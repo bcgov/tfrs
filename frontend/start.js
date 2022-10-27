@@ -30,7 +30,7 @@ const devServerOptions = {
     index: '/index.html',
     publicPath: '/'
   },
-  port: 8080,
+  port: 3000,
   hot: false,
   client: false
 };

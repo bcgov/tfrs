@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import {
   addDocumentUpload,
   clearDocumentUploadError,

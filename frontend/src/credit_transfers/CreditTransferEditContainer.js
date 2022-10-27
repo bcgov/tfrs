@@ -28,7 +28,6 @@ import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
-import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import COMMENTS from '../constants/permissions/Comments';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';

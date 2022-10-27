@@ -12,7 +12,6 @@ import { addOrganization, getOrganization, updateOrganization } from '../actions
 import { getUpdatedLoggedInUser } from '../actions/userActions';
 import Loading from '../app/components/Loading';
 import OrganizationEditForm from './components/OrganizationEditForm';
-import history from '../app/History';
 import toastr from '../utils/toastr';
 import ORGANIZATION from '../constants/routes/Organizations';
 import Modal from '../app/components/Modal';

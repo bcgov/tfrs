@@ -27,8 +27,12 @@ services:
         build:
             dockerfile: Dockerfile-postgres
             context: ./postgres
-        expose:
-            - 5432
+        environment:
+            POSTGRES_DB: tfrs
+            POSTGRES_USER: tfrs
+            POSTGRES_PASSWORD: tfrs
+        ports:
+          - 5432:5432
     django:
         environment:
           - DATABASE_NAME=tfrs
@@ -74,30 +78,27 @@ services:
                 /wfi/wait-for-it.sh -t 14400 rabbit:5672 &&
                 /wfi/wait-for-it.sh -t 14400 db:5432 &&
                 /wfi/wait-for-it.sh -t 14400 minio:9000 &&
-                /wfi/wait-for-it.sh -t 14400 keycloak:8080 &&
                 /wfi/wait-for-it.sh -t 14400 smtplogger:2500 &&
                 python3 manage.py makemigrations &&
                 python3 manage.py migrate &&
                 python3 manage.py createcachetable &&
                 python3 manage.py load_ops_data api/fixtures/development/dockerized.py &&
                 supervisord"
-        expose:
-            - 8000
+        ports:
+            - 8000:8000
         volumes:
             - ./backend:/app
     node:
         build:
-            dockerfile: Dockerfile-node
+            dockerfile: Dockerfile
             context: ./frontend
         command: >
                 bash -c
-                "npm install &&
-                /wfi/wait-for-it.sh rabbit:5672 -t 14400 &&
-                npm run start:docker"
+                "npm install && npm run start"
         depends_on:
             - rabbit
-        expose:
-            - 3000
+        ports:
+            - 3000:3000
         environment:
             - RABBITMQ_VHOST=/tfrs
             - RABBITMQ_USER=rabbitmq
@@ -109,8 +110,8 @@ services:
             - KEYCLOAK_CLIENT_ID=tfrs-app
             - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
             - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
-            - KEYCLOAK_CALLBACK_URL=http://localhost:5001/authCallback
-            - KEYCLOAK_POST_LOGOUT_URL=http://localhost:5001/
+            - KEYCLOAK_CALLBACK_URL=http://localhost:3000/authCallback
+            - KEYCLOAK_POST_LOGOUT_URL=http://localhost:3000/
             - KEYCLOAK_CERTS_URL=http://keycloak:8080/auth/realms/tfrs/protocol/openid-connect/certs
         volumes:
             - ./frontend:/app
@@ -128,10 +129,10 @@ services:
                 bash -c
                 "cat /tfrs/ready.txt &&
                 nginx -g \"daemon off;\""
-    clamav:
-      image: mkodockx/docker-clamav
-      ports:
-        - 3310:3310
+    # clamav:
+    #   image: mkodockx/docker-clamav
+    #   ports:
+    #     - 3310:3310
     rabbit:
         image: rabbitmq:3.7-management
         hostname: "rabbit"

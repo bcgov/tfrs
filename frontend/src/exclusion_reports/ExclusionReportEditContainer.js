@@ -14,7 +14,6 @@ import { exclusionReports } from '../actions/exclusionReports';
 import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
 import AddressBuilder from '../app/components/AddressBuilder';
 import CheckBox from '../app/components/CheckBox';
-import history from '../app/History';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import ExclusionReportButtons from './components/ExclusionReportButtons';

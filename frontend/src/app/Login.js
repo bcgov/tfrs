@@ -1,13 +1,16 @@
 import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import CONFIG from '../config';
 import CallableModal from '../app/components/CallableModal';
 import * as Lang from '../constants/langEnUs';
+import { login } from '../actions/keycloakActions';
 
 class Login extends React.Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
 
     this.state = {
       hideModal: false
@@ -27,6 +30,7 @@ class Login extends React.Component {
 
   render () {
     const { hideModal } = this.state;
+    const { login } = this.props;
 
     let showModal = false;
 
@@ -44,10 +48,30 @@ class Login extends React.Component {
           <div className="card-tfrs">
             <div className="buttons-section">
               <div className="oidc">
-                <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=bceid`} id="link-bceid" className="oidc"> <span className="text">Login with</span> <span className="display-name">BCeID</span></a>
+                <button
+                  type="button"
+                  onClick={() => login({ idpHint: 'bceid' })}
+                  id="link-bceid"
+                  className="button"
+                >
+                  <span className="text"> Login with </span>
+                  <span className="display-name"> BCeID </span>
+                </button>
+                {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=bceid`} id="link-bceid" className="oidc"> <span className="text">Login with</span> <span className="display-name">BCeID</span></a> */}
+              
               </div>
               <div className="oidc">
-                <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=idir`} id="link-idir" className="oidc"> <span className="text">Login with</span> <span className="display-name">IDIR</span></a>
+                <button
+                  type="button"
+                  onClick={() => login({ idpHint: 'idir' })}
+                  id="link-idir"
+                  className="button"
+                >
+                  <span className="text">Login with</span>
+                  <span className="display-name"> IDIR </span>
+                </button>
+                {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=idir`} id="link-idir" className="oidc"> <span className="text">Login with</span> <span className="display-name">IDIR</span></a> */}
+              
               </div>
             </div>
           </div>
@@ -87,4 +111,16 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  keycloak: state.rootReducer.keycloak.keycloak,
+  authenticated: state.rootReducer.keycloak.authenticated,
+  isFetching: state.rootReducer.keycloak.isFetching,
+  user: state.rootReducer.keycloak.user,
+  errors: state.rootReducer.keycloak.errors
+});
+
+const mapDispatchToProps = dispatch => ({
+  login: bindActionCreators(login, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

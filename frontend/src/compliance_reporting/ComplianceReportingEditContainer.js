@@ -32,7 +32,6 @@ import Loading from '../app/components/Loading';
 import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleTabs from './components/ScheduleTabs';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';

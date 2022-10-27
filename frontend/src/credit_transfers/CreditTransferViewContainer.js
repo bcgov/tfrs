@@ -28,7 +28,6 @@ import {
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser, getUpdatedLoggedInUser } from '../actions/userActions';
-import history from '../app/History';
 import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';

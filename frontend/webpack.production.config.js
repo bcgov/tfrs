@@ -5,7 +5,7 @@ const path = require('path');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
-const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
+// const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
 
 const config = {
   mode: 'production',
@@ -15,10 +15,10 @@ const config = {
       'babel-polyfill',
       mainPath
     ],
-    tokenRenewal: [
-      'babel-polyfill',
-      tokenRenewalPath
-    ]
+    // tokenRenewal: [
+    //   'babel-polyfill',
+    //   tokenRenewalPath
+    // ]
   },
   output: {
     filename: "[name].js",
