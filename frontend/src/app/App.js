@@ -55,6 +55,10 @@ class App extends Component {
       return <Login keycloak={keycloak} />;
     }
 
+    if(!loggedInUser?.username) {
+      return <Loading />;
+    }
+
     let content;
     if (this.state.hasErrors) {
       content = <StatusInterceptor statusCode={500} />;

@@ -3,30 +3,25 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { getOrganizations } from '../actions/organizationActions';
 import OrganizationsPage from './components/OrganizationsPage';
 
-class OrganizationsContainer extends Component {
-  componentDidMount () {
-    this.loadData();
-  }
+const OrganizationsContainer = props => {
 
-  loadData () {
-    this.props.getOrganizations();
-  }
+  useEffect(() => {
+    props.getOrganizations();
+  }, []);
 
-  render () {
-    return (
-      <OrganizationsPage
-        title="Fuel Suppliers"
-        organizations={this.props.organizations}
-      />
-    );
-  }
+  return (
+    <OrganizationsPage
+      title="Fuel Suppliers"
+      organizations={props.organizations}
+    />
+  );
 }
 
 OrganizationsContainer.propTypes = {

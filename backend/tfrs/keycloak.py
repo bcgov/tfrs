@@ -5,8 +5,8 @@ def config():
     return {
         'ENABLED': True,
         'REALM': os.getenv('KEYCLOAK_REALM_URL', 'http://localhost:8888/auth/realms/tfrs'),
-        'CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID', 'tfrs-app'),
-        'AUDIENCE': os.getenv('KEYCLOAK_AUDIENCE', 'tfrs-app'),
+        'CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID', 'tfrs-on-gold-4308'),
+        'AUDIENCE': os.getenv('KEYCLOAK_AUDIENCE', 'tfrs-on-gold-4308'),
         'ISSUER': os.getenv('KEYCLOAK_ISSUER', 'http://localhost:8888/auth/realms/tfrs'),
         'CERTS_URL': os.getenv('KEYCLOAK_CERTS_URL',
                                'http://localhost:8888/auth/realms/tfrs/protocol/openid-connect/certs'),

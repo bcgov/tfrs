@@ -3,43 +3,35 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 import { getOrganization, getOrganizationMembers } from '../actions/organizationActions';
 import OrganizationPage from './components/OrganizationPage';
+import { useParams } from 'react-router';
 
-class OrganizationViewContainer extends Component {
-  componentDidMount () {
-    this.loadData(this.props.match.params.id);
-  }
+const OrganizationViewContainer = props => {
+  const { id } = useParams();
 
-  loadData (id) {
-    this.props.getOrganization(id);
-    this.props.getOrganizationMembers(id);
-  }
+  useEffect(() => {
+    props.getOrganization(id);
+    props.getOrganizationMembers(id);
+  }, [id]);
 
-  render () {
-    return (
-      <OrganizationPage
-        loggedInUser={this.props.loggedInUser}
-        members={this.props.organizationMembers}
-        organization={this.props.organization}
-      />
-    );
-  }
+  return (
+    <OrganizationPage
+      loggedInUser={props.loggedInUser}
+      members={props.organizationMembers}
+      organization={props.organization}
+    />
+  );
 }
 
 OrganizationViewContainer.propTypes = {
   getOrganization: PropTypes.func.isRequired,
   getOrganizationMembers: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.shape({
     details: PropTypes.shape({

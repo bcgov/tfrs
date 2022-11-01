@@ -24,15 +24,16 @@ services:
     #     context: ./security-scan/scan-coordinator
 
     db:
-        build:
-            dockerfile: Dockerfile-postgres
-            context: ./postgres
+        image: postgres
+        container_name: tfrs_db
         environment:
             POSTGRES_DB: tfrs
             POSTGRES_USER: tfrs
-            POSTGRES_PASSWORD: tfrs
+            POSTGRES_PASSWORD: development_only
         ports:
           - 5432:5432
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
     django:
         environment:
           - DATABASE_NAME=tfrs
@@ -48,9 +49,9 @@ services:
           - RABBITMQ_HOST=rabbit
           - RABBITMQ_PORT=5672
           - KEYCLOAK_ENABLED=True
-          - KEYCLOAK_AUDIENCE=tfrs-app
-          - KEYCLOAK_CLIENT_ID=tfrs-app
-          - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
+          - KEYCLOAK_AUDIENCE=tfrs-on-gold-4308
+          - KEYCLOAK_CLIENT_ID=tfrs-on-gold-4308
+          - KEYCLOAK_REALM=standard
           - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
           - KEYCLOAK_CERTS_URL=http://keycloak:8080/auth/realms/tfrs/protocol/openid-connect/certs
           - KEYCLOAK_SA_BASEURL=http://keycloak:8080
@@ -107,7 +108,7 @@ services:
             - RABBITMQ_PORT=5672
             - KEYCLOAK_ENABLED=False
             - KEYCLOAK_AUTHORITY=http://localhost:8888/auth/realms/tfrs
-            - KEYCLOAK_CLIENT_ID=tfrs-app
+            - KEYCLOAK_CLIENT_ID=tfrs-on-gold-4308
             - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
             - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
             - KEYCLOAK_CALLBACK_URL=http://localhost:3000/authCallback
@@ -189,5 +190,6 @@ services:
         - 2500:2500
 volumes:
     node_modules:
+    postgres_data:
     postgres_keycloak_data:
     minio_data:

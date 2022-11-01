@@ -48,13 +48,14 @@ export const logoutKeycloakUser = () => ({
 export const login = (hint = 'idir') => (dispatch) => {
   const kc = keycloak()
 
-  console.log("KEYCLOAK")
-  console.log(kc)
-
-  kc.login({idpHint: hint})
+  kc.login({ 
+    pkceMethod: 'S256',
+    redirectUri: 'http://localhost:3000', // TODO Setup for dev,test,prod
+    idpHint: hint
+  })
     .then((user) => {
-      dispatch(loginKeycloakUserSuccess(user));
       console.log("logged in " + hint + " user")
+      dispatch(loginKeycloakUserSuccess(user));
     })
     .catch((error) => {
       dispatch(loginKeycloakUserError(error));
