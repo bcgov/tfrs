@@ -14,8 +14,10 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import filterNumber from '../../utils/filters';
 import ReactTable from '../../app/components/StateSavingReactTable';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import { useNavigate } from 'react-router';
 
 const CreditTransferTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'complianceReport',
     className: 'col-compliance-report',
@@ -159,7 +161,7 @@ const CreditTransferTable = (props) => {
               } else {
                 viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
               }
-              props.navigate(viewUrl);
+              navigate(viewUrl);
             },
             className: `clickable ${(row && row.original.id.toString() === props.highlight) && 'highlight'}`
           };

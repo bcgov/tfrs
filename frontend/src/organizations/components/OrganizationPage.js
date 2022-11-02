@@ -6,8 +6,10 @@ import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 import OrganizationDetails from './OrganizationDetails';
 import OrganizationMembers from './OrganizationMembers';
+import { useNavigate } from 'react-router';
 
 const OrganizationPage = (props) => {
+  const navigate = useNavigate()
   const { isFetching, details } = props.organization;
 
   return (
@@ -31,7 +33,7 @@ const OrganizationPage = (props) => {
         >
           <button
             className="btn btn-default"
-            onClick={() => props.navigate(-1)}
+            onClick={() => navigate(-1)}
             type="button"
           >
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

@@ -7,8 +7,10 @@ import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
 import * as Routes from '../../constants/routes';
 import { download } from '../../utils/functions';
+import { useNavigate } from 'react-router';
 
 const OrganizationsPage = (props) => {
+  const navigate = useNavigate()
   const { isFetching, items } = props.organizations;
   const isEmpty = items.length === 0;
   return (
@@ -19,7 +21,7 @@ const OrganizationsPage = (props) => {
           id="create-organization"
           className="btn btn-primary"
           type="button"
-          onClick={() => props.navigate(ORGANIZATIONS.ADD)}
+          onClick={() => navigate(ORGANIZATIONS.ADD)}
         >
           <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>

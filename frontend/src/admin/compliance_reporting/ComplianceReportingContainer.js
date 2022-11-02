@@ -3,7 +3,7 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -16,41 +16,34 @@ import { energyDensities } from '../../actions/energyDensities';
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
 
-class ComplianceReportingContainer extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-    };
-  }
+const ComplianceReportingContainer = props => {
 
-  componentDidMount () {
-    this.props.loadCarbonIntensities();
-    this.props.loadDefaultCarbonIntensities();
-    this.props.loadEnergyDensities();
-    this.props.loadEnergyEffectivenessRatios();
-    this.props.loadPetroleumCarbonIntensities();
-  }
+  useEffect(() => {
+    props.loadCarbonIntensities();
+    props.loadDefaultCarbonIntensities();
+    props.loadEnergyDensities();
+    props.loadEnergyEffectivenessRatios();
+    props.loadPetroleumCarbonIntensities();
+  }, []);
 
-  render () {
-    return ([
-      <AdminTabs
-        active="compliance-reporting"
-        key="nav"
-        loggedInUser={this.props.loggedInUser}
-      />,
-      <ComplianceReportingPage
-        carbonIntensityLimits={this.props.carbonIntensityLimits}
-        defaultCarbonIntensities={this.props.defaultCarbonIntensities}
-        energyDensities={this.props.energyDensities}
-        energyEffectivenessRatios={this.props.energyEffectivenessRatios}
-        fuelTypes={this.props.referenceData.approvedFuels}
-        key="compliance-reporting"
-        loggedInUser={this.props.loggedInUser}
-        petroleumCarbonIntensities={this.props.petroleumCarbonIntensities}
-        title="Compliance Reporting"
-      />
-    ]);
-  }
+  return ([
+    <AdminTabs
+      active="compliance-reporting"
+      key="nav"
+      loggedInUser={props.loggedInUser}
+    />,
+    <ComplianceReportingPage
+      carbonIntensityLimits={props.carbonIntensityLimits}
+      defaultCarbonIntensities={props.defaultCarbonIntensities}
+      energyDensities={props.energyDensities}
+      energyEffectivenessRatios={props.energyEffectivenessRatios}
+      fuelTypes={props.referenceData.approvedFuels}
+      key="compliance-reporting"
+      loggedInUser={props.loggedInUser}
+      petroleumCarbonIntensities={props.petroleumCarbonIntensities}
+      title="Compliance Reporting"
+    />
+  ]);
 }
 
 ComplianceReportingContainer.defaultProps = {

@@ -7,8 +7,10 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import ReactTable from '../../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const CarbonIntensitiesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -72,7 +74,7 @@ const CarbonIntensitiesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = props.viewUrl.replace(':id', row.original.id);
-              props.navigate(viewUrl)
+              navigate(viewUrl)
             },
             className: 'clickable'
           };

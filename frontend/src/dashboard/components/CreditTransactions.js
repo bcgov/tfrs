@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Loading from '../../app/components/Loading';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
@@ -8,6 +8,7 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
 const CreditTransactions = (props) => {
   const { isFetching, items } = props.creditTransfers;
+  const navigate = useNavigate()
 
   if (isFetching) {
     return <Loading />;
@@ -74,7 +75,7 @@ const CreditTransactions = (props) => {
                   value: 'Signed'
                 }], 'credit-transfers');
 
-                return props.navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -96,7 +97,7 @@ const CreditTransactions = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return props.navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -129,7 +130,7 @@ const CreditTransactions = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return props.navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -153,7 +154,7 @@ const CreditTransactions = (props) => {
                   value: currentYear.toString()
                 }], 'credit-transfers');
 
-                return props.navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -167,7 +168,7 @@ const CreditTransactions = (props) => {
                   value: ''
                 }], 'credit-transfers');
 
-                return props.navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >

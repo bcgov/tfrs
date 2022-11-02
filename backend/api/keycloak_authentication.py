@@ -25,7 +25,6 @@ class UserAuthentication(authentication.BaseAuthentication):
     """
 
     def refresh_jwk(self):
-        print(WELL_KNOWN_ENDPOINT)
         oidc_response = requests.get(WELL_KNOWN_ENDPOINT)
         jwks_uri = json.loads(oidc_response.text)['jwks_uri']
         self.jwks_uri = jwks_uri
@@ -70,7 +69,6 @@ class UserAuthentication(authentication.BaseAuthentication):
         jwks_client = jwt.PyJWKClient(self.jwks_uri)
 
         try:
-            print(token)
             signing_key = jwks_client.get_signing_key_from_jwt(token)
         except Exception as error:
             print(error)
@@ -83,8 +81,6 @@ class UserAuthentication(authentication.BaseAuthentication):
                 audience=settings.KEYCLOAK['AUDIENCE'],#"sso-test-2-2",
                 options={"verify_exp": True},
             )
-            print("user_token")
-            print(user_token)
         except (jwt.InvalidTokenError, jwt.ExpiredSignature, jwt.DecodeError) as exc:
             print(str(exc))
             token_validation_errors.append(exc)
@@ -98,7 +94,7 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         user_found_via_email = None
         # OVERRIDE user_id HERE FOR TESTING 
-        # user_token['user_id'] = 'director'
+        user_token['user_id'] = 'director'
 
         if 'user_id' not in user_token:
             # try email

@@ -14,10 +14,12 @@ import { download } from '../../utils/functions';
 
 import * as Routes from '../../constants/routes';
 import * as Lang from '../../constants/langEnUs';
+import { useNavigate } from 'react-router';
 
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
   const isEmpty = items.length === 0;
+  const navigate = useNavigate()
 
   return (
     <div className="page_credit_transactions">
@@ -114,7 +116,7 @@ const CreditTransactionsPage = (props) => {
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
-              onClick={() => props.navigate(CREDIT_TRANSACTIONS.ADD)}
+              onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_TRANSFER}
             </button>

@@ -10,8 +10,10 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import history from '../../../app/History';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
+import { useNavigate } from 'react-router';
 
 const EnergyEffectivenessRatiosTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -118,7 +120,7 @@ const EnergyEffectivenessRatiosTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_DETAILS.replace(':id', row.original.id);
-              props.navigate(viewUrl);
+              navigate(viewUrl);
             },
             className: 'clickable'
           };

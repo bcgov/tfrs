@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import { useNavigate } from 'react-router';
 
 const FileSubmissions = (props) => {
   const { isFetching, items } = props.documentUploads;
+  const navigate = useNavigate()
 
   if (isFetching) {
     return <Loading />;
@@ -51,7 +53,7 @@ const FileSubmissions = (props) => {
                   value: 'Submitted'
                 }], 'sfs');
 
-                return props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST);
               }}
               type="button"
             >
@@ -68,7 +70,7 @@ const FileSubmissions = (props) => {
                   value: 'Received'
                 }], 'sfs');
 
-                return props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST);
               }}
               type="button"
             >

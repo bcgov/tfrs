@@ -14,8 +14,10 @@ import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import ReactTable from '../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const NotificationsTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.id,
     Cell: row => (
@@ -65,7 +67,7 @@ const NotificationsTable = (props) => {
             props.updateNotification(row.original.id, { isRead: true });
 
             if (viewUrl) {
-              props.navigate(viewUrl);
+              navigate(viewUrl);
             }
           }}
         >
@@ -121,7 +123,7 @@ const NotificationsTable = (props) => {
           onClick={() => {
             props.updateNotification(row.original.id, { isRead: true });
 
-            props.navigate(viewUrl);
+            navigate(viewUrl);
           }}
         >
           {row.value}

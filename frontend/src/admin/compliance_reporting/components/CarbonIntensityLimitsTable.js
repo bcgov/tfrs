@@ -9,8 +9,10 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
+import { useNavigate } from 'react-router';
 
 const CarbonIntensityLimitsTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.description,
     className: 'col-compliance-period',
@@ -113,7 +115,7 @@ const CarbonIntensityLimitsTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id);
-              props.navigate(viewUrl)
+              navigate(viewUrl)
             },
             className: 'clickable'
           };

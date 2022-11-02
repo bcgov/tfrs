@@ -3,14 +3,14 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router-dom';
 import 'react-table/react-table.css';
 
 import { ROLES } from '../../constants/routes/Admin';
 import ReactTable from '../../app/components/StateSavingReactTable';
 
 const OrganizationRolesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -48,7 +48,7 @@ const OrganizationRolesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              props.navigate(viewUrl);
+              navigate(viewUrl);
             },
             className: 'clickable'
           };

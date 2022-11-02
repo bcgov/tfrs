@@ -50,7 +50,7 @@ class Login extends React.Component {
               <div className="oidc">
                 <button
                   type="button"
-                  onClick={() => login({ idpHint: 'bceid' })}
+                  onClick={() => login('bceid')}
                   id="link-bceid"
                   className="button"
                 >
@@ -63,7 +63,7 @@ class Login extends React.Component {
               <div className="oidc">
                 <button
                   type="button"
-                  onClick={() => login({ idpHint: 'idir' })}
+                  onClick={() => login('idir')}
                   id="link-idir"
                   className="button"
                 >

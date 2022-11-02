@@ -12,82 +12,86 @@ import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 
 import UserHistoryTable from './UserHistoryTable';
+import { useNavigate } from 'react-router';
 
-const UserDetails = props => (
-  <div className="page_user">
-    {props.user.isFetching && <Loading />}
-    {!props.user.isFetching &&
-      <div>
-        <div className="user_actions">
-          <div className="btn-container">
-            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                let editUrl = USERS.EDIT.replace(':id', props.user.details.id);
+const UserDetails = props => {
+  const navigate = useNavigate()
+  return (
+    <div className="page_user">
+      {props.user.isFetching && <Loading />}
+      {!props.user.isFetching &&
+        <div>
+          <div className="user_actions">
+            <div className="btn-container">
+              {props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  let editUrl = USERS.EDIT.replace(':id', props.user.details.id);
 
-                if (document.location.pathname.indexOf('/admin/') >= 0) {
-                  editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id);
-                }
+                  if (document.location.pathname.indexOf('/admin/') >= 0) {
+                    editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id);
+                  }
 
-                props.navigate(editUrl);
-              }}
-              type="button"
-              id="edit-user"
-            >
-              <FontAwesomeIcon icon="pencil-alt" /> {Lang.BTN_EDIT}
-            </button>
+                  navigate(editUrl);
+                }}
+                type="button"
+                id="edit-user"
+              >
+                <FontAwesomeIcon icon="pencil-alt" /> {Lang.BTN_EDIT}
+              </button>
+              }
+            </div>
+          </div>
+          <h1>
+            {`${props.user.details.firstName} ${props.user.details.lastName}`}
+          </h1>
+          {props.user.details.organization &&
+            <div>Organization:
+              <strong> {props.user.details.organization.name}</strong>
+            </div>
+          }
+          <div>Email:
+            <strong> {props.user.details.email}</strong>
+          </div>
+          <div>Work Phone:
+            <strong> {props.user.details.phone || '-'}</strong>
+          </div>
+          <div>Mobile Phone:
+            <strong> {props.user.details.cellPhone || '-'}</strong>
+          </div>
+          <div>Status:
+            <strong> {props.user.details.isActive ? 'Active' : 'Inactive'}</strong>
+          </div>
+          {props.user.details.roles &&
+            <div>Role:
+              <strong> {props.user.details.roles.map(role => role.description).join(', ')}
+              </strong>
+            </div>
+          }
+          <div>Title:
+            <strong> {props.user.details.title}</strong>
+          </div>
+          <div className="user_history">
+            <h3>User Activity</h3>
+            {props.user.details.id &&
+              <UserHistoryTable userId={props.user.details.id} />
             }
           </div>
         </div>
-        <h1>
-          {`${props.user.details.firstName} ${props.user.details.lastName}`}
-        </h1>
-        {props.user.details.organization &&
-          <div>Organization:
-            <strong> {props.user.details.organization.name}</strong>
-          </div>
-        }
-        <div>Email:
-          <strong> {props.user.details.email}</strong>
-        </div>
-        <div>Work Phone:
-          <strong> {props.user.details.phone || '-'}</strong>
-        </div>
-        <div>Mobile Phone:
-          <strong> {props.user.details.cellPhone || '-'}</strong>
-        </div>
-        <div>Status:
-          <strong> {props.user.details.isActive ? 'Active' : 'Inactive'}</strong>
-        </div>
-        {props.user.details.roles &&
-          <div>Role:
-            <strong> {props.user.details.roles.map(role => role.description).join(', ')}
-            </strong>
-          </div>
-        }
-        <div>Title:
-          <strong> {props.user.details.title}</strong>
-        </div>
-        <div className="user_history">
-          <h3>User Activity</h3>
-          {props.user.details.id &&
-            <UserHistoryTable userId={props.user.details.id} />
-          }
-        </div>
+      }
+      <div className="btn-container">
+        <button
+          className="btn btn-default"
+          onClick={() => navigate(-1)}
+          type="button"
+        >
+          <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        </button>
       </div>
-    }
-    <div className="btn-container">
-      <button
-        className="btn btn-default"
-        onClick={() => props.navigate(-1)}
-        type="button"
-      >
-        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
-      </button>
     </div>
-  </div>
-);
+  )
+};
 
 UserDetails.propTypes = {
   loggedInUser: PropTypes.shape({

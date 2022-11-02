@@ -11,8 +11,10 @@ import moment from 'moment-timezone';
 import history from '../../../app/History';
 import { FUEL_CODES } from '../../../constants/routes/Admin';
 import ReactTable from '../../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const FuelCodesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -209,7 +211,7 @@ const FuelCodesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = FUEL_CODES.DETAILS.replace(':id', row.original.id);
-              props.navigate(viewUrl);
+              navigate(viewUrl);
             },
             onMouseOver: (e) => {
               let message = '';

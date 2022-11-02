@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
 import { FUEL_CODES } from '../../constants/routes/Admin';
+import { useNavigate } from 'react-router';
 
 const FuelCodes = (props) => {
   const { isFetching, items } = props.fuelCodes;
+  const navigate = useNavigate()
 
   if (isFetching) {
     return <Loading />;
@@ -43,7 +45,7 @@ const FuelCodes = (props) => {
                   value: 'Draft'
                 }], 'fuel-codes');
 
-                return props.navigate(FUEL_CODES.LIST);
+                return navigate(FUEL_CODES.LIST);
               }}
               type="button"
             >
@@ -62,7 +64,7 @@ const FuelCodes = (props) => {
                 value: ''
               }], 'fuel-codes');
 
-              return props.navigate(FUEL_CODES.LIST);
+              return navigate(FUEL_CODES.LIST);
             }}
             type="button"
           >

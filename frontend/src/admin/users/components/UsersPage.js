@@ -13,9 +13,11 @@ import history from '../../../app/History';
 import PERMISSIONS_USERS from '../../../constants/permissions/Users';
 import USERS from '../../../constants/routes/Users';
 import { USERS as ADMIN_USERS } from '../../../constants/routes/Admin';
+import { useNavigate } from 'react-router';
 
 const UsersPage = (props) => {
   const { isFetching, users } = props.data;
+  const navigate = useNavigate()
 
   return (
     <div className="page_users">
@@ -29,7 +31,7 @@ const UsersPage = (props) => {
             <button
               id="new-user"
               className="btn btn-primary"
-              onClick={() => props.navigate(ADMIN_USERS.ADD)}
+              onClick={() => navigate(ADMIN_USERS.ADD)}
               type="button"
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
@@ -41,7 +43,7 @@ const UsersPage = (props) => {
             <ul className="dropdown-menu">
               <li>
                 <button
-                  onClick={() => props.navigate(USERS.ADD)}
+                  onClick={() => navigate(USERS.ADD)}
                   type="button"
                 >
                   <FontAwesomeIcon icon="user" /> Add Fuel Supplier User
