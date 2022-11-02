@@ -14,6 +14,7 @@ import { getLoggedInUser } from '../actions/userActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import { withRouter } from '../utils/withRouter';
 
 class CreditTransactionsContainer extends Component {
   constructor (props) {
@@ -177,4 +178,4 @@ const mapDispatchToProps = dispatch => ({
   saveTableState: bindActionCreators(saveTableState, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransactionsContainer));
