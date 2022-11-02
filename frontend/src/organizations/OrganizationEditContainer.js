@@ -16,6 +16,7 @@ import toastr from '../utils/toastr';
 import ORGANIZATION from '../constants/routes/Organizations';
 import Modal from '../app/components/Modal';
 import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
+import { withRouter } from '../utils/withRouter';
 
 class OrganizationEditContainer extends Component {
   constructor (props) {
@@ -50,7 +51,7 @@ class OrganizationEditContainer extends Component {
       return;
     }
 
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -301,4 +302,4 @@ const mapDispatchToProps = dispatch => ({
   addOrganization: bindActionCreators(addOrganization, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrganizationEditContainer));

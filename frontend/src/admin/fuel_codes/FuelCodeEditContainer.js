@@ -13,6 +13,7 @@ import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeEditContainer extends Component {
   constructor (props) {
@@ -50,7 +51,7 @@ class FuelCodeEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -289,4 +290,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeEditContainer);
+)(withRouter(FuelCodeEditContainer));

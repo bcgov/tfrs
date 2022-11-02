@@ -23,6 +23,7 @@ import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import FileUploadProgress from './components/FileUploadProgress';
 import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
+import { withRouter } from '../utils/withRouter';
 
 class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
@@ -54,7 +55,7 @@ class SecureFileSubmissionEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -471,4 +472,4 @@ const mapDispatchToProps = dispatch => ({
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionEditContainer));

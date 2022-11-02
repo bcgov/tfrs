@@ -13,6 +13,7 @@ import Modal from '../../app/components/Modal';
 import CarbonIntensityForm from './components/CarbonIntensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class DefaultCarbonIntensityEditContainer extends Component {
   constructor (props) {
@@ -171,4 +172,4 @@ const mapDispatchToProps = {
   updateDefaultCarbonIntensity: defaultCarbonIntensities.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultCarbonIntensityEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DefaultCarbonIntensityEditContainer));

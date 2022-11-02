@@ -15,6 +15,7 @@ import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeAddContainer extends Component {
   constructor (props) {
@@ -310,7 +311,7 @@ const mapDispatchToProps = dispatch => ({
   getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
-export default (connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeAddContainer));
+)(withRouter(FuelCodeAddContainer));

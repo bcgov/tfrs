@@ -12,6 +12,7 @@ import ReactTable from '../../app/components/StateSavingReactTable';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
+import { withRouter } from '../../utils/withRouter';
 
 class ComplianceReportingTable extends Component {
   render () {
@@ -209,4 +210,4 @@ ComplianceReportingTable.propTypes = {
   }).isRequired
 };
 
-export default ComplianceReportingTable;
+export default withRouter(ComplianceReportingTable);

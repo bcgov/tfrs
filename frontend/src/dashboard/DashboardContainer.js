@@ -24,6 +24,7 @@ import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import CONFIG from '../config';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class DashboardContainer extends Component {
   constructor (props) {
@@ -328,4 +329,4 @@ const mapStateToProps = (state, ownProps) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)((DashboardContainer));
+)((withRouter(DashboardContainer)));

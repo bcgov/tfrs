@@ -16,6 +16,7 @@ import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class UserEditContainer extends Component {
   constructor (props) {
@@ -49,7 +50,7 @@ class UserEditContainer extends Component {
 
   componentDidMount () {
     this.props.clearUsersRequestError();
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -295,4 +296,4 @@ const mapDispatchToProps = {
   updateUser
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserEditContainer));

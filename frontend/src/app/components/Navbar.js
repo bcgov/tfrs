@@ -18,6 +18,7 @@ import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import CONFIG from '../../config';
+import { withRouter } from '../../utils/withRouter';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -539,4 +540,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}), mapDispatchToProps, null, {})(Navbar);
+}), mapDispatchToProps, null, {})(withRouter(Navbar));

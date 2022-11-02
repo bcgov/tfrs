@@ -14,6 +14,7 @@ import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 import { clearUsersRequestError, createUser } from '../../actions/userActions';
+import { withRouter } from '../../utils/withRouter';
 
 class UserAddContainer extends Component {
   constructor (props) {
@@ -270,4 +271,4 @@ const mapDispatchToProps = {
   createUser
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserAddContainer));

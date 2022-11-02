@@ -13,6 +13,7 @@ import Modal from '../../app/components/Modal';
 import FuelCodeDetails from './components/FuelCodeDetails';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeDetailContainer extends Component {
   constructor (props) {
@@ -23,7 +24,7 @@ class FuelCodeDetailContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   loadData (id) {
@@ -126,4 +127,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeDetailContainer);
+)(withRouter(FuelCodeDetailContainer));

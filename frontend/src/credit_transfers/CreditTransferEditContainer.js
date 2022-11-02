@@ -12,6 +12,7 @@ import Modal from '../app/components/Modal';
 import CreditTransferForm from './components/CreditTransferForm';
 import GovernmentTransferForm from './components/GovernmentTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import { withRouter } from '../utils/withRouter';
 
 import {
   addCommentToCreditTransfer,
@@ -72,7 +73,7 @@ class CreditTransferEditContainer extends Component {
 
   componentDidMount () {
     this.props.invalidateCreditTransfer();
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
     this.props.getFuelSuppliers();
     this.props.getSigningAuthorityAssertions();
   }
@@ -605,4 +606,4 @@ const mapDispatchToProps = dispatch => ({
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransferEditContainer));

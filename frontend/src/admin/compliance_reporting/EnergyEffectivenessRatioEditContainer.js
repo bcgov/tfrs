@@ -13,6 +13,7 @@ import Modal from '../../app/components/Modal';
 import EnergyEffectivenessRatioForm from './components/EnergyEffectivenessRatioForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class EnergyEffectivenessRatioEditContainer extends Component {
   constructor (props) {
@@ -181,4 +182,4 @@ const mapDispatchToProps = {
   updateEnergyEffectivenessRatio: energyEffectivenessRatios.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnergyEffectivenessRatioEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyEffectivenessRatioEditContainer));

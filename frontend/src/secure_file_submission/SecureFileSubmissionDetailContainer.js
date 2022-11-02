@@ -20,6 +20,7 @@ import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import * as Lang from '../constants/langEnUs';
 import toastr from '../utils/toastr';
 import LinkedCreditTransferSelection from './components/LinkedCreditTransferSelection';
+import { withRouter } from '../utils/withRouter';
 
 class SecureFileSubmissionDetailContainer extends Component {
   constructor (props) {
@@ -49,7 +50,7 @@ class SecureFileSubmissionDetailContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   loadData (id) {
@@ -430,4 +431,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SecureFileSubmissionDetailContainer);
+)(withRouter(SecureFileSubmissionDetailContainer));

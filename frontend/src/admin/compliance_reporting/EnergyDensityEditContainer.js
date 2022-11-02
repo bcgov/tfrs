@@ -13,6 +13,7 @@ import Modal from '../../app/components/Modal';
 import EnergyDensityForm from './components/EnergyDensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class EnergyDensityEditContainer extends Component {
   constructor (props) {
@@ -170,4 +171,4 @@ const mapDispatchToProps = {
   updateEnergyDensity: energyDensities.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnergyDensityEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyDensityEditContainer));

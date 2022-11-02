@@ -21,6 +21,7 @@ import {
 } from '../../actions/creditTransfersActions';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
+import { withRouter } from '../../utils/withRouter';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
 
@@ -51,7 +52,7 @@ class HistoricalDataEntryEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
     this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
   }
@@ -222,4 +223,4 @@ const mapDispatchToProps = dispatch => ({
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HistoricalDataEntryEditContainer));

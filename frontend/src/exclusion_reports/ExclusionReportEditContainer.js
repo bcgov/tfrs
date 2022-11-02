@@ -27,6 +27,7 @@ import withReferenceData from '../utils/reference_data_support';
 import autosaved from '../utils/autosave_support';
 import toastr from '../utils/toastr';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
+import { withRouter } from '../utils/withRouter';
 
 class ExclusionReportEditContainer extends Component {
   static componentForTabName (tab) {
@@ -647,4 +648,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(ExclusionReportEditContainer));
+)(autosaved(config)(withRouter(ExclusionReportEditContainer)));

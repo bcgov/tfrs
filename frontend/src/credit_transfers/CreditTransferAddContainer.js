@@ -30,6 +30,7 @@ import COMMENTS from '../constants/permissions/Comments';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -447,4 +448,4 @@ const mapDispatchToProps = dispatch => ({
     prepareSigningAuthorityConfirmations(creditTradeId, terms)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransferAddContainer));

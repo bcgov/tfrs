@@ -37,6 +37,7 @@ import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 import Tooltip from '../app/components/Tooltip';
+import { withRouter } from '../utils/withRouter';
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -968,4 +969,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(ComplianceReportingEditContainer));
+)(autosaved(config)(withRouter(ComplianceReportingEditContainer)));

@@ -17,6 +17,7 @@ import CONFIG from '../config';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -230,4 +231,4 @@ const mapDispatchToProps = {
   getComplianceReports: complianceReporting.find
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer));
