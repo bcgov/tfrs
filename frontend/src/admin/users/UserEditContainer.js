@@ -258,10 +258,8 @@ UserEditContainer.propTypes = {
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
   getUser: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool,

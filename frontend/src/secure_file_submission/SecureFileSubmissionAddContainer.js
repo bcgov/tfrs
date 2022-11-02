@@ -317,11 +317,9 @@ SecureFileSubmissionAddContainer.propTypes = {
   errors: PropTypes.shape({
     title: PropTypes.arrayOf(PropTypes.string)
   }),
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string
-    })
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    type: PropTypes.string
   }).isRequired,
   referenceData: PropTypes.shape({
     documentCategories: PropTypes.arrayOf(PropTypes.shape),

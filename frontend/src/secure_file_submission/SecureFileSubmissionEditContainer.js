@@ -435,11 +435,9 @@ SecureFileSubmissionEditContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
+  }),
   referenceData: PropTypes.shape({
     documentCategories: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,

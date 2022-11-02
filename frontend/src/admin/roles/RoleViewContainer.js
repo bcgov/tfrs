@@ -33,10 +33,8 @@ RoleViewContainer.defaultProps = {
 
 RoleViewContainer.propTypes = {
   getRole: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   role: PropTypes.shape({
     details: PropTypes.shape({}),

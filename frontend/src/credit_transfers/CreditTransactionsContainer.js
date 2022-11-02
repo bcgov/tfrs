@@ -144,11 +144,9 @@ CreditTransactionsContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    })
-  }),
+  params: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired,
   organization: PropTypes.shape({
     name: PropTypes.string,
     organizationBalance: PropTypes.shape({

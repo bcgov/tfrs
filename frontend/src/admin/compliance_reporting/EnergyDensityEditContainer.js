@@ -148,10 +148,8 @@ EnergyDensityEditContainer.propTypes = {
   }).isRequired,
   getEnergyDensity: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   updateEnergyDensity: PropTypes.func.isRequired
 };

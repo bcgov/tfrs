@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import { getUser, getUserByUsername } from '../actions/userActions';
 import UserDetails from './components/UserDetails';
+import { withRouter } from '../utils/withRouter';
 
 class UserViewContainer extends Component {
   componentDidMount () {
@@ -59,11 +60,9 @@ UserViewContainer.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string
   }).isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({}),
@@ -86,4 +85,4 @@ const mapDispatchToProps = dispatch => ({
   getUserByUsername: bindActionCreators(getUserByUsername, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserViewContainer));

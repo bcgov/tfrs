@@ -242,11 +242,9 @@ UserAddContainer.propTypes = {
   createdUsername: PropTypes.string,
   error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      organizationId: PropTypes.string
-    })
-  }),
+  params: PropTypes.shape({
+    organizationId: PropTypes.string
+  }).isRequired,
   organization: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string

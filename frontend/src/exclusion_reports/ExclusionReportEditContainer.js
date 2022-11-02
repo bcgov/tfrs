@@ -575,12 +575,10 @@ ExclusionReportEditContainer.propTypes = {
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.shape(),
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string,
-      tab: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    period: PropTypes.string,
+    tab: PropTypes.string
   }).isRequired,
   saving: PropTypes.bool.isRequired,
   signingAuthorityAssertions: PropTypes.shape({

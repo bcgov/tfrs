@@ -194,10 +194,8 @@ HistoricalDataEntryEditContainer.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,

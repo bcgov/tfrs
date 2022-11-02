@@ -376,11 +376,9 @@ SecureFileSubmissionDetailContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
+  }),
   partialUpdateDocument: PropTypes.func.isRequired,
   referenceData: PropTypes.shape({
     documentStatuses: PropTypes.arrayOf(PropTypes.shape),

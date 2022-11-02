@@ -894,12 +894,10 @@ ComplianceReportingEditContainer.propTypes = {
     }),
     title: PropTypes.string
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string,
-      tab: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    period: PropTypes.string,
+    tab: PropTypes.string
   }).isRequired,
   recomputeTotals: PropTypes.func.isRequired,
   saving: PropTypes.bool.isRequired,
