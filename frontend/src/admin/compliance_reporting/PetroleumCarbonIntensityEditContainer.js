@@ -34,7 +34,7 @@ class PetroleumCarbonIntensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getPetroleumCarbonIntensity(this.props.match.params.id);
+    this.props.getPetroleumCarbonIntensity(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -89,7 +89,7 @@ class PetroleumCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {

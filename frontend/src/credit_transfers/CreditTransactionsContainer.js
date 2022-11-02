@@ -32,7 +32,7 @@ class CreditTransactionsContainer extends Component {
 
   clearUrl () {
     // Update the URL so it doesn't show the URL with the highlight
-    if (this.props.match.params.id) {
+    if (this.props.params.id) {
       window.history.replaceState({}, 'Credit Transactions', CREDIT_TRANSACTIONS.LIST);
     }
   }
@@ -109,7 +109,7 @@ class CreditTransactionsContainer extends Component {
     return (
       <CreditTransactionsPage
         creditTransfers={this._getCreditTransfers()}
-        highlight={this.props.match.params.id}
+        highlight={this.props.params.id}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
         organizations={this._getUniqueOrganizations()}

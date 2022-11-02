@@ -37,7 +37,7 @@ class CarbonIntensityLimitEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getCarbonIntensityLimit(this.props.match.params.id);
+    this.props.getCarbonIntensityLimit(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -95,7 +95,7 @@ class CarbonIntensityLimitEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {

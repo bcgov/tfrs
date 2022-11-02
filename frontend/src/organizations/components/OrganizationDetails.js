@@ -30,7 +30,6 @@ const OrganizationDetails = props => {
               }){` `}
               <Tooltip
                 className="info"
-                show
                 title="Reserved credits are the portion of credits in your credit balance that are
                 currently pending the completion of a credit transaction. For example, selling
                 credits to another organization (i.e. Credit Transfer) or being used to offset

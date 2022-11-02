@@ -76,8 +76,8 @@ class CreditTransferViewContainer extends Component {
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
+    if (prevProps.params.id !== newProps.params.id) {
+      this.loadData(newProps.params.id);
     }
   }
 
@@ -411,7 +411,7 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => {
           this.props.deleteCommentOnCreditTransfer(this.state.selectedId).then(() => {
             this.props.invalidateCreditTransfer();
-            this.props.getCreditTransferIfNeeded(this.props.match.params.id);
+            this.props.getCreditTransferIfNeeded(this.props.params.id);
           });
         }}
         id="confirmDeleteComment"

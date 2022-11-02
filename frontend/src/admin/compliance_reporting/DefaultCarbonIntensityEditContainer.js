@@ -34,7 +34,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getDefaultCarbonIntensity(this.props.match.params.id);
+    this.props.getDefaultCarbonIntensity(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -89,7 +89,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {

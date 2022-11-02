@@ -56,7 +56,7 @@ class ExclusionReportEditContainer extends Component {
   constructor (props) {
     super(props);
     this.tabComponent = Loading;
-    const { tab } = props.match.params;
+    const { tab } = props.params;
     this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
     this.status = {
       fuelSupplierStatus: 'Draft'
@@ -93,9 +93,9 @@ class ExclusionReportEditContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    const { tab } = nextProps.match.params;
+    const { tab } = nextProps.params;
 
-    if (tab !== this.props.match.params.tab) {
+    if (tab !== this.props.params.tab) {
       this.tabComponent = ExclusionReportEditContainer.componentForTabName(tab);
     }
 
@@ -128,7 +128,7 @@ class ExclusionReportEditContainer extends Component {
     }
 
     if (this.props.exclusionReports.isGetting && !nextProps.exclusionReports.isGetting) {
-      const { id } = this.props.match.params;
+      const { id } = this.props.params;
 
       this.setState({
         supplementalNoteRequired: (nextProps.exclusionReports.item.isSupplemental &&
@@ -162,7 +162,7 @@ class ExclusionReportEditContainer extends Component {
   }
 
   loadData () {
-    this.props.getExclusionReport(this.props.match.params.id);
+    this.props.getExclusionReport(this.props.params.id);
   }
 
   _addToFields (value) {
@@ -180,7 +180,7 @@ class ExclusionReportEditContainer extends Component {
   }
 
   _handleDelete () {
-    this.props.deleteComplianceReport({ id: this.props.match.params.id });
+    this.props.deleteComplianceReport({ id: this.props.params.id });
   }
 
   _handleCreateSupplemental (event, compliancePeriodDescription) {
@@ -194,7 +194,7 @@ class ExclusionReportEditContainer extends Component {
       },
       type: 'Exclusion Report',
       compliancePeriod: compliancePeriodDescription,
-      supplements: Number(this.props.match.params.id)
+      supplements: Number(this.props.params.id)
     });
   }
 
@@ -220,7 +220,7 @@ class ExclusionReportEditContainer extends Component {
     this.status = status;
 
     this.props.updateExclusionReport({
-      id: this.props.match.params.id,
+      id: this.props.params.id,
       state: payload,
       patch: true
     });
@@ -229,7 +229,7 @@ class ExclusionReportEditContainer extends Component {
     this.state.terms.forEach((term) => {
       if (term.value) {
         data.push({
-          complianceReport: this.props.match.params.id,
+          complianceReport: this.props.params.id,
           hasAccepted: term.value,
           signingAuthorityAssertion: term.id
         });
@@ -265,7 +265,7 @@ class ExclusionReportEditContainer extends Component {
 
   _updateScheduleState (mergedState) {
     const { exclusionAgreement } = this.state;
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     this.props.validateExclusionReport({
       id,
@@ -286,8 +286,8 @@ class ExclusionReportEditContainer extends Component {
   render () {
     const TabComponent = this.tabComponent;
 
-    const { tab, id } = this.props.match.params;
-    let { period } = this.props.match.params;
+    const { tab, id } = this.props.params;
+    let { period } = this.props.params;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
@@ -368,7 +368,7 @@ class ExclusionReportEditContainer extends Component {
         validationMessages={this.props.exclusionReports.validationMessages}
       />,
       <ExclusionReportButtons
-        id={this.props.match.params.id}
+        id={this.props.params.id}
         actions={this.props.exclusionReports.item.actions}
         actor={this.props.exclusionReports.item.actor}
         edit={this.edit}

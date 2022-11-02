@@ -35,7 +35,7 @@ class EnergyDensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getEnergyDensity(this.props.match.params.id);
+    this.props.getEnergyDensity(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -89,7 +89,7 @@ class EnergyDensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {

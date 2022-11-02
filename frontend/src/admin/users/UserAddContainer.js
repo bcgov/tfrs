@@ -61,8 +61,8 @@ class UserAddContainer extends Component {
   }
 
   loadData () {
-    if (this.props.match.params.organizationId) {
-      this.props.getOrganization(this.props.match.params.organizationId);
+    if (this.props.params.organizationId) {
+      this.props.getOrganization(this.props.params.organizationId);
     } else {
       this.props.getFuelSuppliers();
     }

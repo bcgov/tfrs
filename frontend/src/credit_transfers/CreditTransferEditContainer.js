@@ -99,8 +99,8 @@ class CreditTransferEditContainer extends Component {
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
+    if (prevProps.params.id !== newProps.params.id) {
+      this.loadData(newProps.params.id);
     }
   }
 

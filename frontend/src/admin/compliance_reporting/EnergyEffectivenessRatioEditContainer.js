@@ -37,7 +37,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getEnergyEffectivenessRatio(this.props.match.params.id);
+    this.props.getEnergyEffectivenessRatio(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -97,7 +97,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {

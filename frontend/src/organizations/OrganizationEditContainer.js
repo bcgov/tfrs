@@ -142,10 +142,10 @@ class OrganizationEditContainer extends Component {
     let viewUrl = ORGANIZATION.MINE;
 
     if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
-      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
+      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.params.id);
     }
 
-    this.props.updateOrganization(data, this.props.match.params.id).then(() => {
+    this.props.updateOrganization(data, this.props.params.id).then(() => {
       // update the session for the logged in user (in case the user information got updated)
       this.props.getUpdatedLoggedInUser();
       this.props.navigate(viewUrl);

@@ -82,7 +82,7 @@ class SecureFileSubmissionDetailContainer extends Component {
   }
 
   _addLink () {
-    this.props.fetchCreditTransfers(this.props.match.params.id);
+    this.props.fetchCreditTransfers(this.props.params.id);
   }
 
   _cancelComment () {

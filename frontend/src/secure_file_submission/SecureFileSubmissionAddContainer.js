@@ -34,7 +34,7 @@ class SecureFileSubmissionAddContainer extends Component {
         comment: '',
         compliancePeriod: { id: 0, description: '' },
         documentType: {
-          id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
+          id: props.params.type ? parseInt(props.params.type, 10) : 1
         },
         files: [],
         milestone: '',
