@@ -1,5 +1,5 @@
 coreapi==2.3.3
-cryptography==3.2
+cryptography==3.3.2
 celery==4.2.0
 django-celery-beat==1.4.0
 Django==3.2.10
