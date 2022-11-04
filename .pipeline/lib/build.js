@@ -25,7 +25,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-
+/*
   //build frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-angular-app-bc.yaml`, {
     'param':{
@@ -89,7 +89,7 @@ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/
     'RELEASE_BRANCH': phases[phase].releaseBranch
   }
 }))
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

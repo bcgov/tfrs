@@ -1,0 +1,25 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: tfrs-patroni-app
+parameters:
+- name: APP_DB_PASSWORD
+  description: "secret used by databse user"
+  from: "[a-zA-Z0-9]{16}"
+  generate: expression
+  required: true
+- name: APP_DB_USERNAME
+  description: "secret used by STANDBY"
+  from: "tfrs[a-z]{8}"
+  generate: expression
+  required: true 
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: tfrs-patroni-app
+  stringData:
+    app-db-name: tfrs
+    app-db-password: ${APP_DB_PASSWORD}
+    app-db-username: ${APP_DB_USERNAME}
+  type: Opaque
