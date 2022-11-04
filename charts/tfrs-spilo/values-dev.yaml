@@ -5,28 +5,28 @@ spilo:
   credentials:
     useExistingSecret: true
     existingSecret:
-      name: itvr-patroni-admin
+      name: tfrs-patroni-admin
       superuserKey: password-superuser
       adminKey: password-admin
       standbyKey: password-standby
 
   continuousArchive:
-    enabled: true
+    enabled: false
     scheduleCronJob: "0 10 * * *"
     retainBackups: 3
     storage: s3
     s3:
-      bucket: itvrdv
-      secretName: itvr-db-backup-s3
+      bucket: tfrsdv
+      secretName: tfrs-db-backup-s3
 
   shipLogs:
     enabled: false
 #    s3:
-#      bucket: s3://itvrdv
+#      bucket: s3://tfrsdv
 #      shipSchedule: 0 7 * * *
 
   persistentVolume:
-    size: 5Gi
+    size: 3Gi
     storageClass: netapp-block-standard
 
   resources:
