@@ -14,7 +14,8 @@ from api.notifications.notifications import AMQPNotificationService, \
 from api.permissions.Notifications import NotificationPermissions
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
-
+from api.paginations import BasicPagination
+from django.db.models import Q
 
 class NotificationToken(object):
 
@@ -41,6 +42,7 @@ class NotificationViewSet(AuditableMixin,
                           mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
 
+    pagination_class = BasicPagination
     permission_classes = (NotificationPermissions,)
     http_method_names = ['get', 'put', 'post']
     serializer_classes = {
@@ -59,10 +61,50 @@ class NotificationViewSet(AuditableMixin,
 
     def get_queryset(self):
         user = self.request.user
-        return NotificationMessage.objects.filter(
+        qs = NotificationMessage.objects.filter(
             is_archived=False,
             user=user
-        ).all()
+        )
+
+        request = self.request
+        if request.path.endswith('processed_list') and request.method == 'POST':
+            qs = qs.order_by('-create_timestamp')
+            filters = request.data.get('filters')
+            if filters:
+                for filter in filters:
+                    id = filter.get('id')
+                    value = filter.get('value')
+                    if id and value:
+                        if id == 'notification':
+                            #todo: this can be improved
+                            qs = qs.filter(message__icontains = value)
+                        elif id == 'date':
+                            qs = qs.filter(update_timestamp__icontains = value)
+                        elif id == 'user':
+                            user_split = value.split()
+                            q_object = None
+                            for x in user_split:
+                                q_sub_object = Q(originating_user__first_name__icontains = x) | Q(originating_user__last_name__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object | q_sub_object
+                            qs = qs.filter(q_object)
+                        elif id == 'creditTrade':
+                            if value.isnumeric():
+                                qs = qs.filter(related_credit_trade__id__exact = value)
+                            elif value == '-':
+                                qs = qs.filter(related_credit_trade__isnull = True)
+                            else:
+                                qs = qs.none()
+                        elif id == 'organization':
+                            qs = qs.filter(related_organization__name__icontains = value)
+        return qs
+
+
+    @action(detail=False, methods=['post'])
+    def processed_list(self, request):
+        return super().list(request)
 
     @never_cache
     @action(detail=False, methods=['get'])

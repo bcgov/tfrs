@@ -10,7 +10,8 @@ const notifications = (state = {
   },
   serverInitiatedReloadRequested: false,
   onNotificationsPage: false,
-  success: false
+  success: false,
+  totalCount: 0
 }, action) => {
   switch (action.type) {
     case ActionTypes.MOUNT_NOTIFICATIONS_TABLE:
@@ -50,7 +51,8 @@ const notifications = (state = {
         ...state,
         isFetching: false,
         success: true,
-        items: action.data
+        items: action.data,
+        totalCount: action.totalCount
       };
     case ActionTypes.ERROR:
       return {
