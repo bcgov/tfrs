@@ -103,9 +103,7 @@ const updateNotifications = data => (dispatch) => {
   dispatch(updateNotificationsRequest());
 
   return axios.put(Routes.BASE_URL + Routes.NOTIFICATIONS.UPDATE, data)
-    .then((response) => {
-      dispatch(updateNotificationsSuccess(response.data));
-    }).catch((error) => {
+    .catch((error) => {
       dispatch(updateNotificationsError(error.response));
     });
 };

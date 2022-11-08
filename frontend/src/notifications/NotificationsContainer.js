@@ -27,7 +27,8 @@ class NotificationsContainer extends Component {
       },
       page: 1,
       pageSize: 10,
-      filters: []
+      filters: [],
+      refreshCounter: 0
     };
 
     this._selectIdForModal = this._selectIdForModal.bind(this);
@@ -49,7 +50,7 @@ class NotificationsContainer extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters) {
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
       this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters);
     }
   }
@@ -103,17 +104,25 @@ class NotificationsContainer extends Component {
   }
 
   _updateNotificationsStatuses (data) {
-    return this.props.updateNotifications(data).then(() => {
-      const fieldState = { // reset checkboxes to unchecked
-        ...this.state.fields,
-        notifications: this.state.fields.notifications.map(notification => ({
-          ...notification,
-          value: false
-        }))
-      };
-
-      this.setState({
-        fields: fieldState
+    return this.props.updateNotifications(data).then((response) => {
+      this.setState((prevState) => {
+        let numberOfDeletedNotifications = 0;
+        let newPage = prevState.page;
+        if (data.isArchived && response.data) {
+          numberOfDeletedNotifications = response.data.length;
+          const newCount = this.props.totalCount - numberOfDeletedNotifications;
+          const lastPage = newCount <= 0 ? 1 : Math.ceil(newCount / prevState.pageSize);
+          if (prevState.page > lastPage) {
+            newPage = 1;
+          }
+        }
+        return {
+          fields: {
+            notifications: []
+          },
+          page: newPage,
+          refreshCounter: prevState.refreshCounter + 1
+        }
       });
     });
   }
