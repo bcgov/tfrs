@@ -42,7 +42,7 @@ class NotificationsContainer extends Component {
 
   componentDidMount () {
     this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters);
-    this.props.autoloadNotificationsEnable();
+    //this.props.autoloadNotificationsEnable();
   }
 
   componentWillUnmount () {
