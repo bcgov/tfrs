@@ -7,12 +7,15 @@ import * as Routes from '../constants/routes';
 /*
  * Get Notifications
  */
-const getNotifications = () => (dispatch) => {
+const getNotifications = (pageNumber, pageSize, filters) => (dispatch) => {
   dispatch(getNotificationsRequest());
-
-  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
+  let url = Routes.BASE_URL + Routes.NOTIFICATIONS.PROCESSED_LIST + "?page=" + pageNumber + "&size=" + pageSize;
+  const data = {
+    filters: filters
+  };
+  axios.post(url, data)
     .then((response) => {
-      dispatch(getNotificationsSuccess(response.data));
+      dispatch(getNotificationsSuccess(response.data.results, response.data.count));
     }).catch((error) => {
       dispatch(getNotificationsError(error.response));
     });
@@ -29,8 +32,9 @@ const getNotificationsRequest = () => ({
   type: ActionTypes.GET_NOTIFICATIONS
 });
 
-const getNotificationsSuccess = notifications => ({
+const getNotificationsSuccess = (notifications, totalCount) => ({
   data: notifications,
+  totalCount: totalCount,
   name: ReducerTypes.RECEIVE_NOTIFICATIONS_REQUEST,
   type: ActionTypes.RECEIVE_NOTIFICATIONS
 });
@@ -99,9 +103,7 @@ const updateNotifications = data => (dispatch) => {
   dispatch(updateNotificationsRequest());
 
   return axios.put(Routes.BASE_URL + Routes.NOTIFICATIONS.UPDATE, data)
-    .then((response) => {
-      dispatch(updateNotificationsSuccess(response.data));
-    }).catch((error) => {
+    .catch((error) => {
       dispatch(updateNotificationsError(error.response));
     });
 };

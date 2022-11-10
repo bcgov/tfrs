@@ -62,6 +62,13 @@ const NotificationsDetails = props => (
       toggleCheck={props.toggleCheck}
       updateNotification={props.updateNotification}
       isFetching={props.isFetching}
+      notificationsCount={props.notificationsCount}
+      page={props.page}
+      pageSize={props.pageSize}
+      filters={props.filters}
+      handlePageChange={props.handlePageChange}
+      handlePageSizeChange={props.handlePageSizeChange}
+      handleFiltersChange={props.handleFiltersChange}
     />
   </div>
 );
@@ -76,7 +83,14 @@ NotificationsDetails.propTypes = {
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
   updateNotification: PropTypes.func.isRequired,
-  updateNotifications: PropTypes.func.isRequired
+  updateNotifications: PropTypes.func.isRequired,
+  notificationsCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired
 };
 
 export default NotificationsDetails;

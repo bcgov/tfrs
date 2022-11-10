@@ -24,22 +24,35 @@ class NotificationsContainer extends Component {
     this.state = {
       fields: {
         notifications: []
-      }
+      },
+      page: 1,
+      pageSize: 10,
+      filters: [],
+      refreshCounter: 0
     };
 
     this._selectIdForModal = this._selectIdForModal.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateNotification = this._updateNotification.bind(this);
     this._updateNotifications = this._updateNotifications.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
+    this.handleFiltersChange = this.handleFiltersChange.bind(this);
   }
 
   componentDidMount () {
-    this.props.getNotifications();
-    this.props.autoloadNotificationsEnable();
+    this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters);
+    //this.props.autoloadNotificationsEnable();
   }
 
   componentWillUnmount () {
     this.props.autoloadNotificationsDisable();
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
+      this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters);
+    }
   }
 
   _selectIdForModal (id) {
@@ -91,19 +104,39 @@ class NotificationsContainer extends Component {
   }
 
   _updateNotificationsStatuses (data) {
-    return this.props.updateNotifications(data).then(() => {
-      const fieldState = { // reset checkboxes to unchecked
-        ...this.state.fields,
-        notifications: this.state.fields.notifications.map(notification => ({
-          ...notification,
-          value: false
-        }))
-      };
-
-      this.setState({
-        fields: fieldState
+    return this.props.updateNotifications(data).then((response) => {
+      this.setState((prevState) => {
+        let numberOfDeletedNotifications = 0;
+        let newPage = prevState.page;
+        if (data.isArchived && response.data) {
+          numberOfDeletedNotifications = response.data.length;
+          const newCount = this.props.totalCount - numberOfDeletedNotifications;
+          const lastPage = newCount <= 0 ? 1 : Math.ceil(newCount / prevState.pageSize);
+          if (prevState.page > lastPage) {
+            newPage = 1;
+          }
+        }
+        return {
+          fields: {
+            notifications: []
+          },
+          page: newPage,
+          refreshCounter: prevState.refreshCounter + 1
+        }
       });
     });
+  }
+
+  handlePageChange (page) {
+    this.setState({page: page});
+  }
+
+  handlePageSizeChange (pageSize) {
+    this.setState({pageSize: pageSize});
+  }
+
+  handleFiltersChange (filters) {
+    this.setState({filters: filters});
   }
 
   render () {
@@ -117,6 +150,13 @@ class NotificationsContainer extends Component {
         toggleCheck={this._toggleCheck}
         updateNotification={this._updateNotification}
         updateNotifications={this._updateNotifications}
+        notificationsCount={this.props.totalCount}
+        page={this.state.page}
+        pageSize={this.state.pageSize}
+        filters={this.state.filters}
+        handlePageChange={this.handlePageChange}
+        handlePageSizeChange={this.handlePageSizeChange}
+        handleFiltersChange={this.handleFiltersChange}
       />,
       <Modal
         handleSubmit={() => this._updateNotifications({ isArchived: true })}
@@ -157,7 +197,8 @@ NotificationsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   isFetching: state.rootReducer.notifications.isFetching,
-  items: state.rootReducer.notifications.items
+  items: state.rootReducer.notifications.items,
+  totalCount: state.rootReducer.notifications.totalCount
 });
 
 const mapDispatchToProps = dispatch => ({

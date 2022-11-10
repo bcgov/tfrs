@@ -18,6 +18,14 @@ import { useNavigate } from 'react-router';
 
 const NotificationsTable = (props) => {
   const navigate = useNavigate()
+
+  const calculatePages = (numberOfItems, pageSize) => {
+    if (numberOfItems === 0) {
+      return 1;
+    }
+    return Math.ceil(numberOfItems / pageSize);
+  }
+
   const columns = [{
     accessor: item => item.id,
     Cell: row => (
@@ -172,17 +180,28 @@ const NotificationsTable = (props) => {
       className="searchable"
       columns={columns}
       data={props.items}
-      defaultPageSize={10}
-      defaultSorted={[{
-        id: 'date',
-        desc: true
-      }]}
       loading={props.isFetching}
       filterable={filterable}
       getTrProps={(state, rowInfo) => ({
         className: (rowInfo && rowInfo.original.isRead) ? 'read' : 'unread'
       })}
+      manual
+      pages={calculatePages(props.notificationsCount, props.pageSize)}
+      page={props.page - 1}
+      pageSize={props.pageSize}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+      onPageChange={(pageIndex) => {
+        props.handlePageChange(pageIndex + 1);
+      }}
+      onPageSizeChange={(pageSize, pageIndex) => {
+        props.handlePageChange(1);
+        props.handlePageSizeChange(pageSize);
+      }}
+      filtered={props.filters}
+      onFilteredChange={(filtered, column) => {
+        props.handlePageChange(1);
+        props.handleFiltersChange(filtered);
+      }}
     />
   );
 };
@@ -195,7 +214,14 @@ NotificationsTable.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
-  updateNotification: PropTypes.func.isRequired
+  updateNotification: PropTypes.func.isRequired,
+  notificationsCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired
 };
 
 export default NotificationsTable;
