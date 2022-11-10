@@ -54,6 +54,7 @@
     "react-table": "6.10.3",
     "react-text-mask": "^5.5.0",
     "reduce-reducers": "^1.0.4",
+    "redux": "^4.2.0",
     "redux-actions": "^2.6.5",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.6",
