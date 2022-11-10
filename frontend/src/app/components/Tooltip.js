@@ -37,7 +37,6 @@ class Tooltip extends Component {
         onMouseOut={this._hoverOut}
         overlay={this._tooltip()}
         rootClose
-        show={this.props.show}
       >
         <div className="overlay-trigger">
           {this.props.children}

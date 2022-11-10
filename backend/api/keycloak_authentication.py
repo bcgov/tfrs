@@ -92,53 +92,50 @@ class UserAuthentication(authentication.BaseAuthentication):
                 '\n'.join([str(error) for error in token_validation_errors])
             )
 
-        user_found_via_email = None
-        # OVERRIDE user_id HERE FOR TESTING 
-        user_token['user_id'] = 'director'
+        # Check for existing mapped user
+        if 'preferred_username' in user_token:
+            print(user_token['preferred_username'])
+            try:
+                user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
+                print("user exists", user)
+                return user, None
+            except User.DoesNotExist: 
+                print("User does not exist, falling through")
+                pass
+        
+        # fall through to here if no mapped user is found
+        if 'email' in user_token:
+            creation_request = UserCreationRequest.objects.filter(
+                keycloak_email__iexact=user_token['email']
+            )
 
-        if 'user_id' not in user_token:
-            # try email
-            if 'email' in user_token:
-                creation_request = UserCreationRequest.objects.filter(
-                    keycloak_email__iexact=user_token['email']
-                )
-
-                if not creation_request.exists():
-                    raise exceptions.AuthenticationFailed(
-                        "User does not exist.")
-
-                if creation_request.count() > 1:
-                    _, preferred_username = user_token[
-                        'preferred_username'].split('\\')
-
-                    creation_request = creation_request.filter(
-                        external_username__iexact=preferred_username
-                    )
-
-                user_creation_request = creation_request.first()
-
-                if not user_creation_request.is_mapped:
-                    map_user(user_token['sub'],
-                             user_creation_request.user.username)
-
-                    user_creation_request.is_mapped = True
-                    user_creation_request.save()
-
-                user_found_via_email = user_creation_request.user.username
-            else:
+            if not creation_request.exists():
+                print("No User with that email exists.")
                 raise exceptions.AuthenticationFailed(
-                    'user_id or email is required in jwt payload')
+                    "No User with that email exists.")
 
-        username = user_token['user_id'] if 'user_id' in user_token else user_found_via_email
+            user_creation_request = creation_request.first()
+            print('creation_request', creation_request)
 
-        try:
-            user = User.objects.get_by_natural_key(username)
+            # map keycloak user to tfrs user
+            user = user_creation_request.user
+            print("user", user)
+            user.keycloak_user_id = user_token['preferred_username']
+            if user_token['display_name']:
+                user._display_name = user_token['display_name']
+            user.save()
 
-            if not user.is_active:
-                raise exceptions.AuthenticationFailed(
-                    'user_id "{}" does not exist'.format(username))
-        except User.DoesNotExist:
+            user_creation_request.is_mapped = True
+            user_creation_request.save()
+        else:
             raise exceptions.AuthenticationFailed(
-                'user_id "{}" does not exist'.format(username))
+                'preffered_username or email is required in jwt payload')
+        
+        try:
+            user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed('User is not active')
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed('User does not exist')
 
         return user, None

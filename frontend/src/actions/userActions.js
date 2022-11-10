@@ -6,6 +6,7 @@ import * as Routes from '../constants/routes';
 // import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
 import { getReferenceData } from './referenceDataActions';
+import { logout } from './keycloakActions';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -59,18 +60,7 @@ const getLoggedInUser = () => (dispatch) => {
 };
 
 const signUserOut = () => (dispatch) => {
-  console.log("signUserOut")
-  // userManager.clearStaleState();
-
-  // TODO do we need to clear out the loggedInUser here after Keycloak logout?
-
-  // userManager.removeUser().then(() => (
-  //   userManager.signoutRedirect({
-  //     post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
-  //   }).then(() => {
-  //     dispatch(signUserOutAction());
-  //   })
-  // ));
+  dispatch(logout());
 };
 
 const createUserRequest = payload => ({
