@@ -3,7 +3,7 @@ from datetime import timedelta
 from api.services.AutosaveService import AutosaveService
 from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
-from tfrs.celery import app as celery_app
+from tfrs.celery_config import app as celery_app
 
 
 @celery_app.task

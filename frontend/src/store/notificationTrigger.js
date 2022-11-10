@@ -1,5 +1,4 @@
-import {call, put, takeLatest} from 'redux-saga/effects';
-import {delay} from 'redux-saga';
+import {call, put, takeLatest, delay} from 'redux-saga/effects';
 import {getNotifications, getNotificationsCount} from "../actions/notificationActions";
 import UserActionTypes from "../constants/actionTypes/Users";
 import NotificationActionTypes from "../constants/actionTypes/Notifications";
@@ -12,7 +11,7 @@ const TRIGGERING_ACTIONS = [
 ];
 
 function* fetchNotifications(store) {
-  yield call(delay, 1000); //debounce
+  yield delay(1000); //debounce
 
   if (store.getState().rootReducer.userRequest.isAuthenticated) {
     yield put(getNotificationsCount());

@@ -9,11 +9,11 @@ import { bindActionCreators } from 'redux';
 
 import { filterFuelCodes, getFuelCode, updateFuelCode } from '../../actions/fuelCodes';
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeEditContainer extends Component {
   constructor (props) {
@@ -51,7 +51,7 @@ class FuelCodeEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -180,7 +180,7 @@ class FuelCodeEditContainer extends Component {
     });
 
     this.props.updateFuelCode(id, data).then((response) => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess(status, 'Fuel code updated.');
     });
 
@@ -245,10 +245,8 @@ FuelCodeEditContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   referenceData: PropTypes.shape({
     fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape),
@@ -290,4 +288,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeEditContainer);
+)(withRouter(FuelCodeEditContainer));

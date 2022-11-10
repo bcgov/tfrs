@@ -32,12 +32,12 @@ import Loading from '../app/components/Loading';
 import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleTabs from './components/ScheduleTabs';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import withCreditCalculationService from './services/credit_calculation_hoc';
 import toastr from '../utils/toastr';
 import autosaved from '../utils/autosave_support';
 import ChangelogContainer from './ChangelogContainer';
 import Tooltip from '../app/components/Tooltip';
+import { withRouter } from '../utils/withRouter';
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -103,7 +103,7 @@ class ComplianceReportingEditContainer extends Component {
   constructor (props) {
     super(props);
     this.tabComponent = Loading;
-    const { tab } = props.match.params;
+    const { tab } = props.params;
     this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     this.status = {
       fuelSupplierStatus: 'Draft'
@@ -144,7 +144,7 @@ class ComplianceReportingEditContainer extends Component {
     });
 
     this.props.getComplianceReports();
-    this.props.getComplianceReport(this.props.match.params.id);
+    this.props.getComplianceReport(this.props.params.id);
 
     this.setState({
       getCalled: true
@@ -152,14 +152,14 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    const { tab } = nextProps.match.params;
+    const { tab } = nextProps.params;
 
-    if (tab !== this.props.match.params.tab) {
+    if (tab !== this.props.params.tab) {
       this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
-      const { id } = this.props.match.params;
+      const { id } = this.props.params;
 
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
@@ -222,7 +222,7 @@ class ComplianceReportingEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved();
         toastr.complianceReporting('Supplemental Created');
-        history.push(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
       }
     }
 
@@ -247,14 +247,14 @@ class ComplianceReportingEditContainer extends Component {
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
           this.props.getUpdatedLoggedInUser();
-          history.push(COMPLIANCE_REPORTING.LIST);
+          this.props.navigate(COMPLIANCE_REPORTING.LIST);
         }
       }
     }
 
     if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
       this.props.invalidateAutosaved();
-      history.push(COMPLIANCE_REPORTING.LIST);
+      this.props.navigate(COMPLIANCE_REPORTING.LIST);
       toastr.complianceReporting('Cancelled');
     }
   }
@@ -262,7 +262,7 @@ class ComplianceReportingEditContainer extends Component {
   _updateScheduleState (_mergedState) {
     const mergedState = _mergedState;
     const { schedules } = this.state;
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
     const period = this.props.complianceReporting.item.compliancePeriod.description;
 
     if (schedules.summary && schedules.summary.dieselClassDeferred) {
@@ -356,7 +356,7 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   _handleDelete () {
-    this.props.deleteComplianceReport({ id: this.props.match.params.id });
+    this.props.deleteComplianceReport({ id: this.props.params.id });
 
     setTimeout(() => {
       this.props.getUpdatedLoggedInUser();
@@ -374,7 +374,7 @@ class ComplianceReportingEditContainer extends Component {
       },
       type: 'Compliance Report',
       compliancePeriod: compliancePeriodDescription,
-      supplements: Number(this.props.match.params.id)
+      supplements: Number(this.props.params.id)
     });
 
     setTimeout(() => {
@@ -433,7 +433,7 @@ class ComplianceReportingEditContainer extends Component {
     this.status = status;
 
     this.props.updateComplianceReport({
-      id: this.props.match.params.id,
+      id: this.props.params.id,
       state: payload,
       patch: true
     });
@@ -442,7 +442,7 @@ class ComplianceReportingEditContainer extends Component {
     this.state.terms.forEach((term) => {
       if (term.value) {
         data.push({
-          complianceReport: this.props.match.params.id,
+          complianceReport: this.props.params.id,
           hasAccepted: term.value,
           signingAuthorityAssertion: term.id
         });
@@ -457,7 +457,7 @@ class ComplianceReportingEditContainer extends Component {
   _handleRecomputeRequest () {
     const { schedules } = this.state;
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
     const { complianceReporting: report } = this.props;
 
     if (!complianceReporting.validationMessages ||
@@ -547,7 +547,7 @@ class ComplianceReportingEditContainer extends Component {
   render () {
     const TabComponent = this.tabComponent;
 
-    const { tab, id } = this.props.match.params;
+    const { tab, id } = this.props.params;
     const { item } = this.props.complianceReporting;
 
     if (!this.state.getCalled) {
@@ -652,7 +652,7 @@ class ComplianceReportingEditContainer extends Component {
         validationMessages={this.props.complianceReporting.validationMessages}
       />,
       <ScheduleButtons
-        id={this.props.match.params.id}
+        id={this.props.params.id}
         actions={item.actions}
         actor={item.actor}
         compliancePeriod={period}
@@ -894,12 +894,10 @@ ComplianceReportingEditContainer.propTypes = {
     }),
     title: PropTypes.string
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string,
-      tab: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    period: PropTypes.string,
+    tab: PropTypes.string
   }).isRequired,
   recomputeTotals: PropTypes.func.isRequired,
   saving: PropTypes.bool.isRequired,
@@ -969,4 +967,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(ComplianceReportingEditContainer));
+)(autosaved(config)(withRouter(ComplianceReportingEditContainer)));

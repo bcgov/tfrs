@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
 import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
@@ -15,6 +14,7 @@ import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 import { clearUsersRequestError, createUser } from '../../actions/userActions';
+import { withRouter } from '../../utils/withRouter';
 
 class UserAddContainer extends Component {
   constructor (props) {
@@ -61,8 +61,8 @@ class UserAddContainer extends Component {
   }
 
   loadData () {
-    if (this.props.match.params.organizationId) {
-      this.props.getOrganization(this.props.match.params.organizationId);
+    if (this.props.params.organizationId) {
+      this.props.getOrganization(this.props.params.organizationId);
     } else {
       this.props.getFuelSuppliers();
     }
@@ -155,7 +155,7 @@ class UserAddContainer extends Component {
         viewUrl = ADMIN_USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
       }
 
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.userSuccess('User created.');
     });
 
@@ -242,11 +242,9 @@ UserAddContainer.propTypes = {
   createdUsername: PropTypes.string,
   error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      organizationId: PropTypes.string
-    })
-  }),
+  params: PropTypes.shape({
+    organizationId: PropTypes.string
+  }).isRequired,
   organization: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string
@@ -271,4 +269,4 @@ const mapDispatchToProps = {
   createUser
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserAddContainer));

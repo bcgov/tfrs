@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { delay } from 'redux-saga';
-import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest, delay } from 'redux-saga/effects';
 
 import * as Routes from '../constants/routes';
 import { GenericRestTemplate } from './base/genericTemplate';
@@ -60,7 +59,7 @@ class ExclusionReportRestInterface extends GenericRestTemplate {
   }
 
   * validateHandler () {
-    yield call(delay, 1000); // debounce
+    yield delay(1000); // debounce
 
     const data = yield (select(this.validationStateSelector()));
 

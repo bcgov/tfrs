@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { clearUsersRequestError, getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
@@ -17,6 +16,7 @@ import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class UserEditContainer extends Component {
   constructor (props) {
@@ -50,7 +50,7 @@ class UserEditContainer extends Component {
 
   componentDidMount () {
     this.props.clearUsersRequestError();
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -161,7 +161,7 @@ class UserEditContainer extends Component {
 
     this.props.updateUser(id, data).then(() => {
       // redirect
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.userSuccess();
     });
 
@@ -258,10 +258,8 @@ UserEditContainer.propTypes = {
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
   getUser: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool,
@@ -296,4 +294,4 @@ const mapDispatchToProps = {
   updateUser
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserEditContainer));

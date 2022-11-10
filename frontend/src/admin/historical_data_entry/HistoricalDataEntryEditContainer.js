@@ -20,8 +20,8 @@ import {
   updateCreditTransfer
 } from '../../actions/creditTransfersActions';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import history from '../../app/History';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
+import { withRouter } from '../../utils/withRouter';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
 
@@ -52,7 +52,7 @@ class HistoricalDataEntryEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
     this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
   }
@@ -90,7 +90,7 @@ class HistoricalDataEntryEditContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(HISTORICAL_DATA_ENTRY.LIST);
+      this.props.navigate(HISTORICAL_DATA_ENTRY.LIST);
     });
 
     return false;
@@ -194,10 +194,8 @@ HistoricalDataEntryEditContainer.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
@@ -223,4 +221,4 @@ const mapDispatchToProps = dispatch => ({
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HistoricalDataEntryEditContainer));

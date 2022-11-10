@@ -3,9 +3,10 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Users';
 import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
-import userManager from '../store/oidc-usermanager';
+// import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
 import { getReferenceData } from './referenceDataActions';
+import { logout } from './keycloakActions';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -18,6 +19,7 @@ const getUsers = () => (dispatch) => {
 };
 
 const createUser = payload => (dispatch) => {
+  console.log("createUser")
   dispatch(createUserRequest(payload));
   return axios.post(Routes.BASE_URL + Routes.USERS, payload)
     .then((response) => {
@@ -29,6 +31,7 @@ const createUser = payload => (dispatch) => {
 };
 
 const updateUser = (id, payload) => (dispatch) => {
+  console.log("updateUser")
   dispatch(updateUserRequest(id));
   return axios.patch(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
     .then((response) => {
@@ -40,11 +43,16 @@ const updateUser = (id, payload) => (dispatch) => {
 };
 
 const getLoggedInUser = () => (dispatch) => {
+  console.log("getLoggedInUser")
   dispatch(getLoggedInUserRequest());
-  axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
+  const url = Routes.BASE_URL + Routes.CURRENT_USER
+  axios.get(url)
     .then((response) => {
+      console.log("SUCCESSFUL USER GET")
+      console.log(response.data)
       dispatch(getLoggedInUserSuccess(response.data));
     }).catch((error) => {
+      console.log("getLoggedInUserError", error)
       dispatch(getLoggedInUserError(error.response));
     }).then(() => {
       dispatch(getReferenceData());
@@ -52,15 +60,7 @@ const getLoggedInUser = () => (dispatch) => {
 };
 
 const signUserOut = () => (dispatch) => {
-  userManager.clearStaleState();
-
-  userManager.removeUser().then(() => (
-    userManager.signoutRedirect({
-      post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
-    }).then(() => {
-      dispatch(signUserOutAction());
-    })
-  ));
+  dispatch(logout());
 };
 
 const createUserRequest = payload => ({
@@ -122,6 +122,7 @@ const getLoggedInUserError = error => ({
 });
 
 const getUpdatedLoggedInUser = () => (dispatch) => {
+  console.log("getUpdatedLoggedInUser")
   axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
     .then((response) => {
       dispatch(getLoggedInUserSuccess(response.data));
@@ -131,6 +132,7 @@ const getUpdatedLoggedInUser = () => (dispatch) => {
 };
 
 const getUser = id => (dispatch) => {
+  console.log("getUser")
   dispatch(getUserRequest());
   axios.get(`${Routes.BASE_URL}${Routes.USERS}/${id}`)
     .then((response) => {
@@ -141,6 +143,7 @@ const getUser = id => (dispatch) => {
 };
 
 const getUserByUsername = username => (dispatch) => {
+  console.log("getUserByUsername")
   dispatch(getUserRequest());
   axios.get(`${Routes.BASE_URL}${Routes.USERS}/by_username?username=${username}`)
     .then((response) => {

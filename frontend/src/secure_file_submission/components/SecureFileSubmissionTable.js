@@ -6,11 +6,13 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import moment from 'moment-timezone';
 
-import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import ReactTable from '../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const SecureFileSubmissionTable = (props) => {
+  const navigate = useNavigate()
+
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -117,7 +119,7 @@ const SecureFileSubmissionTable = (props) => {
             onClick: (e) => {
               const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id);
 
-              history.push(viewUrl);
+              navigate(viewUrl);
             },
             className: `clickable ${securityScanFailed && 'scan-failed'}`
           };

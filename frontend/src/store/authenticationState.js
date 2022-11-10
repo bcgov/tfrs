@@ -1,50 +1,54 @@
-import { loadUser } from 'redux-oidc';
-import { put, takeLatest, all } from 'redux-saga/effects';
-import userManager from './oidc-usermanager';
+import { put, takeLatest, all, call } from 'redux-saga/effects';
 import { getLoggedInUser } from '../actions/userActions';
-import CONFIG from '../config';
-
-const LOGIN_TRIGGERING_ACTIONS = [
-  'redux-oidc/USER_EXPIRED'
-];
-
-function triggerLoginFlow (store) {
-  const { routing } = store.getState();
-
-  if (routing.location &&
-    routing.location.pathname !== '/authCallback') {
-    return CONFIG.KEYCLOAK.CUSTOM_LOGIN
-      ? userManager.signinSilent().catch((e) => {
-        // catch the login_required error so we don't see them in the console
-      })
-      : userManager.signinRedirect();
-  }
-
-  return false;
-}
+import { initKeycloak, initKeycloakError, loginKeycloakUserSuccess } from '../actions/keycloakActions';
+import Keycloak from 'keycloak-js';
+import ActionTypes from '../constants/actionTypes/Keycloak';
+import configureAxios from './authorizationInterceptor';
 
 function * getBackendUser (store) {
   const { rootReducer } = store.getState();
+  console.log("getBackendUser")
   if (!rootReducer.userRequest.isAuthenticated) {
     yield put(getLoggedInUser());
   }
 }
 
 export default function * authenticationStateSaga (store) {
-  userManager.clearStaleState();
 
-  const { routing } = store.getState();
+  const keycloak = new Keycloak('/keycloak.json');
+  console.log("keycloak", keycloak)
 
-  if (!routing.location || routing.location.pathname !== '/authCallback') {
-    loadUser(store, userManager);
+  const authenticated = yield keycloak.init({
+      pkceMethod: 'S256', 
+      redirectUri: 'http://localhost:3000',
+      idpHint: 'idir'
+    })
+  console.log("authenticated", authenticated)
+
+
+  if(authenticated == null) {
+    yield put(initKeycloakError(error))
+  } else {
+    yield put(initKeycloak(keycloak, authenticated))
   }
 
   yield all([
-    takeLatest('redux-oidc/USER_FOUND', getBackendUser, store),
-    takeLatest(
-      action => (LOGIN_TRIGGERING_ACTIONS.includes(action.type)),
-      triggerLoginFlow,
-      store
-    )
+    takeLatest(ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS, getBackendUser, store),
   ]);
+  
+  if(authenticated) {
+    console.log("authenticated keycloak")
+    console.log(authenticated)
+    configureAxios()
+    let user = yield keycloak.loadUserInfo()
+    yield put(loginKeycloakUserSuccess(user))
+  }
+    
+  // yield put(initKeycloak(keycloak, authenticated))
+  //   .then((authenticated) => {
+  //   })
+  //   .catch(error => {
+  //   });
+
+
 }

@@ -7,7 +7,6 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Tooltip from '../../app/components/Tooltip';
 import CreditTransferTable from './CreditTransferTable';
@@ -15,10 +14,12 @@ import { download } from '../../utils/functions';
 
 import * as Routes from '../../constants/routes';
 import * as Lang from '../../constants/langEnUs';
+import { useNavigate } from 'react-router';
 
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
   const isEmpty = items.length === 0;
+  const navigate = useNavigate()
 
   return (
     <div className="page_credit_transactions">
@@ -115,7 +116,7 @@ const CreditTransactionsPage = (props) => {
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
-              onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
+              onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_TRANSFER}
             </button>

@@ -12,11 +12,11 @@ import { addOrganization, getOrganization, updateOrganization } from '../actions
 import { getUpdatedLoggedInUser } from '../actions/userActions';
 import Loading from '../app/components/Loading';
 import OrganizationEditForm from './components/OrganizationEditForm';
-import history from '../app/History';
 import toastr from '../utils/toastr';
 import ORGANIZATION from '../constants/routes/Organizations';
 import Modal from '../app/components/Modal';
 import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
+import { withRouter } from '../utils/withRouter';
 
 class OrganizationEditContainer extends Component {
   constructor (props) {
@@ -51,7 +51,7 @@ class OrganizationEditContainer extends Component {
       return;
     }
 
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -142,13 +142,13 @@ class OrganizationEditContainer extends Component {
     let viewUrl = ORGANIZATION.MINE;
 
     if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
-      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
+      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.params.id);
     }
 
-    this.props.updateOrganization(data, this.props.match.params.id).then(() => {
+    this.props.updateOrganization(data, this.props.params.id).then(() => {
       // update the session for the logged in user (in case the user information got updated)
       this.props.getUpdatedLoggedInUser();
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.organizationSuccess();
     });
 
@@ -175,7 +175,7 @@ class OrganizationEditContainer extends Component {
 
     this.props.addOrganization(data).then((id) => {
       const viewUrl = ORGANIZATION.DETAILS.replace(':id', id);
-      history.push(viewUrl);
+      this.props.navigate(viewUrl);
       toastr.organizationSuccess('Organization created.');
     });
 
@@ -240,10 +240,8 @@ OrganizationEditContainer.propTypes = {
       statusDisplay: PropTypes.string
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    })
+  params: PropTypes.shape({
+    id: PropTypes.string
   }),
   organization: PropTypes.shape({
     details: PropTypes.shape({
@@ -302,4 +300,4 @@ const mapDispatchToProps = dispatch => ({
   addOrganization: bindActionCreators(addOrganization, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrganizationEditContainer));

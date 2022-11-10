@@ -12,6 +12,7 @@ import Modal from '../app/components/Modal';
 import CreditTransferForm from './components/CreditTransferForm';
 import GovernmentTransferForm from './components/GovernmentTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import { withRouter } from '../utils/withRouter';
 
 import {
   addCommentToCreditTransfer,
@@ -28,7 +29,6 @@ import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
-import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import COMMENTS from '../constants/permissions/Comments';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
@@ -73,7 +73,7 @@ class CreditTransferEditContainer extends Component {
 
   componentDidMount () {
     this.props.invalidateCreditTransfer();
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
     this.props.getFuelSuppliers();
     this.props.getSigningAuthorityAssertions();
   }
@@ -99,8 +99,8 @@ class CreditTransferEditContainer extends Component {
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
+    if (prevProps.params.id !== newProps.params.id) {
+      this.loadData(newProps.params.id);
     }
   }
 
@@ -164,7 +164,7 @@ class CreditTransferEditContainer extends Component {
 
       this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(status.id, this.props.item);
     }, () => {
       // Failed to update
@@ -176,7 +176,7 @@ class CreditTransferEditContainer extends Component {
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      this.props.navigate(CREDIT_TRANSACTIONS.LIST);
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, this.props.item);
     });
   }
@@ -198,7 +198,7 @@ class CreditTransferEditContainer extends Component {
     this.props.updateCreditTransfer(id, data).then((response) => {
       this._saveComment(comment, isCreatingPrivilegedComment);
 
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(status.id, this.props.item);
     });
 
@@ -566,10 +566,8 @@ CreditTransferEditContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   signingAuthorityAssertions: PropTypes.shape().isRequired,
@@ -606,4 +604,4 @@ const mapDispatchToProps = dispatch => ({
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransferEditContainer));

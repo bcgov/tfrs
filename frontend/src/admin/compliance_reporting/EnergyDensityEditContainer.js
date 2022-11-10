@@ -10,10 +10,10 @@ import PropTypes from 'prop-types';
 import { energyDensities } from '../../actions/energyDensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import EnergyDensityForm from './components/EnergyDensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class EnergyDensityEditContainer extends Component {
   constructor (props) {
@@ -35,13 +35,13 @@ class EnergyDensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getEnergyDensity(this.props.match.params.id);
+    this.props.getEnergyDensity(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
     if (this.props.energyDensity.isUpdating && !props.energyDensity.isUpdating) {
       if (props.energyDensity.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Energy densities saved.');
       }
       return;
@@ -89,7 +89,7 @@ class EnergyDensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {
@@ -148,10 +148,8 @@ EnergyDensityEditContainer.propTypes = {
   }).isRequired,
   getEnergyDensity: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   updateEnergyDensity: PropTypes.func.isRequired
 };
@@ -171,4 +169,4 @@ const mapDispatchToProps = {
   updateEnergyDensity: energyDensities.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnergyDensityEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyDensityEditContainer));

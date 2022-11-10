@@ -18,12 +18,12 @@ import {
   scanDocumentAttachments,
   uploadDocument
 } from '../actions/documentUploads';
-import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import FileUploadProgress from './components/FileUploadProgress';
 import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
+import { withRouter } from '../utils/withRouter';
 
 class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
@@ -55,7 +55,7 @@ class SecureFileSubmissionEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
@@ -117,7 +117,7 @@ class SecureFileSubmissionEditContainer extends Component {
 
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(null, 'Draft deleted.');
     });
   }
@@ -338,7 +338,7 @@ class SecureFileSubmissionEditContainer extends Component {
         this.props.scanDocumentAttachments(id);
 
         this.setState({ uploadState: 'success' });
-        history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+        this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       }).catch((reason) => {
         this.setState({
@@ -435,11 +435,9 @@ SecureFileSubmissionEditContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
+  }),
   referenceData: PropTypes.shape({
     documentCategories: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,
@@ -472,4 +470,4 @@ const mapDispatchToProps = dispatch => ({
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionEditContainer));

@@ -30,10 +30,8 @@ ExclusionAssessmentContainer.defaultProps = {
 ExclusionAssessmentContainer.propTypes = {
   exclusionReport: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string
   }).isRequired,
   snapshot: PropTypes.shape()
 };

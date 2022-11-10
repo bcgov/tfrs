@@ -10,106 +10,107 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import Errors from '../../app/components/Errors';
 import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import GovernmentTransferFormDetails from './GovernmentTransferFormDetails';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
-class GovernmentTransferForm extends Component {
-  componentDidMount () {
-    this.props.getCompliancePeriods();
-  }
+const GovernmentTransferForm = props => {
+  const navigate = useNavigate()
 
-  render () {
-    return (
-      <div className="credit-transaction pvr">
-        <h1>{this.props.title}</h1>
-        <form
-          onSubmit={(event, status) =>
-            this.props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+  useEffect(() => {
+    props.getCompliancePeriods();
+  }, [])
+
+  return (
+    <div className="credit-transaction pvr">
+      <h1>{this.props.title}</h1>
+      <form
+        onSubmit={(event, status) =>
+          this.props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+      >
+        <GovernmentTransferFormDetails
+          compliancePeriods={this.props.compliancePeriods}
+          fuelSuppliers={this.props.fuelSuppliers}
+          fields={this.props.fields}
+          handleInputChange={this.props.handleInputChange}
         >
-          <GovernmentTransferFormDetails
-            compliancePeriods={this.props.compliancePeriods}
-            fuelSuppliers={this.props.fuelSuppliers}
-            fields={this.props.fields}
-            handleInputChange={this.props.handleInputChange}
-          >
-            <CreditTransferCommentButtons
-              canComment={this.props.canComment}
-              isCommenting={false}
-              addComment={this.props.addComment}
-              canCreatePrivilegedComment={this.props.canCreatePrivilegedComment}
-            />
-            <CreditTransferCommentForm
-              comment={this.props.fields.comment}
-              isCommentingOnUnsavedCreditTransfer={this.props.id === 0}
-              isCreatingPrivilegedComment={this.props.isCreatingPrivilegedComment}
-              isEditingExistingComment={this.props.fields.comment.length > 0}
-              handleCommentChanged={this.props.handleCommentChanged}
-              embedded
-            />
-          </GovernmentTransferFormDetails>
+          <CreditTransferCommentButtons
+            canComment={this.props.canComment}
+            isCommenting={false}
+            addComment={this.props.addComment}
+            canCreatePrivilegedComment={this.props.canCreatePrivilegedComment}
+          />
+          <CreditTransferCommentForm
+            comment={this.props.fields.comment}
+            isCommentingOnUnsavedCreditTransfer={this.props.id === 0}
+            isCreatingPrivilegedComment={this.props.isCreatingPrivilegedComment}
+            isEditingExistingComment={this.props.fields.comment.length > 0}
+            handleCommentChanged={this.props.handleCommentChanged}
+            embedded
+          />
+        </GovernmentTransferFormDetails>
 
-          {Object.keys(this.props.errors).length > 0 &&
-            <Errors errors={this.props.errors} />
-          }
+        {Object.keys(this.props.errors).length > 0 &&
+          <Errors errors={this.props.errors} />
+        }
 
-          {Object.keys(this.props.validationErrors).length > 0 &&
-            <Errors errors={this.props.validationErrors} />
-          }
+        {Object.keys(this.props.validationErrors).length > 0 &&
+          <Errors errors={this.props.validationErrors} />
+        }
 
-          <div className="credit-transfer-actions">
-            <div className="btn-container">
+        <div className="credit-transfer-actions">
+          <div className="btn-container">
+            <button
+              className="btn btn-default"
+              onClick={() => navigate(-1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+            </button>
+            {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
+            <button
+              className="btn btn-danger"
+              data-target="#confirmDelete"
+              data-toggle="modal"
+              type="button"
+            >
+              <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+            </button>
+            }
+            {this.props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
+            <button
+              className="btn btn-default"
+              type="submit"
+            >
+              <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
+            </button>
+            }
+            {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
+            <Tooltip
+              show={this.props.fields.comment.length === 0}
+              title={Lang.TEXT_COMMENT_REQUIRED}
+            >
               <button
-                className="btn btn-default"
-                onClick={() => history.goBack()}
-                type="button"
-              >
-                <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
-              </button>
-              {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
-              <button
-                className="btn btn-danger"
-                data-target="#confirmDelete"
+                className={`btn ${this.props.fields.comment.length === 0
+                  ? 'btn-disabled' : 'btn-primary '}`}
+                data-target="#confirmRecommend"
                 data-toggle="modal"
+                disabled={this.props.fields.comment.length === 0}
                 type="button"
               >
-                <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+                {Lang.BTN_RECOMMEND_FOR_DECISION}
               </button>
-              }
-              {this.props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
-              <button
-                className="btn btn-default"
-                type="submit"
-              >
-                <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
-              </button>
-              }
-              {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
-              <Tooltip
-                show={this.props.fields.comment.length === 0}
-                title={Lang.TEXT_COMMENT_REQUIRED}
-              >
-                <button
-                  className={`btn ${this.props.fields.comment.length === 0
-                    ? 'btn-disabled' : 'btn-primary '}`}
-                  data-target="#confirmRecommend"
-                  data-toggle="modal"
-                  disabled={this.props.fields.comment.length === 0}
-                  type="button"
-                >
-                  {Lang.BTN_RECOMMEND_FOR_DECISION}
-                </button>
-              </Tooltip>
-              }
-            </div>
+            </Tooltip>
+            }
           </div>
-        </form>
-      </div>
-    );
-  }
+        </div>
+      </form>
+    </div>
+  );
 }
 
 GovernmentTransferForm.defaultProps = {

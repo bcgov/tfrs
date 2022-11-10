@@ -4,31 +4,23 @@
  */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router';
 
 import { roles } from '../../actions/roleActions';
 import RoleDetails from '../../roles/components/RoleDetails';
 
-class RoleViewContainer extends Component {
-  componentDidMount () {
-    this.loadData(this.props.match.params.id);
-  }
+const RoleViewContainer = props => {
+  const { id } = useParams()
 
-  componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
-  }
+  useEffect(() => {
+    props.getRole(id)
+  }, [id])
 
-  loadData (id) {
-    this.props.getRole(id);
-  }
-
-  render () {
-    return (
-      <RoleDetails role={this.props.role} />
-    );
-  }
+  return (
+    <RoleDetails role={props.role} />
+  );
 }
 
 RoleViewContainer.defaultProps = {
@@ -41,10 +33,8 @@ RoleViewContainer.defaultProps = {
 
 RoleViewContainer.propTypes = {
   getRole: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   role: PropTypes.shape({
     details: PropTypes.shape({}),

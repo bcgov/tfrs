@@ -3,35 +3,30 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { roles } from '../actions/roleActions';
 import OrganizationDetails from './components/OrganizationDetails';
 import OrganizationRoles from './components/OrganizationRoles';
 
-class OrganizationRolesContainer extends Component {
-  componentDidMount () {
-    this.loadData();
-  }
+const OrganizationRolesContainer = props => {
 
-  loadData () {
-    this.props.getRoles();
-  }
+  useEffect(() => {
+    props.getRoles();
+  }, []);
 
-  render () {
-    return ([
-      <OrganizationDetails
-        key="details"
-        organization={this.props.loggedInUser.organization}
-      />,
-      <OrganizationRoles
-        data={this.props.roles}
-        key="roles"
-        loggedInUser={this.props.loggedInUser}
-      />
-    ]);
-  }
+  return ([
+    <OrganizationDetails
+      key="details"
+      organization={props.loggedInUser.organization}
+    />,
+    <OrganizationRoles
+      data={props.roles}
+      key="roles"
+      loggedInUser={props.loggedInUser}
+    />
+  ]);
 }
 
 OrganizationRolesContainer.propTypes = {

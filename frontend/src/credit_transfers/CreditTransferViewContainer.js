@@ -28,12 +28,12 @@ import {
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser, getUpdatedLoggedInUser } from '../actions/userActions';
-import history from '../app/History';
 import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
@@ -71,13 +71,13 @@ class CreditTransferViewContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.match.id);
     this.props.getSigningAuthorityAssertions();
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
+    if (prevProps.params.id !== newProps.params.id) {
+      this.loadData(newProps.params.id);
     }
   }
 
@@ -101,7 +101,7 @@ class CreditTransferViewContainer extends Component {
 
   _approveCreditTransfer (id) {
     this.props.approveCreditTransfer(id).then(() => {
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.approved.id, this.props.item);
     });
   }
@@ -230,7 +230,7 @@ class CreditTransferViewContainer extends Component {
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(status.id, item, successMessage);
     }, () => {
@@ -256,7 +256,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.deleteCreditTransfer(id).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      this.props.navigate(CREDIT_TRANSACTIONS.LIST);
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, item);
     });
   }
@@ -411,7 +411,7 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => {
           this.props.deleteCommentOnCreditTransfer(this.state.selectedId).then(() => {
             this.props.invalidateCreditTransfer();
-            this.props.getCreditTransferIfNeeded(this.props.match.params.id);
+            this.props.getCreditTransferIfNeeded(this.props.params.id);
           });
         }}
         id="confirmDeleteComment"
@@ -575,7 +575,7 @@ class CreditTransferViewContainer extends Component {
     this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       this.props.getUpdatedLoggedInUser();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
     }, () => {
@@ -733,10 +733,8 @@ CreditTransferViewContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   addCommentToCreditTransfer: PropTypes.func.isRequired,
@@ -776,4 +774,4 @@ const mapDispatchToProps = dispatch => ({
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransferViewContainer));

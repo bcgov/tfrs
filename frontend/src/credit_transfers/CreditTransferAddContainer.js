@@ -25,12 +25,12 @@ import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
-import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import COMMENTS from '../constants/permissions/Comments';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -158,7 +158,7 @@ class CreditTransferAddContainer extends Component {
 
       this.props.getUpdatedLoggedInUser();
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
 
@@ -184,7 +184,7 @@ class CreditTransferAddContainer extends Component {
       this._saveComment(response.data.id, comment, isCreatingPrivilegedComment);
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      this.props.navigate(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
 
@@ -448,4 +448,4 @@ const mapDispatchToProps = dispatch => ({
     prepareSigningAuthorityConfirmations(creditTradeId, terms)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransferAddContainer));

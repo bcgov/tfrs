@@ -30,6 +30,7 @@ export const BTN_PULL_BACK = 'Retract Recommendation';
 export const BTN_RECEIVED = 'Received';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_REJECT = 'Reject';
+export const BTN_CANCEL = 'Cancel';
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection';
@@ -66,6 +67,7 @@ export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this c
                                                   'not shared with fuel suppliers';
 export const TEXT_ADD_COMMENT_HEADING = 'Add Comment Form';
 export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment';
+export const TEXT_ADD_INITIAL_COMMENT = 'Add Comment';
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment';
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government';

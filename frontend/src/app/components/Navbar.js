@@ -8,7 +8,6 @@ import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
 import { signUserOut } from '../../actions/userActions';
-import history from '../../app/History';
 import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
@@ -19,6 +18,7 @@ import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import CONFIG from '../../config';
+import { withRouter } from '../../utils/withRouter';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -70,38 +70,39 @@ class Navbar extends Component {
       <div className="level2Navigation">
         <div className="container-fluid">
           <NavLink
-            activeClassName="active"
+            // TODO Cleanup NavLinks for router v6
+            // activeClassName="active"
             id="navbar-home"
-            isActive={(match, location) => {
-              if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
-                return true;
-              }
+            // isActive={(match, location) => {
+            //   if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
+            //     return true;
+            //   }
 
-              return false;
-            }}
+            //   return false;
+            // }}
             to={Routes.HOME}
           >
             Home
           </NavLink>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-organizations"
-            isActive={(match, location) => {
-              if (match || (location.pathname.indexOf('/users/') === 0 &&
-                location.pathname.indexOf('/admin/') < 0)) {
-                return true;
-              }
+            // isActive={(match, location) => {
+            //   if (match || (location.pathname.indexOf('/users/') === 0 &&
+            //     location.pathname.indexOf('/admin/') < 0)) {
+            //     return true;
+            //   }
 
-              return false;
-            }}
+            //   return false;
+            // }}
             to={ORGANIZATIONS.LIST}
           >
             Fuel Suppliers
           </NavLink>
           }
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-credit-transactions"
             to={CREDIT_TRANSACTIONS.LIST}
           >
@@ -112,7 +113,7 @@ class Navbar extends Component {
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           !this.props.loggedInUser.isGovernmentUser &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-secure-document-upload"
             to={SECURE_DOCUMENT_UPLOAD.LIST}
           >
@@ -123,15 +124,15 @@ class Navbar extends Component {
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-compliance-reporting"
-            isActive={(match, location) => {
-              if (location.pathname.indexOf('/compliance_reporting') >= 0) {
-                return true;
-              }
+            // isActive={(match, location) => {
+            //   if (location.pathname.indexOf('/compliance_reporting') >= 0) {
+            //     return true;
+            //   }
 
-              return false;
-            }}
+            //   return false;
+            // }}
             to={COMPLIANCE_REPORTING.LIST}
           >
             Compliance &amp; Exclusion Reports
@@ -142,7 +143,7 @@ class Navbar extends Component {
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           this.props.loggedInUser.isGovernmentUser &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-secure-document-upload"
             to={SECURE_DOCUMENT_UPLOAD.LIST}
           >
@@ -152,7 +153,7 @@ class Navbar extends Component {
           {CONFIG.FUEL_CODES.ENABLED &&
           this.props.loggedInUser.isGovernmentUser &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             id="navbar-fuel-codes"
             to={FUEL_CODES.LIST}
           >
@@ -161,16 +162,16 @@ class Navbar extends Component {
           }
           {!this.props.loggedInUser.isGovernmentUser &&
           <NavLink
-            activeClassName="active"
+            // activeClassName="active"
             className="navbar-item"
             id="navbar-credit-transactions"
-            isActive={(match, location) => {
-              if (match || location.pathname.indexOf('/users/') === 0) {
-                return true;
-              }
+            // isActive={(match, location) => {
+            //   if (match || location.pathname.indexOf('/users/') === 0) {
+            //     return true;
+            //   }
 
-              return false;
-            }}
+            //   return false;
+            // }}
             key="company-details"
             to={ORGANIZATIONS.MINE}
           >
@@ -195,7 +196,7 @@ class Navbar extends Component {
                   <MenuItem
                     className="dropdown-hidden-item"
                     onClick={() => {
-                      history.push(Routes.NOTIFICATIONS.LIST);
+                      this.props.navigate(Routes.NOTIFICATIONS.LIST);
                     }}
                   >
                     <FontAwesomeIcon icon="bell" /> Notifications
@@ -204,7 +205,7 @@ class Navbar extends Component {
                     }
                   </MenuItem>
                   <MenuItem onClick={() => {
-                    history.push(Routes.SETTINGS);
+                    this.props.navigate(Routes.SETTINGS);
                   }}
                   >
                     <FontAwesomeIcon icon="cog" /> Settings
@@ -227,7 +228,7 @@ class Navbar extends Component {
               </div>
             }
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               className="navbar-item"
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS.LIST}
@@ -265,15 +266,15 @@ class Navbar extends Component {
         <ul className="nav navbar-nav">
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="navbar-home"
-              isActive={(match, location) => {
-                if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
-                  return true;
-                }
+              // isActive={(match, location) => {
+              //   if ((match && match.isExact) || (location.pathname.indexOf('/dashboard') === 0)) {
+              //     return true;
+              //   }
 
-                return false;
-              }}
+              //   return false;
+              // }}
               to={Routes.HOME}
             >
               Home
@@ -283,13 +284,13 @@ class Navbar extends Component {
           <li>
             <NavLink
               id="collapse-navbar-organization"
-              isActive={(match, location) => {
-                if (match || location.pathname.indexOf('/users/') === 0) {
-                  return true;
-                }
+              // isActive={(match, location) => {
+              //   if (match || location.pathname.indexOf('/users/') === 0) {
+              //     return true;
+              //   }
 
-                return false;
-              }}
+              //   return false;
+              // }}
               to={ORGANIZATIONS.LIST}
             >
               Fuel Suppliers
@@ -298,7 +299,7 @@ class Navbar extends Component {
           }
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
@@ -311,7 +312,7 @@ class Navbar extends Component {
           !this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="collapse-navbar-secure-document-upload"
               to={SECURE_DOCUMENT_UPLOAD.LIST}
             >
@@ -324,7 +325,7 @@ class Navbar extends Component {
           this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW) &&
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="collapse-navbar-compliance-reporting"
               to={COMPLIANCE_REPORTING.LIST}
             >
@@ -338,7 +339,7 @@ class Navbar extends Component {
           this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="collapse-navbar-secure-document-upload"
               to={SECURE_DOCUMENT_UPLOAD.LIST}
             >
@@ -350,7 +351,7 @@ class Navbar extends Component {
           this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="navbar-fuel-codes"
               to={FUEL_CODES.LIST}
             >
@@ -362,13 +363,13 @@ class Navbar extends Component {
           <li key="company-details">
             <NavLink
               id="navbar-credit-transactions"
-              isActive={(match, location) => {
-                if (match || location.pathname.indexOf('/users/') === 0) {
-                  return true;
-                }
+              // isActive={(match, location) => {
+              //   if (match || location.pathname.indexOf('/users/') === 0) {
+              //     return true;
+              //   }
 
-                return false;
-              }}
+              //   return false;
+              // }}
               to={ORGANIZATIONS.MINE}
             >
               Organization Details
@@ -377,7 +378,7 @@ class Navbar extends Component {
           }
           <li>
             <NavLink
-              activeClassName="active"
+              // activeClassName="active"
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS.LIST}
             >
@@ -539,6 +540,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}), mapDispatchToProps, null, {
-  pure: false
-})(Navbar);
+}), mapDispatchToProps, null, {})(withRouter(Navbar));

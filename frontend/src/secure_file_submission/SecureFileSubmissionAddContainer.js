@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import {
   addDocumentUpload,
   clearDocumentUploadError,
@@ -22,6 +21,7 @@ import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import FileUploadProgress from './components/FileUploadProgress';
 import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
+import { withRouter } from '../utils/withRouter';
 
 class SecureFileSubmissionAddContainer extends Component {
   constructor (props) {
@@ -34,7 +34,7 @@ class SecureFileSubmissionAddContainer extends Component {
         comment: '',
         compliancePeriod: { id: 0, description: '' },
         documentType: {
-          id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
+          id: props.params.type ? parseInt(props.params.type, 10) : 1
         },
         files: [],
         milestone: '',
@@ -251,7 +251,7 @@ class SecureFileSubmissionAddContainer extends Component {
         this.props.scanDocumentAttachments(id);
 
         this.setState({ uploadState: 'success' });
-        history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+        this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       }).catch((reason) => {
         this.setState({
@@ -317,11 +317,9 @@ SecureFileSubmissionAddContainer.propTypes = {
   errors: PropTypes.shape({
     title: PropTypes.arrayOf(PropTypes.string)
   }),
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string
-    })
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    type: PropTypes.string
   }).isRequired,
   referenceData: PropTypes.shape({
     documentCategories: PropTypes.arrayOf(PropTypes.shape),
@@ -351,4 +349,4 @@ const mapDispatchToProps = dispatch => ({
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionAddContainer));

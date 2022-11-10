@@ -10,8 +10,11 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import history from '../../../app/History';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
+import { useNavigate } from 'react-router';
 
 const EnergyDensitiesTable = (props) => {
+  const navigate = useNavigate()
+  
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -76,8 +79,7 @@ const EnergyDensitiesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = CREDIT_CALCULATIONS.ENERGY_DENSITIES_DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              navigate(viewUrl);
             },
             className: 'clickable'
           };
