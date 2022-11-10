@@ -15,12 +15,12 @@ import {
   getLinkableCreditTransactions
 } from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
-import history from '../app/History';
 import SecureFileSubmissionDetails from './components/SecureFileSubmissionDetails';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import * as Lang from '../constants/langEnUs';
 import toastr from '../utils/toastr';
 import LinkedCreditTransferSelection from './components/LinkedCreditTransferSelection';
+import { withRouter } from '../utils/withRouter';
 
 class SecureFileSubmissionDetailContainer extends Component {
   constructor (props) {
@@ -50,7 +50,7 @@ class SecureFileSubmissionDetailContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   loadData (id) {
@@ -82,7 +82,7 @@ class SecureFileSubmissionDetailContainer extends Component {
   }
 
   _addLink () {
-    this.props.fetchCreditTransfers(this.props.match.params.id);
+    this.props.fetchCreditTransfers(this.props.params.id);
   }
 
   _cancelComment () {
@@ -94,7 +94,7 @@ class SecureFileSubmissionDetailContainer extends Component {
 
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(null, 'Draft deleted.');
     });
   }
@@ -160,7 +160,7 @@ class SecureFileSubmissionDetailContainer extends Component {
     }
 
     this.props.partialUpdateDocument(id, data).then((response) => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(status.status);
     });
 
@@ -376,11 +376,9 @@ SecureFileSubmissionDetailContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
+  }),
   partialUpdateDocument: PropTypes.func.isRequired,
   referenceData: PropTypes.shape({
     documentStatuses: PropTypes.arrayOf(PropTypes.shape),
@@ -431,4 +429,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SecureFileSubmissionDetailContainer);
+)(withRouter(SecureFileSubmissionDetailContainer));

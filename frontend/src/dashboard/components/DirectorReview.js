@@ -2,18 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import CONFIG from '../../config';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
+import { useNavigate } from 'react-router';
 
 const DirectorReview = (props) => {
   const {
     isFetching: fetchingComplianceReports,
     items: complianceReports
   } = props.complianceReports;
+
+  const navigate = useNavigate()
 
   const {
     isFetching: fetchingCreditTransfers,
@@ -109,7 +111,7 @@ const DirectorReview = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >
@@ -136,7 +138,7 @@ const DirectorReview = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -162,7 +164,7 @@ const DirectorReview = (props) => {
                   value: 'Manager'
                 }], 'compliance-reporting');
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST);
               }}
               type="button"
             >
@@ -187,7 +189,7 @@ const DirectorReview = (props) => {
                   value: 'Reviewed'
                 }], 'credit-transfers');
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST);
               }}
               type="button"
             >

@@ -5,15 +5,16 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
-import history from '../../app/History';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SecureFileSubmissionTable from './SecureFileSubmissionTable';
+import { useNavigate } from 'react-router';
 
 const SecureFileSubmissionsPage = (props) => {
   const { isFetching, items } = props.documentUploads;
   const isEmpty = items.length === 0;
+  const navigate = useNavigate()
 
   return (
     <div className="page_secure_document_upload">
@@ -32,7 +33,7 @@ const SecureFileSubmissionsPage = (props) => {
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
-              onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
+              onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
             >
               <FontAwesomeIcon icon="plus-circle" /> New Part 3 Award
             </button>
@@ -48,7 +49,7 @@ const SecureFileSubmissionsPage = (props) => {
                 const evidence = part3Category.types.find(category => (category.theType === 'Evidence'));
                 const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', evidence.id);
 
-                history.push(route);
+                navigate(route);
               }}
               type="button"
             >
@@ -67,7 +68,7 @@ const SecureFileSubmissionsPage = (props) => {
                         onClick={() => {
                           const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', t.id);
 
-                          history.push(route);
+                          navigate(route);
                         }}
                         type="button"
                       >

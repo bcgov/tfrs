@@ -10,10 +10,10 @@ import Loading from '../../app/components/Loading';
 
 import { deleteFuelCode, getFuelCode } from '../../actions/fuelCodes';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import FuelCodeDetails from './components/FuelCodeDetails';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeDetailContainer extends Component {
   constructor (props) {
@@ -24,7 +24,7 @@ class FuelCodeDetailContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id);
   }
 
   loadData (id) {
@@ -37,7 +37,7 @@ class FuelCodeDetailContainer extends Component {
     const { id } = this.props.fuelCode.item;
 
     this.props.deleteFuelCode(id).then(() => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess('Cancelled');
     });
 
@@ -96,10 +96,8 @@ FuelCodeDetailContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   referenceData: PropTypes.shape({
     fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape)
@@ -127,4 +125,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeDetailContainer);
+)(withRouter(FuelCodeDetailContainer));

@@ -1,49 +1,76 @@
----
+apiVersion: template.openshift.io/v1
 kind: Template
-apiVersion: v1
 metadata:
-  name: clamav
-  creationTimestamp:
+  creationTimestamp: null
+  name: frontend
+parameters:
+  - name: GIT_URL
+    displayName:
+    description: tfrs repo
+    value: https://github.com/bcgov/tfrs.git
+    required: true
+  - name: GIT_REF
+    displayName:
+    description: tfrs branch name of the pr
+    value: pipeline-2.0.0
+    required: true    
 objects:
-  - kind: ImageStream
-    apiVersion: v1
-    metadata:
-      name: clamav
-      generation: 1
-      creationTimestamp:
-    spec:
-      lookupPolicy:
-        local: false
-    status:
-      dockerImageRepository: ""
-  - kind: BuildConfig
-    apiVersion: v1
-    metadata:
-      name: clamav
-      creationTimestamp:
-      labels:
-        app: clamav
-        name: clamav
-        template: clamav
-    spec:
-      triggers: []
-      runPolicy: Serial
-      source:
-        type: Git
-        git:
-          ref: master
-          uri: https://github.com/bcgov/docker-clamav.git
-      strategy:
-        type: Docker
-        dockerStrategy:
-          pullSecret:
-            name: docker-artifactory-secret
-      output:
-        to:
-          kind: ImageStreamTag
-          name: clamav:latest
-      resources: {}
-      postCommit: {}
-      nodeSelector: {}
-    status:
-      lastVersion: 0
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the clamav image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: tfrs-clamav
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""    
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: tfrs-clamav
+    creationTimestamp:
+    annotations:
+      description: Defines how to build the clamav image in docker
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: tfrs-clamav:0.105_base
+    resources:
+        limits:
+            cpu: 1500m
+            memory: 1300Mi
+        requests:
+            cpu: 750m
+            memory: 650Mi
+    source:
+      contextDir: openshift-v4/templates/clamav
+      git:
+        uri: ${GIT_URL}
+        ref: ${GIT_REF}
+      type: Git
+    strategy:
+      dockerStrategy:
+        type: Docker      
+        env:
+          - name: ARTIFACTORY_USER
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: password
+        forcePull: true
+        noCache: true
+        imageOptimizationPolicy: SkipLayers
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange    

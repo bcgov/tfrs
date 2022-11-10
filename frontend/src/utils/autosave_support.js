@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import Loading from '../app/components/Loading';
 import { loadAutosaveData, saveAutosaveData, clearAutosaveData } from '../actions/autosaveActions';
@@ -145,7 +144,7 @@ function autosaved (config) {
         )
       });
 
-    return withRouter(connect(null, mapDispatchToProps)(AutosaveSupport));
+    return connect(null, mapDispatchToProps)(AutosaveSupport);
   };
 }
 

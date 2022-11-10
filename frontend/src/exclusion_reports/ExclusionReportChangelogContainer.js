@@ -31,10 +31,8 @@ ExclusionReportChangelogContainer.defaultProps = {
 ExclusionReportChangelogContainer.propTypes = {
   exclusionReport: PropTypes.shape().isRequired,
   loading: PropTypes.bool.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string
   }).isRequired,
   snapshot: PropTypes.shape()
 };

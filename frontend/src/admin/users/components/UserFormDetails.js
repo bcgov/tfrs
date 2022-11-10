@@ -4,10 +4,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import Autosuggest from 'react-bootstrap-autosuggest';
+// import Autosuggest from 'react-bootstrap-autosuggest';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 import CheckBox from '../../../app/components/CheckBox';
-import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
+// import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
 
 const UserFormDetails = props => (
   <div className="user-details">
@@ -186,26 +187,59 @@ const UserFormDetails = props => (
           <div className="form-group">
             <label htmlFor="organization" id="organization">Fuel Supplier:
               {props.loggedInUser.isGovernmentUser &&
-              document.location.pathname.indexOf('/users/add') === 0 &&
-                <Autosuggest
-                  datalist={props.fuelSuppliers}
-                  datalistOnly
-                  itemAdapter={new FuelSupplierAdapter()}
-                  itemValuePropName="name"
-                  name="organization"
-                  onChange={(selected) => {
-                    props.handleInputChange({
-                      target: {
-                        name: 'organization',
-                        value: selected
-                      }
-                    });
-                  }}
-                  placeholder="Select an Organization..."
-                  type="text"
-                  value={props.fields.organization}
-                  valueIsItem
-                />
+                document.location.pathname.indexOf('/users/add') === 0 &&
+                <>
+                  <ReactSearchAutocomplete
+                    autoComplete="on"
+                    // getItemValue={this.props.getItemValue}
+                    // inputProps={this.props.inputProps}
+                    name="organization"
+                    placeholder="Select an Organization..."
+                    items={props.fuelSuppliers}
+                    onChange={(selected) => {
+                      props.handleInputChange({
+                        target: {
+                          name: 'organization',
+                          value: selected
+                        }
+                      });
+                    }}
+                    renderItem={(item) => (<div>{item.name}</div>)}
+                    value={props.fields.organization}
+                    // renderMenu={this.props.renderMenu}
+                    // ref={(input) => { this.props.handleRef && this.props.handleRef(input); }}
+                    // renderInput={props => (
+                    //   <input
+                    //     type="text"
+                    //     onKeyPress={this._onKeyPress}
+                    //     className="form-control"
+                    //     {...props}
+                    //   />
+                    // )}
+                    // selectOnBlur={this.props.selectOnBlur}
+                    wrapperStyle={{}}
+                  />
+
+                  {/* <Autosuggest
+                    datalist={props.fuelSuppliers}
+                    datalistOnly
+                    itemAdapter={new FuelSupplierAdapter()}
+                    itemValuePropName="name"
+                    name="organization"
+                    onChange={(selected) => {
+                      props.handleInputChange({
+                        target: {
+                          name: 'organization',
+                          value: selected
+                        }
+                      });
+                    }}
+                    placeholder="Select an Organization..."
+                    type="text"
+                    value={props.fields.organization}
+                    valueIsItem
+                  /> */}
+                </>
               }
               {props.fields.organization &&
               props.loggedInUser.isGovernmentUser &&

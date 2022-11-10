@@ -9,10 +9,10 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
 
-import history from '../../app/History';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
+import { withRouter } from '../../utils/withRouter';
 
 class ComplianceReportingTable extends Component {
   render () {
@@ -178,7 +178,7 @@ class ComplianceReportingTable extends Component {
                     .replace(':tab', tab);
                 }
 
-                history.push(viewUrl);
+                this.props.navigate(viewUrl);
               },
               className: `clickable ${stripeClass}`
             };
@@ -210,4 +210,4 @@ ComplianceReportingTable.propTypes = {
   }).isRequired
 };
 
-export default ComplianceReportingTable;
+export default withRouter(ComplianceReportingTable);

@@ -10,10 +10,10 @@ import PropTypes from 'prop-types';
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import CarbonIntensityForm from './components/CarbonIntensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class DefaultCarbonIntensityEditContainer extends Component {
   constructor (props) {
@@ -34,13 +34,13 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getDefaultCarbonIntensity(this.props.match.params.id);
+    this.props.getDefaultCarbonIntensity(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
     if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
       if (props.defaultCarbonIntensity.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Default Carbon Intensity saved.');
       }
       return;
@@ -89,7 +89,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {
@@ -149,10 +149,8 @@ DefaultCarbonIntensityEditContainer.propTypes = {
   }).isRequired,
   getDefaultCarbonIntensity: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   updateDefaultCarbonIntensity: PropTypes.func.isRequired
 };
@@ -172,4 +170,4 @@ const mapDispatchToProps = {
   updateDefaultCarbonIntensity: defaultCarbonIntensities.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultCarbonIntensityEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DefaultCarbonIntensityEditContainer));

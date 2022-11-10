@@ -12,12 +12,12 @@ import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import { complianceReporting } from '../actions/complianceReporting';
 import { exclusionReports } from '../actions/exclusionReports';
 import CallableModal from '../app/components/CallableModal';
-import history from '../app/History';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
 import CONFIG from '../config';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -44,7 +44,7 @@ class ComplianceReportingContainer extends Component {
   componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
-        history.push(COMPLIANCE_REPORTING.EDIT
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
           .replace(':tab', 'intro'));
         toastr.complianceReporting('Created');
@@ -55,7 +55,7 @@ class ComplianceReportingContainer extends Component {
 
     if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
       if (nextProps.exclusionReports.success) {
-        history.push(EXCLUSION_REPORTS.EDIT
+        this.props.navigate(EXCLUSION_REPORTS.EDIT
           .replace(':id', nextProps.exclusionReports.item.id)
           .replace(':tab', 'intro'));
         toastr.exclusionReports('Created');
@@ -231,4 +231,4 @@ const mapDispatchToProps = {
   getComplianceReports: complianceReporting.find
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer));

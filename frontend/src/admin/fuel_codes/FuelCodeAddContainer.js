@@ -9,13 +9,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { addFuelCode, filterFuelCodes, getLatestFuelCode } from '../../actions/fuelCodes';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CallableModal from '../../app/components/CallableModal';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class FuelCodeAddContainer extends Component {
   constructor (props) {
@@ -188,7 +188,7 @@ class FuelCodeAddContainer extends Component {
     });
 
     this.props.addFuelCode(data).then((response) => {
-      history.push(FUEL_CODES.LIST);
+      this.props.navigate(FUEL_CODES.LIST);
       toastr.fuelCodeSuccess(status);
     });
 
@@ -311,7 +311,7 @@ const mapDispatchToProps = dispatch => ({
   getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
-export default (connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeAddContainer));
+)(withRouter(FuelCodeAddContainer));

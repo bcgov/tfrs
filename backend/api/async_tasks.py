@@ -8,7 +8,7 @@ from api.models.Role import Role
 from api.models.User import User
 from api.notifications.notification_types import NotificationType
 from api.notifications.notifications import AMQPNotificationService
-from tfrs.celery import app as celery_app
+from tfrs.celery_config import app as celery_app
 
 
 def async_send_notifications(notifications: List):

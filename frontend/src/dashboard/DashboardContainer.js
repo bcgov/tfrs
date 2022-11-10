@@ -14,7 +14,6 @@ import { exclusionReports } from '../actions/exclusionReports';
 import { getFuelCodes } from '../actions/fuelCodes';
 import { getOrganization, getOrganizations } from '../actions/organizationActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
-import history from '../app/History';
 import DashboardPage from './components/DashboardPage';
 import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';
@@ -25,6 +24,7 @@ import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
 import CONFIG from '../config';
 import toastr from '../utils/toastr';
+import { withRouter } from '../utils/withRouter';
 
 class DashboardContainer extends Component {
   constructor (props) {
@@ -58,7 +58,7 @@ class DashboardContainer extends Component {
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
-        history.push(COMPLIANCE_REPORTING.EDIT
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
           .replace(':tab', 'intro'));
         toastr.complianceReporting('Created');
@@ -67,7 +67,7 @@ class DashboardContainer extends Component {
 
     if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
       if (nextProps.exclusionReports.success) {
-        history.push(EXCLUSION_REPORTS.EDIT
+        this.props.navigate(EXCLUSION_REPORTS.EDIT
           .replace(':id', nextProps.exclusionReports.item.id)
           .replace(':tab', 'intro'));
         toastr.exclusionReports('Created');
@@ -329,4 +329,4 @@ const mapStateToProps = (state, ownProps) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)((DashboardContainer));
+)((withRouter(DashboardContainer)));

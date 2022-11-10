@@ -7,16 +7,17 @@ import { connect } from 'react-redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
-import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import USERS from '../../constants/routes/Users';
 import FuelSupplierTabs from './FuelSupplierTabs';
 import OrganizationMembersTable from './OrganizationMembersTable';
+import { useNavigate } from 'react-router';
 
 const OrganizationMembers = (props) => {
   const { isFetching, users } = props.members;
+  const navigate = useNavigate()
 
   return (
     <div className="organization-members">
@@ -41,7 +42,7 @@ const OrganizationMembers = (props) => {
                   addUrl = ORGANIZATIONS.ADD_USER.replace(':organizationId', props.organizationId);
                 }
 
-                history.push(addUrl);
+                navigate(addUrl);
               }}
               type="button"
             >

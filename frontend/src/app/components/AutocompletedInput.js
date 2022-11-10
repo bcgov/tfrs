@@ -1,4 +1,5 @@
-import Autocomplete from 'react-autocomplete';
+// import Autocomplete from 'react-autocomplete';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -72,7 +73,7 @@ class AutocompletedInput extends Component {
 
   render () {
     return (
-      <Autocomplete
+      <ReactSearchAutocomplete
         autoComplete="off"
         getItemValue={this.props.getItemValue}
         inputProps={this.props.inputProps}

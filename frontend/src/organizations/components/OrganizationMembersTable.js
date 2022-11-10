@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 
-import history from '../../app/History';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import ReactTable from '../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const OrganizationMembersTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => `${item.firstName} ${item.lastName}`,
     className: 'col-name',
@@ -75,7 +76,7 @@ const OrganizationMembersTable = (props) => {
                 viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.original.id);
               }
 
-              history.push(viewUrl);
+              navigate(viewUrl);
             },
             className: 'clickable'
           };

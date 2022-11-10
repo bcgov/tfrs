@@ -11,10 +11,12 @@ import FuelCodesTable from './FuelCodesTable';
 
 import { download } from '../../../utils/functions';
 import * as Routes from '../../../constants/routes';
+import { useNavigate } from 'react-router';
 
 const FuelCodesPage = (props) => {
   const { isFetching, items } = props.fuelCodes;
   const isEmpty = items.length === 0;
+  const navigate = useNavigate()
 
   return (
     <div className="page-fuel-codes">
@@ -27,8 +29,7 @@ const FuelCodesPage = (props) => {
             className="btn btn-primary"
             onClick={() => {
               const route = FUEL_CODES.ADD.replace(':type', '');
-
-              history.push(route);
+              navigate(route);
             }}
             type="button"
           >

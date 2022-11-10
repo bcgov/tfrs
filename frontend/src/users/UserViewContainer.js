@@ -9,21 +9,22 @@ import { bindActionCreators } from 'redux';
 
 import { getUser, getUserByUsername } from '../actions/userActions';
 import UserDetails from './components/UserDetails';
+import { withRouter } from '../utils/withRouter';
 
 class UserViewContainer extends Component {
   componentDidMount () {
-    if (this.props.match.params.id) {
-      this.loadByID(this.props.match.params.id);
-    } else if (this.props.match.params.username) {
-      this.loadByUsername(this.props.match.params.username);
+    if (this.props.params.id) {
+      this.loadByID(this.props.params.id);
+    } else if (this.props.params.username) {
+      this.loadByUsername(this.props.params.username);
     }
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadByID(newProps.match.params.id);
-    } else if (prevProps.match.params.username !== newProps.match.params.username) {
-      this.loadByUsername(newProps.match.params.username);
+    if (prevProps.params.id !== newProps.params.id) {
+      this.loadByID(newProps.params.id);
+    } else if (prevProps.params.username !== newProps.params.username) {
+      this.loadByUsername(newProps.params.username);
     }
   }
 
@@ -59,11 +60,9 @@ UserViewContainer.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string
   }).isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({}),
@@ -86,4 +85,4 @@ const mapDispatchToProps = dispatch => ({
   getUserByUsername: bindActionCreators(getUserByUsername, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserViewContainer));

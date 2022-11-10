@@ -8,7 +8,7 @@ const user = process.env.RABBITMQ_USER || 'guest';
 const password = process.env.RABBITMQ_PASSWORD || 'guest';
 const amqpHost = process.env.RABBITMQ_HOST || 'localhost';
 const amqpPort = process.env.RABBITMQ_PORT || 5672;
-const jwksURI = process.env.KEYCLOAK_CERTS_URL || null;
+const jwksURI = process.env.KEYCLOAK_CERTS_URL || null; // TODO jwt certs updated for new auth flow
 
 const winston = require('winston');
 
@@ -51,6 +51,7 @@ const setup = (io) => {
     socket.on('action', (action) => {
       switch (action.type) {
         case 'socketio/AUTHENTICATE':
+          console.log("Authing socket")
           jwt.verify(action.token, getSigningKey, {}, (err, decoded) => {
             if (err) {
               log.error(`error verifying token ${err}`);

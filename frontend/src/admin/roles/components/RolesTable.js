@@ -8,8 +8,10 @@ import 'react-table/react-table.css';
 import { ROLES } from '../../../constants/routes/Admin';
 import history from '../../../app/History';
 import ReactTable from '../../../app/components/StateSavingReactTable';
+import { useNavigate } from 'react-router';
 
 const RolesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -46,7 +48,7 @@ const RolesTable = (props) => {
           return {
             onClick: (e) => {
               const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              history.push(viewUrl);
+              navigate(viewUrl);
             },
             className: 'clickable'
           };

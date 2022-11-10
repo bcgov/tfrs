@@ -10,10 +10,10 @@ import PropTypes from 'prop-types';
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import EnergyEffectivenessRatioForm from './components/EnergyEffectivenessRatioForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
+import { withRouter } from '../../utils/withRouter';
 
 class EnergyEffectivenessRatioEditContainer extends Component {
   constructor (props) {
@@ -37,14 +37,14 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getEnergyEffectivenessRatio(this.props.match.params.id);
+    this.props.getEnergyEffectivenessRatio(this.props.params.id);
   }
 
   componentWillReceiveProps (props) {
     if (this.props.energyEffectivenessRatio.isUpdating &&
       !props.energyEffectivenessRatio.isUpdating) {
       if (this.props.energyEffectivenessRatio.success) {
-        history.push(CREDIT_CALCULATIONS.LIST);
+        this.props.navigate(CREDIT_CALCULATIONS.LIST)
         toastr.fuelCodeSuccess(null, 'Energy effectiveness ratios saved.');
       }
 
@@ -97,7 +97,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.match.params;
+    const { id } = this.props.params;
 
     // API data structure
     const data = {
@@ -159,10 +159,8 @@ EnergyEffectivenessRatioEditContainer.propTypes = {
   }).isRequired,
   getEnergyEffectivenessRatio: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   updateEnergyEffectivenessRatio: PropTypes.func.isRequired
 };
@@ -182,4 +180,4 @@ const mapDispatchToProps = {
   updateEnergyEffectivenessRatio: energyEffectivenessRatios.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnergyEffectivenessRatioEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyEffectivenessRatioEditContainer));

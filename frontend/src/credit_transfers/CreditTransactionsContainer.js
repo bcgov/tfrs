@@ -14,6 +14,7 @@ import { getLoggedInUser } from '../actions/userActions';
 import saveTableState from '../actions/stateSavingReactTableActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import { withRouter } from '../utils/withRouter';
 
 class CreditTransactionsContainer extends Component {
   constructor (props) {
@@ -32,7 +33,7 @@ class CreditTransactionsContainer extends Component {
 
   clearUrl () {
     // Update the URL so it doesn't show the URL with the highlight
-    if (this.props.match.params.id) {
+    if (this.props.params.id) {
       window.history.replaceState({}, 'Credit Transactions', CREDIT_TRANSACTIONS.LIST);
     }
   }
@@ -109,7 +110,7 @@ class CreditTransactionsContainer extends Component {
     return (
       <CreditTransactionsPage
         creditTransfers={this._getCreditTransfers()}
-        highlight={this.props.match.params.id}
+        highlight={this.props.params.id}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
         organizations={this._getUniqueOrganizations()}
@@ -143,11 +144,9 @@ CreditTransactionsContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    })
-  }),
+  params: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired,
   organization: PropTypes.shape({
     name: PropTypes.string,
     organizationBalance: PropTypes.shape({
@@ -177,4 +176,4 @@ const mapDispatchToProps = dispatch => ({
   saveTableState: bindActionCreators(saveTableState, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreditTransactionsContainer));
