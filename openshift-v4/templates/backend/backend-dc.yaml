@@ -137,118 +137,118 @@ objects:
           name: ${NAME}-backend${SUFFIX}
       spec:
         containers:
-          - name: tfrs-app
-            image: ''
+        - name: tfrs-app
+          image: ''
           ports:
-            - containerPort: 8080
-              protocol: TCP
+          - containerPort: 8080
+            protocol: TCP
           env:
-            - name: KEYCLOAK_SA_BASEURL
-              value: ${KEYCLOAK_SA_BASEURL}
-            - name: KEYCLOAK_SA_CLIENT_ID
-              value: ${KEYCLOAK_SA_CLIENT_ID}
-            - name: KEYCLOAK_SA_REALM
-              value: ${KEYCLOAK_SA_REALM}
-            - name: KEYCLOAK_AUDIENCE
-              value: ${KEYCLOAK_AUDIENCE}
-            - name: KEYCLOAK_CERTS_URL
-              value: ${KEYCLOAK_CERTS_URL}
-            - name: KEYCLOAK_CLIENT_ID
-              value: ${KEYCLOAK_CLIENT_ID}
-            - name: KEYCLOAK_ENABLED
-              value: 'true'
-            - name: KEYCLOAK_ISSUER
-              value: ${KEYCLOAK_ISSUER}
-            - name: KEYCLOAK_REALM
-              value: ${KEYCLOAK_REALM}
-            - name: KEYCLOAK_SA_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-sa-client-secret
-                  key: KEYCLOAK_SA_CLIENT_SECRET
-            - name: EMAIL_FROM_ADDRESS
-              value: donotreply@gov.bc.ca
-            - name: EMAIL_SENDING_ENABLED
-              value: 'true'
-            - name: MINIO_BUCKET_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-object-storage
-                  key: BUCKEY
-            - name: SMTP_SERVER_HOST
-              value: apps.smtp.gov.bc.ca
-            - name: SMTP_SERVER_PORT
-              value: 2500
-            - name: DATABASE_SERVICE_NAME
-              value: tfrs-spilo
-            - name: DATABASE_ENGINE
-              value: postgresql
-            - name: DATABASE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-patroni-app
-                  key: app-db-name
-            - name: DATABASE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-patroni-app
-                  key: app-db-username
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-patroni-app
-                  key: app-db-password
-            - name: POSTGRESQL_SERVICE_HOST
-              value: tfrs-spilo.${NAMESPACE}.svc.cluster.local
-            - name: POSTGRESQL_SERVICE_PORT
-              value: 5432
-            - name: RABBITMQ_USER
-              value: tfrs
-            - name: RABBITMQ_VHOST
-              value: "tfrs-vhost"
-            - name: RABBITMQ_HOST
-              value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
-            - name: RABBITMQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-rabbitmq-app
-                  key: TFRS_USER_PASWORD
-            - name: RABBITMQ_PORT
-              value: 5672
-            - name: MINIO_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-object-storage
-                  key: ENDPOINT
-            - name: MINIO_USE_SSL
-              value: 'true'
-            - name: DOCUMENTS_API_ENABLED
-              value: 'true'
-            - name: MINIO_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-object-storage
-                  key: USER_ID
-            - name: MINIO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: tfrs-object-storage
-                  key: KEY
-            - name: FUEL_CODES_API_ENABLED
-              value: 'true'
-            - name: CREDIT_CALCULATION_API_ENABLED
-              value: 'true'
-            - name: COMPLIANCE_REPORTING_API_ENABLED
-              value: 'true'
-            - name: EXCLUSION_REPORTS_API_ENABLED
-              value: 'true'
-            - name: DJANGO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: django-secret-key
-                  key: DJANGO_SECRET_KEY
-            - name: APP_CONFIG
-              value: "/opt/app-root/src/gunicorn.cfg"
+          - name: KEYCLOAK_SA_BASEURL
+            value: ${KEYCLOAK_SA_BASEURL}
+          - name: KEYCLOAK_SA_CLIENT_ID
+            value: ${KEYCLOAK_SA_CLIENT_ID}
+          - name: KEYCLOAK_SA_REALM
+            value: ${KEYCLOAK_SA_REALM}
+          - name: KEYCLOAK_AUDIENCE
+            value: ${KEYCLOAK_AUDIENCE}
+          - name: KEYCLOAK_CERTS_URL
+            value: ${KEYCLOAK_CERTS_URL}
+          - name: KEYCLOAK_CLIENT_ID
+            value: ${KEYCLOAK_CLIENT_ID}
+          - name: KEYCLOAK_ENABLED
+            value: 'true'
+          - name: KEYCLOAK_ISSUER
+            value: ${KEYCLOAK_ISSUER}
+          - name: KEYCLOAK_REALM
+            value: ${KEYCLOAK_REALM}
+          - name: KEYCLOAK_SA_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-sa-client-secret
+                key: KEYCLOAK_SA_CLIENT_SECRET
+          - name: EMAIL_FROM_ADDRESS
+            value: donotreply@gov.bc.ca
+          - name: EMAIL_SENDING_ENABLED
+            value: 'true'
+          - name: MINIO_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: BUCKET
+          - name: SMTP_SERVER_HOST
+            value: apps.smtp.gov.bc.ca
+          - name: SMTP_SERVER_PORT
+            value: '2500'
+          - name: DATABASE_SERVICE_NAME
+            value: tfrs-spilo
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-patroni-app
+                key: app-db-name
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-patroni-app
+                key: app-db-username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-patroni-app
+                key: app-db-password
+          - name: POSTGRESQL_SERVICE_HOST
+            value: tfrs-spilo.${NAMESPACE}.svc.cluster.local
+          - name: POSTGRESQL_SERVICE_PORT
+            value: '5432'
+          - name: RABBITMQ_USER
+            value: tfrs
+          - name: RABBITMQ_VHOST
+            value: "tfrs-vhost"
+          - name: RABBITMQ_HOST
+            value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: TFRS_USER_PASWORD
+          - name: RABBITMQ_PORT
+            value: '5672'
+          - name: MINIO_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: ENDPOINT
+          - name: MINIO_USE_SSL
+            value: 'true'
+          - name: DOCUMENTS_API_ENABLED
+            value: 'true'
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: USER_ID
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: KEY
+          - name: FUEL_CODES_API_ENABLED
+            value: 'true'
+          - name: CREDIT_CALCULATION_API_ENABLED
+            value: 'true'
+          - name: COMPLIANCE_REPORTING_API_ENABLED
+            value: 'true'
+          - name: EXCLUSION_REPORTS_API_ENABLED
+            value: 'true'
+          - name: DJANGO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: django-secret-key
+                key: DJANGO_SECRET_KEY
+          - name: APP_CONFIG
+            value: "/opt/app-root/src/gunicorn.cfg"
           resources:
             limits:
               cpu: "${CPU_LIMIT}"
