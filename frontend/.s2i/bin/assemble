@@ -88,7 +88,7 @@ npm install -d
 # run webpack
 # create public/build folder under /opt/app-root/src
 # /opt/app-root/src/public/build has bundle.js and tokenRenewl.js
-npm run production
+npm run build
 
 # Fix source directory permissions
 fix-permissions ./
