@@ -1,0 +1,24 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: tfrs-object-storage
+parameters:
+- name: OBJECT_STORAGE_USER_ID
+  description: Object Storage User ID
+  required: true
+- name: OBJECT_STORAGE_ENDPOINT
+  description: endpoint
+  required: true 
+- name: OBJECT_STORAGE_KEY
+  description: Object Storage key
+  required: true   
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: tfrs-object-storage
+  stringData:
+    OBJECT_STORAGE_USER_ID: ${OBJECT_STORAGE_USER_ID}
+    OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT}
+    OBJECT_STORAGE_KEY: ${OBJECT_STORAGE_KEY}
+  type: Opaque
