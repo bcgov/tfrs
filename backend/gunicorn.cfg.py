@@ -46,3 +46,5 @@
 workers = 2
 timeout = 60
 graceful_timeout = 60
+host = 127.0.0.1
+port = 8080
