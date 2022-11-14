@@ -43,4 +43,6 @@
 #       A positive integer. Generally set in the 1-5 seconds range.
 #
 
-workers = 4
+workers = 2
+timeout = 60
+graceful_timeout = 60
