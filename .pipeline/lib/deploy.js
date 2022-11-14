@@ -38,7 +38,7 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-
+/*
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
     'param': {
@@ -164,7 +164,7 @@ module.exports = settings => {
       }
     }))
   }
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,
