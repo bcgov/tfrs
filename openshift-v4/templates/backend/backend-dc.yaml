@@ -248,7 +248,7 @@ objects:
                 name: django-secret-key
                 key: DJANGO_SECRET_KEY
           - name: APP_CONFIG
-            value: "/opt/app-root/src/gunicorn.cfg"
+            value: "/opt/app-root/src/gunicorn.cfg.py"
           resources:
             limits:
               cpu: "${CPU_LIMIT}"
