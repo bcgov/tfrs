@@ -13,8 +13,42 @@ import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
 import ComplianceReportStatus from './ComplianceReportStatus';
 import { withRouter } from '../../utils/withRouter';
+import { calculatePages} from '../../utils/functions'
 
 class ComplianceReportingTable extends Component {
+
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      page: 1,
+      pageSize: 10,
+      filters: []
+    }
+
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
+    this.handleFiltersChange = this.handleFiltersChange.bind(this);
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters) {
+      this.props.getComplianceReports({page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters})
+    }
+  }
+
+  handlePageChange (page) {
+    this.setState({page: page});
+  }
+
+  handlePageSizeChange (pageSize) {
+    this.setState({pageSize: pageSize});
+  }
+
+  handleFiltersChange (filters) {
+    this.setState({filters: filters});
+  }
+
   render () {
     const customDefaults = {
       ...ReactTableDefaults.column
@@ -98,12 +132,6 @@ class ComplianceReportingTable extends Component {
       Header: 'Last Updated On',
       id: 'updateTimestamp',
       minWidth: 95,
-      filterMethod: (filter, row) => {
-        const displayedValue = row.updateTimestamp
-          ? moment(row.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z') : '-';
-
-        return displayedValue.includes(filter.value);
-      },
       Cell: row => (
         <span>
           {row.original.sortDate
@@ -113,20 +141,6 @@ class ComplianceReportingTable extends Component {
       )
     }];
 
-    const filterMethod = (filter, row, column) => {
-      const id = filter.pivotId || filter.id;
-
-      return row[id] !== undefined ? String(row[id])
-        .toLowerCase()
-        .includes(filter.value.toLowerCase()) : true;
-    };
-
-    const findExpanded = data => (
-      data.map((row, i) => (
-        { i: true }
-      ))
-    );
-
     const filterable = true;
 
     return (
@@ -135,12 +149,6 @@ class ComplianceReportingTable extends Component {
         className="searchable complianceReportListTable"
         columns={columns}
         data={this.props.items}
-        defaultFilterMethod={filterMethod}
-        defaultPageSize={10}
-        defaultSorted={[{
-          id: 'id',
-          desc: true
-        }]}
         loading={this.props.isFetching}
         filterable={filterable}
         getTrProps={(state, row) => {
@@ -186,7 +194,23 @@ class ComplianceReportingTable extends Component {
 
           return {};
         }}
+        manual
+        pages={calculatePages(this.props.itemsCount, this.state.pageSize)}
+        page={this.state.page - 1}
+        pageSize={this.state.pageSize}
         pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+        onPageChange={(pageIndex) => {
+          this.handlePageChange(pageIndex + 1);
+        }}
+        onPageSizeChange={(pageSize, pageIndex) => {
+          this.handlePageChange(1);
+          this.handlePageSizeChange(pageSize);
+        }}
+        filtered={this.state.filters}
+        onFilteredChange={(filtered, column) => {
+          this.handlePageChange(1);
+          this.handleFiltersChange(filtered);
+        }}
       />
     );
   }
@@ -203,11 +227,13 @@ ComplianceReportingTable.propTypes = {
     status: PropTypes.object,
     type: PropTypes.string
   })).isRequired,
+  itemsCount: PropTypes.number.isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  getComplianceReports: PropTypes.func.isRequired
 };
 
 export default withRouter(ComplianceReportingTable);
