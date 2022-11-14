@@ -38,6 +38,15 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
+  
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'BACKEND_HOST':phases[phase].backendHost
+    }
+  }))  
+
 /*
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
@@ -137,13 +146,6 @@ module.exports = settings => {
       }
     }))  
 
-    objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
-      'param': {
-        'NAME': phases[phase].name,
-        'SUFFIX': phases[phase].suffix,
-        'BACKEND_HOST':phases[phase].backendHost
-      }
-    }))  
   }
 
   //only deploy schemaspy for test and prod
