@@ -1,7 +1,7 @@
 ## Before running Helm
 * Create secret tfrs-patroni-admin
 * Create secret tfrs-patroni-app
-* Create Object Storage secret for database continuous backup, tfrs-db-backup-s3 (name to tbd)
+* Create Object Storage secret for database continuous backup, tfrs-object-storage
 
 ## Heml command
 helm install -n 0ab226-dev -f ./values-dev.yaml tfrs-spilo .
