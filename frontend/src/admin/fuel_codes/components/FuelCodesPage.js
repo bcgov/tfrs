@@ -5,7 +5,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { FUEL_CODES } from '../../../constants/routes/Admin'
 import Loading from '../../../app/components/Loading'
 import * as Lang from '../../../constants/langEnUs'
-import history from '../../../app/History'
 import PERMISSIONS_FUEL_CODES from '../../../constants/permissions/FuelCodes'
 import FuelCodesTable from './FuelCodesTable'
 

@@ -3,7 +3,7 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types'
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router'
 

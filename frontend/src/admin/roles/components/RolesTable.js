@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import 'react-table/react-table.css'
 
 import { ROLES } from '../../../constants/routes/Admin'
-import history from '../../../app/History'
 import ReactTable from '../../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
 

@@ -3,8 +3,6 @@ import axios from 'axios'
 import ActionTypes from '../constants/actionTypes/Users'
 import ReducerTypes from '../constants/reducerTypes/Users'
 import * as Routes from '../constants/routes'
-// import userManager from '../store/oidc-usermanager';
-import CONFIG from '../config'
 import { getReferenceData } from './referenceDataActions'
 import { logout } from './keycloakActions'
 
@@ -199,5 +197,5 @@ const clearUserErrorRequest = () => ({
 
 export {
   getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername,
-  signUserOut, clearUsersRequestError, getUpdatedLoggedInUser
+  signUserOut, clearUsersRequestError, getUpdatedLoggedInUser, signUserOutAction
 }

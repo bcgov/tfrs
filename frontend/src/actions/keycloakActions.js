@@ -1,8 +1,6 @@
-import axios from 'axios'
 import CONFIG from '../config'
 
 import ActionTypes from '../constants/actionTypes/Keycloak'
-import * as Routes from '../constants/routes'
 import store from '../store/store'
 
 /*

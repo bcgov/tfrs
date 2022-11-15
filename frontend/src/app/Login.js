@@ -3,7 +3,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import CONFIG from '../config'
 import CallableModal from '../app/components/CallableModal'
 import * as Lang from '../constants/langEnUs'
 import { login } from '../actions/keycloakActions'

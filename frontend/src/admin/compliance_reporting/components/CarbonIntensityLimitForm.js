@@ -6,10 +6,10 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import CarbonIntensityLimitFormDetails from './CarbonIntensityLimitFormDetails'
-import history from '../../../app/History'
 import * as Lang from '../../../constants/langEnUs'
 import Errors from '../../../app/components/Errors'
 import Tooltip from '../../../app/components/Tooltip'
+import { withRouter } from '../../../utils/withRouter'
 
 class CarbonIntensityLimitForm extends Component {
   _getValidationMessages () {
@@ -48,7 +48,7 @@ class CarbonIntensityLimitForm extends Component {
             <div className="btn-container">
               <button
                 className="btn btn-default"
-                onClick={() => history.goBack()}
+                onClick={() => this.props.navigate(-1)}
                 type="button"
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -96,4 +96,4 @@ CarbonIntensityLimitForm.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-export default CarbonIntensityLimitForm
+export default withRouter(CarbonIntensityLimitForm)

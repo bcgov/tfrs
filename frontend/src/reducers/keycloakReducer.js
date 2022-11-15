@@ -9,7 +9,7 @@ const keycloakReducer = (state = {
   errors: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.INIT_KEYCLOAK:
+    case ActionTypes.INIT_KEYCLOAK: {
       const { keycloak, authenticated } = action.payload
       return {
         ...state,
@@ -17,6 +17,7 @@ const keycloakReducer = (state = {
         authenticated,
         errors: {}
       }
+    }
     case ActionTypes.INIT_KEYCLOAK_ERROR:
       return {
         ...state,

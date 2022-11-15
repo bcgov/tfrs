@@ -176,5 +176,5 @@ const unmountNotificationsTable = () => (dispatch) => {
 export {
   getNotifications, getNotificationsCount, getSubscriptions,
   updateNotifications, updateSubscriptions, mountNotificationsTable,
-  unmountNotificationsTable
+  unmountNotificationsTable, updateNotificationsSuccess
 }

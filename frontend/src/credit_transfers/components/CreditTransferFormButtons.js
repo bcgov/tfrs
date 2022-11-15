@@ -38,7 +38,7 @@ const CreditTransferFormButtons = props => {
         >
           <button
             className="btn btn-default"
-            show={props.isCommenting}
+            disabled={props.isCommenting}
             onClick={() => navigate(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
             type="button"
           >

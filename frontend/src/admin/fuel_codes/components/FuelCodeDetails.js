@@ -5,7 +5,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History'
 import * as Lang from '../../../constants/langEnUs'
 import { FUEL_CODES } from '../../../constants/routes/Admin'
 import { useNavigate } from 'react-router'
@@ -178,7 +177,7 @@ const FuelCodeDetails = props => {
       <div className="btn-container">
         <button
           className="btn btn-default"
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           type="button"
         >
           <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}

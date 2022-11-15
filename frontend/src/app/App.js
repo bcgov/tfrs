@@ -10,7 +10,6 @@ import Footer from './components/Footer'
 import SessionTimer from './components/SessionTimer'
 
 import Loading from './components/Loading'
-import CONFIG from '../config'
 import Login from './Login'
 import Router from './router'
 

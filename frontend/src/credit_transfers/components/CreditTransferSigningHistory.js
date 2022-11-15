@@ -31,17 +31,6 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderApproved (history) {
-    let roleDisplay = null
-
-    if (history.userRole) {
-      roleDisplay = history.userRole.description
-
-      if (history.userRole.name === 'GovDeputyDirector' ||
-          history.userRole.name === 'GovDirector') {
-        roleDisplay = roleDisplay.replace('Government ', '')
-      }
-    }
-
     // if "recorded" status was found, this means this credit trade
     // was from the historical data entry
     // show "the Director" at all times

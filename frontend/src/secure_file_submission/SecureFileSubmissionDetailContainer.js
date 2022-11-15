@@ -63,7 +63,7 @@ class SecureFileSubmissionDetailContainer extends Component {
     const attachments = newProps.documentUpload.item.attachments
     if (attachments) {
       attachments.forEach(attachment => {
-        if (attachment.securityScanStatus == 'FAIL') {
+        if (attachment.securityScanStatus === 'FAIL') {
           hasFailures = true
         }
       })

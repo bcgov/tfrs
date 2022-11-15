@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import 'react-table/react-table.css'
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory'
-import ScheduleDeltas, { SummaryDelta } from './ScheduleDeltas'
+import ScheduleDeltas from './ScheduleDeltas'
 import SnapshotDisplay from './SnapshotDisplay'
 
 const Delta = (props) => {
@@ -96,7 +96,7 @@ class ReportHistory extends Component {
     let currentSnapshotComputed = false
     if (!currentSnapshot) {
       currentSnapshotComputed = true
-      currentSnapshot = this.props.recomputedTotals || this.props.complianceReport
+      currentSnapshot = (this.props.recomputedTotals) || (this.props.complianceReport)
     }
 
     let title
@@ -125,12 +125,12 @@ class ReportHistory extends Component {
         <div className="history-content panel">
           <div className="panel-body">
             <h1>{title}</h1>
-            {(String(activeReport) === '-1') &&
+            {((String(activeReport) === '-1') &&
             <Current
               snapshot={currentSnapshot}
               computedWarning={currentSnapshotComputed}
               complianceReport={this.props.complianceReport}
-            /> || deltas.map((d) => {
+            />) || (deltas.map((d) => {
               if (String(activeReport) === String(d.ancestorId)) {
                 return (
                   <Delta
@@ -142,7 +142,7 @@ class ReportHistory extends Component {
                 )
               }
               return null
-            })
+            }))
             }
           </div>
         </div>

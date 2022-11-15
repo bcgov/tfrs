@@ -4,9 +4,7 @@ const persistTargetPathReducer = (state = {
   target: '/'
 }, action) => {
   switch (action.type) {
-    case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
-      console.log('LOGIN_KEYCLOAK_USER_SUCCESS')
-      console.log(action)
+    case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS: {
       const pathname = window.location.pathname
 
       if (!pathname.match(/.*?authCallback/)) {
@@ -17,7 +15,7 @@ const persistTargetPathReducer = (state = {
       }
 
       return state
-
+    }
     default:
       return state
   }

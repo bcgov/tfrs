@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import Loading from '../../app/components/Loading'
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import { useNavigate } from 'react-router'
 
 const ComplianceReports = (props) => {
   const { isFetching, items } = props.complianceReports

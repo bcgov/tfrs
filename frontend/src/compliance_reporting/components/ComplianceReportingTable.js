@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import { ReactTableDefaults } from 'react-table'
 import 'react-table/react-table.css'
 
 import ReactTable from '../../app/components/StateSavingReactTable'
@@ -16,10 +15,6 @@ import { withRouter } from '../../utils/withRouter'
 
 class ComplianceReportingTable extends Component {
   render () {
-    const customDefaults = {
-      ...ReactTableDefaults.column
-    }
-
     const columns = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -124,12 +119,6 @@ class ComplianceReportingTable extends Component {
           .includes(filter.value.toLowerCase())
         : true
     }
-
-    const findExpanded = data => (
-      data.map((row, i) => (
-        { i: true }
-      ))
-    )
 
     const filterable = true
 

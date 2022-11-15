@@ -8,7 +8,6 @@ import 'react-table/react-table.css'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import ReactTable from '../../../app/components/StateSavingReactTable'
-import history from '../../../app/History'
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
 import { useNavigate } from 'react-router'
 

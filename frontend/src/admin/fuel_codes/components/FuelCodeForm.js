@@ -6,11 +6,11 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import FuelCodeFormDetails from './FuelCodeFormDetails'
-import history from '../../../app/History'
 import * as Lang from '../../../constants/langEnUs'
 import CallableModal from '../../../app/components/CallableModal'
 import Errors from '../../../app/components/Errors'
 import Tooltip from '../../../app/components/Tooltip'
+import { withRouter } from '../../../utils/withRouter'
 
 class FuelCodeForm extends Component {
   constructor (props) {
@@ -177,7 +177,7 @@ class FuelCodeForm extends Component {
             <div className="btn-container">
               <button
                 className="btn btn-default"
-                onClick={() => history.goBack()}
+                onClick={() => this.props.navigate(-1)}
                 type="button"
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -285,4 +285,4 @@ FuelCodeForm.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-export default FuelCodeForm
+export default withRouter(FuelCodeForm)

@@ -148,7 +148,7 @@ class ComplianceReportingService {
 
     const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod)
     if (!cached) {
-      throw { msg: 'you must seed the cache for this compliancePeriod first' }
+      throw new Error('you must seed the cache for this compliancePeriod first')
     }
     const response = cached.data
 
@@ -303,12 +303,12 @@ class ComplianceReportingService {
   }
 
   static computeSummaryValues (context, sourceValues) {
-    const {
-      compliancePeriod,
-      availableScheduleDFuels,
-      scheduleA,
-      scheduleB
-    } = context
+    // const {
+    //   compliancePeriod,
+    //   availableScheduleDFuels,
+    //   scheduleA,
+    //   scheduleB
+    // } = context
 
     const {
       line6,

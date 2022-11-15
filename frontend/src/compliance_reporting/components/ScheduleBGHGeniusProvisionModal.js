@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import Modal from '../../app/components/Modal'
 
 const RoundedNumericSpan = props => (
-  (props.value &&
-    <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span> ||
+  ((props.value &&
+    <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>) ||
     <span><i>pending</i></span>
   )
 )
