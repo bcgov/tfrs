@@ -6,10 +6,14 @@ COPY ./ ./
 RUN npm install -g npm@9.1.1 \
     && npm install --omit=dev \
     && npm install -g webpack webpack-cli
-RUN find / -name webpack
-RUN npm link webpack 
-RUN npm link webpack-cli
-RUN npm run build
+#RUN find / -name webpack
+#/usr/local/bin/webpack
+#/usr/local/lib/node_modules/webpack
+#/usr/src/app/node_modules/.bin/webpack
+#/usr/src/app/node_modules/webpack
+#RUN npm link webpack 
+#RUN npm link webpack-cli
+RUN yes | npm run build
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
 FROM artifacts.developer.gov.bc.ca/docker-remote/bitnami/nginx:1.21.6
