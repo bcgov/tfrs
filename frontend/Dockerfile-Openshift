@@ -5,7 +5,9 @@ WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install -g npm@9.1.1 \
     && npm install --omit=dev \
-    && npm install -D webpack webpack-cli \
+    && npm install -g webpack webpack-cli \
+    && npm link webpack \
+    && npm link webpack-cli \
     && yes | npm run build
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
