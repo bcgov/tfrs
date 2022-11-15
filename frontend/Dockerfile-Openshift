@@ -6,6 +6,7 @@ COPY ./ ./
 RUN npm install -g npm@9.1.1 \
     && npm install --omit=dev \
     && npm install -g webpack webpack-cli
+RUN find / -name webpack
 RUN npm link webpack 
 RUN npm link webpack-cli
 RUN npm run build
