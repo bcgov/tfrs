@@ -41,7 +41,7 @@ class ComplianceReportingContainer extends Component {
     this.loadData()
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
         this.props.navigate(COMPLIANCE_REPORTING.EDIT

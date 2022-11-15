@@ -124,7 +124,7 @@ class ScheduleCContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { grid } = this.state
 
     if (nextProps.snapshot && this.props.readOnly) {

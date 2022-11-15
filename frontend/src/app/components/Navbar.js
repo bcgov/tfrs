@@ -41,7 +41,7 @@ class Navbar extends Component {
     window.addEventListener('resize', () => Navbar.updateContainerPadding())
   }
 
-  componentWillReceiveProps (newProps) {
+  UNSAFE_componentWillReceiveProps (newProps) {
     if (newProps.unreadNotificationsCount != null) {
       let unreadCount = 0
 

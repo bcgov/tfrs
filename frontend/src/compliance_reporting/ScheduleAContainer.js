@@ -119,7 +119,7 @@ class ScheduleAContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { grid } = this.state
 
     let source = nextProps.scheduleState.scheduleA

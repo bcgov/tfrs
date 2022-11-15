@@ -14,7 +14,7 @@ class UserSettings extends Component {
     }
   }
 
-  componentWillReceiveProps (newProps) {
+  UNSAFE_componentWillReceiveProps (newProps) {
     if (newProps.unreadNotificationsCount != null) {
       let unreadCount = 0
 

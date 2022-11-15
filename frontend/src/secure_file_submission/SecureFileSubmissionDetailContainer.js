@@ -57,7 +57,7 @@ class SecureFileSubmissionDetailContainer extends Component {
     this.props.getDocumentUpload(id)
   }
 
-  componentWillReceiveProps (newProps) {
+  UNSAFE_componentWillReceiveProps (newProps) {
     let hasFailures = false
 
     const attachments = newProps.documentUpload.item.attachments

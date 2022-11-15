@@ -57,7 +57,7 @@ class HistoricalDataEntryContainer extends Component {
     this.props.getFuelSuppliers()
   }
 
-  componentWillReceiveProps (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     const fieldState = { ...this.state.fields }
 
     this.setState({

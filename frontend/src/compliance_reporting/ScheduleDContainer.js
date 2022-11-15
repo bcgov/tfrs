@@ -65,7 +65,7 @@ class ScheduleDContainer extends Component {
     if (this.props.scheduleState.scheduleD || (this.props.snapshot && this.props.readOnly)) {
       // it's probably more elegant to use getDerivedStateFromProps,
       // but it is defined static and we need to access instance methods to set the headers
-      this.componentWillReceiveProps(this.props)
+      this.UNSAFE_componentWillReceiveProps(this.props)
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleD) {
       this._addSheet()
@@ -74,7 +74,7 @@ class ScheduleDContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { sheets, loaded } = this.state
 
     let source = nextProps.scheduleState.scheduleD

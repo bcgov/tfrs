@@ -204,7 +204,7 @@ class ScheduleSummaryContainer extends Component {
 
   componentDidMount () {
     if (this.props.complianceReport.hasSnapshot && this.props.snapshot && this.props.readOnly) {
-      this.componentWillReceiveProps(this.props)
+      this.UNSAFE_componentWillReceiveProps(this.props)
     } else {
       if (this.props.complianceReport && !this.props.complianceReport.hasSnapshot) {
         this.props.recomputeRequest()
@@ -216,7 +216,7 @@ class ScheduleSummaryContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { diesel, gasoline } = this.state
     let { part3, penalty, showModal } = this.state
 

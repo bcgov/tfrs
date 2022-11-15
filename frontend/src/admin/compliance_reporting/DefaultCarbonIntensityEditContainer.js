@@ -37,7 +37,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
     this.props.getDefaultCarbonIntensity(this.props.params.id)
   }
 
-  componentWillReceiveProps (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
       if (props.defaultCarbonIntensity.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)

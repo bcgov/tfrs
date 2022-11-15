@@ -51,7 +51,7 @@ class DashboardContainer extends Component {
     this._getOrganizations()
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     if (nextProps.unreadNotificationsCount) {
       this._getUnreadNotificationCount(nextProps)
     }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 class SessionTimer extends Component {
-  componentWillReceiveProps (newProps) {
+  UNSAFE_componentWillReceiveProps (newProps) {
     const oldProps = this.props
 
     if (!oldProps.warning && newProps.warning) {

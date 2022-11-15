@@ -335,7 +335,7 @@ class ScheduleBContainer extends Component {
   componentDidMount () {
     if (this.props.scheduleState.scheduleB || (this.props.snapshot && this.props.readOnly)) {
       // we already have the state. don't load it. just render it.
-      this.componentWillReceiveProps(this.props)
+      this.UNSAFE_componentWillReceiveProps(this.props)
     } else if (!this.props.complianceReport.scheduleB) {
       this._addRow(5)
     } else {
@@ -343,7 +343,7 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     let { grid } = this.state
 
     if (nextProps.snapshot && this.props.readOnly) {
