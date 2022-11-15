@@ -8,22 +8,22 @@ const sessionTimeout = (state = {
         ...state,
         warning: false,
         expired: false
-      };
+      }
     case 'SESSION_TIMEOUT_WARNING':
       return {
         ...state,
         warning: true,
         expired: false
-      };
+      }
     case 'SESSION_TIMEOUT_EXPIRED':
       return {
         ...state,
         warning: true,
         expired: true
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default sessionTimeout;
+export default sessionTimeout

@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const Errors = props => (
   <div className="alert alert-danger error-alert" role="alert">
@@ -19,11 +19,11 @@ const Errors = props => (
       ))
     }
   </div>
-);
+)
 
 Errors.defaultProps = {
   title: 'Error!'
-};
+}
 
 Errors.propTypes = {
   errors: PropTypes.oneOfType([
@@ -31,6 +31,6 @@ Errors.propTypes = {
     PropTypes.string
   ]).isRequired,
   title: PropTypes.string
-};
+}
 
-export default Errors;
+export default Errors

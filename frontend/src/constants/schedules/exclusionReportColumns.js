@@ -8,7 +8,7 @@ const EXCLUSION_AGREEMENT = {
   UNITS: 6,
   QUANTITY_NOT_SOLD: 7,
   NOT_SOLD_UNITS: 8
-};
+}
 
 const EXCLUSION_AGREEMENT_ERROR_KEYS = {
   fuelType: 2,
@@ -17,9 +17,9 @@ const EXCLUSION_AGREEMENT_ERROR_KEYS = {
   quantityNotSold: 7,
   transactionPartner: 3,
   transactionType: 1
-};
+}
 
 export {
   EXCLUSION_AGREEMENT,
   EXCLUSION_AGREEMENT_ERROR_KEYS
-};
+}

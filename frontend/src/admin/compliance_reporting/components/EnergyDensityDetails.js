@@ -1,18 +1,18 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyDensityDetails = props => {
   const navigate = useNavigate()
-  
+
   return (
     <div className="page-compliance-reporting-details">
       <h1>{props.title}</h1>
@@ -75,9 +75,9 @@ const EnergyDensityDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-EnergyDensityDetails.defaultProps = {};
+EnergyDensityDetails.defaultProps = {}
 
 EnergyDensityDetails.propTypes = {
   item: PropTypes.shape({
@@ -91,6 +91,6 @@ EnergyDensityDetails.propTypes = {
     unitOfMeasure: PropTypes.string
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default EnergyDensityDetails;
+export default EnergyDensityDetails

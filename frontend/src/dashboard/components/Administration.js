@@ -1,13 +1,13 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Link } from 'react-router-dom'
 
 import {
   CREDIT_TRANSACTIONS_HISTORY,
   HISTORICAL_DATA_ENTRY,
   USERS
-} from '../../constants/routes/Admin';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
+} from '../../constants/routes/Admin'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
 
 const Administration = props => (
   <div className="dashboard-fieldset administration">
@@ -51,12 +51,12 @@ const Administration = props => (
       </div>
     </div>
   </div>
-);
+)
 
 Administration.defaultProps = {
-};
+}
 
 Administration.propTypes = {
-};
+}
 
-export default Administration;
+export default Administration

@@ -3,26 +3,26 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tab, Tabs } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tab, Tabs } from 'react-bootstrap'
 
-import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
-import Loading from '../../app/components/Loading';
-import CarbonIntensityDetails from './components/CarbonIntensityDetails';
-import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import { useParams } from 'react-router';
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities'
+import Loading from '../../app/components/Loading'
+import CarbonIntensityDetails from './components/CarbonIntensityDetails'
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import { useParams } from 'react-router'
 
 const PetroleumCarbonIntensityDetailContainer = props => {
-  const { id } = useParams();
+  const { id } = useParams()
 
   useEffect(() => {
-    props.getPetroleumCarbonIntensity(id);
-  }, [id]);
+    props.getPetroleumCarbonIntensity(id)
+  }, [id])
 
-  const { item, isFetching, success } = props.petroleumCarbonIntensity;
+  const { item, isFetching, success } = props.petroleumCarbonIntensity
 
   if (success && !isFetching && item) {
     return (
@@ -44,14 +44,14 @@ const PetroleumCarbonIntensityDetailContainer = props => {
           />
         </Tab>
       </Tabs>
-    );
+    )
   }
 
-  return <Loading />;
+  return <Loading />
 }
 
 PetroleumCarbonIntensityDetailContainer.defaultProps = {
-};
+}
 
 PetroleumCarbonIntensityDetailContainer.propTypes = {
   getPetroleumCarbonIntensity: PropTypes.func.isRequired,
@@ -61,7 +61,7 @@ PetroleumCarbonIntensityDetailContainer.propTypes = {
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
@@ -70,13 +70,13 @@ const mapStateToProps = state => ({
     item: state.rootReducer.petroleumCarbonIntensities.item,
     success: state.rootReducer.petroleumCarbonIntensities.success
   }
-});
+})
 
 const mapDispatchToProps = {
   getPetroleumCarbonIntensity: petroleumCarbonIntensities.get
-};
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PetroleumCarbonIntensityDetailContainer);
+)(PetroleumCarbonIntensityDetailContainer)

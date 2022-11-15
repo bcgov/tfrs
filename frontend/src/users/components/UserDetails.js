@@ -1,18 +1,18 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_USERS from '../../constants/permissions/Users';
-import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
-import USERS from '../../constants/routes/Users';
+import Loading from '../../app/components/Loading'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_USERS from '../../constants/permissions/Users'
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin'
+import USERS from '../../constants/routes/Users'
 
-import UserHistoryTable from './UserHistoryTable';
-import { useNavigate } from 'react-router';
+import UserHistoryTable from './UserHistoryTable'
+import { useNavigate } from 'react-router'
 
 const UserDetails = props => {
   const navigate = useNavigate()
@@ -27,13 +27,13 @@ const UserDetails = props => {
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  let editUrl = USERS.EDIT.replace(':id', props.user.details.id);
+                  let editUrl = USERS.EDIT.replace(':id', props.user.details.id)
 
                   if (document.location.pathname.indexOf('/admin/') >= 0) {
-                    editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id);
+                    editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id)
                   }
 
-                  navigate(editUrl);
+                  navigate(editUrl)
                 }}
                 type="button"
                 id="edit-user"
@@ -91,7 +91,7 @@ const UserDetails = props => {
       </div>
     </div>
   )
-};
+}
 
 UserDetails.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -117,6 +117,6 @@ UserDetails.propTypes = {
     errors: PropTypes.shape({}),
     isFetching: PropTypes.bool.isRequired
   }).isRequired
-};
+}
 
-export default UserDetails;
+export default UserDetails

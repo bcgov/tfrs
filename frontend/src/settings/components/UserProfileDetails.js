@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import UserForm from '../../admin/users/components/UserForm';
-import SettingsTabs from './SettingsTabs';
+import UserForm from '../../admin/users/components/UserForm'
+import SettingsTabs from './SettingsTabs'
 
 const UserProfileDetails = props => (
   <div className="page_user_profile">
@@ -20,11 +20,11 @@ const UserProfileDetails = props => (
       title="User Profile"
     />
   </div>
-);
+)
 
 UserProfileDetails.defaultProps = {
   errors: null
-};
+}
 
 UserProfileDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -38,6 +38,6 @@ UserProfileDetails.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired
-};
+}
 
-export default UserProfileDetails;
+export default UserProfileDetails

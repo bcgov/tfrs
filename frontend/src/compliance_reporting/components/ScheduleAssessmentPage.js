@@ -1,27 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
-import { formatNumeric } from '../../utils/functions';
+import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory'
+import { formatNumeric } from '../../utils/functions'
 
 const ScheduleAssessmentPage = (props) => {
-  const { status, isSupplemental } = props.complianceReport;
+  const { status, isSupplemental } = props.complianceReport
 
-  let originalCredits = 0;
-  let supplementalCredits = 0;
+  let originalCredits = 0
+  let supplementalCredits = 0
 
   // try to search for the original credits from the credit transactions
   if (props.complianceReport.creditTransactions) {
     props.complianceReport.creditTransactions.forEach((transaction) => {
       if (!transaction.supplemental) {
-        const { credits } = transaction;
+        const { credits } = transaction
         if (transaction.type === 'Credit Reduction') {
-          originalCredits = credits * -1;
+          originalCredits = credits * -1
         } else if (transaction.type === 'Credit Validation') {
-          originalCredits = credits;
+          originalCredits = credits
         }
       }
-    });
+    })
   }
 
   if ([status.analystStatus, status.managerStatus].indexOf('Recommended') >= 0 &&
@@ -32,67 +32,67 @@ const ScheduleAssessmentPage = (props) => {
     // check if the report was supposed to be a debit or credit
       originalCredits = Number(props.snapshot.summary.lines[25]) > 0
         ? Number(props.snapshot.summary.lines[25])
-        : props.snapshot.summary.lines[26] * -1;
+        : props.snapshot.summary.lines[26] * -1
     } else {
       supplementalCredits = Number(props.snapshot.summary.lines[25]) > 0
         ? Number(props.snapshot.summary.lines[25])
-        : props.snapshot.summary.lines[26] * -1;
+        : props.snapshot.summary.lines[26] * -1
     }
   } else if (status.directorStatus === 'Accepted' && isSupplemental) {
     supplementalCredits = Number(props.snapshot.summary.lines[25]) > 0
       ? Number(props.snapshot.summary.lines[25])
-      : props.snapshot.summary.lines[26] * -1;
+      : props.snapshot.summary.lines[26] * -1
   } else if (status.directorStatus === 'Rejected' && isSupplemental) {
-    supplementalCredits = originalCredits;
+    supplementalCredits = originalCredits
 
     if (props.complianceReport.creditTransactions) {
       props.complianceReport.creditTransactions.forEach((transaction) => {
         if (transaction.supplemental) {
-          const { credits } = transaction;
+          const { credits } = transaction
           if (transaction.type === 'Credit Reduction') {
-            supplementalCredits -= credits;
+            supplementalCredits -= credits
           } else if (transaction.type === 'Credit Validation') {
-            supplementalCredits += credits;
+            supplementalCredits += credits
           }
         }
-      });
+      })
     }
   } else if (status.fuelSupplierStatus === 'Submitted' &&
     (status.directorStatus === 'Unreviewed' || !status.directorStatus) && isSupplemental) {
-    supplementalCredits = originalCredits;
+    supplementalCredits = originalCredits
 
     if (props.complianceReport.creditTransactions) {
       props.complianceReport.creditTransactions.forEach((transaction) => {
         if (transaction.supplemental) {
-          const { credits } = transaction;
+          const { credits } = transaction
           if (transaction.type === 'Credit Reduction') {
-            supplementalCredits -= credits;
+            supplementalCredits -= credits
           } else if (transaction.type === 'Credit Validation') {
-            supplementalCredits += credits;
+            supplementalCredits += credits
           }
         }
-      });
+      })
     }
   }
 
-  let credits = 0;
+  let credits = 0
 
   // if the new report shows a negative value, that means we have to reverse the
   // previous credits (assuming they were getting credits before)
   if (supplementalCredits < 0 && originalCredits > 0) {
-    credits = originalCredits * -1;
-    credits += supplementalCredits;
+    credits = originalCredits * -1
+    credits += supplementalCredits
 
   // this is for the reverse situation where they originally had a debit, but
   // are now getting credits
   } else if (supplementalCredits > 0 && originalCredits < 0) {
-    credits = supplementalCredits;
-    credits += originalCredits * -1;
+    credits = supplementalCredits
+    credits += originalCredits * -1
 
   // if they were previously had a debit, but still had a debit after
   // or if they were in a credit and was still in a credit after
   } else {
-    credits = supplementalCredits - originalCredits;
+    credits = supplementalCredits - originalCredits
   }
 
   return (
@@ -112,7 +112,7 @@ const ScheduleAssessmentPage = (props) => {
       {props.part2Compliant !== 'Did not supply Part 2 fuel' &&
       <p>
         Based on the information submitted,
-        <strong> {props.snapshot.organization.name} </strong> {` was `}
+        <strong> {props.snapshot.organization.name} </strong> {' was '}
         {props.part2Compliant === 'Non-compliant' &&
         <strong> not </strong>
         }
@@ -137,7 +137,7 @@ const ScheduleAssessmentPage = (props) => {
 
       <p>
         Based on the information submitted,
-        <strong> {props.snapshot.organization.name} </strong> {` was `}
+        <strong> {props.snapshot.organization.name} </strong> {' was '}
         {props.part3Compliant === 'Non-compliant' &&
         <strong> not </strong>
         }
@@ -166,9 +166,9 @@ const ScheduleAssessmentPage = (props) => {
         <p>
           <strong> {props.snapshot.organization.name} </strong> applied
           {` ${formatNumeric(Number(originalCredits) * -1, 0)} `}
-          {` credit(s) to `}
+          {' credit(s) to '}
           {Number(props.snapshot.summary.lines[27]) < 0 && ' partially '}
-          {` offset a net debit balance in the `}
+          {' offset a net debit balance in the '}
           {` ${props.snapshot.compliancePeriod.description} `} compliance period.
         </p>
       )}
@@ -202,7 +202,7 @@ const ScheduleAssessmentPage = (props) => {
         There were
         <strong>
           {` ${formatNumeric(Number(props.snapshot.summary.lines[27]) * -1, 0)} `}
-          {` outstanding debits `}
+          {' outstanding debits '}
         </strong>
         subject to an administrative penalty under section 10 of the
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>.
@@ -217,10 +217,10 @@ const ScheduleAssessmentPage = (props) => {
         Requirements Regulation.
       </p>
     </div>
-  );
-};
+  )
+}
 
-ScheduleAssessmentPage.defaultProps = {};
+ScheduleAssessmentPage.defaultProps = {}
 
 ScheduleAssessmentPage.propTypes = {
   complianceReport: PropTypes.shape().isRequired,
@@ -238,6 +238,6 @@ ScheduleAssessmentPage.propTypes = {
       lines: PropTypes.shape()
     })
   }).isRequired
-};
+}
 
-export default ScheduleAssessmentPage;
+export default ScheduleAssessmentPage

@@ -3,19 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import ReactJson from 'react-json-view';
-import ExclusionReportingStatusHistory from './ExclusionReportStatusHistory';
-import SnapshotDisplay from './ExclusionReportSnapshotDisplay';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import ReactJson from 'react-json-view'
+import ExclusionReportingStatusHistory from './ExclusionReportStatusHistory'
+import SnapshotDisplay from './ExclusionReportSnapshotDisplay'
 
 const Delta = (props) => {
   const valueRenderer = (row) => {
     if (row.value === null) {
-      return (<em>null</em>);
+      return (<em>null</em>)
     }
 
     if (row.value instanceof Object) {
@@ -32,26 +32,26 @@ const Delta = (props) => {
           enableClipboard={false}
           sortKeys
         />
-      );
+      )
     }
-    return (<span>{row.value}</span>);
-  };
+    return (<span>{row.value}</span>)
+  }
 
   const columns = [{
     id: 'field',
     Header: 'Field',
     accessor: (item) => {
-      let result;
+      let result
       if (Number.isInteger(item.field)) {
-        result = `[${item.field}]`;
+        result = `[${item.field}]`
       } else {
-        result = `.${item.field}`;
+        result = `.${item.field}`
       }
       if (item.path !== null && item.path !== '') {
-        return item.path + result;
+        return item.path + result
       }
 
-      return item.field;
+      return item.field
     }
   }, {
     id: 'action',
@@ -71,18 +71,18 @@ const Delta = (props) => {
     id: 'delta',
     Header: 'Delta',
     accessor: (item) => {
-      const ov = Number.parseFloat(item.oldValue);
-      const nv = Number.parseFloat(item.newValue);
+      const ov = Number.parseFloat(item.oldValue)
+      const nv = Number.parseFloat(item.newValue)
 
       if (Number.isNaN(ov) || Number.isNaN(nv)) {
-        return 'N/A';
+        return 'N/A'
       }
 
-      return nv - ov;
+      return nv - ov
     }
-  }];
+  }]
 
-  let content = null;
+  let content = null
 
   switch (props.activeTab) {
     case 'snapshot':
@@ -91,9 +91,9 @@ const Delta = (props) => {
           snapshot={props.snapshot.data}
           showHeaders={false}
           computedWarning={props.snapshot.computed}
-        />);
+        />)
 
-      break;
+      break
     case 'delta':
       content = (
         (props.delta.length === 0) &&
@@ -105,8 +105,8 @@ const Delta = (props) => {
           sortable
           defaultPageSize={props.delta.length}
         />
-      );
-      break;
+      )
+      break
     default:
   }
 
@@ -114,20 +114,20 @@ const Delta = (props) => {
     <div>
       {content}
     </div>
-  );
-};
+  )
+}
 
 Delta.defaultProps = {
   activeTab: '',
   delta: [],
   snapshot: null
-};
+}
 
 Delta.propTypes = {
   activeTab: PropTypes.string,
   delta: PropTypes.arrayOf(PropTypes.shape()),
   snapshot: PropTypes.shape()
-};
+}
 
 const Current = props => (
   <div>
@@ -138,56 +138,56 @@ const Current = props => (
       showHeaders={false}
     />
   </div>
-);
+)
 
 Current.defaultProps = {
   computedWarning: false,
   snapshot: null
-};
+}
 
 Current.propTypes = {
   computedWarning: PropTypes.bool,
   snapshot: PropTypes.shape()
-};
+}
 
 class ReportHistory extends Component {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       activeReport: -1,
       activeTab: 'snapshot'
-    };
-    this.handleHistorySelection = this.handleHistorySelection.bind(this);
+    }
+    this.handleHistorySelection = this.handleHistorySelection.bind(this)
   }
 
   handleHistorySelection (id, tab) {
     this.setState({
       activeReport: id,
       activeTab: tab
-    });
+    })
   }
 
   render () {
-    const { deltas } = this.props;
-    const { activeReport, activeTab } = this.state;
+    const { deltas } = this.props
+    const { activeReport, activeTab } = this.state
 
-    let currentSnapshot = this.props.snapshot;
-    let currentSnapshotComputed = false;
+    let currentSnapshot = this.props.snapshot
+    let currentSnapshotComputed = false
     if (!currentSnapshot) {
-      currentSnapshotComputed = true;
-      currentSnapshot = this.props.exclusionReport;
+      currentSnapshotComputed = true
+      currentSnapshot = this.props.exclusionReport
     }
 
-    let title;
+    let title
     switch (String(activeReport)) {
       case '-1':
-        title = this.props.exclusionReport.displayName;
-        break;
+        title = this.props.exclusionReport.displayName
+        break
       default:
         try {
-          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeReport))).ancestorDisplayName;
+          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeReport))).ancestorDisplayName
         } catch (e) {
-          title = 'Current Report';
+          title = 'Current Report'
         }
     }
 
@@ -217,15 +217,15 @@ class ReportHistory extends Component {
                     snapshot={d.snapshot}
                     activeTab={activeTab}
                   />
-                );
+                )
               }
 
-              return null;
+              return null
             })}
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -234,17 +234,17 @@ ReportHistory.defaultProps = {
   exclusionReport: null,
   recomputedTotals: null,
   snapshot: null
-};
+}
 
 ReportHistory.propTypes = {
   deltas: PropTypes.arrayOf(PropTypes.shape()),
   exclusionReport: PropTypes.shape(),
   recomputedTotals: PropTypes.shape(),
   snapshot: PropTypes.shape()
-};
+}
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReportHistory);
+export default connect(mapStateToProps, mapDispatchToProps)(ReportHistory)

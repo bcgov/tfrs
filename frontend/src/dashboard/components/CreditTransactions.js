@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link, useNavigate } from 'react-router-dom'
 
-import Loading from '../../app/components/Loading';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import Loading from '../../app/components/Loading'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 
 const CreditTransactions = (props) => {
-  const { isFetching, items } = props.creditTransfers;
+  const { isFetching, items } = props.creditTransfers
   const navigate = useNavigate()
 
   if (isFetching) {
-    return <Loading />;
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -25,28 +25,28 @@ const CreditTransactions = (props) => {
       director: 0,
       total: 0
     }
-  };
+  }
 
   items.forEach((item) => {
     if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
       if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-        awaitingReview.part3Awards.director += 1;
-        awaitingReview.part3Awards.total += 1;
+        awaitingReview.part3Awards.director += 1
+        awaitingReview.part3Awards.total += 1
       }
     }
 
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
       if (item.status.status === 'Accepted' && !item.isRescinded) {
-        awaitingReview.creditTransfers.analyst += 1;
-        awaitingReview.creditTransfers.total += 1;
+        awaitingReview.creditTransfers.analyst += 1
+        awaitingReview.creditTransfers.total += 1
       }
 
       if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0 && !item.isRescinded) {
-        awaitingReview.creditTransfers.director += 1;
-        awaitingReview.creditTransfers.total += 1;
+        awaitingReview.creditTransfers.director += 1
+        awaitingReview.creditTransfers.total += 1
       }
     }
-  });
+  })
 
   return (
     <div className="dashboard-fieldset">
@@ -73,9 +73,9 @@ const CreditTransactions = (props) => {
                 }, {
                   id: 'status',
                   value: 'Signed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -95,9 +95,9 @@ const CreditTransactions = (props) => {
                 }, {
                   id: 'status',
                   value: 'Reviewed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -128,9 +128,9 @@ const CreditTransactions = (props) => {
                 }, {
                   id: 'status',
                   value: 'Reviewed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -147,28 +147,28 @@ const CreditTransactions = (props) => {
           <div>
             <button
               onClick={() => {
-                const currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear()
 
                 props.setFilter([{
                   id: 'compliancePeriod',
                   value: currentYear.toString()
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
               Current compliance period
             </button>
-            {` | `}
+            {' | '}
             <button
               onClick={() => {
                 props.setFilter([{
                   id: 'compliancePeriod',
                   value: ''
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -188,11 +188,11 @@ const CreditTransactions = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 CreditTransactions.defaultProps = {
-};
+}
 
 CreditTransactions.propTypes = {
   creditTransfers: PropTypes.shape({
@@ -200,6 +200,6 @@ CreditTransactions.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default CreditTransactions;
+export default CreditTransactions

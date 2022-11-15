@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyEffectivenessRatioDetails = props => {
   const navigate = useNavigate()
@@ -104,9 +104,9 @@ const EnergyEffectivenessRatioDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-EnergyEffectivenessRatioDetails.defaultProps = {};
+EnergyEffectivenessRatioDetails.defaultProps = {}
 
 EnergyEffectivenessRatioDetails.propTypes = {
   item: PropTypes.shape({
@@ -118,6 +118,6 @@ EnergyEffectivenessRatioDetails.propTypes = {
     })
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default EnergyEffectivenessRatioDetails;
+export default EnergyEffectivenessRatioDetails

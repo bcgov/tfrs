@@ -42,6 +42,6 @@ const NOTIFICATION_TYPES = {
   EXCLUSION_REPORT_ACCEPTED: 'Exclusion Report Accepted',
   EXCLUSION_REPORT_REJECTED: 'Exclusion Report Rejected',
   EXCLUSION_REPORT_REQUESTED_SUPPLEMENTAL: 'Exclusion Report Supplemental Requested'
-};
+}
 
-export default NOTIFICATION_TYPES;
+export default NOTIFICATION_TYPES

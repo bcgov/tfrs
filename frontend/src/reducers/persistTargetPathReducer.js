@@ -13,16 +13,16 @@ const persistTargetPathReducer = (state = {
         return {
           ...state,
           target: pathname
-        };
+        }
       }
 
-      return state;
+      return state
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { persistTargetPathReducer };
+export { persistTargetPathReducer }
 
-//TODO check if target path is needed after user login
+// TODO check if target path is needed after user login

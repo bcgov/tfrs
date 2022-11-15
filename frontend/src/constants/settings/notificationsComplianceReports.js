@@ -52,6 +52,6 @@ const COMPLIANCE_REPORTS_NOTIFICATIONS = [{
   description: 'Rejected',
   key: 'rejected',
   recipients: ['fuel_supplier', 'government']
-}];
+}]
 
-export default COMPLIANCE_REPORTS_NOTIFICATIONS;
+export default COMPLIANCE_REPORTS_NOTIFICATIONS

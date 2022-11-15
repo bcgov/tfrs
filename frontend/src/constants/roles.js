@@ -15,6 +15,6 @@ const ROLES = {
     id: 5,
     description: 'Signing Authority'
   }
-};
+}
 
-export default ROLES;
+export default ROLES

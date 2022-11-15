@@ -1,21 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { FUEL_CODES } from '../../../constants/routes/Admin';
-import Loading from '../../../app/components/Loading';
-import * as Lang from '../../../constants/langEnUs';
-import history from '../../../app/History';
-import PERMISSIONS_FUEL_CODES from '../../../constants/permissions/FuelCodes';
-import FuelCodesTable from './FuelCodesTable';
+import { FUEL_CODES } from '../../../constants/routes/Admin'
+import Loading from '../../../app/components/Loading'
+import * as Lang from '../../../constants/langEnUs'
+import history from '../../../app/History'
+import PERMISSIONS_FUEL_CODES from '../../../constants/permissions/FuelCodes'
+import FuelCodesTable from './FuelCodesTable'
 
-import { download } from '../../../utils/functions';
-import * as Routes from '../../../constants/routes';
-import { useNavigate } from 'react-router';
+import { download } from '../../../utils/functions'
+import * as Routes from '../../../constants/routes'
+import { useNavigate } from 'react-router'
 
 const FuelCodesPage = (props) => {
-  const { isFetching, items } = props.fuelCodes;
-  const isEmpty = items.length === 0;
+  const { isFetching, items } = props.fuelCodes
+  const isEmpty = items.length === 0
   const navigate = useNavigate()
 
   return (
@@ -28,8 +28,8 @@ const FuelCodesPage = (props) => {
             id="new-submission"
             className="btn btn-primary"
             onClick={() => {
-              const route = FUEL_CODES.ADD.replace(':type', '');
-              navigate(route);
+              const route = FUEL_CODES.ADD.replace(':type', '')
+              navigate(route)
             }}
             type="button"
           >
@@ -41,14 +41,14 @@ const FuelCodesPage = (props) => {
             id="download-fuel-codes"
             type="button"
             onClick={(e) => {
-              const element = e.target;
-              const original = element.innerHTML;
+              const element = e.target
+              const original = element.innerHTML
 
-              element.firstChild.textContent = ' Downloading...';
+              element.firstChild.textContent = ' Downloading...'
 
               return download(Routes.BASE_URL + FUEL_CODES.EXPORT, {}).then(() => {
-                element.innerHTML = original;
-              });
+                element.innerHTML = original
+              })
             }}
           >
             <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
@@ -67,11 +67,11 @@ const FuelCodesPage = (props) => {
       />
       }
     </div>
-  );
-};
+  )
+}
 
 FuelCodesPage.defaultProps = {
-};
+}
 
 FuelCodesPage.propTypes = {
   fuelCodes: PropTypes.shape({
@@ -84,6 +84,6 @@ FuelCodesPage.propTypes = {
   }).isRequired,
   title: PropTypes.string.isRequired,
   tooltips: PropTypes.shape({}).isRequired
-};
+}
 
-export default FuelCodesPage;
+export default FuelCodesPage

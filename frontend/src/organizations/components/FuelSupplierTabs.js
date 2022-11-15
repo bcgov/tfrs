@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import ORGANIZATIONS from '../../constants/routes/Organizations';
+import ORGANIZATIONS from '../../constants/routes/Organizations'
 
 const FuelSupplierTabs = props => (
   <ul className="fuel-supplier-tabs nav nav-tabs" key="nav" role="tablist">
@@ -17,13 +17,13 @@ const FuelSupplierTabs = props => (
       </Link>
     </li>
   </ul>
-);
+)
 
 FuelSupplierTabs.propTypes = {
   active: PropTypes.string.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired
-};
+}
 
-export default FuelSupplierTabs;
+export default FuelSupplierTabs

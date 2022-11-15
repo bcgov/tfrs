@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/DocumentUploads';
+import ActionTypes from '../constants/actionTypes/DocumentUploads'
 
 const documentUpload = (state = {
   item: {},
@@ -11,14 +11,14 @@ const documentUpload = (state = {
       return {
         ...state,
         errors: {}
-      };
+      }
     case ActionTypes.GET_REQUEST:
       return {
         ...state,
         isFetching: true,
         item: {},
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_REQUEST:
       return {
         ...state,
@@ -26,18 +26,18 @@ const documentUpload = (state = {
         isFetching: false,
         item: action.data,
         success: true
-      };
+      }
     case ActionTypes.ERROR:
       return {
         ...state,
         errors: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const documentUploads = (state = {
   items: [],
@@ -51,24 +51,24 @@ const documentUploads = (state = {
         ...state,
         isFetching: true,
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_REQUESTS:
       return {
         ...state,
         isFetching: false,
         items: action.data,
         success: true
-      };
+      }
     case ActionTypes.ERROR:
       return {
         ...state,
         errorMessage: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { documentUpload, documentUploads };
+export { documentUpload, documentUploads }

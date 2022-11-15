@@ -1,32 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
-import { useNavigate } from 'react-router';
+import Loading from '../../app/components/Loading'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import { useNavigate } from 'react-router'
 
 const CreditTransactions = (props) => {
-  const { isFetching, items } = props.creditTransfers;
+  const { isFetching, items } = props.creditTransfers
   const navigate = useNavigate()
 
   if (isFetching) {
-    return <Loading />;
+    return <Loading />
   }
 
   const inProgress = {
     creditTransfers: 0
-  };
+  }
 
   items.forEach((item) => {
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
       if (!item.isRescinded && ['Accepted', 'Submitted'].indexOf(item.status.status) >= 0) {
-        inProgress.creditTransfers += 1;
+        inProgress.creditTransfers += 1
       }
     }
-  });
+  })
 
   return (
     <div className="dashboard-fieldset">
@@ -51,9 +51,9 @@ const CreditTransactions = (props) => {
                 }, {
                   id: 'status',
                   value: 'Proposed,Signed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -70,28 +70,28 @@ const CreditTransactions = (props) => {
           <div>
             <button
               onClick={() => {
-                const currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear()
 
                 props.setFilter([{
                   id: 'compliancePeriod',
                   value: currentYear.toString()
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
               Current compliance period
             </button>
-            {` | `}
+            {' | '}
             <button
               onClick={() => {
                 props.setFilter([{
                   id: 'compliancePeriod',
                   value: ''
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -125,7 +125,7 @@ const CreditTransactions = (props) => {
       (props.loggedInUser.organization.organizationBalance &&
       (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
       <div className="add-button">
-        <FontAwesomeIcon icon="play" /> {` `}
+        <FontAwesomeIcon icon="play" /> {' '}
         <button
           onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
           type="button"
@@ -135,11 +135,11 @@ const CreditTransactions = (props) => {
       </div>
       }
     </div>
-  );
-};
+  )
+}
 
 CreditTransactions.defaultProps = {
-};
+}
 
 CreditTransactions.propTypes = {
   creditTransfers: PropTypes.shape({
@@ -157,6 +157,6 @@ CreditTransactions.propTypes = {
     })
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default CreditTransactions;
+export default CreditTransactions

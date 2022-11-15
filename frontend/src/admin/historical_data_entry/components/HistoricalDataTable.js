@@ -1,19 +1,19 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import numeral from 'numeral';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import numeral from 'numeral'
 
-import * as NumberFormat from '../../../constants/numeralFormats';
-import { HISTORICAL_DATA_ENTRY } from '../../../constants/routes/Admin';
-import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
-import { getCreditTransferType } from '../../../actions/creditTransfersActions';
-import filterNumber from '../../../utils/filters';
-import ReactTable from '../../../app/components/StateSavingReactTable';
+import * as NumberFormat from '../../../constants/numeralFormats'
+import { HISTORICAL_DATA_ENTRY } from '../../../constants/routes/Admin'
+import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values'
+import { getCreditTransferType } from '../../../actions/creditTransfersActions'
+import filterNumber from '../../../utils/filters'
+import ReactTable from '../../../app/components/StateSavingReactTable'
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -47,10 +47,10 @@ const HistoricalDataTable = (props) => {
         row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     }
   }, {
     id: 'creditsTo',
@@ -61,10 +61,10 @@ const HistoricalDataTable = (props) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     }
   }, {
     id: 'numberOfCredits',
@@ -81,10 +81,10 @@ const HistoricalDataTable = (props) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return -1; // this is to fix sorting (value can't be negative)
+        return -1 // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.fairMarketValuePerCredit);
+      return parseFloat(item.fairMarketValuePerCredit)
     },
     minWidth: 100,
     Cell: row => (
@@ -97,16 +97,16 @@ const HistoricalDataTable = (props) => {
     accessor: item => item.zeroReason,
     className: 'col-zero-reason',
     Cell: (row) => {
-      const zeroReason = row.value;
-      let content;
+      const zeroReason = row.value
+      let content
 
       if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.affiliate.id) {
-        content = ZERO_DOLLAR_REASON.affiliate.description;
+        content = ZERO_DOLLAR_REASON.affiliate.description
       } else if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.other.id) {
-        content = ZERO_DOLLAR_REASON.other.description;
+        content = ZERO_DOLLAR_REASON.other.description
       }
 
-      return content || '';
+      return content || ''
     }
   }, {
     id: 'actions',
@@ -114,7 +114,7 @@ const HistoricalDataTable = (props) => {
     accessor: 'id',
     filterable: false,
     Cell: (row) => {
-      const editUrl = HISTORICAL_DATA_ENTRY.EDIT.replace(':id', row.value);
+      const editUrl = HISTORICAL_DATA_ENTRY.EDIT.replace(':id', row.value)
 
       return (
         <div className="col-actions">
@@ -128,19 +128,21 @@ const HistoricalDataTable = (props) => {
             <FontAwesomeIcon icon="minus-circle" />
           </button>
         </div>
-      );
+      )
     },
     maxWidth: 75
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -156,12 +158,12 @@ const HistoricalDataTable = (props) => {
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 HistoricalDataTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectIdForModal: PropTypes.func.isRequired
-};
+}
 
-export default HistoricalDataTable;
+export default HistoricalDataTable

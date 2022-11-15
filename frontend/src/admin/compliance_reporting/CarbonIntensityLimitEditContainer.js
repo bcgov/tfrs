@@ -3,21 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { carbonIntensities } from '../../actions/carbonIntensities';
-import Loading from '../../app/components/Loading';
-import Modal from '../../app/components/Modal';
-import CarbonIntensityLimitForm from './components/CarbonIntensityLimitForm';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import toastr from '../../utils/toastr';
-import { withRouter } from '../../utils/withRouter';
+import { carbonIntensities } from '../../actions/carbonIntensities'
+import Loading from '../../app/components/Loading'
+import Modal from '../../app/components/Modal'
+import CarbonIntensityLimitForm from './components/CarbonIntensityLimitForm'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import toastr from '../../utils/toastr'
+import { withRouter } from '../../utils/withRouter'
 
 class CarbonIntensityLimitEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -28,33 +28,33 @@ class CarbonIntensityLimitEditContainer extends Component {
         gasolineEffectiveDate: '',
         gasolineExpirationDate: ''
       }
-    };
+    }
 
-    this.loaded = false;
+    this.loaded = false
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.props.getCarbonIntensityLimit(this.props.params.id);
+    this.props.getCarbonIntensityLimit(this.props.params.id)
   }
 
   componentWillReceiveProps (props) {
     if (this.props.carbonIntensityLimit.isUpdating && !props.carbonIntensityLimit.isUpdating) {
       if (props.carbonIntensityLimit.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)
-        toastr.fuelCodeSuccess(null, 'Carbon intensity limits saved.');
+        toastr.fuelCodeSuccess(null, 'Carbon intensity limits saved.')
       }
 
-      return;
+      return
     }
 
-    this.loadPropsToFieldState(props);
+    this.loadPropsToFieldState(props)
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props.carbonIntensityLimit;
+    const { item } = props.carbonIntensityLimit
 
     if (item && !this.loaded) {
       const fieldState = {
@@ -64,38 +64,38 @@ class CarbonIntensityLimitEditContainer extends Component {
         gasolineCarbonIntensity: item.limits.gasoline ? `${item.limits.gasoline.density}` : '',
         gasolineEffectiveDate: item.limits.gasoline ? item.limits.gasoline.effectiveDate : '',
         gasolineExpirationDate: item.limits.gasoline ? item.limits.gasoline.expirationDate : ''
-      };
+      }
 
       this.setState({
         fields: fieldState
-      });
+      })
 
-      this.loaded = true;
+      this.loaded = true
     }
   }
 
   _handleInputChange (event) {
-    const { name, value } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { name, value } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
+      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value)
       this.setState({
         fields: fieldState
-      });
+      })
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
 
       this.setState({
         fields: fieldState
-      });
+      })
     }
   }
 
   _handleSubmit (event, status = 'Submitted') {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { id } = this.props.params;
+    const { id } = this.props.params
 
     // API data structure
     const data = {
@@ -103,22 +103,22 @@ class CarbonIntensityLimitEditContainer extends Component {
       dieselEffectiveDate: this.state.fields.dieselEffectiveDate !== '' ? this.state.fields.dieselEffectiveDate : null,
       gasolineCarbonIntensity: this.state.fields.gasolineCarbonIntensity !== '' ? this.state.fields.gasolineCarbonIntensity : null,
       gasolineEffectiveDate: this.state.fields.gasolineEffectiveDate !== '' ? this.state.fields.gasolineEffectiveDate : null
-    };
+    }
 
     Object.entries(data).forEach((prop) => {
       if (prop[1] === null) {
-        delete data[prop[0]];
+        delete data[prop[0]]
       }
-    });
+    })
 
-    this.props.updateCarbonIntensityLimit({ id, state: data });
+    this.props.updateCarbonIntensityLimit({ id, state: data })
 
-    return true;
+    return true
   }
 
   render () {
-    const { item, isFetching, success } = this.props.carbonIntensityLimit;
-    const updating = this.props.carbonIntensityLimit.isUpdating;
+    const { item, isFetching, success } = this.props.carbonIntensityLimit
+    const updating = this.props.carbonIntensityLimit.isUpdating
 
     if (!updating && success && (!isFetching)) {
       return ([
@@ -138,14 +138,14 @@ class CarbonIntensityLimitEditContainer extends Component {
         >
           Are you sure you want to update the prescribed carbon intensity limits?
         </Modal>
-      ]);
+      ])
     }
 
-    return <Loading />;
+    return <Loading />
   }
 }
 
-CarbonIntensityLimitEditContainer.defaultProps = {};
+CarbonIntensityLimitEditContainer.defaultProps = {}
 
 CarbonIntensityLimitEditContainer.propTypes = {
   carbonIntensityLimit: PropTypes.shape({
@@ -160,7 +160,7 @@ CarbonIntensityLimitEditContainer.propTypes = {
     id: PropTypes.string.isRequired
   }).isRequired,
   updateCarbonIntensityLimit: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
@@ -170,11 +170,11 @@ const mapStateToProps = state => ({
     success: state.rootReducer.carbonIntensityLimits.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getCarbonIntensityLimit: carbonIntensities.get,
   updateCarbonIntensityLimit: carbonIntensities.update
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CarbonIntensityLimitEditContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CarbonIntensityLimitEditContainer))

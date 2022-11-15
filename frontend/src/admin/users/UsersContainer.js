@@ -3,21 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { getMyOrganizationMembers } from '../../actions/organizationActions';
-import AdminTabs from '../components/AdminTabs';
-import UsersPage from './components/UsersPage';
+import { getMyOrganizationMembers } from '../../actions/organizationActions'
+import AdminTabs from '../components/AdminTabs'
+import UsersPage from './components/UsersPage'
 
 class UsersContainer extends Component {
   componentDidMount () {
-    this.loadData();
+    this.loadData()
   }
 
   loadData () {
-    this.props.getMyOrganizationMembers();
+    this.props.getMyOrganizationMembers()
   }
 
   render () {
@@ -31,7 +31,7 @@ class UsersContainer extends Component {
         data={this.props.myOrganizationMembers}
         key="page"
       />
-    ]);
+    ])
   }
 }
 
@@ -60,7 +60,7 @@ UsersContainer.propTypes = {
       })
     }))
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
@@ -68,12 +68,12 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getMyOrganizationMembers: () => {
-    dispatch(getMyOrganizationMembers());
+    dispatch(getMyOrganizationMembers())
   }
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer)

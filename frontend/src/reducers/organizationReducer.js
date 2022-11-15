@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/Organizations';
+import ActionTypes from '../constants/actionTypes/Organizations'
 
 const organizationMembers = (state = {
   users: [],
@@ -12,25 +12,25 @@ const organizationMembers = (state = {
         ...state,
         isFetching: true,
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_MEMBERS:
       return {
         ...state,
         users: action.data,
         isFetching: false,
         success: true
-      };
+      }
     case ActionTypes.ERROR_MEMBERS:
       return {
         ...state,
         errorMessage: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const organizationRequest = (state = {
   didInvalidate: false,
@@ -44,18 +44,18 @@ const organizationRequest = (state = {
         didInvalidate: false,
         fuelSupplier: {},
         isFetching: true
-      };
+      }
     case ActionTypes.RECEIVE_ORGANIZATION:
       return {
         ...state,
         didInvalidate: false,
         fuelSupplier: action.data,
         isFetching: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const organizations = (state = {
   items: [],
@@ -69,25 +69,25 @@ const organizations = (state = {
         ...state,
         isFetching: true,
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_ORGANIZATIONS:
       return {
         ...state,
         isFetching: false,
         items: action.data,
         success: true
-      };
+      }
     case ActionTypes.ERROR_ORGANIZATIONS:
       return {
         ...state,
         errorMessage: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const fuelSuppliersRequest = (state = {
   fuelSuppliers: [],
@@ -100,24 +100,24 @@ const fuelSuppliersRequest = (state = {
         ...state,
         isFetching: true,
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_FUEL_SUPPLIERS:
       return {
         ...state,
         fuelSuppliers: action.data,
         isFetching: false,
         success: true
-      };
+      }
     case ActionTypes.ERROR_FUEL_SUPPLIERS:
       return {
         ...state,
         errorMessage: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { organizationMembers, organizationRequest, organizations, fuelSuppliersRequest };
+export { organizationMembers, organizationRequest, organizations, fuelSuppliersRequest }

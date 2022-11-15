@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const ComplianceReportIntro = (props) => {
-  const complianceReportDueDate = `20${Number(props.period.substr(-2)) + 1}`;
+  const complianceReportDueDate = `20${Number(props.period.substr(-2)) + 1}`
 
-  let litresText = ' 75 million ';
+  let litresText = ' 75 million '
 
   if (Number(props.period) === 2021) {
-    litresText = ' 25 million ';
+    litresText = ' 25 million '
   } else if (Number(props.period) > 2021) {
-    litresText = ' 200,000 litres ';
+    litresText = ' 200,000 litres '
   }
 
   return (
@@ -80,12 +80,12 @@ const ComplianceReportIntro = (props) => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 ComplianceReportIntro.propTypes = {
   period: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default ComplianceReportIntro;
+export default ComplianceReportIntro

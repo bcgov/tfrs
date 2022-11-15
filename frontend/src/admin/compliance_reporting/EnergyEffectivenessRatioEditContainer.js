@@ -3,21 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
-import Loading from '../../app/components/Loading';
-import Modal from '../../app/components/Modal';
-import EnergyEffectivenessRatioForm from './components/EnergyEffectivenessRatioForm';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import toastr from '../../utils/toastr';
-import { withRouter } from '../../utils/withRouter';
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios'
+import Loading from '../../app/components/Loading'
+import Modal from '../../app/components/Modal'
+import EnergyEffectivenessRatioForm from './components/EnergyEffectivenessRatioForm'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import toastr from '../../utils/toastr'
+import { withRouter } from '../../utils/withRouter'
 
 class EnergyEffectivenessRatioEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -28,16 +28,16 @@ class EnergyEffectivenessRatioEditContainer extends Component {
         gasolineExpirationDate: '',
         gasolineRatio: ''
       }
-    };
+    }
 
-    this.loaded = false;
+    this.loaded = false
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.props.getEnergyEffectivenessRatio(this.props.params.id);
+    this.props.getEnergyEffectivenessRatio(this.props.params.id)
   }
 
   componentWillReceiveProps (props) {
@@ -45,17 +45,17 @@ class EnergyEffectivenessRatioEditContainer extends Component {
       !props.energyEffectivenessRatio.isUpdating) {
       if (this.props.energyEffectivenessRatio.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)
-        toastr.fuelCodeSuccess(null, 'Energy effectiveness ratios saved.');
+        toastr.fuelCodeSuccess(null, 'Energy effectiveness ratios saved.')
       }
 
-      return;
+      return
     }
 
-    this.loadPropsToFieldState(props);
+    this.loadPropsToFieldState(props)
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props.energyEffectivenessRatio;
+    const { item } = props.energyEffectivenessRatio
 
     if (item && !this.loaded) {
       const fieldState = {
@@ -65,39 +65,39 @@ class EnergyEffectivenessRatioEditContainer extends Component {
         gasolineEffectiveDate: item.ratios.gasoline.effectiveDate || '',
         gasolineExpirationDate: item.ratios.gasoline.expirationDate || '',
         gasolineRatio: `${item.ratios.gasoline.ratio}` || ''
-      };
+      }
 
       this.setState({
         fields: fieldState
-      });
+      })
 
-      this.loaded = true;
+      this.loaded = true
     }
   }
 
   _handleInputChange (event) {
-    const { name } = event.target;
-    const { value } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { name } = event.target
+    const { value } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
+      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value)
       this.setState({
         fields: fieldState
-      });
+      })
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
 
       this.setState({
         fields: fieldState
-      });
+      })
     }
   }
 
   _handleSubmit (event, status = 'Submitted') {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { id } = this.props.params;
+    const { id } = this.props.params
 
     // API data structure
     const data = {
@@ -105,22 +105,22 @@ class EnergyEffectivenessRatioEditContainer extends Component {
       dieselRatio: this.state.fields.dieselRatio !== '' ? this.state.fields.dieselRatio : null,
       gasolineEffectiveDate: this.state.fields.gasolineEffectiveDate !== '' ? this.state.fields.gasolineEffectiveDate : null,
       gasolineRatio: this.state.fields.gasolineRatio !== '' ? this.state.fields.gasolineRatio : null
-    };
+    }
 
     Object.entries(data).forEach((prop) => {
       if (prop[1] === null || prop[1] === 'null') {
-        delete data[prop[0]];
+        delete data[prop[0]]
       }
-    });
+    })
 
-    this.props.updateEnergyEffectivenessRatio({ id, state: data });
+    this.props.updateEnergyEffectivenessRatio({ id, state: data })
 
-    return true;
+    return true
   }
 
   render () {
-    const { item, isFetching, success } = this.props.energyEffectivenessRatio;
-    const updating = this.props.energyEffectivenessRatio.isUpdating;
+    const { item, isFetching, success } = this.props.energyEffectivenessRatio
+    const updating = this.props.energyEffectivenessRatio.isUpdating
 
     if (!updating && success && (!isFetching)) {
       return ([
@@ -140,15 +140,15 @@ class EnergyEffectivenessRatioEditContainer extends Component {
         >
           Are you sure you want to update the energy effectiveness ratio(s)?
         </Modal>
-      ]);
+      ])
     }
 
-    return <Loading />;
+    return <Loading />
   }
 }
 
 EnergyEffectivenessRatioEditContainer.defaultProps = {
-};
+}
 
 EnergyEffectivenessRatioEditContainer.propTypes = {
   energyEffectivenessRatio: PropTypes.shape({
@@ -163,7 +163,7 @@ EnergyEffectivenessRatioEditContainer.propTypes = {
     id: PropTypes.string.isRequired
   }).isRequired,
   updateEnergyEffectivenessRatio: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   energyEffectivenessRatio: {
@@ -173,11 +173,11 @@ const mapStateToProps = state => ({
     success: state.rootReducer.energyEffectivenessRatios.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getEnergyEffectivenessRatio: energyEffectivenessRatios.get,
   updateEnergyEffectivenessRatio: energyEffectivenessRatios.update
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyEffectivenessRatioEditContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EnergyEffectivenessRatioEditContainer))

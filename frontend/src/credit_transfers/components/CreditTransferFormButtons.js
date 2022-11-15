@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from '../../constants/langEnUs';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
-import Tooltip from '../../app/components/Tooltip';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../constants/langEnUs'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
+import Tooltip from '../../app/components/Tooltip'
+import { useNavigate } from 'react-router'
 
 const CreditTransferFormButtons = props => {
   const navigate = useNavigate()
-  
+
   return (
     <div className="credit-transfer-actions">
       <div className="btn-container">
@@ -67,9 +67,11 @@ const CreditTransferFormButtons = props => {
         {props.actions.includes(Lang.BTN_SIGN_1_2) &&
         <Tooltip
           show={props.isCommenting || props.disabled.BTN_SIGN_1_2}
-          title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_1_2
-            ? 'Signing Authority Declaration needs to be accepted'
-            : 'You must be assigned the Signing Authority role in order to sign and send ' +
+          title={props.isCommenting
+            ? Lang.TEXT_COMMENT_DIRTY
+            : (props.permissions.BTN_SIGN_1_2
+                ? 'Signing Authority Declaration needs to be accepted'
+                : 'You must be assigned the Signing Authority role in order to sign and send ' +
             'a Credit Transfer Proposal to another fuel supplier')}
         >
           <button
@@ -104,9 +106,11 @@ const CreditTransferFormButtons = props => {
         {props.actions.includes(Lang.BTN_SIGN_2_2) &&
         <Tooltip
           show={props.isCommenting || props.disabled.BTN_SIGN_2_2}
-          title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_2_2
-            ? 'Signing Authority Declaration needs to be accepted'
-            : 'You must be assigned the Signing Authority role in order to sign and send ' +
+          title={props.isCommenting
+            ? Lang.TEXT_COMMENT_DIRTY
+            : (props.permissions.BTN_SIGN_2_2
+                ? 'Signing Authority Declaration needs to be accepted'
+                : 'You must be assigned the Signing Authority role in order to sign and send ' +
             'a Credit Transfer Proposal to the Low Carbon Fuels Branch')}
         >
           <button
@@ -221,7 +225,7 @@ const CreditTransferFormButtons = props => {
       </div>
     </div>
   )
-};
+}
 
 CreditTransferFormButtons.defaultProps = {
   addComment: null,
@@ -235,7 +239,7 @@ CreditTransferFormButtons.defaultProps = {
     BTN_SIGN_1_2: false,
     BTN_SIGN_2_2: false
   }
-};
+}
 
 CreditTransferFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -252,6 +256,6 @@ CreditTransferFormButtons.propTypes = {
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
   })
-};
+}
 
-export default CreditTransferFormButtons;
+export default CreditTransferFormButtons

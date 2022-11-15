@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const ContactUsPage = props => (
   <div className="page_contact_us">
@@ -20,6 +20,6 @@ const ContactUsPage = props => (
       Email: <a href="mailto:77000@gov.bc.ca">77000@gov.bc.ca</a>
     </p>
   </div>
-);
+)
 
-export default ContactUsPage;
+export default ContactUsPage

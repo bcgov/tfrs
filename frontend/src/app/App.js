@@ -1,73 +1,73 @@
-import React, { Component } from 'react';
-import { IntlProvider } from 'react-intl';
-import { connect } from 'react-redux';
-import ReduxToastr from 'react-redux-toastr';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react'
+import { IntlProvider } from 'react-intl'
+import { connect } from 'react-redux'
+import ReduxToastr from 'react-redux-toastr'
+import { bindActionCreators } from 'redux'
 
-import StatusInterceptor from './components/StatusInterceptor';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import SessionTimer from './components/SessionTimer';
+import StatusInterceptor from './components/StatusInterceptor'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import SessionTimer from './components/SessionTimer'
 
-import Loading from './components/Loading';
-import CONFIG from '../config';
-import Login from './Login';
-import Router from './router';
+import Loading from './components/Loading'
+import CONFIG from '../config'
+import Login from './Login'
+import Router from './router'
 
 // import 'toastr/build/toastr.min.css';
 // import 'react-table/react-table.css';
-import { logout } from '../actions/keycloakActions';
+import { logout } from '../actions/keycloakActions'
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = {
       hasErrors: false
-    };
+    }
   }
 
   static getDerivedStateFromError (errors) {
-    return { hasErrors: true };
+    return { hasErrors: true }
   }
 
   componentDidCatch (_error, info) {
     this.setState({
       hasErrors: true
-    });
+    })
   }
 
-  render() {
-    const { 
-      authenticated, 
-      keycloak, 
+  render () {
+    const {
+      authenticated,
+      keycloak,
       errorRequest,
       userRequest,
       loggedInUser,
       unreadNotificationsCount
-    } = this.props;
+    } = this.props
 
     if (!keycloak) {
-      return <Loading />;
+      return <Loading />
     }
 
     if (keycloak && !authenticated) {
-      return <Login keycloak={keycloak} />;
+      return <Login keycloak={keycloak} />
     }
 
-    if(!loggedInUser?.username) {
-      return <Loading />;
+    if (!loggedInUser?.username) {
+      return <Loading />
     }
 
-    let content;
+    let content
     if (this.state.hasErrors) {
-      content = <StatusInterceptor statusCode={500} />;
+      content = <StatusInterceptor statusCode={500} />
     } else if (errorRequest.hasErrors &&
       errorRequest.error &&
       errorRequest.error.status) {
-      content = <StatusInterceptor statusCode={errorRequest.error.status} />;
+      content = <StatusInterceptor statusCode={errorRequest.error.status} />
     } else if (userRequest.serverError) {
-      content = <StatusInterceptor statusCode={401} />;
+      content = <StatusInterceptor statusCode={401} />
     } else {
       content = <Router/>
     }
@@ -94,8 +94,7 @@ class App extends Component {
           <Footer />
         </div>
       </IntlProvider>
-    );
-
+    )
   }
 }
 
@@ -115,11 +114,11 @@ const mapStateToProps = state => ({
   authenticated: state.rootReducer.keycloak.authenticated,
   isFetching: state.rootReducer.keycloak.isFetching,
   user: state.rootReducer.keycloak.user,
-  errors: state.rootReducer.keycloak.errors,
-});
+  errors: state.rootReducer.keycloak.errors
+})
 
 const mapDispatchToProps = dispatch => ({
-  logout: bindActionCreators(logout, dispatch),
-});
+  logout: bindActionCreators(logout, dispatch)
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App)

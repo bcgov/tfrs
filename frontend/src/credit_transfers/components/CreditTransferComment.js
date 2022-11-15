@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import * as Lang from '../../constants/langEnUs';
-import LocalTimestamp from '../../app/components/LocalTimestamp';
-import Tooltip from '../../app/components/Tooltip';
-import CreditTransferCommentForm from './CreditTransferCommentForm';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import * as Lang from '../../constants/langEnUs'
+import LocalTimestamp from '../../app/components/LocalTimestamp'
+import Tooltip from '../../app/components/Tooltip'
+import CreditTransferCommentForm from './CreditTransferCommentForm'
 
 class CreditTransferComment extends Component {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       editing: false
-    };
-    this._cancelEdit = this._cancelEdit.bind(this);
-    this._beginEdit = this._beginEdit.bind(this);
+    }
+    this._cancelEdit = this._cancelEdit.bind(this)
+    this._beginEdit = this._beginEdit.bind(this)
   }
 
   _cancelEdit () {
     this.setState({
       editing: false
-    });
+    })
   }
 
   _beginEdit () {
     this.setState({
       editing: true
-    });
+    })
   }
 
   renderEditing () {
@@ -39,7 +39,7 @@ class CreditTransferComment extends Component {
         cancelComment={this._cancelEdit}
         id={this.props.comment.id}
       />
-    );
+    )
   }
 
   renderStatic () {
@@ -107,21 +107,21 @@ class CreditTransferComment extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   render () {
     if (this.state.editing) {
-      return this.renderEditing();
+      return this.renderEditing()
     }
-    return this.renderStatic();
+    return this.renderStatic()
   }
 }
 
 CreditTransferComment.defaultProps = {
   isReadOnly: false,
   saveComment: () => {}
-};
+}
 
 CreditTransferComment.propTypes = {
   comment: PropTypes.shape({
@@ -146,6 +146,6 @@ CreditTransferComment.propTypes = {
   saveComment: PropTypes.func,
   selectIdForModal: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool
-};
+}
 
-export default CreditTransferComment;
+export default CreditTransferComment

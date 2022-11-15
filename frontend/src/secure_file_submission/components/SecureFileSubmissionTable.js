@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
-import moment from 'moment-timezone';
+import React from 'react'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
+import moment from 'moment-timezone'
 
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import ReactTable from '../../app/components/StateSavingReactTable';
-import { useNavigate } from 'react-router';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
+import ReactTable from '../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -38,18 +38,19 @@ const SecureFileSubmissionTable = (props) => {
         if (item.status.status === 'Pending Submission') {
           const attachmentsScanned = item.attachments.filter(attachment => (
             ['PASS', 'FAIL'].indexOf(attachment.securityScanStatus) >= 0
-          )).length;
+          )).length
           // ensure that we always have at least 1 so we don't divide by 0
           const totalAttachments = (item.attachments.length > 0
-            ? item.attachments.length : 1);
+            ? item.attachments.length
+            : 1)
 
-          return `Scan Progress: ${((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%`;
+          return `Scan Progress: ${((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%`
         }
 
-        return item.status.status;
+        return item.status.status
       }
 
-      return false;
+      return false
     },
     className: 'col-status',
     Header: 'Status',
@@ -59,11 +60,11 @@ const SecureFileSubmissionTable = (props) => {
     accessor: (item) => {
       if (item.type.theType === 'Evidence') {
         if (item.milestone) {
-          return `${item.title}: ${item.milestone}`;
+          return `${item.title}: ${item.milestone}`
         }
       }
 
-      return item.title;
+      return item.title
     },
     className: 'col-title',
     Header: 'Title',
@@ -76,28 +77,30 @@ const SecureFileSubmissionTable = (props) => {
     minWidth: 70
   }, {
     accessor: (item) => {
-      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'));
+      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
 
       if (historyFound) {
-        return moment(historyFound.createTimestamp).format('YYYY-MM-DD');
+        return moment(historyFound.createTimestamp).format('YYYY-MM-DD')
       }
 
-      return '-';
+      return '-'
     },
     className: 'col-date',
     Header: 'Submitted On',
     id: 'updateTimestamp',
     minWidth: 65
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -114,25 +117,25 @@ const SecureFileSubmissionTable = (props) => {
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
-          const securityScanFailed = row.original.status && row.original.status.status === 'Security Scan Failed';
+          const securityScanFailed = row.original.status && row.original.status.status === 'Security Scan Failed'
           return {
             onClick: (e) => {
-              const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id);
+              const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id)
 
-              navigate(viewUrl);
+              navigate(viewUrl)
             },
             className: `clickable ${securityScanFailed && 'scan-failed'}`
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
     />
-  );
-};
+  )
+}
 
-SecureFileSubmissionTable.defaultProps = {};
+SecureFileSubmissionTable.defaultProps = {}
 
 SecureFileSubmissionTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
@@ -154,6 +157,6 @@ SecureFileSubmissionTable.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired
-};
+}
 
-export default SecureFileSubmissionTable;
+export default SecureFileSubmissionTable

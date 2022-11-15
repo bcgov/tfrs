@@ -1,24 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { DEFAULT_ORGANIZATION } from '../../constants/values';
-import Loading from '../../app/components/Loading';
-import Tooltip from '../../app/components/Tooltip';
-import CreditTransferTable from './CreditTransferTable';
-import { download } from '../../utils/functions';
+import * as NumberFormat from '../../constants/numeralFormats'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import { DEFAULT_ORGANIZATION } from '../../constants/values'
+import Loading from '../../app/components/Loading'
+import Tooltip from '../../app/components/Tooltip'
+import CreditTransferTable from './CreditTransferTable'
+import { download } from '../../utils/functions'
 
-import * as Routes from '../../constants/routes';
-import * as Lang from '../../constants/langEnUs';
-import { useNavigate } from 'react-router';
+import * as Routes from '../../constants/routes'
+import * as Lang from '../../constants/langEnUs'
+import { useNavigate } from 'react-router'
 
 const CreditTransactionsPage = (props) => {
-  const { isFetching, items } = props.creditTransfers;
-  const isEmpty = items.length === 0;
+  const { isFetching, items } = props.creditTransfers
+  const isEmpty = items.length === 0
   const navigate = useNavigate()
 
   return (
@@ -35,7 +35,7 @@ const CreditTransactionsPage = (props) => {
               (In Reserve: {
                 numeral(props.loggedInUser.organization.organizationBalance.deductions)
                   .format(NumberFormat.INT)
-              }){` `}
+              }){' '}
               <Tooltip
                 className="info"
                 show
@@ -83,8 +83,8 @@ const CreditTransactionsPage = (props) => {
                   id="organizationFilterSelect"
                   className="form-control"
                   onChange={(event) => {
-                    const organizationId = parseInt(event.target.value, 10);
-                    props.selectOrganization(organizationId);
+                    const organizationId = parseInt(event.target.value, 10)
+                    props.selectOrganization(organizationId)
                   }}
                   value={props.organization.id}
                 >
@@ -126,16 +126,16 @@ const CreditTransactionsPage = (props) => {
             id="download-credit-transfers"
             type="button"
             onClick={(e) => {
-              const element = e.target;
-              const original = element.innerHTML;
+              const element = e.target
+              const original = element.innerHTML
 
-              element.firstChild.textContent = ' Downloading...';
+              element.firstChild.textContent = ' Downloading...'
 
               return download(Routes.BASE_URL + CREDIT_TRANSACTIONS.EXPORT, {
                 organization_id: props.organization.id
               }).then(() => {
-                element.innerHTML = original;
-              });
+                element.innerHTML = original
+              })
             }}
           >
             <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
@@ -152,14 +152,14 @@ const CreditTransactionsPage = (props) => {
       />
       }
     </div>
-  );
-};
+  )
+}
 
 CreditTransactionsPage.defaultProps = {
   highlight: null,
   organization: null,
   organizations: []
-};
+}
 
 CreditTransactionsPage.propTypes = {
   creditTransfers: PropTypes.shape({
@@ -201,6 +201,6 @@ CreditTransactionsPage.propTypes = {
   })),
   selectOrganization: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default CreditTransactionsPage;
+export default CreditTransactionsPage

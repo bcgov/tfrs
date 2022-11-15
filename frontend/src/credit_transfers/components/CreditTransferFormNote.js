@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const CreditTransferFormNote = props => (
   <div className="form-group note">
@@ -14,11 +14,11 @@ const CreditTransferFormNote = props => (
       />
     </label>
   </div>
-);
+)
 
 CreditTransferFormNote.propTypes = {
   note: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired
-};
+}
 
-export default CreditTransferFormNote;
+export default CreditTransferFormNote

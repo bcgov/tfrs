@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import NotificationsTable from './NotificationsTable';
+import NotificationsTable from './NotificationsTable'
 
 const NotificationsDetails = props => (
   <div className="page_notifications">
@@ -71,7 +71,7 @@ const NotificationsDetails = props => (
       handleFiltersChange={props.handleFiltersChange}
     />
   </div>
-);
+)
 
 NotificationsDetails.propTypes = {
   fields: PropTypes.shape({
@@ -91,6 +91,6 @@ NotificationsDetails.propTypes = {
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleFiltersChange: PropTypes.func.isRequired
-};
+}
 
-export default NotificationsDetails;
+export default NotificationsDetails

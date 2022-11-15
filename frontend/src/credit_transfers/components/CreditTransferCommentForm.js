@@ -1,44 +1,44 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import * as Lang from '../../constants/langEnUs';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import * as Lang from '../../constants/langEnUs'
 
 class CreditTransferCommentForm extends Component {
   static titleText (props) {
     if (props.isCommentingOnUnsavedCreditTransfer) {
-      return Lang.TEXT_ADD_INITIAL_COMMENT;
+      return Lang.TEXT_ADD_INITIAL_COMMENT
     }
 
     if (props.isEditingExistingComment) {
-      return Lang.TEXT_EDIT_COMMENT_HEADING;
+      return Lang.TEXT_EDIT_COMMENT_HEADING
     }
 
     if (props.isCreatingPrivilegedComment) {
-      return Lang.TEXT_ADD_INTERNAL_COMMENT_HEADING;
+      return Lang.TEXT_ADD_INTERNAL_COMMENT_HEADING
     }
 
-    return Lang.TEXT_ADD_COMMENT_HEADING;
+    return Lang.TEXT_ADD_COMMENT_HEADING
   }
 
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       comment: props.comment
-    };
+    }
   }
 
   componentDidMount () {
-    this.commentField.focus();
+    this.commentField.focus()
   }
 
   handleInputChange (prop) {
     return (e) => {
       this.setState({
         [prop]: e.target.value
-      });
+      })
       if (this.props.handleCommentChanged != null && prop === 'comment') {
-        this.props.handleCommentChanged(e.target.value);
+        this.props.handleCommentChanged(e.target.value)
       }
-    };
+    }
   }
 
   _renderTextArea () {
@@ -52,7 +52,7 @@ class CreditTransferCommentForm extends Component {
           className="form-control"
           rows="5"
           name="comment"
-          ref={(input) => { this.commentField = input; }}
+          ref={(input) => { this.commentField = input }}
           placeholder={
             this.props.isCreatingPrivilegedComment
               ? Lang.TEXT_COMMENT_PLACEHOLDER_PRIVILEGED
@@ -61,7 +61,7 @@ class CreditTransferCommentForm extends Component {
           value={this.state.comment}
         />
       </label>
-    );
+    )
   }
 
   render () {
@@ -93,7 +93,7 @@ class CreditTransferCommentForm extends Component {
                   data-toggle="modal"
                   data-target="#confirmDeleteComment"
                   onClick={() => {
-                    this.props.selectIdForModal(this.props.id);
+                    this.props.selectIdForModal(this.props.id)
                   }}
                   type="button"
                 >
@@ -125,14 +125,15 @@ class CreditTransferCommentForm extends Component {
           >
             <div className="alert alert-warning">
               <h4 className="alert-heading">Disclosure Notice</h4>
-              <p>{this.props.isCreatingPrivilegedComment ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
+              <p>{this.props.isCreatingPrivilegedComment
+                ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
                 : Lang.TEXT_COMMENT_DISCLOSURE}
               </p>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -146,7 +147,7 @@ CreditTransferCommentForm.defaultProps = {
   isEditingExistingComment: false,
   saveComment: null,
   selectIdForModal: null
-};
+}
 
 CreditTransferCommentForm.propTypes = {
   comment: PropTypes.string,
@@ -159,6 +160,6 @@ CreditTransferCommentForm.propTypes = {
   cancelComment: PropTypes.func,
   handleCommentChanged: PropTypes.func,
   selectIdForModal: PropTypes.func
-};
+}
 
-export default CreditTransferCommentForm;
+export default CreditTransferCommentForm

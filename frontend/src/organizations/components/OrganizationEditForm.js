@@ -1,13 +1,13 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import { useNavigate } from 'react-router'
 
 const OrganizationEditForm = props => {
   const navigate = useNavigate()
@@ -223,14 +223,14 @@ const OrganizationEditForm = props => {
       </div>
     </div>
   )
-};
+}
 
 OrganizationEditForm.defaultProps = {
   fields: {},
   loggedInUser: null,
   referenceData: {},
   mode: 'add'
-};
+}
 
 OrganizationEditForm.propTypes = {
   fields: PropTypes.shape({
@@ -258,6 +258,6 @@ OrganizationEditForm.propTypes = {
     organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
-};
+}
 
-export default OrganizationEditForm;
+export default OrganizationEditForm

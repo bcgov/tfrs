@@ -1,20 +1,20 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ReactTable from '../../../app/components/StateSavingReactTable';
-import history from '../../../app/History';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import history from '../../../app/History'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyDensitiesTable = (props) => {
   const navigate = useNavigate()
-  
+
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -36,10 +36,10 @@ const EnergyDensitiesTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-density',
     Header: 'Energy Density',
@@ -50,16 +50,18 @@ const EnergyDensitiesTable = (props) => {
     Header: 'Unit',
     id: 'unit of measure',
     width: 100
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -78,27 +80,27 @@ const EnergyDensitiesTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = CREDIT_CALCULATIONS.ENERGY_DENSITIES_DETAILS.replace(':id', row.original.id);
-              navigate(viewUrl);
+              const viewUrl = CREDIT_CALCULATIONS.ENERGY_DENSITIES_DETAILS.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
-  );
-};
+  )
+}
 
-EnergyDensitiesTable.defaultProps = {};
+EnergyDensitiesTable.defaultProps = {}
 
 EnergyDensitiesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
-};
+}
 
-export default EnergyDensitiesTable;
+export default EnergyDensitiesTable

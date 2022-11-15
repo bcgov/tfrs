@@ -1,118 +1,118 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import FuelCodeFormDetails from './FuelCodeFormDetails';
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CallableModal from '../../../app/components/CallableModal';
-import Errors from '../../../app/components/Errors';
-import Tooltip from '../../../app/components/Tooltip';
+import FuelCodeFormDetails from './FuelCodeFormDetails'
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
+import CallableModal from '../../../app/components/CallableModal'
+import Errors from '../../../app/components/Errors'
+import Tooltip from '../../../app/components/Tooltip'
 
 class FuelCodeForm extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       showOverlapModal: false
-    };
+    }
 
-    this.conflictingFuelCode = {};
+    this.conflictingFuelCode = {}
 
-    this._closeModal = this._closeModal.bind(this);
-    this._getEffectiveDatesStatus = this._getEffectiveDatesStatus.bind(this);
-    this._openOverlapModal = this._openOverlapModal.bind(this);
-    this._validateEffectiveDates = this._validateEffectiveDates.bind(this);
+    this._closeModal = this._closeModal.bind(this)
+    this._getEffectiveDatesStatus = this._getEffectiveDatesStatus.bind(this)
+    this._openOverlapModal = this._openOverlapModal.bind(this)
+    this._validateEffectiveDates = this._validateEffectiveDates.bind(this)
   }
 
   _closeModal () {
     this.setState({
       showOverlapModal: false
-    });
+    })
   }
 
   _getValidationMessagesForDraft () {
-    const validationMessage = [];
+    const validationMessage = []
 
     if (this.props.fields.fuelCode === '') {
-      validationMessage.push('Please enter a fuel code.');
+      validationMessage.push('Please enter a fuel code.')
     }
 
     if (this.props.fields.company === '') {
-      validationMessage.push('Please enter a company.');
+      validationMessage.push('Please enter a company.')
     }
 
     if (this.props.fields.carbonIntensity === '') {
-      validationMessage.push('Please enter the carbon intensity.');
+      validationMessage.push('Please enter the carbon intensity.')
     }
 
     if (this.props.fields.applicationDate === '') {
-      validationMessage.push('Please enter an application date.');
+      validationMessage.push('Please enter an application date.')
     }
 
     if (this.props.fields.fuel === '') {
-      validationMessage.push('Please select a fuel.');
+      validationMessage.push('Please select a fuel.')
     }
 
     if (this.props.fields.feedstock === '') {
-      validationMessage.push('Please enter a feedstock.');
+      validationMessage.push('Please enter a feedstock.')
     }
 
     if (this.props.fields.feedstockLocation === '') {
-      validationMessage.push('Please enter a feedstock location.');
+      validationMessage.push('Please enter a feedstock location.')
     }
 
     if (this.props.fields.facilityLocation === '') {
-      validationMessage.push('Please enter a fuel production facility location.');
+      validationMessage.push('Please enter a fuel production facility location.')
     }
 
     if (this.props.fields.feedstockTransportMode.length === 0) {
-      validationMessage.push('Please select a feedstock transport mode.');
+      validationMessage.push('Please select a feedstock transport mode.')
     }
 
     if (this.props.fields.fuelTransportMode.length === 0) {
-      validationMessage.push('Please select a finished fuel transport mode.');
+      validationMessage.push('Please select a finished fuel transport mode.')
     }
 
     if (this.props.fields.expiryDate < this.props.fields.effectiveDate) {
-      validationMessage.push('The expiry date precedes the effective date.');
+      validationMessage.push('The expiry date precedes the effective date.')
     }
 
     if (this.props.fields.partiallyRenewable && this.props.fields.renewablePercentage === '') {
-      validationMessage.push('Please enter a renewable percentage if this is partially renewable.');
+      validationMessage.push('Please enter a renewable percentage if this is partially renewable.')
     }
 
-    return validationMessage;
+    return validationMessage
   }
 
   _getValidationMessagesForApproval () {
-    const validationMessage = this._getValidationMessagesForDraft();
+    const validationMessage = this._getValidationMessagesForDraft()
 
     if (this.props.fields.effectiveDate === '') {
-      validationMessage.push('Please enter an effective date.');
+      validationMessage.push('Please enter an effective date.')
     }
 
     if (this.props.fields.expiryDate === '') {
-      validationMessage.push('Please enter an expiry date.');
+      validationMessage.push('Please enter an expiry date.')
     }
 
     if (this.props.fields.facilityNameplate === '') {
-      validationMessage.push('Please enter a fuel production facility nameplate capacity.');
+      validationMessage.push('Please enter a fuel production facility nameplate capacity.')
     }
 
     if (this.props.fields.approvalDate === '') {
-      validationMessage.push('Please enter a approval date.');
+      validationMessage.push('Please enter a approval date.')
     }
 
-    return validationMessage;
+    return validationMessage
   }
 
   _getEffectiveDatesStatus () {
     if (this.props.fuelCodes.isFetching || this.props.fuelCodes.items.length === 0) {
-      return false;
+      return false
     }
 
     this.conflictingFuelCode = this.props.fuelCodes.items.find(fuelCode => (
@@ -122,31 +122,31 @@ class FuelCodeForm extends Component {
         (fuelCode.effectiveDate <= this.props.fields.expiryDate &&
         fuelCode.effectiveDate >= this.props.fields.effectiveDate)
       )
-    ));
+    ))
 
     if (this.conflictingFuelCode) {
-      return true;
+      return true
     }
 
-    return false;
+    return false
   }
 
   _openOverlapModal () {
     this.setState({
       showOverlapModal: true
-    });
+    })
   }
 
   _validateEffectiveDates () {
-    const fuelCode = this.props.fields.fuelCode.split('.');
+    const fuelCode = this.props.fields.fuelCode.split('.')
 
     if (fuelCode.length > 0) {
       this.props.filterFuelCodes({
         fuel_code: 'BCLCF',
         fuel_code_version: fuelCode[0]
       }).then((response) => {
-        this._openOverlapModal();
-      });
+        this._openOverlapModal()
+      })
     }
   }
 
@@ -216,7 +216,7 @@ class FuelCodeForm extends Component {
       <CallableModal
         close={this._closeModal}
         handleSubmit={(event) => {
-          this.props.handleSubmit(event, 'Approved');
+          this.props.handleSubmit(event, 'Approved')
         }}
         id="confirmOverlap"
         key="confirmOverlap"
@@ -235,7 +235,7 @@ class FuelCodeForm extends Component {
 
         Are you sure you want to add this fuel code?
       </CallableModal>
-    ]);
+    ])
   }
 }
 
@@ -243,7 +243,7 @@ FuelCodeForm.defaultProps = {
   edit: false,
   errors: [],
   handleSelect: () => {}
-};
+}
 
 FuelCodeForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -283,6 +283,6 @@ FuelCodeForm.propTypes = {
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default FuelCodeForm;
+export default FuelCodeForm

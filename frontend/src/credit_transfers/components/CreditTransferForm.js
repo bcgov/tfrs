@@ -1,24 +1,24 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
 
-import Errors from '../../app/components/Errors';
-import Tooltip from '../../app/components/Tooltip';
-import * as NumberFormat from '../../constants/numeralFormats';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
-import CreditTransferProgress from './CreditTransferProgress';
-import CreditTransferFormDetails from './CreditTransferFormDetails';
-import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
-import CreditTransferFormButtons from './CreditTransferFormButtons';
-import CreditTransferTerms from './CreditTransferTerms';
-import CreditTransferCommentForm from './CreditTransferCommentForm';
-import CreditTransferComment from './CreditTransferComment';
+import Errors from '../../app/components/Errors'
+import Tooltip from '../../app/components/Tooltip'
+import * as NumberFormat from '../../constants/numeralFormats'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import CreditTransferProgress from './CreditTransferProgress'
+import CreditTransferFormDetails from './CreditTransferFormDetails'
+import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation'
+import CreditTransferFormButtons from './CreditTransferFormButtons'
+import CreditTransferTerms from './CreditTransferTerms'
+import CreditTransferCommentForm from './CreditTransferCommentForm'
+import CreditTransferComment from './CreditTransferComment'
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -34,7 +34,7 @@ const CreditTransferForm = props => (
             (In Reserve: {
               numeral(props.loggedInUser.organization.organizationBalance.deductions)
                 .format(NumberFormat.INT)
-            }){` `}
+            }){' '}
             <Tooltip
               className="info"
               show
@@ -140,7 +140,7 @@ const CreditTransferForm = props => (
       />
     </form>
   </div>
-);
+)
 
 CreditTransferForm.defaultProps = {
   handleCommentChanged: null,
@@ -151,7 +151,7 @@ CreditTransferForm.defaultProps = {
   zeroDollarReason: {
     id: null
   }
-};
+}
 
 CreditTransferForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -225,6 +225,6 @@ CreditTransferForm.propTypes = {
     id: PropTypes.number,
     reason: PropTypes.string
   })
-};
+}
 
-export default CreditTransferForm;
+export default CreditTransferForm

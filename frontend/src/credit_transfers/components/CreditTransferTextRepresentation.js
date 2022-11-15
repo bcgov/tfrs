@@ -1,41 +1,42 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
-import numeral from 'numeral';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
+import numeral from 'numeral'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values';
+import * as NumberFormat from '../../constants/numeralFormats'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values'
 
 class CreditTransferTextRepresentation extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this.compliancePeriod = (this.props.compliancePeriod) ? this.props.compliancePeriod.description : '';
-    this.creditsFrom = this.props.creditsFrom.name;
-    this.creditsTo = this.props.creditsTo.name;
+    this.compliancePeriod = (this.props.compliancePeriod) ? this.props.compliancePeriod.description : ''
+    this.creditsFrom = this.props.creditsFrom.name
+    this.creditsTo = this.props.creditsTo.name
     this.fairMarketValuePerCredit =
-      numeral(this.props.fairMarketValuePerCredit).format(NumberFormat.CURRENCY);
-    this.numberOfCredits = numeral(this.props.numberOfCredits).format(NumberFormat.INT);
-    this.totalValue = numeral(this.props.totalValue).format(NumberFormat.CURRENCY);
+      numeral(this.props.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)
+    this.numberOfCredits = numeral(this.props.numberOfCredits).format(NumberFormat.INT)
+    this.totalValue = numeral(this.props.totalValue).format(NumberFormat.CURRENCY)
     this.tradeEffectiveDate = (this.props.tradeEffectiveDate)
-      ? moment(this.props.tradeEffectiveDate).format('LL') : "on Director's approval";
+      ? moment(this.props.tradeEffectiveDate).format('LL')
+      : "on Director's approval"
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
-      this.tradeStatus = 'Drafted';
+      this.tradeStatus = 'Drafted'
     } else {
       this.tradeStatus = Object.values(CREDIT_TRANSFER_STATUS).find(element =>
-        element.id === this.props.status.id).description;
+        element.id === this.props.status.id).description
     }
   }
 
   _buyAction () {
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-        return ' bought ';
+        return ' bought '
       case CREDIT_TRANSFER_STATUS.refused.id:
-        return ' proposed to buy ';
+        return ' proposed to buy '
       default:
-        return ' is proposing to buy ';
+        return ' is proposing to buy '
     }
   }
 
@@ -59,7 +60,7 @@ class CreditTransferTextRepresentation extends Component {
         </div>
         }
       </div>
-    );
+    )
   }
 
   _renderDefault () {
@@ -71,7 +72,7 @@ class CreditTransferTextRepresentation extends Component {
         has been <span className="value lowercase"> {this.tradeStatus} </span>
         effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
-    );
+    )
   }
 
   _renderPart3Award () {
@@ -89,7 +90,7 @@ class CreditTransferTextRepresentation extends Component {
           </span>
         }.
       </div>
-    );
+    )
   }
 
   _renderRetirement () {
@@ -106,7 +107,7 @@ class CreditTransferTextRepresentation extends Component {
           </span>
         }.
       </div>
-    );
+    )
   }
 
   _renderSell () {
@@ -130,7 +131,7 @@ class CreditTransferTextRepresentation extends Component {
           </div>
         }
       </div>
-    );
+    )
   }
 
   _renderValidation () {
@@ -147,71 +148,71 @@ class CreditTransferTextRepresentation extends Component {
           </span>
         }.
       </div>
-    );
+    )
   }
 
   _rescindedBy () {
-    const rescindedBy = this.props.history.find(history => (history.isRescinded));
+    const rescindedBy = this.props.history.find(history => (history.isRescinded))
 
     if (rescindedBy) {
       return [
         <span key="rescinded-by" className="value"> {rescindedBy.user.organization.name} </span>,
         <span key="rescinded-by-text">rescinded the proposal.</span>
-      ];
+      ]
     }
 
-    return false;
+    return false
   }
 
   _sellAction () {
     if (this.props.isRescinded) {
-      return ' proposed to sell ';
+      return ' proposed to sell '
     }
 
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-        return ' sold ';
+        return ' sold '
       case CREDIT_TRANSFER_STATUS.refused.id:
-        return ' proposed to sell ';
+        return ' proposed to sell '
       default:
-        return ' is proposing to sell ';
+        return ' is proposing to sell '
     }
   }
 
   _statusText (respondent) {
     if (this.props.isRescinded) {
-      return <span>. {this._rescindedBy()}</span>;
+      return <span>. {this._rescindedBy()}</span>
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
-      return <span>. <span className="value"> {respondent.name} </span> refused the proposal.</span>;
+      return <span>. <span className="value"> {respondent.name} </span> refused the proposal.</span>
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
-      return <span>. The proposal was declined.</span>;
+      return <span>. The proposal was declined.</span>
     }
-    return <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>;
+    return <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
   }
 
   render () {
     switch (this.props.tradeType.id) {
       case CREDIT_TRANSFER_TYPES.buy.id:
-        return this._renderBuy();
+        return this._renderBuy()
 
       case CREDIT_TRANSFER_TYPES.part3Award.id:
-        return this._renderPart3Award();
+        return this._renderPart3Award()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
-        return this._renderRetirement();
+        return this._renderRetirement()
 
       case CREDIT_TRANSFER_TYPES.sell.id:
-        return this._renderSell();
+        return this._renderSell()
 
       case CREDIT_TRANSFER_TYPES.validation.id:
-        return this._renderValidation();
+        return this._renderValidation()
 
       default:
-        return this._renderDefault();
+        return this._renderDefault()
     }
   }
 }
@@ -230,7 +231,7 @@ CreditTransferTextRepresentation.defaultProps = {
   isRescinded: false,
   tradeEffectiveDate: '',
   zeroDollarReason: null
-};
+}
 
 CreditTransferTextRepresentation.propTypes = {
   compliancePeriod: PropTypes.shape({
@@ -286,6 +287,6 @@ CreditTransferTextRepresentation.propTypes = {
     id: PropTypes.number,
     reason: PropTypes.string
   })
-};
+}
 
-export default CreditTransferTextRepresentation;
+export default CreditTransferTextRepresentation

@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading';
-import CONFIG from '../../config';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import ComplianceReportingTable from './ComplianceReportingTable';
+import Loading from '../../app/components/Loading'
+import CONFIG from '../../config'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import ComplianceReportingTable from './ComplianceReportingTable'
 
 const ComplianceReportingPage = (props) => {
-  const { isFetching, items } = props.complianceReports;
-  const isEmpty = items.length === 0;
+  const { isFetching, items } = props.complianceReports
+  const isEmpty = items.length === 0
 
   return (
     <div className="page-compliance-reporting">
@@ -42,13 +42,13 @@ const ComplianceReportingPage = (props) => {
                         item.status.fuelSupplierStatus === 'Submitted' &&
                         item.compliancePeriod.id === compliancePeriod.id &&
                         item.type === 'Compliance Report'
-                      ));
+                      ))
 
                       if (found >= 0) {
-                        props.selectComplianceReport('compliance', compliancePeriod.description);
-                        props.showModal(true);
+                        props.selectComplianceReport('compliance', compliancePeriod.description)
+                        props.showModal(true)
                       } else {
-                        props.createComplianceReport(compliancePeriod.description);
+                        props.createComplianceReport(compliancePeriod.description)
                       }
                     }}
                     type="button"
@@ -85,13 +85,13 @@ const ComplianceReportingPage = (props) => {
                         item.status.fuelSupplierStatus === 'Submitted' &&
                         item.compliancePeriod.id === compliancePeriod.id &&
                         item.type === 'Exclusion Report'
-                      ));
+                      ))
 
                       if (found >= 0) {
-                        props.selectComplianceReport('exclusion', compliancePeriod.description);
-                        props.showModal(true);
+                        props.selectComplianceReport('exclusion', compliancePeriod.description)
+                        props.showModal(true)
                       } else {
-                        props.createExclusionReport(compliancePeriod.description);
+                        props.createExclusionReport(compliancePeriod.description)
                       }
                     }}
                     type="button"
@@ -116,11 +116,11 @@ const ComplianceReportingPage = (props) => {
       />
       }
     </div>
-  );
-};
+  )
+}
 
 ComplianceReportingPage.defaultProps = {
-};
+}
 
 ComplianceReportingPage.propTypes = {
   createComplianceReport: PropTypes.func.isRequired,
@@ -136,6 +136,6 @@ ComplianceReportingPage.propTypes = {
   selectComplianceReport: PropTypes.func.isRequired,
   showModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default ComplianceReportingPage;
+export default ComplianceReportingPage

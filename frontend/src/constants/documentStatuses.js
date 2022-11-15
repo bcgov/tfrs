@@ -15,6 +15,6 @@ const DOCUMENT_STATUSES = {
     id: 14,
     description: 'Archived'
   }
-};
+}
 
-export default DOCUMENT_STATUSES;
+export default DOCUMENT_STATUSES

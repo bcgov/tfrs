@@ -3,17 +3,16 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
-import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory';
-import ScheduleDeltas, { SummaryDelta } from './ScheduleDeltas';
-import SnapshotDisplay from './SnapshotDisplay';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
+import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory'
+import ScheduleDeltas, { SummaryDelta } from './ScheduleDeltas'
+import SnapshotDisplay from './SnapshotDisplay'
 
 const Delta = (props) => {
-
-  let content = null;
+  let content = null
 
   switch (props.activeTab) {
     case 'snapshot':
@@ -22,14 +21,14 @@ const Delta = (props) => {
           snapshot={props.snapshot.data}
           showHeaders={false}
           computedWarning={props.snapshot.computed}
-        />);
+        />)
 
-      break;
+      break
     case 'delta':
       content = (
         <ScheduleDeltas deltas={props.delta} />
-      );
-      break;
+      )
+      break
     default:
   }
 
@@ -37,20 +36,20 @@ const Delta = (props) => {
     <div>
       {content}
     </div>
-  );
-};
+  )
+}
 
 Delta.defaultProps = {
   activeTab: '',
   delta: [],
   snapshot: null
-};
+}
 
 Delta.propTypes = {
   activeTab: PropTypes.string,
   delta: PropTypes.arrayOf(PropTypes.shape()),
   snapshot: PropTypes.shape()
-};
+}
 
 const Current = props => (
   <div>
@@ -60,56 +59,56 @@ const Current = props => (
       showHeaders={false}
     />
   </div>
-);
+)
 
 Current.defaultProps = {
   computedWarning: false,
   snapshot: null
-};
+}
 
 Current.propTypes = {
   computedWarning: PropTypes.bool,
   snapshot: PropTypes.shape()
-};
+}
 
 class ReportHistory extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       activeReport: -1,
       activeTab: 'snapshot'
-    };
-    this.handleHistorySelection = this.handleHistorySelection.bind(this);
+    }
+    this.handleHistorySelection = this.handleHistorySelection.bind(this)
   }
 
-  handleHistorySelection(id, tab) {
+  handleHistorySelection (id, tab) {
     this.setState({
       activeReport: id,
       activeTab: tab
-    });
+    })
   }
 
-  render() {
-    const { deltas } = this.props;
-    const { activeReport, activeTab } = this.state;
+  render () {
+    const { deltas } = this.props
+    const { activeReport, activeTab } = this.state
 
-    let currentSnapshot = this.props.snapshot;
-    let currentSnapshotComputed = false;
+    let currentSnapshot = this.props.snapshot
+    let currentSnapshotComputed = false
     if (!currentSnapshot) {
-      currentSnapshotComputed = true;
-      currentSnapshot = this.props.recomputedTotals || this.props.complianceReport;
+      currentSnapshotComputed = true
+      currentSnapshot = this.props.recomputedTotals || this.props.complianceReport
     }
 
-    let title;
+    let title
     switch (String(activeReport)) {
       case '-1':
-        title = this.props.complianceReport.displayName;
-        break;
+        title = this.props.complianceReport.displayName
+        break
       default:
         try {
-          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeReport))).ancestorDisplayName;
+          title = this.props.deltas.find(x => (String(x.ancestorId) === String(activeReport))).ancestorDisplayName
         } catch (e) {
-          title = 'Current Report';
+          title = 'Current Report'
         }
     }
 
@@ -140,15 +139,15 @@ class ReportHistory extends Component {
                     snapshot={d.snapshot}
                     activeTab={activeTab}
                   />
-                );
+                )
               }
-              return null;
+              return null
             })
             }
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -157,17 +156,17 @@ ReportHistory.defaultProps = {
   deltas: [],
   recomputedTotals: null,
   snapshot: null
-};
+}
 
 ReportHistory.propTypes = {
   complianceReport: PropTypes.shape(),
   deltas: PropTypes.arrayOf(PropTypes.shape()),
   recomputedTotals: PropTypes.shape(),
   snapshot: PropTypes.shape()
-};
+}
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReportHistory);
+export default connect(mapStateToProps, mapDispatchToProps)(ReportHistory)

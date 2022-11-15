@@ -1,30 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import { download } from '../../utils/functions';
-import * as Routes from '../../constants/routes';
-import { useNavigate } from 'react-router';
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import { download } from '../../utils/functions'
+import * as Routes from '../../constants/routes'
+import { useNavigate } from 'react-router'
 
 const getValidationMessages = (props) => {
   if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
-    return 'You must have the Signing Authority role to submit an Exclusion Report to the Government of British Columbia.';
+    return 'You must have the Signing Authority role to submit an Exclusion Report to the Government of British Columbia.'
   }
 
   if (!props.valid) {
-    return 'Please fix the issues identified before submitting.';
+    return 'Please fix the issues identified before submitting.'
   }
 
   if (props.validating) {
-    return 'Identifying potential issues...';
+    return 'Identifying potential issues...'
   }
 
-  return '';
-};
+  return ''
+}
 
 const ExclusionReportButtons = props => {
   const navigate = useNavigate()
@@ -55,16 +55,16 @@ const ExclusionReportButtons = props => {
           id="download-report"
           type="button"
           onClick={(e) => {
-            const element = e.target;
-            const original = element.innerHTML;
+            const element = e.target
+            const original = element.innerHTML
 
-            element.firstChild.textContent = ' Downloading...';
+            element.firstChild.textContent = ' Downloading...'
 
-            const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
+            const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id)
 
             return download(url).then(() => {
-              element.innerHTML = original;
-            });
+              element.innerHTML = original
+            })
           }}
         >
           <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
@@ -213,7 +213,7 @@ const ExclusionReportButtons = props => {
       </div>
     </div>
   )
-};
+}
 
 ExclusionReportButtons.defaultProps = {
   actions: [],
@@ -222,7 +222,7 @@ ExclusionReportButtons.defaultProps = {
   validating: false,
   valid: true,
   validationMessages: {}
-};
+}
 
 ExclusionReportButtons.propTypes = {
   id: PropTypes.string,
@@ -236,6 +236,6 @@ ExclusionReportButtons.propTypes = {
   validating: PropTypes.bool,
   valid: PropTypes.bool,
   validationMessages: PropTypes.shape()
-};
+}
 
-export default ExclusionReportButtons;
+export default ExclusionReportButtons

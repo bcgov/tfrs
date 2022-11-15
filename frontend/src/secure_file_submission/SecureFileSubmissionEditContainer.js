@@ -2,13 +2,13 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import Loading from '../app/components/Loading';
-import Modal from '../app/components/Modal';
+import Loading from '../app/components/Loading'
+import Modal from '../app/components/Modal'
 
 import {
   deleteDocumentUpload,
@@ -17,17 +17,17 @@ import {
   partialUpdateDocument,
   scanDocumentAttachments,
   uploadDocument
-} from '../actions/documentUploads';
-import DOCUMENT_STATUSES from '../constants/documentStatuses';
-import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
-import toastr from '../utils/toastr';
-import FileUploadProgress from './components/FileUploadProgress';
-import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
-import { withRouter } from '../utils/withRouter';
+} from '../actions/documentUploads'
+import DOCUMENT_STATUSES from '../constants/documentStatuses'
+import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload'
+import toastr from '../utils/toastr'
+import FileUploadProgress from './components/FileUploadProgress'
+import SecureFileSubmissionForm from './components/SecureFileSubmissionForm'
+import { withRouter } from '../utils/withRouter'
 
 class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -45,38 +45,38 @@ class SecureFileSubmissionEditContainer extends Component {
       uploadState: '',
       validationErrors: {},
       hasFailures: false
-    };
+    }
 
-    this.loaded = false;
-    this.originalAttachments = [];
+    this.loaded = false
+    this.originalAttachments = []
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.loadData(this.props.params.id);
+    this.loadData(this.props.params.id)
   }
 
   componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
+    this.loadPropsToFieldState(props)
   }
 
   changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
+    const fieldState = { ...this.state.fields }
 
-    fieldState[name] = { id: id || 0 };
+    fieldState[name] = { id: id || 0 }
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   loadData (id) {
-    this.props.getDocumentUpload(id);
+    this.props.getDocumentUpload(id)
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props;
+    const { item } = props
 
     if (Object.keys(item).length > 0 && !this.loaded) {
       const fieldState = {
@@ -87,106 +87,106 @@ class SecureFileSubmissionEditContainer extends Component {
         files: [],
         milestone: (item.milestone ? item.milestone.milestone : '') || '',
         title: item.title
-      };
+      }
 
       // original source to see if something was removed
-      this.originalAttachments = item.attachments.slice(0);
+      this.originalAttachments = item.attachments.slice(0)
 
       this.setState({
         fields: fieldState
-      });
+      })
 
-      this.loaded = true;
+      this.loaded = true
     }
 
-    let hasFailures = false;
+    let hasFailures = false
 
-    const { attachments } = props.item;
+    const { attachments } = props.item
     if (attachments) {
       attachments.forEach((attachment) => {
         if (attachment.securityScanStatus === 'FAIL') {
-          hasFailures = true;
+          hasFailures = true
         }
-      });
+      })
     }
 
     this.setState({
       hasFailures
-    });
+    })
   }
 
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
-      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload(null, 'Draft deleted.');
-    });
+      this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+      toastr.documentUpload(null, 'Draft deleted.')
+    })
   }
 
   _getDocumentType () {
-    let documentTypes = [];
+    let documentTypes = []
     this.props.referenceData.documentCategories.forEach((category) => {
-      documentTypes = documentTypes.concat(category.types);
-    });
+      documentTypes = documentTypes.concat(category.types)
+    })
 
-    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
+    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id))
 
     if (foundType) {
-      return foundType;
+      return foundType
     }
 
-    return false;
+    return false
   }
 
   _getErrors () {
     if ('title' in this.props.errors && this._getDocumentType().theType === 'Evidence') {
       this.props.errors.title.forEach((error, index) => {
-        this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement');
-      });
+        this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement')
+      })
     }
 
-    return this.props.errors;
+    return this.props.errors
   }
 
   _getValidationMessages () {
-    const validationMessage = [];
+    const validationMessage = []
 
     if (this.state.hasFailures) {
-      validationMessage.push('Please remove all attachments with failing security scans.');
+      validationMessage.push('Please remove all attachments with failing security scans.')
     }
 
     if (this.state.fields.compliancePeriod.id === 0) {
-      validationMessage.push('Please specify the Compliance Period to which the request relates.');
+      validationMessage.push('Please specify the Compliance Period to which the request relates.')
     }
 
     if (this._getDocumentType().theType === 'Evidence') {
       if (this.state.fields.title === '') {
-        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.');
+        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.')
       }
 
       if (this.state.fields.milestone === '') {
-        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.');
+        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.')
       }
     } else if (this.state.fields.title === '') {
-      validationMessage.push('Please provide a Title.');
+      validationMessage.push('Please provide a Title.')
     }
 
     if (this.state.fields.files.length === 0 && this.state.fields.attachments.length === 0) {
-      validationMessage.push('Please attach at least one file before submitting.');
+      validationMessage.push('Please attach at least one file before submitting.')
     }
 
-    return validationMessage;
+    return validationMessage
   }
 
   _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { value, name } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object' &&
       name !== 'files' && name !== 'attachments') {
-      this.changeObjectProp(parseInt(value, 10), name);
+      this.changeObjectProp(parseInt(value, 10), name)
     } else if (name === 'files') {
-      const progress = [];
-      fieldState[name] = value;
+      const progress = []
+      fieldState[name] = value
 
       for (let i = 0; i < value.length; i += 1) {
         progress.push({
@@ -198,117 +198,117 @@ class SecureFileSubmissionEditContainer extends Component {
             loaded: 0,
             total: 1
           }
-        });
+        })
       }
 
       this.setState({
         ...this.state,
         uploadProgress: progress,
         fields: fieldState
-      });
+      })
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
       this.setState({
         fields: fieldState
-      });
+      })
     }
 
-    let hasFailures = false;
+    let hasFailures = false
 
-    const { attachments } = fieldState;
+    const { attachments } = fieldState
     if (attachments) {
       attachments.forEach((attachment) => {
         if (attachment.securityScanStatus === 'FAIL') {
-          hasFailures = true;
+          hasFailures = true
         }
-      });
+      })
     }
 
     this.setState({
       hasFailures
-    });
+    })
   }
 
   _handleSubmit (event, status) {
-    event.preventDefault();
+    event.preventDefault()
 
     this.setState({
       uploadState: 'progress'
-    });
+    })
 
-    const uploadPromises = [];
-    const attachments = [];
-    const attachedFiles = this.state.fields.files;
+    const uploadPromises = []
+    const attachments = []
+    const attachedFiles = this.state.fields.files
 
     for (let i = 0; i < attachedFiles.length; i += 1) {
-      const file = attachedFiles[i];
+      const file = attachedFiles[i]
 
       uploadPromises.push(new Promise((resolve, reject) => {
-        const reader = new FileReader();
+        const reader = new FileReader()
 
         reader.onload = () => {
-          const blob = reader.result;
+          const blob = reader.result
 
           this.props.requestURL().then((response) => {
-            const progress = this.state.uploadProgress;
+            const progress = this.state.uploadProgress
             progress[i] = {
               ...progress[i],
               started: true
-            };
+            }
             this.setState({
               ...this.state,
               uploadProgress: progress
-            });
+            })
 
             this.props.uploadDocument(response.data.put, blob, (progressEvent) => {
-              const { uploadProgress } = this.state;
+              const { uploadProgress } = this.state
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 progress: {
                   loaded: progressEvent.loaded,
                   total: progressEvent.total
                 }
-              };
+              }
               this.setState({
                 ...this.state,
                 uploadProgress
-              });
+              })
             }).then(() => {
-              const { uploadProgress } = this.state;
+              const { uploadProgress } = this.state
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: true,
                 error: false
-              };
+              }
               this.setState({
                 ...this.state,
                 uploadProgress
-              });
+              })
             }).catch(() => {
-              const { uploadProgress } = this.state;
+              const { uploadProgress } = this.state
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: false,
                 error: true
-              };
+              }
               this.setState({
                 ...this.state,
                 uploadProgress
-              });
-            });
+              })
+            })
 
             attachments.push({
               filename: file.name,
               mimeType: file.type,
               size: file.size,
               url: response.data.get.split(/[?#]/)[0]
-            });
-            resolve();
-          });
-        };
+            })
+            resolve()
+          })
+        }
 
-        reader.readAsArrayBuffer(file);
-      }));
+        reader.readAsArrayBuffer(file)
+      }))
     }
 
     // goes through the original attachments and see if something is missing
@@ -318,9 +318,9 @@ class SecureFileSubmissionEditContainer extends Component {
         this.state.fields.attachments.findIndex(attachment => (
           attachment.id === originalAttachment.id)) < 0
       ))
-      .map(attachment => attachment.id);
+      .map(attachment => attachment.id)
 
-    const { id } = this.props.item;
+    const { id } = this.props.item
 
     // API data structure
     const data = {
@@ -331,48 +331,48 @@ class SecureFileSubmissionEditContainer extends Component {
       milestone: this.state.fields.milestone,
       status: status.id,
       title: this.state.fields.title
-    };
+    }
 
     Promise.all(uploadPromises).then(() => (
       this.props.partialUpdateDocument(id, data).then((response) => {
-        this.props.scanDocumentAttachments(id);
+        this.props.scanDocumentAttachments(id)
 
-        this.setState({ uploadState: 'success' });
-        this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST);
-        toastr.documentUpload(status.id);
+        this.setState({ uploadState: 'success' })
+        this.props.navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+        toastr.documentUpload(status.id)
       }).catch((reason) => {
         this.setState({
           uploadState: 'failed'
-        });
+        })
       })
     )).catch((reason) => {
       this.setState({
         uploadState: 'failed'
-      });
-    });
+      })
+    })
 
-    return true;
+    return true
   }
 
   render () {
     if (this.props.referenceData.isFetching || !this.loaded) {
-      return (<Loading />);
+      return (<Loading />)
     }
 
     if (this.state.uploadState === 'progress') {
       return (<FileUploadProgress
         progress={this.state.uploadProgress}
         files={this.state.fields.files}
-      />);
+      />)
     }
 
-    const { item } = this.props;
-    let availableActions = [];
+    const { item } = this.props
+    let availableActions = []
 
     if (item.actions) {
       availableActions = item.actions.map(action => (
         action.status
-      ));
+      ))
     }
 
     return ([
@@ -393,7 +393,7 @@ class SecureFileSubmissionEditContainer extends Component {
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
+          this._handleSubmit(event, DOCUMENT_STATUSES.submitted)
         }}
         id="confirmSubmit"
         key="confirmSubmit"
@@ -407,14 +407,14 @@ class SecureFileSubmissionEditContainer extends Component {
       >
         Are you sure you want to delete this draft?
       </Modal>
-    ]);
+    ])
   }
 }
 
 SecureFileSubmissionEditContainer.defaultProps = {
   errors: {},
   validationErrors: {}
-};
+}
 
 SecureFileSubmissionEditContainer.propTypes = {
   deleteDocumentUpload: PropTypes.func.isRequired,
@@ -448,7 +448,7 @@ SecureFileSubmissionEditContainer.propTypes = {
   scanDocumentAttachments: PropTypes.func.isRequired,
   uploadDocument: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
-};
+}
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.documentUpload.errors,
@@ -459,7 +459,7 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.referenceData.isFetching,
     isSuccessful: state.rootReducer.referenceData.success
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   deleteDocumentUpload: bindActionCreators(deleteDocumentUpload, dispatch),
@@ -468,6 +468,6 @@ const mapDispatchToProps = dispatch => ({
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
   scanDocumentAttachments: bindActionCreators(scanDocumentAttachments, dispatch),
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionEditContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionEditContainer))

@@ -3,18 +3,18 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { transactionTypes } from '../actions/transactionTypes';
-import AddressBuilder from '../app/components/AddressBuilder';
-import Input from '../app/components/Spreadsheet/Input';
-import Select from '../app/components/Spreadsheet/Select';
-import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete';
-import ExclusionAgreementPage from './components/ExclusionAgreementPage';
-import { EXCLUSION_AGREEMENT, EXCLUSION_AGREEMENT_ERROR_KEYS } from '../constants/schedules/exclusionReportColumns';
+import { transactionTypes } from '../actions/transactionTypes'
+import AddressBuilder from '../app/components/AddressBuilder'
+import Input from '../app/components/Spreadsheet/Input'
+import Select from '../app/components/Spreadsheet/Select'
+import OrganizationAutocomplete from '../app/components/Spreadsheet/OrganizationAutocomplete'
+import ExclusionAgreementPage from './components/ExclusionAgreementPage'
+import { EXCLUSION_AGREEMENT, EXCLUSION_AGREEMENT_ERROR_KEYS } from '../constants/schedules/exclusionReportColumns'
 
 class ExclusionAgreementContainer extends Component {
   static addHeaders () {
@@ -57,28 +57,28 @@ class ExclusionAgreementContainer extends Component {
           value: 'Units'
         }] // header
       ]
-    };
+    }
   }
 
   static clearErrorColumns (_row) {
-    const row = _row;
+    const row = _row
 
     row.forEach((cell, col) => {
-      const { className } = cell;
+      const { className } = cell
       if (className && className.indexOf('error') >= 0) {
         row[col] = {
           ...row[col],
           className: className.replace(/error/g, '')
-        };
+        }
       }
-    });
+    })
 
     const hasContent = row[EXCLUSION_AGREEMENT.TRANSACTION_TYPE].value &&
       row[EXCLUSION_AGREEMENT.FUEL_TYPE].value &&
       row[EXCLUSION_AGREEMENT.LEGAL_NAME].value &&
       row[EXCLUSION_AGREEMENT.ADDRESS].value &&
       row[EXCLUSION_AGREEMENT.QUANTITY].value &&
-      row[EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD].value;
+      row[EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD].value
 
     row[EXCLUSION_AGREEMENT.ROW_NUMBER] = {
       ...row[EXCLUSION_AGREEMENT.ROW_NUMBER],
@@ -90,116 +90,119 @@ class ExclusionAgreementContainer extends Component {
           }
         </div>
       )
-    };
+    }
 
-    return row;
+    return row
   }
 
   constructor (props) {
-    super(props);
+    super(props)
 
-    this.state = ExclusionAgreementContainer.addHeaders();
-    this.rowNumber = 1;
+    this.state = ExclusionAgreementContainer.addHeaders()
+    this.rowNumber = 1
 
-    this._addRow = this._addRow.bind(this);
-    this._handleCellsChanged = this._handleCellsChanged.bind(this);
-    this.loadData = this.loadData.bind(this);
+    this._addRow = this._addRow.bind(this)
+    this._handleCellsChanged = this._handleCellsChanged.bind(this)
+    this.loadData = this.loadData.bind(this)
   }
 
   componentDidMount () {
-    this.props.loadTransactionTypes();
+    this.props.loadTransactionTypes()
 
     if (this.props.exclusionReport.exclusionAgreement &&
       this.props.exclusionReport.exclusionAgreement.records &&
       this.props.exclusionReport.exclusionAgreement.records.length >= 0) {
-      this.loadData();
+      this.loadData()
     } else {
-      this._addRow(5);
+      this._addRow(5)
     }
   }
 
   shouldComponentUpdate (nextProps) {
-    const { grid } = this.state;
+    const { grid } = this.state
 
     if (this.props.validating) {
-      return false;
+      return false
     }
 
-    const totalRecords = grid.length;
+    const totalRecords = grid.length
 
     for (let i = 0; i < totalRecords; i += 1) {
-      const row = 1 + i;
+      const row = 1 + i
 
       if (grid[row]) {
-        grid[row] = this._validate(grid[row], i, nextProps);
+        grid[row] = this._validate(grid[row], i, nextProps)
       }
     }
 
-    return true;
+    return true
   }
 
   loadData () {
-    const { grid } = this.state;
-    this._addRow(this.props.exclusionReport.exclusionAgreement.records.length);
+    const { grid } = this.state
+    this._addRow(this.props.exclusionReport.exclusionAgreement.records.length)
 
-    const readOnly = this.props.exclusionReport.readOnly === true;
+    const readOnly = this.props.exclusionReport.readOnly === true
 
     this.props.exclusionReport.exclusionAgreement.records.forEach((record, recordIndex) => {
-      const index = recordIndex + 1;
+      const index = recordIndex + 1
 
       grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE] = {
         ...grid[index][EXCLUSION_AGREEMENT.TRANSACTION_TYPE],
         readOnly,
         value: record.transactionType
-      };
+      }
 
       grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE] = {
         ...grid[index][EXCLUSION_AGREEMENT.FUEL_TYPE],
         readOnly,
         value: record.fuelType
-      };
+      }
 
       grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME] = {
         ...grid[index][EXCLUSION_AGREEMENT.LEGAL_NAME],
         readOnly,
         value: record.transactionPartner
-      };
+      }
 
       grid[index][EXCLUSION_AGREEMENT.ADDRESS] = {
         ...grid[index][EXCLUSION_AGREEMENT.ADDRESS],
         readOnly,
         value: record.postalAddress
-      };
+      }
 
       grid[index][EXCLUSION_AGREEMENT.QUANTITY] = {
         ...grid[index][EXCLUSION_AGREEMENT.QUANTITY],
         readOnly,
         value: record.quantity
-      };
+      }
 
       grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD] = {
         ...grid[index][EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD],
         readOnly,
         value: record.quantityNotSold
-      };
+      }
 
       const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-        fuel.name === record.fuelType);
+        fuel.name === record.fuelType)
 
       grid[index][EXCLUSION_AGREEMENT.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-        ? selectedFuel.unitOfMeasure.name : '';
+        ? selectedFuel.unitOfMeasure.name
+        : ''
 
       grid[index][EXCLUSION_AGREEMENT.NOT_SOLD_UNITS].value = (selectedFuel &&
-        selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
-    });
+        selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name
+        : ''
+    })
 
     this.setState({
       grid
-    });
+    })
   }
 
   _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+    const { grid } = this.state
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -241,8 +244,8 @@ class ExclusionAgreementContainer extends Component {
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
-          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+          const { value } = props
+          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
         }
       }, { // units
         attributes: {},
@@ -258,30 +261,30 @@ class ExclusionAgreementContainer extends Component {
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
-          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+          const { value } = props
+          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
         }
       }, { // units
         attributes: {},
         className: 'units',
         readOnly: true
-      }]);
+      }])
 
-      this.rowNumber += 1;
+      this.rowNumber += 1
     }
 
     this.setState({
       grid
-    });
+    })
   }
 
   _gridStateToPayload (state) {
-    const startingRow = 1;
+    const startingRow = 1
 
-    const records = [];
+    const records = []
 
     for (let i = startingRow; i < state.grid.length; i += 1) {
-      const row = state.grid[i];
+      const row = state.grid[i]
       const record = {
         fuelType: row[EXCLUSION_AGREEMENT.FUEL_TYPE].value,
         postalAddress: row[EXCLUSION_AGREEMENT.ADDRESS].value,
@@ -289,13 +292,13 @@ class ExclusionAgreementContainer extends Component {
         quantityNotSold: row[EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD].value,
         transactionPartner: row[EXCLUSION_AGREEMENT.LEGAL_NAME].value,
         transactionType: row[EXCLUSION_AGREEMENT.TRANSACTION_TYPE].value
-      };
+      }
 
       const rowIsEmpty = !(record.transactionType || record.fuelType || record.legalName ||
-        record.address || record.quantity || record.quantityNotSold);
+        record.address || record.quantity || record.quantityNotSold)
 
       if (!rowIsEmpty) {
-        records.push(record);
+        records.push(record)
       }
     }
 
@@ -303,93 +306,96 @@ class ExclusionAgreementContainer extends Component {
       exclusionAgreement: {
         records
       }
-    });
+    })
   }
 
   _handleCellsChanged (changes, addition = null) {
-    const grid = this.state.grid.map(row => [...row]);
+    const grid = this.state.grid.map(row => [...row])
 
     changes.forEach((change) => {
       const {
         cell, row, col, value
-      } = change;
+      } = change
 
       if (cell.component) {
-        return;
+        return
       }
 
       grid[row][col] = {
         ...grid[row][col],
         value
-      };
+      }
 
       if (col === EXCLUSION_AGREEMENT.FUEL_TYPE) {
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-          fuel.name === value);
+          fuel.name === value)
 
         grid[row][EXCLUSION_AGREEMENT.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-          ? selectedFuel.unitOfMeasure.name : '';
+          ? selectedFuel.unitOfMeasure.name
+          : ''
 
         grid[row][EXCLUSION_AGREEMENT.NOT_SOLD_UNITS].value = (selectedFuel &&
-          selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : '';
+          selectedFuel.unitOfMeasure)
+          ? selectedFuel.unitOfMeasure.name
+          : ''
       }
 
       if (col === EXCLUSION_AGREEMENT.LEGAL_NAME && cell.attributes.address) {
         grid[row][EXCLUSION_AGREEMENT.ADDRESS] = {
           ...grid[row][EXCLUSION_AGREEMENT.ADDRESS],
           value: AddressBuilder(cell.attributes.address)
-        };
+        }
       }
 
       if (col === EXCLUSION_AGREEMENT.QUANTITY || col === EXCLUSION_AGREEMENT.QUANTITY_NOT_SOLD) {
-        const cleanedValue = Number(value.replace(/,/g, ''));
+        const cleanedValue = Number(value.replace(/,/g, ''))
         grid[row][col] = {
           ...grid[row][col],
           value: Number.isNaN(cleanedValue) ? '' : cleanedValue
-        };
+        }
       }
-    });
+    })
 
     this.setState({
       grid
-    });
+    })
 
     this._gridStateToPayload({
       grid
-    });
+    })
   }
 
   _validate (_row, _rowIndex, nextProps) {
-    console.error('validate');
-    console.log(this);
+    console.error('validate')
+    console.log(this)
 
-    let row = _row;
-    const rowIndex = _rowIndex;
+    let row = _row
+    const rowIndex = _rowIndex
 
     if (
       nextProps.valid ||
       (nextProps.validationMessages && !nextProps.validationMessages.exclusionAgreement)
     ) {
-      row = ExclusionAgreementContainer.clearErrorColumns(row);
+      row = ExclusionAgreementContainer.clearErrorColumns(row)
     } else if (
       nextProps.validationMessages &&
       nextProps.validationMessages.exclusionAgreement &&
       nextProps.validationMessages.exclusionAgreement.records &&
       nextProps.validationMessages.exclusionAgreement.records.length > (rowIndex)) {
-      const errorCells = Object.keys(nextProps.validationMessages.exclusionAgreement.records[rowIndex]);
-      const errorKeys = Object.keys(EXCLUSION_AGREEMENT_ERROR_KEYS);
+      const errorCells = Object.keys(nextProps.validationMessages.exclusionAgreement.records[rowIndex])
+      const errorKeys = Object.keys(EXCLUSION_AGREEMENT_ERROR_KEYS)
 
       errorKeys.forEach((errorKey) => {
-        const col = EXCLUSION_AGREEMENT_ERROR_KEYS[errorKey];
+        const col = EXCLUSION_AGREEMENT_ERROR_KEYS[errorKey]
 
         if (errorCells.indexOf(errorKey) < 0) {
-          row[col].className = row[col].className.replace(/error/g, '');
+          row[col].className = row[col].className.replace(/error/g, '')
         }
-      });
+      })
 
-      let rowNumberClassName = row[EXCLUSION_AGREEMENT.ROW_NUMBER].className;
+      let rowNumberClassName = row[EXCLUSION_AGREEMENT.ROW_NUMBER].className
       if (errorCells.length === 0) {
-        rowNumberClassName = rowNumberClassName.replace(/error/g, '');
+        rowNumberClassName = rowNumberClassName.replace(/error/g, '')
       }
 
       row[EXCLUSION_AGREEMENT.ROW_NUMBER] = {
@@ -398,41 +404,41 @@ class ExclusionAgreementContainer extends Component {
         valueViewer: data => (
           <div><FontAwesomeIcon icon={(errorCells.length > 0) ? 'exclamation-triangle' : 'check'} /></div>
         )
-      };
+      }
 
       errorCells.forEach((errorKey) => {
         if (errorKey in EXCLUSION_AGREEMENT_ERROR_KEYS) {
-          const col = EXCLUSION_AGREEMENT_ERROR_KEYS[errorKey];
-          let { className } = row[col];
+          const col = EXCLUSION_AGREEMENT_ERROR_KEYS[errorKey]
+          let { className } = row[col]
 
           if (row[col].className.indexOf('error') < 0) {
-            className += ' error';
+            className += ' error'
           }
 
           row[col] = {
             ...row[col],
             className
-          };
+          }
         }
-      });
+      })
     } else if (
       nextProps.validationMessages &&
       nextProps.validationMessages.exclusionAgreement &&
       Array.isArray(nextProps.validationMessages.exclusionAgreement)
     ) {
-      row = ExclusionAgreementContainer.clearErrorColumns(row);
+      row = ExclusionAgreementContainer.clearErrorColumns(row)
 
       nextProps.validationMessages.exclusionAgreement.forEach((message) => {
         if (message.indexOf('Duplicate entry in row') >= 0) {
-          const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '');
+          const duplicateRowIndex = message.replace(/Duplicate entry in row /g, '')
 
           if (Number(rowIndex) === Number(duplicateRowIndex)) {
-            let { className } = row[EXCLUSION_AGREEMENT.ROW_NUMBER];
+            let { className } = row[EXCLUSION_AGREEMENT.ROW_NUMBER]
 
             if (!className) {
-              className = 'error';
+              className = 'error'
             } else if (row[EXCLUSION_AGREEMENT.ROW_NUMBER].className.indexOf('error') < 0) {
-              className += ' error';
+              className += ' error'
             }
 
             row[EXCLUSION_AGREEMENT.ROW_NUMBER] = {
@@ -441,13 +447,13 @@ class ExclusionAgreementContainer extends Component {
               valueViewer: data => (
                 <div><FontAwesomeIcon icon="exclamation-triangle" /></div>
               )
-            };
+            }
           }
         }
-      });
+      })
     }
 
-    return row;
+    return row
   }
 
   render () {
@@ -470,13 +476,13 @@ class ExclusionAgreementContainer extends Component {
           <b>This report does not apply to petroleum-based gasoline or petroleum-based diesel.</b>
         </p>
       </ExclusionAgreementPage>
-    ]);
+    ])
   }
 }
 
 ExclusionAgreementContainer.defaultProps = {
   loadedState: null
-};
+}
 
 ExclusionAgreementContainer.propTypes = {
   create: PropTypes.bool.isRequired,
@@ -501,7 +507,7 @@ ExclusionAgreementContainer.propTypes = {
   valid: PropTypes.bool,
   validating: PropTypes.bool,
   validationMessages: PropTypes.object
-};
+}
 
 const mapStateToProps = state => ({
   transactionTypes: {
@@ -511,10 +517,10 @@ const mapStateToProps = state => ({
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
-});
+})
 
 const mapDispatchToProps = {
   loadTransactionTypes: transactionTypes.find
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExclusionAgreementContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ExclusionAgreementContainer)

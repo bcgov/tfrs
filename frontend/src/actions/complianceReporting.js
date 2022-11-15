@@ -1,21 +1,21 @@
-import axios from 'axios';
-import { call, put, select, takeLatest, delay } from 'redux-saga/effects';
+import axios from 'axios'
+import { call, put, select, takeLatest, delay } from 'redux-saga/effects'
 
-import * as Routes from '../constants/routes';
-import { GenericRestTemplate } from './base/genericTemplate';
+import * as Routes from '../constants/routes'
+import { GenericRestTemplate } from './base/genericTemplate'
 
 class ComplianceReportingRestInterface extends GenericRestTemplate {
   constructor (name, baseUrl, stateName) {
-    super(name, baseUrl, stateName);
+    super(name, baseUrl, stateName)
 
-    this.validateHandler = this.validateHandler.bind(this);
-    this.doValidate = this.doValidate.bind(this);
+    this.validateHandler = this.validateHandler.bind(this)
+    this.doValidate = this.doValidate.bind(this)
 
-    this.recomputeHandler = this.recomputeHandler.bind(this);
-    this.doRecompute = this.doRecompute.bind(this);
+    this.recomputeHandler = this.recomputeHandler.bind(this)
+    this.doRecompute = this.doRecompute.bind(this)
 
-    this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
-    this.doGetSnapshot = this.doGetSnapshot.bind(this);
+    this.getSnapshotHandler = this.getSnapshotHandler.bind(this)
+    this.doGetSnapshot = this.doGetSnapshot.bind(this)
   }
 
   getCustomIdentityActions () {
@@ -23,7 +23,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       'VALIDATE', 'VALIDATE_SUCCESS',
       'RECOMPUTE', 'RECOMPUTE_SUCCESS',
       'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS'
-    ];
+    ]
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -36,7 +36,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isGettingSnapshot: false,
       snapshotItem: null,
       recomputeResult: {}
-    };
+    }
   }
 
   getCustomReducerMap () {
@@ -78,70 +78,70 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isGettingSnapshot: false,
         snapshotItem: action.payload
       })]
-    ];
+    ]
   }
 
   validationStateSelector () {
-    const sn = this.stateName;
+    const sn = this.stateName
 
-    return state => (state.rootReducer[sn].validationState);
+    return state => (state.rootReducer[sn].validationState)
   }
 
   recomputeStateSelector () {
-    const sn = this.stateName;
+    const sn = this.stateName
 
-    return state => (state.rootReducer[sn].recomputeState);
+    return state => (state.rootReducer[sn].recomputeState)
   }
 
   doValidate (data = null) {
-    const { id, state } = data;
-    return axios.post(`${this.baseUrl}/${id}/validate_partial`, state);
+    const { id, state } = data
+    return axios.post(`${this.baseUrl}/${id}/validate_partial`, state)
   }
 
   * validateHandler () {
-    yield delay(1000); // debounce
+    yield delay(1000) // debounce
 
-    const data = yield (select(this.validationStateSelector()));
+    const data = yield (select(this.validationStateSelector()))
 
     try {
-      const response = yield call(this.doValidate, data);
-      yield put(this.validateSuccess(response.data));
+      const response = yield call(this.doValidate, data)
+      yield put(this.validateSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data));
+      yield put(this.error(error.response.data))
     }
   }
 
   doRecompute (data = null) {
-    const { id, state } = data;
-    return axios.patch(`${this.baseUrl}/${id}/compute_totals`, state);
+    const { id, state } = data
+    return axios.patch(`${this.baseUrl}/${id}/compute_totals`, state)
   }
 
   * recomputeHandler () {
-    yield delay(500); // debounce
+    yield delay(500) // debounce
 
-    const data = yield (select(this.recomputeStateSelector()));
+    const data = yield (select(this.recomputeStateSelector()))
 
     try {
-      const response = yield call(this.doRecompute, data);
-      yield put(this.recomputeSuccess(response.data));
+      const response = yield call(this.doRecompute, data)
+      yield put(this.recomputeSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data));
+      yield put(this.error(error.response.data))
     }
   }
 
   doGetSnapshot (data = null) {
-    const id = data;
-    return axios.get(`${this.baseUrl}/${id}/snapshot`);
+    const id = data
+    return axios.get(`${this.baseUrl}/${id}/snapshot`)
   }
 
   * getSnapshotHandler () {
-    const data = yield (select(this.idSelector()));
+    const data = yield (select(this.idSelector()))
 
     try {
-      const response = yield call(this.doGetSnapshot, data);
-      yield put(this.getSnapshotSuccess(response.data));
+      const response = yield call(this.doGetSnapshot, data)
+      yield put(this.getSnapshotSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data));
+      yield put(this.error(error.response.data))
     }
   }
 
@@ -150,7 +150,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
       takeLatest(this.getSnapshot, this.getSnapshotHandler)
-    ];
+    ]
   }
 }
 
@@ -158,7 +158,7 @@ const complianceReporting = new ComplianceReportingRestInterface(
   'COMPLIANCE_REPORTING',
   Routes.BASE_URL + Routes.COMPLIANCE_REPORTING_API,
   'complianceReporting'
-);
+)
 
 // eslint-disable-next-line import/prefer-default-export
-export { complianceReporting };
+export { complianceReporting }

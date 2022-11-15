@@ -1,29 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../app/components/Loading';
-import { FUEL_CODES } from '../../constants/routes/Admin';
-import { useNavigate } from 'react-router';
+import Loading from '../../app/components/Loading'
+import { FUEL_CODES } from '../../constants/routes/Admin'
+import { useNavigate } from 'react-router'
 
 const FuelCodes = (props) => {
-  const { isFetching, items } = props.fuelCodes;
+  const { isFetching, items } = props.fuelCodes
   const navigate = useNavigate()
 
   if (isFetching) {
-    return <Loading />;
+    return <Loading />
   }
 
   const awaitingReview = {
     fuelCodes: {
       total: 0
     }
-  };
+  }
 
   items.forEach((item) => {
     if (item.status.status === 'Draft') {
-      awaitingReview.fuelCodes.total += 1;
+      awaitingReview.fuelCodes.total += 1
     }
-  });
+  })
 
   return (
     <div className="dashboard-fieldset">
@@ -43,9 +43,9 @@ const FuelCodes = (props) => {
                 props.setFilter([{
                   id: 'status',
                   value: 'Draft'
-                }], 'fuel-codes');
+                }], 'fuel-codes')
 
-                return navigate(FUEL_CODES.LIST);
+                return navigate(FUEL_CODES.LIST)
               }}
               type="button"
             >
@@ -62,9 +62,9 @@ const FuelCodes = (props) => {
               props.setFilter([{
                 id: 'status',
                 value: ''
-              }], 'fuel-codes');
+              }], 'fuel-codes')
 
-              return navigate(FUEL_CODES.LIST);
+              return navigate(FUEL_CODES.LIST)
             }}
             type="button"
           >
@@ -73,11 +73,11 @@ const FuelCodes = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 FuelCodes.defaultProps = {
-};
+}
 
 FuelCodes.propTypes = {
   fuelCodes: PropTypes.shape({
@@ -85,6 +85,6 @@ FuelCodes.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default FuelCodes;
+export default FuelCodes

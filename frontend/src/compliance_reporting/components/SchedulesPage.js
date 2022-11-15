@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import 'react-datasheet/lib/react-datasheet.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import 'react-datasheet/lib/react-datasheet.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ScheduleATotals from './ScheduleATotals';
-import ScheduleBTotals from './ScheduleBTotals';
-import ValidationMessages from './ValidationMessages';
+import ScheduleATotals from './ScheduleATotals'
+import ScheduleBTotals from './ScheduleBTotals'
+import ValidationMessages from './ValidationMessages'
 
 const SchedulesPage = props => (
   <div className="page_schedule spreadsheet-component">
@@ -40,7 +40,7 @@ const SchedulesPage = props => (
           <button
             className="btn btn-default left"
             onClick={() => {
-              props.addRow();
+              props.addRow()
             }}
             type="button"
           >
@@ -61,7 +61,7 @@ const SchedulesPage = props => (
               <li key={numberOfRows}>
                 <button
                   onClick={() => {
-                    props.addRow(numberOfRows);
+                    props.addRow(numberOfRows)
                   }}
                   type="button"
                 >
@@ -89,14 +89,14 @@ const SchedulesPage = props => (
       <div className="clear" />
     </div>
   </div>
-);
+)
 
 SchedulesPage.defaultProps = {
   addRowEnabled: true,
   children: null,
   totals: {},
   validationMessages: {}
-};
+}
 
 SchedulesPage.propTypes = {
   addRow: PropTypes.func.isRequired,
@@ -117,6 +117,6 @@ SchedulesPage.propTypes = {
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
-};
+}
 
-export default SchedulesPage;
+export default SchedulesPage

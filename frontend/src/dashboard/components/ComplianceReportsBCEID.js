@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import { useNavigate } from 'react-router';
+import Loading from '../../app/components/Loading'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import { useNavigate } from 'react-router'
 
 const ComplianceReportsBCEID = (props) => {
-  const { isFetching, items } = props.complianceReports;
+  const { isFetching, items } = props.complianceReports
   const navigate = useNavigate()
 
   if (isFetching) {
-    return <Loading />;
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -28,40 +28,40 @@ const ComplianceReportsBCEID = (props) => {
       supplemental: 0,
       total: 0
     }
-  };
+  }
 
   items.forEach((item) => {
-    let { status } = item;
-    const { supplementalReports, type } = item;
-    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports';
+    let { status } = item
+    const { supplementalReports, type } = item
+    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports'
 
     if (supplementalReports.length > 0) {
-      let [deepestSupplementalReport] = supplementalReports;
+      let [deepestSupplementalReport] = supplementalReports
 
       while (deepestSupplementalReport.supplementalReports &&
         deepestSupplementalReport.supplementalReports.length > 0) {
-        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
+        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports
       }
-      ({ status } = deepestSupplementalReport);
+      ({ status } = deepestSupplementalReport)
     }
 
     if (status.fuelSupplierStatus === 'Draft') {
-      awaitingReview[reportType].draft += 1;
-      awaitingReview[reportType].total += 1;
+      awaitingReview[reportType].draft += 1
+      awaitingReview[reportType].total += 1
     }
 
     if (status.fuelSupplierStatus === 'Submitted' &&
     ['Accepted', 'Rejected'].indexOf(status.directorStatus) < 0) {
       if (status.analystStatus === 'Requested Supplemental' ||
       status.managerStatus === 'Requested Supplemental') {
-        awaitingReview[reportType].supplemental += 1;
+        awaitingReview[reportType].supplemental += 1
       } else {
-        awaitingReview[reportType].review += 1;
+        awaitingReview[reportType].review += 1
       }
 
-      awaitingReview[reportType].total += 1;
+      awaitingReview[reportType].total += 1
     }
-  });
+  })
 
   return (
     <div className="dashboard-fieldset">
@@ -87,9 +87,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Draft'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -109,9 +109,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Supplemental Requested'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -131,9 +131,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Submitted'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -163,9 +163,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Draft'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -185,9 +185,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Supplemental Requested'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -207,9 +207,9 @@ const ComplianceReportsBCEID = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Submitted'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -226,28 +226,28 @@ const ComplianceReportsBCEID = (props) => {
           <div>
             <button
               onClick={() => {
-                const currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear()
 
                 props.setFilter([{
                   id: 'compliance-period',
                   value: currentYear.toString()
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
               Current compliance period
             </button>
-            {` | `}
+            {' | '}
             <button
               onClick={() => {
                 props.setFilter([{
                   id: 'compliance-period',
                   value: ''
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -259,7 +259,7 @@ const ComplianceReportsBCEID = (props) => {
 
       {props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
       <div className="add-button">
-        <FontAwesomeIcon icon="play" /> {` `}
+        <FontAwesomeIcon icon="play" /> {' '}
         <button
           onClick={() => (navigate(COMPLIANCE_REPORTING.LIST))}
           type="button"
@@ -269,11 +269,11 @@ const ComplianceReportsBCEID = (props) => {
       </div>
       }
     </div>
-  );
-};
+  )
+}
 
 ComplianceReportsBCEID.defaultProps = {
-};
+}
 
 ComplianceReportsBCEID.propTypes = {
   complianceReports: PropTypes.shape({
@@ -287,6 +287,6 @@ ComplianceReportsBCEID.propTypes = {
     })
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default ComplianceReportsBCEID;
+export default ComplianceReportsBCEID

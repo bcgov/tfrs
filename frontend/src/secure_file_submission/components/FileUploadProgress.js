@@ -1,10 +1,10 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import { ProgressBar } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import { getFileSize } from '../../utils/functions';
+import React from 'react'
+import { ProgressBar } from 'react-bootstrap'
+import PropTypes from 'prop-types'
+import { getFileSize } from '../../utils/functions'
 
 const FileUploadProgress = props => (
   <div className="progress-bars">
@@ -28,7 +28,7 @@ const FileUploadProgress = props => (
     ))
     }
   </div>
-);
+)
 
 FileUploadProgress.propTypes = {
   progress: PropTypes.arrayOf(PropTypes.shape({
@@ -42,6 +42,6 @@ FileUploadProgress.propTypes = {
     })
   })).isRequired,
   files: PropTypes.arrayOf(PropTypes.shape()).isRequired
-};
+}
 
-export default FileUploadProgress;
+export default FileUploadProgress

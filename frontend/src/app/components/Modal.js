@@ -1,36 +1,36 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
 
 const bootstrapClassFor = (extraConfirmType) => {
   switch (extraConfirmType) {
     case 'warning':
-      return 'alert alert-warning';
+      return 'alert alert-warning'
     case 'error':
-      return 'alert alert-danger';
+      return 'alert alert-danger'
     case 'info':
     default:
-      return 'alert alert-primary';
+      return 'alert alert-primary'
   }
-};
+}
 
 class Modal extends React.Component {
   componentDidMount () {
     if (this.props.initiallyShown) {
-      this.show();
+      this.show()
     }
 
     if (this.props.handleCancel) {
       $(this.element).on('hidden.bs.modal', (e) => {
-        this.props.handleCancel();
-      });
+        this.props.handleCancel()
+      })
     }
   }
 
   show () {
-    $(this.element).modal('show');
+    $(this.element).modal('show')
   }
 
   render () {
@@ -99,7 +99,7 @@ class Modal extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -117,7 +117,7 @@ Modal.defaultProps = {
   showExtraConfirm: false,
   title: 'Confirmation',
   tooltipMessage: ''
-};
+}
 
 Modal.propTypes = {
   cancelLabel: PropTypes.string,
@@ -140,6 +140,6 @@ Modal.propTypes = {
   showExtraConfirm: PropTypes.bool,
   title: PropTypes.string,
   tooltipMessage: PropTypes.string
-};
+}
 
-export default Modal;
+export default Modal

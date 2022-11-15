@@ -1,15 +1,15 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ReactTable from '../../../app/components/StateSavingReactTable';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const CarbonIntensityLimitsTable = (props) => {
   const navigate = useNavigate()
@@ -22,7 +22,8 @@ const CarbonIntensityLimitsTable = (props) => {
     id: 'title'
   }, {
     accessor: item => (item.limits.diesel && item.limits.diesel.density
-      ? item.limits.diesel.density : 0).toFixed(2),
+      ? item.limits.diesel.density
+      : 0).toFixed(2),
     Cell: (row) => {
       if (row.original.revisedLimits && row.original.revisedLimits.diesel) {
         return (
@@ -39,10 +40,10 @@ const CarbonIntensityLimitsTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-diesel',
     Header: (
@@ -55,7 +56,8 @@ const CarbonIntensityLimitsTable = (props) => {
     width: 300
   }, {
     accessor: item => (item.limits.gasoline && item.limits.gasoline.density
-      ? item.limits.gasoline.density : 0).toFixed(2),
+      ? item.limits.gasoline.density
+      : 0).toFixed(2),
     Cell: (row) => {
       if (row.original.revisedLimits && row.original.revisedLimits.gasoline) {
         return (
@@ -72,10 +74,10 @@ const CarbonIntensityLimitsTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-gasoline',
     Header: (
@@ -86,16 +88,18 @@ const CarbonIntensityLimitsTable = (props) => {
     ),
     id: 'gasoline',
     width: 300
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -114,27 +118,27 @@ const CarbonIntensityLimitsTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id);
+              const viewUrl = CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id)
               navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
-  );
-};
+  )
+}
 
-CarbonIntensityLimitsTable.defaultProps = {};
+CarbonIntensityLimitsTable.defaultProps = {}
 
 CarbonIntensityLimitsTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
-};
+}
 
-export default CarbonIntensityLimitsTable;
+export default CarbonIntensityLimitsTable

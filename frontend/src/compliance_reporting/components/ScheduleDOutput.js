@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import Input from '../../app/components/Spreadsheet/Input';
+import Input from '../../app/components/Spreadsheet/Input'
 
 const numericInput = readOnly => ({
   attributes: {
@@ -13,42 +13,42 @@ const numericInput = readOnly => ({
   readOnly,
   dataEditor: Input,
   valueViewer: (cell) => {
-    let { value } = cell;
+    let { value } = cell
 
     if (value === '') {
-      return '';
+      return ''
     }
 
-    value = Number(value);
+    value = Number(value)
 
-    const parts = String(value).split('.');
-    const wholeNumber = parts[0];
-    let decimal = '';
+    const parts = String(value).split('.')
+    const wholeNumber = parts[0]
+    let decimal = ''
     if (parts.length > 1) {
-      ({ 1: decimal } = parts);
+      ({ 1: decimal } = parts)
     }
 
     return (
       <span>
         {Number(wholeNumber).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}{decimal !== '' && decimal > 0 ? `.${decimal}` : ''}
       </span>
-    );
+    )
   }
-});
+})
 
 const totalViewer = (cell) => {
-  const { value } = cell;
+  const { value } = cell
 
   if (value === '') {
-    return '';
+    return ''
   }
 
   return (
     <span>
       {Number(value) ? Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''}
     </span>
-  );
-};
+  )
+}
 
 const ScheduleDOutput = readOnly => ([
   [{
@@ -130,6 +130,6 @@ const ScheduleDOutput = readOnly => ([
     readOnly: true,
     valueViewer: totalViewer
   }]
-]);
+])
 
-export default ScheduleDOutput;
+export default ScheduleDOutput

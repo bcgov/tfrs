@@ -3,41 +3,41 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { toastr as reduxToastr } from 'react-redux-toastr';
-import ReactMarkdown from 'react-markdown';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { toastr as reduxToastr } from 'react-redux-toastr'
+import ReactMarkdown from 'react-markdown'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { getUpdatedLoggedInUser } from '../actions/userActions';
-import * as NumberFormat from '../constants/numeralFormats';
-import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions';
-import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions';
-import { complianceReporting } from '../actions/complianceReporting';
-import CheckBox from '../app/components/CheckBox';
-import AddressBuilder from '../app/components/AddressBuilder';
-import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import ScheduleAContainer from './ScheduleAContainer';
-import ScheduleAssessmentContainer from './ScheduleAssessmentContainer';
-import ScheduleBContainer from './ScheduleBContainer';
-import ScheduleCContainer from './ScheduleCContainer';
-import ScheduleDContainer from './ScheduleDContainer';
-import ScheduleSummaryContainer from './ScheduleSummaryContainer';
-import withReferenceData from '../utils/reference_data_support';
-import ComplianceReportIntroContainer from './ComplianceReportIntroContainer';
-import Loading from '../app/components/Loading';
-import ScheduleButtons from './components/ScheduleButtons';
-import ScheduleTabs from './components/ScheduleTabs';
-import Modal from '../app/components/Modal';
-import withCreditCalculationService from './services/credit_calculation_hoc';
-import toastr from '../utils/toastr';
-import autosaved from '../utils/autosave_support';
-import ChangelogContainer from './ChangelogContainer';
-import Tooltip from '../app/components/Tooltip';
-import { withRouter } from '../utils/withRouter';
+import { getUpdatedLoggedInUser } from '../actions/userActions'
+import * as NumberFormat from '../constants/numeralFormats'
+import { addSigningAuthorityConfirmation } from '../actions/signingAuthorityConfirmationsActions'
+import getSigningAuthorityAssertions from '../actions/signingAuthorityAssertionsActions'
+import { complianceReporting } from '../actions/complianceReporting'
+import CheckBox from '../app/components/CheckBox'
+import AddressBuilder from '../app/components/AddressBuilder'
+import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport'
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
+import ScheduleAContainer from './ScheduleAContainer'
+import ScheduleAssessmentContainer from './ScheduleAssessmentContainer'
+import ScheduleBContainer from './ScheduleBContainer'
+import ScheduleCContainer from './ScheduleCContainer'
+import ScheduleDContainer from './ScheduleDContainer'
+import ScheduleSummaryContainer from './ScheduleSummaryContainer'
+import withReferenceData from '../utils/reference_data_support'
+import ComplianceReportIntroContainer from './ComplianceReportIntroContainer'
+import Loading from '../app/components/Loading'
+import ScheduleButtons from './components/ScheduleButtons'
+import ScheduleTabs from './components/ScheduleTabs'
+import Modal from '../app/components/Modal'
+import withCreditCalculationService from './services/credit_calculation_hoc'
+import toastr from '../utils/toastr'
+import autosaved from '../utils/autosave_support'
+import ChangelogContainer from './ChangelogContainer'
+import Tooltip from '../app/components/Tooltip'
+import { withRouter } from '../utils/withRouter'
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -54,60 +54,60 @@ class ComplianceReportingEditContainer extends Component {
       gasolineClassObligation: Number(summary.gasolineClassObligation),
       gasolineClassPreviouslyRetained: Number(summary.gasolineClassPreviouslyRetained),
       gasolineClassRetained: Number(summary.gasolineClassRetained)
-    };
+    }
   }
 
   static componentForTabName (tab) {
-    let TabComponent;
+    let TabComponent
 
     switch (tab) {
       case 'schedule-a':
-        TabComponent = withReferenceData()(ScheduleAContainer);
-        break;
+        TabComponent = withReferenceData()(ScheduleAContainer)
+        break
 
       case 'schedule-b':
         TabComponent = withReferenceData({
           includeCompliancePeriods: true
-        })(withCreditCalculationService()(ScheduleBContainer));
-        break;
+        })(withCreditCalculationService()(ScheduleBContainer))
+        break
 
       case 'schedule-c':
-        TabComponent = withReferenceData()(ScheduleCContainer);
-        break;
+        TabComponent = withReferenceData()(ScheduleCContainer)
+        break
 
       case 'schedule-d':
-        TabComponent = withReferenceData()(ScheduleDContainer);
-        break;
+        TabComponent = withReferenceData()(ScheduleDContainer)
+        break
 
       case 'schedule-summary':
         TabComponent = withReferenceData({
           includeCompliancePeriods: true
-        })(withCreditCalculationService()(ScheduleSummaryContainer));
-        break;
+        })(withCreditCalculationService()(ScheduleSummaryContainer))
+        break
 
       case 'schedule-assessment':
-        TabComponent = withReferenceData()(ScheduleAssessmentContainer);
-        break;
+        TabComponent = withReferenceData()(ScheduleAssessmentContainer)
+        break
 
       case 'changelog':
-        TabComponent = withReferenceData()(ChangelogContainer);
-        break;
+        TabComponent = withReferenceData()(ChangelogContainer)
+        break
 
       default:
-        TabComponent = ComplianceReportIntroContainer;
+        TabComponent = ComplianceReportIntroContainer
     }
 
-    return TabComponent;
+    return TabComponent
   }
 
   constructor (props) {
-    super(props);
-    this.tabComponent = Loading;
-    const { tab } = props.params;
-    this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
+    super(props)
+    this.tabComponent = Loading
+    const { tab } = props.params
+    this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab)
     this.status = {
       fuelSupplierStatus: 'Draft'
-    };
+    }
 
     let initialState = {
       schedules: {},
@@ -119,83 +119,83 @@ class ComplianceReportingEditContainer extends Component {
         props.complianceReporting.item.isSupplemental &&
         props.complianceReporting.item.actions.includes('SUBMIT')),
       supplementalNote: ''
-    };
+    }
     if (props.loadedState) {
       initialState = {
         ...initialState,
         ...props.loadedState
-      };
+      }
     }
 
-    this.state = initialState;
-    this._addToFields = this._addToFields.bind(this);
-    this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this);
-    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this);
-    this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this);
-    this._showPenaltyWarning = this._showPenaltyWarning.bind(this);
-    this._toggleCheck = this._toggleCheck.bind(this);
-    this._updateScheduleState = this._updateScheduleState.bind(this);
-    this._validate = this._validate.bind(this);
+    this.state = initialState
+    this._addToFields = this._addToFields.bind(this)
+    this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this)
+    this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this)
+    this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this)
+    this._showPenaltyWarning = this._showPenaltyWarning.bind(this)
+    this._toggleCheck = this._toggleCheck.bind(this)
+    this._updateScheduleState = this._updateScheduleState.bind(this)
+    this._validate = this._validate.bind(this)
   }
 
   componentDidMount () {
     this.props.getSigningAuthorityAssertions({
       module: 'compliance_report'
-    });
+    })
 
-    this.props.getComplianceReports();
-    this.props.getComplianceReport(this.props.params.id);
+    this.props.getComplianceReports()
+    this.props.getComplianceReport(this.props.params.id)
 
     this.setState({
       getCalled: true
-    });
+    })
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    const { tab } = nextProps.params;
+    const { tab } = nextProps.params
 
     if (tab !== this.props.params.tab) {
-      this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab);
+      this.tabComponent = ComplianceReportingEditContainer.componentForTabName(tab)
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
-      const { id } = this.props.params;
+      const { id } = this.props.params
 
       if (nextProps.complianceReporting.item &&
         !nextProps.complianceReporting.item.readOnly) {
-        const { schedules } = this.state;
+        const { schedules } = this.state
 
         if (schedules.summary && schedules.summary.dieselClassDeferred) {
           schedules.summary.dieselClassDeferred =
-            String(schedules.summary.dieselClassDeferred).replace(/,/g, '');
+            String(schedules.summary.dieselClassDeferred).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.dieselClassObligation) {
           schedules.summary.dieselClassObligation =
-            String(schedules.summary.dieselClassObligation).replace(/,/g, '');
+            String(schedules.summary.dieselClassObligation).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.dieselClassPreviouslyRetained) {
           schedules.summary.dieselClassPreviouslyRetained =
-            String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+            String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.dieselClassRetained) {
           schedules.summary.dieselClassRetained =
-            String(schedules.summary.dieselClassRetained).replace(/,/g, '');
+            String(schedules.summary.dieselClassRetained).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.gasolineClassDeferred) {
           schedules.summary.gasolineClassDeferred =
-            String(schedules.summary.gasolineClassDeferred).replace(/,/g, '');
+            String(schedules.summary.gasolineClassDeferred).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.gasolineClassObligation) {
           schedules.summary.gasolineClassObligation =
-            String(schedules.summary.gasolineClassObligation).replace(/,/g, '');
+            String(schedules.summary.gasolineClassObligation).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.gasolineClassPreviouslyRetained) {
           schedules.summary.gasolineClassPreviouslyRetained =
-            String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+            String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '')
         }
         if (schedules.summary && schedules.summary.gasolineClassRetained) {
           schedules.summary.gasolineClassRetained =
-            String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
+            String(schedules.summary.gasolineClassRetained).replace(/,/g, '')
         }
 
         this._validate({
@@ -203,132 +203,132 @@ class ComplianceReportingEditContainer extends Component {
           state: {
             ...schedules
           }
-        });
+        })
       }
 
       if (nextProps.complianceReporting.item.hasSnapshot) {
-        this.props.getSnapshotRequest(id);
+        this.props.getSnapshotRequest(id)
       }
 
       this.setState({
         supplementalNoteRequired: (nextProps.complianceReporting.item.isSupplemental &&
           nextProps.complianceReporting.item.actions.includes('SUBMIT'))
-      });
+      })
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (!nextProps.complianceReporting.success) {
-        reduxToastr.error('Error creating supplemental report');
+        reduxToastr.error('Error creating supplemental report')
       } else {
-        this.props.invalidateAutosaved();
-        toastr.complianceReporting('Supplemental Created');
-        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id));
+        this.props.invalidateAutosaved()
+        toastr.complianceReporting('Supplemental Created')
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id))
       }
     }
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
-        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving';
-        reduxToastr.error(errorMessage);
+        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving'
+        reduxToastr.error(errorMessage)
       } else {
         if (this.status.fuelSupplierStatus) {
-          toastr.complianceReporting(this.status.fuelSupplierStatus);
+          toastr.complianceReporting(this.status.fuelSupplierStatus)
         } else if (this.status.analystStatus && this.status.analystStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.analystStatus);
+          toastr.complianceReporting(this.status.analystStatus)
         } else if (this.status.managerStatus && this.status.managerStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.managerStatus);
+          toastr.complianceReporting(this.status.managerStatus)
         } else if (this.status.directorStatus && this.status.directorStatus !== 'Unreviewed') {
-          toastr.complianceReporting(this.status.directorStatus);
+          toastr.complianceReporting(this.status.directorStatus)
         } else {
-          toastr.complianceReporting(this.status);
+          toastr.complianceReporting(this.status)
         }
 
-        this.props.invalidateAutosaved();
+        this.props.invalidateAutosaved()
 
         if (this.status.fuelSupplierStatus !== 'Draft') {
-          this.props.getUpdatedLoggedInUser();
-          this.props.navigate(COMPLIANCE_REPORTING.LIST);
+          this.props.getUpdatedLoggedInUser()
+          this.props.navigate(COMPLIANCE_REPORTING.LIST)
         }
       }
     }
 
     if (this.props.complianceReporting.isRemoving && !nextProps.complianceReporting.isRemoving) {
-      this.props.invalidateAutosaved();
-      this.props.navigate(COMPLIANCE_REPORTING.LIST);
-      toastr.complianceReporting('Cancelled');
+      this.props.invalidateAutosaved()
+      this.props.navigate(COMPLIANCE_REPORTING.LIST)
+      toastr.complianceReporting('Cancelled')
     }
   }
 
   _updateScheduleState (_mergedState) {
-    const mergedState = _mergedState;
-    const { schedules } = this.state;
-    const { id } = this.props.params;
-    const period = this.props.complianceReporting.item.compliancePeriod.description;
+    const mergedState = _mergedState
+    const { schedules } = this.state
+    const { id } = this.props.params
+    const period = this.props.complianceReporting.item.compliancePeriod.description
 
     if (schedules.summary && schedules.summary.dieselClassDeferred) {
       schedules.summary.dieselClassDeferred =
-        String(schedules.summary.dieselClassDeferred).replace(/,/g, '');
+        String(schedules.summary.dieselClassDeferred).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.dieselClassObligation) {
       schedules.summary.dieselClassObligation =
-        String(schedules.summary.dieselClassObligation).replace(/,/g, '');
+        String(schedules.summary.dieselClassObligation).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.dieselClassPreviouslyRetained) {
       schedules.summary.dieselClassPreviouslyRetained =
-        String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+        String(schedules.summary.dieselClassPreviouslyRetained).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.dieselClassRetained) {
       schedules.summary.dieselClassRetained =
-        String(schedules.summary.dieselClassRetained).replace(/,/g, '');
+        String(schedules.summary.dieselClassRetained).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.gasolineClassDeferred) {
       schedules.summary.gasolineClassDeferred =
-        String(schedules.summary.gasolineClassDeferred).replace(/,/g, '');
+        String(schedules.summary.gasolineClassDeferred).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.gasolineClassObligation) {
       schedules.summary.gasolineClassObligation =
-        String(schedules.summary.gasolineClassObligation).replace(/,/g, '');
+        String(schedules.summary.gasolineClassObligation).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.gasolineClassPreviouslyRetained) {
       schedules.summary.gasolineClassPreviouslyRetained =
-        String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+        String(schedules.summary.gasolineClassPreviouslyRetained).replace(/,/g, '')
     }
     if (schedules.summary && schedules.summary.gasolineClassRetained) {
       schedules.summary.gasolineClassRetained =
-        String(schedules.summary.gasolineClassRetained).replace(/,/g, '');
+        String(schedules.summary.gasolineClassRetained).replace(/,/g, '')
     }
 
     if (mergedState.summary && mergedState.summary.dieselClassDeferred) {
       mergedState.summary.dieselClassDeferred =
-        String(mergedState.summary.dieselClassDeferred).replace(/,/g, '');
+        String(mergedState.summary.dieselClassDeferred).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.dieselClassObligation) {
       mergedState.summary.dieselClassObligation =
-        String(mergedState.summary.dieselClassObligation).replace(/,/g, '');
+        String(mergedState.summary.dieselClassObligation).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.dieselClassPreviouslyRetained) {
       mergedState.summary.dieselClassPreviouslyRetained =
-        String(mergedState.summary.dieselClassPreviouslyRetained).replace(/,/g, '');
+        String(mergedState.summary.dieselClassPreviouslyRetained).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.dieselClassRetained) {
       mergedState.summary.dieselClassRetained =
-        String(mergedState.summary.dieselClassRetained).replace(/,/g, '');
+        String(mergedState.summary.dieselClassRetained).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.gasolineClassDeferred) {
       mergedState.summary.gasolineClassDeferred =
-        String(mergedState.summary.gasolineClassDeferred).replace(/,/g, '');
+        String(mergedState.summary.gasolineClassDeferred).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.gasolineClassObligation) {
       mergedState.summary.gasolineClassObligation =
-        String(mergedState.summary.gasolineClassObligation).replace(/,/g, '');
+        String(mergedState.summary.gasolineClassObligation).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.gasolineClassPreviouslyRetained) {
       mergedState.summary.gasolineClassPreviouslyRetained =
-        String(mergedState.summary.gasolineClassPreviouslyRetained).replace(/,/g, '');
+        String(mergedState.summary.gasolineClassPreviouslyRetained).replace(/,/g, '')
     }
     if (mergedState.summary && mergedState.summary.gasolineClassRetained) {
       mergedState.summary.gasolineClassRetained =
-        String(mergedState.summary.gasolineClassRetained).replace(/,/g, '');
+        String(mergedState.summary.gasolineClassRetained).replace(/,/g, '')
     }
 
     this.setState({
@@ -336,7 +336,7 @@ class ComplianceReportingEditContainer extends Component {
         ...schedules,
         ...mergedState
       }
-    });
+    })
 
     this._validate({
       id,
@@ -345,28 +345,28 @@ class ComplianceReportingEditContainer extends Component {
         ...schedules,
         ...mergedState
       }
-    });
+    })
 
     this.props.updateStateToSave({
       schedules: {
         ...schedules,
         ...mergedState
       }
-    });
+    })
   }
 
   _handleDelete () {
-    this.props.deleteComplianceReport({ id: this.props.params.id });
+    this.props.deleteComplianceReport({ id: this.props.params.id })
 
     setTimeout(() => {
-      this.props.getUpdatedLoggedInUser();
-    }, 2000);
+      this.props.getUpdatedLoggedInUser()
+    }, 2000)
   }
 
   _handleCreateSupplemental (event, compliancePeriodDescription) {
     this.setState({
       createSupplementalCalled: true
-    });
+    })
 
     this.props.createComplianceReport({
       status: {
@@ -375,41 +375,41 @@ class ComplianceReportingEditContainer extends Component {
       type: 'Compliance Report',
       compliancePeriod: compliancePeriodDescription,
       supplements: Number(this.props.params.id)
-    });
+    })
 
     setTimeout(() => {
-      this.props.getUpdatedLoggedInUser();
-    }, 2000);
+      this.props.getUpdatedLoggedInUser()
+    }, 2000)
   }
 
   _addToFields (value) {
-    const { terms } = this.state;
+    const { terms } = this.state
 
-    const found = terms.find(term => term.id === value.id);
+    const found = terms.find(term => term.id === value.id)
 
     if (!found) {
-      terms.push(value);
+      terms.push(value)
     }
 
     this.setState({
       terms
-    });
+    })
   }
 
   _toggleCheck (key) {
-    const { terms } = this.state;
-    const index = terms.findIndex(term => term.id === key);
-    terms[index].value = !terms[index].value;
+    const { terms } = this.state
+    const index = terms.findIndex(term => term.id === key)
+    terms[index].value = !terms[index].value
 
     this.setState({
       terms
-    });
+    })
   }
 
   _handleSupplementalNoteUpdate (event) {
     this.setState({
       supplementalNote: event.target.value
-    });
+    })
   }
 
   _handleSubmit (event, status = { fuelSupplierStatus: 'Draft' }) {
@@ -417,97 +417,97 @@ class ComplianceReportingEditContainer extends Component {
     const payload = {
       status,
       ...this.state.schedules
-    };
+    }
 
     if (this.state.supplementalNoteRequired &&
       status.fuelSupplierStatus &&
       status.fuelSupplierStatus === 'Submitted') {
-      payload.supplementalNote = this.state.supplementalNote;
+      payload.supplementalNote = this.state.supplementalNote
     }
 
     if (payload.summary) {
-      const { summary } = payload;
-      payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+      const { summary } = payload
+      payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary)
     }
 
-    this.status = status;
+    this.status = status
 
     this.props.updateComplianceReport({
       id: this.props.params.id,
       state: payload,
       patch: true
-    });
+    })
 
-    const data = [];
+    const data = []
     this.state.terms.forEach((term) => {
       if (term.value) {
         data.push({
           complianceReport: this.props.params.id,
           hasAccepted: term.value,
           signingAuthorityAssertion: term.id
-        });
+        })
       }
-    });
+    })
 
     if (data.length > 0) {
-      this.props.addSigningAuthorityConfirmation(data);
+      this.props.addSigningAuthorityConfirmation(data)
     }
   }
 
   _handleRecomputeRequest () {
-    const { schedules } = this.state;
+    const { schedules } = this.state
 
-    const { id } = this.props.params;
-    const { complianceReporting: report } = this.props;
+    const { id } = this.props.params
+    const { complianceReporting: report } = this.props
 
     if (!complianceReporting.validationMessages ||
       Object.keys(complianceReporting.validationMessages).length === 0) {
-      const { summary } = schedules;
+      const { summary } = schedules
 
       if (summary && !summary.dieselClassDeferred) {
-        summary.dieselClassDeferred = 0;
+        summary.dieselClassDeferred = 0
       }
 
       if (summary && !summary.dieselClassRetained) {
-        summary.dieselClassRetained = 0;
+        summary.dieselClassRetained = 0
       }
 
       if (summary && !summary.dieselClassPreviouslyRetained) {
-        summary.dieselClassPreviouslyRetained = 0;
+        summary.dieselClassPreviouslyRetained = 0
       }
 
       if (summary && !summary.dieselClassObligation) {
-        summary.dieselClassObligation = 0;
+        summary.dieselClassObligation = 0
       }
 
       if (summary && !summary.gasolineClassDeferred) {
-        summary.gasolineClassDeferred = 0;
+        summary.gasolineClassDeferred = 0
       }
 
       if (summary && !summary.gasolineClassRetained) {
-        summary.gasolineClassRetained = 0;
+        summary.gasolineClassRetained = 0
       }
 
       if (summary && !summary.gasolineClassPreviouslyRetained) {
-        summary.gasolineClassPreviouslyRetained = 0;
+        summary.gasolineClassPreviouslyRetained = 0
       }
 
       if (summary && !summary.gasolineClassObligation) {
-        summary.gasolineClassObligation = 0;
+        summary.gasolineClassObligation = 0
       }
 
       if (summary && !summary.creditsOffset) {
-        summary.creditsOffset = 0;
+        summary.creditsOffset = 0
       }
 
-      const { isSupplemental } = report.item;
+      const { isSupplemental } = report.item
 
       // if (isSupplemental && summary && !summary.creditsOffsetA) {
       //   summary.creditsOffsetA = totalPreviousCreditReductions;
       // }
 
       if (isSupplemental && summary && !summary.creditsOffsetB) {
-        summary.creditsOffsetB = 0;
+        summary.creditsOffsetB = 0
       }
 
       this.props.recomputeTotals({
@@ -518,7 +518,7 @@ class ComplianceReportingEditContainer extends Component {
             ...summary
           }
         }
-      });
+      })
     }
   }
 
@@ -526,67 +526,67 @@ class ComplianceReportingEditContainer extends Component {
     this.setState({
       ...this.state,
       showPenaltyWarning: bool
-    });
+    })
   }
 
   _validate (_payload) {
     if (this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE)) {
-      const payload = _payload;
+      const payload = _payload
       if (payload.state && payload.state.summary) {
-        const { summary } = payload.state;
+        const { summary } = payload.state
 
-        payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary);
+        payload.state.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary)
       }
 
-      return this.props.validateComplianceReport(payload);
+      return this.props.validateComplianceReport(payload)
     }
 
-    return false;
+    return false
   }
 
   render () {
-    const TabComponent = this.tabComponent;
+    const TabComponent = this.tabComponent
 
-    const { tab, id } = this.props.params;
-    const { item } = this.props.complianceReporting;
+    const { tab, id } = this.props.params
+    const { item } = this.props.complianceReporting
 
     if (!this.state.getCalled) {
-      return (<Loading />);
+      return (<Loading />)
     }
 
     if (this.props.complianceReporting.isGetting) {
-      return (<Loading />);
+      return (<Loading />)
     }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
-      return (<Loading />);
+      return (<Loading />)
     }
 
-    let period = null;
+    let period = null
     if (typeof (item.compliancePeriod) === 'string') {
-      period = item.compliancePeriod;
+      period = item.compliancePeriod
     } else {
-      period = item.compliancePeriod.description;
+      period = item.compliancePeriod.description
     }
 
-    let organizationAddress = null;
+    let organizationAddress = null
 
     if (item.hasSnapshot &&
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
-      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization);
+      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization)
     } else if (this.props.loggedInUser.organization.organizationAddress &&
       !this.props.loggedInUser.isGovernmentUser) {
-      ({ organizationAddress } = this.props.loggedInUser.organization);
+      ({ organizationAddress } = this.props.loggedInUser.organization)
     }
 
     return ([
       <h2 className="schedule-header" key="main-header">
         {item.organization.name}
-        {` -- `}
+        {' -- '}
         {typeof item.type === 'string' && item.type}
         {item.type.theType}
-        {` for `}
+        {' for '}
         {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
         {item.compliancePeriod.description}
       </h2>,
@@ -816,7 +816,7 @@ class ComplianceReportingEditContainer extends Component {
       >
         Are you sure you want to delete this draft?
       </Modal>
-    ]);
+    ])
   }
 }
 
@@ -826,7 +826,7 @@ ComplianceReportingEditContainer.defaultProps = {
     success: false
   },
   loadedState: null
-};
+}
 
 ComplianceReportingEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
@@ -908,7 +908,7 @@ ComplianceReportingEditContainer.propTypes = {
   updateComplianceReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired,
   validateComplianceReport: PropTypes.func.isRequired
-};
+}
 
 const
   mapDispatchToProps = {
@@ -923,7 +923,7 @@ const
     updateComplianceReport: complianceReporting.update,
     validateComplianceReport: complianceReporting.validate,
     getUpdatedLoggedInUser
-  };
+  }
 
 const
   mapStateToProps = state => ({
@@ -954,7 +954,7 @@ const
       items: state.rootReducer.signingAuthorityAssertions.items,
       isFetching: state.rootReducer.signingAuthorityAssertions.isFetching
     }
-  });
+  })
 
 const
   config = {
@@ -962,9 +962,9 @@ const
     version: 4,
     name: 'compliance-report',
     customPathGenerator: props => (props.location.pathname)
-  };
+  }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(withRouter(ComplianceReportingEditContainer)));
+)(autosaved(config)(withRouter(ComplianceReportingEditContainer)))

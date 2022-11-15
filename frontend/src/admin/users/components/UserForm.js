@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import UserFormDetails from './UserFormDetails';
-import Errors from '../../../app/components/Errors';
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
+import UserFormDetails from './UserFormDetails'
+import Errors from '../../../app/components/Errors'
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
 
 const UserForm = props => (
   <div className="page_admin_user">
@@ -52,7 +52,7 @@ const UserForm = props => (
       </div>
     </form>
   </div>
-);
+)
 
 UserForm.defaultProps = {
   editPrimaryFields: false,
@@ -61,7 +61,7 @@ UserForm.defaultProps = {
   isAdding: false,
   roles: null,
   toggleCheck: null
-};
+}
 
 UserForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -78,6 +78,6 @@ UserForm.propTypes = {
   roles: PropTypes.shape(),
   title: PropTypes.string.isRequired,
   toggleCheck: PropTypes.func
-};
+}
 
-export default UserForm;
+export default UserForm

@@ -3,26 +3,26 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tab, Tabs } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tab, Tabs } from 'react-bootstrap'
 
-import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
-import Loading from '../../app/components/Loading';
-import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
-import CarbonIntensityDetails from './components/CarbonIntensityDetails';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import { useParams } from 'react-router';
+import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities'
+import Loading from '../../app/components/Loading'
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable'
+import CarbonIntensityDetails from './components/CarbonIntensityDetails'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import { useParams } from 'react-router'
 
 const DefaultCarbonIntensityDetailContainer = props => {
-  const { id } = useParams();
+  const { id } = useParams()
 
   useEffect(() => {
-    props.getDefaultCarbonIntensity(id);
-  }, [id]);
+    props.getDefaultCarbonIntensity(id)
+  }, [id])
 
-  const { item, isFetching, success } = props.defaultCarbonIntensity;
+  const { item, isFetching, success } = props.defaultCarbonIntensity
 
   if (success && !isFetching && item) {
     return (
@@ -44,14 +44,14 @@ const DefaultCarbonIntensityDetailContainer = props => {
 
         </Tab>
       </Tabs>
-    );
+    )
   }
 
-  return <Loading />;
+  return <Loading />
 }
 
 DefaultCarbonIntensityDetailContainer.defaultProps = {
-};
+}
 
 DefaultCarbonIntensityDetailContainer.propTypes = {
   defaultCarbonIntensity: PropTypes.shape({
@@ -60,8 +60,8 @@ DefaultCarbonIntensityDetailContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getDefaultCarbonIntensity: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape().isRequired,
-};
+  loggedInUser: PropTypes.shape().isRequired
+}
 
 const mapStateToProps = state => ({
   defaultCarbonIntensity: {
@@ -70,10 +70,10 @@ const mapStateToProps = state => ({
     success: state.rootReducer.defaultCarbonIntensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getDefaultCarbonIntensity: defaultCarbonIntensities.get
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultCarbonIntensityDetailContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultCarbonIntensityDetailContainer)

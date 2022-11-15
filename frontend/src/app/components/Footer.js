@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import * as Routes from '../../constants/routes';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import * as Routes from '../../constants/routes'
 
 /* global __VERSION__ */
 
@@ -49,6 +49,6 @@ const Footer = props => (
       </div>
     </div>
   </div>
-);
+)
 
-export default Footer;
+export default Footer

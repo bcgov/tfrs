@@ -1,28 +1,28 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import Errors from '../../app/components/Errors';
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
-import CreditTransferCommentButtons from './CreditTransferCommentButtons';
-import CreditTransferCommentForm from './CreditTransferCommentForm';
-import GovernmentTransferFormDetails from './GovernmentTransferFormDetails';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import getCompliancePeriods from '../../actions/compliancePeriodsActions'
+import Errors from '../../app/components/Errors'
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
+import CreditTransferCommentButtons from './CreditTransferCommentButtons'
+import CreditTransferCommentForm from './CreditTransferCommentForm'
+import GovernmentTransferFormDetails from './GovernmentTransferFormDetails'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
 
 const GovernmentTransferForm = props => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    props.getCompliancePeriods();
+    props.getCompliancePeriods()
   }, [])
 
   return (
@@ -96,7 +96,8 @@ const GovernmentTransferForm = props => {
             >
               <button
                 className={`btn ${this.props.fields.comment.length === 0
-                  ? 'btn-disabled' : 'btn-primary '}`}
+                  ? 'btn-disabled'
+: 'btn-primary '}`}
                 data-target="#confirmRecommend"
                 data-toggle="modal"
                 disabled={this.props.fields.comment.length === 0}
@@ -110,7 +111,7 @@ const GovernmentTransferForm = props => {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
 GovernmentTransferForm.defaultProps = {
@@ -118,7 +119,7 @@ GovernmentTransferForm.defaultProps = {
   id: 0,
   title: 'New Credit Transaction',
   validationErrors: {}
-};
+}
 
 GovernmentTransferForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -140,14 +141,14 @@ GovernmentTransferForm.propTypes = {
   isCommenting: PropTypes.bool.isRequired,
   title: PropTypes.string,
   validationErrors: PropTypes.shape({})
-};
+}
 
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(GovernmentTransferForm);
+export default connect(mapStateToProps, mapDispatchToProps)(GovernmentTransferForm)

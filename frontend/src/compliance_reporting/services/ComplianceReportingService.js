@@ -4,63 +4,63 @@
  * Move projection and mapping out of UI layer
  */
 
-import axios from 'axios';
-import * as Routes from '../../constants/routes';
+import axios from 'axios'
+import * as Routes from '../../constants/routes'
 
 class ComplianceReportingService {
   static getAvailableScheduleDFuels (complianceReport, scheduleState) {
-    let source;
+    let source
 
     if (scheduleState.scheduleD) {
-      source = scheduleState.scheduleD;
+      source = scheduleState.scheduleD
     } else if (complianceReport && complianceReport.scheduleD) {
-      source = complianceReport.scheduleD;
+      source = complianceReport.scheduleD
     }
 
     if (!source || !source.sheets) {
-      return [];
+      return []
     }
 
-    const fuels = [];
+    const fuels = []
 
-    for (let [i, sheet] of source.sheets.entries()) {
-      const intensity = this.computeScheduleDFuelIntensity(sheet);
+    for (const [i, sheet] of source.sheets.entries()) {
+      const intensity = this.computeScheduleDFuelIntensity(sheet)
       fuels.push({
         id: i,
         fuelType: sheet.fuelType,
         fuelClass: sheet.fuelClass,
         intensity,
         descriptiveName: `${sheet.fuelType} ${intensity}`
-      });
+      })
     }
 
-    return fuels;
+    return fuels
   }
 
   static computeScheduleDFuelIntensity (sheet) {
-    let total = 0.0;
-    let empty = true;
+    let total = 0.0
+    let empty = true
 
     for (const output of sheet.outputs) {
-      total += parseFloat(output.intensity);
-      empty = false;
+      total += parseFloat(output.intensity)
+      empty = false
     }
 
-    total = (total / 1000).toFixed(2);
+    total = (total / 1000).toFixed(2)
 
-    return empty ? null : total;
+    return empty ? null : total
   }
 
   static _fetchCalculationValuePromise (compliancePeriod) {
     if (!ComplianceReportingService._cache) {
-      ComplianceReportingService._cache = [];
+      ComplianceReportingService._cache = []
     }
 
-    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod);
+    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod)
     if (cached) {
       return new Promise((resolve) => {
-        resolve(cached.data);
-      });
+        resolve(cached.data)
+      })
     }
 
     return new Promise((resolve) => {
@@ -72,42 +72,42 @@ class ComplianceReportingService {
         // enhance the supplied data with synthetic properties
         for (let i = 0; i < response.data.length; i += 1) {
           for (let j = 0; j < response.data[i].fuelCodes.length; j += 1) {
-            const fc = response.data[i].fuelCodes[j];
-            response.data[i].fuelCodes[j].descriptiveName = `${fc.fuelCode}${fc.fuelCodeVersion}.${fc.fuelCodeVersionMinor}`;
+            const fc = response.data[i].fuelCodes[j]
+            response.data[i].fuelCodes[j].descriptiveName = `${fc.fuelCode}${fc.fuelCodeVersion}.${fc.fuelCodeVersionMinor}`
           }
           for (let j = 0; j < response.data[i].provisions.length; j += 1) {
-            const p = response.data[i].provisions[j];
-            response.data[i].provisions[j].descriptiveName = `${p.provision} - ${p.description}`;
+            const p = response.data[i].provisions[j]
+            response.data[i].provisions[j].descriptiveName = `${p.provision} - ${p.description}`
           }
         }
 
         ComplianceReportingService._cache.push({
           key: compliancePeriod,
           data: response.data
-        });
-        resolve(response.data);
-      });
-    });
+        })
+        resolve(response.data)
+      })
+    })
   }
 
   static loadData (compliancePeriod) {
     if (!ComplianceReportingService._cache) {
-      ComplianceReportingService._cache = [];
+      ComplianceReportingService._cache = []
     }
-    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod);
+    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod)
     if (!cached) {
-      return this._fetchCalculationValuePromise(compliancePeriod);
+      return this._fetchCalculationValuePromise(compliancePeriod)
     }
     return new Promise((resolve) => {
-      resolve();
-    });
+      resolve()
+    })
   }
 
   static computeCredits (context, sourceValues) {
     const {
       compliancePeriod,
       availableScheduleDFuels
-    } = context;
+    } = context
 
     const {
       fuelClass,
@@ -117,7 +117,7 @@ class ComplianceReportingService {
       fuelCode,
       scheduleDIntensityValue,
       quantity
-    } = sourceValues;
+    } = sourceValues
 
     if (!fuelType) {
       return {
@@ -143,40 +143,40 @@ class ComplianceReportingService {
           singleFuelClassAvailable: false,
           singleProvisionAvailable: false
         }
-      };
+      }
     }
 
-    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod);
+    const cached = ComplianceReportingService._cache.find(e => e.key === compliancePeriod)
     if (!cached) {
       throw { msg: 'you must seed the cache for this compliancePeriod first' }
     }
-    const response = cached.data;
+    const response = cached.data
 
     const fuel = response.find(e =>
-      String(e.name).toUpperCase() === String(fuelType).toUpperCase());
+      String(e.name).toUpperCase() === String(fuelType).toUpperCase())
 
-    let selectedFuelClass = null;
+    let selectedFuelClass = null
 
     if (fuel && fuel.fuelClasses && fuelClass) {
       selectedFuelClass = fuel.fuelClasses.find(item => (
         String(item.fuelClass).toUpperCase() === String(fuelClass).toUpperCase()
-      ));
+      ))
     }
 
-    let selectedProvision = null;
+    let selectedProvision = null
 
     if (fuel && fuel.provisions && provisionOfTheAct) {
       selectedProvision = fuel.provisions.find((item) => {
-        const inputProvisions = provisionOfTheAct.split('-');
+        const inputProvisions = provisionOfTheAct.split('-')
 
         return String(item.provision).toUpperCase().indexOf(
           inputProvisions[0].trim().toUpperCase()
-        ) >= 0;
-      });
+        ) >= 0
+      })
     }
 
     const filteredScheduleDFuels = availableScheduleDFuels.filter(f =>
-      (f.fuelType === fuel.name && f.fuelClass === fuelClass));
+      (f.fuelType === fuel.name && f.fuelClass === fuelClass))
 
     const result = {
       inputs: {
@@ -213,93 +213,93 @@ class ComplianceReportingService {
         singleFuelClassAvailable: false,
         singleProvisionAvailable: false
       }
-    };
+    }
 
     if (result.parameters.fuelClasses.length === 1) {
-      result.parameters.singleFuelClassAvailable = true;
-      result.inputs.fuelClass = result.parameters.fuelClasses[0].fuelClass;
+      result.parameters.singleFuelClassAvailable = true
+      result.inputs.fuelClass = result.parameters.fuelClasses[0].fuelClass
     }
 
     if (result.parameters.provisions.length === 1) {
-      result.parameters.singleProvisionAvailable = true;
-      result.inputs.provisionOfTheAct = result.parameters.provisions[0].provision;
+      result.parameters.singleProvisionAvailable = true
+      result.inputs.provisionOfTheAct = result.parameters.provisions[0].provision
     }
 
     // select carbon intensity limit
     switch (String(result.inputs.fuelClass).toUpperCase()) {
       case 'DIESEL':
-        result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.diesel;
-        result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.diesel;
-        break;
+        result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.diesel
+        result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.diesel
+        break
       case 'GASOLINE':
-        result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.gasoline;
-        result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.gasoline;
-        break;
+        result.outputs.carbonIntensityLimit = fuel.carbonIntensityLimit.gasoline
+        result.outputs.energyEffectivenessRatio = fuel.energyEffectivenessRatio.gasoline
+        break
       default:
-        break;
+        break
     }
 
-    let provisionObject = null;
+    let provisionObject = null
 
     if (fuel) {
-      provisionObject = fuel.provisions.find(p => p.provision === provisionOfTheAct);
+      provisionObject = fuel.provisions.find(p => p.provision === provisionOfTheAct)
     }
 
     // select carbon intensity of fuel
     if (provisionObject) {
       switch (provisionObject.description) {
         case 'Default Carbon Intensity Value':
-          result.outputs.carbonIntensityFuel = fuel.defaultCarbonIntensity;
-          break;
+          result.outputs.carbonIntensityFuel = fuel.defaultCarbonIntensity
+          break
         case 'Alternative Method':
-          result.outputs.carbonIntensityFuel = result.inputs.customIntensity;
-          result.outputs.customIntensityValue = result.inputs.customIntensity;
-          result.parameters.intensityInputRequired = true;
-          break;
+          result.outputs.carbonIntensityFuel = result.inputs.customIntensity
+          result.outputs.customIntensityValue = result.inputs.customIntensity
+          result.parameters.intensityInputRequired = true
+          break
         case 'Approved fuel code': {
-          result.parameters.fuelCodeSelectionRequired = true;
-          const fuelCodeObject = fuel.fuelCodes.find(f => String(f.id) === String(fuelCode));
+          result.parameters.fuelCodeSelectionRequired = true
+          const fuelCodeObject = fuel.fuelCodes.find(f => String(f.id) === String(fuelCode))
           if (fuelCodeObject) {
-            result.outputs.carbonIntensityFuel = fuelCodeObject.carbonIntensity;
+            result.outputs.carbonIntensityFuel = fuelCodeObject.carbonIntensity
           }
         }
-          break;
+          break
         case 'GHGenius modelled': {
-          result.parameters.scheduleDSelectionRequired = true;
-          const scheduleDEntryObject = availableScheduleDFuels.find(f => String(f.id) === String(fuelCode));
+          result.parameters.scheduleDSelectionRequired = true
+          const scheduleDEntryObject = availableScheduleDFuels.find(f => String(f.id) === String(fuelCode))
           if (scheduleDEntryObject) {
-            result.outputs.carbonIntensityFuel = scheduleDEntryObject.intensity;
+            result.outputs.carbonIntensityFuel = scheduleDEntryObject.intensity
           }
         }
-          break;
+          break
         case 'Prescribed carbon intensity':
-          result.outputs.carbonIntensityFuel = fuel.defaultCarbonIntensity; // is this correct?
-          break;
+          result.outputs.carbonIntensityFuel = fuel.defaultCarbonIntensity // is this correct?
+          break
         default:
-          break;
+          break
       }
     }
 
     // compute energy content
     if (result.inputs.quantity) {
-      result.outputs.energyContent = Number(result.outputs.energyDensity) * Number(result.inputs.quantity);
+      result.outputs.energyContent = Number(result.outputs.energyDensity) * Number(result.inputs.quantity)
     }
 
     // compute credit or debit
     if (result.outputs.carbonIntensityFuel && result.outputs.energyContent &&
       result.outputs.carbonIntensityLimit && result.outputs.energyEffectivenessRatio) {
-      let credit = Number(result.outputs.carbonIntensityLimit) * Number(result.outputs.energyEffectivenessRatio);
-      credit -= Number(result.outputs.carbonIntensityFuel);
-      credit *= Number(result.outputs.energyContent);
-      credit /= 1000000;
+      let credit = Number(result.outputs.carbonIntensityLimit) * Number(result.outputs.energyEffectivenessRatio)
+      credit -= Number(result.outputs.carbonIntensityFuel)
+      credit *= Number(result.outputs.energyContent)
+      credit /= 1000000
       if (credit < 0) {
-        result.outputs.debits = -credit;
+        result.outputs.debits = -credit
       } else {
-        result.outputs.credits = credit;
+        result.outputs.credits = credit
       }
     }
 
-    return result;
+    return result
   }
 
   static computeSummaryValues (context, sourceValues) {
@@ -308,14 +308,14 @@ class ComplianceReportingService {
       availableScheduleDFuels,
       scheduleA,
       scheduleB
-    } = context;
+    } = context
 
     const {
       line6,
       line8,
       line17,
       line19
-    } = sourceValues;
+    } = sourceValues
 
     const result = {
       inputs: {
@@ -358,7 +358,7 @@ class ComplianceReportingService {
         totalPenalty: null
       },
       parameters: {}
-    };
+    }
 
     result.inputs = {
       ...result.inputs,
@@ -366,10 +366,10 @@ class ComplianceReportingService {
       line8,
       line17,
       line19
-    };
+    }
 
-    return result;
+    return result
   }
 }
 
-export default ComplianceReportingService;
+export default ComplianceReportingService

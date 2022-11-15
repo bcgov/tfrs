@@ -1,21 +1,21 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../app/components/Loading';
-import NotificationsTable from './NotificationsTable';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
-import COMPLIANCE_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsComplianceReports';
-import EXCLUSION_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsExclusionReports';
-import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
-import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
-import * as Lang from '../../constants/langEnUs';
-import SettingsTabs from './SettingsTabs';
-import DOCUMENT_NOTIFICATIONS from '../../constants/settings/notificationsDocuments';
-import CONFIG from '../../config';
+import Loading from '../../app/components/Loading'
+import NotificationsTable from './NotificationsTable'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
+import COMPLIANCE_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsComplianceReports'
+import EXCLUSION_REPORT_NOTIFICATIONS from '../../constants/settings/notificationsExclusionReports'
+import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers'
+import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers'
+import * as Lang from '../../constants/langEnUs'
+import SettingsTabs from './SettingsTabs'
+import DOCUMENT_NOTIFICATIONS from '../../constants/settings/notificationsDocuments'
+import CONFIG from '../../config'
 
 const SettingsDetails = props => (
   <div className="page_settings">
@@ -46,20 +46,20 @@ const SettingsDetails = props => (
           fields={props.fields.settings.notifications}
           items={CREDIT_TRANSFER_NOTIFICATIONS.filter((notification) => {
             if (props.loggedInUser.isGovernmentUser) {
-              return notification.recipients.includes('government');
+              return notification.recipients.includes('government')
             }
 
             if (notification.recipients.includes('fuel_supplier')) {
               if (notification.feature === 'base') {
-                return true;
+                return true
               }
 
               if (CONFIG.CREDIT_TRANSFER.ENABLED && notification.feature === 'credit_transfer') {
-                return true;
+                return true
               }
             }
 
-            return false;
+            return false
           })}
           key="table-credit-transactions"
           toggleCheck={props.toggleCheck}
@@ -149,7 +149,7 @@ const SettingsDetails = props => (
       ]}
     </div>
   </div>
-);
+)
 
 SettingsDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -168,6 +168,6 @@ SettingsDetails.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   toggleCheck: PropTypes.func.isRequired
-};
+}
 
-export default SettingsDetails;
+export default SettingsDetails

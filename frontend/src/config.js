@@ -4,12 +4,12 @@
 const getConfig = (value, def) => {
   // console.log("getConfig", value, def)
   if (global.tfrs_config) {
-    return global.tfrs_config[value] || def;
+    return global.tfrs_config[value] || def
   }
-  console.log("getConfig AFTER", value, def)
+  console.log('getConfig AFTER', value, def)
 
-  return def;
-};
+  return def
+}
 
 const CONFIG = {
   API_BASE: getConfig('api_base', `${window.location.protocol}//${window.location.host}:8000/api`),
@@ -23,7 +23,7 @@ const CONFIG = {
 
     // LOGOUT_URL: getConfig('keycloak.logout_url', false),
     REALM: getConfig('keycloak.realm', false),
-    URL: getConfig('keycloak.url', false),
+    URL: getConfig('keycloak.url', false)
   },
   DEBUG: {
     ENABLED: getConfig('debug.enabled', false)
@@ -49,6 +49,6 @@ const CONFIG = {
     ENABLED: getConfig('exclusion_reports.enabled', false),
     CREATE_EFFECTIVE_DATE: getConfig('exclusion_reports.create_effective_date', '2013-07-01')
   }
-};
+}
 
-export default CONFIG;
+export default CONFIG

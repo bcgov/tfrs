@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Tooltip from '../../app/components/Tooltip';
-import * as NumberFormat from '../../constants/numeralFormats';
-import { DEFAULT_ORGANIZATION } from '../../constants/values';
+import Tooltip from '../../app/components/Tooltip'
+import * as NumberFormat from '../../constants/numeralFormats'
+import { DEFAULT_ORGANIZATION } from '../../constants/values'
 
 const Balance = props => (
   <div className="dashboard-card">
@@ -48,25 +48,25 @@ const Balance = props => (
       id="organizationFilterSelect"
       className="form-control"
       onChange={(event) => {
-        const organizationId = parseInt(event.target.value, 10);
-        props.selectOrganization(organizationId);
+        const organizationId = parseInt(event.target.value, 10)
+        props.selectOrganization(organizationId)
       }}
       value={props.organization.id}
     >
       <option value="-1">All Organizations</option>
       {props.organizations.sort((a, b) => {
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
+        const nameA = a.name.toUpperCase()
+        const nameB = b.name.toUpperCase()
 
         if (nameA < nameB) {
-          return -1;
+          return -1
         }
 
         if (nameA > nameB) {
-          return 1;
+          return 1
         }
 
-        return 0;
+        return 0
       }).map(organization =>
         (organization.id !== DEFAULT_ORGANIZATION.id &&
           <option
@@ -78,12 +78,12 @@ const Balance = props => (
         ))}
     </select>
   </div>
-);
+)
 
 Balance.defaultProps = {
   organization: {},
   organizations: []
-};
+}
 
 Balance.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -109,6 +109,6 @@ Balance.propTypes = {
     name: PropTypes.string
   })),
   selectOrganization: PropTypes.func.isRequired
-};
+}
 
-export default Balance;
+export default Balance

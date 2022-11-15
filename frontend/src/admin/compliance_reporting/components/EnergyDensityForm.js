@@ -1,29 +1,29 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import EnergyDensityFormDetails from './EnergyDensityFormDetails';
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import Errors from '../../../app/components/Errors';
-import Tooltip from '../../../app/components/Tooltip';
+import EnergyDensityFormDetails from './EnergyDensityFormDetails'
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
+import Errors from '../../../app/components/Errors'
+import Tooltip from '../../../app/components/Tooltip'
 
 class EnergyDensityForm extends Component {
   _getValidationMessages () {
-    const validationMessage = [];
+    const validationMessage = []
 
     if (this.props.fields.effectiveDate === '') {
-      validationMessage.push('Please enter an effective date.');
+      validationMessage.push('Please enter an effective date.')
     }
 
     if (this.props.fields.expiryDate === '') {
-      validationMessage.push('Please enter an expiry date.');
+      validationMessage.push('Please enter an expiry date.')
     }
 
-    return validationMessage;
+    return validationMessage
   }
 
   render () {
@@ -71,7 +71,7 @@ class EnergyDensityForm extends Component {
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -79,7 +79,7 @@ EnergyDensityForm.defaultProps = {
   edit: false,
   errors: [],
   item: {}
-};
+}
 
 EnergyDensityForm.propTypes = {
   edit: PropTypes.bool,
@@ -93,6 +93,6 @@ EnergyDensityForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   item: PropTypes.shape(),
   title: PropTypes.string.isRequired
-};
+}
 
-export default EnergyDensityForm;
+export default EnergyDensityForm

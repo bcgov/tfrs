@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 import {
   CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES,
   HISTORICAL_DATA_ENTRY, ROLES, USERS
-} from '../../constants/routes/Admin';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
-import CONFIG from '../../config';
+} from '../../constants/routes/Admin'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import CONFIG from '../../config'
 
 const AdminTabs = props => (
   <ul className="admin-tabs nav nav-tabs" key="nav" role="tablist">
@@ -70,7 +70,7 @@ const AdminTabs = props => (
       </li>
     }
   </ul>
-);
+)
 
 AdminTabs.propTypes = {
   active: PropTypes.string.isRequired,
@@ -78,6 +78,6 @@ AdminTabs.propTypes = {
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired
-};
+}
 
-export default AdminTabs;
+export default AdminTabs

@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 
 const CreditTransferDocumentList = props => (
   <div className="credit-transfer-documents">
@@ -31,7 +31,7 @@ const CreditTransferDocumentList = props => (
       ))}
     </div>
   </div>
-);
+)
 
 CreditTransferDocumentList.propTypes = {
   documents: PropTypes.arrayOf(PropTypes.shape({
@@ -40,6 +40,6 @@ CreditTransferDocumentList.propTypes = {
     type: PropTypes.shape,
     status: PropTypes.shape
   })).isRequired
-};
+}
 
-export default CreditTransferDocumentList;
+export default CreditTransferDocumentList

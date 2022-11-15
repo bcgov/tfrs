@@ -1,5 +1,5 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const Feedback = props => (
   <div className="dashboard-card feedback">
@@ -7,7 +7,7 @@ const Feedback = props => (
     <h2>We want to hear from you</h2>
     <p>
       We are always striving to improve TFRS. <br />
-      {` Please send your suggestions and feedback to `}
+      {' Please send your suggestions and feedback to '}
       <a
         href="mailto:lcfs@gov.bc.ca"
         rel="noopener noreferrer"
@@ -17,12 +17,12 @@ const Feedback = props => (
       </a>
     </p>
   </div>
-);
+)
 
 Feedback.defaultProps = {
-};
+}
 
 Feedback.propTypes = {
-};
+}
 
-export default Feedback;
+export default Feedback

@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import history from '../../../app/History'
+import * as Lang from '../../../constants/langEnUs'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const CarbonIntensityLimitDetails = props => {
   const navigate = useNavigate()
@@ -101,9 +101,9 @@ const CarbonIntensityLimitDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-CarbonIntensityLimitDetails.defaultProps = {};
+CarbonIntensityLimitDetails.defaultProps = {}
 
 CarbonIntensityLimitDetails.propTypes = {
   item: PropTypes.shape({
@@ -115,6 +115,6 @@ CarbonIntensityLimitDetails.propTypes = {
     })
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default CarbonIntensityLimitDetails;
+export default CarbonIntensityLimitDetails

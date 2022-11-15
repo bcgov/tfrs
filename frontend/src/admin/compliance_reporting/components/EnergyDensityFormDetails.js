@@ -1,9 +1,9 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
+import React from 'react'
+import PropTypes from 'prop-types'
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
 
 const EnergyDensityFormDetails = props => (
   <div className="energy-density-details">
@@ -91,11 +91,11 @@ const EnergyDensityFormDetails = props => (
       </div>
     </div>
   </div>
-);
+)
 
 EnergyDensityFormDetails.defaultProps = {
   edit: false
-};
+}
 
 EnergyDensityFormDetails.propTypes = {
   edit: PropTypes.bool,
@@ -117,6 +117,6 @@ EnergyDensityFormDetails.propTypes = {
     name: PropTypes.string,
     unitOfMeasure: PropTypes.string
   }).isRequired
-};
+}
 
-export default EnergyDensityFormDetails;
+export default EnergyDensityFormDetails

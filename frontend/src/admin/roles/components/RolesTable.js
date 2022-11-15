@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
 
-import { ROLES } from '../../../constants/routes/Admin';
-import history from '../../../app/History';
-import ReactTable from '../../../app/components/StateSavingReactTable';
-import { useNavigate } from 'react-router';
+import { ROLES } from '../../../constants/routes/Admin'
+import history from '../../../app/History'
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
 
 const RolesTable = (props) => {
   const navigate = useNavigate()
@@ -22,16 +22,18 @@ const RolesTable = (props) => {
     accessor: item => (item.description),
     Header: 'Role',
     id: 'role'
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -47,23 +49,23 @@ const RolesTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              navigate(viewUrl);
+              const viewUrl = ROLES.DETAILS.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       columns={columns}
       defaultPageSize={10}
     />
-  );
-};
+  )
+}
 
 RolesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+}
 
-export default RolesTable;
+export default RolesTable

@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import StateSavingReactTable from '../../app/components/StateSavingReactTable'
 
 const Permissions = (props) => {
   const columns = [{
@@ -22,16 +22,18 @@ const Permissions = (props) => {
     Header: '',
     id: 'actions',
     width: 50
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <StateSavingReactTable
@@ -46,11 +48,11 @@ const Permissions = (props) => {
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 Permissions.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+}
 
-export default Permissions;
+export default Permissions

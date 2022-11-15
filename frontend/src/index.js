@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 
-import store from './store/store';
+import store from './store/store'
 
-import './app/FontAwesome';
-import '../styles/index.scss';
+import './app/FontAwesome'
+import '../styles/index.scss'
 
-import App from './app/App';
+import App from './app/App'
 
 ReactDOM.render(
   <BrowserRouter>
@@ -16,4 +16,4 @@ ReactDOM.render(
       <App/>
     </Provider>
   </BrowserRouter>,
-document.getElementById('root'));
+  document.getElementById('root'))

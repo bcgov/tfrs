@@ -1,77 +1,77 @@
-import React from 'react';
+import React from 'react'
 import {
   Routes,
   Route
-} from "react-router-dom";
+} from 'react-router-dom'
 
-import * as RoutePath from '../constants/routes';
+import * as RoutePath from '../constants/routes'
 import {
   CREDIT_TRANSACTIONS_HISTORY,
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
   USERS as ADMIN_USERS
-} from '../constants/routes/Admin';
-import CONTACT_US from '../constants/routes/ContactUs';
-import CREDIT_CALCULATIONS from '../constants/routes/CreditCalculations';
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import ORGANIZATIONS from '../constants/routes/Organizations';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
-import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
-import USERS from '../constants/routes/Users';
+} from '../constants/routes/Admin'
+import CONTACT_US from '../constants/routes/ContactUs'
+import CREDIT_CALCULATIONS from '../constants/routes/CreditCalculations'
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions'
+import ORGANIZATIONS from '../constants/routes/Organizations'
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
+import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload'
+import USERS from '../constants/routes/Users'
 
-import DashboardContainer from '../dashboard/DashboardContainer';
-import FuelCodeAddContainer from '../admin/fuel_codes/FuelCodeAddContainer';
-import FuelCodeDetailContainer from '../admin/fuel_codes/FuelCodeDetailContainer';
-import FuelCodeEditContainer from '../admin/fuel_codes/FuelCodeEditContainer';
-import FuelCodesContainer from '../admin/fuel_codes/FuelCodesContainer';
-import AdminComplianceReportingContainer from '../admin/compliance_reporting/ComplianceReportingContainer';
-import CarbonIntensityLimitDetailContainer from '../admin/compliance_reporting/CarbonIntensityLimitDetailContainer';
-import CarbonIntensityLimitEditContainer from '../admin/compliance_reporting/CarbonIntensityLimitEditContainer';
-import DefaultCarbonIntensityDetailContainer from '../admin/compliance_reporting/DefaultCarbonIntensityDetailContainer';
-import DefaultCarbonIntensityEditContainer from '../admin/compliance_reporting/DefaultCarbonIntensityEditContainer';
-import EnergyDensityDetailContainer from '../admin/compliance_reporting/EnergyDensityDetailContainer';
-import EnergyDensityEditContainer from '../admin/compliance_reporting/EnergyDensityEditContainer';
+import DashboardContainer from '../dashboard/DashboardContainer'
+import FuelCodeAddContainer from '../admin/fuel_codes/FuelCodeAddContainer'
+import FuelCodeDetailContainer from '../admin/fuel_codes/FuelCodeDetailContainer'
+import FuelCodeEditContainer from '../admin/fuel_codes/FuelCodeEditContainer'
+import FuelCodesContainer from '../admin/fuel_codes/FuelCodesContainer'
+import AdminComplianceReportingContainer from '../admin/compliance_reporting/ComplianceReportingContainer'
+import CarbonIntensityLimitDetailContainer from '../admin/compliance_reporting/CarbonIntensityLimitDetailContainer'
+import CarbonIntensityLimitEditContainer from '../admin/compliance_reporting/CarbonIntensityLimitEditContainer'
+import DefaultCarbonIntensityDetailContainer from '../admin/compliance_reporting/DefaultCarbonIntensityDetailContainer'
+import DefaultCarbonIntensityEditContainer from '../admin/compliance_reporting/DefaultCarbonIntensityEditContainer'
+import EnergyDensityDetailContainer from '../admin/compliance_reporting/EnergyDensityDetailContainer'
+import EnergyDensityEditContainer from '../admin/compliance_reporting/EnergyDensityEditContainer'
 import EnergyEffectivenessRatioDetailContainer
-  from '../admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
-import EnergyEffectivenessRatioEditContainer from '../admin/compliance_reporting/EnergyEffectivenessRatioEditContainer';
+  from '../admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer'
+import EnergyEffectivenessRatioEditContainer from '../admin/compliance_reporting/EnergyEffectivenessRatioEditContainer'
 import PetroleumCarbonIntensityDetailContainer
-  from '../admin/compliance_reporting/PetroleumCarbonIntensityDetailContainer';
-import PetroleumCarbonIntensityEditContainer from '../admin/compliance_reporting/PetroleumCarbonIntensityEditContainer';
-import CreditTransactionsHistoryContainer from '../admin/credit_trade_history/CreditTradeHistoryContainer';
-import SecureFileSubmissionsContainer from '../secure_file_submission/SecureFileSubmissionContainer';
-import SecureFileSubmissionAddContainer from '../secure_file_submission/SecureFileSubmissionAddContainer';
-import SecureFileSubmissionDetailContainer from '../secure_file_submission/SecureFileSubmissionDetailContainer';
-import SecureFileSubmissionEditContainer from '../secure_file_submission/SecureFileSubmissionEditContainer';
-import HistoricalDataEntryContainer from '../admin/historical_data_entry/HistoricalDataEntryContainer';
-import HistoricalDataEntryEditContainer from '../admin/historical_data_entry/HistoricalDataEntryEditContainer';
-import RolesContainer from '../admin/roles/RolesContainer';
-import RoleViewContainer from '../admin/roles/RoleViewContainer';
-import UsersContainer from '../admin/users/UsersContainer';
-import UserAddContainer from '../admin/users/UserAddContainer';
-import UserEditContainer from '../admin/users/UserEditContainer';
-import NotFound from './components/NotFound';
-import ComplianceReportingContainer from '../compliance_reporting/ComplianceReportingContainer';
-import ExclusionReportEditContainer from '../exclusion_reports/ExclusionReportEditContainer';
-import ContactUsContainer from '../contact_us/ContactUsContainer';
-import CreditTransactionsContainer from '../credit_transfers/CreditTransactionsContainer';
-import CreditTransferAddContainer from '../credit_transfers/CreditTransferAddContainer';
-import CreditTransferEditContainer from '../credit_transfers/CreditTransferEditContainer';
-import CreditTransferViewContainer from '../credit_transfers/CreditTransferViewContainer';
-import MyOrganizationContainer from '../organizations/MyOrganizationContainer';
-import OrganizationsContainer from '../organizations/OrganizationsContainer';
-import OrganizationViewContainer from '../organizations/OrganizationViewContainer';
-import OrganizationRolesContainer from '../organizations/OrganizationRolesContainer';
-import SettingsContainer from '../settings/SettingsContainer';
-import UserProfileContainer from '../settings/UserProfileContainer';
-import UserViewContainer from '../users/UserViewContainer';
-import NotificationsContainer from '../notifications/NotificationsContainer';
-import CONFIG from '../config';
-import OrganizationEditContainer from '../organizations/OrganizationEditContainer';
-import ComplianceReportingEditContainer from '../compliance_reporting/ComplianceReportingEditContainer';
-import ComplianceReportingEditRedirector from '../compliance_reporting/ComplianceReportingEditRedirector';
-import ExclusionReportingEditRedirector from '../exclusion_reports/ExclusionReportingEditRedirector';
+  from '../admin/compliance_reporting/PetroleumCarbonIntensityDetailContainer'
+import PetroleumCarbonIntensityEditContainer from '../admin/compliance_reporting/PetroleumCarbonIntensityEditContainer'
+import CreditTransactionsHistoryContainer from '../admin/credit_trade_history/CreditTradeHistoryContainer'
+import SecureFileSubmissionsContainer from '../secure_file_submission/SecureFileSubmissionContainer'
+import SecureFileSubmissionAddContainer from '../secure_file_submission/SecureFileSubmissionAddContainer'
+import SecureFileSubmissionDetailContainer from '../secure_file_submission/SecureFileSubmissionDetailContainer'
+import SecureFileSubmissionEditContainer from '../secure_file_submission/SecureFileSubmissionEditContainer'
+import HistoricalDataEntryContainer from '../admin/historical_data_entry/HistoricalDataEntryContainer'
+import HistoricalDataEntryEditContainer from '../admin/historical_data_entry/HistoricalDataEntryEditContainer'
+import RolesContainer from '../admin/roles/RolesContainer'
+import RoleViewContainer from '../admin/roles/RoleViewContainer'
+import UsersContainer from '../admin/users/UsersContainer'
+import UserAddContainer from '../admin/users/UserAddContainer'
+import UserEditContainer from '../admin/users/UserEditContainer'
+import NotFound from './components/NotFound'
+import ComplianceReportingContainer from '../compliance_reporting/ComplianceReportingContainer'
+import ExclusionReportEditContainer from '../exclusion_reports/ExclusionReportEditContainer'
+import ContactUsContainer from '../contact_us/ContactUsContainer'
+import CreditTransactionsContainer from '../credit_transfers/CreditTransactionsContainer'
+import CreditTransferAddContainer from '../credit_transfers/CreditTransferAddContainer'
+import CreditTransferEditContainer from '../credit_transfers/CreditTransferEditContainer'
+import CreditTransferViewContainer from '../credit_transfers/CreditTransferViewContainer'
+import MyOrganizationContainer from '../organizations/MyOrganizationContainer'
+import OrganizationsContainer from '../organizations/OrganizationsContainer'
+import OrganizationViewContainer from '../organizations/OrganizationViewContainer'
+import OrganizationRolesContainer from '../organizations/OrganizationRolesContainer'
+import SettingsContainer from '../settings/SettingsContainer'
+import UserProfileContainer from '../settings/UserProfileContainer'
+import UserViewContainer from '../users/UserViewContainer'
+import NotificationsContainer from '../notifications/NotificationsContainer'
+import CONFIG from '../config'
+import OrganizationEditContainer from '../organizations/OrganizationEditContainer'
+import ComplianceReportingEditContainer from '../compliance_reporting/ComplianceReportingEditContainer'
+import ComplianceReportingEditRedirector from '../compliance_reporting/ComplianceReportingEditRedirector'
+import ExclusionReportingEditRedirector from '../exclusion_reports/ExclusionReportingEditRedirector'
 
 const Router = routerProps => (
   <Routes>
@@ -376,6 +376,6 @@ const Router = routerProps => (
     />
     <Route element={<NotFound/>} />
   </Routes>
-);
+)
 
-export default Router;
+export default Router

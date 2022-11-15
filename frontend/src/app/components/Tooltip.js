@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import ReactMarkdown from 'react-markdown';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip as ReactTooltip } from 'react-bootstrap';
+import React, { Component } from 'react'
+import ReactMarkdown from 'react-markdown'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip as ReactTooltip } from 'react-bootstrap'
 
 class Tooltip extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       hovering: 0
-    };
+    }
 
-    this._hover = this._hover.bind(this);
-    this._hoverOut = this._hoverOut.bind(this);
+    this._hover = this._hover.bind(this)
+    this._hoverOut = this._hoverOut.bind(this)
   }
 
   _hover () {
     this.setState({
       hovering: 3000
-    });
+    })
   }
 
   _hoverOut () {
     this.setState({
       hovering: 0
-    });
+    })
   }
 
   _renderOverlay () {
@@ -42,7 +42,7 @@ class Tooltip extends Component {
           {this.props.children}
         </div>
       </OverlayTrigger>
-    );
+    )
   }
 
   _tooltip () {
@@ -62,15 +62,15 @@ class Tooltip extends Component {
           <ReactMarkdown source={this.props.title} />
         }
       </ReactTooltip>
-    );
+    )
   }
 
   render () {
     if (this.props.show) {
-      return this._renderOverlay();
+      return this._renderOverlay()
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
@@ -78,7 +78,7 @@ Tooltip.defaultProps = {
   className: 'danger',
   placement: 'top',
   show: false
-};
+}
 
 Tooltip.propTypes = {
   className: PropTypes.string,
@@ -92,6 +92,6 @@ Tooltip.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired
-};
+}
 
-export default Tooltip;
+export default Tooltip

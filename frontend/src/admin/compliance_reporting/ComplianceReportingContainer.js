@@ -3,28 +3,27 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import ComplianceReportingPage from './components/ComplianceReportingPage';
+import ComplianceReportingPage from './components/ComplianceReportingPage'
 
-import AdminTabs from '../components/AdminTabs';
-import { carbonIntensities } from '../../actions/carbonIntensities';
-import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
-import { energyDensities } from '../../actions/energyDensities';
-import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
-import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
+import AdminTabs from '../components/AdminTabs'
+import { carbonIntensities } from '../../actions/carbonIntensities'
+import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities'
+import { energyDensities } from '../../actions/energyDensities'
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios'
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities'
 
 const ComplianceReportingContainer = props => {
-
   useEffect(() => {
-    props.loadCarbonIntensities();
-    props.loadDefaultCarbonIntensities();
-    props.loadEnergyDensities();
-    props.loadEnergyEffectivenessRatios();
-    props.loadPetroleumCarbonIntensities();
-  }, []);
+    props.loadCarbonIntensities()
+    props.loadDefaultCarbonIntensities()
+    props.loadEnergyDensities()
+    props.loadEnergyEffectivenessRatios()
+    props.loadPetroleumCarbonIntensities()
+  }, [])
 
   return ([
     <AdminTabs
@@ -43,11 +42,11 @@ const ComplianceReportingContainer = props => {
       petroleumCarbonIntensities={props.petroleumCarbonIntensities}
       title="Compliance Reporting"
     />
-  ]);
+  ])
 }
 
 ComplianceReportingContainer.defaultProps = {
-};
+}
 
 ComplianceReportingContainer.propTypes = {
   carbonIntensityLimits: PropTypes.shape({
@@ -79,7 +78,7 @@ ComplianceReportingContainer.propTypes = {
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   carbonIntensityLimits: {
@@ -106,7 +105,7 @@ const mapStateToProps = state => ({
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
-});
+})
 
 const mapDispatchToProps = {
   loadCarbonIntensities: carbonIntensities.find,
@@ -114,6 +113,6 @@ const mapDispatchToProps = {
   loadDefaultCarbonIntensities: defaultCarbonIntensities.find,
   loadEnergyEffectivenessRatios: energyEffectivenessRatios.find,
   loadPetroleumCarbonIntensities: petroleumCarbonIntensities.find
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer)

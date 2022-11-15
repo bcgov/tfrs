@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
-import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import SecureFileSubmissionTable from './SecureFileSubmissionTable';
-import { useNavigate } from 'react-router';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
+import Loading from '../../app/components/Loading'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import SecureFileSubmissionTable from './SecureFileSubmissionTable'
+import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionsPage = (props) => {
-  const { isFetching, items } = props.documentUploads;
-  const isEmpty = items.length === 0;
+  const { isFetching, items } = props.documentUploads
+  const isEmpty = items.length === 0
   const navigate = useNavigate()
 
   return (
@@ -45,11 +45,11 @@ const SecureFileSubmissionsPage = (props) => {
               id="new-submission"
               className="btn btn-primary"
               onClick={() => {
-                const part3Category = props.categories.find(category => category.name === 'Part 3 Agreements');
-                const evidence = part3Category.types.find(category => (category.theType === 'Evidence'));
-                const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', evidence.id);
+                const part3Category = props.categories.find(category => category.name === 'Part 3 Agreements')
+                const evidence = part3Category.types.find(category => (category.theType === 'Evidence'))
+                const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', evidence.id)
 
-                navigate(route);
+                navigate(route)
               }}
               type="button"
             >
@@ -66,9 +66,9 @@ const SecureFileSubmissionsPage = (props) => {
                     <li key={t.id}>
                       <button
                         onClick={() => {
-                          const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', t.id);
+                          const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', t.id)
 
-                          navigate(route);
+                          navigate(route)
                         }}
                         type="button"
                       >
@@ -92,11 +92,11 @@ const SecureFileSubmissionsPage = (props) => {
       />
       }
     </div>
-  );
-};
+  )
+}
 
 SecureFileSubmissionsPage.defaultProps = {
-};
+}
 
 SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -109,6 +109,6 @@ SecureFileSubmissionsPage.propTypes = {
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default SecureFileSubmissionsPage;
+export default SecureFileSubmissionsPage

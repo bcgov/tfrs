@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from '../../../constants/langEnUs';
+import * as Lang from '../../../constants/langEnUs'
 
-import history from '../../../app/History';
+import history from '../../../app/History'
 
 const HistoricalDataEntryFormButtons = props => (
   <div className="btn-container">
@@ -47,13 +47,13 @@ const HistoricalDataEntryFormButtons = props => (
     </button>
     }
   </div>
-);
+)
 
 HistoricalDataEntryFormButtons.defaultProps = {
-};
+}
 
 HistoricalDataEntryFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired
-};
+}
 
-export default HistoricalDataEntryFormButtons;
+export default HistoricalDataEntryFormButtons

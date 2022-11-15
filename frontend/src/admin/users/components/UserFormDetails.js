@@ -1,13 +1,13 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 // import Autosuggest from 'react-bootstrap-autosuggest';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
-import CheckBox from '../../../app/components/CheckBox';
+import CheckBox from '../../../app/components/CheckBox'
 // import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
 
 const UserFormDetails = props => (
@@ -202,7 +202,7 @@ const UserFormDetails = props => (
                           name: 'organization',
                           value: selected
                         }
-                      });
+                      })
                     }}
                     renderItem={(item) => (<div>{item.name}</div>)}
                     value={props.fields.organization}
@@ -300,10 +300,10 @@ const UserFormDetails = props => (
           <div className="row roles" id="user-roles">
             {props.roles.items.filter((role) => {
               if (document.location.pathname.indexOf('/admin/users/') >= 0) {
-                return role.isGovernmentRole;
+                return role.isGovernmentRole
               }
 
-              return !role.isGovernmentRole;
+              return !role.isGovernmentRole
             }).map(role => (
               <div className="col-sm-4 checkbox-group" key={role.id}>
                 <CheckBox
@@ -344,13 +344,13 @@ const UserFormDetails = props => (
       }
     </div>
   </div>
-);
+)
 
 UserFormDetails.defaultProps = {
   fuelSuppliers: null,
   roles: null,
   toggleCheck: null
-};
+}
 
 UserFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -393,6 +393,6 @@ UserFormDetails.propTypes = {
     isFinding: PropTypes.bool.isRequired
   }),
   toggleCheck: PropTypes.func
-};
+}
 
-export default UserFormDetails;
+export default UserFormDetails

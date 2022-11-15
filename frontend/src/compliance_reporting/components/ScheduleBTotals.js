@@ -1,32 +1,32 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import Draggable from 'react-draggable';
+import PropTypes from 'prop-types'
+import React from 'react'
+import Draggable from 'react-draggable'
 
-import { formatNumeric } from '../../utils/functions';
+import { formatNumeric } from '../../utils/functions'
 
 const ScheduleBTotals = (props) => {
   const formatNumber = (value) => {
     if (value === 0) {
-      return '-';
+      return '-'
     }
 
-    return formatNumeric(Math.round(value), 0);
-  };
+    return formatNumeric(Math.round(value), 0)
+  }
 
   const getNetTotal = () => {
-    const { credit, debit } = props.totals;
-    const value = credit - debit;
+    const { credit, debit } = props.totals
+    const value = credit - debit
 
     if (value === 0) {
-      return '-';
+      return '-'
     }
 
     if (value < 0) {
-      return `(${formatNumeric(Math.round(value * -1), 0)})`;
+      return `(${formatNumeric(Math.round(value * -1), 0)})`
     }
 
-    return formatNumeric(Math.round(value), 0);
-  };
+    return formatNumeric(Math.round(value), 0)
+  }
 
   return (
     <Draggable bounds="parent">
@@ -62,14 +62,14 @@ const ScheduleBTotals = (props) => {
         </div>
       </div>
     </Draggable>
-  );
-};
+  )
+}
 
 ScheduleBTotals.propTypes = {
   totals: PropTypes.shape({
     credit: PropTypes.number,
     debit: PropTypes.number
   }).isRequired
-};
+}
 
-export default ScheduleBTotals;
+export default ScheduleBTotals
