@@ -1,7 +1,7 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -15,7 +15,6 @@ import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
 import CreditTransferCommentButtons from './CreditTransferCommentButtons'
 import CreditTransferCommentForm from './CreditTransferCommentForm'
 import GovernmentTransferFormDetails from './GovernmentTransferFormDetails'
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 const GovernmentTransferForm = props => {
