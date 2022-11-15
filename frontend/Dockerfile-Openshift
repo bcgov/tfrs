@@ -4,7 +4,8 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install --production
-RUN npm install webpack webpack-cli -g
+RUN npm install -D webpack
+RUN npm install -D webpack-cli
 RUN npm run production
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
