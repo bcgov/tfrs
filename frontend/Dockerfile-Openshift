@@ -3,7 +3,7 @@ FROM artifacts.developer.gov.bc.ca/docker-remote/node:16 as builder
 ENV NODE_ENV=production
 WORKDIR /usr/src/app
 COPY ./ ./
-RUN npm install --save-dev
+RUN npm install -D webpack-cli
 RUN npm run production
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
