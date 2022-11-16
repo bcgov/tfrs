@@ -49,7 +49,7 @@ module.exports = settings => {
     }
   }))
 
-  /*
+
  //build celery
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
   'param':{
@@ -60,7 +60,7 @@ module.exports = settings => {
     'RELEASE_BRANCH': phases[phase].releaseBranch
   }
 }))
-
+  /*
 //build notification server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-bc.yaml`, {
   'param':{
