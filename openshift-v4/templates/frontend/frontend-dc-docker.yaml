@@ -21,9 +21,9 @@ parameters:
     displayName: Environment name
     description: Environment name, dev, test and prod
     required: true
-  - name: HOST_NAME
-    displayName: Host name for route
-    description: Host name for route
+  - name: NAMESPACE
+    displayName: namespace
+    description: namespace
     required: true
   - name: CPU_REQUEST
     displayName: Requested CPU
@@ -85,27 +85,27 @@ objects:
       name: ${NAME}-frontend-features${SUFFIX}
       creationTimestamp:
     data:
-    features.js: |
-      window.tfrs_config = {
-        "keycloak.enabled": true,
-        "keycloak.authority": "${KEYCLOAK_AUTHORITY}" , 
-        "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
-        "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
-        "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
-        "debug.enabled": false,
-        "secure_document_upload.enabled": true,
-        "secure_document_upload.max_file_size": 50000000,
-        "fuel_codes.enabled": true,
-        "keycloak.custom_login": true,
-        "credit_transfer.enabled": true,
-        "compliance_reporting.enabled": true,
-        "credit_calculation_api.enabled": true,
-        "compliance_reporting.starting_year": 2017,
-        "compliance_reporting.create_effective_date": "2019-01-01",
-        "exclusion_reports.create_effective_date": "2019-01-01",
-        "exclusion_reports.enabled": true,
-        "api_base": "https://${BACKEND_HOST}/api"
-      };
+      features.js: |
+        window.tfrs_config = {
+          "keycloak.enabled": true,
+          "keycloak.authority": "${KEYCLOAK_AUTHORITY}" , 
+          "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
+          "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
+          "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
+          "debug.enabled": false,
+          "secure_document_upload.enabled": true,
+          "secure_document_upload.max_file_size": 50000000,
+          "fuel_codes.enabled": true,
+          "keycloak.custom_login": true,
+          "credit_transfer.enabled": true,
+          "compliance_reporting.enabled": true,
+          "credit_calculation_api.enabled": true,
+          "compliance_reporting.starting_year": 2017,
+          "compliance_reporting.create_effective_date": "2019-01-01",
+          "exclusion_reports.create_effective_date": "2019-01-01",
+          "exclusion_reports.enabled": true,
+          "api_base": "https://${BACKEND_HOST}/api"
+        };
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
@@ -143,6 +143,26 @@ objects:
               volumeMounts:
                 - name: ${NAME}-frontend-features${SUFFIX}
                   mountPath: /app/static/js/config
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              env:
+                - name: RABBITMQ_VHOST
+                  value: tfrs-vhost
+                - name: RABBITMQ_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: tfrs-rabbitmq-app
+                      key: username
+                - name: RABBITMQ_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: tfrs-rabbitmq-app
+                      key: password
+                - name: RABBITMQ_HOST
+                  value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
+                - name: RABBITMQ_PORT
+                  value: '5672'
               livenessProbe:
                 failureThreshold: 10
                 initialDelaySeconds: 30
@@ -151,9 +171,6 @@ objects:
                 tcpSocket:
                   port: 8080
                 timeoutSeconds: 3
-              ports:
-                - containerPort: 8080
-                  protocol: TCP
               readinessProbe:
                 failureThreshold: 10
                 initialDelaySeconds: 20

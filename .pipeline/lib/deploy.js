@@ -55,6 +55,7 @@ module.exports = settings => {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
+      'NAMESPACE': phases[phase].namespace,
       'CPU_REQUEST': phases[phase].frontendCpuRequest,
       'CPU_LIMIT': phases[phase].frontendCpuLimit,
       'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
@@ -68,6 +69,7 @@ module.exports = settings => {
     }
   }))
 
+
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker-others.yaml`, {
     'param': {
@@ -77,8 +79,7 @@ module.exports = settings => {
       'FRONTEND_HOST': phases[phase].frontendHost,
     }
   }))
-    
-/*
+/*    
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {

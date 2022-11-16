@@ -18,11 +18,10 @@ const phases = {
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`,
         frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 2,
-            frontendKeycloakAuthority: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard', frontendKeycloakClientId: 'standard', frontendKeycloakCallbackUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca/authCallback`,
+            frontendKeycloakAuthority: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca/authCallback`,
             frontendKeycloakLogoutUrl: `https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`, 
             frontendHost: `tfrs-frontend-dev.${ocpName}.gov.bc.ca`,
             frontendCpuRequest: '200m', frontendCpuLimit: '500m', frontendMemoryRequest: '250Mi', frontendMemoryLimit: '500Mi',
-        
             backendCpuRequest: '300m', backendCpuLimit: '600m', backendMemoryRequest: '1Gi', backendMemoryLimit: '2Gi', backendHealthCheckDelay: 30, 
             backendHost: `tfrs-backend-dev.${ocpName}.gov.bc.ca`, backendReplicas: 2,
             backendKeycloakSaBaseurl: 'https://dev.loginproxy.gov.bc.ca',
@@ -33,8 +32,6 @@ const phases = {
             backendKeycloakClientId: 'tfrs-on-gold-4308',
             backendKeycloakIssuer: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard',
             backendKeycloakRealm: 'standard',
-        
-        
             celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '100m', scanHandlerCpuLimit: '250m', scanHandlerMemoryRequest: '255Mi', scanHandlerMemoryLimit: '512Mi',
         scanCoordinatorCpuRequest: '100m', scanCoordinatorCpuLimit: '250m', scanCoordinatorMemoryRequest: '255Mi', scanCoordinatorMemoryLimit: '512Mi',
@@ -42,7 +39,7 @@ const phases = {
         patroniCpuRequest: '500m', patroniCpuLimit: '1000m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '2Gi', 
             patroniReplica: 1, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
         rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '700m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
-            rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard',
+        rabbitmqReplica: 1, rabbitmqPostStartSleep: 120, storageClass: 'netapp-block-standard', 
         schemaSpyPublicCpuRequest: '50m', schemaSpyPublicCpuLimit: '500m', schemaSpyPublicMemoryRequest: '512Mi', schemaSpyPublicMemoryLimit: '2Gi', 
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
         },

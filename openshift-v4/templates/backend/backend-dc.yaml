@@ -203,7 +203,10 @@ objects:
           - name: POSTGRESQL_SERVICE_PORT
             value: '5432'
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: username
           - name: RABBITMQ_VHOST
             value: "tfrs-vhost"
           - name: RABBITMQ_HOST
@@ -212,7 +215,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: tfrs-rabbitmq-app
-                key: TFRS_USER_PASWORD
+                key: password
           - name: RABBITMQ_PORT
             value: '5672'
           - name: MINIO_ENDPOINT
