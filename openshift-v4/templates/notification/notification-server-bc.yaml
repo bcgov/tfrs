@@ -59,7 +59,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nodejs:12-1-45
+          name: nodejs-16:1-71
         pullSecret:
           name: tfrs-image-pull-secret
         forcePull: true

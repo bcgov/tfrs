@@ -50,7 +50,7 @@ module.exports = settings => {
   }))
 
 */
-
+/*
  //build celery
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
   'param':{
@@ -61,7 +61,8 @@ module.exports = settings => {
     'RELEASE_BRANCH': phases[phase].releaseBranch
   }
 }))
-  /*
+*/
+
 //build notification server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-bc.yaml`, {
   'param':{
@@ -72,7 +73,7 @@ module.exports = settings => {
     'GIT_REF': oc.git.ref
   }
 }))
-
+/*
 //build scan coordinator server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-bc.yaml`, {
   'param':{
