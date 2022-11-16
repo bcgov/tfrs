@@ -65,7 +65,7 @@ module.exports = settings => {
       'KEYCLOAK_CLIENT_ID':phases[phase].frontendKeycloakClientId,
       'KEYCLOAK_CALLBACK_URL':phases[phase].frontendKeycloakCallbackUrl,
       'KEYCLOAK_LOGOUT_URL':phases[phase].frontendKeycloakLogoutUrl,
-      'BACKEND_HOST':phases[phase].frontendHost,
+      'BACKEND_HOST':phases[phase].backendHost,
     }
   }))
 
