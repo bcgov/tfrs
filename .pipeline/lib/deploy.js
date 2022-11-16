@@ -15,6 +15,7 @@ module.exports = settings => {
 
   //The deployment of your cool app goes here ▼▼▼
 
+  /*
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -38,7 +39,7 @@ module.exports = settings => {
       'REPLICAS':phases[phase].backendReplicas
     }
   }))
-  
+
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -46,10 +47,10 @@ module.exports = settings => {
       'BACKEND_HOST':phases[phase].backendHost
     }
   }))  
+  */
 
-/*
   //deploy frontend
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
@@ -58,10 +59,26 @@ module.exports = settings => {
       'CPU_LIMIT': phases[phase].frontendCpuLimit,
       'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
       'MEMORY_LIMIT': phases[phase].frontendMemoryLimit,
-      'REPLICAS':phases[phase].frontendReplicas
+      'REPLICAS':phases[phase].frontendReplicas,
+      'KEYCLOAK_AUTHORITY':phases[phase].frontendKeycloakAuthority,
+      'KEYCLOAK_CLIENT_ID':phases[phase].frontendKeycloakClientId,
+      'KEYCLOAK_CALLBACK_URL':phases[phase].frontendKeycloakCallbackUrl,
+      'KEYCLOAK_LOGOUT_URL':phases[phase].frontendKeycloakLogoutUrl,
+      'BACKEND_HOST':phases[phase].frontendHost,
     }
   }))
 
+  //deploy frontend
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker-others.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'FRONTEND_HOST': phases[phase].frontendHost,
+    }
+  }))
+    
+/*
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
