@@ -38,7 +38,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-*/
+
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{
       'NAME': phases[phase].name,
@@ -49,6 +49,7 @@ module.exports = settings => {
     }
   }))
 
+*/
 
  //build celery
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
