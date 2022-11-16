@@ -51,7 +51,7 @@ objects:
       source:
         type: Dockerfile
         dockerfile: |
-          FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.6.8-slim-stretch
+          FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.9.15
           ENV TFRS_RELEASE=${tfrs_release}
           RUN apt-get update \
               && apt-get install -y git \
@@ -90,7 +90,13 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-celery:${VERSION}
-      resources: {}
+      resources: 
+        limits:
+          cpu: 1500m
+          memory: 1300Mi
+        requests:
+          cpu: 750m
+          memory: 650Mi
       postCommit: {}
       nodeSelector:
       successfulBuildsHistoryLimit: 5
