@@ -251,17 +251,19 @@ UserAddContainer.propTypes = {
   })
 }
 
-const mapStateToProps = state => ({
-  fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  roles: state.rootReducer.roles,
-  error: state.rootReducer.userAdmin.error,
-  createdUsername: state.rootReducer.userAdmin.user
-    .hasOwnProperty('user')
-    ? state.rootReducer.userAdmin.user.user.username
-    : null,
-  organization: state.rootReducer.organizationRequest.fuelSupplier
-})
+const mapStateToProps = state => {
+  const hasBarProperty = Object.prototype.hasOwnProperty.call(state.rootReducer.userAdmin.user, 'user')
+  return ({
+    fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
+    loggedInUser: state.rootReducer.userRequest.loggedInUser,
+    roles: state.rootReducer.roles,
+    error: state.rootReducer.userAdmin.error,
+    createdUsername: hasBarProperty
+      ? state.rootReducer.userAdmin.user.user.username
+      : null,
+    organization: state.rootReducer.organizationRequest.fuelSupplier
+  })
+}
 
 const mapDispatchToProps = {
   getFuelSuppliers,

@@ -96,15 +96,15 @@ const Delta = (props) => {
       break
     case 'delta':
       content = (
-        (props.delta.length === 0) &&
-        <p>No changes</p> ||
+        (props.delta.length === 0 &&
+        <p>No changes</p>) || (
         <ReactTable
           columns={columns}
           data={props.delta}
           filterable
           sortable
           defaultPageSize={props.delta.length}
-        />
+        />)
       )
       break
     default:
@@ -204,11 +204,11 @@ class ReportHistory extends Component {
         <div className="history-content panel">
           <div className="panel-body">
             <h1>{title}</h1>
-            {(String(activeReport) === '-1') &&
+            {(String(activeReport) === '-1' &&
             <Current
               snapshot={currentSnapshot}
               computedWarning={currentSnapshotComputed}
-            /> || deltas.map((d) => {
+            />) || deltas.map((d) => {
               if (String(activeReport) === String(d.ancestorId)) {
                 return (
                   <Delta
