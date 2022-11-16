@@ -1,0 +1,84 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: frontend
+parameters:
+  - name: NAME
+    displayName:
+    description: the module name entered when run yo bcdk:pipeline, which is zeva
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -pr-0
+    required: true
+  - name: VERSION
+    displayName:
+    description:  image tag name for output
+    required: true
+  - name: GIT_URL
+    displayName:
+    description: itvr repo
+    required: true
+  - name: GIT_REF
+    displayName:
+    description: itvr branch name of the pr
+    required: true
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the client / front end image
+    labels:
+      shared: "true"
+    creationTimestamp: null
+    name: ${NAME}-frontend
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: ${NAME}-frontend${SUFFIX}
+    creationTimestamp:
+    annotations:
+      description: Defines how to build the frontend image in docker
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}-frontend:${VERSION}
+    resources:
+        limits:
+            cpu: 1500m
+            memory: 1300Mi
+        requests:
+            cpu: 750m
+            memory: 650Mi
+    source:
+      contextDir: frontend
+      git:
+        uri: ${GIT_URL}
+        ref: ${GIT_REF}
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: ./Dockerfile-Openshift
+        env:
+          - name: ARTIFACTORY_USER
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: password
+      type: Docker
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange

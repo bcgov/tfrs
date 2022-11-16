@@ -34,7 +34,6 @@ objects:
     labels:
       shared: "true"
     creationTimestamp: null
-    generation: 643
     name: ${NAME}-frontend-angular-app
   spec:
     lookupPolicy:
@@ -63,7 +62,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nodejs:12-1-45
+          name: nodejs-16:1-71
           namespace: 0ab226-tools
         pullSecret:
           name: tfrs-image-pull-secret

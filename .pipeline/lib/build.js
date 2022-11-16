@@ -15,6 +15,7 @@ module.exports = settings => {
   console.log( oc.git.http_url);
   console.log( oc.git.ref);
 
+/*
   //build backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-bc.yaml`, {
     'param':{
@@ -25,6 +26,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
+*/
 /*
   //build frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-angular-app-bc.yaml`, {
@@ -36,8 +38,8 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-  
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc.yaml`, {
+*/
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
@@ -47,6 +49,7 @@ module.exports = settings => {
     }
   }))
 
+  /*
  //build celery
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-bc.yaml`, {
   'param':{
