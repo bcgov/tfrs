@@ -1,4 +1,4 @@
-amqp==2.6.1
+amqp==5.1.1
 asgiref==3.5.2
 backports.zoneinfo==0.2.1
 billiard==3.6.4
