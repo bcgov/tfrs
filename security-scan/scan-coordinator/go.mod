@@ -1,10 +1,19 @@
-module scan-coordinator
+module github.com/bcgov/tfrs/scan-coordinator
 
 go 1.19
 
 require (
-    github.com/streadway/amqp master
-    github.com/dutchcoders/go-clamd master
-    github.com/minio/minio-go v7.0.43
-    github.com/minio/minio-go/pkg/credentials v7.0.43
+	github.com/dutchcoders/go-clamd v0.0.0-20170520113014-b970184f4d9e
+	github.com/minio/minio-go v6.0.14+incompatible
+	github.com/streadway/amqp v1.0.0
+)
+
+require (
+	github.com/go-ini/ini v1.67.0 // indirect
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
+	golang.org/x/crypto v0.3.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 )
