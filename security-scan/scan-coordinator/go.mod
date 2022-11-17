@@ -4,7 +4,7 @@ go 1.19
 
 require (
     github.com/streadway/amqp master
-    github.com/dutchcoders/go-clamd
-    github.com/minio/minio-go
-    github.com/minio/minio-go/pkg/credentials
+    github.com/dutchcoders/go-clamd master
+    github.com/minio/minio-go master
+    github.com/minio/minio-go/pkg/credentials master
 )
