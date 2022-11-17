@@ -16,13 +16,17 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
 
     this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
     this.doGetSnapshot = this.doGetSnapshot.bind(this);
+
+    this.findPaginatedHandler = this.findPaginatedHandler.bind(this);
+    this.doFindPaginated = this.doFindPaginated.bind(this);
   }
 
   getCustomIdentityActions () {
     return [
       'VALIDATE', 'VALIDATE_SUCCESS',
       'RECOMPUTE', 'RECOMPUTE_SUCCESS',
-      'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS'
+      'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS',
+      'FIND_PAGINATED', 'FIND_PAGINATED_SUCCESS'
     ];
   }
 
@@ -35,7 +39,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isRecomputing: false,
       isGettingSnapshot: false,
       snapshotItem: null,
-      recomputeResult: {}
+      recomputeResult: {},
+      totalCount: 0
     };
   }
 
@@ -77,6 +82,20 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         ...state,
         isGettingSnapshot: false,
         snapshotItem: action.payload
+      })],
+      [this.findPaginated, (state, action) => ({
+        ...state,
+        isFinding: true,
+        errorMessage: {},
+        findPaginatedState: action.payload
+      })],
+      [this.findPaginatedSuccess, (state, action) => ({
+        ...state,
+        items: action.payload.results,
+        totalCount: action.payload.count,
+        receivedAt: Date.now(),
+        isFinding: false,
+        success: true
       })]
     ];
   }
@@ -91,6 +110,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     const sn = this.stateName;
 
     return state => (state.rootReducer[sn].recomputeState);
+  }
+
+  findPaginatedStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].findPaginatedState);
   }
 
   doValidate (data = null) {
@@ -145,11 +170,32 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
+  doFindPaginated (data) {
+    const page = data.page;
+    const pageSize = data.pageSize;
+    const filters = data.filters
+    return axios.post(`${this.baseUrl}/paginated?page=${page}&size=${pageSize}`, {filters: filters});
+  }
+
+  * findPaginatedHandler () {
+    yield delay(1000);
+
+    const data = yield (select(this.findPaginatedStateSelector()));
+
+    try {
+      const response = yield call(this.doFindPaginated, data);
+      yield put(this.findPaginatedSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
   getCustomSagas () {
     return [
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
-      takeLatest(this.getSnapshot, this.getSnapshotHandler)
+      takeLatest(this.getSnapshot, this.getSnapshotHandler),
+      takeLatest(this.findPaginated, this.findPaginatedHandler)
     ];
   }
 }

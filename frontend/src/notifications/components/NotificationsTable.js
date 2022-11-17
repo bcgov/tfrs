@@ -15,16 +15,10 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import ReactTable from '../../app/components/StateSavingReactTable';
 import { useNavigate } from 'react-router';
+import { calculatePages} from '../../utils/functions'
 
 const NotificationsTable = (props) => {
   const navigate = useNavigate()
-
-  const calculatePages = (numberOfItems, pageSize) => {
-    if (numberOfItems === 0) {
-      return 1;
-    }
-    return Math.ceil(numberOfItems / pageSize);
-  }
 
   const columns = [{
     accessor: item => item.id,
