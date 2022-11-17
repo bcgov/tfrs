@@ -3,7 +3,7 @@ FROM artifacts.developer.gov.bc.ca/docker-remote/golang:1.19
 WORKDIR /usr/src/app
 
 COPY go.mod ./
-RUN go mod download && go mod verify
+RUN go mod download 
 
 COPY . .
 
