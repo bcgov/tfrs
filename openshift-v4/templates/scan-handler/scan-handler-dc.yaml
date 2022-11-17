@@ -98,40 +98,51 @@ objects:
           image: ''
           env:
           - name: RABBITMQ_VHOST
-            value: "/tfrs"
+            value: "tfrs-vhost"
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: username
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: tfrs_password
+                name: tfrs-rabbitmq-app
+                key: password
           - name: RABBITMQ_HOST
-            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
+            value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PORT
             value: '5672'
           - name: DATABASE_SERVICE_NAME
-            value: patroni-master${SUFFIX}
+            # value: patroni-master${SUFFIX}
+            value: tfrs-spilo
           - name: DATABASE_ENGINE
             value: postgresql
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-name
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-password
           resources:
             limits:
-              cpu: 250m
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
+            requests:
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
           imagePullPolicy: Always

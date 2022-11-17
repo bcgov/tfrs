@@ -57,15 +57,30 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
-        pullSecret:
-          name: docker-artifactory-secret
+        env:
+          - name: ARTIFACTORY_USER
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifacts-default-cgcynz
+                key: password
         noCache: true
         forcePull: true
     output:
       to:
         kind: ImageStreamTag
         name: ${NAME}-scan-coordinator:${VERSION}
-    resources: {}
+    resources: 
+      limits:
+          cpu: 1500m
+          memory: 1300Mi
+      requests:
+          cpu: 750m
+          memory: 650Mi    
     postCommit: {}
     nodeSelector:
     successfulBuildsHistoryLimit: 5
