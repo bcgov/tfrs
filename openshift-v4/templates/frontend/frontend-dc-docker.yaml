@@ -103,8 +103,8 @@ objects:
           "compliance_reporting.starting_year": 2017,
           "compliance_reporting.create_effective_date": "2019-01-01",
           "credit_calculation_api.enabled": true,
-          "exclusion_reports.enabled": true
-          "exclusion_reports.create_effective_date": "2019-01-01",
+          "exclusion_reports.enabled": true,
+          "exclusion_reports.create_effective_date": "2019-01-01"
         };
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
