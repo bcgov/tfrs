@@ -13,13 +13,13 @@ options.git.repository='tfrs'
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
-            releaseBranch: 'scan-build-2.0.0'
+            releaseBranch: 'release-2.0.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`,
         frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 2,
-            frontendKeycloakAuthority: 'https://dev.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca/authCallback`,
-            frontendKeycloakLogoutUrl: `https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`, 
+            frontendKeycloakAuthority: 'https://dev.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`,
+            frontendKeycloakLogoutUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`, 
             frontendHost: `tfrs-frontend-dev.${ocpName}.gov.bc.ca`,
             frontendCpuRequest: '200m', frontendCpuLimit: '500m', frontendMemoryRequest: '250Mi', frontendMemoryLimit: '500Mi',
             backendCpuRequest: '300m', backendCpuLimit: '600m', backendMemoryRequest: '1Gi', backendMemoryLimit: '2Gi', backendHealthCheckDelay: 30, 
