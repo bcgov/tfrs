@@ -48,7 +48,7 @@ export const login = (hint = 'idir') => (dispatch) => {
 
   kc.login({
     pkceMethod: 'S256',
-    redirectUri: 'http://localhost:3000', // TODO Setup for dev,test,prod
+    redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
     idpHint: hint
   })
     .then((user) => {
