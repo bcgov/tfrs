@@ -80,7 +80,7 @@ module.exports = settings => {
     }
   }))
 */
-
+/*
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -95,7 +95,7 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
     }
   })) 
-
+*/
 /*
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
@@ -126,6 +126,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
     }
   }))
+*/
 
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
@@ -135,12 +136,12 @@ module.exports = settings => {
       'NAMESPACE': phases[phase].namespace,
       'VERSION': phases[phase].tag,
       'CPU_REQUEST':phases[phase].scanHandlerCpuRequest,
-      'CPU_LIMIT':phases[phase].scanHandlerServerCpuLimit,
-      'MEMORY_REQUEST':phases[phase].scanHandlerServerMemoryRequest,
-      'MEMORY_LIMIT':phases[phase].scanHandlerServerMemoryLimit
+      'CPU_LIMIT':phases[phase].scanHandlerCpuLimit,
+      'MEMORY_REQUEST':phases[phase].scanHandlerMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit
     }
   }))
-
+/*
   //only deploy on dev for Tracking PR
   if(phases[phase].phase === 'dev') {
 
