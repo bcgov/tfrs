@@ -23,6 +23,8 @@ from api.serializers.ExclusionReport import \
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
 from auditable.views import AuditableMixin
+from api.paginations import BasicPagination
+from django.db.models import Q
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -51,6 +53,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         'retrieve': ComplianceReportDetailSerializer,
         'types': ComplianceReportTypeSerializer,
     }
+    pagination_class = BasicPagination
 
     def get_queryset(self):
         """
@@ -58,8 +61,43 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         for the currently authenticated user.
         """
         user = self.request.user
-        return ComplianceReportService.get_organization_compliance_reports(
+        qs = ComplianceReportService.get_organization_compliance_reports(
             user.organization)
+        
+        request = self.request
+        if self.action == 'list' or (request.path.endswith('paginated') and request.method == 'POST'):
+            qs = qs.annotate(Count('supplements')).filter(supplements__count=0)\
+                .order_by('-compliance_period__effective_date')
+
+            if request.path.endswith('paginated') and request.method == 'POST':
+                filters = request.data.get('filters')
+                if filters:
+                    for filter in filters:
+                        id = filter.get('id')
+                        value = filter.get('value')
+                        if id and value:
+                            if id == 'compliance-period':
+                                qs = qs.filter(compliance_period__description__exact=value)
+                            elif id == 'organization':
+                                qs = qs.filter(organization__name__icontains=value)
+                            elif id == 'displayname':
+                                qs = qs.filter(Q(nickname__isnull=True) | Q(nickname__icontains=value))
+                                # possible todo: deal with case where generated nicknames are used
+                            elif id == 'status':
+                                # todo; I think we'll just have to replicate the logic in ComplianceReportStatus.js here...
+                                pass
+                            elif id == 'supplemental-status':
+                                # todo; same as the todo above, along with the fact that we'll have to somehow define (annotate)
+                                # a deepest_supplemental_report field (via some sort of aggregation) which we can then filter on
+                                pass
+                            elif id == 'current-status':
+                                # todo; same as the todo above
+                                pass
+                            elif id == 'updateTimestamp':
+                                # the original frontend sorting used sortDate, which is a @property, not a database field
+                                pass
+
+        return qs
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
@@ -154,13 +192,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        qs = self.get_queryset().annotate(Count('supplements')).filter(supplements__count=0)\
-            .order_by('-compliance_period__effective_date')
+        qs = self.get_queryset()
 
         sorted_qs = sorted(list(qs.all()), key=lambda x: [x.compliance_period.effective_date, x.sort_date])
 
         serializer = self.get_serializer(sorted_qs, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=False, methods=['post'])
+    def paginated(self, request):
+        return super().list(request)
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def types(self, request):

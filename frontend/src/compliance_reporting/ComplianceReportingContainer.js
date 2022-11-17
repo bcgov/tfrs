@@ -103,8 +103,8 @@ class ComplianceReportingContainer extends Component {
   }
 
   loadData () {
-    this.props.getCompliancePeriods()
-    this.props.getComplianceReports()
+    this.props.getCompliancePeriods();
+    this.props.getComplianceReports({page: 1, pageSize: 10, filters: []});
   }
 
   render () {
@@ -118,8 +118,10 @@ class ComplianceReportingContainer extends Component {
           .reverse()}
         complianceReports={{
           isFetching: this.props.complianceReports.isFinding,
-          items: this.props.complianceReports.items
+          items: this.props.complianceReports.items,
+          itemsCount: this.props.complianceReports.totalCount
         }}
+        getComplianceReports={this.props.getComplianceReports}
         createComplianceReport={this.createComplianceReport}
         createExclusionReport={this.createExclusionReport}
         key="compliance-reporting-list"
@@ -228,7 +230,7 @@ const mapDispatchToProps = {
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
-  getComplianceReports: complianceReporting.find
-}
+  getComplianceReports: complianceReporting.findPaginated
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

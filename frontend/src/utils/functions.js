@@ -170,7 +170,14 @@ const validateFiles = files => (
   })
 )
 
+const calculatePages = (numberOfItems, pageSize) => {
+  if (numberOfItems === 0) {
+    return 1;
+  }
+  return Math.ceil(numberOfItems / pageSize);
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles
-}
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages
+};

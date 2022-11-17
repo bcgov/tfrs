@@ -3,15 +3,14 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Loading from '../../app/components/Loading'
-import CONFIG from '../../config'
-import * as Lang from '../../constants/langEnUs'
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
-import ComplianceReportingTable from './ComplianceReportingTable'
+import CONFIG from '../../config';
+import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
+import ComplianceReportingTable from './ComplianceReportingTable';
 
 const ComplianceReportingPage = (props) => {
-  const { isFetching, items } = props.complianceReports
-  const isEmpty = items.length === 0
-
+  const { isFetching, items, itemsCount } = props.complianceReports;
+  const isEmpty = items.length === 0;
   return (
     <div className="page-compliance-reporting">
       <h1>{props.title}</h1>
@@ -106,15 +105,14 @@ const ComplianceReportingPage = (props) => {
         </div>
       </div>
       }
-      {isFetching && <Loading />}
-      {!isFetching &&
       <ComplianceReportingTable
+        getComplianceReports={props.getComplianceReports}
         items={items}
+        itemsCount={itemsCount}
         isFetching={isFetching}
         isEmpty={isEmpty}
         loggedInUser={props.loggedInUser}
       />
-      }
     </div>
   )
 }
@@ -130,6 +128,7 @@ ComplianceReportingPage.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
+  getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
