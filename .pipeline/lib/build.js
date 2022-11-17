@@ -27,7 +27,7 @@ module.exports = settings => {
     }
   }))
 
-
+/*
   //build frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-angular-app-bc.yaml`, {
     'param':{
@@ -38,7 +38,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-
+*/
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{
       'NAME': phases[phase].name,
