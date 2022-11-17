@@ -159,7 +159,9 @@ func testMinioConnection(conf *config) {
 		panic(err)
 	}
 
-	_, err = client.ListBuckets(context.Background())
+	//out of date
+	//_, err = client.ListBuckets(context.Background())
+	_, err = client.ListBuckets()
 	if err != nil {
 		panic(err)
 	}
@@ -191,11 +193,13 @@ func handleRequest(conf *config, body []byte) (response ScanResponse) {
 
 		bucket := tokens[1]
 		obj := tokens[2]
-
-		client, err := minio.New(conf.MinioEndpoint, &minio.Options{
-			Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
-			Secure: conf.MinioSecure,
-		})
+		
+		//out of date 
+		//client, err := minio.New(conf.MinioEndpoint, &minio.Options{
+		//	Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
+		//	Secure: conf.MinioSecure,
+		//})
+		client, err := minio.New(conf.MinioEndpoint, conf.MinioAccessKey, conf.MinioSecretKey, true)
 		if err != nil {
 			log.Print(err)
 			return
