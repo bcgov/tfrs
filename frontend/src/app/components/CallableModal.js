@@ -1,8 +1,8 @@
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Modal } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
-import * as Lang from '../../constants/langEnUs';
+import * as Lang from '../../constants/langEnUs'
 
 const CallableModal = props => (
   <Modal
@@ -48,7 +48,7 @@ const CallableModal = props => (
       }
     </Modal.Footer>
   </Modal>
-);
+)
 
 CallableModal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
@@ -56,7 +56,7 @@ CallableModal.defaultProps = {
   confirmLabel: Lang.BTN_YES,
   handleSubmit: null,
   title: 'Confirmation'
-};
+}
 
 CallableModal.propTypes = {
   cancelLabel: PropTypes.string,
@@ -71,6 +71,6 @@ CallableModal.propTypes = {
   id: PropTypes.string.isRequired,
   show: PropTypes.bool.isRequired,
   title: PropTypes.string
-};
+}
 
-export default CallableModal;
+export default CallableModal

@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import 'react-datasheet/lib/react-datasheet.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import 'react-datasheet/lib/react-datasheet.css'
 
-import ValidationMessages from './ValidationMessages';
+import ValidationMessages from './ValidationMessages'
 
 const ScheduleSummaryPage = props => (
   <div className="schedule-summary spreadsheet-component">
@@ -61,12 +61,12 @@ const ScheduleSummaryPage = props => (
       </div>
     </div>
   </div>
-);
+)
 
 ScheduleSummaryPage.defaultProps = {
   children: null,
   validationMessages: {}
-};
+}
 
 ScheduleSummaryPage.propTypes = {
   children: PropTypes.oneOfType([
@@ -84,6 +84,6 @@ ScheduleSummaryPage.propTypes = {
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
-};
+}
 
-export default ScheduleSummaryPage;
+export default ScheduleSummaryPage

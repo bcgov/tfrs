@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import 'react-datasheet/lib/react-datasheet.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import 'react-datasheet/lib/react-datasheet.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const ScheduleDPage = props => ([
   <div className="scrollable" key="input">
@@ -10,7 +10,7 @@ const ScheduleDPage = props => ([
       className={`spreadsheet ${props.scheduleType} input`}
       data={props.sheet.input}
       onCellsChanged={(changes, additions) => {
-        props.handleCellsChanged('input', changes, additions);
+        props.handleCellsChanged('input', changes, additions)
       }}
       valueRenderer={cell => cell.value}
     />
@@ -20,7 +20,7 @@ const ScheduleDPage = props => ([
       className={`spreadsheet ${props.scheduleType}`}
       data={props.sheet.grid}
       onCellsChanged={(changes, additions) => {
-        props.handleCellsChanged('grid', changes, additions);
+        props.handleCellsChanged('grid', changes, additions)
       }}
       valueRenderer={cell => cell.value}
     />
@@ -32,7 +32,7 @@ const ScheduleDPage = props => ([
       <button
         className="btn btn-default left"
         onClick={() => {
-          props.addRow();
+          props.addRow()
         }}
         type="button"
       >
@@ -53,7 +53,7 @@ const ScheduleDPage = props => ([
           <li key={numberOfRows}>
             <button
               onClick={() => {
-                props.addRow(numberOfRows);
+                props.addRow(numberOfRows)
               }}
               type="button"
             >
@@ -71,16 +71,16 @@ const ScheduleDPage = props => ([
       data={props.sheet.output}
       key="output-summary"
       onCellsChanged={(changes, additions) => {
-        props.handleCellsChanged('output', changes, additions);
+        props.handleCellsChanged('output', changes, additions)
       }}
       valueRenderer={cell => cell.value}
     />
   </div>
-]);
+])
 
 ScheduleDPage.defaultProps = {
   addRowEnabled: true
-};
+}
 
 ScheduleDPage.propTypes = {
   addRow: PropTypes.func.isRequired,
@@ -94,6 +94,6 @@ ScheduleDPage.propTypes = {
     input: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
     output: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape()))
   }).isRequired
-};
+}
 
-export default ScheduleDPage;
+export default ScheduleDPage

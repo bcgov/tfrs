@@ -1,14 +1,14 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Link } from 'react-router-dom'
 
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
 
 const LinkedCreditTransactions = props => (
   <div className="linked-credit-transactions">
@@ -45,7 +45,7 @@ const LinkedCreditTransactions = props => (
       </div>
     ))}
   </div>
-);
+)
 
 LinkedCreditTransactions.propTypes = {
   canLink: PropTypes.bool.isRequired,
@@ -55,6 +55,6 @@ LinkedCreditTransactions.propTypes = {
     type: PropTypes.shape()
   })).isRequired,
   selectLinkIdForModal: PropTypes.func.isRequired
-};
+}
 
-export default LinkedCreditTransactions;
+export default LinkedCreditTransactions

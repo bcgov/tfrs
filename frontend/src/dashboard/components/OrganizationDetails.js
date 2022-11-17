@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Link, useNavigate } from 'react-router-dom'
 
-import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
-import PERMISSIONS_USERS from '../../constants/permissions/Users';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import USERS from '../../constants/routes/Users';
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import PERMISSIONS_USERS from '../../constants/permissions/Users'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import USERS from '../../constants/routes/Users'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -86,10 +86,10 @@ const OrganizationDetails = props => {
       </div>
     </div>
   )
-};
+}
 
 OrganizationDetails.defaultProps = {
-};
+}
 
 OrganizationDetails.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -107,6 +107,6 @@ OrganizationDetails.propTypes = {
       })
     })
   }).isRequired
-};
+}
 
-export default OrganizationDetails;
+export default OrganizationDetails

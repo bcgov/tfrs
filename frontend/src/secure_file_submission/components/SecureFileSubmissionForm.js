@@ -1,26 +1,26 @@
 /*
  * Presentational component
  */
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails';
-import Errors from '../../app/components/Errors';
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
-import DOCUMENT_STATUSES from '../../constants/documentStatuses';
-import { useNavigate } from 'react-router';
+import getCompliancePeriods from '../../actions/compliancePeriodsActions'
+import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails'
+import Errors from '../../app/components/Errors'
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import DOCUMENT_STATUSES from '../../constants/documentStatuses'
+import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionForm = props => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    props.getCompliancePeriods();
-  }, []);
+    props.getCompliancePeriods()
+  }, [])
 
   return (
     <div className="credit-transaction-requests">
@@ -89,14 +89,14 @@ const SecureFileSubmissionForm = props => {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
 SecureFileSubmissionForm.defaultProps = {
   edit: false,
   formValidationMessage: ['Form is missing one or more required fields.'],
   id: 0
-};
+}
 
 SecureFileSubmissionForm.propTypes = {
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -119,14 +119,14 @@ SecureFileSubmissionForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number
-};
+}
 
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionForm)

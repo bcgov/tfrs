@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports'
 
 const ExclusionReportTabs = (props) => {
   let urls = {
     intro: EXCLUSION_REPORTS.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'intro'),
     exclusionAgreement: EXCLUSION_REPORTS.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'exclusion-agreement')
-  };
+  }
 
   if (props.edit) {
     urls = {
@@ -16,18 +16,18 @@ const ExclusionReportTabs = (props) => {
       exclusionAgreement: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'exclusion-agreement'),
       scheduleAssessment: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'schedule-assessment'),
       changelog: EXCLUSION_REPORTS.EDIT.replace(':id', props.id).replace(':tab', 'changelog')
-    };
+    }
   }
 
-  let showAssessment = false;
+  let showAssessment = false
   if (props.exclusionReport && ['Accepted'].indexOf(props.exclusionReport.status.directorStatus) >= 0) {
-    showAssessment = true;
+    showAssessment = true
   }
 
   if (props.loggedInUser.isGovernmentUser &&
     (['Recommended', 'Not Recommended'].indexOf(props.exclusionReport.status.analystStatus) >= 0 ||
     ['Recommended', 'Not Recommended'].indexOf(props.exclusionReport.status.managerStatus) >= 0)) {
-    showAssessment = true;
+    showAssessment = true
   }
 
   return (
@@ -67,14 +67,14 @@ const ExclusionReportTabs = (props) => {
         </Link>
       </li>
     </ul>
-  );
-};
+  )
+}
 
 ExclusionReportTabs.defaultProps = {
   compliancePeriod: null,
   exclusionReport: null,
   id: null
-};
+}
 
 ExclusionReportTabs.propTypes = {
   active: PropTypes.string.isRequired,
@@ -87,6 +87,6 @@ ExclusionReportTabs.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired
-};
+}
 
-export default ExclusionReportTabs;
+export default ExclusionReportTabs

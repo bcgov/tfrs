@@ -1,6 +1,6 @@
 // import { SESSION_TERMINATED, USER_EXPIRED } from 'redux-oidc';
 
-import ActionTypes from '../constants/actionTypes/Users';
+import ActionTypes from '../constants/actionTypes/Users'
 // import ActionTypesKeycloak from '../constants/actionTypes/Keycloak';
 
 const userRequest = (state = {
@@ -24,7 +24,7 @@ const userRequest = (state = {
         isFetching: false,
         isAuthenticated: false,
         error: {}
-      };
+      }
     case ActionTypes.GET_LOGGED_IN_USER:
       return {
         ...state,
@@ -32,7 +32,7 @@ const userRequest = (state = {
         isFetching: true,
         loggedInUser: {},
         requestStarted: true
-      };
+      }
     case ActionTypes.RECEIVE_LOGGED_IN_USER:
       return {
         ...state,
@@ -44,14 +44,14 @@ const userRequest = (state = {
             if (action.data.permissions) {
               return action.data.permissions.findIndex(permission => (
                 permission.code === permissionCode
-              )) >= 0;
+              )) >= 0
             }
 
-            return false;
+            return false
           }
         },
         requestStarted: true
-      };
+      }
     case ActionTypes.ERROR_LOGGED_IN_USER:
       return {
         ...state,
@@ -61,11 +61,11 @@ const userRequest = (state = {
         loggedInUser: {},
         requestStarted: true,
         serverError: true
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const userViewRequest = (state = {
   error: {},
@@ -80,7 +80,7 @@ const userViewRequest = (state = {
         isAuthenticated: false,
         isFetching: true,
         user: {}
-      };
+      }
     case ActionTypes.RECEIVE_USER:
       return {
         ...state,
@@ -88,7 +88,7 @@ const userViewRequest = (state = {
         user: {
           ...action.data
         }
-      };
+      }
     case ActionTypes.ERROR_USER:
       return {
         ...state,
@@ -96,11 +96,11 @@ const userViewRequest = (state = {
         isFetching: false,
         serverError: true,
         user: {}
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const userAdmin = (state = {
   error: {},
@@ -114,14 +114,14 @@ const userAdmin = (state = {
         ...state,
         serverError: false,
         error: {}
-      };
+      }
     case ActionTypes.CREATE_USER_REQUEST:
       return {
         ...state,
         isFetching: true,
         user: {},
         error: {}
-      };
+      }
     case ActionTypes.CREATE_USER_SUCCESS:
       return {
         ...state,
@@ -131,14 +131,14 @@ const userAdmin = (state = {
           ...action.data
         },
         error: {}
-      };
+      }
     case ActionTypes.CREATE_USER_ERROR: {
       let error = {
         ...action.errorData.data
-      };
+      }
       if (Object.prototype.hasOwnProperty.call(action.errorData.data, 'user')) {
-        error = Object.assign(error, action.errorData.data.user);
-        delete error.user;
+        error = Object.assign(error, action.errorData.data.user)
+        delete error.user
       }
 
       return {
@@ -147,7 +147,7 @@ const userAdmin = (state = {
         isFetching: false,
         serverError: true,
         user: {}
-      };
+      }
     }
     case ActionTypes.UPDATE_USER_REQUEST:
       return {
@@ -155,7 +155,7 @@ const userAdmin = (state = {
         isFetching: true,
         user: {},
         error: {}
-      };
+      }
     case ActionTypes.UPDATE_USER_SUCCESS:
       return {
         ...state,
@@ -165,7 +165,7 @@ const userAdmin = (state = {
           ...action.data
         },
         error: {}
-      };
+      }
     case ActionTypes.UPDATE_USER_ERROR:
       return {
         ...state,
@@ -173,10 +173,10 @@ const userAdmin = (state = {
         isFetching: false,
         serverError: true,
         user: {}
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { userRequest, userViewRequest, userAdmin };
+export { userRequest, userViewRequest, userAdmin }

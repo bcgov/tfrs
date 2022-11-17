@@ -28,6 +28,6 @@ const DOCUMENT_NOTIFICATIONS = [{
   description: 'Submission Archived',
   key: 'archived',
   recipients: ['fuel_supplier', 'government']
-}];
+}]
 
-export default DOCUMENT_NOTIFICATIONS;
+export default DOCUMENT_NOTIFICATIONS

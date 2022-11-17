@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 
 const Part3Agreements = props => {
   const navigate = useNavigate()
@@ -44,25 +44,25 @@ const Part3Agreements = props => {
         <div className="content">
           <button
             onClick={() => {
-              const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '');
+              const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '')
 
-              return navigate(route);
+              return navigate(route)
             }}
             type="button"
           >
             Submit/Upload a file securely
           </button>
-          {` for Part 3 Agreement applications or milestone evidence for Part 3 Awards`}
+          {' for Part 3 Agreement applications or milestone evidence for Part 3 Awards'}
         </div>
       </div>
     </div>
   )
-};
+}
 
 Part3Agreements.defaultProps = {
-};
+}
 
 Part3Agreements.propTypes = {
-};
+}
 
-export default Part3Agreements;
+export default Part3Agreements

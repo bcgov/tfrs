@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import 'react-datasheet/lib/react-datasheet.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import ValidationMessages from './ValidationMessages';
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import 'react-datasheet/lib/react-datasheet.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import ValidationMessages from './ValidationMessages'
 
 const ExclusionAgreementPage = props => (
   <div className="spreadsheet-component">
@@ -37,7 +37,7 @@ const ExclusionAgreementPage = props => (
           <button
             className="btn btn-default left"
             onClick={() => {
-              props.addRow();
+              props.addRow()
             }}
             type="button"
           >
@@ -52,7 +52,7 @@ const ExclusionAgreementPage = props => (
               <li key={numberOfRows}>
                 <button
                   onClick={() => {
-                    props.addRow(numberOfRows);
+                    props.addRow(numberOfRows)
                   }}
                   type="button"
                 >
@@ -66,7 +66,7 @@ const ExclusionAgreementPage = props => (
       }
     </div>
   </div>
-);
+)
 
 ExclusionAgreementPage.defaultProps = {
   children: null,
@@ -75,7 +75,7 @@ ExclusionAgreementPage.defaultProps = {
   valid: true,
   validationMessages: {},
   scheduleType: 'exclusion-agreement'
-};
+}
 
 ExclusionAgreementPage.propTypes = {
   addRow: PropTypes.func.isRequired,
@@ -94,6 +94,6 @@ ExclusionAgreementPage.propTypes = {
   valid: PropTypes.bool,
   validationMessages: PropTypes.shape(),
   scheduleType: PropTypes.string
-};
+}
 
-export default ExclusionAgreementPage;
+export default ExclusionAgreementPage

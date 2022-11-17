@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from 'axios'
 // import userManager from './oidc-usermanager';
-import CONFIG from '../config';
+import CONFIG from '../config'
 import { keycloak } from '../actions/keycloakActions'
 
 function configureAxios () {
@@ -8,19 +8,19 @@ function configureAxios () {
     axios.interceptors.request.use((config) => {
       const loadconfig = async () => {
         // const user = await userManager.getUser();
-        const kc = keycloak(); // TODO see if this needs to be an async get
+        const kc = keycloak() // TODO see if this needs to be an async get
         // console.log("configureAxios user", kc)
         return {
           ...config,
           headers: {
             Authorization: `Bearer ${kc.idToken}`
           }
-        };
-      };
+        }
+      }
 
-      return loadconfig();
-    });
+      return loadconfig()
+    })
   }
 }
 
-export default configureAxios;
+export default configureAxios

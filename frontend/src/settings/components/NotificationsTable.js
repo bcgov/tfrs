@@ -1,12 +1,12 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
 
-import CheckBox from '../../app/components/CheckBox';
-import ReactTable from '../../app/components/StateSavingReactTable';
+import CheckBox from '../../app/components/CheckBox'
+import ReactTable from '../../app/components/StateSavingReactTable'
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -67,7 +67,7 @@ const NotificationsTable = (props) => {
     id: 'sms',
     sortable: false,
     show: false
-  }];
+  }]
 
   return (
     <ReactTable
@@ -76,8 +76,8 @@ const NotificationsTable = (props) => {
       defaultPageSize={props.items.length}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 NotificationsTable.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -85,6 +85,6 @@ NotificationsTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleCheck: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired
-};
+}
 
-export default NotificationsTable;
+export default NotificationsTable

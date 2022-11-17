@@ -1,16 +1,16 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import Loading from '../../app/components/Loading';
-import FuelSupplierTabs from './FuelSupplierTabs';
-import OrganizationRolesTable from './OrganizationRolesTable';
+import Loading from '../../app/components/Loading'
+import FuelSupplierTabs from './FuelSupplierTabs'
+import OrganizationRolesTable from './OrganizationRolesTable'
 
 const OrganizationRoles = (props) => {
-  const { isFinding, items } = props.data;
+  const { isFinding, items } = props.data
 
   return (
     <div className="organization-members">
@@ -31,12 +31,12 @@ const OrganizationRoles = (props) => {
         />
       }
     </div>
-  );
-};
+  )
+}
 
 OrganizationRoles.defaultProps = {
   loggedInUser: null
-};
+}
 
 OrganizationRoles.propTypes = {
   data: PropTypes.shape({
@@ -47,9 +47,9 @@ OrganizationRoles.propTypes = {
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   })
-};
+}
 
 const mapStateToProps = state => ({
-});
+})
 
-export default connect(mapStateToProps)(OrganizationRoles);
+export default connect(mapStateToProps)(OrganizationRoles)

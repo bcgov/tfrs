@@ -3,12 +3,12 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import Loading from '../app/components/Loading';
-import ScheduleAssessmentPage from './components/ScheduleAssessmentPage';
+import Loading from '../app/components/Loading'
+import ScheduleAssessmentPage from './components/ScheduleAssessmentPage'
 
 class ScheduleAssessmentContainer extends Component {
   componentDidMount () {
@@ -17,7 +17,7 @@ class ScheduleAssessmentContainer extends Component {
   render () {
     if (this.props.snapshotIsLoading ||
       !this.props.complianceReport) {
-      return <Loading />;
+      return <Loading />
     }
 
     // let mostRecentlyReviewed = null;
@@ -42,15 +42,15 @@ class ScheduleAssessmentContainer extends Component {
     // }
 
     // const snap = mostRecentlyReviewed;
-    const snap = this.props.snapshot;
+    const snap = this.props.snapshot
 
     if (!snap || !snap.summary) {
-      return <Loading />;
+      return <Loading />
     }
 
-    let part2Compliant = 'Did not supply Part 2 fuel';
-    let foundInScheduleB = false;
-    let foundInScheduleC = false;
+    let part2Compliant = 'Did not supply Part 2 fuel'
+    let foundInScheduleB = false
+    let foundInScheduleC = false
 
     if (snap.scheduleB) {
       foundInScheduleB = snap.scheduleB.records.findIndex(row => (
@@ -59,7 +59,7 @@ class ScheduleAssessmentContainer extends Component {
           'Petroleum-based diesel', 'Petroleum-based gasoline', 'Renewable diesel',
           'Renewable gasoline'
         ].indexOf(row.fuelType) >= 0
-      )) >= 0;
+      )) >= 0
     }
 
     if (snap.scheduleC) {
@@ -69,22 +69,22 @@ class ScheduleAssessmentContainer extends Component {
           'Petroleum-based diesel', 'Petroleum-based gasoline', 'Renewable diesel',
           'Renewable gasoline'
         ].indexOf(row.fuelType) >= 0
-      )) >= 0;
+      )) >= 0
     }
 
     if (foundInScheduleB || foundInScheduleC) {
       if (Number(snap.summary.lines[11]) > 0 ||
         Number(snap.summary.lines[22]) > 0) {
-        part2Compliant = 'Non-compliant';
+        part2Compliant = 'Non-compliant'
       } else {
-        part2Compliant = 'Compliant';
+        part2Compliant = 'Compliant'
       }
     }
 
-    let part3Compliant = 'Compliant';
+    let part3Compliant = 'Compliant'
 
     if (Number(snap.summary.lines[27]) < 0) {
-      part3Compliant = 'Non-compliant';
+      part3Compliant = 'Non-compliant'
     }
 
     return (
@@ -95,24 +95,24 @@ class ScheduleAssessmentContainer extends Component {
         part3Compliant={part3Compliant}
         snapshot={snap}
       />
-    );
+    )
   }
 }
 
 ScheduleAssessmentContainer.defaultProps = {
   snapshot: null,
   snapshotIsLoading: true
-};
+}
 
 ScheduleAssessmentContainer.propTypes = {
   complianceReport: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   snapshot: PropTypes.shape(),
   snapshotIsLoading: PropTypes.bool
-};
+}
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleAssessmentContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleAssessmentContainer)

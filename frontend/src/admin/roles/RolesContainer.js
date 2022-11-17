@@ -2,21 +2,21 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import { roles } from '../../actions/roleActions';
-import AdminTabs from '../components/AdminTabs';
-import RolesPage from './components/RolesPage';
+import { roles } from '../../actions/roleActions'
+import AdminTabs from '../components/AdminTabs'
+import RolesPage from './components/RolesPage'
 
 class RolesContainer extends Component {
   componentDidMount () {
-    this.loadData();
+    this.loadData()
   }
 
   loadData () {
-    this.props.getRoles();
+    this.props.getRoles()
   }
 
   render () {
@@ -30,12 +30,12 @@ class RolesContainer extends Component {
         data={this.props.roles}
         key="roles"
       />
-    ]);
+    ])
   }
 }
 
 RolesContainer.defaultProps = {
-};
+}
 
 RolesContainer.propTypes = {
   getRoles: PropTypes.func.isRequired,
@@ -50,15 +50,15 @@ RolesContainer.propTypes = {
     })
   }).isRequired,
   roles: PropTypes.shape().isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   roles: state.rootReducer.roles
-});
+})
 
 const mapDispatchToProps = {
   getRoles: roles.find
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(RolesContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(RolesContainer)

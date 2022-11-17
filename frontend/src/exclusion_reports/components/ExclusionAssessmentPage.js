@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const ScheduleAssessmentPage = props => (
   <div className="schedule-assessment">
@@ -22,10 +22,10 @@ const ScheduleAssessmentPage = props => (
       Requirements Regulation.
     </p>
   </div>
-);
+)
 
 ScheduleAssessmentPage.defaultProps = {
-};
+}
 
 ScheduleAssessmentPage.propTypes = {
   exclusionReport: PropTypes.shape().isRequired,
@@ -37,6 +37,6 @@ ScheduleAssessmentPage.propTypes = {
       name: PropTypes.string
     })
   }).isRequired
-};
+}
 
-export default ScheduleAssessmentPage;
+export default ScheduleAssessmentPage

@@ -257,7 +257,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     display_name = SerializerMethodField()
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -355,7 +355,7 @@ class ComplianceReportDetailSerializer(
         return transactions
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -1163,7 +1163,7 @@ class ComplianceReportUpdateSerializer(
     disregard_status = False
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 

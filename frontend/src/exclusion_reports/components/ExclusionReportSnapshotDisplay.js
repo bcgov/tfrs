@@ -3,17 +3,17 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import moment from 'moment-timezone';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import moment from 'moment-timezone'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 class SnapshotDisplay extends Component {
   static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
-      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
   static buildExclusionAgreement (snapshot) {
@@ -51,7 +51,7 @@ class SnapshotDisplay extends Component {
         disableEvents: true,
         value: 'Units'
       }]
-    ];
+    ]
 
     if (snapshot.exclusionAgreement) {
       snapshot.exclusionAgreement.records.forEach((row) => {
@@ -87,14 +87,14 @@ class SnapshotDisplay extends Component {
           className: 'center',
           readOnly: true,
           value: row.unitOfMeasure
-        }]);
-      });
+        }])
+      })
     }
-    return grid;
+    return grid
   }
 
   render () {
-    const { snapshot } = this.props;
+    const { snapshot } = this.props
 
     return (
       <div className="snapshot">
@@ -144,7 +144,7 @@ class SnapshotDisplay extends Component {
         </div>
         }
       </div>
-    );
+    )
   }
 }
 
@@ -153,17 +153,17 @@ SnapshotDisplay.defaultProps = {
   showHeaders: false,
   computedWarning: false,
   dirtyWarning: false
-};
+}
 
 SnapshotDisplay.propTypes = {
   snapshot: PropTypes.shape(),
   showHeaders: PropTypes.bool,
   computedWarning: PropTypes.bool,
   dirtyWarning: PropTypes.bool
-};
+}
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(SnapshotDisplay);
+export default connect(mapStateToProps, mapDispatchToProps)(SnapshotDisplay)

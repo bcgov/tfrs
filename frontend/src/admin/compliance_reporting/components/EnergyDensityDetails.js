@@ -1,18 +1,17 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../../constants/langEnUs'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyDensityDetails = props => {
   const navigate = useNavigate()
-  
+
   return (
     <div className="page-compliance-reporting-details">
       <h1>{props.title}</h1>
@@ -60,7 +59,7 @@ const EnergyDensityDetails = props => {
       <div className="btn-container">
         <button
           className="btn btn-default"
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           type="button"
         >
           <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -75,9 +74,9 @@ const EnergyDensityDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-EnergyDensityDetails.defaultProps = {};
+EnergyDensityDetails.defaultProps = {}
 
 EnergyDensityDetails.propTypes = {
   item: PropTypes.shape({
@@ -91,6 +90,6 @@ EnergyDensityDetails.propTypes = {
     unitOfMeasure: PropTypes.string
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default EnergyDensityDetails;
+export default EnergyDensityDetails

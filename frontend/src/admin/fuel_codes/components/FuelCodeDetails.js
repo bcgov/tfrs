@@ -1,14 +1,13 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import { FUEL_CODES } from '../../../constants/routes/Admin';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../../constants/langEnUs'
+import { FUEL_CODES } from '../../../constants/routes/Admin'
+import { useNavigate } from 'react-router'
 
 const FuelCodeDetails = props => {
   const navigate = useNavigate()
@@ -178,7 +177,7 @@ const FuelCodeDetails = props => {
       <div className="btn-container">
         <button
           className="btn btn-default"
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           type="button"
         >
           <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -204,9 +203,9 @@ const FuelCodeDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-FuelCodeDetails.defaultProps = {};
+FuelCodeDetails.defaultProps = {}
 
 FuelCodeDetails.propTypes = {
   item: PropTypes.shape({
@@ -234,6 +233,6 @@ FuelCodeDetails.propTypes = {
       status: PropTypes.string
     })
   }).isRequired
-};
+}
 
-export default FuelCodeDetails;
+export default FuelCodeDetails

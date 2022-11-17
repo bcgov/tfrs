@@ -1,16 +1,16 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations';
-import Tooltip from '../../app/components/Tooltip';
-import { useNavigate } from 'react-router';
+import * as NumberFormat from '../../constants/numeralFormats'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import Tooltip from '../../app/components/Tooltip'
+import { useNavigate } from 'react-router'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -26,8 +26,8 @@ const OrganizationDetails = props => {
             }
             <div className="reserved">
               (In Reserve: {numeral(props.organization.organizationBalance.deductions)
-                .format(NumberFormat.INT)
-              }){` `}
+              .format(NumberFormat.INT)
+              }){' '}
               <Tooltip
                 className="info"
                 title="Reserved credits are the portion of credits in your credit balance that are
@@ -93,7 +93,7 @@ const OrganizationDetails = props => {
                 An active organization is one that is actively &quot;supplying&quot; fuel in
                 British Columbia as defined under the
                 <strong>
-                  {` Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act `}
+                  {' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act '}
                 </strong>.
               </dd>
             }
@@ -102,11 +102,11 @@ const OrganizationDetails = props => {
       </div>
     </div>
   )
-};
+}
 
 OrganizationDetails.defaultProps = {
   loggedInUser: null
-};
+}
 
 OrganizationDetails.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -130,6 +130,6 @@ OrganizationDetails.propTypes = {
     }),
     statusDisplay: PropTypes.string
   }).isRequired
-};
+}
 
-export default OrganizationDetails;
+export default OrganizationDetails

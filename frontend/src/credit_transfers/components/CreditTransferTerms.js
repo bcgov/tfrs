@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import CheckBox from '../../app/components/CheckBox';
+import PropTypes from 'prop-types'
+import React from 'react'
+import CheckBox from '../../app/components/CheckBox'
 
 const CreditTransferTerms = props => (
   <div className="credit-transfer-terms">
@@ -21,7 +21,7 @@ const CreditTransferTerms = props => (
       </div>
     ))}
   </div>
-);
+)
 
 CreditTransferTerms.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -33,6 +33,6 @@ CreditTransferTerms.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   toggleCheck: PropTypes.func.isRequired
-};
+}
 
-export default CreditTransferTerms;
+export default CreditTransferTerms

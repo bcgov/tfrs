@@ -1,17 +1,19 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import axios from 'axios';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import axios from 'axios'
 
-import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
+import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions'
 
 const SecureFileSubmissionFileAttachments = props => (
   <div className={`file-submission-attachments hide-security-scan ${
     ((props.status.status === 'Received' && props.availableActions.includes('Archived')) ||
-    props.status.status === 'Archived') ? '' : 'hide-trim'}`
+    props.status.status === 'Archived')
+? ''
+: 'hide-trim'}`
   }
   >
     <div className="row">
@@ -31,18 +33,18 @@ const SecureFileSubmissionFileAttachments = props => (
             onClick={() => {
               axios.get(attachment.url, {
                 transformRequest: (data, headers) => {
-                  headers.Authorization = null;
+                  headers.Authorization = null
                 },
                 responseType: 'blob'
               }).then((response) => {
                 const objectURL =
-                  window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = objectURL;
-                link.setAttribute('download', attachment.filename);
-                document.body.appendChild(link);
-                link.click();
-              });
+                  window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+                link.href = objectURL
+                link.setAttribute('download', attachment.filename)
+                document.body.appendChild(link)
+                link.click()
+              })
             }}
             type="button"
           >
@@ -70,7 +72,7 @@ const SecureFileSubmissionFileAttachments = props => (
             id={`record-number-${index}`}
             name="recordNumbers"
             onChange={(event) => {
-              props.handleRecordNumberChange(event, index, attachment.id);
+              props.handleRecordNumberChange(event, index, attachment.id)
             }}
             required="required"
             type="text"
@@ -89,7 +91,7 @@ const SecureFileSubmissionFileAttachments = props => (
     </div>
     }
   </div>
-);
+)
 
 SecureFileSubmissionFileAttachments.propTypes = {
   attachments: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -99,6 +101,6 @@ SecureFileSubmissionFileAttachments.propTypes = {
   }).isRequired,
   status: PropTypes.shape().isRequired,
   handleRecordNumberChange: PropTypes.func.isRequired
-};
+}
 
-export default SecureFileSubmissionFileAttachments;
+export default SecureFileSubmissionFileAttachments

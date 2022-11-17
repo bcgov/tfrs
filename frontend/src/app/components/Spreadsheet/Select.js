@@ -1,31 +1,31 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
 class Select extends PureComponent {
   constructor (props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidMount () {
-    this._input.focus();
+    this._input.focus()
   }
 
   handleChange (e) {
-    this.props.onChange(e.target.value);
+    this.props.onChange(e.target.value)
   }
 
   render () {
-    const options = this.props.cell.getOptions(this.props.row);
-    const { value, onKeyDown } = this.props;
-    const { key: optionKey, value: optionValue, display: optionDisplay } = this.props.cell.mapping;
+    const options = this.props.cell.getOptions(this.props.row)
+    const { value, onKeyDown } = this.props
+    const { key: optionKey, value: optionValue, display: optionDisplay } = this.props.cell.mapping
 
     return (
       <select
         className="form-control"
         onChange={this.handleChange}
         onKeyDown={onKeyDown}
-        ref={(input) => { this._input = input; }}
+        ref={(input) => { this._input = input }}
         value={value}
       >
         <option key="0" value="" default />
@@ -36,13 +36,13 @@ class Select extends PureComponent {
           </option>
         ))}
       </select>
-    );
+    )
   }
 }
 
 Select.defaultProps = {
   value: ''
-};
+}
 
 Select.propTypes = {
   cell: PropTypes.shape({
@@ -57,6 +57,6 @@ Select.propTypes = {
   onKeyDown: PropTypes.func.isRequired,
   row: PropTypes.number.isRequired,
   value: PropTypes.any
-};
+}
 
-export default Select;
+export default Select

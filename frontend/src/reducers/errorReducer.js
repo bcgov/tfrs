@@ -8,16 +8,16 @@ const errorRequest = (state = {
         ...state,
         errorMessage: action.errorMessage,
         hasErrors: true
-      };
+      }
     case '@@router/LOCATION_CHANGE':
       return {
         ...state,
         errorMessage: {},
         hasErrors: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default errorRequest;
+export default errorRequest

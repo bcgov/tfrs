@@ -1,57 +1,57 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import AutosaveNotifier from './AutosaveNotifier';
-import * as Routes from '../../constants/routes';
-import { download } from '../../utils/functions';
-import { useNavigate } from 'react-router';
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import AutosaveNotifier from './AutosaveNotifier'
+import * as Routes from '../../constants/routes'
+import { download } from '../../utils/functions'
+import { useNavigate } from 'react-router'
 
 const getValidationMessages = (props) => {
   if (!props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.SIGN)) {
-    return 'You must have the Signing Authority role to submit a Compliance Report to the Government of British Columbia.';
+    return 'You must have the Signing Authority role to submit a Compliance Report to the Government of British Columbia.'
   }
 
   if (!props.valid) {
-    return 'Please fix the issues identified before submitting.';
+    return 'Please fix the issues identified before submitting.'
   }
 
   if (props.tab !== 'schedule-summary') {
-    return 'You can only submit this report in the Summary and Declaration tab.';
+    return 'You can only submit this report in the Summary and Declaration tab.'
   }
 
   if (props.validating || props.complianceReports.isFinding) {
-    return 'Identifying potential issues...';
+    return 'Identifying potential issues...'
   }
 
-  let period = null;
+  let period = null
   if (typeof (props.complianceReport.compliancePeriod) === 'string') {
-    period = props.complianceReport.compliancePeriod;
+    period = props.complianceReport.compliancePeriod
   } else {
-    period = props.complianceReport.compliancePeriod.description;
+    period = props.complianceReport.compliancePeriod.description
   }
 
-  let type = null;
+  let type = null
   if (typeof (props.complianceReport.type) === 'string') {
-    ({ type } = props.complianceReport);
+    ({ type } = props.complianceReport)
   } else {
-    type = props.complianceReport.type.theType;
+    type = props.complianceReport.type.theType
   }
 
   const found = props.complianceReports.items.find(item => (
     item.status.fuelSupplierStatus === 'Submitted' &&
     item.compliancePeriod.description === period &&
     item.type === type
-  ));
+  ))
 
-  let typeString = `A ${type}`;
+  let typeString = `A ${type}`
 
   if (type === 'Exclusion Report') {
-    typeString = `An ${type}`;
+    typeString = `An ${type}`
   }
 
   if (found && !props.complianceReport.isSupplemental) {
@@ -59,11 +59,11 @@ const getValidationMessages = (props) => {
       to the Government of British Columbia. If the information in the previous report does not
       completely and accurately disclose the information required to be included in the report,
       please create a supplemental report by opening the previous report and clicking on the
-      "Create Supplemental Report" button.`;
+      "Create Supplemental Report" button.`
   }
 
-  return '';
-};
+  return ''
+}
 
 const ScheduleButtons = props => {
   const navigate = useNavigate()
@@ -97,16 +97,16 @@ const ScheduleButtons = props => {
           id="download-report"
           type="button"
           onClick={(e) => {
-            const element = e.target;
-            const original = element.innerHTML;
+            const element = e.target
+            const original = element.innerHTML
 
-            element.firstChild.textContent = ' Downloading...';
+            element.firstChild.textContent = ' Downloading...'
 
-            const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id);
+            const url = Routes.BASE_URL + COMPLIANCE_REPORTING.EXPORT.replace(':id', props.id)
 
             return download(url).then(() => {
-              element.innerHTML = original;
-            });
+              element.innerHTML = original
+            })
           }}
         >
           <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
@@ -255,7 +255,7 @@ const ScheduleButtons = props => {
       </div>
     </div>
   )
-};
+}
 
 ScheduleButtons.defaultProps = {
   actions: [],
@@ -264,7 +264,7 @@ ScheduleButtons.defaultProps = {
   validating: false,
   valid: true,
   validationMessages: {}
-};
+}
 
 ScheduleButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string),
@@ -295,6 +295,6 @@ ScheduleButtons.propTypes = {
   validating: PropTypes.bool,
   valid: PropTypes.bool,
   validationMessages: PropTypes.shape()
-};
+}
 
-export default ScheduleButtons;
+export default ScheduleButtons

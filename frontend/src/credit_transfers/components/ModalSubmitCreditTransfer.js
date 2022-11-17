@@ -1,9 +1,9 @@
-import numeral from 'numeral';
-import React from 'react';
-import PropTypes from 'prop-types';
+import numeral from 'numeral'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Modal from '../../app/components/Modal';
-import * as NumberFormat from '../../constants/numeralFormats';
+import Modal from '../../app/components/Modal'
+import * as NumberFormat from '../../constants/numeralFormats'
 
 const ModalSubmitCreditTransfer = props => (
   <Modal
@@ -24,7 +24,7 @@ const ModalSubmitCreditTransfer = props => (
       to {props.item.creditsTo.name}?
     </p>
   </Modal>
-);
+)
 
 ModalSubmitCreditTransfer.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
@@ -44,6 +44,6 @@ ModalSubmitCreditTransfer.propTypes = {
       PropTypes.number
     ])
   }).isRequired
-};
+}
 
-export default ModalSubmitCreditTransfer;
+export default ModalSubmitCreditTransfer

@@ -1,9 +1,6 @@
 import os
 import json
 import jwt
-from jwt import PyJWKClient
-from jwt import InvalidTokenError
-from jwt.algorithms import RSAAlgorithm
 import requests
 
 from cryptography.hazmat.primitives import serialization
@@ -94,10 +91,8 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         # Check for existing mapped user
         if 'preferred_username' in user_token:
-            print(user_token['preferred_username'])
             try:
                 user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
-                print("user exists", user)
                 return user, None
             except User.DoesNotExist: 
                 print("User does not exist, falling through")
@@ -115,11 +110,9 @@ class UserAuthentication(authentication.BaseAuthentication):
                     "No User with that email exists.")
 
             user_creation_request = creation_request.first()
-            print('creation_request', creation_request)
 
             # map keycloak user to tfrs user
             user = user_creation_request.user
-            print("user", user)
             user.keycloak_user_id = user_token['preferred_username']
             if user_token['display_name']:
                 user._display_name = user_token['display_name']

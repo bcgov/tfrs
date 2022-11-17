@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../../app/components/Loading';
-import CarbonIntensitiesTable from './CarbonIntensitiesTable';
-import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable';
-import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
-import EnergyDensitiesTable from './EnergyDensitiesTable';
-import FuelClassesTable from './FuelClassesTable';
-import FuelTypesTable from './FuelTypesTable';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
+import Loading from '../../../app/components/Loading'
+import CarbonIntensitiesTable from './CarbonIntensitiesTable'
+import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable'
+import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable'
+import EnergyDensitiesTable from './EnergyDensitiesTable'
+import FuelClassesTable from './FuelClassesTable'
+import FuelTypesTable from './FuelTypesTable'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
 
 const ComplianceReportingPage = props => (
   <div className="page-compliance-reporting">
@@ -133,11 +133,11 @@ const ComplianceReportingPage = props => (
       </div>
     </div>
   </div>
-);
+)
 
 ComplianceReportingPage.defaultProps = {
   fuelTypes: []
-};
+}
 
 ComplianceReportingPage.propTypes = {
   carbonIntensityLimits: PropTypes.shape({
@@ -165,6 +165,6 @@ ComplianceReportingPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default ComplianceReportingPage;
+export default ComplianceReportingPage

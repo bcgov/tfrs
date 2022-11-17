@@ -1,22 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import * as Lang from '../../../constants/langEnUs';
+import * as Lang from '../../../constants/langEnUs'
 
-import Errors from '../../../app/components/Errors';
-import Loading from '../../../app/components/Loading';
-import HistoricalDataEntryForm from './HistoricalDataEntryForm';
-import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
-import HistoricalDataTable from './HistoricalDataTable';
-import Modal from '../../../app/components/Modal';
-import SuccessAlert from '../../../app/components/SuccessAlert';
+import Errors from '../../../app/components/Errors'
+import Loading from '../../../app/components/Loading'
+import HistoricalDataEntryForm from './HistoricalDataEntryForm'
+import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons'
+import HistoricalDataTable from './HistoricalDataTable'
+import Modal from '../../../app/components/Modal'
+import SuccessAlert from '../../../app/components/SuccessAlert'
 
-const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT];
-const formActions = [Lang.BTN_ADD_TO_QUEUE];
+const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT]
+const formActions = [Lang.BTN_ADD_TO_QUEUE]
 
 const HistoricalDataEntryPage = (props) => {
-  const { isFetching, items } = props.historicalData;
-  const isEmpty = items.length === 0;
+  const { isFetching, items } = props.historicalData
+  const isEmpty = items.length === 0
 
   return (
     <div className="page_historical_data_entry">
@@ -71,12 +71,12 @@ const HistoricalDataEntryPage = (props) => {
         Are you sure you want to commit the approved credit transactions?
       </Modal>
     </div>
-  );
-};
+  )
+}
 
 HistoricalDataEntryPage.defaultProps = {
   validationErrors: {}
-};
+}
 
 HistoricalDataEntryPage.propTypes = {
   addErrors: PropTypes.oneOfType([
@@ -120,6 +120,6 @@ HistoricalDataEntryPage.propTypes = {
   title: PropTypes.string.isRequired,
   totalValue: PropTypes.number.isRequired,
   validationErrors: PropTypes.shape({})
-};
+}
 
-export default HistoricalDataEntryPage;
+export default HistoricalDataEntryPage

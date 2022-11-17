@@ -3,25 +3,25 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tab, Tabs } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tab, Tabs } from 'react-bootstrap'
 
-import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
-import Loading from '../../app/components/Loading';
-import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails';
-import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
-import { useParams } from 'react-router';
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios'
+import Loading from '../../app/components/Loading'
+import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails'
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable'
+import { useParams } from 'react-router'
 
 const EnergyEffectivenessRatioDetailContainer = props => {
-  const { id } = useParams();
+  const { id } = useParams()
 
   useEffect(() => {
-    props.getEnergyEffectivenessRatio(id);
-  }, [id]);
+    props.getEnergyEffectivenessRatio(id)
+  }, [id])
 
-  const { item, isFetching, success } = props.energyEffectivenessRatio;
+  const { item, isFetching, success } = props.energyEffectivenessRatio
 
   if (success && !isFetching && item) {
     return (
@@ -46,11 +46,11 @@ const EnergyEffectivenessRatioDetailContainer = props => {
     )
   }
 
-  return <Loading />;
+  return <Loading />
 }
 
 EnergyEffectivenessRatioDetailContainer.defaultProps = {
-};
+}
 
 EnergyEffectivenessRatioDetailContainer.propTypes = {
   energyEffectivenessRatio: PropTypes.shape({
@@ -59,8 +59,8 @@ EnergyEffectivenessRatioDetailContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getEnergyEffectivenessRatio: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape().isRequired,
-};
+  loggedInUser: PropTypes.shape().isRequired
+}
 
 const mapStateToProps = state => ({
   energyEffectivenessRatio: {
@@ -69,13 +69,13 @@ const mapStateToProps = state => ({
     success: state.rootReducer.energyEffectivenessRatios.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getEnergyEffectivenessRatio: energyEffectivenessRatios.get
-};
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EnergyEffectivenessRatioDetailContainer);
+)(EnergyEffectivenessRatioDetailContainer)

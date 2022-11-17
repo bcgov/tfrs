@@ -1,29 +1,29 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import CarbonIntensityFormDetails from './CarbonIntensityFormDetails';
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import Errors from '../../../app/components/Errors';
-import Tooltip from '../../../app/components/Tooltip';
+import CarbonIntensityFormDetails from './CarbonIntensityFormDetails'
+import * as Lang from '../../../constants/langEnUs'
+import Errors from '../../../app/components/Errors'
+import Tooltip from '../../../app/components/Tooltip'
+import { withRouter } from '../../../utils/withRouter'
 
 class CarbonIntensityForm extends Component {
   _getValidationMessages () {
-    const validationMessage = [];
+    const validationMessage = []
 
     if (this.props.fields.effectiveDate === '') {
-      validationMessage.push('Please enter an effective date.');
+      validationMessage.push('Please enter an effective date.')
     }
 
     if (this.props.fields.expiryDate === '') {
-      validationMessage.push('Please enter an expiry date.');
+      validationMessage.push('Please enter an expiry date.')
     }
 
-    return validationMessage;
+    return validationMessage
   }
 
   render () {
@@ -48,7 +48,7 @@ class CarbonIntensityForm extends Component {
             <div className="btn-container">
               <button
                 className="btn btn-default"
-                onClick={() => history.goBack()}
+                onClick={() => this.props.navigate(-1)}
                 type="button"
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -71,7 +71,7 @@ class CarbonIntensityForm extends Component {
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -79,7 +79,7 @@ CarbonIntensityForm.defaultProps = {
   edit: false,
   errors: [],
   item: {}
-};
+}
 
 CarbonIntensityForm.propTypes = {
   edit: PropTypes.bool,
@@ -93,6 +93,6 @@ CarbonIntensityForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   item: PropTypes.shape(),
   title: PropTypes.string.isRequired
-};
+}
 
-export default CarbonIntensityForm;
+export default withRouter(CarbonIntensityForm)

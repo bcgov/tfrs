@@ -3,27 +3,27 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 
-import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads';
-import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage';
+import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads'
+import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage'
 
 class SecureFileSubmissionContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
-    };
+    }
   }
 
   componentDidMount () {
-    this.loadData();
+    this.loadData()
   }
 
   loadData () {
-    this.props.getDocumentUploads();
+    this.props.getDocumentUploads()
   }
 
   render () {
@@ -35,12 +35,12 @@ class SecureFileSubmissionContainer extends Component {
         requestURL={this.props.requestURL}
         title="Secure File Submissions"
       />
-    );
+    )
   }
 }
 
 SecureFileSubmissionContainer.defaultProps = {
-};
+}
 
 SecureFileSubmissionContainer.propTypes = {
   documentUploads: PropTypes.shape({
@@ -55,7 +55,7 @@ SecureFileSubmissionContainer.propTypes = {
     isSuccessful: PropTypes.bool
   }).isRequired,
   requestURL: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   documentUploads: {
@@ -68,11 +68,11 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.referenceData.isFetching,
     isSuccessful: state.rootReducer.referenceData.success
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getDocumentUploads: bindActionCreators(getDocumentUploads, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer)

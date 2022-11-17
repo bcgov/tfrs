@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const HistoricalDataEntryFormNote = props => (
   <div className="form-group note">
@@ -14,11 +14,11 @@ const HistoricalDataEntryFormNote = props => (
       />
     </label>
   </div>
-);
+)
 
 HistoricalDataEntryFormNote.propTypes = {
   comment: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired
-};
+}
 
-export default HistoricalDataEntryFormNote;
+export default HistoricalDataEntryFormNote

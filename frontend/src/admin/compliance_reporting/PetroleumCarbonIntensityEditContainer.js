@@ -3,21 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
-import Loading from '../../app/components/Loading';
-import Modal from '../../app/components/Modal';
-import CarbonIntensityForm from './components/CarbonIntensityForm';
-import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
-import toastr from '../../utils/toastr';
-import { withRouter } from '../../utils/withRouter';
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities'
+import Loading from '../../app/components/Loading'
+import Modal from '../../app/components/Modal'
+import CarbonIntensityForm from './components/CarbonIntensityForm'
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
+import toastr from '../../utils/toastr'
+import { withRouter } from '../../utils/withRouter'
 
 class PetroleumCarbonIntensityEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -25,92 +25,92 @@ class PetroleumCarbonIntensityEditContainer extends Component {
         effectiveDate: '',
         expirationDate: ''
       }
-    };
+    }
 
-    this.loaded = false;
+    this.loaded = false
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.props.getPetroleumCarbonIntensity(this.props.params.id);
+    this.props.getPetroleumCarbonIntensity(this.props.params.id)
   }
 
-  componentWillReceiveProps (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     if (this.props.carbonIntensity.isUpdating && !props.carbonIntensity.isUpdating) {
       if (props.carbonIntensity.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)
-        toastr.fuelCodeSuccess(null, 'Carbon Intensity saved.');
+        toastr.fuelCodeSuccess(null, 'Carbon Intensity saved.')
       }
-      return;
+      return
     }
 
-    this.loadPropsToFieldState(props);
+    this.loadPropsToFieldState(props)
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props.carbonIntensity;
+    const { item } = props.carbonIntensity
 
     if (item && !this.loaded) {
       const fieldState = {
         density: `${item.density.density}` || '',
         effectiveDate: item.density.effectiveDate || '',
         expirationDate: item.density.expirationDate || ''
-      };
+      }
 
       this.setState({
         fields: fieldState
-      });
+      })
 
-      this.loaded = true;
+      this.loaded = true
     }
   }
 
   _handleInputChange (event) {
-    const { name } = event.target;
-    const { value } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { name } = event.target
+    const { value } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
+      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value)
       this.setState({
         fields: fieldState
-      });
+      })
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
 
       this.setState({
         fields: fieldState
-      });
+      })
     }
   }
 
   _handleSubmit (event, status = 'Submitted') {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { id } = this.props.params;
+    const { id } = this.props.params
 
     // API data structure
     const data = {
       density: this.state.fields.density !== '' ? this.state.fields.density : null,
       effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null
-    };
+    }
 
     Object.entries(data).forEach((prop) => {
       if (prop[1] === null) {
-        delete data[prop[0]];
+        delete data[prop[0]]
       }
-    });
+    })
 
-    this.props.updatePetroleumCarbonIntensity({ id, state: data });
+    this.props.updatePetroleumCarbonIntensity({ id, state: data })
 
-    return true;
+    return true
   }
 
   render () {
-    const { item, isFetching, success } = this.props.carbonIntensity;
-    const updating = this.props.carbonIntensity.isUpdating;
+    const { item, isFetching, success } = this.props.carbonIntensity
+    const updating = this.props.carbonIntensity.isUpdating
 
     if (!updating && success && (!isFetching)) {
       return ([
@@ -130,15 +130,15 @@ class PetroleumCarbonIntensityEditContainer extends Component {
         >
           Are you sure you want to update the carbon intensity?
         </Modal>
-      ]);
+      ])
     }
 
-    return <Loading />;
+    return <Loading />
   }
 }
 
 PetroleumCarbonIntensityEditContainer.defaultProps = {
-};
+}
 
 PetroleumCarbonIntensityEditContainer.propTypes = {
   carbonIntensity: PropTypes.shape({
@@ -153,7 +153,7 @@ PetroleumCarbonIntensityEditContainer.propTypes = {
     id: PropTypes.string.isRequired
   }).isRequired,
   updatePetroleumCarbonIntensity: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   carbonIntensity: {
@@ -163,11 +163,11 @@ const mapStateToProps = state => ({
     success: state.rootReducer.petroleumCarbonIntensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getPetroleumCarbonIntensity: petroleumCarbonIntensities.get,
   updatePetroleumCarbonIntensity: petroleumCarbonIntensities.update
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PetroleumCarbonIntensityEditContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PetroleumCarbonIntensityEditContainer))

@@ -1,5 +1,5 @@
-const API = '/notifications';
-const BASE_PATH = '/notifications';
+const API = '/notifications'
+const BASE_PATH = '/notifications'
 
 const NOTIFICATIONS = {
   API,
@@ -10,6 +10,6 @@ const NOTIFICATIONS = {
   UPDATE: `${API}/statuses`,
   UPDATE_SUBSCRIPTIONS: `${API}/update_subscription`,
   PROCESSED_LIST: `${API}/processed_list`
-};
+}
 
-export default NOTIFICATIONS;
+export default NOTIFICATIONS

@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Errors from '../../../app/components/Errors';
-import HistoricalDataEntryFormDetails from './HistoricalDataEntryFormDetails';
+import Errors from '../../../app/components/Errors'
+import HistoricalDataEntryFormDetails from './HistoricalDataEntryFormDetails'
 
 const HistoricalDataEntryForm = props => (
   <div className="historical-data-entry">
@@ -31,12 +31,12 @@ const HistoricalDataEntryForm = props => (
 
     </form>
   </div>
-);
+)
 
 HistoricalDataEntryForm.defaultProps = {
   editMode: false,
   validationErrors: {}
-};
+}
 
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -71,6 +71,6 @@ HistoricalDataEntryForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired,
   validationErrors: PropTypes.shape({})
-};
+}
 
-export default HistoricalDataEntryForm;
+export default HistoricalDataEntryForm

@@ -1,9 +1,9 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
+import React from 'react'
+import PropTypes from 'prop-types'
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
 
 const CarbonIntensityLimitFormDetails = props => (
   <div className="carbon-intensity-limit-details">
@@ -168,11 +168,11 @@ const CarbonIntensityLimitFormDetails = props => (
       ]}
     </div>
   </div>
-);
+)
 
 CarbonIntensityLimitFormDetails.defaultProps = {
   edit: false
-};
+}
 
 CarbonIntensityLimitFormDetails.propTypes = {
   edit: PropTypes.bool,
@@ -192,6 +192,6 @@ CarbonIntensityLimitFormDetails.propTypes = {
       gasoline: PropTypes.shape()
     })
   }).isRequired
-};
+}
 
-export default CarbonIntensityLimitFormDetails;
+export default CarbonIntensityLimitFormDetails

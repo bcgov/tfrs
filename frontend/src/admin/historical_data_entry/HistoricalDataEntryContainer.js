@@ -3,10 +3,10 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 
 import {
   addCommentToCreditTransfer,
@@ -17,15 +17,15 @@ import {
   invalidateCreditTransfers,
   prepareCreditTransfer,
   processApprovedCreditTransfers
-} from '../../actions/creditTransfersActions';
-import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import { getFuelSuppliers } from '../../actions/organizationActions';
-import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
-import AdminTabs from '../components/AdminTabs';
+} from '../../actions/creditTransfersActions'
+import getCompliancePeriods from '../../actions/compliancePeriodsActions'
+import { getFuelSuppliers } from '../../actions/organizationActions'
+import HistoricalDataEntryPage from './components/HistoricalDataEntryPage'
+import AdminTabs from '../components/AdminTabs'
 
 class HistoricalDataEntryContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       fields: {
         comment: '',
@@ -39,98 +39,98 @@ class HistoricalDataEntryContainer extends Component {
       },
       selectedId: 0,
       totalValue: 0
-    };
+    }
 
-    this.oldState = Object.assign({}, this.state);
+    this.oldState = Object.assign({}, this.state)
 
-    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
-    this._processApprovedCreditTransfers = this._processApprovedCreditTransfers.bind(this);
-    this._selectIdForModal = this._selectIdForModal.bind(this);
+    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this)
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
+    this._processApprovedCreditTransfers = this._processApprovedCreditTransfers.bind(this)
+    this._selectIdForModal = this._selectIdForModal.bind(this)
   }
 
   componentDidMount () {
-    this.props.invalidateCreditTransfers();
-    this.loadData();
-    this.props.getCompliancePeriods();
-    this.props.getFuelSuppliers();
+    this.props.invalidateCreditTransfers()
+    this.loadData()
+    this.props.getCompliancePeriods()
+    this.props.getFuelSuppliers()
   }
 
-  componentWillReceiveProps (props) {
-    const fieldState = { ...this.state.fields };
+  UNSAFE_componentWillReceiveProps (props) {
+    const fieldState = { ...this.state.fields }
 
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   loadData () {
-    this.props.invalidateCreditTransfer(); // reset the errors in the form
-    this.props.getApprovedCreditTransfersIfNeeded();
+    this.props.invalidateCreditTransfer() // reset the errors in the form
+    this.props.getApprovedCreditTransfersIfNeeded()
   }
 
   _deleteCreditTransfer () {
-    const id = this.state.selectedId;
+    const id = this.state.selectedId
 
     this.props.deleteCreditTransfer(id).then(() => {
-      this.props.invalidateCreditTransfers();
-      this.loadData();
-    });
+      this.props.invalidateCreditTransfers()
+      this.loadData()
+    })
   }
 
   _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { value, name } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      this.changeObjectProp(parseInt(value, 10), name);
+      this.changeObjectProp(parseInt(value, 10), name)
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
       this.setState({
         fields: fieldState
-      }, () => this.computeTotalValue(name));
+      }, () => this.computeTotalValue(name))
     }
   }
 
   _handleSubmit (event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const data = this.props.prepareCreditTransfer(this.state.fields);
-    const { comment } = this.state.fields;
+    const data = this.props.prepareCreditTransfer(this.state.fields)
+    const { comment } = this.state.fields
 
     if (comment.length > 0) {
-      data.comment = comment;
+      data.comment = comment
     }
 
     this.props.addCreditTransfer(data).then((response) => {
-      this.props.invalidateCreditTransfers();
-      this.loadData();
-      this.resetState();
-    });
+      this.props.invalidateCreditTransfers()
+      this.loadData()
+      this.resetState()
+    })
 
-    return false;
+    return false
   }
 
   _processApprovedCreditTransfers () {
     this.props.processApprovedCreditTransfers().then(() => {
-      this.loadData();
-    });
+      this.loadData()
+    })
   }
 
   _selectIdForModal (id) {
     this.setState({
       selectedId: id
-    });
+    })
   }
 
   changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
+    const fieldState = { ...this.state.fields }
 
-    fieldState[name] = { id: id || 0 };
+    fieldState[name] = { id: id || 0 }
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   computeTotalValue (name) {
@@ -138,12 +138,12 @@ class HistoricalDataEntryContainer extends Component {
       this.setState({
         totalValue:
           this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
-      });
+      })
     }
   }
 
   resetState () {
-    this.setState(this.oldState);
+    this.setState(this.oldState)
   }
 
   render () {
@@ -173,7 +173,7 @@ class HistoricalDataEntryContainer extends Component {
         totalValue={this.state.totalValue}
         validationErrors={this.state.validationErrors}
       />
-    ]);
+    ])
   }
 }
 
@@ -181,7 +181,7 @@ HistoricalDataEntryContainer.defaultProps = {
   addErrors: {},
   commitErrors: {},
   commitMessage: ''
-};
+}
 
 HistoricalDataEntryContainer.propTypes = {
   addCommentToCreditTransfer: PropTypes.func.isRequired,
@@ -216,7 +216,7 @@ HistoricalDataEntryContainer.propTypes = {
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   processApprovedCreditTransfers: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   addErrors: state.rootReducer.creditTransfer.errors,
@@ -229,14 +229,14 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.approvedCreditTransfers.isFetching
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getApprovedCreditTransfersIfNeeded: () => {
-    dispatch(getApprovedCreditTransfersIfNeeded());
+    dispatch(getApprovedCreditTransfersIfNeeded())
   },
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
@@ -244,6 +244,6 @@ const mapDispatchToProps = dispatch => ({
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareCreditTransfer: fields => prepareCreditTransfer(fields),
   processApprovedCreditTransfers: bindActionCreators(processApprovedCreditTransfers, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer)

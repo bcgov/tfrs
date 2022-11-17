@@ -1,13 +1,13 @@
-const notifications = require('./notifications');
+const notifications = require('./notifications')
 
-const http = require('http');
+const http = require('http')
 
 const httpServer = http.createServer((req, res) => {
-  res.end();
-});
+  res.end()
+})
 
-const io = require('socket.io')(httpServer);
+const io = require('socket.io')(httpServer)
 
-httpServer.listen(3000);
+httpServer.listen(3000)
 
-notifications.setup(io);
+notifications.setup(io)

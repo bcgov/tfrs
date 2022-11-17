@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 
 const ScheduleTabs = (props) => {
   const urls = {
@@ -15,26 +15,26 @@ const ScheduleTabs = (props) => {
     scheduleAssessment: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-assessment'),
     ScheduleChangelog: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'changelog'),
     snapshot: COMPLIANCE_REPORTING.SNAPSHOT.replace(':id', props.id)
-  };
+  }
 
-  let showAssessment = false;
+  let showAssessment = false
 
   if (props.complianceReport.status.directorStatus !== 'Rejected') {
     if (props.complianceReport && ['Accepted'].indexOf(props.complianceReport.status.directorStatus) >= 0) {
-      showAssessment = true;
+      showAssessment = true
     } else if (props.complianceReport &&
       props.complianceReport.history &&
       props.complianceReport.history.find(h =>
         (['Accepted'].indexOf(h.status.directorStatus) >= 0))
     ) {
       // at least one prior version was accepted
-      showAssessment = true;
+      showAssessment = true
     }
 
     if (props.loggedInUser.isGovernmentUser &&
       (['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.analystStatus) >= 0 ||
         ['Recommended', 'Not Recommended'].indexOf(props.complianceReport.status.managerStatus) >= 0)) {
-      showAssessment = true;
+      showAssessment = true
     }
   }
 
@@ -108,15 +108,15 @@ const ScheduleTabs = (props) => {
       </li>
     </ul>
 
-  );
-};
+  )
+}
 
 ScheduleTabs.defaultProps = {
   compliancePeriod: null,
   complianceReport: null,
   hasSnapshot: false,
   id: null
-};
+}
 
 ScheduleTabs.propTypes = {
   active: PropTypes.string.isRequired,
@@ -129,6 +129,6 @@ ScheduleTabs.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired
-};
+}
 
-export default ScheduleTabs;
+export default ScheduleTabs

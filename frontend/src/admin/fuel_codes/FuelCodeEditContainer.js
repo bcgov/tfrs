@@ -2,22 +2,22 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { filterFuelCodes, getFuelCode, updateFuelCode } from '../../actions/fuelCodes';
-import Loading from '../../app/components/Loading';
-import FuelCodeForm from './components/FuelCodeForm';
-import { FUEL_CODES } from '../../constants/routes/Admin';
-import { formatFacilityNameplate } from '../../utils/functions';
-import toastr from '../../utils/toastr';
-import { withRouter } from '../../utils/withRouter';
+import { filterFuelCodes, getFuelCode, updateFuelCode } from '../../actions/fuelCodes'
+import Loading from '../../app/components/Loading'
+import FuelCodeForm from './components/FuelCodeForm'
+import { FUEL_CODES } from '../../constants/routes/Admin'
+import { formatFacilityNameplate } from '../../utils/functions'
+import toastr from '../../utils/toastr'
+import { withRouter } from '../../utils/withRouter'
 
 class FuelCodeEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -40,30 +40,30 @@ class FuelCodeEditContainer extends Component {
         partiallyRenewable: false,
         renewablePercentage: ''
       }
-    };
+    }
 
-    this.loaded = false;
+    this.loaded = false
 
-    this._addToFields = this._addToFields.bind(this);
-    this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this);
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._addToFields = this._addToFields.bind(this)
+    this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this)
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.loadData(this.props.params.id);
+    this.loadData(this.props.params.id)
   }
 
-  componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
+  UNSAFE_componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props)
   }
 
   loadData (id) {
-    this.props.getFuelCode(id);
+    this.props.getFuelCode(id)
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props.fuelCode;
+    const { item } = props.fuelCode
 
     if (Object.keys(item).length > 0 && !this.loaded) {
       const fieldState = {
@@ -85,69 +85,69 @@ class FuelCodeEditContainer extends Component {
         fuelTransportMode: item.fuelTransportMode,
         partiallyRenewable: item.renewablePercentage !== null && item.renewablePercentage !== '',
         renewablePercentage: item.renewablePercentage || ''
-      };
+      }
 
       this.setState({
         fields: fieldState
-      });
+      })
 
-      this.loaded = true;
+      this.loaded = true
     }
   }
 
   _addToFields (value) {
-    const fieldState = { ...this.state.fields };
+    const fieldState = { ...this.state.fields }
 
-    const found = this.state.fields.terms.find(term => term.id === value.id);
+    const found = this.state.fields.terms.find(term => term.id === value.id)
 
     if (!found) {
-      fieldState.terms.push(value);
+      fieldState.terms.push(value)
     }
 
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   _getFuelCodeStatus (status) {
     return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
-      (fuelCodeStatus.status === status));
+      (fuelCodeStatus.status === status))
   }
 
   _handleInputChange (event) {
-    const { name } = event.target;
-    let { value } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { name } = event.target
+    let { value } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
+      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value)
       this.setState({
         fields: fieldState
-      });
+      })
     } else {
       if (name === 'facilityNameplate') {
         // as you're typing remove non-numeric values
         // (this is so we don't mess our count, but we'll add commas later)
-        value = formatFacilityNameplate(value);
+        value = formatFacilityNameplate(value)
       }
 
       // clear out the renewable percentage when it gets toggled off
       if (name === 'partiallyRenewable' && value === false) {
-        fieldState.renewablePercentage = '';
+        fieldState.renewablePercentage = ''
       }
 
-      fieldState[name] = value;
+      fieldState[name] = value
       this.setState({
         fields: fieldState
-      });
+      })
     }
   }
 
   _handleSubmit (event, status = 'Draft') {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { id } = this.props.fuelCode.item;
-    const fuelCode = this.state.fields.fuelCode.split('.');
+    const { id } = this.props.fuelCode.item
+    const fuelCode = this.state.fields.fuelCode.split('.')
 
     // API data structure
     const data = {
@@ -171,30 +171,30 @@ class FuelCodeEditContainer extends Component {
       fuelTransportMode: this.state.fields.fuelTransportMode,
       renewablePercentage: this.state.fields.renewablePercentage !== '' ? this.state.fields.renewablePercentage : null,
       status: this._getFuelCodeStatus(status).id
-    };
+    }
 
     Object.entries(data).forEach((prop) => {
       if (prop[1] === null) {
-        delete data[prop[0]];
+        delete data[prop[0]]
       }
-    });
+    })
 
     this.props.updateFuelCode(id, data).then((response) => {
-      this.props.navigate(FUEL_CODES.LIST);
-      toastr.fuelCodeSuccess(status, 'Fuel code updated.');
-    });
+      this.props.navigate(FUEL_CODES.LIST)
+      toastr.fuelCodeSuccess(status, 'Fuel code updated.')
+    })
 
-    return true;
+    return true
   }
 
   render () {
     const {
       errors, isFetching, success
-    } = this.props.fuelCode;
+    } = this.props.fuelCode
 
     if (isFetching || this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
-      return <Loading />;
+      return <Loading />
     }
 
     if (success || (!isFetching && Object.keys(errors).length > 0)) {
@@ -212,15 +212,15 @@ class FuelCodeEditContainer extends Component {
           title="Edit Fuel Code"
           transportModes={this.props.referenceData.transportModes}
         />
-      );
+      )
     }
 
-    return <Loading />;
+    return <Loading />
   }
 }
 
 FuelCodeEditContainer.defaultProps = {
-};
+}
 
 FuelCodeEditContainer.propTypes = {
   filterFuelCodes: PropTypes.func.isRequired,
@@ -256,7 +256,7 @@ FuelCodeEditContainer.propTypes = {
     isSuccessful: PropTypes.bool
   }).isRequired,
   updateFuelCode: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   fuelCode: {
@@ -277,15 +277,15 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.referenceData.isFetching,
     isSuccessful: state.rootReducer.referenceData.success
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   filterFuelCodes: bindActionCreators(filterFuelCodes, dispatch),
   getFuelCode: bindActionCreators(getFuelCode, dispatch),
   updateFuelCode: bindActionCreators(updateFuelCode, dispatch)
-});
+})
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(FuelCodeEditContainer));
+)(withRouter(FuelCodeEditContainer))

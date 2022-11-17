@@ -1,34 +1,33 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
 
 class ScheduleDeltas extends Component {
-
   static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
-      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
   static buildSummaryGrid (deltas) {
     const findMatchingDelta = (field) => {
-      const found = deltas.find(d => d.field === field);
-      if (!!found) {
-        return found;
+      const found = deltas.find(d => d.field === field)
+      if (found) {
+        return found
       }
       return {
         newValue: null,
         oldValue: null
-      };
-    };
+      }
+    }
     const difference = (delta) => {
       if (delta.newValue == null) {
-        return delta.oldValue;
+        return delta.oldValue
       }
       if (delta.oldValue == null) {
-        return delta.newValue;
+        return delta.newValue
       }
-      return delta.oldValue - delta.newValue;
-    };
+      return delta.oldValue - delta.newValue
+    }
 
     const grid = [
       [{ // p2 gasoline
@@ -805,23 +804,23 @@ class ScheduleDeltas extends Component {
         value: difference(findMatchingDelta('total_payable')),
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }]
-    ];
+    ]
 
-    return grid;
+    return grid
   }
 
   render () {
-    const { deltas } = this.props;
+    const { deltas } = this.props
 
     if (!deltas) {
-      return null;
+      return null
     }
 
-    const scheduleADeltas = deltas.filter(d => /^schedule_a/.test(d.path));
-    const scheduleBDeltas = deltas.filter(d => /^schedule_b/.test(d.path));
-    const scheduleCDeltas = deltas.filter(d => /^schedule_c/.test(d.path));
-    const scheduleDDeltas = deltas.filter(d => /^schedule_d/.test(d.path));
-    const summaryDeltas = deltas.filter(d => /^summary/.test(d.path));
+    const scheduleADeltas = deltas.filter(d => /^schedule_a/.test(d.path))
+    const scheduleBDeltas = deltas.filter(d => /^schedule_b/.test(d.path))
+    const scheduleCDeltas = deltas.filter(d => /^schedule_c/.test(d.path))
+    const scheduleDDeltas = deltas.filter(d => /^schedule_d/.test(d.path))
+    const summaryDeltas = deltas.filter(d => /^summary/.test(d.path))
 
     return (
       <div className="delta">
@@ -851,13 +850,13 @@ class ScheduleDeltas extends Component {
         </div>
 
       </div>
-    );
+    )
   }
 }
 
 ScheduleDeltas.defaultProps = {
   deltas: []
-};
+}
 
 ScheduleDeltas.propTypes = {
   deltas: PropTypes.arrayOf(PropTypes.shape({
@@ -865,6 +864,6 @@ ScheduleDeltas.propTypes = {
     oldValue: PropTypes.any,
     newValue: PropTypes.any
   }))
-};
+}
 
-export default ScheduleDeltas;
+export default ScheduleDeltas

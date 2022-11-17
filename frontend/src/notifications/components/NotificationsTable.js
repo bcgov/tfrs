@@ -19,7 +19,6 @@ import { calculatePages} from '../../utils/functions'
 
 const NotificationsTable = (props) => {
   const navigate = useNavigate()
-
   const columns = [{
     accessor: item => item.id,
     Cell: row => (
@@ -38,44 +37,44 @@ const NotificationsTable = (props) => {
   }, {
     accessor: (item) => {
       if (item.relatedCreditTrade) {
-        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType);
+        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType)
       }
 
       if (item.relatedReport) {
-        return NOTIFICATION_TYPES[item.message].replace(/Report/, `Report for ${item.relatedReport.compliancePeriod.description}`);
+        return NOTIFICATION_TYPES[item.message].replace(/Report/, `Report for ${item.relatedReport.compliancePeriod.description}`)
       }
 
-      return NOTIFICATION_TYPES[item.message];
+      return NOTIFICATION_TYPES[item.message]
     },
     Cell: (row) => {
-      let viewUrl = null;
+      let viewUrl = null
 
       if (row.original.relatedDocument) {
-        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(/:id/gi, row.original.relatedDocument.id);
+        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(/:id/gi, row.original.relatedDocument.id)
       } else if (row.original.relatedCreditTrade) {
-        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(/:id/gi, row.original.relatedCreditTrade.id);
+        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(/:id/gi, row.original.relatedCreditTrade.id)
       } else if (row.original.relatedReport && row.original.relatedReport.type.theType === 'Compliance Report') {
-        viewUrl = COMPLIANCE_REPORTING.EDIT.replace(/:id/gi, row.original.relatedReport.id);
-        viewUrl = viewUrl.replace(/:tab/gi, 'intro');
+        viewUrl = COMPLIANCE_REPORTING.EDIT.replace(/:id/gi, row.original.relatedReport.id)
+        viewUrl = viewUrl.replace(/:tab/gi, 'intro')
       } else if (row.original.relatedReport && row.original.relatedReport.type.theType === 'Exclusion Report') {
-        viewUrl = EXCLUSION_REPORTS.EDIT.replace(/:id/gi, row.original.relatedReport.id);
-        viewUrl = viewUrl.replace(/:tab/gi, 'intro');
+        viewUrl = EXCLUSION_REPORTS.EDIT.replace(/:id/gi, row.original.relatedReport.id)
+        viewUrl = viewUrl.replace(/:tab/gi, 'intro')
       }
 
       return (
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, { isRead: true });
+            props.updateNotification(row.original.id, { isRead: true })
 
             if (viewUrl) {
-              navigate(viewUrl);
+              navigate(viewUrl)
             }
           }}
         >
           {row.value}
         </button>
-      );
+      )
     },
     className: 'col-notification',
     Header: 'Notification',
@@ -88,19 +87,19 @@ const NotificationsTable = (props) => {
     headerClassName: 'col-date',
     id: 'date',
     sortMethod: (a, b, desc) => {
-      const value = moment(a).format('YYYY-MM-DD-HH:mm:ss');
-      const previous = moment(b).format('YYYY-MM-DD-HH:mm:ss');
+      const value = moment(a).format('YYYY-MM-DD-HH:mm:ss')
+      const previous = moment(b).format('YYYY-MM-DD-HH:mm:ss')
 
       // Return either 1 or -1 to indicate a sort priority
       if (value > previous) {
-        return 1;
+        return 1
       }
       if (value < previous) {
-        return -1;
+        return -1
       }
       // returning 0, undefined or any falsey value will use subsequent sorts or
       // the index as a tiebreaker
-      return 0;
+      return 0
     },
     width: 150
   }, {
@@ -113,24 +112,24 @@ const NotificationsTable = (props) => {
   }, {
     accessor: item => (item.relatedCreditTrade ? item.relatedCreditTrade.id : '-'),
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value)
 
       if (row.value === '-') {
-        return '-';
+        return '-'
       }
 
       return (
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, { isRead: true });
+            props.updateNotification(row.original.id, { isRead: true })
 
-            navigate(viewUrl);
+            navigate(viewUrl)
           }}
         >
           {row.value}
         </button>
-      );
+      )
     },
     className: 'col-credit-trade',
     Header: 'Transaction ID',
@@ -164,9 +163,9 @@ const NotificationsTable = (props) => {
     Header: '',
     id: 'actions',
     width: 50
-  }];
+  }]
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -185,20 +184,20 @@ const NotificationsTable = (props) => {
       pageSize={props.pageSize}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       onPageChange={(pageIndex) => {
-        props.handlePageChange(pageIndex + 1);
+        props.handlePageChange(pageIndex + 1)
       }}
       onPageSizeChange={(pageSize, pageIndex) => {
-        props.handlePageChange(1);
-        props.handlePageSizeChange(pageSize);
+        props.handlePageChange(1)
+        props.handlePageSizeChange(pageSize)
       }}
       filtered={props.filters}
       onFilteredChange={(filtered, column) => {
-        props.handlePageChange(1);
-        props.handleFiltersChange(filtered);
+        props.handlePageChange(1)
+        props.handleFiltersChange(filtered)
       }}
     />
-  );
-};
+  )
+}
 
 NotificationsTable.propTypes = {
   fields: PropTypes.shape({
@@ -216,6 +215,6 @@ NotificationsTable.propTypes = {
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleFiltersChange: PropTypes.func.isRequired
-};
+}
 
-export default NotificationsTable;
+export default NotificationsTable

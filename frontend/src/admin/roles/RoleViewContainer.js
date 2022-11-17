@@ -2,14 +2,13 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useParams } from 'react-router';
+import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { useParams } from 'react-router'
 
-import { roles } from '../../actions/roleActions';
-import RoleDetails from '../../roles/components/RoleDetails';
+import { roles } from '../../actions/roleActions'
+import RoleDetails from '../../roles/components/RoleDetails'
 
 const RoleViewContainer = props => {
   const { id } = useParams()
@@ -20,7 +19,7 @@ const RoleViewContainer = props => {
 
   return (
     <RoleDetails role={props.role} />
-  );
+  )
 }
 
 RoleViewContainer.defaultProps = {
@@ -29,7 +28,7 @@ RoleViewContainer.defaultProps = {
     error: {},
     isFetching: true
   }
-};
+}
 
 RoleViewContainer.propTypes = {
   getRole: PropTypes.func.isRequired,
@@ -41,7 +40,7 @@ RoleViewContainer.propTypes = {
     error: PropTypes.shape({}),
     isFetching: PropTypes.bool
   })
-};
+}
 
 const mapStateToProps = state => ({
   role: {
@@ -49,10 +48,10 @@ const mapStateToProps = state => ({
     error: state.rootReducer.roles.errorMessage,
     isGetting: state.rootReducer.roles.isGetting
   }
-});
+})
 
 const mapDispatchToProps = {
   getRole: roles.get
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoleViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(RoleViewContainer)

@@ -1,21 +1,21 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Errors from '../../app/components/Errors';
-import LocalTimestamp from '../../app/components/LocalTimestamp';
-import Tooltip from '../../app/components/Tooltip';
-import * as Lang from '../../constants/langEnUs';
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import LinkedCreditTransactions from './LinkedCreditTransactions';
-import SecureFileSubmissionComment from './SecureFileSubmissionComment';
-import SecureFileSubmissionCommentButtons from './SecureFileSubmissionCommentButtons';
-import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm';
-import SecureFileSubmissionFileAttachments from './SecureFileSubmissionFileAttachments';
-import { useNavigate } from 'react-router';
+import Errors from '../../app/components/Errors'
+import LocalTimestamp from '../../app/components/LocalTimestamp'
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
+import LinkedCreditTransactions from './LinkedCreditTransactions'
+import SecureFileSubmissionComment from './SecureFileSubmissionComment'
+import SecureFileSubmissionCommentButtons from './SecureFileSubmissionCommentButtons'
+import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm'
+import SecureFileSubmissionFileAttachments from './SecureFileSubmissionFileAttachments'
+import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionDetails = props => {
   const navigate = useNavigate()
@@ -250,12 +250,12 @@ const SecureFileSubmissionDetails = props => {
       </div>
     </div>
   )
-};
+}
 
 SecureFileSubmissionDetails.defaultProps = {
   errors: {},
   formValidationMessage: []
-};
+}
 
 SecureFileSubmissionDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
@@ -280,6 +280,6 @@ SecureFileSubmissionDetails.propTypes = {
   }).isRequired,
   saveComment: PropTypes.func.isRequired,
   selectLinkIdForModal: PropTypes.func.isRequired
-};
+}
 
-export default SecureFileSubmissionDetails;
+export default SecureFileSubmissionDetails

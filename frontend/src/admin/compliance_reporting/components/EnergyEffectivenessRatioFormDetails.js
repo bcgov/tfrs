@@ -1,9 +1,9 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
+import React from 'react'
+import PropTypes from 'prop-types'
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
 
 const EnergyEffectivenessRatioFormDetails = props => (
   <div className="energy-effectiveness-ratio-details">
@@ -171,11 +171,11 @@ const EnergyEffectivenessRatioFormDetails = props => (
       }
     </div>
   </div>
-);
+)
 
 EnergyEffectivenessRatioFormDetails.defaultProps = {
   edit: false
-};
+}
 
 EnergyEffectivenessRatioFormDetails.propTypes = {
   edit: PropTypes.bool,
@@ -195,6 +195,6 @@ EnergyEffectivenessRatioFormDetails.propTypes = {
       gasoline: PropTypes.shape()
     })
   }).isRequired
-};
+}
 
-export default EnergyEffectivenessRatioFormDetails;
+export default EnergyEffectivenessRatioFormDetails

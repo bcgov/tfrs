@@ -1,26 +1,26 @@
-import React from 'react';
+import React from 'react'
 
-import Input from '../../app/components/Spreadsheet/Input';
-import { getQuantity } from '../../utils/functions';
+import Input from '../../app/components/Spreadsheet/Input'
+import { getQuantity } from '../../utils/functions'
 
 const numericColumn = {
   className: 'numeric',
   readOnly: true,
   value: '',
   valueViewer: (data) => {
-    const { value } = data;
+    const { value } = data
 
     if (value === '') {
-      return '';
+      return ''
     }
 
     if (Number(value) < 0) {
-      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
+      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>
     }
 
-    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
   }
-};
+}
 
 const numericInput = {
   attributes: {
@@ -31,41 +31,41 @@ const numericInput = {
   className: 'number',
   dataEditor: Input,
   valueViewer: (data) => {
-    const { attributes } = data.cell;
-    let { value } = data;
+    const { attributes } = data.cell
+    let { value } = data
 
     if (!value) {
-      return '';
+      return ''
     }
 
-    value = String(value).replace(/,/g, '');
-    value = Number(value);
-    const qty = getQuantity(value);
+    value = String(value).replace(/,/g, '')
+    value = Number(value)
+    const qty = getQuantity(value)
     if (qty !== '') {
-      return <span>{qty.toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+      return <span>{qty.toFixed(attributes.dataNumberToFixed).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
     }
-    return <span />;
+    return <span />
   }
 
-};
+}
 
 const totalViewer = {
   className: 'numeric',
   readOnly: true,
   value: '',
   valueViewer: (data) => {
-    const { value } = data;
+    const { value } = data
 
     if (value === '') {
-      return '';
+      return ''
     }
 
     if (Number(value) < 0) {
-      return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
+      return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>
     }
 
-    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
   }
-};
+}
 
-export { numericColumn, numericInput, totalViewer };
+export { numericColumn, numericInput, totalViewer }

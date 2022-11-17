@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/Autocomplete';
+import ActionTypes from '../constants/actionTypes/Autocomplete'
 
 const autocomplete = (state = {
   serial: Math.floor(Math.random() * 1000000)
@@ -8,10 +8,10 @@ const autocomplete = (state = {
       return {
         ...state,
         serial: Math.floor(Math.random() * 1000000)
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { autocomplete };
+export { autocomplete }

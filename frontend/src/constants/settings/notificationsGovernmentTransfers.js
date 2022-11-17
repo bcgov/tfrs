@@ -40,6 +40,6 @@ const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
   description: 'Returned to Analyst',
   key: 'return_to_analyst',
   recipients: ['government']
-}];
+}]
 
-export default GOVERNMENT_TRANSFER_NOTIFICATIONS;
+export default GOVERNMENT_TRANSFER_NOTIFICATIONS

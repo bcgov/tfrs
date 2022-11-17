@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import * as NumberFormat from '../../constants/numeralFormats'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
 
 class CreditTransferVisualRepresentation extends Component {
   _renderPart3Award () {
@@ -21,7 +21,7 @@ class CreditTransferVisualRepresentation extends Component {
           <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
-    );
+    )
   }
 
   _renderRetirement () {
@@ -37,29 +37,29 @@ class CreditTransferVisualRepresentation extends Component {
           <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
-    );
+    )
   }
 
   _creditTransferIcon () {
     if (Number(this.props.numberOfCredits) === 0) {
-      return { icon: 'minus', className: '' };
+      return { icon: 'minus', className: '' }
     }
 
     if (this.props.totalValue === 0.0) {
       if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) {
-        return { icon: 'arrow-left', className: '' };
+        return { icon: 'arrow-left', className: '' }
       }
       if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id) {
-        return { icon: 'arrow-left', className: 'fa-flip-horizontal' };
+        return { icon: 'arrow-left', className: 'fa-flip-horizontal' }
       }
     }
 
     switch (this.props.tradeType.id) {
       case CREDIT_TRANSFER_TYPES.buy.id:
       case CREDIT_TRANSFER_TYPES.sell.id:
-        return { icon: 'exchange-alt', className: '' };
+        return { icon: 'exchange-alt', className: '' }
       default:
-        return { icon: 'minus', className: '' };
+        return { icon: 'minus', className: '' }
     }
   }
 
@@ -121,20 +121,20 @@ class CreditTransferVisualRepresentation extends Component {
         </div>
         }
       </div>
-    );
+    )
   }
 
   render () {
     switch (this.props.tradeType.id) {
       case CREDIT_TRANSFER_TYPES.part3Award.id:
       case CREDIT_TRANSFER_TYPES.validation.id:
-        return this._renderPart3Award();
+        return this._renderPart3Award()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
-        return this._renderRetirement();
+        return this._renderRetirement()
 
       default:
-        return this._renderCreditTransfer();
+        return this._renderCreditTransfer()
     }
   }
 }
@@ -151,7 +151,7 @@ CreditTransferVisualRepresentation.defaultProps = {
     id: 0
   },
   zeroDollarReason: null
-};
+}
 
 CreditTransferVisualRepresentation.propTypes = {
   creditsFrom: PropTypes.shape({
@@ -192,6 +192,6 @@ CreditTransferVisualRepresentation.propTypes = {
     id: PropTypes.number,
     reason: PropTypes.string
   })
-};
+}
 
-export default CreditTransferVisualRepresentation;
+export default CreditTransferVisualRepresentation

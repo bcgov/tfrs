@@ -1,5 +1,5 @@
-const API = '/exclusion_reports';
-const BASE_PATH = '/exclusion_reports';
+const API = '/exclusion_reports'
+const BASE_PATH = '/exclusion_reports'
 
 const EXCLUSION_REPORTS = {
   API,
@@ -9,6 +9,6 @@ const EXCLUSION_REPORTS = {
   LIST: BASE_PATH,
   SNAPSHOT: `${BASE_PATH}/snapshot/:id`,
   TRANSACTION_TYPES: `${BASE_PATH}/transaction_types`
-};
+}
 
-export default EXCLUSION_REPORTS;
+export default EXCLUSION_REPORTS

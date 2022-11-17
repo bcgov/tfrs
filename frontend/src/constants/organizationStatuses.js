@@ -7,6 +7,6 @@ const ORGANIZATION_STATUSES = {
     id: 2,
     description: 'Inactive'
   }
-};
+}
 
-export default ORGANIZATION_STATUSES;
+export default ORGANIZATION_STATUSES

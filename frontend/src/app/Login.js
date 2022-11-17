@@ -1,41 +1,40 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import CONFIG from '../config';
-import CallableModal from '../app/components/CallableModal';
-import * as Lang from '../constants/langEnUs';
-import { login } from '../actions/keycloakActions';
+import CallableModal from '../app/components/CallableModal'
+import * as Lang from '../constants/langEnUs'
+import { login } from '../actions/keycloakActions'
 
 class Login extends React.Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       hideModal: false
-    };
+    }
 
-    this.userAgent = window.navigator.userAgent;
-    this.redirectUri = window.location.href;
+    this.userAgent = window.navigator.userAgent
+    this.redirectUri = window.location.href
 
-    this._closeModal = this._closeModal.bind(this);
+    this._closeModal = this._closeModal.bind(this)
   }
 
   _closeModal () {
     this.setState({
       hideModal: true
-    });
+    })
   }
 
   render () {
-    const { hideModal } = this.state;
-    const { login } = this.props;
+    const { hideModal } = this.state
+    const { login } = this.props
 
-    let showModal = false;
+    let showModal = false
 
     if (!hideModal && (this.userAgent.indexOf('MSIE ') >= 0 || this.userAgent.indexOf('Trident/') >= 0)) {
-      showModal = true;
+      showModal = true
     }
 
     return (
@@ -58,7 +57,7 @@ class Login extends React.Component {
                   <span className="display-name"> BCeID </span>
                 </button>
                 {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=bceid`} id="link-bceid" className="oidc"> <span className="text">Login with</span> <span className="display-name">BCeID</span></a> */}
-              
+
               </div>
               <div className="oidc">
                 <button
@@ -71,7 +70,7 @@ class Login extends React.Component {
                   <span className="display-name"> IDIR </span>
                 </button>
                 {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=idir`} id="link-idir" className="oidc"> <span className="text">Login with</span> <span className="display-name">IDIR</span></a> */}
-              
+
               </div>
             </div>
           </div>
@@ -81,7 +80,7 @@ class Login extends React.Component {
           cancelLabel={Lang.BTN_OK}
           className="login-modal"
           close={() => {
-            this._closeModal();
+            this._closeModal()
           }}
           id="no-ie"
           show={showModal}
@@ -98,7 +97,7 @@ class Login extends React.Component {
             <p>Please consider using a different browser such as Chrome, Firefox or Safari.</p>
             <button
               onClick={() => {
-                this._closeModal();
+                this._closeModal()
               }}
               type="button"
             >
@@ -107,7 +106,7 @@ class Login extends React.Component {
           </div>
         </CallableModal>
       </div>
-    );
+    )
   }
 }
 
@@ -117,10 +116,10 @@ const mapStateToProps = state => ({
   isFetching: state.rootReducer.keycloak.isFetching,
   user: state.rootReducer.keycloak.user,
   errors: state.rootReducer.keycloak.errors
-});
+})
 
 const mapDispatchToProps = dispatch => ({
-  login: bindActionCreators(login, dispatch),
-});
+  login: bindActionCreators(login, dispatch)
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

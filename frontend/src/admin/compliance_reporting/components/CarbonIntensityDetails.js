@@ -1,12 +1,12 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from '../../../constants/langEnUs';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../../constants/langEnUs'
+import { useNavigate } from 'react-router'
 
 const CarbonIntensityDetails = props => {
   const navigate = useNavigate()
@@ -72,9 +72,9 @@ const CarbonIntensityDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-CarbonIntensityDetails.defaultProps = {};
+CarbonIntensityDetails.defaultProps = {}
 
 CarbonIntensityDetails.propTypes = {
   editUrl: PropTypes.string.isRequired,
@@ -88,6 +88,6 @@ CarbonIntensityDetails.propTypes = {
     })
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default CarbonIntensityDetails;
+export default CarbonIntensityDetails

@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import * as Lang from '../../constants/langEnUs';
+import * as Lang from '../../constants/langEnUs'
 
 const SecureFileSubmissionCommentButtons = props => (
   <div>
@@ -28,13 +28,13 @@ const SecureFileSubmissionCommentButtons = props => (
     </button>
     }
   </div>
-);
+)
 
 SecureFileSubmissionCommentButtons.propTypes = {
   canComment: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   addComment: PropTypes.func.isRequired,
   isCommenting: PropTypes.bool.isRequired
-};
+}
 
-export default SecureFileSubmissionCommentButtons;
+export default SecureFileSubmissionCommentButtons

@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 class SessionTimer extends Component {
-  componentWillReceiveProps (newProps) {
-    const oldProps = this.props;
+  UNSAFE_componentWillReceiveProps (newProps) {
+    const oldProps = this.props
 
     if (!oldProps.warning && newProps.warning) {
-      $('#session-expiry-modal').modal('show');
+      $('#session-expiry-modal').modal('show')
     }
   }
 
@@ -49,26 +49,26 @@ class SessionTimer extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 SessionTimer.defaultProps = {
-};
+}
 
 SessionTimer.propTypes = {
   warning: PropTypes.bool.isRequired,
   expired: PropTypes.bool.isRequired,
   handleContinue: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   warning: state.rootReducer.sessionTimeout.warning,
   expired: state.rootReducer.sessionTimeout.expired
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   handleContinue: bindActionCreators(() => ({ type: 'SESSION_TIMEOUT_CONTINUE' }), dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(SessionTimer);
+export default connect(mapStateToProps, mapDispatchToProps)(SessionTimer)

@@ -3,22 +3,22 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
 
-import { getOrganization, getOrganizationMembers } from '../actions/organizationActions';
-import OrganizationPage from './components/OrganizationPage';
-import { useParams } from 'react-router';
+import { getOrganization, getOrganizationMembers } from '../actions/organizationActions'
+import OrganizationPage from './components/OrganizationPage'
+import { useParams } from 'react-router'
 
 const OrganizationViewContainer = props => {
-  const { id } = useParams();
+  const { id } = useParams()
 
   useEffect(() => {
-    props.getOrganization(id);
-    props.getOrganizationMembers(id);
-  }, [id]);
+    props.getOrganization(id)
+    props.getOrganizationMembers(id)
+  }, [id])
 
   return (
     <OrganizationPage
@@ -26,7 +26,7 @@ const OrganizationViewContainer = props => {
       members={props.organizationMembers}
       organization={props.organization}
     />
-  );
+  )
 }
 
 OrganizationViewContainer.propTypes = {
@@ -57,7 +57,7 @@ OrganizationViewContainer.propTypes = {
       })
     }))
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
@@ -69,11 +69,11 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
   getOrganizationMembers: bindActionCreators(getOrganizationMembers, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationViewContainer)

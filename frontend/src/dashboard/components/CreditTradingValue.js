@@ -1,7 +1,7 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ORGANIZATIONS from '../../constants/routes/Organizations';
+import ORGANIZATIONS from '../../constants/routes/Organizations'
 
 const CreditTradingValue = props => (
   <div className="dashboard-card">
@@ -20,12 +20,12 @@ const CreditTradingValue = props => (
       <FontAwesomeIcon icon={['far', 'file-pdf']} />
     </a>
   </div>
-);
+)
 
 CreditTradingValue.defaultProps = {
-};
+}
 
 CreditTradingValue.propTypes = {
-};
+}
 
-export default CreditTradingValue;
+export default CreditTradingValue

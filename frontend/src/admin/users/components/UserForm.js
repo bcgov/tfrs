@@ -1,58 +1,61 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import UserFormDetails from './UserFormDetails';
-import Errors from '../../../app/components/Errors';
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
+import UserFormDetails from './UserFormDetails'
+import Errors from '../../../app/components/Errors'
+import * as Lang from '../../../constants/langEnUs'
+import { useNavigate } from 'react-router'
 
-const UserForm = props => (
-  <div className="page_admin_user">
-    <h1>{props.title}</h1>
-    <form>
-      <UserFormDetails
-        addToFields={props.addToFields}
-        editPrimaryFields={props.editPrimaryFields}
-        fields={props.fields}
-        fuelSuppliers={props.fuelSuppliers}
-        handleInputChange={props.handleInputChange}
-        isAdding={props.isAdding}
-        loggedInUser={props.loggedInUser}
-        roles={props.roles}
-        toggleCheck={props.toggleCheck}
-      />
+const UserForm = props => {
+  const navigate = useNavigate()
+  return (
+    <div className="page_admin_user">
+      <h1>{props.title}</h1>
+      <form>
+        <UserFormDetails
+          addToFields={props.addToFields}
+          editPrimaryFields={props.editPrimaryFields}
+          fields={props.fields}
+          fuelSuppliers={props.fuelSuppliers}
+          handleInputChange={props.handleInputChange}
+          isAdding={props.isAdding}
+          loggedInUser={props.loggedInUser}
+          roles={props.roles}
+          toggleCheck={props.toggleCheck}
+        />
 
-      {Object.keys(props.errors).length > 0 &&
-      <Errors errors={props.errors} />
-      }
+        {Object.keys(props.errors).length > 0 &&
+        <Errors errors={props.errors} />
+        }
 
-      <div className="user-actions">
-        <div className="btn-container">
-          <button
-            className="btn btn-default"
-            onClick={() => history.goBack()}
-            type="button"
-          >
-            <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
-          </button>
-          <button
-            className="btn btn-primary"
-            data-target="#confirmSubmit"
-            data-toggle="modal"
-            type="button"
-            id="save-user"
-          >
-            <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_USER}
-          </button>
+        <div className="user-actions">
+          <div className="btn-container">
+            <button
+              className="btn btn-default"
+              onClick={() => navigate(-1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+            </button>
+            <button
+              className="btn btn-primary"
+              data-target="#confirmSubmit"
+              data-toggle="modal"
+              type="button"
+              id="save-user"
+            >
+              <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_USER}
+            </button>
+          </div>
         </div>
-      </div>
-    </form>
-  </div>
-);
+      </form>
+    </div>
+  )
+}
 
 UserForm.defaultProps = {
   editPrimaryFields: false,
@@ -61,7 +64,7 @@ UserForm.defaultProps = {
   isAdding: false,
   roles: null,
   toggleCheck: null
-};
+}
 
 UserForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -78,6 +81,6 @@ UserForm.propTypes = {
   roles: PropTypes.shape(),
   title: PropTypes.string.isRequired,
   toggleCheck: PropTypes.func
-};
+}
 
-export default UserForm;
+export default UserForm

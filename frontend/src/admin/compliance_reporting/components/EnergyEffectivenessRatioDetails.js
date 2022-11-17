@@ -1,14 +1,13 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../../app/History';
-import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
-import { useNavigate } from 'react-router';
+import * as Lang from '../../../constants/langEnUs'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyEffectivenessRatioDetails = props => {
   const navigate = useNavigate()
@@ -89,7 +88,7 @@ const EnergyEffectivenessRatioDetails = props => {
       <div className="btn-container">
         <button
           className="btn btn-default"
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           type="button"
         >
           <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -104,9 +103,9 @@ const EnergyEffectivenessRatioDetails = props => {
       </div>
     </div>
   )
-};
+}
 
-EnergyEffectivenessRatioDetails.defaultProps = {};
+EnergyEffectivenessRatioDetails.defaultProps = {}
 
 EnergyEffectivenessRatioDetails.propTypes = {
   item: PropTypes.shape({
@@ -118,6 +117,6 @@ EnergyEffectivenessRatioDetails.propTypes = {
     })
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default EnergyEffectivenessRatioDetails;
+export default EnergyEffectivenessRatioDetails

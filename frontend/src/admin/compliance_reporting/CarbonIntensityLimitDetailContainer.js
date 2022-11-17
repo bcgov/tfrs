@@ -3,25 +3,25 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tab, Tabs } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tab, Tabs } from 'react-bootstrap'
 
-import { carbonIntensities } from '../../actions/carbonIntensities';
-import Loading from '../../app/components/Loading';
-import CarbonIntensityLimitDetails from './components/CarbonIntensityLimitDetails';
-import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
-import { useParams } from 'react-router';
+import { carbonIntensities } from '../../actions/carbonIntensities'
+import Loading from '../../app/components/Loading'
+import CarbonIntensityLimitDetails from './components/CarbonIntensityLimitDetails'
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable'
+import { useParams } from 'react-router'
 
 const CarbonIntensityLimitDetailContainer = props => {
   const { id } = useParams()
 
   useEffect(() => {
-    props.getCarbonIntensityLimit(id);
-  }, [id]);
+    props.getCarbonIntensityLimit(id)
+  }, [id])
 
-  const { item, isFetching, success } = props.carbonIntensityLimit;
+  const { item, isFetching, success } = props.carbonIntensityLimit
 
   if (success && !isFetching && item) {
     return (
@@ -42,13 +42,13 @@ const CarbonIntensityLimitDetailContainer = props => {
           />
         </Tab>
       </Tabs>
-    );
+    )
   }
 
-  return <Loading />;
+  return <Loading />
 }
 
-CarbonIntensityLimitDetailContainer.defaultProps = {};
+CarbonIntensityLimitDetailContainer.defaultProps = {}
 
 CarbonIntensityLimitDetailContainer.propTypes = {
   carbonIntensityLimit: PropTypes.shape({
@@ -57,8 +57,8 @@ CarbonIntensityLimitDetailContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getCarbonIntensityLimit: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape().isRequired,
-};
+  loggedInUser: PropTypes.shape().isRequired
+}
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
@@ -67,10 +67,10 @@ const mapStateToProps = state => ({
     success: state.rootReducer.carbonIntensityLimits.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getCarbonIntensityLimit: carbonIntensities.get
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarbonIntensityLimitDetailContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CarbonIntensityLimitDetailContainer)

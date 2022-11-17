@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import * as Routes from '../../constants/routes';
+import * as Routes from '../../constants/routes'
 
 const SettingsTabs = props => (
   <ul className="settings-tabs nav nav-tabs" key="nav" role="tablist">
@@ -17,10 +17,10 @@ const SettingsTabs = props => (
       </Link>
     </li>
   </ul>
-);
+)
 
 SettingsTabs.propTypes = {
   active: PropTypes.string.isRequired
-};
+}
 
-export default SettingsTabs;
+export default SettingsTabs

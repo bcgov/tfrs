@@ -1,17 +1,17 @@
 export default class CreditTransferUtilityFunctions {
   static canComment (loggedInUser, item) {
     if (!item.commentActions) {
-      return false;
+      return false
     }
 
-    return item.commentActions.includes('ADD_COMMENT');
+    return item.commentActions.includes('ADD_COMMENT')
   }
 
   static canCreatePrivilegedComment (loggedInUser, item) {
     if (!item.commentActions) {
-      return false;
+      return false
     }
 
-    return item.commentActions.includes('ADD_PRIVILEGED_COMMENT');
+    return item.commentActions.includes('ADD_PRIVILEGED_COMMENT')
   }
 }

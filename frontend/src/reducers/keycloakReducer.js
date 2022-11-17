@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/Keycloak';
+import ActionTypes from '../constants/actionTypes/Keycloak'
 
 const keycloakReducer = (state = {
   keycloak: null,
@@ -9,43 +9,44 @@ const keycloakReducer = (state = {
   errors: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.INIT_KEYCLOAK:
+    case ActionTypes.INIT_KEYCLOAK: {
       const { keycloak, authenticated } = action.payload
       return {
         ...state,
-        keycloak: keycloak,
-        authenticated: authenticated,
+        keycloak,
+        authenticated,
         errors: {}
-      };
+      }
+    }
     case ActionTypes.INIT_KEYCLOAK_ERROR:
       return {
         ...state,
         authenticated: false,
         errors: action.payload
-      };
+      }
     case ActionTypes.LOGOUT_KEYCLOAK_USER:
       return {
         ...state,
         user: null,
         errors: action.payload
-      };
+      }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
       return {
         ...state,
         user: action.payload,
         authenticated: true,
         errors: {}
-      };
+      }
     case ActionTypes.LOGIN_KEYCLOAK_USER_ERROR:
       return {
         ...state,
         user: null,
         authenticated: false,
         errors: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default keycloakReducer;
+export default keycloakReducer

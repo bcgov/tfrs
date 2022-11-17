@@ -1,54 +1,54 @@
 // import Autocomplete from 'react-autocomplete';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import axios from 'axios';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import axios from 'axios'
 
-import * as Routes from '../../constants/routes';
+import * as Routes from '../../constants/routes'
 
 class AutocompletedInput extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       items: []
-    };
+    }
 
-    this._onChange = this._onChange.bind(this);
-    this._onKeyPress = this._onKeyPress.bind(this);
-    this._onSelect = this._onSelect.bind(this);
+    this._onChange = this._onChange.bind(this)
+    this._onKeyPress = this._onKeyPress.bind(this)
+    this._onSelect = this._onSelect.bind(this)
   }
 
   _onChange (event) {
-    const { value } = event.target;
+    const { value } = event.target
 
     if (value.length < 3) {
       this.setState({
         items: []
-      });
+      })
     } else {
-      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}&cacheSerial=${this.props.cacheSerial}${this.props.cache === false ? `&cache=False` : ''}${this.props.additionalParams || ''}`)
+      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}&cacheSerial=${this.props.cacheSerial}${this.props.cache === false ? '&cache=False' : ''}${this.props.additionalParams || ''}`)
         .then((response) => {
           this.setState({
             items: response.data
-          });
+          })
         }).catch((error) => {
-          console.log(error);
+          console.log(error)
 
           this.setState({
             items: []
-          });
-        });
+          })
+        })
     }
 
-    return this.props.handleInputChange(event);
+    return this.props.handleInputChange(event)
   }
 
   _onKeyPress (event) {
     if (this.props.integersOnly) {
       if (event.key.match(/\D/g)) {
-        event.preventDefault();
+        event.preventDefault()
       }
     }
   }
@@ -60,14 +60,14 @@ class AutocompletedInput extends Component {
         name: this.props.inputProps.name,
         value
       }
-    });
+    })
 
     this.setState({
       items: []
-    });
+    })
 
     if (this.props.onSelectEvent) {
-      this.props.onSelectEvent(item);
+      this.props.onSelectEvent(item)
     }
   }
 
@@ -82,7 +82,7 @@ class AutocompletedInput extends Component {
         onSelect={this._onSelect}
         renderItem={this.props.renderItem}
         renderMenu={this.props.renderMenu}
-        ref={(input) => { this.props.handleRef && this.props.handleRef(input); }}
+        ref={(input) => { this.props.handleRef && this.props.handleRef(input) }}
         renderInput={props => (
           <input
             type="text"
@@ -95,7 +95,7 @@ class AutocompletedInput extends Component {
         value={this.props.value}
         wrapperStyle={{}}
       />
-    );
+    )
   }
 }
 
@@ -117,7 +117,7 @@ AutocompletedInput.defaultProps = {
   ),
   renderMenu: (items, value, style) => (
     <div
-      className={items.length > 0 ? `autocomplete-menu` : ''}
+      className={items.length > 0 ? 'autocomplete-menu' : ''}
       style={{
         ...style,
         position: 'fixed',
@@ -129,7 +129,7 @@ AutocompletedInput.defaultProps = {
   ),
   selectOnBlur: true,
   value: ''
-};
+}
 
 AutocompletedInput.propTypes = {
   additionalParams: PropTypes.string,
@@ -146,13 +146,13 @@ AutocompletedInput.propTypes = {
   renderMenu: PropTypes.func,
   selectOnBlur: PropTypes.bool,
   value: PropTypes.any
-};
+}
 
 const mapStateToProps = state => ({
   cacheSerial: state.rootReducer.autocomplete.serial
-});
+})
 
 const mapDispatchToProps = dispatch => ({
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(AutocompletedInput);
+export default connect(mapStateToProps, mapDispatchToProps)(AutocompletedInput)

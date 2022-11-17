@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/Notifications';
+import ActionTypes from '../constants/actionTypes/Notifications'
 
 const notifications = (state = {
   errorMessage: [],
@@ -18,26 +18,26 @@ const notifications = (state = {
       return {
         ...state,
         onNotificationsPage: true
-      };
+      }
     case ActionTypes.UNMOUNT_NOTIFICATIONS_TABLE:
       return {
         ...state,
         onNotificationsPage: false
-      };
+      }
     case ActionTypes.GET_NOTIFICATIONS:
       return {
         ...state,
         isFetching: true,
         serverInitiatedReloadRequested: false,
         success: false
-      };
+      }
     case ActionTypes.GET_NOTIFICATIONS_COUNT:
       return {
         ...state,
         count: {
           isFetching: true
         }
-      };
+      }
     case ActionTypes.RECEIVE_NOTIFICATIONS_COUNT:
       return {
         ...state,
@@ -45,7 +45,7 @@ const notifications = (state = {
           isFetching: false,
           unreadCount: action.data.unreadCount
         }
-      };
+      }
     case ActionTypes.RECEIVE_NOTIFICATIONS:
       return {
         ...state,
@@ -53,26 +53,26 @@ const notifications = (state = {
         success: true,
         items: action.data,
         totalCount: action.totalCount
-      };
+      }
     case ActionTypes.ERROR:
       return {
         ...state,
         isFetching: false,
         success: false,
         errorMessage: action.errorMessage
-      };
+      }
     case ActionTypes.INVALIDATE_NOTIFICATIONS:
       return {
         ...state,
         didInvalidate: true,
         errors: {},
         message: ''
-      };
+      }
     case ActionTypes.SERVER_INITIATED_NOTIFICATION_RELOAD:
       return {
         ...state,
         serverInitiatedReloadRequested: true
-      };
+      }
     case ActionTypes.SUCCESS_NOTIFICATIONS:
       return {
         ...state,
@@ -85,11 +85,11 @@ const notifications = (state = {
         )).filter(notification => (!notification.isArchived)), // only show unarchived
         message: action.message,
         success: true
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 const subscriptions = (state = {
   items: [],
@@ -103,28 +103,28 @@ const subscriptions = (state = {
         ...state,
         isFetching: true,
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_SUBSCRIPTIONS:
       return {
         ...state,
         isFetching: false,
         items: action.data,
         success: true
-      };
+      }
     case ActionTypes.ERROR:
       return {
         ...state,
         errorMessage: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     case ActionTypes.INVALIDATE_SUBSCRIPTIONS:
       return {
         ...state,
         didInvalidate: true,
         errorMessage: [],
         message: ''
-      };
+      }
     case ActionTypes.SUCCESS:
       return {
         ...state,
@@ -132,10 +132,10 @@ const subscriptions = (state = {
         isFetching: false,
         message: action.message,
         success: true
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { notifications, subscriptions };
+export { notifications, subscriptions }

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
 
 class CreditTransferProgress extends Component {
   static addStepRescinded () {
@@ -12,7 +12,7 @@ class CreditTransferProgress extends Component {
       >
         <span>{CREDIT_TRANSFER_STATUS.rescinded.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepAccepted () {
@@ -20,24 +20,26 @@ class CreditTransferProgress extends Component {
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.accepted.id &&
           !this.props.isRescinded)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.accepted.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.accepted.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepCompleted () {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.approved.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.approved.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepDeclined () {
@@ -48,19 +50,20 @@ class CreditTransferProgress extends Component {
       >
         <span>{CREDIT_TRANSFER_STATUS.declinedForApproval.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepDraft () {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.draft.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.draft.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepProposed () {
@@ -68,12 +71,13 @@ class CreditTransferProgress extends Component {
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.proposed.id &&
           !this.props.isRescinded)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.proposed.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.proposed.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepReviewed () {
@@ -82,12 +86,13 @@ class CreditTransferProgress extends Component {
         className={`step ${((this.props.status.id === CREDIT_TRANSFER_STATUS.recommendedForDecision.id ||
           this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) &&
           !this.props.isRescinded)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.recommendedForDecision.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.recommendedForDecision.description}</span>
       </div>
-    );
+    )
   }
 
   _addStepRefused () {
@@ -95,78 +100,79 @@ class CreditTransferProgress extends Component {
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
           !this.props.isRescinded)
-          ? 'current' : ''}`}
+          ? 'current'
+: ''}`}
         key={CREDIT_TRANSFER_STATUS.refused.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.refused.description}</span>
       </div>
-    );
+    )
   }
 
   _renderCreditTransfer () {
-    const view = [];
+    const view = []
 
-    view.push(this._addStepDraft());
+    view.push(this._addStepDraft())
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id &&
       this.props.isRescinded) {
-      view.push(CreditTransferProgress.addStepRescinded());
+      view.push(CreditTransferProgress.addStepRescinded())
     }
 
-    view.push(this._addStepProposed());
+    view.push(this._addStepProposed())
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.proposed.id &&
       this.props.isRescinded) {
-      view.push(CreditTransferProgress.addStepRescinded());
+      view.push(CreditTransferProgress.addStepRescinded())
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
-      view.push(this._addStepRefused());
+      view.push(this._addStepRefused())
     } else {
-      view.push(this._addStepAccepted());
+      view.push(this._addStepAccepted())
     }
 
     if ((this.props.status.id === CREDIT_TRANSFER_STATUS.accepted.id ||
       this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) &&
       this.props.isRescinded) {
-      view.push(CreditTransferProgress.addStepRescinded());
+      view.push(CreditTransferProgress.addStepRescinded())
     }
 
-    view.push(this._addStepReviewed());
+    view.push(this._addStepReviewed())
 
     if ((this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id ||
       this.props.status.id === CREDIT_TRANSFER_STATUS.recommendedForDecision.id) &&
       this.props.isRescinded) {
-      view.push(CreditTransferProgress.addStepRescinded());
+      view.push(CreditTransferProgress.addStepRescinded())
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
-      view.push(this._addStepDeclined());
+      view.push(this._addStepDeclined())
     } else {
-      view.push(this._addStepCompleted());
+      view.push(this._addStepCompleted())
     }
 
-    return view;
+    return view
   }
 
   _renderGovernmentTransfer () {
-    const view = [];
+    const view = []
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.rescinded.id) {
-      view.push(CreditTransferProgress.addStepRescinded());
-      return view;
+      view.push(CreditTransferProgress.addStepRescinded())
+      return view
     }
 
-    view.push(this._addStepDraft());
-    view.push(this._addStepReviewed());
+    view.push(this._addStepDraft())
+    view.push(this._addStepReviewed())
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
-      view.push(this._addStepDeclined());
+      view.push(this._addStepDeclined())
     } else {
-      view.push(this._addStepCompleted());
+      view.push(this._addStepCompleted())
     }
 
-    return view;
+    return view
   }
 
   render () {
@@ -180,12 +186,14 @@ class CreditTransferProgress extends Component {
             className={`arrow-steps clearfix
               ${(this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id ||
                 this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id ||
-                this.props.isRescinded) ? 'negative' : ''}`}
+                this.props.isRescinded)
+? 'negative'
+: ''}`}
           >
             {this._renderCreditTransfer()}
           </div>
         </div>
-      );
+      )
     }
 
     return (
@@ -196,7 +204,7 @@ class CreditTransferProgress extends Component {
           {this._renderGovernmentTransfer()}
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -210,7 +218,7 @@ CreditTransferProgress.defaultProps = {
     id: CREDIT_TRANSFER_TYPES.sell.id,
     theType: 'Credit Transfer'
   }
-};
+}
 
 CreditTransferProgress.propTypes = {
   isRescinded: PropTypes.bool,
@@ -222,6 +230,6 @@ CreditTransferProgress.propTypes = {
     id: PropTypes.number,
     theType: PropTypes.string
   })
-};
+}
 
-export default CreditTransferProgress;
+export default CreditTransferProgress

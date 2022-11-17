@@ -1,47 +1,36 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
 
-import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values';
-import { arrayMove } from '../../utils/functions';
+import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values'
+import { arrayMove } from '../../utils/functions'
 
 class CreditTransferSigningHistory extends Component {
   static recordedFound (histories) {
     return histories.find(history => (
       history.status.id === CREDIT_TRANSFER_STATUS.recorded.id
-    ));
+    ))
   }
 
   constructor (props) {
-    super(props);
+    super(props)
 
-    const recordedFound = CreditTransferSigningHistory.recordedFound(props.history);
+    const recordedFound = CreditTransferSigningHistory.recordedFound(props.history)
 
     if (recordedFound &&
       moment(props.tradeEffectiveDate).format('YYYYMMDD') < moment(recordedFound.createTimestamp).format('YYYYMMDD')) {
       const approvedIndex = props.history.findIndex(history => (
-        history.status.id === CREDIT_TRANSFER_STATUS.approved.id));
+        history.status.id === CREDIT_TRANSFER_STATUS.approved.id))
 
       const recordedIndex = props.history.findIndex(history => (
         history.status.id === CREDIT_TRANSFER_STATUS.recorded.id
-      ));
+      ))
 
-      arrayMove(props.history, approvedIndex, recordedIndex);
+      arrayMove(props.history, approvedIndex, recordedIndex)
     }
   }
 
   _renderApproved (history) {
-    let roleDisplay = null;
-
-    if (history.userRole) {
-      roleDisplay = history.userRole.description;
-
-      if (history.userRole.name === 'GovDeputyDirector' ||
-          history.userRole.name === 'GovDirector') {
-        roleDisplay = roleDisplay.replace('Government ', '');
-      }
-    }
-
     // if "recorded" status was found, this means this credit trade
     // was from the historical data entry
     // show "the Director" at all times
@@ -55,18 +44,18 @@ class CreditTransferSigningHistory extends Component {
         </span>
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
       </p>
-    );
+    )
   }
 
   _renderDeclined (history) {
-    let roleDisplay = null;
+    let roleDisplay = null
 
     if (history.userRole) {
-      roleDisplay = history.userRole.description;
+      roleDisplay = history.userRole.description
 
       if (history.userRole.name === 'GovDeputyDirector' ||
       history.userRole.name === 'GovDirector') {
-        roleDisplay = roleDisplay.replace('Government ', '');
+        roleDisplay = roleDisplay.replace('Government ', '')
       }
     }
 
@@ -92,15 +81,15 @@ class CreditTransferSigningHistory extends Component {
         }
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
       </p>
-    );
+    )
   }
 
   static renderAccepted (history) {
-    return (<strong>Signed</strong>);
+    return (<strong>Signed</strong>)
   }
 
   static renderHistory (history) {
-    return (<strong>{history.status.status} </strong>);
+    return (<strong>{history.status.status} </strong>)
   }
 
   static renderNotRecommended () {
@@ -109,7 +98,7 @@ class CreditTransferSigningHistory extends Component {
         <strong>Reviewed</strong> and
         <strong className="text-danger"> Not Recommended</strong>
       </span>
-    );
+    )
   }
 
   static renderRecommended () {
@@ -118,23 +107,23 @@ class CreditTransferSigningHistory extends Component {
         <strong>Reviewed</strong> and
         <strong className="text-success"> Recommended</strong>
       </span>
-    );
+    )
   }
 
   static renderRecorded () {
-    return (<strong>Recorded</strong>);
+    return (<strong>Recorded</strong>)
   }
 
   static renderRefused () {
-    return (<strong className="text-danger">Refused</strong>);
+    return (<strong className="text-danger">Refused</strong>)
   }
 
   static renderRescinded () {
-    return (<strong className="text-danger">Rescinded</strong>);
+    return (<strong className="text-danger">Rescinded</strong>)
   }
 
   static renderSubmitted (history) {
-    return (<strong>Proposed</strong>);
+    return (<strong>Proposed</strong>)
   }
 
   render () {
@@ -143,9 +132,9 @@ class CreditTransferSigningHistory extends Component {
         <h3 className="signing-authority-header" key="header">Transaction History</h3>
         {this.props.history.length > 0 &&
         this.props.history.map((history, index, arr) => {
-          let action;
+          let action
           if (history.isRescinded) {
-            action = CreditTransferSigningHistory.renderRescinded();
+            action = CreditTransferSigningHistory.renderRescinded()
           } else {
             if ([ // if the next history entry is also recommended/not recommended, don't show it
               CREDIT_TRANSFER_STATUS.notRecommended.id,
@@ -157,42 +146,42 @@ class CreditTransferSigningHistory extends Component {
               CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
               CREDIT_TRANSFER_STATUS.recorded.id
             ].includes(arr[index + 1].status.id)) {
-              return false;
+              return false
             }
 
             switch (history.status.id) {
               case CREDIT_TRANSFER_STATUS.accepted.id:
-                action = CreditTransferSigningHistory.renderAccepted(history);
-                break;
+                action = CreditTransferSigningHistory.renderAccepted(history)
+                break
 
               case CREDIT_TRANSFER_STATUS.approved.id:
-                return this._renderApproved(history);
+                return this._renderApproved(history)
 
               case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
-                return this._renderDeclined(history);
+                return this._renderDeclined(history)
 
               case CREDIT_TRANSFER_STATUS.notRecommended.id:
-                action = CreditTransferSigningHistory.renderNotRecommended();
-                break;
+                action = CreditTransferSigningHistory.renderNotRecommended()
+                break
 
               case CREDIT_TRANSFER_STATUS.proposed.id:
-                action = CreditTransferSigningHistory.renderSubmitted(history);
-                break;
+                action = CreditTransferSigningHistory.renderSubmitted(history)
+                break
 
               case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
-                action = CreditTransferSigningHistory.renderRecommended();
-                break;
+                action = CreditTransferSigningHistory.renderRecommended()
+                break
 
               case CREDIT_TRANSFER_STATUS.recorded.id:
-                action = CreditTransferSigningHistory.renderRecorded(history);
-                break;
+                action = CreditTransferSigningHistory.renderRecorded(history)
+                break
 
               case CREDIT_TRANSFER_STATUS.refused.id:
-                action = CreditTransferSigningHistory.renderRefused();
-                break;
+                action = CreditTransferSigningHistory.renderRefused()
+                break
 
               default:
-                action = CreditTransferSigningHistory.renderHistory(history);
+                action = CreditTransferSigningHistory.renderHistory(history)
             }
           }
 
@@ -203,10 +192,10 @@ class CreditTransferSigningHistory extends Component {
               <strong> {history.user.firstName} {history.user.lastName}</strong> of
               <strong> {history.user.organization.name} </strong>
             </p>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 }
 
@@ -214,7 +203,7 @@ CreditTransferSigningHistory.defaultProps = {
   history: [],
   signatures: [],
   tradeEffectiveDate: null
-};
+}
 
 CreditTransferSigningHistory.propTypes = {
   history: PropTypes.arrayOf(PropTypes.shape({
@@ -245,6 +234,6 @@ CreditTransferSigningHistory.propTypes = {
     })
   })),
   tradeEffectiveDate: PropTypes.string
-};
+}
 
-export default CreditTransferSigningHistory;
+export default CreditTransferSigningHistory

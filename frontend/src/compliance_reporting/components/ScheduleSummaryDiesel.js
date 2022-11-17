@@ -1,8 +1,8 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { numericColumn, numericInput, totalViewer } from './Columns';
-import Tooltip from '../../app/components/Tooltip';
+import { numericColumn, numericInput, totalViewer } from './Columns'
+import Tooltip from '../../app/components/Tooltip'
 
 class ScheduleSummaryDiesel {
   constructor (readOnly = false) {
@@ -29,7 +29,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 12 `}
+            {'Line 12 '}
             <Tooltip
               className="info"
               show
@@ -49,7 +49,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 13 `}
+            {'Line 13 '}
             <Tooltip
               className="info"
               show
@@ -69,7 +69,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 14 `}
+            {'Line 14 '}
             <Tooltip
               className="info"
               show
@@ -89,7 +89,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 15 `}
+            {'Line 15 '}
             <Tooltip
               className="info"
               show
@@ -110,7 +110,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 16 `}
+            {'Line 16 '}
             <Tooltip
               className="info"
               show
@@ -130,7 +130,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 17 `}
+            {'Line 17 '}
             <Tooltip
               className="info"
               show
@@ -159,7 +159,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 18 `}
+            {'Line 18 '}
             <Tooltip
               className="info"
               show
@@ -187,7 +187,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 19 `}
+            {'Line 19 '}
             <Tooltip
               className="info"
               show
@@ -216,7 +216,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 20 `}
+            {'Line 20 '}
             <Tooltip
               className="info"
               show
@@ -245,7 +245,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 21 `}
+            {'Line 21 '}
             <Tooltip
               className="info"
               show
@@ -265,7 +265,7 @@ class ScheduleSummaryDiesel {
         readOnly: true,
         value: (
           <div>
-            {`Line 22 `}
+            {'Line 22 '}
             <Tooltip
               className="info"
               show
@@ -279,8 +279,8 @@ class ScheduleSummaryDiesel {
         ...totalViewer,
         className: 'total numeric'
       }]
-    ];
+    ]
   }
 }
 
-export default ScheduleSummaryDiesel;
+export default ScheduleSummaryDiesel

@@ -4,26 +4,21 @@
 const getConfig = (value, def) => {
   // console.log("getConfig", value, def)
   if (global.tfrs_config) {
-    return global.tfrs_config[value] || def;
+    return global.tfrs_config[value] || def
   }
-  console.log("getConfig AFTER", value, def)
+  console.log('getConfig AFTER', value, def)
 
-  return def;
-};
+  return def
+}
 
 const CONFIG = {
   API_BASE: getConfig('api_base', `${window.location.protocol}//${window.location.host}:8000/api`),
   KEYCLOAK: {
-    ENABLED: true,
-    AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
-    CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
-    CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
-    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured'),
-    CUSTOM_LOGIN: getConfig('keycloak.custom_login', true),
-
-    // LOGOUT_URL: getConfig('keycloak.logout_url', false),
     REALM: getConfig('keycloak.realm', false),
-    URL: getConfig('keycloak.url', false),
+    CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
+    AUTH_URL: getConfig('keycloak.auth_url', 'unconfigured'),
+    CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
+    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured')
   },
   DEBUG: {
     ENABLED: getConfig('debug.enabled', false)
@@ -49,6 +44,6 @@ const CONFIG = {
     ENABLED: getConfig('exclusion_reports.enabled', false),
     CREATE_EFFECTIVE_DATE: getConfig('exclusion_reports.create_effective_date', '2013-07-01')
   }
-};
+}
 
-export default CONFIG;
+export default CONFIG

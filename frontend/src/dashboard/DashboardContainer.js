@@ -3,65 +3,65 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { complianceReporting } from '../actions/complianceReporting';
-import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
-import { getDocumentUploads } from '../actions/documentUploads';
-import { exclusionReports } from '../actions/exclusionReports';
-import { getFuelCodes } from '../actions/fuelCodes';
-import { getOrganization, getOrganizations } from '../actions/organizationActions';
-import saveTableState from '../actions/stateSavingReactTableActions';
-import DashboardPage from './components/DashboardPage';
-import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';
-import PERMISSIONS_FUEL_CODES from '../constants/permissions/FuelCodes';
-import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
-import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../constants/permissions/SecureDocumentUpload';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
-import CONFIG from '../config';
-import toastr from '../utils/toastr';
-import { withRouter } from '../utils/withRouter';
+import { complianceReporting } from '../actions/complianceReporting'
+import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions'
+import { getDocumentUploads } from '../actions/documentUploads'
+import { exclusionReports } from '../actions/exclusionReports'
+import { getFuelCodes } from '../actions/fuelCodes'
+import { getOrganization, getOrganizations } from '../actions/organizationActions'
+import saveTableState from '../actions/stateSavingReactTableActions'
+import DashboardPage from './components/DashboardPage'
+import PERMISSIONS_COMPLIANCE_REPORT from '../constants/permissions/ComplianceReport'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions'
+import PERMISSIONS_FUEL_CODES from '../constants/permissions/FuelCodes'
+import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations'
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../constants/permissions/SecureDocumentUpload'
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
+import CONFIG from '../config'
+import toastr from '../utils/toastr'
+import { withRouter } from '../utils/withRouter'
 
 class DashboardContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       filterOrganization: -1,
       unreadNotificationsCount: 0
-    };
+    }
 
-    this._createComplianceReport = this._createComplianceReport.bind(this);
-    this._createExclusionReport = this._createExclusionReport.bind(this);
-    this._selectOrganization = this._selectOrganization.bind(this);
-    this._selectedOrganization = this._selectedOrganization.bind(this);
-    this._setFilter = this._setFilter.bind(this);
+    this._createComplianceReport = this._createComplianceReport.bind(this)
+    this._createExclusionReport = this._createExclusionReport.bind(this)
+    this._selectOrganization = this._selectOrganization.bind(this)
+    this._selectedOrganization = this._selectedOrganization.bind(this)
+    this._setFilter = this._setFilter.bind(this)
   }
 
   componentDidMount () {
-    this._getComplianceReports();
-    this._getCreditTransfers();
-    this._getFileSubmissions();
-    this._getUnreadNotificationCount();
-    this._getFuelCodes();
-    this._getOrganizations();
+    this._getComplianceReports()
+    this._getCreditTransfers()
+    this._getFileSubmissions()
+    this._getUnreadNotificationCount()
+    this._getFuelCodes()
+    this._getOrganizations()
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     if (nextProps.unreadNotificationsCount) {
-      this._getUnreadNotificationCount(nextProps);
+      this._getUnreadNotificationCount(nextProps)
     }
 
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
         this.props.navigate(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
-          .replace(':tab', 'intro'));
-        toastr.complianceReporting('Created');
+          .replace(':tab', 'intro'))
+        toastr.complianceReporting('Created')
       }
     }
 
@@ -69,14 +69,14 @@ class DashboardContainer extends Component {
       if (nextProps.exclusionReports.success) {
         this.props.navigate(EXCLUSION_REPORTS.EDIT
           .replace(':id', nextProps.exclusionReports.item.id)
-          .replace(':tab', 'intro'));
-        toastr.exclusionReports('Created');
+          .replace(':tab', 'intro'))
+        toastr.exclusionReports('Created')
       }
     }
   }
 
   _createComplianceReport (compliancePeriodDescription) {
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear()
 
     const payload = {
       status: {
@@ -84,13 +84,13 @@ class DashboardContainer extends Component {
       },
       type: 'Compliance Report',
       compliancePeriod: currentYear
-    };
+    }
 
-    this.props.createComplianceReport(payload);
+    this.props.createComplianceReport(payload)
   }
 
   _createExclusionReport (compliancePeriodDescription) {
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear()
 
     const payload = {
       status: {
@@ -98,79 +98,79 @@ class DashboardContainer extends Component {
       },
       type: 'Exclusion Report',
       compliancePeriod: currentYear
-    };
+    }
 
-    this.props.createExclusionReport(payload);
+    this.props.createExclusionReport(payload)
   }
 
   _getComplianceReports () {
     if (CONFIG.COMPLIANCE_REPORTING.ENABLED &&
     typeof this.props.loggedInUser.hasPermission === 'function' &&
     this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
-      this.props.getComplianceReports();
+      this.props.getComplianceReports()
     }
   }
 
   _getCreditTransfers () {
     if (typeof this.props.loggedInUser.hasPermission === 'function' &&
       this.props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) {
-      this.props.getCreditTransfersIfNeeded();
+      this.props.getCreditTransfersIfNeeded()
     }
   }
 
   _getFileSubmissions () {
     if (typeof this.props.loggedInUser.hasPermission === 'function' &&
       this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) {
-      this.props.getDocumentUploads();
+      this.props.getDocumentUploads()
     }
   }
 
   _getFuelCodes () {
     if (typeof this.props.loggedInUser.hasPermission === 'function' &&
       this.props.loggedInUser.hasPermission(PERMISSIONS_FUEL_CODES.VIEW)) {
-      this.props.getFuelCodes();
+      this.props.getFuelCodes()
     }
   }
 
   _getOrganizations () {
     if (typeof this.props.loggedInUser.hasPermission === 'function' &&
       this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) {
-      this.props.getOrganizations();
+      this.props.getOrganizations()
     }
   }
 
   _getUnreadNotificationCount (nextProps = null) {
-    let { unreadNotificationsCount } = this.state;
+    let { unreadNotificationsCount } = this.state
 
     if (this.props.unreadNotificationsCount > 0) {
-      ({ unreadNotificationsCount } = this.props);
+      ({ unreadNotificationsCount } = this.props)
     }
 
     if (nextProps && nextProps.unreadNotificationsCount > 0) {
-      ({ unreadNotificationsCount } = nextProps);
+      ({ unreadNotificationsCount } = nextProps)
     }
 
     this.setState({
       unreadNotificationsCount
-    });
+    })
   }
 
   _selectedOrganization () {
     if (this.state.filterOrganization === -1) {
-      return false;
+      return false
     }
 
-    return this.props.organization;
+    return this.props.organization
   }
 
   _selectOrganization (organizationId) {
     if (organizationId !== -1) {
-      this.props.getOrganization(organizationId);
+      this.props.getOrganization(organizationId)
     }
 
     this.setState({
       filterOrganization: organizationId
-    });
+    })
   }
 
   _setFilter (filtered, stateKey) {
@@ -178,7 +178,7 @@ class DashboardContainer extends Component {
       ...this.props.tableState,
       filtered,
       page: 0
-    });
+    })
   }
 
   render () {
@@ -197,7 +197,7 @@ class DashboardContainer extends Component {
         setFilter={this._setFilter}
         unreadNotificationsCount={this.state.unreadNotificationsCount}
       />
-    );
+    )
   }
 }
 
@@ -206,7 +206,7 @@ DashboardContainer.defaultProps = {
   exclusionReports: {},
   organization: null,
   unreadNotificationsCount: null
-};
+}
 
 DashboardContainer.propTypes = {
   complianceReports: PropTypes.shape({
@@ -270,7 +270,7 @@ DashboardContainer.propTypes = {
   saveTableState: PropTypes.func.isRequired,
   tableState: PropTypes.shape().isRequired,
   unreadNotificationsCount: PropTypes.number
-};
+}
 
 const mapDispatchToProps = ({
   createComplianceReport: complianceReporting.create,
@@ -282,7 +282,7 @@ const mapDispatchToProps = ({
   getOrganization,
   getOrganizations,
   saveTableState
-});
+})
 
 const mapStateToProps = (state, ownProps) => ({
   complianceReports: state.rootReducer.complianceReporting,
@@ -317,16 +317,17 @@ const mapStateToProps = (state, ownProps) => ({
     isFetching: state.rootReducer.organizations.isFetching
   },
   tableState: ownProps.stateKey in state.rootReducer.tableState.savedState
-    ? state.rootReducer.tableState.savedState[ownProps.stateKey] : {
-      page: 0,
-      pageSize: ownProps.defaultPageSize,
-      sorted: ownProps.defaultSorted,
-      filtered: ownProps.defaultFiltered
-    },
+    ? state.rootReducer.tableState.savedState[ownProps.stateKey]
+    : {
+        page: 0,
+        pageSize: ownProps.defaultPageSize,
+        sorted: ownProps.defaultSorted,
+        filtered: ownProps.defaultFiltered
+      },
   unreadNotificationsCount: state.rootReducer.notifications.count.unreadCount
-});
+})
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)((withRouter(DashboardContainer)));
+)((withRouter(DashboardContainer)))

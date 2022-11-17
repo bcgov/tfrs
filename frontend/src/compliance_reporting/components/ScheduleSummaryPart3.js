@@ -1,8 +1,8 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { numericColumn, numericInput, totalViewer } from './Columns';
-import Tooltip from '../../app/components/Tooltip';
+import { numericColumn, numericInput, totalViewer } from './Columns'
+import Tooltip from '../../app/components/Tooltip'
 
 class ScheduleSummaryPart3 {
   constructor () {
@@ -32,7 +32,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 23 `}
+            {'Line 23 '}
             <Tooltip
               className="info"
               show
@@ -55,7 +55,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 24 `}
+            {'Line 24 '}
             <Tooltip
               className="info"
               show
@@ -78,7 +78,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 25 `}
+            {'Line 25 '}
             <Tooltip
               className="info"
               show
@@ -101,7 +101,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 26 `}
+            {'Line 26 '}
             <Tooltip
               className="info"
               show
@@ -136,7 +136,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 26a `}
+            {'Line 26a '}
             <Tooltip
               className="info"
               show
@@ -159,7 +159,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 26b `}
+            {'Line 26b '}
             <Tooltip
               className="info"
               show
@@ -193,7 +193,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 27 `}
+            {'Line 27 '}
             <Tooltip
               className="info"
               show
@@ -217,7 +217,7 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: (
           <div>
-            {`Line 28 `}
+            {'Line 28 '}
             <Tooltip
               className="info"
               show
@@ -235,8 +235,8 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: '$CAD'
       }] // line 28
-    ];
+    ]
   }
 }
 
-export default ScheduleSummaryPart3;
+export default ScheduleSummaryPart3
