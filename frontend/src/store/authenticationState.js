@@ -4,6 +4,7 @@ import { initKeycloak, initKeycloakError, loginKeycloakUserSuccess } from '../ac
 import Keycloak from 'keycloak-js'
 import ActionTypes from '../constants/actionTypes/Keycloak'
 import configureAxios from './authorizationInterceptor'
+import CONFIG from '../config'
 
 function * getBackendUser (store) {
   const { rootReducer } = store.getState()
@@ -14,15 +15,17 @@ function * getBackendUser (store) {
 }
 
 export default function * authenticationStateSaga (store) {
-  const keycloak = new Keycloak('/keycloak.json')
-  console.log('keycloak', keycloak)
+  const keycloak = new Keycloak({
+    url: CONFIG.KEYCLOAK.AUTH_URL,
+    realm: CONFIG.KEYCLOAK.REALM,
+    clientId: CONFIG.KEYCLOAK.CLIENT_ID
+  })
 
   const authenticated = yield keycloak.init({
     pkceMethod: 'S256',
-    redirectUri: 'http://localhost:3000',
+    redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
     idpHint: 'idir'
   })
-  console.log('authenticated', authenticated)
 
   if (authenticated == null) {
     yield put(initKeycloakError('keycloak authentication failed'))
@@ -35,16 +38,8 @@ export default function * authenticationStateSaga (store) {
   ])
 
   if (authenticated) {
-    console.log('authenticated keycloak')
-    console.log(authenticated)
     configureAxios()
     const user = yield keycloak.loadUserInfo()
     yield put(loginKeycloakUserSuccess(user))
   }
-
-  // yield put(initKeycloak(keycloak, authenticated))
-  //   .then((authenticated) => {
-  //   })
-  //   .catch(error => {
-  //   });
 }

@@ -14,16 +14,11 @@ const getConfig = (value, def) => {
 const CONFIG = {
   API_BASE: getConfig('api_base', `${window.location.protocol}//${window.location.host}:8000/api`),
   KEYCLOAK: {
-    ENABLED: true,
-    AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
-    CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
-    CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
-    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured'),
-    CUSTOM_LOGIN: getConfig('keycloak.custom_login', true),
-
-    // LOGOUT_URL: getConfig('keycloak.logout_url', false),
     REALM: getConfig('keycloak.realm', false),
-    URL: getConfig('keycloak.url', false)
+    CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
+    AUTH_URL: getConfig('keycloak.auth_url', 'unconfigured'),
+    CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
+    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured')
   },
   DEBUG: {
     ENABLED: getConfig('debug.enabled', false)

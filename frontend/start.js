@@ -1,9 +1,9 @@
-const Webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-const webpackConfig = require('./webpack.config');
-const path = require('path');
-const http = require('http');
-const notifications = require('./notifications');
+const Webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const webpackConfig = require('./webpack.config')
+const path = require('path')
+const http = require('http')
+const notifications = require('./notifications')
 
 const devServerOptions = {
   static: {
@@ -24,7 +24,7 @@ const devServerOptions = {
         from: /\/api/,
         to: '/api'
       }
-    ] 
+    ]
   },
   devMiddleware: {
     index: '/index.html',
@@ -33,24 +33,26 @@ const devServerOptions = {
   port: 3000,
   hot: false,
   client: false
-};
+}
 
 // First we fire up Webpack an pass in the configuration we
 // created
-const compiler = Webpack(webpackConfig);
-const devServer = new WebpackDevServer(devServerOptions, compiler);
+const compiler = Webpack(webpackConfig({ env: { production: false } }))
+const devServer = new WebpackDevServer(devServerOptions, compiler)
 
 const websocketServer = http.createServer((req, res) => {
-  res.end();
-});
+  res.end()
+})
 
-const io = require('socket.io')(websocketServer);
+const io = require('socket.io')(websocketServer)
 
-notifications.setup(io);
+notifications.setup(io)
 
-websocketServer.listen(5002, '0.0.0.0');
+websocketServer.listen(5002, '0.0.0.0')
 
-(async () => {
-  await devServer.start();
-  console.log('Webpack Dev Server Started');
-})();
+const startServer = async () => {
+  await devServer.start()
+  console.log('Webpack Dev Server Started')
+}
+
+startServer()

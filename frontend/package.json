@@ -102,9 +102,9 @@
     "start": "node start",
     "start:docker": "node server-docker.js",
     "start:notifications": "node server-notifications.js",
-    "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "lint": "eslint src",
     "build": "webpack",
+    "build-prod": "webpack --env production",
     "test": "jest --coverage",
     "snyk-protect": "snyk protect"
   },
