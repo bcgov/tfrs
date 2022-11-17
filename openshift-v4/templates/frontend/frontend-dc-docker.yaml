@@ -87,24 +87,24 @@ objects:
     data:
       features.js: |
         window.tfrs_config = {
-          "keycloak.enabled": true,
-          "keycloak.authority": "${KEYCLOAK_AUTHORITY}" , 
+          "api_base": "https://${BACKEND_HOST}/api",
+          "keycloak.realm": "standard",
           "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
+          "keycloak.auth_url": "${KEYCLOAK_AUTHORITY}",
           "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
           "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
-          "debug.enabled": false,
+          "debug.enabled": true,
           "secure_document_upload.enabled": true,
           "secure_document_upload.max_file_size": 50000000,
           "fuel_codes.enabled": true,
           "keycloak.custom_login": true,
           "credit_transfer.enabled": true,
           "compliance_reporting.enabled": true,
-          "credit_calculation_api.enabled": true,
           "compliance_reporting.starting_year": 2017,
           "compliance_reporting.create_effective_date": "2019-01-01",
-          "exclusion_reports.create_effective_date": "2019-01-01",
+          "credit_calculation_api.enabled": true,
           "exclusion_reports.enabled": true,
-          "api_base": "https://${BACKEND_HOST}/api"
+          "exclusion_reports.create_effective_date": "2019-01-01"
         };
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
