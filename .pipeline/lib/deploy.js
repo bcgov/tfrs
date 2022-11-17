@@ -111,7 +111,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
-
+*/
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -126,8 +126,8 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
     }
   }))
-*/
 
+/*
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
     'param': {
@@ -141,6 +141,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit
     }
   }))
+*/
 /*
   //only deploy on dev for Tracking PR
   if(phases[phase].phase === 'dev') {
