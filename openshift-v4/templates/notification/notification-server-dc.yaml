@@ -24,8 +24,7 @@ parameters:
   required: true  
 - name: KEYCLOAK_CERTS_URL
   displayName: KEYCLOAK_CERTS_URL
-  description: 'Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs,
-    https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
+  description: KEYCLOAK_CERTS_URL
   required: true
 - name: CPU_REQUEST
   displayName: Requested CPU
@@ -102,16 +101,19 @@ objects:
             protocol: TCP
           env:
           - name: RABBITMQ_HOST
-            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
+            value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_VHOST
-            value: "/tfrs"
+            value: "tfrs-vhost"
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: username
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: tfrs_password
+                name: tfrs-rabbitmq-app
+                key: password
           - name: NPM_RUN
             value: start:notifications
           - name: KEYCLOAK_CERTS_URL

@@ -15,7 +15,7 @@ module.exports = settings => {
 
   //The deployment of your cool app goes here ▼▼▼
 
-  
+/*  
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -95,8 +95,9 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
     }
   })) 
+*/
 
-/*
+
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -111,7 +112,6 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
-*/
 
 /*
   //deploy scan coordinator
@@ -129,7 +129,7 @@ module.exports = settings => {
     }
   }))
 */
-
+/*
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
     'param': {
@@ -143,7 +143,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit
     }
   }))
-
+*/
 /*
   //only deploy on dev for Tracking PR
   if(phases[phase].phase === 'dev') {
