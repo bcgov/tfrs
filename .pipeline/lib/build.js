@@ -64,7 +64,7 @@ module.exports = settings => {
 }))
 */
 
-/*
+
 //build notification server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-bc.yaml`, {
   'param':{
@@ -75,8 +75,8 @@ module.exports = settings => {
     'GIT_REF': oc.git.ref
   }
 }))
-*/
 
+/*
 //build scan coordinator server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-bc.yaml`, {
   'param':{
@@ -87,7 +87,7 @@ module.exports = settings => {
     'GIT_REF': oc.git.ref
   }
 }))
-
+*/
 /*
 //build scan handler server
 objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-bc.yaml`, {
