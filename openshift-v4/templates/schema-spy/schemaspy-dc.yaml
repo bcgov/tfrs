@@ -110,21 +110,21 @@ objects:
             protocol: TCP
           env:
           - name: DATABASE_SERVICE_NAME
-            value: patroni-master${SUFFIX}
+            value: tfrs-spilo
           - name: POSTGRESQL_DATABASE
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-name
           - name: POSTGRESQL_USER
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-username
           - name: POSTGRESQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-password
           resources:
             limits:

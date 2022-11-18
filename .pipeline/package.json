@@ -13,6 +13,7 @@
     "deploy-knps": "node deploy-knps.js",
     "deploy-unittest": "node deploy-unittest.js",
     "deploy-db": "node deploy-db.js",
+    "deploy-schemaspy": "node deploy-schemaspy.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
   "repository": {

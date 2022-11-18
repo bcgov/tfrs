@@ -14,8 +14,7 @@ module.exports = settings => {
   var objects = [];
 
   //The deployment of your cool app goes here ▼▼▼
-
-/*  
+  
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -95,8 +94,6 @@ module.exports = settings => {
       'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
     }
   })) 
-*/
-
 
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
@@ -110,6 +107,14 @@ module.exports = settings => {
       'CPU_LIMIT':phases[phase].notificationServerCpuLimit,
       'MEMORY_REQUEST':phases[phase].notificationServerMemoryRequest,
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
+    }
+  }))
+
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-others-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'FRONTEND_HOST': phases[phase].frontendHost
     }
   }))
 
@@ -129,7 +134,7 @@ module.exports = settings => {
     }
   }))
 */
-/*
+
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
     'param': {
@@ -143,7 +148,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit
     }
   }))
-*/
+
 /*
   //only deploy on dev for Tracking PR
   if(phases[phase].phase === 'dev') {
