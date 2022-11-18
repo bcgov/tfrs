@@ -60,8 +60,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: nodejs-16:1-71
-        pullSecret:
-          name: tfrs-image-pull-secret
         forcePull: true
         noCache: true   
         env:

@@ -14,7 +14,6 @@ module.exports = settings => {
   var objects = [];
 
   //The deployment of your cool app goes here ▼▼▼
-
   
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
@@ -96,7 +95,6 @@ module.exports = settings => {
     }
   })) 
 
-/*
   //deploy notification server
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-dc.yaml`, {
     'param': {
@@ -111,7 +109,14 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
     }
   }))
-*/
+
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-others-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'FRONTEND_HOST': phases[phase].frontendHost
+    }
+  }))
 
 /*
   //deploy scan coordinator
