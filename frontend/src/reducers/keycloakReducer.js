@@ -3,6 +3,7 @@ import ActionTypes from '../constants/actionTypes/Keycloak'
 const keycloakReducer = (state = {
   keycloak: null,
   authenticated: false,
+  token: null,
   user: null,
   isFetching: false,
   success: false,
@@ -27,13 +28,14 @@ const keycloakReducer = (state = {
     case ActionTypes.LOGOUT_KEYCLOAK_USER:
       return {
         ...state,
+        token: null,
         user: null,
         errors: action.payload
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        token: action.payload,
         authenticated: true,
         errors: {}
       }

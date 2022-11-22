@@ -16,6 +16,7 @@ import Router from './router'
 // import 'toastr/build/toastr.min.css';
 // import 'react-table/react-table.css';
 import { logout } from '../actions/keycloakActions'
+import { getLoggedInUser } from '../actions/userActions'
 
 class App extends Component {
   constructor (props) {
@@ -31,6 +32,7 @@ class App extends Component {
   }
 
   componentDidCatch (_error, info) {
+    console.error(_error)
     this.setState({
       hasErrors: true
     })
@@ -38,23 +40,22 @@ class App extends Component {
 
   render () {
     const {
-      authenticated,
-      keycloak,
+      token,
       errorRequest,
       userRequest,
       loggedInUser,
       unreadNotificationsCount
     } = this.props
 
-    if (!keycloak) {
+    if (!token) {
+      return <Login />
+    }
+
+    if (token && !loggedInUser?.username) {
       return <Loading />
     }
 
-    if (keycloak && !authenticated) {
-      return <Login keycloak={keycloak} />
-    }
-
-    if (!loggedInUser?.username) {
+    if (userRequest.isFetching) {
       return <Loading />
     }
 
@@ -109,15 +110,17 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.userRequest.isFetching,
     serverError: state.rootReducer.userRequest.serverError
   },
-  keycloak: state.rootReducer.keycloak.keycloak,
-  authenticated: state.rootReducer.keycloak.authenticated,
-  isFetching: state.rootReducer.keycloak.isFetching,
-  user: state.rootReducer.keycloak.user,
-  errors: state.rootReducer.keycloak.errors
+  keycloak: state.userAuth.keycloak,
+  token: state.userAuth.token,
+  authenticated: state.userAuth.authenticated,
+  isFetching: state.userAuth.isFetching,
+  user: state.userAuth.user,
+  errors: state.userAuth.errors
 })
 
 const mapDispatchToProps = dispatch => ({
-  logout: bindActionCreators(logout, dispatch)
+  logout: bindActionCreators(logout, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

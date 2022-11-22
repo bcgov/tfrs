@@ -42,20 +42,24 @@ class UserAuthentication(authentication.BaseAuthentication):
         auth = request.META.get('HTTP_AUTHORIZATION', None)
 
         if not auth:
+            print('Authorization header required')
             raise exceptions.AuthenticationFailed(
                 'Authorization header required')
 
         try:
             scheme, token = auth.split()
         except ValueError:
+            print('Invalid format for authorization header')
             raise exceptions.AuthenticationFailed(
                 'Invalid format for authorization header')
         if scheme != 'Bearer':
+            print('Authorization header invalid')
             raise exceptions.AuthenticationFailed(
                 'Authorization header invalid'
             )
 
         if not token:
+            print('No token found')
             raise exceptions.AuthenticationFailed(
                 'No token found'
             )
@@ -75,7 +79,7 @@ class UserAuthentication(authentication.BaseAuthentication):
                 token,
                 signing_key.key,
                 algorithms=["RS256"],
-                audience=settings.KEYCLOAK['AUDIENCE'],#"sso-test-2-2",
+                audience=settings.KEYCLOAK['AUDIENCE'],
                 options={"verify_exp": True},
             )
         except (jwt.InvalidTokenError, jwt.ExpiredSignature, jwt.DecodeError) as exc:

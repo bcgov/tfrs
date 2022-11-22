@@ -1,7 +1,6 @@
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 import CallableModal from '../app/components/CallableModal'
 import * as Lang from '../constants/langEnUs'
@@ -56,8 +55,6 @@ class Login extends React.Component {
                   <span className="text"> Login with </span>
                   <span className="display-name"> BCeID </span>
                 </button>
-                {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=bceid`} id="link-bceid" className="oidc"> <span className="text">Login with</span> <span className="display-name">BCeID</span></a> */}
-
               </div>
               <div className="oidc">
                 <button
@@ -69,8 +66,6 @@ class Login extends React.Component {
                   <span className="text">Login with</span>
                   <span className="display-name"> IDIR </span>
                 </button>
-                {/* <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=idir`} id="link-idir" className="oidc"> <span className="text">Login with</span> <span className="display-name">IDIR</span></a> */}
-
               </div>
             </div>
           </div>
@@ -111,15 +106,13 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  keycloak: state.rootReducer.keycloak.keycloak,
-  authenticated: state.rootReducer.keycloak.authenticated,
-  isFetching: state.rootReducer.keycloak.isFetching,
-  user: state.rootReducer.keycloak.user,
-  errors: state.rootReducer.keycloak.errors
+  authenticated: state.userAuth.authenticated
 })
 
-const mapDispatchToProps = dispatch => ({
-  login: bindActionCreators(login, dispatch)
-})
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (hint) => dispatch(login(hint))
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
