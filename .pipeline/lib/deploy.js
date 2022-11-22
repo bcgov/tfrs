@@ -47,7 +47,6 @@ module.exports = settings => {
     }
   }))  
 
-
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker.yaml`, {
     'param': {
@@ -68,7 +67,6 @@ module.exports = settings => {
     }
   }))
 
-
   //deploy frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker-others.yaml`, {
     'param': {
@@ -78,7 +76,6 @@ module.exports = settings => {
       'FRONTEND_HOST': phases[phase].frontendHost,
     }
   }))
-
 
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {

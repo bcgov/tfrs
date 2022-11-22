@@ -162,10 +162,7 @@ objects:
           - name: KEYCLOAK_REALM
             value: ${KEYCLOAK_REALM}
           - name: KEYCLOAK_SA_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-sa-client-secret
-                key: KEYCLOAK_SA_CLIENT_SECRET
+            value: notbeingused
           - name: EMAIL_FROM_ADDRESS
             value: donotreply@gov.bc.ca
           - name: EMAIL_SENDING_ENABLED

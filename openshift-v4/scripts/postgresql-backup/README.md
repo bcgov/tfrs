@@ -1,0 +1,1 @@
+The script needs to be copied to /postgresql-backup on each database pod.
