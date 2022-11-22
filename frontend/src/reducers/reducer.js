@@ -27,7 +27,6 @@ import { complianceReporting } from '../actions/complianceReporting'
 import { exclusionReports } from '../actions/exclusionReports'
 import { transactionTypes } from '../actions/transactionTypes'
 import creditCalculation from './creditCalculationReducer'
-import keycloak from './keycloakReducer'
 
 const rootReducer = combineReducers({
   autocomplete,
@@ -54,7 +53,6 @@ const rootReducer = combineReducers({
   userAdmin,
   userRequest,
   userViewRequest,
-  keycloak,
   roles: roles.reducer(),
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),

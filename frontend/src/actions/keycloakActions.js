@@ -7,12 +7,12 @@ import store from '../store/store'
  * Keycloak Selectors
  */
 export const keycloak = () => {
-  const keycloak = store.getState().rootReducer.keycloak
-  return keycloak?.keycloak
+  const userAuth = store.getState().userAuth
+  return userAuth.keycloak
 }
 
 export const getKeycloakUser = () => {
-  const keycloak = store.getState().rootReducer.keycloak
+  const keycloak = store.getState().userAuth.keycloak
   return keycloak?.user
 }
 
@@ -29,8 +29,8 @@ export const initKeycloakError = (error) => ({
   type: ActionTypes.INIT_KEYCLOAK_ERROR
 })
 
-export const loginKeycloakUserSuccess = (user) => ({
-  payload: user,
+export const loginKeycloakUserSuccess = (token) => ({
+  payload: token,
   type: ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS
 })
 
@@ -45,28 +45,17 @@ export const logoutKeycloakUser = () => ({
 
 export const login = (hint = 'idir') => (dispatch) => {
   const kc = keycloak()
-
   kc.login({
     pkceMethod: 'S256',
     redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
     idpHint: hint
   })
-    .then((user) => {
-      console.log('logged in ' + hint + ' user')
-      dispatch(loginKeycloakUserSuccess(user))
-    })
-    .catch((error) => {
-      dispatch(loginKeycloakUserError(error))
-      console.log('login user error ' + error)
-    })
 }
 
 export const logout = () => (dispatch) => {
   const kc = keycloak()
+  dispatch(logoutKeycloakUser())
   kc.logout({
     redirectUri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
-  }).then(() => {
-    console.log('logged out user')
-    dispatch(logoutKeycloakUser())
   })
 }
