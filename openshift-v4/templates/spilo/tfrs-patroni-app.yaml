@@ -4,14 +4,13 @@ metadata:
   name: tfrs-patroni-app
 parameters:
 - name: APP_DB_PASSWORD
-  description: "secret used by databse user"
-  from: "[a-zA-Z0-9]{16}"
-  generate: expression
+  description: "trs user password"
   required: true
 - name: APP_DB_USERNAME
-  description: "secret used by STANDBY"
-  from: "tfrs[a-z]{8}"
-  generate: expression
+  description: "tfrs username"
+  required: true 
+- name: METABASE_PASSWORD
+  description: "metabase password"
   required: true 
 objects:
 - apiVersion: v1
@@ -22,4 +21,6 @@ objects:
     app-db-name: tfrs
     app-db-password: ${APP_DB_PASSWORD}
     app-db-username: ${APP_DB_USERNAME}
+    metabaseuser-name: metabaseuser
+    metabaseuser-password: ${METABASE_PASSWORD}
   type: Opaque
