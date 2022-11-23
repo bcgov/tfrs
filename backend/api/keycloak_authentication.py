@@ -71,8 +71,10 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         try:
             signing_key = jwks_client.get_signing_key_from_jwt(token)
-        except Exception as error:
-            print(error)
+        except Exception as exc:
+            print(exc)
+            token_validation_errors.append(exc)
+            raise Exception(str(exc))
 
         try:
             user_token = jwt.decode(
@@ -106,7 +108,7 @@ class UserAuthentication(authentication.BaseAuthentication):
         if 'email' in user_token:
             creation_request = UserCreationRequest.objects.filter(
                 keycloak_email__iexact=user_token['email']
-            )
+            ).filter(user__keycloak_user_id=None)
 
             if not creation_request.exists():
                 print("No User with that email exists.")

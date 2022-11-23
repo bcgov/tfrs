@@ -4,7 +4,7 @@ const keycloakReducer = (state = {
   keycloak: null,
   authenticated: false,
   token: null,
-  user: null,
+  expiry: null,
   isFetching: false,
   success: false,
   errors: {}
@@ -29,20 +29,20 @@ const keycloakReducer = (state = {
       return {
         ...state,
         token: null,
-        user: null,
+        expiry: null,
         errors: action.payload
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
       return {
         ...state,
-        token: action.payload,
+        token: action.payload.token,
+        expiry: action.payload.expiry,
         authenticated: true,
         errors: {}
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_ERROR:
       return {
         ...state,
-        user: null,
         authenticated: false,
         errors: action.payload
       }

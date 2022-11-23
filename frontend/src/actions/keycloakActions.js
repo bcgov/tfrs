@@ -29,8 +29,8 @@ export const initKeycloakError = (error) => ({
   type: ActionTypes.INIT_KEYCLOAK_ERROR
 })
 
-export const loginKeycloakUserSuccess = (token) => ({
-  payload: token,
+export const loginKeycloakUserSuccess = (token, expiry) => ({
+  payload: { token, expiry },
   type: ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS
 })
 
