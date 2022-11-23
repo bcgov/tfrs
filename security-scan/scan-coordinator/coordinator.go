@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "context"
 	"net/url"
 	"strings"
 	"log"
@@ -9,7 +8,6 @@ import (
 	"github.com/streadway/amqp"
 	"github.com/dutchcoders/go-clamd"
 	"github.com/minio/minio-go"
-	// "github.com/minio/minio-go/pkg/credentials"
 	"io"
 )
 
