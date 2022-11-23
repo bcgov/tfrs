@@ -29,7 +29,8 @@ from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
-
+from api.paginations import BasicPagination
+from django.db.models import Q
 
 class DocumentViewSet(AuditableMixin,
                       mixins.CreateModelMixin,
@@ -59,6 +60,7 @@ class DocumentViewSet(AuditableMixin,
         'linkable_credit_transactions': CreditTradeListSerializer
     }
 
+    pagination_class = BasicPagination
     queryset = Document.objects.all()
     ordering = ('-id',)
 
@@ -111,6 +113,10 @@ class DocumentViewSet(AuditableMixin,
             ~Q(status__status__in=['Cancelled'])
         ).all()
 
+    @action(detail=False, methods=['post'])
+    def processed_list(self, request):
+        return super().list(request)
+    
     def perform_create(self, serializer):
         user = self.request.user
         document = serializer.save()

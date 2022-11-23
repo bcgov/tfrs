@@ -23,7 +23,7 @@ class SecureFileSubmissionContainer extends Component {
   }
 
   loadData () {
-    this.props.getDocumentUploads()
+    this.props.getDocumentUploads({page: 1, pageSize: 10, filters: []})
   }
 
   render () {

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
-import Loading from '../../app/components/Loading'
 import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
@@ -12,6 +11,7 @@ import SecureFileSubmissionTable from './SecureFileSubmissionTable'
 import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionsPage = (props) => {
+  const { isFetching, items, itemsCount } = props.documentUploads
   const { isFetching, items } = props.documentUploads
   const isEmpty = items.length === 0
   const navigate = useNavigate()
@@ -85,7 +85,9 @@ const SecureFileSubmissionsPage = (props) => {
       {isFetching && <Loading />}
       {!isFetching &&
       <SecureFileSubmissionTable
+        getSecureFileSubmissions={props.getSecureFileSubmissions}
         items={items}
+        itemsCount = {itemsCount}
         isFetching={isFetching}
         isEmpty={isEmpty}
         loggedInUser={props.loggedInUser}
@@ -104,6 +106,7 @@ SecureFileSubmissionsPage.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
+  getSecureFileSubmissions: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
