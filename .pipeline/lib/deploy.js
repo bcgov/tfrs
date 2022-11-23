@@ -14,7 +14,7 @@ module.exports = settings => {
   var objects = [];
 
   //The deployment of your cool app goes here ▼▼▼
-  
+
   //deploy backend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc.yaml`, {
     'param': {
@@ -39,7 +39,7 @@ module.exports = settings => {
       'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   }))
-
+  
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
     'param': {
       'NAME': phases[phase].name,
@@ -117,7 +117,6 @@ module.exports = settings => {
     }
   }))
 
-/*
   //deploy scan coordinator
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-dc.yaml`, {
     'param': {
@@ -132,7 +131,6 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].scanCoordinatorMemoryLimit
     }
   }))
-*/
 
   //deploy scan handler
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-dc.yaml`, {
