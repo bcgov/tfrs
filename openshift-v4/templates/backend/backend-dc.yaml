@@ -75,6 +75,10 @@ parameters:
   displayName: replicas
   description: replicas
   required: true
+- name: DB_SERVICE_NAME
+  displayName: The database service name
+  description: The database service name
+  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -177,7 +181,7 @@ objects:
           - name: SMTP_SERVER_PORT
             value: '2500'
           - name: DATABASE_SERVICE_NAME
-            value: tfrs-spilo
+            value: ${DB_SERVICE_NAME}
           - name: DATABASE_ENGINE
             value: postgresql
           - name: DATABASE_NAME

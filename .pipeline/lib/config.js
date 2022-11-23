@@ -16,7 +16,7 @@ const phases = {
             releaseBranch: 'release-2.0.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
-        instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`,
+        instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`, dbServiceName: 'tfrs-spilo',
         frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 2,
             frontendKeycloakAuthority: 'https://dev.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`,
             frontendKeycloakLogoutUrl: `https://tfrs-frontend-dev.${ocpName}.gov.bc.ca`, 
@@ -44,7 +44,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
         },
   test: {namespace:'0ab226-test'    , name: `${name}`, phase: 'test'  , changeId:changeId, suffix: `-test`  , 
-        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`,
+        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`, dbServiceName: 'patroni-master-test',
         frontendCpuRequest: '100m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 1,
             frontendKeycloakAuthority: 'https://test.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-frontend-test.${ocpName}.gov.bc.ca`,
             frontendKeycloakLogoutUrl: `https://tfrs-frontend-test.${ocpName}.gov.bc.ca`, 
@@ -72,7 +72,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
       },
   prod: {namespace:'0ab226-prod'    , name: `${name}`, phase: 'prod'  , changeId:changeId, suffix: `-prod`  , 
-        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`,
+        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`, dbServiceName: 'patroni-master-prod',
         frontendCpuRequest: '200m', frontendCpuLimit: '700m', frontendMemoryRequest: '300M', frontendMemoryLimit: '4G', frontendReplicas: 2,
             frontendKeycloakAuthority: 'https://oidc.gov.bc.ca/auth/realms/tfrs', frontendKeycloakClientId: 'tfrs', frontendKeycloakCallbackUrl: 'https://lowcarbonfuels.gov.bc.ca/authCallback',
             frontendKeycloakLogoutUrl: 'https://logon7.gov.bc.ca/clp-cgi/logoff.cgi?returl=https://lowcarbonfuels.gov.bc.ca&retnow=1', 

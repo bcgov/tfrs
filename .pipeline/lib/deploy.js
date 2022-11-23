@@ -35,7 +35,8 @@ module.exports = settings => {
       'CPU_LIMIT':phases[phase].backendCpuLimit,
       'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
       'MEMORY_LIMIT':phases[phase].backendMemoryLimit,
-      'REPLICAS':phases[phase].backendReplicas
+      'REPLICAS':phases[phase].backendReplicas,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   }))
 
@@ -88,7 +89,8 @@ module.exports = settings => {
       'CPU_REQUEST': phases[phase].celeryCpuRequest,
       'CPU_LIMIT': phases[phase].celeryCpuLimit,
       'MEMORY_REQUEST': phases[phase].celeryMemoryRequest,
-      'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
+      'MEMORY_LIMIT': phases[phase].celeryMemoryLimit,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   })) 
 
@@ -142,7 +144,8 @@ module.exports = settings => {
       'CPU_REQUEST':phases[phase].scanHandlerCpuRequest,
       'CPU_LIMIT':phases[phase].scanHandlerCpuLimit,
       'MEMORY_REQUEST':phases[phase].scanHandlerMemoryRequest,
-      'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit
+      'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   }))
 
