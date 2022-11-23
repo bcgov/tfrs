@@ -1,6 +1,8 @@
 # TFRS
 Transportation Fuels Reporting System
 
+[![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://www2.gov.bc.ca/gov/content/industry/electricity-alternative-energy/transportation-energies/renewable-low-carbon-fuels/transportation-fuels-reporting-system)
+
 ## Usage
 Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supporting BC's market-based approach to avoiding lifecycle GHG emissions from transportation fuel.  
 
