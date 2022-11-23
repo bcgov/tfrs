@@ -7,9 +7,10 @@ import configureAxios from './authorizationInterceptor'
 import CONFIG from '../config'
 
 export default function * authenticationStateSaga (store) {
-  const token = store.getState().userAuth?.token
-  if (token) {
-    // Token already exists so setup things here
+  const { token, expiry } = store.getState().userAuth
+  const now = Math.round(Date.now() / 1000)
+  // Token already exists so setup things here
+  if (token && now < expiry) {
     configureAxios()
     yield put(getLoggedInUser())
   }
@@ -32,7 +33,7 @@ export default function * authenticationStateSaga (store) {
   ])
 
   if (authenticated) {
-    yield put(loginKeycloakUserSuccess(keycloak.idToken))
+    yield put(loginKeycloakUserSuccess(keycloak.idToken, keycloak.idTokenParsed.exp))
   }
 }
 

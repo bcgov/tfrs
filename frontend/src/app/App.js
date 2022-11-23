@@ -15,7 +15,7 @@ import Router from './router'
 
 // import 'toastr/build/toastr.min.css';
 // import 'react-table/react-table.css';
-import { logout } from '../actions/keycloakActions'
+import { loginKeycloakUserSuccess, logout } from '../actions/keycloakActions'
 import { getLoggedInUser } from '../actions/userActions'
 
 class App extends Component {
@@ -38,24 +38,35 @@ class App extends Component {
     })
   }
 
+  componentDidMount () {
+    const { keycloak } = this.props
+    keycloak.onTokenExpired = () => {
+      console.log('token expired, starting refresh')
+      keycloak.updateToken(5).success(() => {
+        console.log('successfully got a new token', keycloak.idToken)
+        this.props.loginKeycloakUserSuccess(keycloak.idToken, keycloak.idTokenParsed.exp)
+      }).error((err) => {
+        console.log('refresh token error', err)
+      })
+    }
+  }
+
   render () {
     const {
       token,
+      expiry,
       errorRequest,
       userRequest,
       loggedInUser,
       unreadNotificationsCount
     } = this.props
 
-    if (!token) {
+    const now = Math.round(Date.now() / 1000)
+    if (!token || expiry < now) {
       return <Login />
     }
 
-    if (token && !loggedInUser?.username) {
-      return <Loading />
-    }
-
-    if (userRequest.isFetching) {
+    if (token && (!loggedInUser?.username || userRequest.isFetching)) {
       return <Loading />
     }
 
@@ -112,6 +123,7 @@ const mapStateToProps = state => ({
   },
   keycloak: state.userAuth.keycloak,
   token: state.userAuth.token,
+  expiry: state.userAuth.expiry,
   authenticated: state.userAuth.authenticated,
   isFetching: state.userAuth.isFetching,
   user: state.userAuth.user,
@@ -120,7 +132,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   logout: bindActionCreators(logout, dispatch),
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch)
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  loginKeycloakUserSuccess: bindActionCreators(loginKeycloakUserSuccess, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
