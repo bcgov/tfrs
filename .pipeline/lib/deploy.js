@@ -37,6 +37,7 @@ module.exports = settings => {
       'MEMORY_LIMIT':phases[phase].backendMemoryLimit,
       'REPLICAS':phases[phase].backendReplicas,
       'DB_SERVICE_NAME':phases[phase].dbServiceName,
+      'WELL_KNOWN_ENDPOINT':phases[phase].dbServiceName,backendWellKnownEndpoint,
     }
   }))
   

@@ -79,6 +79,10 @@ parameters:
   displayName: The database service name
   description: The database service name
   required: true
+- name: WELL_KNOWN_ENDPOINT
+  displayName: The database service name
+  description: The database service name
+  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -253,6 +257,8 @@ objects:
                 key: DJANGO_SECRET_KEY
           - name: APP_CONFIG
             value: "/opt/app-root/src/gunicorn.cfg.py"
+          - name: WELL_KNOWN_ENDPOINT
+            value: "${WELL_KNOWN_ENDPOINT}"
           resources:
             limits:
               cpu: "${CPU_LIMIT}"
