@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net/url"
 	"strings"
 	"log"
@@ -9,7 +8,6 @@ import (
 	"github.com/streadway/amqp"
 	"github.com/dutchcoders/go-clamd"
 	"github.com/minio/minio-go"
-	"github.com/minio/minio-go/pkg/credentials"
 	"io"
 )
 
@@ -154,7 +152,7 @@ func testMinioConnection(conf *config) {
 	//		Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
 	//		Secure: conf.MinioSecure,
 	//	})
-	client, err := minio.New(conf.MinioEndpoint, conf.MinioAccessKey, conf.MinioSecretKey, true)
+	client, err := minio.New(conf.MinioEndpoint, conf.MinioAccessKey, conf.MinioSecretKey, conf.MinioSecure)
 	if err != nil {
 		panic(err)
 	}
@@ -199,13 +197,15 @@ func handleRequest(conf *config, body []byte) (response ScanResponse) {
 		//	Creds:  credentials.NewStaticV4(conf.MinioAccessKey, conf.MinioSecretKey, ""),
 		//	Secure: conf.MinioSecure,
 		//})
-		client, err := minio.New(conf.MinioEndpoint, conf.MinioAccessKey, conf.MinioSecretKey, true)
+		client, err := minio.New(conf.MinioEndpoint, conf.MinioAccessKey, conf.MinioSecretKey, conf.MinioSecure)
 		if err != nil {
 			log.Print(err)
 			return
 		}
 
-		resp, err := client.GetObject(context.Background(), bucket, obj, minio.GetObjectOptions{})
+		//out of date
+		// resp, err := client.GetObject(context.Background(), bucket, obj, minio.GetObjectOptions{})
+		resp, err := client.GetObject(bucket, obj, minio.GetObjectOptions{})
 		if err != nil {
 			log.Print(err)
 			return
