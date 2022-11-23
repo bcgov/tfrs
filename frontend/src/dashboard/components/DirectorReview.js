@@ -69,15 +69,17 @@ const DirectorReview = (props) => {
   if (typeof props.loggedInUser.hasPermission === 'function' &&
   props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) {
     creditTransfers.forEach((item) => {
-      if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-        if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-          awaitingReview.creditTransfers += 1
-          awaitingReview.total += 1
-        }
-
-        if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
-          awaitingReview.part3Awards += 1
-          awaitingReview.total += 1
+      if (!item.isRescinded) {
+        if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
+          if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
+            awaitingReview.creditTransfers += 1
+            awaitingReview.total += 1
+          }
+  
+          if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
+            awaitingReview.part3Awards += 1
+            awaitingReview.total += 1
+          }
         }
       }
     })
