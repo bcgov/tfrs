@@ -41,7 +41,7 @@ objects:
 - kind: Route
   apiVersion: v1
   metadata:
-    name: ${NAME}-frontend${SUFFIX}
+    name: ${NAME}${SUFFIX}
     creationTimestamp:
     labels:
       frontend: 'true'

@@ -87,7 +87,6 @@ objects:
     data:
       features.js: |
         window.tfrs_config = {
-          "api_base": "https://${BACKEND_HOST}/api",
           "keycloak.realm": "standard",
           "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
           "keycloak.auth_url": "${KEYCLOAK_AUTHORITY}",
@@ -104,7 +103,8 @@ objects:
           "compliance_reporting.create_effective_date": "2019-01-01",
           "credit_calculation_api.enabled": true,
           "exclusion_reports.enabled": true,
-          "exclusion_reports.create_effective_date": "2019-01-01"
+          "exclusion_reports.create_effective_date": "2019-01-01",
+          "api_base": "https://${BACKEND_HOST}/api"
         };
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
