@@ -65,11 +65,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             user.organization)
         
         request = self.request
-        if self.action == 'list' or (request.path.endswith('paginated') and request.method == 'POST'):
+        if self.action == 'list' or self.action == 'paginated':
             qs = qs.annotate(Count('supplements')).filter(supplements__count=0)\
                 .order_by('-compliance_period__effective_date')
 
-            if request.path.endswith('paginated') and request.method == 'POST':
+            if self.action == 'paginated':
                 filters = request.data.get('filters')
                 if filters:
                     for filter in filters:
@@ -201,7 +201,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
-        return super().list(request)
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def types(self, request):

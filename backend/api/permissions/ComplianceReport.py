@@ -281,9 +281,11 @@ class ComplianceReportPermissions(permissions.BasePermission):
         """Check permissions When an object does not yet exist (POST, GET /)"""
 
         if request.user.is_government_user:
+            if view.action == 'paginated':
+                return True
             return request.method not in ('POST',)
 
-        if request.method == 'GET':
+        if request.method == 'GET' or view.action == 'paginated':
             return request.user.has_perm('VIEW_COMPLIANCE_REPORT')
 
         if request.user.has_perm('SIGN_COMPLIANCE_REPORT'):
