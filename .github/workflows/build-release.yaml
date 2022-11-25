@@ -1,18 +1,18 @@
 ## For each release, the value of workflow name, branches and PR_NUMBER need to be adjusted accordingly
 
-name: TFRS pipeline-2.0.0
+name: TFRS prod-build-2.0.0
 
 on:
   push:
-    branches: [ pipeline-2.0.0 ]
+    branches: [ prod-build-2.0.0 ]
   workflow_dispatch:
   workflow_call:
 
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 1825
-  RELEASE_NAME: pipeline-2.0.0
+  PR_NUMBER: 1864
+  RELEASE_NAME: prod-build-2.0.0
 
 jobs:
 
@@ -67,3 +67,10 @@ jobs:
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
+
+      ## Run build on Openshift
+      - name: Run build
+        run: |
+          cd .pipeline
+          npm install
+          npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
