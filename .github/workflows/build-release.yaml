@@ -68,9 +68,82 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
 
-      ## Run build on Openshift
-      - name: Run build
+      - name: Run deploy
         run: |
           cd .pipeline
           npm install
-          npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
+          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=dev 
+
+  deploy-on-test:
+
+    name: Deploy TFRS on Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    needs: deploy-on-dev
+
+    steps:
+
+      ## it will checkout to /home/runner/work/itvr/itvr
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Log in to Openshift
+        ##uses: redhat-actions/oc-login@v1
+        uses: smlgbl/oc-login@main
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
+
+      - name: Ask for approval for TFRS Test deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,emi-hi,tim738745,vibhiquartech,kuanfandevops
+          minimum-approvals: 1
+          issue-title: "TFRS ${{ env.RELEASE_NAME }} Test Deployment"
+          timeout-minutes: 240
+
+      - name: Run deploy
+        run: |
+          cd .pipeline
+          npm install
+          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=test 
+
+  deploy-on-prod:
+
+    name: Deploy TFRS on Prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 2880
+    needs: deploy-on-test
+
+    steps:
+
+      ## it will checkout to /home/runner/work/itvr/itvr
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Log in to Openshift
+        ##uses: redhat-actions/oc-login@v1
+        uses: smlgbl/oc-login@main
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
+
+      - name: Ask for approval for TFRS Prod deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,kuanfandevops,tim738745
+          minimum-approvals: 2
+          issue-title: "TFRS ${{ env.RELEASE_NAME }} Prod Deployment"
+          timeout-minutes: 2880
+
+      - name: Run deploy
+        run: |
+          cd .pipeline
+          npm install
+          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=prod 
