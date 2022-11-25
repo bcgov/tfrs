@@ -31,7 +31,8 @@ jobs:
 
       ## Log in to Openshift with a token of service account
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1
+        ##uses: redhat-actions/oc-login@v1   
+        uses: smlgbl/oc-login@main
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
@@ -59,7 +60,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1
+        ##uses: redhat-actions/oc-login@v1
+        uses: smlgbl/oc-login@main
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
