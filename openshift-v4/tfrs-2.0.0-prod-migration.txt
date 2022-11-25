@@ -1,0 +1,16 @@
+
+
+1. Deploy Clamav
+
+2. Deploy Rabbitmq
+    2.1 Create Rabbitmq route for management console
+    2.2 Create tfrs user and tfrs-vhost on Rabbitmq
+
+3. Create secrets:
+    3.1 Create secret tfrs-patroni-app
+    3.2 Create secret tfrs-rabbitmq-app
+    3.3 Create secret tfrs-object-storage
+
+4. Update config.js
+
+5. Apply knps
