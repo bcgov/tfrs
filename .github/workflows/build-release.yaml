@@ -138,7 +138,7 @@ jobs:
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,tim738745
-          minimum-approvals: 2
+          minimum-approvals: 3
           issue-title: "TFRS ${{ env.RELEASE_NAME }} Prod Deployment"
           timeout-minutes: 2880
 
