@@ -9,6 +9,8 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
+import { calculatePages} from '../../utils/functions'
+
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -19,7 +21,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'ID',
     resizable: false,
     width: 45
-  }, {
+   }, {
     accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -70,7 +72,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Title',
     id: 'title',
     minWidth: 100
-  }, {
+  }, /*{
     className: 'col-credit-transaction-id',
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
@@ -89,7 +91,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Submitted On',
     id: 'updateTimestamp',
     minWidth: 65
-  }]
+  }*/]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -108,12 +110,7 @@ const SecureFileSubmissionTable = (props) => {
       className="searchable"
       columns={columns}
       data={props.items}
-      defaultFilterMethod={filterMethod}
-      defaultPageSize={10}
-      defaultSorted={[{
-        id: 'id',
-        desc: true
-      }]}
+      isFetching={props.isFetching}
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
@@ -130,7 +127,23 @@ const SecureFileSubmissionTable = (props) => {
 
         return {}
       }}
+      manual
+      pages={calculatePages(props.itemsCount, props.pageSize)}
+      page={props.page - 1}
+      pageSize={props.pageSize}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+      onPageChange={(pageIndex) => {
+        props.handlePageChange(pageIndex + 1)
+      }}
+      onPageSizeChange={(pageSize, pageIndex) => {
+        props.handlePageChange(1)
+        props.handlePageSizeChange(pageSize)
+      }}
+      filtered={props.filters}
+      onFilteredChange={(filtered, column) => {
+        props.handlePageChange(1)
+        props.handleFiltersChange(filtered)
+      }}
     />
   )
 }
@@ -152,8 +165,14 @@ SecureFileSubmissionTable.propTypes = {
       id: PropTypes.integer
     })
   })).isRequired,
-  isEmpty: PropTypes.bool.isRequired,
+  // itemsCount: PropTypes.number.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired

@@ -12,10 +12,10 @@ import SecureFileSubmissionTable from './SecureFileSubmissionTable'
 import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionsPage = (props) => {
-  const { isFetching, items } = props.documentUploads
-  const isEmpty = items.length === 0
+  const { isFetching, items, itemsCount } = props.documentUploads
+  // const isEmpty = items.length === 0
   const navigate = useNavigate()
-
+  console.log(items)
   return (
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
@@ -82,15 +82,19 @@ const SecureFileSubmissionsPage = (props) => {
           }
         </div>
       </div>
-      {isFetching && <Loading />}
-      {!isFetching &&
       <SecureFileSubmissionTable
         items={items}
         isFetching={isFetching}
-        isEmpty={isEmpty}
+        // isEmpty={isEmpty}
+        itemsCount={itemsCount}
+        page={props.page}
+        pageSize={props.pageSize}
+        filters={props.filters}
+        handlePageChange={props.handlePageChange}
+        handlePageSizeChange={props.handlePageSizeChange}
+        handleFiltersChange={props.handleFiltersChange}
         loggedInUser={props.loggedInUser}
       />
-      }
     </div>
   )
 }
@@ -108,7 +112,7 @@ SecureFileSubmissionsPage.propTypes = {
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 }
 
 export default SecureFileSubmissionsPage

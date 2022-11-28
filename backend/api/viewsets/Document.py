@@ -29,8 +29,9 @@ from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
-
-
+# New
+from api.paginations import BasicPagination
+from django.core.paginator import Paginator
 class DocumentViewSet(AuditableMixin,
                       mixins.CreateModelMixin,
                       mixins.ListModelMixin,
@@ -43,7 +44,9 @@ class DocumentViewSet(AuditableMixin,
 
     permission_classes = (DocumentPermissions,)
     http_method_names = ['delete', 'get', 'put', 'post', 'patch']
-
+    queryset = Document.objects.all()
+    ordering = ('-id',)
+    serializer_class = DocumentSerializer
     serializer_classes = {
         'default': DocumentSerializer,
         'destroy': DocumentDeleteSerializer,
@@ -59,8 +62,7 @@ class DocumentViewSet(AuditableMixin,
         'linkable_credit_transactions': CreditTradeListSerializer
     }
 
-    queryset = Document.objects.all()
-    ordering = ('-id',)
+    pagination_class = BasicPagination
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def categories(self, request):
@@ -94,23 +96,30 @@ class DocumentViewSet(AuditableMixin,
             return self.serializer_classes[self.action]
 
         return self.serializer_classes['default']
-
+# -->
     def get_queryset(self):
         user = self.request.user
 
         if user.organization.id == 1:
-            return self.queryset.filter(
+            qs = self.queryset.filter(
                 ~Q(status__status__in=['Draft',
                                        'Cancelled',
                                        'Pending Submission',
                                        'Security Scan Failed'])
-            ).all()
-
-        return self.queryset.filter(
-            Q(create_user__organization__id=user.organization.id),
-            ~Q(status__status__in=['Cancelled'])
-        ).all()
-
+            )
+        else:
+            qs = self.queryset.filter(
+                Q(create_user__organization__id=user.organization.id),
+                ~Q(status__status__in=['Cancelled'])
+            )
+        request = self.request
+        if request.path.endswith('paginated') and request.method == 'POST':
+            qs = qs.order_by('-id')
+        return qs
+        # p=Paginator(secure_file_data,page_no)
+        # return p
+        # return secure_file_data
+# <--
     def perform_create(self, serializer):
         user = self.request.user
         document = serializer.save()
@@ -125,7 +134,11 @@ class DocumentViewSet(AuditableMixin,
         DocumentService.create_history(document)
 
         DocumentService.send_notification(document, user)
-
+# -->
+    @action(detail=False, methods=['post'])
+    def paginated(self, request):
+        return super().list(request)
+# <--
     @action(detail=True, methods=['put'])
     @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def link(self, request, pk=None):
