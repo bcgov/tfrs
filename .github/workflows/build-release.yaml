@@ -27,7 +27,14 @@ jobs:
 
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Linting
+        continue-on-error: true
+        run: |
+          cd frontend
+          npm install
+          npm run lint        
 
       ## Log in to Openshift with a token of service account
       - name: Log in to Openshift
@@ -57,7 +64,7 @@ jobs:
 
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to Openshift
         ##uses: redhat-actions/oc-login@v1
@@ -85,7 +92,7 @@ jobs:
 
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to Openshift
         ##uses: redhat-actions/oc-login@v1
@@ -122,7 +129,7 @@ jobs:
 
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to Openshift
         ##uses: redhat-actions/oc-login@v1
