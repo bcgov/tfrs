@@ -10,15 +10,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
-env:
-  ## The pull request number of the Tracking pull request to merge the release branch to main
-  ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 1868
-  RELEASE_NAME: linter-2.0.0
-
 jobs:
 
-  build:
+  runLint:
     # Name the Job
     name: Lint Code Base
     # Set the agent to run on
