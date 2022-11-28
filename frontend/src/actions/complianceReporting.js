@@ -40,6 +40,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isGettingSnapshot: false,
       snapshotItem: null,
       recomputeResult: {},
+      isFindingPaginated: false,
+      paginatedItems: [],
       totalCount: 0
     };
   }
@@ -85,17 +87,15 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       })],
       [this.findPaginated, (state, action) => ({
         ...state,
-        isFinding: true,
+        isFindingPaginated: true,
         errorMessage: {},
         findPaginatedState: action.payload
       })],
       [this.findPaginatedSuccess, (state, action) => ({
         ...state,
-        items: action.payload.results,
+        paginatedItems: action.payload.results,
         totalCount: action.payload.count,
-        receivedAt: Date.now(),
-        isFinding: false,
-        success: true
+        isFindingPaginated: false
       })]
     ]
   }

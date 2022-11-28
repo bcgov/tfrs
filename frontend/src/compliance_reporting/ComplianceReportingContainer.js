@@ -117,8 +117,8 @@ class ComplianceReportingContainer extends Component {
           compliancePeriod.effectiveDate >= CONFIG.COMPLIANCE_REPORTING.CREATE_EFFECTIVE_DATE)
           .reverse()}
         complianceReports={{
-          isFetching: this.props.complianceReports.isFinding,
-          items: this.props.complianceReports.items,
+          isFetching: this.props.complianceReports.isFindingPaginated,
+          items: this.props.complianceReports.paginatedItems,
           itemsCount: this.props.complianceReports.totalCount
         }}
         getComplianceReports={this.props.getComplianceReports}
@@ -172,8 +172,9 @@ ComplianceReportingContainer.defaultProps = {
 ComplianceReportingContainer.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReports: PropTypes.shape({
-    items: PropTypes.arrayOf(PropTypes.shape()),
-    isFinding: PropTypes.bool
+    paginatedItems: PropTypes.arrayOf(PropTypes.shape()),
+    isFindingPaginated: PropTypes.bool,
+    totalCount: PropTypes.number
   }).isRequired,
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
