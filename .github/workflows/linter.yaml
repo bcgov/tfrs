@@ -6,7 +6,7 @@
 #################################
 on:
   push:
-    branches: [ linter-2.0.0 ]
+    branches: [ lint-2.0.0 ]
   workflow_dispatch:
   workflow_call:
 
