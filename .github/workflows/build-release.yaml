@@ -29,12 +29,20 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Linting
+      - name: Frontend Linting 
         continue-on-error: true
         run: |
           cd frontend
           npm install
           npm run lint        
+
+      - name: Backend Linting
+        uses: github/super-linter@4.9.7
+        continue-on-error: true
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
+          FILTER_REGEX_INCLUDE: .*backend/.*
 
       ## Log in to Openshift with a token of service account
       - name: Log in to Openshift
