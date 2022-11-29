@@ -63,7 +63,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         user = self.request.user
         qs = ComplianceReportService.get_organization_compliance_reports(
             user.organization)
-        
+            
         request = self.request
         if self.action == 'list' or self.action == 'paginated':
             qs = qs.annotate(Count('supplements')).filter(supplements__count=0)\

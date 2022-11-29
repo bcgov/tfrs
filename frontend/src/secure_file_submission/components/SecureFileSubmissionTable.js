@@ -9,6 +9,8 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
+import { calculatePages} from '../../utils/functions'
+
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -19,7 +21,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'ID',
     resizable: false,
     width: 45
-  }, {
+   }, {
     accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -75,20 +77,6 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
-  }, {
-    accessor: (item) => {
-      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
-
-      if (historyFound) {
-        return moment(historyFound.createTimestamp).format('YYYY-MM-DD')
-      }
-
-      return '-'
-    },
-    className: 'col-date',
-    Header: 'Submitted On',
-    id: 'updateTimestamp',
-    minWidth: 65
   }]
 
   const filterMethod = (filter, row, column) => {
@@ -101,19 +89,13 @@ const SecureFileSubmissionTable = (props) => {
   }
 
   const filterable = true
-
   return (
     <ReactTable
       stateKey="sfs"
       className="searchable"
       columns={columns}
       data={props.items}
-      defaultFilterMethod={filterMethod}
-      defaultPageSize={10}
-      defaultSorted={[{
-        id: 'id',
-        desc: true
-      }]}
+      isFetching={props.isFetching}
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
@@ -130,7 +112,23 @@ const SecureFileSubmissionTable = (props) => {
 
         return {}
       }}
+      manual
+      pages={calculatePages(props.itemsCount, props.pageSize)}
+      page={props.page - 1}
+      pageSize={props.pageSize}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+      onPageChange={(pageIndex) => {
+        props.handlePageChange(pageIndex + 1)
+      }}
+      onPageSizeChange={(pageSize, pageIndex) => {
+        props.handlePageChange(1)
+        props.handlePageSizeChange(pageSize)
+      }}
+      filtered={props.filters}
+      onFilteredChange={(filtered, column) => {
+        props.handlePageChange(1)
+        props.handleFiltersChange(filtered)
+      }}
     />
   )
 }
@@ -138,22 +136,10 @@ const SecureFileSubmissionTable = (props) => {
 SecureFileSubmissionTable.defaultProps = {}
 
 SecureFileSubmissionTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    createUser: PropTypes.shape({
-      organization: PropTypes.shape({
-        name: PropTypes.string
-      })
-    }),
-    status: PropTypes.shape({
-      status: PropTypes.string
-    }),
-    listTitle: PropTypes.string,
-    type: PropTypes.shape({
-      id: PropTypes.integer
-    })
-  })).isRequired,
-  isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired

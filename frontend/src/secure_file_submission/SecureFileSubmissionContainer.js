@@ -15,7 +15,14 @@ class SecureFileSubmissionContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      page: 1,
+      pageSize: 10,
+      filters: [],
+      refreshCounter: 0
     }
+    this.handlePageChange = this.handlePageChange.bind(this)
+    this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
+    this.handleFiltersChange = this.handleFiltersChange.bind(this)
   }
 
   componentDidMount () {
@@ -23,16 +30,37 @@ class SecureFileSubmissionContainer extends Component {
   }
 
   loadData () {
-    this.props.getDocumentUploads()
+    this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
+  }
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
+      this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
+    }
+  }
+  handlePageChange (page) {
+    this.setState({ page })
+  }
+  handlePageSizeChange (pageSize) {
+    this.setState({ pageSize })
   }
 
+  handleFiltersChange (filters) {
+    this.setState({ filters })
+  }
   render () {
     return (
       <SecureFileSubmissionsPage
         categories={this.props.referenceData.documentCategories}
         documentUploads={this.props.documentUploads}
+        getDocumentUploads={this.props.getDocumentUploads}
         loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
+        page={this.state.page}
+        pageSize={this.state.pageSize}
+        filters={this.state.filters}
+        handlePageChange={this.handlePageChange}
+        handlePageSizeChange={this.handlePageSizeChange}
+        handleFiltersChange={this.handleFiltersChange}
         title="Secure File Submissions"
       />
     )
@@ -45,7 +73,8 @@ SecureFileSubmissionContainer.defaultProps = {
 SecureFileSubmissionContainer.propTypes = {
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    itemsCount: PropTypes.number
   }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
@@ -60,7 +89,8 @@ SecureFileSubmissionContainer.propTypes = {
 const mapStateToProps = state => ({
   documentUploads: {
     isFetching: state.rootReducer.documentUploads.isFetching,
-    items: state.rootReducer.documentUploads.items
+    items: state.rootReducer.documentUploads.items,
+    itemsCount: state.rootReducer.documentUploads.itemsCount
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {

@@ -1,10 +1,15 @@
 import ActionTypes from '../constants/actionTypes/DocumentUploads'
 
 const documentUpload = (state = {
-  item: {},
   isFetching: false,
   success: false,
-  errors: {}
+  errors: {},
+  item: {},
+  count: {
+    isFetching: false,
+    unreadCount: null
+  },
+  itemsCount: 0
 }, action) => {
   switch (action.type) {
     case ActionTypes.CLEAR_ERROR:
@@ -16,7 +21,7 @@ const documentUpload = (state = {
       return {
         ...state,
         isFetching: true,
-        item: {},
+        item: action.data,
         success: false
       }
     case ActionTypes.RECEIVE_REQUEST:
@@ -25,7 +30,8 @@ const documentUpload = (state = {
         errors: {},
         isFetching: false,
         item: action.data,
-        success: true
+        success: true,
+        itemsCount: action.totalCount
       }
     case ActionTypes.ERROR:
       return {
@@ -43,6 +49,8 @@ const documentUploads = (state = {
   items: [],
   isFetching: false,
   success: false,
+  item: {},
+  itemsCount: 0,
   errorMessage: []
 }, action) => {
   switch (action.type) {
@@ -57,7 +65,8 @@ const documentUploads = (state = {
         ...state,
         isFetching: false,
         items: action.data,
-        success: true
+        success: true,
+        itemsCount: action.totalCount
       }
     case ActionTypes.ERROR:
       return {
