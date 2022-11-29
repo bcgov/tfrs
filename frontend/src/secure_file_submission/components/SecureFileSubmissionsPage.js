@@ -12,10 +12,7 @@ import SecureFileSubmissionTable from './SecureFileSubmissionTable'
 import { useNavigate } from 'react-router'
 
 const SecureFileSubmissionsPage = (props) => {
-  const { isFetching, items, itemsCount } = props.documentUploads
-  // const isEmpty = items.length === 0
   const navigate = useNavigate()
-  console.log(items)
   return (
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
@@ -83,10 +80,9 @@ const SecureFileSubmissionsPage = (props) => {
         </div>
       </div>
       <SecureFileSubmissionTable
-        items={items}
-        isFetching={isFetching}
-        // isEmpty={isEmpty}
-        itemsCount={itemsCount}
+        items={props.documentUploads.items}
+        isFetching={props.documentUploads.isFetching}
+        itemsCount={props.documentUploads.itemsCount}
         page={props.page}
         pageSize={props.pageSize}
         filters={props.filters}
@@ -106,13 +102,18 @@ SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape)
+    items: PropTypes.arrayOf(PropTypes.shape),
+    itemsCount: PropTypes.number
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   title: PropTypes.string.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired
 }
 
 export default SecureFileSubmissionsPage

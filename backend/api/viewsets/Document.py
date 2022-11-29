@@ -29,9 +29,7 @@ from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
-# New
 from api.paginations import BasicPagination
-from django.core.paginator import Paginator
 class DocumentViewSet(AuditableMixin,
                       mixins.CreateModelMixin,
                       mixins.ListModelMixin,
@@ -96,7 +94,7 @@ class DocumentViewSet(AuditableMixin,
             return self.serializer_classes[self.action]
 
         return self.serializer_classes['default']
-# -->
+
     def get_queryset(self):
         user = self.request.user
 
@@ -116,10 +114,7 @@ class DocumentViewSet(AuditableMixin,
         if request.path.endswith('paginated') and request.method == 'POST':
             qs = qs.order_by('-id')
         return qs
-        # p=Paginator(secure_file_data,page_no)
-        # return p
-        # return secure_file_data
-# <--
+
     def perform_create(self, serializer):
         user = self.request.user
         document = serializer.save()
@@ -134,11 +129,11 @@ class DocumentViewSet(AuditableMixin,
         DocumentService.create_history(document)
 
         DocumentService.send_notification(document, user)
-# -->
+
     @action(detail=False, methods=['post'])
     def paginated(self, request):
         return super().list(request)
-# <--
+
     @action(detail=True, methods=['put'])
     @method_decorator(permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE'))
     def link(self, request, pk=None):

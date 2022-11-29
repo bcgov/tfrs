@@ -72,26 +72,12 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Title',
     id: 'title',
     minWidth: 100
-  }, /*{
+  }, {
     className: 'col-credit-transaction-id',
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
-  }, {
-    accessor: (item) => {
-      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
-
-      if (historyFound) {
-        return moment(historyFound.createTimestamp).format('YYYY-MM-DD')
-      }
-
-      return '-'
-    },
-    className: 'col-date',
-    Header: 'Submitted On',
-    id: 'updateTimestamp',
-    minWidth: 65
-  }*/]
+  }]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -103,7 +89,6 @@ const SecureFileSubmissionTable = (props) => {
   }
 
   const filterable = true
-
   return (
     <ReactTable
       stateKey="sfs"
@@ -151,28 +136,10 @@ const SecureFileSubmissionTable = (props) => {
 SecureFileSubmissionTable.defaultProps = {}
 
 SecureFileSubmissionTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    createUser: PropTypes.shape({
-      organization: PropTypes.shape({
-        name: PropTypes.string
-      })
-    }),
-    status: PropTypes.shape({
-      status: PropTypes.string
-    }),
-    listTitle: PropTypes.string,
-    type: PropTypes.shape({
-      id: PropTypes.integer
-    })
-  })).isRequired,
-  // itemsCount: PropTypes.number.isRequired,
   isFetching: PropTypes.bool.isRequired,
   page: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
-  handlePageChange: PropTypes.func.isRequired,
-  handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleFiltersChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired

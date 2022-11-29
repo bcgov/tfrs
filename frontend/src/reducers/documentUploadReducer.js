@@ -9,7 +9,7 @@ const documentUpload = (state = {
     isFetching: false,
     unreadCount: null
   },
-  totalCount: 0
+  itemsCount: 0
 }, action) => {
   switch (action.type) {
     case ActionTypes.CLEAR_ERROR:
@@ -31,7 +31,7 @@ const documentUpload = (state = {
         isFetching: false,
         item: action.data,
         success: true,
-        totalCount: action.totalCount
+        itemsCount: action.totalCount
       }
     case ActionTypes.ERROR:
       return {
@@ -49,6 +49,8 @@ const documentUploads = (state = {
   items: [],
   isFetching: false,
   success: false,
+  item: {},
+  itemsCount: 0,
   errorMessage: []
 }, action) => {
   switch (action.type) {
@@ -63,7 +65,8 @@ const documentUploads = (state = {
         ...state,
         isFetching: false,
         items: action.data,
-        success: true
+        success: true,
+        itemsCount: action.totalCount
       }
     case ActionTypes.ERROR:
       return {
