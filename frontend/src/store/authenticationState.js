@@ -1,18 +1,21 @@
 import { put, takeLatest, all } from 'redux-saga/effects'
 import { getLoggedInUser } from '../actions/userActions'
-import { initKeycloak, loginKeycloakUserSuccess } from '../actions/keycloakActions'
+import { initKeycloak, loginKeycloakUserSuccess, resetAuth, resetToken } from '../actions/keycloakActions'
 import Keycloak from 'keycloak-js'
 import ActionTypes from '../constants/actionTypes/Keycloak'
 import configureAxios from './authorizationInterceptor'
 import CONFIG from '../config'
 
 export default function * authenticationStateSaga (store) {
+  yield put(resetAuth())
   const { token, expiry } = store.getState().userAuth
   const now = Math.round(Date.now() / 1000)
   // Token already exists so setup things here
   if (token && now < expiry) {
     configureAxios()
     yield put(getLoggedInUser())
+  } else {
+    yield put(resetToken())
   }
 
   const keycloak = new Keycloak({

@@ -5,9 +5,7 @@ import React, { Component } from 'react'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 
-import { signUserOut } from '../../actions/userActions'
 import * as NumberFormat from '../../constants/numeralFormats'
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
@@ -19,6 +17,7 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
 import CONFIG from '../../config'
 import { withRouter } from '../../utils/withRouter'
+import { logout } from '../../actions/keycloakActions'
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -219,7 +218,7 @@ class Navbar extends Component {
                   </MenuItem>
                   <MenuItem onClick={(e) => {
                     e.preventDefault()
-                    this.props.signUserOut()
+                    this.props.logout(this.props.token)
                   }}
                   >
                     <FontAwesomeIcon icon="sign-out-alt" /> Log Out
@@ -407,7 +406,7 @@ class Navbar extends Component {
               id="navbar-logout"
               onClick={(e) => {
                 e.preventDefault()
-                this.props.signUserOut()
+                this.props.logout(this.props.token)
               }}
               to={Routes.LOGOUT}
             >
@@ -528,12 +527,12 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  signUserOut: PropTypes.func.isRequired,
+  token: PropTypes.string,
   unreadNotificationsCount: PropTypes.number
 }
 
 const mapDispatchToProps = dispatch => ({
-  signUserOut: bindActionCreators(signUserOut, dispatch)
+  logout: (token) => dispatch(logout(token))
 })
 
 // export default Navbar;

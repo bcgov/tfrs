@@ -17,6 +17,7 @@ import Router from './router'
 // import 'react-table/react-table.css';
 import { loginKeycloakUserSuccess, logout } from '../actions/keycloakActions'
 import { getLoggedInUser } from '../actions/userActions'
+import Unverified from './components/Unverified'
 
 class App extends Component {
   constructor (props) {
@@ -40,33 +41,42 @@ class App extends Component {
 
   componentDidMount () {
     const { keycloak } = this.props
-    keycloak.onTokenExpired = () => {
-      console.log('token expired, starting refresh')
-      keycloak.updateToken(5).success(() => {
-        console.log('successfully got a new token', keycloak.idToken)
-        this.props.loginKeycloakUserSuccess(keycloak.idToken, keycloak.idTokenParsed.exp)
-      }).error((err) => {
-        console.log('refresh token error', err)
-      })
+    if (keycloak) {
+      keycloak.onTokenExpired = () => {
+        console.log('token expired, starting refresh')
+        keycloak.updateToken(5).success(() => {
+          console.log('successfully got a new token', keycloak.idToken)
+          this.props.loginKeycloakUserSuccess(keycloak.idToken, keycloak.idTokenParsed.exp)
+        }).error((err) => {
+          console.log('refresh token error', err)
+        })
+      }
     }
   }
 
   render () {
     const {
       token,
-      expiry,
+      initialized,
       errorRequest,
       userRequest,
       loggedInUser,
       unreadNotificationsCount
     } = this.props
 
-    const now = Math.round(Date.now() / 1000)
-    if (!token || expiry < now) {
+    if (!initialized || userRequest.isFetching) {
+      return <Loading />
+    }
+
+    if (!token) {
       return <Login />
     }
 
-    if (token && (!loggedInUser?.username || userRequest.isFetching)) {
+    if (userRequest.serverError) {
+      return <Unverified token={token}/>
+    }
+
+    if (!loggedInUser?.username) {
       return <Loading />
     }
 
@@ -77,8 +87,6 @@ class App extends Component {
       errorRequest.error &&
       errorRequest.error.status) {
       content = <StatusInterceptor statusCode={errorRequest.error.status} />
-    } else if (userRequest.serverError) {
-      content = <StatusInterceptor statusCode={401} />
     } else {
       content = <Router/>
     }
@@ -97,6 +105,7 @@ class App extends Component {
           <Navbar
             loggedInUser={loggedInUser}
             unreadNotificationsCount={unreadNotificationsCount}
+            token={token}
           />
           <div id="main" className="template container-fluid">
             <SessionTimer />
@@ -122,6 +131,7 @@ const mapStateToProps = state => ({
     serverError: state.rootReducer.userRequest.serverError
   },
   keycloak: state.userAuth.keycloak,
+  initialized: state.userAuth.initialized,
   token: state.userAuth.token,
   expiry: state.userAuth.expiry,
   authenticated: state.userAuth.authenticated,
