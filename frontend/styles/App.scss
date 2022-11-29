@@ -50,6 +50,13 @@ input[type="number"] {
   }
 }
 
+.unverified {
+  margin: 1.2rem;
+  button {
+    margin-top: 10px;
+  }
+}
+
 .panel {
   &.panel-danger {
     border-color: $red;

@@ -46,8 +46,6 @@ const getLoggedInUser = () => (dispatch) => {
   const url = Routes.BASE_URL + Routes.CURRENT_USER
   axios.get(url)
     .then((response) => {
-      console.log('SUCCESSFUL USER GET')
-      console.log(response.data)
       dispatch(getLoggedInUserSuccess(response.data))
     }).catch((error) => {
       console.log('getLoggedInUserError', error)

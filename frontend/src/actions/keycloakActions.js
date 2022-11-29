@@ -29,6 +29,14 @@ export const initKeycloakError = (error) => ({
   type: ActionTypes.INIT_KEYCLOAK_ERROR
 })
 
+export const resetAuth = () => ({
+  type: ActionTypes.RESET_AUTH
+})
+
+export const resetToken = () => ({
+  type: ActionTypes.RESET_TOKEN
+})
+
 export const loginKeycloakUserSuccess = (token, expiry) => ({
   payload: { token, expiry },
   type: ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS
@@ -52,10 +60,12 @@ export const login = (hint = 'idir') => (dispatch) => {
   })
 }
 
-export const logout = () => (dispatch) => {
+export const logout = (token) => (dispatch) => {
   const kc = keycloak()
+  const url = kc.endpoints.logout() +
+    '?client_id=' + encodeURIComponent(kc.clientId) +
+    '&post_logout_redirect_uri=' + encodeURIComponent(CONFIG.KEYCLOAK.POST_LOGOUT_URL) +
+    '&id_token_hint=' + encodeURIComponent(token)
   dispatch(logoutKeycloakUser())
-  kc.logout({
-    redirectUri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
-  })
+  window.location = url
 }

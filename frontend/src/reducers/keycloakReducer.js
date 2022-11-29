@@ -3,10 +3,9 @@ import ActionTypes from '../constants/actionTypes/Keycloak'
 const keycloakReducer = (state = {
   keycloak: null,
   authenticated: false,
+  initialized: false,
   token: null,
   expiry: null,
-  isFetching: false,
-  success: false,
   errors: {}
 }, action) => {
   switch (action.type) {
@@ -16,12 +15,14 @@ const keycloakReducer = (state = {
         ...state,
         keycloak,
         authenticated,
+        initialized: true,
         errors: {}
       }
     }
     case ActionTypes.INIT_KEYCLOAK_ERROR:
       return {
         ...state,
+        initialized: true,
         authenticated: false,
         errors: action.payload
       }
@@ -30,6 +31,9 @@ const keycloakReducer = (state = {
         ...state,
         token: null,
         expiry: null,
+        keycloak: null,
+        authenticated: false,
+        initialized: false,
         errors: action.payload
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
@@ -45,6 +49,21 @@ const keycloakReducer = (state = {
         ...state,
         authenticated: false,
         errors: action.payload
+      }
+    case ActionTypes.RESET_AUTH:
+      return {
+        ...state,
+        keycloak: null,
+        authenticated: false,
+        initialized: false,
+        errors: {}
+      }
+    case ActionTypes.RESET_TOKEN:
+      return {
+        ...state,
+        token: null,
+        expiry: false,
+        errors: {}
       }
     default:
       return state
