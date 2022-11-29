@@ -110,7 +110,6 @@ jobs:
           approvers: AlexZorkin,emi-hi,tim738745,vibhiquartech,kuanfandevops
           minimum-approvals: 1
           issue-title: "TFRS ${{ env.RELEASE_NAME }} Test Deployment"
-          timeout-minutes: 240
 
       - name: Run deploy
         run: |
@@ -147,10 +146,8 @@ jobs:
           approvers: AlexZorkin,kuanfandevops,tim738745
           minimum-approvals: 3
           issue-title: "TFRS ${{ env.RELEASE_NAME }} Prod Deployment"
-          timeout-minutes: 2880
 
       - name: Run deploy
         run: |
           cd .pipeline
-          npm install
-          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=prod 
+          echo "no prod deploy yet"
