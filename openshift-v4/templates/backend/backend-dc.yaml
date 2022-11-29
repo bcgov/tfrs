@@ -267,20 +267,16 @@ objects:
               cpu: "${CPU_REQUEST}"
               memory: "${MEMORY_REQUEST}"
           livenessProbe:
-            httpGet:
-              path: "/health"
+            tcpSocket:
               port: 8080
-              scheme: HTTP
             initialDelaySeconds: 90
             timeoutSeconds: 3
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 10
           readinessProbe:
-            httpGet:
-              path: "/health"
+            tcpSocket:
               port: 8080
-              scheme: HTTP
             initialDelaySeconds: 60
             timeoutSeconds: 3
             periodSeconds: 10
