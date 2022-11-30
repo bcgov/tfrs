@@ -106,10 +106,10 @@ class UserAuthentication(authentication.BaseAuthentication):
         
         try:
             # Which provider is user logging in with
-            if token['identity_provider'] == 'idir':
-                external_username = token['idir_username']
-            elif token['identity_provider'] == 'bceidbusiness':
-                external_username = token['bceid_username']
+            if user_token['identity_provider'] == 'idir':
+                external_username = user_token['idir_username']
+            elif user_token['identity_provider'] == 'bceidbusiness':
+                external_username = user_token['bceid_username']
             else:
                 raise Exception('unknown identity provider')
         except Exception as exc:
