@@ -100,7 +100,6 @@
   },
   "scripts": {
     "start": "node start",
-    "start:docker": "node server-docker.js",
     "start:notifications": "node server-notifications.js",
     "lint": "eslint src",
     "build": "webpack",

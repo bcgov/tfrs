@@ -15,15 +15,17 @@ module.exports = (env) => {
   return {
     mode: 'development',
     entry: {
-      bundle: [
-        // For hot style updates
-        'webpack/hot/dev-server',
-        // The script refreshing the browser on none hot updates
-        'webpack-dev-server/client/index.js?hot=true&live-reload=true',
-        '@babel/polyfill',
-        // Our application
-        mainPath
-      ]
+      bundle: env.production
+        ? ['@babel/polyfill', mainPath]
+        : [
+            // For hot style updates
+            'webpack/hot/dev-server',
+            // The script refreshing the browser on none hot updates
+            'webpack-dev-server/client/index.js?hot=true&live-reload=true',
+            '@babel/polyfill',
+            // Our application
+            mainPath
+          ]
     },
     optimization: {
       splitChunks: {
