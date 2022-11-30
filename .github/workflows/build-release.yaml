@@ -4,15 +4,15 @@ name: TFRS release-2.0.0
 
 on:
   push:
-    branches: [ release-2.0.0 ]
+    branches: [ backend-unit-test-2.0.0 ]
   workflow_dispatch:
   workflow_call:
 
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 1824
-  RELEASE_NAME: release-2.0.0
+  PR_NUMBER: 1897
+  RELEASE_NAME: backend-unit-test-2.0.0
 
 jobs:
 
