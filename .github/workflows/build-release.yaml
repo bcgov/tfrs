@@ -33,15 +33,24 @@ jobs:
         continue-on-error: true
         run: |
           cd frontend
+          pwd
           npm install
           npm run lint        
 
+      - name: Show current folder
+        continue-on-error: true
+        run: |
+          echo "show current folder as below:"
+          pwd     
+          ls -l
+
       - name: Backend Linting
-        uses: github/super-linter@v4.9.7
+        uses: github/super-linter@slim-v4
         continue-on-error: true
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_INCLUDE: .*backend/.*
 
       ## Log in to Openshift with a token of service account
