@@ -1,0 +1,47 @@
+## For each release, the value of workflow name, branches and PR_NUMBER need to be adjusted accordingly
+
+name: TFRS backend-lint-2.0.0
+
+on:
+  push:
+    branches: [ backend-lint-2.0.0 ]
+  workflow_dispatch:
+  workflow_call:
+
+env:
+  ## The pull request number of the Tracking pull request to merge the release branch to main
+  ## Also remember to update the version in .pipeline/lib/config.js
+  RELEASE_NAME: backend-lint-2.0.0
+
+###############
+# Set the Job #
+###############
+jobs:
+  build:
+    # Name the Job
+    name: Lint Code Base
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    ##################
+    # Load all steps #
+    ##################
+    steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout
+        uses: actions/checkout@v2.5.0
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Backend Code Base linting
+        uses: github/super-linter/slim@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_INCLUDE: .*backend/.*.py
+          VALIDATE_PYTHON_PYLINT: true
+          LOG_LEVEL: WARN
