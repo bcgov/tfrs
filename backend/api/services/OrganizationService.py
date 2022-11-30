@@ -7,11 +7,8 @@ from api.models.CreditTrade import CreditTrade
 
 class OrganizationService(object):
     @staticmethod
-    def get_pending_deductions(
-            organization,
-            ignore_pending_supplemental=True
-    ):
-        deductions = 0
+    def get_pending_transfers_value(organization):
+        pending_transfers_value = 0
         pending_trades = CreditTrade.objects.filter(
             (Q(status__status__in=[
                 "Submitted", "Accepted", "Recommended", "Not Recommended"
@@ -28,7 +25,17 @@ class OrganizationService(object):
         ).aggregate(total_credits=Sum('number_of_credits'))
 
         if pending_trades['total_credits'] is not None:
-            deductions += pending_trades['total_credits']
+            pending_transfers_value = pending_trades['total_credits']
+
+        return pending_transfers_value
+
+    @staticmethod
+    def get_pending_deductions(
+            organization,
+            ignore_pending_supplemental=True
+    ):
+        deductions = 0
+        deductions += OrganizationService.get_pending_transfers_value(organization)
 
         compliance_report = ComplianceReport.objects.annotate(
             Count('supplements')
@@ -113,7 +120,7 @@ class OrganizationService(object):
         return deductions
 
     @staticmethod
-    def get_max_credit_offset(organization, compliance_year):
+    def get_max_credit_offset(organization, compliance_year, exclude_reserved=False):
         effective_date_deadline = datetime.date(
             int(compliance_year) + 1, 3, 31
         )
@@ -169,11 +176,11 @@ class OrganizationService(object):
         if debits and debits.get('total') is not None:
             total -= debits.get('total')
 
-        pending_deductions = OrganizationService.get_pending_deductions(
-            organization,
-            ignore_pending_supplemental=False
-        )
-
+        if exclude_reserved:
+            pending_deductions = OrganizationService.get_pending_transfers_value(organization)
+        else:
+            pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
+        
         current_balance = organization.organization_balance.get(
             'validated_credits', 0
         )
