@@ -104,16 +104,31 @@ class UserAuthentication(authentication.BaseAuthentication):
                 print("User does not exist, falling through")
                 pass
         
+        try:
+            # Which provider is user logging in with
+            if token['identity_provider'] == 'idir':
+                external_username = token['idir_username']
+            elif token['identity_provider'] == 'bceidbusiness':
+                external_username = token['bceid_username']
+            else:
+                raise Exception('unknown identity provider')
+        except Exception as exc:
+            raise Exception('identity provider invalid')
+
         # fall through to here if no mapped user is found
         if 'email' in user_token:
             creation_request = UserCreationRequest.objects.filter(
                 keycloak_email__iexact=user_token['email']
-            ).filter(user__keycloak_user_id=None)
+            ).filter(
+              external_username__iexact=external_username
+            ).filter(
+              user__keycloak_user_id=None
+            )
 
             if not creation_request.exists():
-                print("No User with that email exists.")
+                print("No User with that email/username exists.")
                 raise exceptions.AuthenticationFailed(
-                    "No User with that email exists.")
+                    "No User with that email/username exists.")
 
             user_creation_request = creation_request.first()
 

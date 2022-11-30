@@ -967,4 +967,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(withRouter(ComplianceReportingEditContainer)))
+)(withRouter(autosaved(config)(ComplianceReportingEditContainer)))
