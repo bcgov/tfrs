@@ -1553,15 +1553,15 @@ class ComplianceReportUpdateSerializer(
             'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
             'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
             'display_name', 'supplemental_note', 'is_supplemental',
-            'max_credit_offset', 'total_previous_credit_reductions',
+            'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
             'supplemental_number', 'last_accepted_offset', 'history',
             'previous_report_was_credit'
         )
         read_only_fields = (
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
             'actions', 'actor', 'display_name', 'is_supplemental',
-            'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number', 'max_credit_offset_exclude_reserved', 'last_accepted_offset', 'history'
+            'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
+            'supplemental_number', 'last_accepted_offset', 'history'
         )
 
 
