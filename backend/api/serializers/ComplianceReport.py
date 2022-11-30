@@ -1166,6 +1166,7 @@ class ComplianceReportUpdateSerializer(
     actor = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
+    max_credit_offset_exclude_reserved = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
@@ -1203,6 +1204,18 @@ class ComplianceReportUpdateSerializer(
             max_credit_offset = 0
 
         return max_credit_offset
+
+    def get_max_credit_offset_exclude_reserved(self, obj):
+        max_credit_offset_exclude_reserved = OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description,
+            exclude_reserved=True
+        )
+
+        if max_credit_offset_exclude_reserved < 0:
+            max_credit_offset_exclude_reserved = 0
+
+        return max_credit_offset_exclude_reserved
 
     def get_history(self, obj):
         """
@@ -1548,7 +1561,7 @@ class ComplianceReportUpdateSerializer(
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
             'actions', 'actor', 'display_name', 'is_supplemental',
             'max_credit_offset', 'total_previous_credit_reductions',
-            'supplemental_number', 'last_accepted_offset', 'history'
+            'supplemental_number', 'max_credit_offset_exclude_reserved', 'last_accepted_offset', 'history'
         )
 
 
