@@ -46,10 +46,5 @@ jobs:
           DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_INCLUDE: .*backend/.*.py
-          VALIDATE_PYTHON: true
           VALIDATE_PYTHON_PYLINT: true
-          VALIDATE_PYTHON_BLACK: false
-          VALIDATE_PYTHON_FLAKE8: false
-          VALIDATE_PYTHON_ISORT: false
-          VALIDATE_PYTHON_MYPY: false
           LOG_LEVEL: WARN
