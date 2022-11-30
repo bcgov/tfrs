@@ -1,17 +1,17 @@
 ## For each release, the value of workflow name, branches and PR_NUMBER need to be adjusted accordingly
 
-name: TFRS backend-lint-2.0.0
+name: remove-nagios-2.0.0
 
 on:
   push:
-    branches: [ backend-lint-2.0.0 ]
+    branches: [ remove-nagios-2.0.0 ]
   workflow_dispatch:
   workflow_call:
 
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  RELEASE_NAME: backend-lint-2.0.0
+  RELEASE_NAME: remove-nagios-2.0.0
 
 ###############
 # Set the Job #
