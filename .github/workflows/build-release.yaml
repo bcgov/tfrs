@@ -13,6 +13,7 @@ env:
   ## Also remember to update the version in .pipeline/lib/config.js
   PR_NUMBER: 1824
   RELEASE_NAME: release-2.0.0
+  GITHUB_WORKSPACE: /home/runner/work/tfrs/tfrs
 
 jobs:
 
