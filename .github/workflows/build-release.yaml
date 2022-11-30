@@ -43,6 +43,8 @@ jobs:
           echo "show current folder as below:"
           pwd     
           ls -l
+          echo "show /github/workspace"
+          ls -l /github/workspace
 
       - name: Backend Linting
         uses: github/super-linter/slim@v4
