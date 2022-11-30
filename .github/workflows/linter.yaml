@@ -32,16 +32,13 @@ jobs:
       ##########################
       - name: Checkout
         uses: actions/checkout@v2.5.0
-        with:
-          # Full git history is needed to get a proper
-          # list of changed files within `super-linter`
-          fetch-depth: 0
 
       ################################
       # Run Linter against code base #
       ################################
       - name: Backend Code Base linting
         uses: github/super-linter/slim@v4
+        continue-on-error: true
         env:
           DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
