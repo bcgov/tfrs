@@ -109,10 +109,8 @@ class UserAuthentication(authentication.BaseAuthentication):
             # Which provider is user logging in with
             if user_token['identity_provider'] == 'idir':
                 external_username = user_token['idir_username']
-                identity_provider = 'idir'
             elif user_token['identity_provider'] == 'bceidbusiness':
                 external_username = user_token['bceid_username']
-                identity_provider = 'bceidbusiness'
             else:
                 raise Exception('unknown identity provider')
         except Exception as exc:
@@ -129,11 +127,13 @@ class UserAuthentication(authentication.BaseAuthentication):
 
             # Ensure that idir users can only be mapped to bcgov org
             # and external users are mapped only to supplier orgs
-            if identity_provider == 'idir':
+            if user_token['identity_provider'] == 'idir':
                 creation_request.filter(user__organization=1)
-            elif identity_provider == 'bceidbusiness':
+            elif user_token['identity_provider'] == 'bceidbusiness':
                 creation_request.filter(~Q(user__organization=1))
-                
+            else:
+                raise Exception('unknown identity provider')
+
             # filter out if the user has already been mapped
             creation_request.filter(user__keycloak_user_id=None)
 
