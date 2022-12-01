@@ -11,14 +11,14 @@ import { useNavigate } from 'react-router'
 
 const DirectorReview = (props) => {
   const {
-    isFetching: fetchingComplianceReports,
+    isFinding: fetchingComplianceReports,
     items: complianceReports
   } = props.complianceReports
 
   const navigate = useNavigate()
 
   const {
-    isFetching: fetchingCreditTransfers,
+    isFinding: fetchingCreditTransfers,
     items: creditTransfers
   } = props.creditTransfers
 
@@ -75,7 +75,7 @@ const DirectorReview = (props) => {
             awaitingReview.creditTransfers += 1
             awaitingReview.total += 1
           }
-  
+
           if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
             awaitingReview.part3Awards += 1
             awaitingReview.total += 1

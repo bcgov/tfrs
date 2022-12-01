@@ -21,7 +21,7 @@ const FileSubmissions = (props) => {
     }
   }
 
-  items.forEach((item) => {
+  items?.forEach((item) => { // TODO investigate why items is null on load
     if (item.status.status === 'Submitted') {
       awaitingReview.documentUploads.submitted += 1
       awaitingReview.documentUploads.total += 1
