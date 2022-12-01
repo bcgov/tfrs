@@ -19,8 +19,8 @@ export const getKeycloakUser = () => {
 /*
  * Keycloak Actions
  */
-export const initKeycloak = (keycloak, authenticated) => ({
-  payload: { keycloak, authenticated },
+export const initKeycloak = (keycloak) => ({
+  payload: { keycloak },
   type: ActionTypes.INIT_KEYCLOAK
 })
 
@@ -37,9 +37,19 @@ export const resetToken = () => ({
   type: ActionTypes.RESET_TOKEN
 })
 
-export const loginKeycloakUserSuccess = (token, expiry) => ({
-  payload: { token, expiry },
+export const loginKeycloakUserSuccess = (idToken, refreshToken, expiry) => ({
+  payload: { idToken, refreshToken, expiry },
   type: ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS
+})
+
+export const loginKeycloakRefreshSuccess = (refreshToken, expiry) => ({
+  payload: { refreshToken, expiry },
+  type: ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS
+})
+
+export const loginKeycloakSilentRefreshSuccess = (idToken, refreshToken, expiry) => ({
+  payload: { idToken, refreshToken, expiry },
+  type: ActionTypes.LOGIN_KEYCLOAK_SILENT_REFRESH_SUCCESS
 })
 
 export const loginKeycloakUserError = (error) => ({
@@ -53,6 +63,7 @@ export const logoutKeycloakUser = () => ({
 
 export const login = (hint = 'idir') => (dispatch) => {
   const kc = keycloak()
+  dispatch({ type: ActionTypes.LOGGING_IN })
   kc.login({
     pkceMethod: 'S256',
     redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
@@ -61,11 +72,12 @@ export const login = (hint = 'idir') => (dispatch) => {
 }
 
 export const logout = (token) => (dispatch) => {
+  const userAuth = store.getState().userAuth
   const kc = keycloak()
+  dispatch(logoutKeycloakUser())
   const url = kc.endpoints.logout() +
     '?client_id=' + encodeURIComponent(kc.clientId) +
     '&post_logout_redirect_uri=' + encodeURIComponent(CONFIG.KEYCLOAK.POST_LOGOUT_URL) +
-    '&id_token_hint=' + encodeURIComponent(token)
-  dispatch(logoutKeycloakUser())
+    '&id_token_hint=' + encodeURIComponent(userAuth.idToken)
   window.location = url
 }

@@ -17,6 +17,7 @@ import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensitie
 import { transactionTypes } from '../actions/transactionTypes'
 import { roles } from '../actions/roleActions'
 import autosaveSaga from '../store/autosaveStore'
+import sessionTimeoutSaga from '../store/sessionTimeout'
 import { complianceReporting } from '../actions/complianceReporting'
 import { exclusionReports } from '../actions/exclusionReports'
 
@@ -25,7 +26,7 @@ function * rootSaga () {
   yield take(REHYDRATE) // Wait for rehydrate to prevent sagas from running with empty store
   console.log('Rehydrated')
 
-  // sagaMiddleware.run(sessionTimeoutSaga) // TODO fix sessiontimeout with new keycloak login
+  sagaMiddleware.run(sessionTimeoutSaga, store)
   sagaMiddleware.run(notificationsSaga, store)
   sagaMiddleware.run(authenticationStateSaga, store)
   sagaMiddleware.run(socketAuthenticationSaga, store)
