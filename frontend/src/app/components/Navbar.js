@@ -218,7 +218,7 @@ class Navbar extends Component {
                   </MenuItem>
                   <MenuItem onClick={(e) => {
                     e.preventDefault()
-                    this.props.logout(this.props.token)
+                    this.props.logout()
                   }}
                   >
                     <FontAwesomeIcon icon="sign-out-alt" /> Log Out
@@ -406,7 +406,7 @@ class Navbar extends Component {
               id="navbar-logout"
               onClick={(e) => {
                 e.preventDefault()
-                this.props.logout(this.props.token)
+                this.props.logout()
               }}
               to={Routes.LOGOUT}
             >
@@ -527,12 +527,11 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  token: PropTypes.string,
   unreadNotificationsCount: PropTypes.number
 }
 
 const mapDispatchToProps = dispatch => ({
-  logout: (token) => dispatch(logout(token))
+  logout: () => dispatch(logout())
 })
 
 // export default Navbar;

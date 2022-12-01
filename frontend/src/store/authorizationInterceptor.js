@@ -6,7 +6,7 @@ function configureAxios () {
   if (CONFIG.KEYCLOAK) {
     axios.interceptors.request.use((config) => {
       const loadconfig = () => {
-        const token = store.getState().userAuth.token
+        const token = store.getState().userAuth.idToken
         return {
           ...config,
           headers: {

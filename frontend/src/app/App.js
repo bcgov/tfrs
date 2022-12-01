@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { IntlProvider } from 'react-intl'
 import { connect } from 'react-redux'
 import ReduxToastr from 'react-redux-toastr'
-import { bindActionCreators } from 'redux'
 
 import StatusInterceptor from './components/StatusInterceptor'
 import Navbar from './components/Navbar'
@@ -15,8 +14,6 @@ import Router from './router'
 
 // import 'toastr/build/toastr.min.css';
 // import 'react-table/react-table.css';
-import { loginKeycloakUserSuccess, logout } from '../actions/keycloakActions'
-import { getLoggedInUser } from '../actions/userActions'
 import Unverified from './components/Unverified'
 
 class App extends Component {
@@ -39,41 +36,33 @@ class App extends Component {
     })
   }
 
-  componentDidMount () {
-    const { keycloak } = this.props
-    if (keycloak) {
-      keycloak.onTokenExpired = () => {
-        console.log('token expired, starting refresh')
-        keycloak.updateToken(5).success(() => {
-          console.log('successfully got a new token', keycloak.idToken)
-          this.props.loginKeycloakUserSuccess(keycloak.idToken, keycloak.idTokenParsed.exp)
-        }).error((err) => {
-          console.log('refresh token error', err)
-        })
-      }
-    }
-  }
-
   render () {
     const {
-      token,
-      initialized,
+      idToken,
+      keycloak,
+      loggingIn,
+      authenticated,
       errorRequest,
       userRequest,
       loggedInUser,
       unreadNotificationsCount
     } = this.props
 
-    if (!initialized || userRequest.isFetching) {
+    if (
+      !keycloak ||
+      userRequest.isFetching ||
+      loggingIn ||
+      (idToken && authenticated === undefined)
+    ) {
       return <Loading />
     }
 
-    if (!token) {
+    if (keycloak && !keycloak.authenticated) {
       return <Login />
     }
 
     if (userRequest.serverError) {
-      return <Unverified token={token}/>
+      return <Unverified token={idToken}/>
     }
 
     if (!loggedInUser?.username) {
@@ -105,7 +94,6 @@ class App extends Component {
           <Navbar
             loggedInUser={loggedInUser}
             unreadNotificationsCount={unreadNotificationsCount}
-            token={token}
           />
           <div id="main" className="template container-fluid">
             <SessionTimer />
@@ -131,19 +119,16 @@ const mapStateToProps = state => ({
     serverError: state.rootReducer.userRequest.serverError
   },
   keycloak: state.userAuth.keycloak,
-  initialized: state.userAuth.initialized,
-  token: state.userAuth.token,
+  idToken: state.userAuth.idToken,
   expiry: state.userAuth.expiry,
   authenticated: state.userAuth.authenticated,
+  loggingIn: state.userAuth.loggingIn,
   isFetching: state.userAuth.isFetching,
   user: state.userAuth.user,
   errors: state.userAuth.errors
 })
 
 const mapDispatchToProps = dispatch => ({
-  logout: bindActionCreators(logout, dispatch),
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  loginKeycloakUserSuccess: bindActionCreators(loginKeycloakUserSuccess, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
