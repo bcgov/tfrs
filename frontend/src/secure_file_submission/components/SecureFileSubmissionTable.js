@@ -14,7 +14,6 @@ import { calculatePages} from '../../utils/functions'
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
-
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -77,6 +76,20 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
+  }, {
+    accessor: (item) => {
+      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
+
+      if (historyFound) {
+        return moment(historyFound.createTimestamp).format('YYYY-MM-DD')
+      }
+
+      return '-'
+    },
+    className: 'col-date',
+    Header: 'Submitted On',
+    id: 'updateTimestamp',
+    minWidth: 65
   }]
 
   const filterMethod = (filter, row, column) => {
@@ -96,6 +109,7 @@ const SecureFileSubmissionTable = (props) => {
       columns={columns}
       data={props.items}
       isFetching={props.isFetching}
+      isEmpty={props.isEmpty}
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
@@ -136,6 +150,21 @@ const SecureFileSubmissionTable = (props) => {
 SecureFileSubmissionTable.defaultProps = {}
 
 SecureFileSubmissionTable.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.shape({
+    createUser: PropTypes.shape({
+      organization: PropTypes.shape({
+        name: PropTypes.string
+      })
+    }),
+    status: PropTypes.shape({
+      status: PropTypes.string
+    }),
+    listTitle: PropTypes.string,
+    type: PropTypes.shape({
+      id: PropTypes.integer
+    })
+  })).isRequired,
+  isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   page: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,

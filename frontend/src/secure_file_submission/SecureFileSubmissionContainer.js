@@ -52,7 +52,6 @@ class SecureFileSubmissionContainer extends Component {
       <SecureFileSubmissionsPage
         categories={this.props.referenceData.documentCategories}
         documentUploads={this.props.documentUploads}
-        getDocumentUploads={this.props.getDocumentUploads}
         loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
         page={this.state.page}

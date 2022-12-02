@@ -6,7 +6,7 @@ import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import { useNavigate } from 'react-router'
 
 const FileSubmissions = (props) => {
-  const { isFetching, items } = props.documentUploads
+  const { isFetching, items, itemsCount } = props.documentUploads
   const navigate = useNavigate()
 
   if (isFetching) {
@@ -20,7 +20,7 @@ const FileSubmissions = (props) => {
       total: 0
     }
   }
-
+  if (itemsCount>0) {
   items.forEach((item) => {
     if (item.status.status === 'Submitted') {
       awaitingReview.documentUploads.submitted += 1
@@ -32,7 +32,7 @@ const FileSubmissions = (props) => {
       awaitingReview.documentUploads.total += 1
     }
   })
-
+  }
   return (
     <div className="dashboard-fieldset">
       <h1>File Submissions</h1>
