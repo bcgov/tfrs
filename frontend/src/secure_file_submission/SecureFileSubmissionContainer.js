@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-
+import { withRouter } from '../utils/withRouter'
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads'
 import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage'
 
@@ -104,4 +104,5 @@ const mapDispatchToProps = dispatch => ({
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionContainer))
+// export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer)

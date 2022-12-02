@@ -1,20 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import React from 'react';
+import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
-import Loading from '../../app/components/Loading'
-import * as Lang from '../../constants/langEnUs'
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
-import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
-import SecureFileSubmissionTable from './SecureFileSubmissionTable'
-import { useNavigate } from 'react-router'
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import Loading from '../../app/components/Loading';
+import * as Lang from '../../constants/langEnUs';
+import history from '../../app/History';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import SecureFileSubmissionTable from './SecureFileSubmissionTable';
 
 const SecureFileSubmissionsPage = (props) => {
-  const { isFetching, items, itemsCount } = props.documentUploads
-  const isEmpty = items.length === 0
-  const navigate = useNavigate()
+  const { isFetching, items, itemsCount} = props.documentUploads;
+  const isEmpty = itemsCount === 0;
+
   return (
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
@@ -48,7 +48,7 @@ const SecureFileSubmissionsPage = (props) => {
                 const evidence = part3Category.types.find(category => (category.theType === 'Evidence'))
                 const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', evidence.id)
 
-                navigate(route)
+                history.push(route);
               }}
               type="button"
             >
@@ -81,6 +81,8 @@ const SecureFileSubmissionsPage = (props) => {
           }
         </div>
       </div>
+      {isFetching && <Loading />}
+      {!isFetching &&
       <SecureFileSubmissionTable
         items={items}
         isFetching={isFetching}
@@ -94,6 +96,7 @@ const SecureFileSubmissionsPage = (props) => {
         handleFiltersChange={props.handleFiltersChange}
         loggedInUser={props.loggedInUser}
       />
+      }
     </div>
   )
 }

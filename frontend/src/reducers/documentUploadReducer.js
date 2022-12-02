@@ -51,14 +51,14 @@ const documentUploads = (state = {
       return {
         ...state,
         isFetching: true,
-        success: false
+        success: false,
       };
     case ActionTypes.RECEIVE_REQUESTS:
       return {
         ...state,
-        isFetching: false,
         items: action.data,
         itemsCount: action.totalCount,
+        isFetching: false,
         success: true
       };
     case ActionTypes.ERROR:

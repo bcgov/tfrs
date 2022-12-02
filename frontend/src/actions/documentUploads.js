@@ -116,14 +116,18 @@ const deleteDocumentUploadRequestError = error => ({
 /*
  * Get Documents
  */
-const getDocumentUploads = () => (dispatch) => {
+const getDocumentUploads = (pageNumber, pageSize, filters) => (dispatch) => {
   dispatch(getDocumentUploadRequests());
-  return axios.get(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API)
-    .then((response) => {
-      dispatch(getDocumentUploadRequestsSuccess(response.data));
-    }).catch((error) => {
-      dispatch(getDocumentUploadRequestsError(error.response));
-    });
+  const url = Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/paginated?page=' + pageNumber + '&size=' + pageSize
+  const data = {
+    filters
+  }
+  axios.post(url, data)
+    .then(response => {
+      dispatch(getDocumentUploadRequestsSuccess(response.data.results, response.data.count))
+    }).catch(error => {
+      dispatch(getDocumentUploadRequestsError(error.response))
+    })
 };
 
 const getDocumentUploadRequests = () => ({
