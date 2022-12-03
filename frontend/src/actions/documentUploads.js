@@ -135,10 +135,11 @@ const getDocumentUploadRequests = () => ({
   type: ActionTypes.GET_REQUESTS
 })
 
-const getDocumentUploadRequestsSuccess = requests => ({
+const getDocumentUploadRequestsSuccess = (requests, totalCount) => ({
   name: ReducerTypes.RECEIVE_DOCUMENT_UPLOADS_REQUEST,
   type: ActionTypes.RECEIVE_REQUESTS,
   data: requests,
+  totalCount: totalCount,
   receivedAt: Date.now()
 })
 
