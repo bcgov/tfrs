@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { withRouter } from '../utils/withRouter'
+
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads'
 import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage'
 
@@ -17,8 +17,7 @@ class SecureFileSubmissionContainer extends Component {
     this.state = {
       page: 1,
       pageSize: 10,
-      filters: [],
-      refreshCounter: 0
+      filters: []
     }
     this.handlePageChange = this.handlePageChange.bind(this)
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
@@ -82,6 +81,12 @@ SecureFileSubmissionContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape()),
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  handleFiltersChange: PropTypes.func.isRequired,
   requestURL: PropTypes.func.isRequired
 }
 
@@ -104,5 +109,4 @@ const mapDispatchToProps = dispatch => ({
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SecureFileSubmissionContainer))
-// export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer)

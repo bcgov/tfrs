@@ -9,18 +9,17 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
-import { calculatePages} from '../../utils/functions'
-
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
+
   const columns = [{
     accessor: 'id',
     className: 'col-id',
     Header: 'ID',
     resizable: false,
     width: 45
-   }, {
+  }, {
     accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -102,14 +101,19 @@ const SecureFileSubmissionTable = (props) => {
   }
 
   const filterable = true
+
   return (
     <ReactTable
       stateKey="sfs"
       className="searchable"
       columns={columns}
       data={props.items}
-      isFetching={props.isFetching}
-      isEmpty={props.isEmpty}
+      defaultFilterMethod={filterMethod}
+      defaultPageSize={10}
+      defaultSorted={[{
+        id: 'id',
+        desc: true
+      }]}
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
@@ -166,9 +170,6 @@ SecureFileSubmissionTable.propTypes = {
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  page: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired
