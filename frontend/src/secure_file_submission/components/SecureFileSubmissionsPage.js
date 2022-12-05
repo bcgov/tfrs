@@ -15,7 +15,6 @@ const SecureFileSubmissionsPage = (props) => {
   const { isFetching, items, itemsCount } = props.documentUploads
   const isEmpty = items.length === 0
   const navigate = useNavigate()
-
   return (
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
@@ -109,18 +108,13 @@ SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape),
-    itemsCount: PropTypes.number
+    items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handlePageChange: PropTypes.func.isRequired,
-  handlePageSizeChange: PropTypes.func.isRequired,
-  handleFiltersChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 }
 
 export default SecureFileSubmissionsPage

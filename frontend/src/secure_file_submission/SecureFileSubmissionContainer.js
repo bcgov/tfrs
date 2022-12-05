@@ -17,8 +17,10 @@ class SecureFileSubmissionContainer extends Component {
     this.state = {
       page: 1,
       pageSize: 10,
-      filters: []
+      filters: [],
+      refreshCounter: 0
     }
+
     this.handlePageChange = this.handlePageChange.bind(this)
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
     this.handleFiltersChange = this.handleFiltersChange.bind(this)
@@ -31,14 +33,16 @@ class SecureFileSubmissionContainer extends Component {
   loadData () {
     this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
   }
+
   componentDidUpdate (prevProps, prevState) {
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
-      this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
+      this.props.DocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
     }
   }
   handlePageChange (page) {
     this.setState({ page })
   }
+
   handlePageSizeChange (pageSize) {
     this.setState({ pageSize })
   }
@@ -46,6 +50,7 @@ class SecureFileSubmissionContainer extends Component {
   handleFiltersChange (filters) {
     this.setState({ filters })
   }
+
   render () {
     return (
       <SecureFileSubmissionsPage
@@ -53,6 +58,7 @@ class SecureFileSubmissionContainer extends Component {
         documentUploads={this.props.documentUploads}
         loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
+        itemsCount={this.props.totalCount}
         page={this.state.page}
         pageSize={this.state.pageSize}
         filters={this.state.filters}
@@ -71,8 +77,7 @@ SecureFileSubmissionContainer.defaultProps = {
 SecureFileSubmissionContainer.propTypes = {
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape()),
-    itemsCount: PropTypes.number
+    items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
@@ -81,12 +86,6 @@ SecureFileSubmissionContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
-  page: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.shape()),
-  handlePageChange: PropTypes.func.isRequired,
-  handlePageSizeChange: PropTypes.func.isRequired,
-  handleFiltersChange: PropTypes.func.isRequired,
   requestURL: PropTypes.func.isRequired
 }
 
@@ -94,7 +93,7 @@ const mapStateToProps = state => ({
   documentUploads: {
     isFetching: state.rootReducer.documentUploads.isFetching,
     items: state.rootReducer.documentUploads.items,
-    itemsCount: state.rootReducer.documentUploads.itemsCount
+    itemsCount: state.rootReducer.documentUploads.totalCount
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {

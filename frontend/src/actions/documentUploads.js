@@ -116,7 +116,7 @@ const deleteDocumentUploadRequestError = error => ({
 /*
  * Get Documents
  */
-const getDocumentUploads = (pageNumber, pageSize, filters) => (dispatch) => {
+const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[]) => (dispatch) => {
   dispatch(getDocumentUploadRequests())
   const url = Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/paginated?page=' + pageNumber + '&size=' + pageSize
   const data = {
@@ -124,7 +124,7 @@ const getDocumentUploads = (pageNumber, pageSize, filters) => (dispatch) => {
   }
   return axios.post(url, data)
     .then((response) => {
-      dispatch(getDocumentUploadRequestsSuccess(response.data.results, response.data.count))
+      dispatch(getDocumentUploadRequestsSuccess(response.data))
     }).catch((error) => {
       dispatch(getDocumentUploadRequestsError(error.response))
     })
@@ -135,11 +135,11 @@ const getDocumentUploadRequests = () => ({
   type: ActionTypes.GET_REQUESTS
 })
 
-const getDocumentUploadRequestsSuccess = (requests, totalCount) => ({
+const getDocumentUploadRequestsSuccess = requests => ({
   name: ReducerTypes.RECEIVE_DOCUMENT_UPLOADS_REQUEST,
   type: ActionTypes.RECEIVE_REQUESTS,
-  data: requests,
-  totalCount: totalCount,
+  data: requests.results,
+  totalCount:  requests.count,
   receivedAt: Date.now()
 })
 

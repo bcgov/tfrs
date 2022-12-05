@@ -20,7 +20,7 @@ const FileSubmissions = (props) => {
       total: 0
     }
   }
-  items?.forEach((item) => {
+  items.forEach((item) => {
     if (item.status.status === 'Submitted') {
       awaitingReview.documentUploads.submitted += 1
       awaitingReview.documentUploads.total += 1
