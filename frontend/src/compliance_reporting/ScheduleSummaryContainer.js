@@ -615,7 +615,7 @@ class ScheduleSummaryContainer extends Component {
             gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
           }
         })
-      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset) {
+      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
         this.props.updateScheduleState({
           summary: {
             ...summary,
