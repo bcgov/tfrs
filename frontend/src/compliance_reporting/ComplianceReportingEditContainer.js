@@ -554,11 +554,15 @@ class ComplianceReportingEditContainer extends Component {
       return (<Loading />)
     }
 
-    if (this.props.complianceReporting.isGetting) {
+    if (this.props.complianceReporting.isGetting || this.props.complianceReporting.isFinding) {
       return (<Loading />)
     }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
+      return (<Loading />)
+    }
+
+    if (!item) {
       return (<Loading />)
     }
 
@@ -833,6 +837,7 @@ ComplianceReportingEditContainer.propTypes = {
   complianceReporting: PropTypes.shape({
     errorMessage: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),
+      PropTypes.string,
       PropTypes.shape()
     ]),
     isCreating: PropTypes.bool,
