@@ -3,51 +3,78 @@ import ActionTypes from '../constants/actionTypes/Keycloak'
 const keycloakReducer = (state = {
   keycloak: null,
   authenticated: false,
-  initialized: false,
-  token: null,
+  idToken: null,
+  refreshToken: null,
+  loggingIn: false,
   expiry: null,
   errors: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.INIT_KEYCLOAK: {
-      const { keycloak, authenticated } = action.payload
+      const { keycloak } = action.payload
       return {
         ...state,
         keycloak,
-        authenticated,
-        initialized: true,
+        authenticated: keycloak.authenticated,
         errors: {}
       }
     }
     case ActionTypes.INIT_KEYCLOAK_ERROR:
       return {
         ...state,
-        initialized: true,
         authenticated: false,
         errors: action.payload
       }
     case ActionTypes.LOGOUT_KEYCLOAK_USER:
       return {
         ...state,
-        token: null,
+        idToken: null,
+        refreshToken: null,
         expiry: null,
         keycloak: null,
         authenticated: false,
-        initialized: false,
         errors: action.payload
+      }
+    case ActionTypes.LOGGING_IN:
+      return {
+        ...state,
+        loggingIn: true,
+        errors: {}
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
       return {
         ...state,
-        token: action.payload.token,
+        idToken: action.payload.idToken,
+        refreshToken: action.payload.refreshToken,
         expiry: action.payload.expiry,
         authenticated: true,
+        loggingIn: false,
+        errors: {}
+      }
+    case ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS:
+      return {
+        ...state,
+        refreshToken: action.payload.refreshToken,
+        expiry: action.payload.expiry,
+        authenticated: true,
+        loggingIn: false,
+        errors: {}
+      }
+    case ActionTypes.LOGIN_KEYCLOAK_SILENT_REFRESH_SUCCESS:
+      return {
+        ...state,
+        idToken: action.payload.idToken,
+        refreshToken: action.payload.refreshToken,
+        expiry: action.payload.expiry,
+        authenticated: true,
+        loggingIn: false,
         errors: {}
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_ERROR:
       return {
         ...state,
         authenticated: false,
+        loggingIn: false,
         errors: action.payload
       }
     case ActionTypes.RESET_AUTH:
@@ -55,13 +82,13 @@ const keycloakReducer = (state = {
         ...state,
         keycloak: null,
         authenticated: false,
-        initialized: false,
         errors: {}
       }
     case ActionTypes.RESET_TOKEN:
       return {
         ...state,
-        token: null,
+        idToken: null,
+        refreshToken: null,
         expiry: false,
         errors: {}
       }

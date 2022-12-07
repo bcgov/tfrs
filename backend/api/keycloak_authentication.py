@@ -6,6 +6,7 @@ import requests
 from cryptography.hazmat.primitives import serialization
 from django.core.cache import caches
 from django.conf import settings
+from django.db.models import Q
 from rest_framework import authentication
 from rest_framework import exceptions
 
@@ -104,16 +105,42 @@ class UserAuthentication(authentication.BaseAuthentication):
                 print("User does not exist, falling through")
                 pass
         
+        try:
+            # Which provider is user logging in with
+            if user_token['identity_provider'] == 'idir':
+                external_username = user_token['idir_username']
+            elif user_token['identity_provider'] == 'bceidbusiness':
+                external_username = user_token['bceid_username']
+            else:
+                raise Exception('unknown identity provider')
+        except Exception as exc:
+            raise Exception('identity provider invalid')
+
         # fall through to here if no mapped user is found
         if 'email' in user_token:
+            # we map users by email and external_username
             creation_request = UserCreationRequest.objects.filter(
                 keycloak_email__iexact=user_token['email']
-            ).filter(user__keycloak_user_id=None)
+            ).filter(
+              external_username__iexact=external_username
+            )
+
+            # Ensure that idir users can only be mapped to bcgov org
+            # and external users are mapped only to supplier orgs
+            if user_token['identity_provider'] == 'idir':
+                creation_request.filter(user__organization=1)
+            elif user_token['identity_provider'] == 'bceidbusiness':
+                creation_request.filter(~Q(user__organization=1))
+            else:
+                raise Exception('unknown identity provider')
+
+            # filter out if the user has already been mapped
+            creation_request.filter(user__keycloak_user_id=None)
 
             if not creation_request.exists():
-                print("No User with that email exists.")
+                print("No User with that configuration exists.")
                 raise exceptions.AuthenticationFailed(
-                    "No User with that email exists.")
+                    "No User with that configuration exists.")
 
             user_creation_request = creation_request.first()
 

@@ -646,4 +646,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(withRouter(ExclusionReportEditContainer)))
+)(withRouter(autosaved(config)(ExclusionReportEditContainer)))

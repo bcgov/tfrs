@@ -13,11 +13,55 @@ env:
   ## Also remember to update the version in .pipeline/lib/config.js
   PR_NUMBER: 1824
   RELEASE_NAME: release-2.0.0
-  GITHUB_WORKSPACE: /home/runner/work/tfrs/tfrs
 
 jobs:
 
-  ## This is the CI job
+  unit-test:
+
+    name: Run Backend Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Run coverage report for django tests 
+        uses: kuanfandevops/django-test-action@itvr-django-test
+        continue-on-error: true
+        with:
+          settings-dir-path: "backend/api"
+          requirements-file: "backend/requirements.txt"
+          managepy-dir: backend
+  
+  lint:
+
+    name: Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Frontend Linting 
+        continue-on-error: true
+        run: |
+          cd frontend
+          pwd
+          npm install
+          npm run lint        
+
+      - name: Backend linting
+        uses: github/super-linter/slim@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_INCLUDE: .*backend/.*.py
+          VALIDATE_PYTHON_PYLINT: true
+          LOG_LEVEL: WARN
+
   build:
 
     name: Build TFRS on Openshift
@@ -29,32 +73,6 @@ jobs:
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
         uses: actions/checkout@v3
-
-      - name: Frontend Linting 
-        continue-on-error: true
-        run: |
-          cd frontend
-          pwd
-          npm install
-          npm run lint        
-
-      - name: Show current folder
-        continue-on-error: true
-        run: |
-          echo "show current folder as below:"
-          pwd     
-          ls -l
-          echo "show /github/workspace"
-          ls -l /github/workspace
-
-      - name: Backend Linting
-        uses: github/super-linter/slim@v4
-        continue-on-error: true
-        env:
-          DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_INCLUDE: .*backend/.*
-          VALIDATE_PYTHON: true
 
       ## Log in to Openshift with a token of service account
       - name: Log in to Openshift

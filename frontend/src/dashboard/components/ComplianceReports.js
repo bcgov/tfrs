@@ -6,10 +6,10 @@ import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 import { useNavigate } from 'react-router'
 
 const ComplianceReports = (props) => {
-  const { isFetching, items } = props.complianceReports
+  const { isFinding, items } = props.complianceReports
   const navigate = useNavigate()
 
-  if (isFetching) {
+  if (isFinding) {
     return <Loading />
   }
 

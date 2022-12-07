@@ -592,7 +592,7 @@ class ComplianceReportingEditContainer extends Component {
       </h2>,
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
       Available Credit Balance for this compliance period:
-        {` ${numeral(item.maxCreditOffset).format(NumberFormat.INT)} `}
+        {` ${numeral(item.maxCreditOffsetExcludeReserved).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
           placement="bottom"
@@ -967,4 +967,4 @@ const
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(autosaved(config)(withRouter(ComplianceReportingEditContainer)))
+)(withRouter(autosaved(config)(ComplianceReportingEditContainer)))
