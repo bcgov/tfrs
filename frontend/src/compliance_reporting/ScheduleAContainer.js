@@ -7,7 +7,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
 import { fuelClasses } from '../actions/fuelClasses'
 import { notionalTransferTypes } from '../actions/notionalTransferTypes'
 import AddressBuilder from '../app/components/AddressBuilder'

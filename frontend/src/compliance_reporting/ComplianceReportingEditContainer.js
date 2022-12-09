@@ -431,7 +431,7 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     this.status = status
-
+    
     this.props.updateComplianceReport({
       id: this.props.params.id,
       state: payload,
