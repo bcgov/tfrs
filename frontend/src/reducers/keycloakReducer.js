@@ -15,6 +15,7 @@ const keycloakReducer = (state = {
       return {
         ...state,
         keycloak,
+        loggingIn: true,
         authenticated: keycloak.authenticated,
         errors: {}
       }
@@ -22,6 +23,7 @@ const keycloakReducer = (state = {
     case ActionTypes.INIT_KEYCLOAK_ERROR:
       return {
         ...state,
+        loggingIn: false,
         authenticated: false,
         errors: action.payload
       }
@@ -32,6 +34,7 @@ const keycloakReducer = (state = {
         refreshToken: null,
         expiry: null,
         keycloak: null,
+        loggingIn: false,
         authenticated: false,
         errors: action.payload
       }
@@ -82,14 +85,6 @@ const keycloakReducer = (state = {
         ...state,
         keycloak: null,
         authenticated: false,
-        errors: {}
-      }
-    case ActionTypes.RESET_TOKEN:
-      return {
-        ...state,
-        idToken: null,
-        refreshToken: null,
-        expiry: false,
         errors: {}
       }
     default:

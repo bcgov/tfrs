@@ -51,7 +51,7 @@ class App extends Component {
     if (
       !keycloak ||
       userRequest.isFetching ||
-      loggingIn ||
+      // loggingIn ||
       (idToken && authenticated === undefined)
     ) {
       return <Loading />
@@ -62,7 +62,7 @@ class App extends Component {
     }
 
     if (userRequest.serverError) {
-      return <Unverified token={idToken}/>
+      return <Unverified />
     }
 
     if (!loggedInUser?.username) {
