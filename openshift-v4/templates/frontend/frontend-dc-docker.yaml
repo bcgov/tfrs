@@ -68,6 +68,10 @@ parameters:
     displayName: backend host
     description: backend host
     required: true
+  - name: DEBUG_ENABLED
+    displayName: debug enabled
+    description: debug enabled
+    required: true
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
@@ -97,7 +101,7 @@ objects:
           "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
           "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
           "keycloak.siteminder_logout_url": "${SITEMINDER_LOGOUT_URL}",
-          "debug.enabled": true,
+          "debug.enabled": ${DEBUG_ENABLED},
           "secure_document_upload.enabled": true,
           "secure_document_upload.max_file_size": 50000000,
           "fuel_codes.enabled": true,
