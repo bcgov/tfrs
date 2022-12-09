@@ -7,6 +7,7 @@ window.tfrs_config = {
   'keycloak.auth_url': 'https://dev.loginproxy.gov.bc.ca/auth',
   'keycloak.callback_url': 'http://localhost:3000/',
   'keycloak.post_logout_url': 'http://localhost:3000/',
+  'keycloak.siteminder_logout_url': 'https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl=',
   'debug.enabled': false,
   'secure_document_upload.enabled': true,
   'secure_document_upload.max_file_size': 50000000,

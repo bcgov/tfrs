@@ -21,7 +21,7 @@ const Unverified = (props) => {
           <button
             className="button primary"
             onClick={() => {
-              props.logout(props.token)
+              props.logout()
             }}
             type="button"
           >
@@ -35,7 +35,7 @@ const Unverified = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: (token) => dispatch(logout(token))
+    logout: () => dispatch(logout())
   }
 }
 
