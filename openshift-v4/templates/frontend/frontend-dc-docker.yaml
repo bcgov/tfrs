@@ -60,9 +60,17 @@ parameters:
     displayName: keycloak logout url
     description: keycloak logout url
     required: true
+  - name: SITEMINDER_LOGOUT_URL
+    displayName: siteminder logout url
+    description: siteminder logout url
+    required: true       
   - name: BACKEND_HOST
     displayName: backend host
     description: backend host
+    required: true
+  - name: DEBUG_ENABLED
+    displayName: debug enabled
+    description: debug enabled
     required: true
 objects:
   - apiVersion: image.openshift.io/v1
@@ -92,7 +100,8 @@ objects:
           "keycloak.auth_url": "${KEYCLOAK_AUTHORITY}",
           "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
           "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
-          "debug.enabled": true,
+          "keycloak.siteminder_logout_url": "${SITEMINDER_LOGOUT_URL}",
+          "debug.enabled": ${DEBUG_ENABLED},
           "secure_document_upload.enabled": true,
           "secure_document_upload.max_file_size": 50000000,
           "fuel_codes.enabled": true,

@@ -74,7 +74,7 @@ export class GenericRestTemplate {
         [this.find, (state, action) => ({
           ...state,
           isFinding: true,
-          errorMessage: {},
+          errorMessage: [],
           findState: action.payload
         })],
         [this.findSuccess, (state, action) => ({
@@ -93,7 +93,7 @@ export class GenericRestTemplate {
           isUpdating: false,
           isRemoving: false,
           success: false,
-          errorMessage: action.payload
+          errorMessage: action.payload.errorMessage
         })],
         [this.get, (state, action) => ({
           ...state,
@@ -112,7 +112,7 @@ export class GenericRestTemplate {
           ...state,
           createState: action.payload,
           isCreating: true,
-          errorMessage: {}
+          errorMessage: []
         })],
         [this.createSuccess, (state, action) => ({
           ...state,
@@ -128,7 +128,7 @@ export class GenericRestTemplate {
           updateState: action.payload.state,
           updateUsingPatch: action.payload.patch || false,
           isUpdating: true,
-          errorMessage: {}
+          errorMessage: []
         })],
         [this.updateSuccess, (state, action) => ({
           ...state,
@@ -142,7 +142,7 @@ export class GenericRestTemplate {
           ...state,
           id: action.payload.id,
           isRemoving: true,
-          errorMessage: {}
+          errorMessage: []
         })],
         [this.removeSuccess, (state, action) => ({
           ...state,
@@ -163,7 +163,7 @@ export class GenericRestTemplate {
         isRemoving: false,
         updateUsingPatch: false,
         success: false,
-        errorMessage: {},
+        errorMessage: [],
         validationErrors: {},
         ...this.getCustomDefaultState()
       }
@@ -237,7 +237,7 @@ export class GenericRestTemplate {
       const response = yield call(this.doFind, data)
       yield put(this.findSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error({ errorMessage: error.response.data?.detail }))
     }
   }
 
@@ -253,7 +253,7 @@ export class GenericRestTemplate {
       const response = yield call(this.doGet, id, data)
       yield put(this.getSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error({ errorMessage: error.response.data?.detail }))
     }
   }
 
@@ -274,7 +274,7 @@ export class GenericRestTemplate {
       const response = yield call(this.doUpdate, id, data, patch)
       yield put(this.updateSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error({ errorMessage: error.response.data?.detail }))
     }
   }
 
@@ -288,7 +288,7 @@ export class GenericRestTemplate {
       const response = yield call(this.doRemove, id)
       yield put(this.removeSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error({ errorMessage: error.response.data?.detail }))
     }
   }
 
@@ -303,7 +303,7 @@ export class GenericRestTemplate {
       const response = yield call(this.doCreate, data)
       yield put(this.createSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error({ errorMessage: error.response.data?.detail }))
     }
   }
 

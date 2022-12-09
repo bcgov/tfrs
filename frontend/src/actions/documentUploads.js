@@ -116,31 +116,30 @@ const deleteDocumentUploadRequestError = error => ({
 /*
  * Get Documents
  */
-const getDocumentUploads = (pageNumber, pageSize, filters) => (dispatch) => {
+const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[]) => (dispatch) => {
   dispatch(getDocumentUploadRequests())
-
   const url = Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/paginated?page=' + pageNumber + '&size=' + pageSize
   const data = {
     filters
   }
-  axios.post(url, data)
+  return axios.post(url, data)
     .then((response) => {
-      dispatch(getDocumentUploadRequestsSuccess(response.data.results, response.data.count))
+      dispatch(getDocumentUploadRequestsSuccess(response.data))
     }).catch((error) => {
       dispatch(getDocumentUploadRequestsError(error.response))
     })
-}
+  }
 
 const getDocumentUploadRequests = () => ({
   name: ReducerTypes.GET_DOCUMENT_UPLOADS_REQUEST,
   type: ActionTypes.GET_REQUESTS
 })
 
-const getDocumentUploadRequestsSuccess = (requests, totalCount) => ({
+const getDocumentUploadRequestsSuccess = requests => ({
   name: ReducerTypes.RECEIVE_DOCUMENT_UPLOADS_REQUEST,
   type: ActionTypes.RECEIVE_REQUESTS,
-  data: requests,
-  totalCount,
+  data: requests.results,
+  totalCount:  requests.count,
   receivedAt: Date.now()
 })
 
@@ -230,8 +229,11 @@ const updateCommentOnDocument = (id, data) => (dispatch) => {
 
   return axios
     .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.COMMENTS_API}/${id}`, data)
-    .catch((error) =>{
-      dispatch(updateCommentOnDocumentError(error.response))
+    .then((response) => {
+      dispatch(updateCommentOnDocumentSuccess(response.data))
+    }).catch((error) => {
+      dispatch(updateCommentOnDocumentError(error.response.data))
+      return Promise.reject(error)
     })
 }
 

@@ -49,7 +49,10 @@ class ComplianceReportingContainer extends Component {
           .replace(':tab', 'intro'))
         toastr.complianceReporting('Created')
       } else {
-        reduxToastr.error('Error saving')
+        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0
+          ? nextProps.complianceReporting.errorMessage
+          : 'Error saving'
+        reduxToastr.error(errorMessage)
       }
     }
 
@@ -60,7 +63,10 @@ class ComplianceReportingContainer extends Component {
           .replace(':tab', 'intro'))
         toastr.exclusionReports('Created')
       } else {
-        reduxToastr.error('Error saving')
+        const errorMessage = nextProps.exclusionReports.errorMessage.length > 0
+          ? nextProps.exclusionReports.errorMessage
+          : 'Error saving'
+        reduxToastr.error(errorMessage)
       }
     }
   }

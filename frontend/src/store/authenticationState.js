@@ -1,6 +1,13 @@
 import { put, takeLatest, all } from 'redux-saga/effects'
 import { getLoggedInUser } from '../actions/userActions'
-import { initKeycloak, loginKeycloakRefreshSuccess, loginKeycloakSilentRefreshSuccess, loginKeycloakUserSuccess, resetAuth } from '../actions/keycloakActions'
+import {
+  initKeycloak,
+  loginKeycloakRefreshSuccess,
+  loginKeycloakSilentRefreshSuccess,
+  loginKeycloakUserSuccess,
+  logout,
+  resetAuth
+} from '../actions/keycloakActions'
 import Keycloak from 'keycloak-js'
 import ActionTypes from '../constants/actionTypes/Keycloak'
 import configureAxios from './authorizationInterceptor'
@@ -9,7 +16,6 @@ import CONFIG from '../config'
 export default function * authenticationStateSaga (store) {
   yield put(resetAuth())
   const { idToken, refreshToken } = store.getState().userAuth
-
   yield all([
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS, getBackendUser),
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS, getBackendUser),
@@ -35,6 +41,8 @@ export default function * authenticationStateSaga (store) {
     })
     if (refreshAuthenticated) {
       yield put(loginKeycloakRefreshSuccess(kc.refreshToken, kc.tokenParsed.exp))
+    } else {
+      yield put(logout())
     }
   } else {
     const authenticated = yield kc.init({
