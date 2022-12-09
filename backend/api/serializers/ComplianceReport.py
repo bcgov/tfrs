@@ -1148,11 +1148,13 @@ class ComplianceReportUpdateSerializer(
     Update Serializer for the Compliance Report
     """
     status = ComplianceReportWorkflowStateSerializer(required=False)
-    type = SlugRelatedField(slug_field='the_type', read_only=True)
-    compliance_period = SlugRelatedField(
-        slug_field='description',
-        read_only=True
-    )
+    type = ComplianceReportTypeSerializer(read_only=True)
+    # type = SlugRelatedField(slug_field='the_type', read_only=True)
+    # compliance_period = SlugRelatedField(
+    #     slug_field='description',
+    #     read_only=True
+    # )
+    compliance_period = CompliancePeriodSerializer(read_only=True)
     organization = OrganizationDisplaySerializer(read_only=True)
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
@@ -1542,7 +1544,6 @@ class ComplianceReportUpdateSerializer(
 
         instance.update_user = request.user
         instance.save()
-
         # all other fields are read-only
         return instance
 

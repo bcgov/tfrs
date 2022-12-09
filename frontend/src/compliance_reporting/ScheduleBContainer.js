@@ -1041,7 +1041,7 @@ ScheduleBContainer.propTypes = {
     isFetching: PropTypes.bool
   }).isRequired,
   complianceReport: PropTypes.shape({
-    compliancePeriod: PropTypes.shape(),
+    compliancePeriod: PropTypes.string,
     scheduleB: PropTypes.shape()
   }),
   // eslint-disable-next-line react/forbid-prop-types
