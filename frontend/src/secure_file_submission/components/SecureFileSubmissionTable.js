@@ -79,7 +79,10 @@ const SecureFileSubmissionTable = (props) => {
     minWidth: 70
   }, {
     accessor: (item) => {
-      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
+      let historyFound = false;
+      if (item.history) {
+        historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
+      }
 
       if (historyFound) {
         return moment(historyFound.createTimestamp).format('YYYY-MM-DD')

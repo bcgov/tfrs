@@ -26,39 +26,39 @@ const GovernmentTransferForm = props => {
 
   return (
     <div className="credit-transaction pvr">
-      <h1>{this.props.title}</h1>
+      <h1>{props.title}</h1>
       <form
         onSubmit={(event, status) =>
-          this.props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+          props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
       >
         <GovernmentTransferFormDetails
-          compliancePeriods={this.props.compliancePeriods}
-          fuelSuppliers={this.props.fuelSuppliers}
-          fields={this.props.fields}
-          handleInputChange={this.props.handleInputChange}
+          compliancePeriods={props.compliancePeriods}
+          fuelSuppliers={props.fuelSuppliers}
+          fields={props.fields}
+          handleInputChange={props.handleInputChange}
         >
           <CreditTransferCommentButtons
-            canComment={this.props.canComment}
+            canComment={props.canComment}
             isCommenting={false}
-            addComment={this.props.addComment}
-            canCreatePrivilegedComment={this.props.canCreatePrivilegedComment}
+            addComment={props.addComment}
+            canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
           <CreditTransferCommentForm
-            comment={this.props.fields.comment}
-            isCommentingOnUnsavedCreditTransfer={this.props.id === 0}
-            isCreatingPrivilegedComment={this.props.isCreatingPrivilegedComment}
-            isEditingExistingComment={this.props.fields.comment.length > 0}
-            handleCommentChanged={this.props.handleCommentChanged}
+            comment={props.fields.comment}
+            isCommentingOnUnsavedCreditTransfer={props.id === 0}
+            isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+            isEditingExistingComment={props.fields.comment.length > 0}
+            handleCommentChanged={props.handleCommentChanged}
             embedded
           />
         </GovernmentTransferFormDetails>
 
-        {Object.keys(this.props.errors).length > 0 &&
-          <Errors errors={this.props.errors} />
+        {Object.keys(props.errors).length > 0 &&
+          <Errors errors={props.errors} />
         }
 
-        {Object.keys(this.props.validationErrors).length > 0 &&
-          <Errors errors={this.props.validationErrors} />
+        {Object.keys(props.validationErrors).length > 0 &&
+          <Errors errors={props.validationErrors} />
         }
 
         <div className="credit-transfer-actions">
@@ -70,7 +70,7 @@ const GovernmentTransferForm = props => {
             >
               <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
             </button>
-            {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
+            {props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
             <button
               className="btn btn-danger"
               data-target="#confirmDelete"
@@ -80,7 +80,7 @@ const GovernmentTransferForm = props => {
               <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
             </button>
             }
-            {this.props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
+            {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
             <button
               className="btn btn-default"
               type="submit"
@@ -88,18 +88,18 @@ const GovernmentTransferForm = props => {
               <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
             </button>
             }
-            {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
+            {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
             <Tooltip
-              show={this.props.fields.comment.length === 0}
+              show={props.fields.comment.length === 0}
               title={Lang.TEXT_COMMENT_REQUIRED}
             >
               <button
-                className={`btn ${this.props.fields.comment.length === 0
+                className={`btn ${props.fields.comment.length === 0
                   ? 'btn-disabled'
 : 'btn-primary '}`}
                 data-target="#confirmRecommend"
                 data-toggle="modal"
-                disabled={this.props.fields.comment.length === 0}
+                disabled={props.fields.comment.length === 0}
                 type="button"
               >
                 {Lang.BTN_RECOMMEND_FOR_DECISION}
