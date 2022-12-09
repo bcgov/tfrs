@@ -7,7 +7,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { complianceReporting } from '../actions/complianceReporting'
 import { fuelClasses } from '../actions/fuelClasses'
 import { notionalTransferTypes } from '../actions/notionalTransferTypes'
 import AddressBuilder from '../app/components/AddressBuilder'
@@ -478,7 +477,6 @@ class ScheduleAContainer extends Component {
   }
 
   render () {
-    const { item } = this.props.complianceReporting
     return ([
       <SchedulesPage
         addRow={this._addRow}
@@ -561,24 +559,7 @@ const mapStateToProps = state => ({
   notionalTransferTypes: {
     isFetching: state.rootReducer.notionalTransferTypes.isFinding,
     items: state.rootReducer.notionalTransferTypes.items
-  },
-  complianceReporting: {
-    errorMessage: state.rootReducer.complianceReporting.errorMessage,
-    isRemoving: state.rootReducer.complianceReporting.isRemoving,
-    isFinding: state.rootReducer.complianceReporting.isFinding,
-    isGetting: state.rootReducer.complianceReporting.isGetting,
-    isRecomputing: state.rootReducer.complianceReporting.isRecomputing,
-    isUpdating: state.rootReducer.complianceReporting.isUpdating,
-    isCreating: state.rootReducer.complianceReporting.isCreating,
-    item: state.rootReducer.complianceReporting.item,
-    recomputeResult: state.rootReducer.complianceReporting.recomputeResult,
-    success: state.rootReducer.complianceReporting.success,
-    valid: state.rootReducer.complianceReporting.validationPassed,
-    validating: state.rootReducer.complianceReporting.isValidating,
-    validationMessages: state.rootReducer.complianceReporting.validationMessages,
-    snapshot: state.rootReducer.complianceReporting.snapshotItem,
-    snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot
-  },
+  }
 })
 
 const mapDispatchToProps = {

@@ -169,6 +169,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             partial = kwargs.pop('partial', True)
         else:
             partial = kwargs.pop('partial', False)
+        
         if instance.type.the_type != 'Exclusion Report':
             serializer = self.get_serializer(
                 instance,
@@ -187,6 +188,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         request.data.update({'update_user': user.id})
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+        
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):

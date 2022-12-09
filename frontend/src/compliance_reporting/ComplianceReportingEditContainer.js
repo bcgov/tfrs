@@ -431,11 +431,13 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     this.status = status
+    
     this.props.updateComplianceReport({
       id: this.props.params.id,
       state: payload,
       patch: true
     })
+
     const data = []
     this.state.terms.forEach((term) => {
       if (term.value) {
@@ -547,6 +549,7 @@ class ComplianceReportingEditContainer extends Component {
 
     const { tab, id } = this.props.params
     const { item } = this.props.complianceReporting
+
     if (!this.state.getCalled) {
       return (<Loading />)
     }
