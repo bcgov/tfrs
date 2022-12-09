@@ -71,7 +71,7 @@ class CreditTransferViewContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.id)
+    this.loadData(this.props.params.id)
     this.props.getSigningAuthorityAssertions()
   }
 
