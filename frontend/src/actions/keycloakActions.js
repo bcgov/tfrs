@@ -57,13 +57,13 @@ export const logoutKeycloakUser = () => ({
   type: ActionTypes.LOGOUT_KEYCLOAK_USER
 })
 
-export const login = (hint = 'idir') => (dispatch) => {
+export const login = (idpHint = 'idir') => (dispatch) => {
   const kc = keycloak()
   dispatch({ type: ActionTypes.LOGGING_IN })
   kc.login({
     pkceMethod: 'S256',
     redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
-    idpHint: hint
+    idpHint
   })
 }
 
