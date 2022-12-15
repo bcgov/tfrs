@@ -17,12 +17,12 @@ assignees: ''
 
 **Acceptance Criteria:**
 
-[] Given I am a <role>, When I am <doing something>, then <this happens>
-[] Given I am a <role>, When I am <doing something>, then <this happens>
+[ ] Given I am a <role>, When I am <doing something>, then <this happens>
+[ ] Given I am a <role>, When I am <doing something>, then <this happens>
 
 **Development Checklist:**
-[] A
-[] B
-[] C
+[ ] A
+[ ] B
+[ ] C
 
 **Notes:**
