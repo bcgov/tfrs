@@ -1,6 +1,7 @@
 import CONFIG from '../config'
 
 import ActionTypes from '../constants/actionTypes/Keycloak'
+import { IDENTITY_PROVIDERS } from '../constants/auth'
 import store from '../store/store'
 
 /*
@@ -57,9 +58,8 @@ export const logoutKeycloakUser = () => ({
   type: ActionTypes.LOGOUT_KEYCLOAK_USER
 })
 
-export const login = (idpHint = 'idir') => (dispatch) => {
+export const login = (idpHint = IDENTITY_PROVIDERS.IDIR) => (dispatch) => {
   const kc = keycloak()
-  dispatch({ type: ActionTypes.LOGGING_IN })
   kc.login({
     pkceMethod: 'S256',
     redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
@@ -72,14 +72,14 @@ export const logout = () => (dispatch) => {
   const kc = keycloak()
   const token = userAuth.idToken
 
-  dispatch(logoutKeycloakUser())
-
   const kcLogoutUrl = kc.endpoints.logout() +
     '?post_logout_redirect_uri=' + CONFIG.KEYCLOAK.POST_LOGOUT_URL +
     '&client_id=' + kc.clientId +
     '&id_token_hint=' + token
 
   const url = CONFIG.KEYCLOAK.SM_LOGOUT_URL + encodeURIComponent(kcLogoutUrl)
+
+  dispatch(logoutKeycloakUser())
 
   window.location = url
 }

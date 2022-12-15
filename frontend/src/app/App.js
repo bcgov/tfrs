@@ -38,10 +38,8 @@ class App extends Component {
 
   render () {
     const {
-      idToken,
       keycloak,
       loggingIn,
-      authenticated,
       errorRequest,
       userRequest,
       loggedInUser,
@@ -51,8 +49,7 @@ class App extends Component {
     if (
       !keycloak ||
       userRequest.isFetching ||
-      // loggingIn ||
-      (idToken && authenticated === undefined)
+      loggingIn
     ) {
       return <Loading />
     }
