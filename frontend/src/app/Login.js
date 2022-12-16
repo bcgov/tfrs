@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import CallableModal from '../app/components/CallableModal'
 import * as Lang from '../constants/langEnUs'
 import { login } from '../actions/keycloakActions'
+import { IDENTITY_PROVIDERS } from '../constants/auth'
 
 class Login extends React.Component {
   constructor (props) {
@@ -48,7 +49,7 @@ class Login extends React.Component {
               <div className="oidc">
                 <button
                   type="button"
-                  onClick={() => login('bceid')}
+                  onClick={() => login(IDENTITY_PROVIDERS.BCEID_BUSINESS)}
                   id="link-bceid"
                   className="button"
                 >
@@ -59,7 +60,7 @@ class Login extends React.Component {
               <div className="oidc">
                 <button
                   type="button"
-                  onClick={() => login('idir')}
+                  onClick={() => login(IDENTITY_PROVIDERS.IDIR)}
                   id="link-idir"
                   className="button"
                 >
@@ -111,7 +112,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: (hint) => dispatch(login(hint))
+    login: (idpHint) => dispatch(login(idpHint))
   }
 }
 

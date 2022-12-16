@@ -15,7 +15,11 @@ import CONFIG from '../config'
 
 export default function * authenticationStateSaga (store) {
   yield put(resetAuth())
-  const { idToken, refreshToken } = store.getState().userAuth
+
+  const { idToken, refreshToken, expiry } = store.getState().userAuth
+  const now = Math.round(Date.now() / 1000)
+  const expired = now > expiry
+
   yield all([
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS, getBackendUser),
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS, getBackendUser),
@@ -30,7 +34,10 @@ export default function * authenticationStateSaga (store) {
 
   yield put(initKeycloak(kc))
 
-  if (idToken && refreshToken) {
+  yield put({ type: ActionTypes.LOGGING_IN })
+
+  if (idToken && refreshToken && !expired) {
+    // Refreshing existing token
     const refreshAuthenticated = yield kc.init({
       pkceMethod: 'S256',
       redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
@@ -45,6 +52,7 @@ export default function * authenticationStateSaga (store) {
       yield put(logout())
     }
   } else {
+    // Getting new token
     const authenticated = yield kc.init({
       pkceMethod: 'S256',
       redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
@@ -54,6 +62,7 @@ export default function * authenticationStateSaga (store) {
       yield put(loginKeycloakUserSuccess(kc.idToken, kc.refreshToken, kc.idTokenParsed.exp))
     }
   }
+  yield put({ type: ActionTypes.LOGGING_IN_DONE })
 }
 
 function * getBackendUser (action) {
@@ -64,8 +73,10 @@ function * getBackendUser (action) {
 export function * silentTokenRefreshSaga (store) {
   const state = store.getState()
   const { keycloak } = state.userAuth
-  const authenticated = yield keycloak.updateToken(5)
-  if (authenticated) {
-    yield put(loginKeycloakSilentRefreshSuccess(keycloak.idToken, keycloak.refreshToken, keycloak.idTokenParsed.exp))
+  if (keycloak) {
+    const authenticated = yield keycloak.updateToken(5)
+    if (authenticated) {
+      yield put(loginKeycloakSilentRefreshSuccess(keycloak.idToken, keycloak.refreshToken, keycloak.idTokenParsed.exp))
+    }
   }
 }

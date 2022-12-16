@@ -1,6 +1,6 @@
-import { put, takeLatest, delay } from 'redux-saga/effects'
+import { put, takeLatest, delay, call } from 'redux-saga/effects'
 import { logout } from '../actions/keycloakActions'
-// import { silentTokenRefreshSaga } from './authenticationState'
+import { silentTokenRefreshSaga } from './authenticationState'
 
 const NON_RESETTING_ACTIONS = [
   'RECEIVE_NOTIFICATIONS',
@@ -14,15 +14,24 @@ const NON_RESETTING_ACTIONS = [
 ]
 
 function * resetTimer (store) {
-  const { expiry } = store.getState().userAuth
+  const { keycloak, expiry } = store.getState().userAuth
+  if (!keycloak?.authenticated) {
+    return
+  }
+  // Check for expired token
   const now = Math.round(Date.now() / 1000)
   const timeLeft = (expiry - now) * 1000
-
+  if (timeLeft < 0) {
+    yield put(logout())
+  }
+  // Montior remaining session length
   yield put({ type: 'SESSION_TIMEOUT_RESET' })
-  yield delay(timeLeft - 60000) // 1 minute before expiry
+  yield delay(timeLeft - (30000)) // 30 seconds before expiry
+  yield call(silentTokenRefreshSaga, store) // silent refresh token
+  yield delay(timeLeft - 15000)
+  // If silent renew fails, we then show the continue session button
   yield put({ type: 'SESSION_TIMEOUT_WARNING' })
-  // yield call(silentTokenRefreshSaga, store) // left here for silent renew if wanted
-  yield delay(1 * 60 * 1000)
+  yield delay(15000)
   yield put({ type: 'SESSION_TIMEOUT_EXPIRED' })
   yield put(logout())
 }

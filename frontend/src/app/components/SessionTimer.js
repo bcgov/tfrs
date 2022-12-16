@@ -31,7 +31,7 @@ class SessionTimer extends Component {
               </h4>
             </div>
             <div className="modal-body">
-              <p>Your session will end in one minute. If you would like to continue working,
+              <p>Your session will end soon. If you would like to continue working,
                 please click Continue Session to extend your session.
               </p>
             </div>

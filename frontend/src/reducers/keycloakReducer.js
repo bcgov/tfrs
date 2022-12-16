@@ -15,7 +15,6 @@ const keycloakReducer = (state = {
       return {
         ...state,
         keycloak,
-        loggingIn: true,
         authenticated: keycloak.authenticated,
         errors: {}
       }
@@ -42,6 +41,12 @@ const keycloakReducer = (state = {
       return {
         ...state,
         loggingIn: true,
+        errors: {}
+      }
+    case ActionTypes.LOGGING_IN_DONE:
+      return {
+        ...state,
+        loggingIn: false,
         errors: {}
       }
     case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS:
@@ -85,6 +90,7 @@ const keycloakReducer = (state = {
         ...state,
         keycloak: null,
         authenticated: false,
+        loggingIn: false,
         errors: {}
       }
     default:
