@@ -784,7 +784,7 @@ class ComplianceReportingEditContainer extends Component {
               </div>
               <div>
                 <ReactMarkdown
-                  source={assertion.description.substr(1)}
+                  children={assertion.description.substr(1)}
                 />
               </div>
             </div>
