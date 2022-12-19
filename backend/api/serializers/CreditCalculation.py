@@ -151,7 +151,6 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         Gets the available fuel codes for the fuel type
         """
         fuel_codes = FuelCode.objects.filter(
-            fuel_id=obj.id,
             status__status="Approved"
         ).order_by(
             'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
