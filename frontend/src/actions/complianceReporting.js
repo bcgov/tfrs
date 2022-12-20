@@ -14,11 +14,14 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     this.recomputeHandler = this.recomputeHandler.bind(this)
     this.doRecompute = this.doRecompute.bind(this)
 
-    this.getSnapshotHandler = this.getSnapshotHandler.bind(this);
-    this.doGetSnapshot = this.doGetSnapshot.bind(this);
+    this.getSnapshotHandler = this.getSnapshotHandler.bind(this)
+    this.doGetSnapshot = this.doGetSnapshot.bind(this)
 
-    this.findPaginatedHandler = this.findPaginatedHandler.bind(this);
-    this.doFindPaginated = this.doFindPaginated.bind(this);
+    this.getDashboardHandler = this.getDashboardHandler.bind(this)
+    this.doGetDashboard = this.doGetDashboard.bind(this)
+
+    this.findPaginatedHandler = this.findPaginatedHandler.bind(this)
+    this.doFindPaginated = this.doFindPaginated.bind(this)
   }
 
   getCustomIdentityActions () {
@@ -26,8 +29,9 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       'VALIDATE', 'VALIDATE_SUCCESS',
       'RECOMPUTE', 'RECOMPUTE_SUCCESS',
       'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS',
+      'GET_DASHBOARD', 'GET_DASHBOARD_SUCCESS',
       'FIND_PAGINATED', 'FIND_PAGINATED_SUCCESS'
-    ];
+    ]
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -39,11 +43,12 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       isRecomputing: false,
       isGettingSnapshot: false,
       snapshotItem: null,
+      isGettingDashboard: false,
       recomputeResult: {},
       isFindingPaginated: false,
       paginatedItems: [],
       totalCount: 0
-    };
+    }
   }
 
   getCustomReducerMap () {
@@ -85,6 +90,16 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isGettingSnapshot: false,
         snapshotItem: action.payload
       })],
+      [this.getDashboard, (state, action) => ({
+        ...state,
+        isGettingDashboard: true,
+        items: null
+      })],
+      [this.getDashboardSuccess, (state, action) => ({
+        ...state,
+        isGettingDashboard: false,
+        items: action.payload
+      })],
       [this.findPaginated, (state, action) => ({
         ...state,
         isFindingPaginated: true,
@@ -113,9 +128,9 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   }
 
   findPaginatedStateSelector () {
-    const sn = this.stateName;
+    const sn = this.stateName
 
-    return state => (state.rootReducer[sn].findPaginatedState);
+    return state => (state.rootReducer[sn].findPaginatedState)
   }
 
   doValidate (data = null) {
@@ -170,23 +185,36 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     }
   }
 
+  doGetDashboard () {
+    return axios.get(`${this.baseUrl}/dashboard`)
+  }
+
+  * getDashboardHandler () {
+    try {
+      const response = yield call(this.doGetDashboard)
+      yield put(this.getDashboardSuccess(response.data))
+    } catch (error) {
+      yield put(this.error(error.response.data))
+    }
+  }
+
   doFindPaginated (data) {
-    const page = data.page;
-    const pageSize = data.pageSize;
+    const page = data.page
+    const pageSize = data.pageSize
     const filters = data.filters
-    return axios.post(`${this.baseUrl}/paginated?page=${page}&size=${pageSize}`, {filters: filters});
+    return axios.post(`${this.baseUrl}/paginated?page=${page}&size=${pageSize}`, { filters })
   }
 
   * findPaginatedHandler () {
-    yield delay(1000);
+    yield delay(1000)
 
-    const data = yield (select(this.findPaginatedStateSelector()));
+    const data = yield (select(this.findPaginatedStateSelector()))
 
     try {
-      const response = yield call(this.doFindPaginated, data);
-      yield put(this.findPaginatedSuccess(response.data));
+      const response = yield call(this.doFindPaginated, data)
+      yield put(this.findPaginatedSuccess(response.data))
     } catch (error) {
-      yield put(this.error(error.response.data));
+      yield put(this.error(error.response.data))
     }
   }
 
@@ -195,8 +223,9 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       takeLatest(this.validate, this.validateHandler),
       takeLatest(this.recompute, this.recomputeHandler),
       takeLatest(this.getSnapshot, this.getSnapshotHandler),
+      takeLatest(this.getDashboard, this.getDashboardHandler),
       takeLatest(this.findPaginated, this.findPaginatedHandler)
-    ];
+    ]
   }
 }
 

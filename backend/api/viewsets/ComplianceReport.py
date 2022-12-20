@@ -17,7 +17,8 @@ from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
     ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
-    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer
+    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer, \
+    ComplianceReportDashboardListSerializer
 from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
@@ -45,6 +46,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     serializer_class = ComplianceReportListSerializer
     serializer_classes = {
         'default': ComplianceReportListSerializer,
+        'dashboard': ComplianceReportDashboardListSerializer,
         'update': ComplianceReportUpdateSerializer,
         'partial_update': ComplianceReportUpdateSerializer,
         'validate_partial': ComplianceReportValidationSerializer,
@@ -98,6 +100,17 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 pass
 
         return qs
+
+    def get_simple_queryset(self):
+        """
+        This view should return a list of all the compliance reports
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        qs = ComplianceReportService.get_organization_compliance_reports(
+            user.organization)
+        return qs
+
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
@@ -319,3 +332,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         workbook.save(response)
 
         return response
+
+    @action(detail=False, methods=['get'])
+    def dashboard(self, request):
+        qs = self.get_simple_queryset()
+        serializer = self.get_serializer(qs, many=True, context={'request': request})
+        return Response(serializer.data)

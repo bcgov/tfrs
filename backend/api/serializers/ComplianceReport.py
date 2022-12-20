@@ -298,6 +298,44 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
                   'sort_date', 'original_report_id')
 
 
+class ComplianceReportDashboardListSerializer(serializers.ModelSerializer):
+    """
+    Dashboard List serializer for Compliance Reports
+    """
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
+    type = SlugRelatedField(slug_field='the_type', read_only=True)
+    supplemental_reports = SerializerMethodField()
+
+    def get_supplemental_reports(self, obj):
+        qs = obj.supplemental_reports.order_by('create_timestamp')
+        gov_org = Organization.objects.get(type=1)
+        organization = self.context['request'].user.organization
+
+        if organization == gov_org:
+            # If organization == Government
+            #  don't show "Draft" transactions
+            #  don't show "Deleted" transactions
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=[
+                    "Draft", "Deleted"
+                ])
+            )
+        else:
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+            )
+
+        return ComplianceReportDashboardListSerializer(
+            qs.all(),
+            read_only=True,
+            context=self.context,
+            many=True).data
+
+    class Meta:
+        model = ComplianceReport
+        fields = ('id', 'status', 'type', 'supplemental_reports')
+
+
 class ComplianceReportMinSerializer(serializers.ModelSerializer):
     """
     Basic Serializer for a Report (just shows the type and compliance period)

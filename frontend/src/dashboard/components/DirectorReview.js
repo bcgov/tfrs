@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router'
 const DirectorReview = (props) => {
   const {
     isFinding: fetchingComplianceReports,
+    isGettingDashboard: fetchingDashboard,
     items: complianceReports
   } = props.complianceReports
 
@@ -22,7 +23,7 @@ const DirectorReview = (props) => {
     items: creditTransfers
   } = props.creditTransfers
 
-  if (fetchingComplianceReports || fetchingCreditTransfers) {
+  if (fetchingComplianceReports || fetchingCreditTransfers || fetchingDashboard) {
     return <Loading />
   }
 
