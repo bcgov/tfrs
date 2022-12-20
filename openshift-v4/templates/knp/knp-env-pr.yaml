@@ -325,10 +325,10 @@ objects:
         - from:
             - podSelector:
                 matchLabels:
-                  app: tfrs-rabbitmq
+                  app.kubernetes.io/instance: tfrs-rabbitmq
           ports:
             - protocol: TCP
-              port: 5672  
+              port: 5672     
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
