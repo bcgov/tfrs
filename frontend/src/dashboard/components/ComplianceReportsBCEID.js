@@ -8,10 +8,10 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import { useNavigate } from 'react-router'
 
 const ComplianceReportsBCEID = (props) => {
-  const { isFetching, items } = props.complianceReports
+  const { isFetching, items, isGettingDashboard } = props.complianceReports
   const navigate = useNavigate()
 
-  if (isFetching) {
+  if (isFetching || isGettingDashboard) {
     return <Loading />
   }
 

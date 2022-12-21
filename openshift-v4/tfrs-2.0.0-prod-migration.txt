@@ -11,6 +11,18 @@
     3.2 Create secret tfrs-rabbitmq-app - done
     3.3 Create secret tfrs-object-storage - done
 
-4. Update config.js
+4. Update config.js - Done
 
-5. Apply knps
+5. Bring up maintanence page and make sure the prod url is redirected to the maintanence page
+
+6. Disable nagios 
+
+7. Bring down tfrs-clamav-prod and tfrs-prod-rabbitmq-cluster
+
+8. Apply knps
+
+9. Update the GitHub Action based pipeline to deploy on prod and limit two approvals
+
+10. Run the pipeline and approve the prod deployment
+
+11. Change the route back to the right URL, and bring down the maintanence page

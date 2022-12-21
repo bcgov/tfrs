@@ -107,7 +107,7 @@ class DashboardContainer extends Component {
     if (CONFIG.COMPLIANCE_REPORTING.ENABLED &&
     typeof this.props.loggedInUser.hasPermission === 'function' &&
     this.props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
-      this.props.getComplianceReports()
+      this.props.getDashboardRequest()
     }
   }
 
@@ -250,7 +250,7 @@ DashboardContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  getComplianceReports: PropTypes.func.isRequired,
+  getDashboardRequest: PropTypes.func.isRequired,
   getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   getFuelCodes: PropTypes.func.isRequired,
@@ -275,7 +275,7 @@ DashboardContainer.propTypes = {
 const mapDispatchToProps = ({
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
-  getComplianceReports: complianceReporting.find,
+  getDashboardRequest: complianceReporting.getDashboard,
   getCreditTransfersIfNeeded,
   getDocumentUploads,
   getFuelCodes,
