@@ -95,21 +95,35 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 # todo; same as the todo above
                                 pass
                             elif id == 'updateTimestamp':
-                                date_tuple = value.split('-')
-                                if len(date_tuple) > 0:
-                                    for i in range(len(date_tuple)):
-                                        d_value = date_tuple[i]
-                                        if not d_value:
-                                            continue
-                                        if i is 0:
-                                            qs = qs.filter(update_timestamp__year=(d_value))
-                                        if i is 1:
-                                            qs = qs.filter(update_timestamp__month=(d_value))
-                                        if i is 2:
-                                            qs = qs.filter(update_timestamp__day=(d_value))
-                                else:
-                                    qs = qs.filter(update_timestamp__year=(value))
+                                query = self.query_timestamp(value)
+                                qs = qs.filter(query)
         return qs
+
+
+    def query_timestamp(self, date):
+        date_query = None
+        date_tuple = date.split('-')
+        for i in range(len(date_tuple)):
+            date_value = date_tuple[i].replace(" ", "")
+            if not date_value:
+                continue
+
+            if i is 0:
+                query = Q(update_timestamp__year=(date_value))
+            elif i is 1:
+                query = Q(update_timestamp__month=(date_value))
+            elif i is 2:
+                query = Q(update_timestamp__day=(date_value))
+
+            if date_query == None:
+                date_query = query
+            else:
+                date_query = date_query & query
+
+        if date_query == None:
+            date_query = Q(update_timestamp__icontains=(date))
+        
+        return date_query
 
 
     def filter_compliance_status(self, qs, value):
