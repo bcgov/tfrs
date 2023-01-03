@@ -2,12 +2,9 @@
  Used to track feature configuration
 */
 const getConfig = (value, def) => {
-  // console.log("getConfig", value, def)
   if (global.tfrs_config) {
     return global.tfrs_config[value] || def
   }
-  console.log('getConfig AFTER', value, def)
-
   return def
 }
 

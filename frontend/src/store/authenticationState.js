@@ -37,6 +37,7 @@ export default function * authenticationStateSaga (store) {
   yield put({ type: ActionTypes.LOGGING_IN })
 
   if (idToken && refreshToken && !expired) {
+    console.log('Refreshing Token - Started')
     // Refreshing existing token
     const refreshAuthenticated = yield kc.init({
       pkceMethod: 'S256',
@@ -47,6 +48,7 @@ export default function * authenticationStateSaga (store) {
       refreshToken
     })
     if (refreshAuthenticated) {
+      console.log('Refreshing Token - Success')
       yield put(loginKeycloakRefreshSuccess(kc.refreshToken, kc.tokenParsed.exp))
     } else {
       yield put(logout())
@@ -71,12 +73,17 @@ function * getBackendUser (action) {
 }
 
 export function * silentTokenRefreshSaga (store) {
+  console.log('Silent Token Refresh - Started')
   const state = store.getState()
   const { keycloak } = state.userAuth
   if (keycloak) {
+    console.log('Silent Token Refresh - Authenticating')
     const authenticated = yield keycloak.updateToken(5)
     if (authenticated) {
+      console.log('Silent Token Refresh - Success')
       yield put(loginKeycloakSilentRefreshSuccess(keycloak.idToken, keycloak.refreshToken, keycloak.idTokenParsed.exp))
+    } else {
+      console.log('Silent Token Refresh - Failed')
     }
   }
 }

@@ -74,6 +74,7 @@ class AutocompletedInput extends Component {
   render () {
     return (
       <ReactSearchAutocomplete
+        autoFocus={true}
         autoComplete="off"
         getItemValue={this.props.getItemValue}
         inputProps={this.props.inputProps}
@@ -82,7 +83,7 @@ class AutocompletedInput extends Component {
         onSelect={this._onSelect}
         renderItem={this.props.renderItem}
         renderMenu={this.props.renderMenu}
-        ref={(input) => { this.props.handleRef && this.props.handleRef(input) }}
+        refs={(input) => { this.props.handleRef && this.props.handleRef(input) }} // todo: name changed to refs to avoid deprecation error, review for better solution
         renderInput={props => (
           <input
             type="text"
