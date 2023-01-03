@@ -11,10 +11,6 @@ class OrganizationAutocomplete extends PureComponent {
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
-  componentDidMount () {
-    this._input.focus()
-  }
-
   handleChange (e) {
     this.props.onChange(e.target.value)
   }

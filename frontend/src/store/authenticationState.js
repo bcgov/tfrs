@@ -82,6 +82,8 @@ export function * silentTokenRefreshSaga (store) {
     if (authenticated) {
       console.log('Silent Token Refresh - Success')
       yield put(loginKeycloakSilentRefreshSuccess(keycloak.idToken, keycloak.refreshToken, keycloak.idTokenParsed.exp))
+    } else {
+      console.log('Silent Token Refresh - Failed')
     }
   }
 }
