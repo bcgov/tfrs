@@ -21,17 +21,20 @@ function * resetTimer (store) {
   // Check for expired token
   const now = Math.round(Date.now() / 1000)
   const timeLeft = (expiry - now) * 1000
+  console.log('Session Time Left - ' + timeLeft / 1000)
   if (timeLeft < 0) {
     yield put(logout())
   }
   // Montior remaining session length
   yield put({ type: 'SESSION_TIMEOUT_RESET' })
   yield delay(timeLeft - (30000)) // 30 seconds before expiry
-  yield call(silentTokenRefreshSaga, store) // silent refresh token
-  yield delay(timeLeft - 15000)
+  yield call(silentTokenRefreshSaga, store)
+  yield delay(timeLeft - 15000) // 15 seconds before expiry
+  yield call(silentTokenRefreshSaga, store)
+  yield delay(timeLeft - 10000)
   // If silent renew fails, we then show the continue session button
   yield put({ type: 'SESSION_TIMEOUT_WARNING' })
-  yield delay(15000)
+  yield delay(60000)
   yield put({ type: 'SESSION_TIMEOUT_EXPIRED' })
   yield put(logout())
 }
