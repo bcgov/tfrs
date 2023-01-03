@@ -86,8 +86,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = qs.filter(Q(nickname__isnull=True) | Q(nickname__icontains=value))
                                 # possible todo: deal with case where generated nicknames are used
                             elif id == 'status':
-                                # todo; I think we'll just have to replicate the logic in ComplianceReportStatus.js here...
-                                pass
+                                qs = self.filter_compliance_status(qs, value.lower())
                             elif id == 'supplemental-status':
                                 # todo; same as the todo above, along with the fact that we'll have to somehow define (annotate)
                                 # a deepest_supplemental_report field (via some sort of aggregation) which we can then filter on
@@ -96,10 +95,65 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 # todo; same as the todo above
                                 pass
                             elif id == 'updateTimestamp':
-                                # the original frontend sorting used sortDate, which is a @property, not a database field
-                                pass
-
+                                date_tuple = value.split('-')
+                                if len(date_tuple) > 0:
+                                    for i in range(len(date_tuple)):
+                                        d_value = date_tuple[i]
+                                        if not d_value:
+                                            continue
+                                        if i is 0:
+                                            qs = qs.filter(update_timestamp__year=(d_value))
+                                        if i is 1:
+                                            qs = qs.filter(update_timestamp__month=(d_value))
+                                        if i is 2:
+                                            qs = qs.filter(update_timestamp__day=(d_value))
+                                else:
+                                    qs = qs.filter(update_timestamp__year=(value))
         return qs
+
+
+    def filter_compliance_status(self, qs, value):
+        if value in 'recommended':
+            return qs.filter(
+              (Q(status__manager_status__status__icontains=value) |
+              Q(status__analyst_status__status__icontains=value)) &
+              (~Q(status__director_status__status__icontains='Accepted') &
+              ~Q(status__director_status__status__icontains='Rejected'))
+            )
+
+        if value in 'supplemental requested':
+            return qs.filter(
+              Q(status__manager_status__status__icontains=value) |
+              Q(status__analyst_status__status__icontains=value)
+            )
+        if value in 'accepted':
+            return qs.filter(
+              Q(status__director_status__status__icontains=value)
+            )
+        if value in 'rejected':
+            return qs.filter(
+              Q(status__director_status__status__icontains=value)
+            )
+        if value in 'recommended acceptance - manager':
+            return qs.filter(
+              Q(status__manager_status__status__icontains=value)
+            )
+        if value in 'recommended rejection - manager':
+            return qs.filter(
+              Q(status__manager_status__status__icontains=value)
+            )
+        if value in 'recommended acceptance - analyst':
+            return qs.filter(
+              Q(status__analyst_status__status__icontains=value)
+            )
+        if value in 'recommended rejection - analyst':
+            return qs.filter(
+              Q(status__analyst_status__status__icontains=value)
+            )
+        return qs.filter(
+          Q(status__fuel_supplier_status__status__icontains=value)
+        )
+
 
     def get_simple_queryset(self):
         """
