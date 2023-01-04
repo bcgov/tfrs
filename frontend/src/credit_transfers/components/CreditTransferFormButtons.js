@@ -108,10 +108,11 @@ const CreditTransferFormButtons = props => {
           show={props.isCommenting || props.disabled.BTN_SIGN_2_2}
           title={props.isCommenting
             ? Lang.TEXT_COMMENT_DIRTY
+            : (props.disabled.inactiveSupplier ? props.disabled.organizationName + ' is not currently recognized as an active fuel supplier in TFRS and is not permitted to buy credits. Inactive suppliers are only permitted to sell credits.'
             : (props.permissions.BTN_SIGN_2_2
                 ? 'Signing Authority Declaration needs to be accepted'
                 : 'You must be assigned the Signing Authority role in order to sign and send ' +
-            'a Credit Transfer Proposal to the Low Carbon Fuels Branch')}
+            'a Credit Transfer Proposal to the Low Carbon Fuels Branch'))}
         >
           <button
             id="credit-transfer-accept"
@@ -248,7 +249,9 @@ CreditTransferFormButtons.propTypes = {
   disabled: PropTypes.shape({
     BTN_RECOMMEND: PropTypes.bool,
     BTN_SIGN_1_2: PropTypes.bool,
-    BTN_SIGN_2_2: PropTypes.bool
+    BTN_SIGN_2_2: PropTypes.bool,
+    organizationName: PropTypes.string,
+    inactiveSupplier: PropTypes.bool
   }),
   id: PropTypes.number.isRequired,
   isCommenting: PropTypes.bool,

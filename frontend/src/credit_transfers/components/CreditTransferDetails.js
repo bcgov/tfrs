@@ -189,8 +189,10 @@ const CreditTransferDetails = props => (
                   props.comments.length === 0,
                 BTN_SIGN_1_2: props.fields.terms.filter(term =>
                   term.value === true).length < props.signingAuthorityAssertions.items.length,
-                BTN_SIGN_2_2: props.fields.terms.filter(term =>
-                  term.value === true).length < props.signingAuthorityAssertions.items.length
+                BTN_SIGN_2_2: props.loggedInUser.organization.statusDisplay !== 'Active' ? true : props.fields.terms.filter(term =>
+                  term.value === true).length < props.signingAuthorityAssertions.items.length,
+                organizationName: props.loggedInUser.organization.name,
+                inactiveSupplier: props.loggedInUser.organization.statusDisplay !== 'Active'
               }
             }
             id={props.id}
