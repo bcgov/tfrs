@@ -2,8 +2,8 @@ amqp==2.6.1
 asgiref==3.5.2
 backports.zoneinfo==0.2.1
 billiard==3.5.0.5
-celery==4.2.0
-certifi==2022.9.24
+celery==5.2.2
+certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
 coreapi==2.3.3
