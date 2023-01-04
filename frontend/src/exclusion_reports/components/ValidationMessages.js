@@ -1,105 +1,105 @@
-import React, { Component } from 'react';
-import { Collapse } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { Collapse } from 'react-bootstrap'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 class ValidationMessages extends Component {
   static getOtherSchedulesErrorMessage (validationMessages) {
-    let message = 'Errors found in ';
+    let message = 'Errors found in '
     if (validationMessages.exclusionAgreement) {
-      message += 'Exclusion Agreement, ';
+      message += 'Exclusion Agreement, '
     }
     // find the last comma and get rid of it
     // (this enables us not to get into a really complicated if else condition
     // as we'll always get a comma at the end)
-    const lastComma = message.lastIndexOf(', ');
-    message = message.substring(0, lastComma);
+    const lastComma = message.lastIndexOf(', ')
+    message = message.substring(0, lastComma)
 
-    message = message.replace(/,([^,]*)$/, ' and$1'); // replace last comma with "and"
+    message = message.replace(/,([^,]*)$/, ' and$1') // replace last comma with "and"
 
-    return message;
+    return message
   }
 
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       collapsed: true
-    };
+    }
 
-    this._getClassNames = this._getClassNames.bind(this);
-    this._toggleErrorMessages = this._toggleErrorMessages.bind(this);
-    this._validateExclusionAgreement = this._validateExclusionAgreement.bind(this);
+    this._getClassNames = this._getClassNames.bind(this)
+    this._toggleErrorMessages = this._toggleErrorMessages.bind(this)
+    this._validateExclusionAgreement = this._validateExclusionAgreement.bind(this)
   }
 
   _getClassNames (valid = true) {
     if (this.props.validating) {
-      return 'panel panel-warning';
+      return 'panel panel-warning'
     }
 
     if (valid) {
-      return 'panel panel-success';
+      return 'panel panel-success'
     }
 
-    return 'panel panel-danger';
+    return 'panel panel-danger'
   }
 
   _toggleErrorMessages () {
-    const collapsed = !this.state.collapsed;
+    const collapsed = !this.state.collapsed
 
     this.setState({
       collapsed
-    });
+    })
   }
 
   _validateExclusionAgreement () {
-    const errorMessages = [];
+    const errorMessages = []
 
     if (!this.props.valid &&
       this.props.validationMessages &&
       !this.props.validationMessages.exclusionAgreement) {
-      const { validationMessages } = this.props;
-      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
-      errorMessages.push(message);
+      const { validationMessages } = this.props
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages)
+      errorMessages.push(message)
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.exclusionAgreement &&
       this.props.validationMessages.exclusionAgreement.records
     ) {
       this.props.validationMessages.exclusionAgreement.records.forEach((record) => {
-        let errorCount = Object.keys(record).length;
+        let errorCount = Object.keys(record).length
 
         if ('quantity' in record) {
-          const message = 'The quantity of fuel cannot be zero, negative, or contain a decimal value.';
+          const message = 'The quantity of fuel cannot be zero, negative, or contain a decimal value.'
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
-            errorMessages.push(message);
+            errorMessages.push(message)
           }
 
-          errorCount -= 1;
+          errorCount -= 1
         }
 
         if ('quantityNotSold' in record) {
-          const message = 'The quantity of fuel not sold cannot be negative, contain a decimal value, or be greater than the quantity.';
+          const message = 'The quantity of fuel not sold cannot be negative, contain a decimal value, or be greater than the quantity.'
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
-            errorMessages.push(message);
+            errorMessages.push(message)
           }
 
-          errorCount -= 1;
+          errorCount -= 1
         }
 
         // if we still have errors after checking
         // that means we're missing some columns (it's very tedious and unnecessary to check each
         // column for missing information)
         if (errorCount > 0) {
-          const message = 'There is missing information, please ensure all fields are completed.';
+          const message = 'There is missing information, please ensure all fields are completed.'
 
           if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
-            errorMessages.push(message);
+            errorMessages.push(message)
           }
         }
-      });
+      })
     }
 
     if (
@@ -107,38 +107,38 @@ class ValidationMessages extends Component {
       this.props.validationMessages.exclusionAgreement &&
       Array.isArray(this.props.validationMessages.exclusionAgreement)
     ) {
-      const message = 'There are duplicate entries, please combine the quantity into a single value on one row.';
+      const message = 'There are duplicate entries, please combine the quantity into a single value on one row.'
 
       if (errorMessages.findIndex(errorMessage => errorMessage === message) < 0) {
-        errorMessages.push(message);
+        errorMessages.push(message)
       }
     }
 
-    return errorMessages;
+    return errorMessages
   }
 
   _validateSchedules () {
-    const errorMessages = [];
+    const errorMessages = []
 
     if (!this.props.valid &&
       this.props.validationMessages) {
-      const { validationMessages } = this.props;
-      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages);
-      errorMessages.push(message);
+      const { validationMessages } = this.props
+      const message = ValidationMessages.getOtherSchedulesErrorMessage(validationMessages)
+      errorMessages.push(message)
     }
 
-    return errorMessages;
+    return errorMessages
   }
 
   render () {
-    let errorMessages = [];
+    let errorMessages = []
 
     switch (this.props.scheduleType) {
       case 'exclusion-agreement':
-        errorMessages = this._validateExclusionAgreement();
-        break;
+        errorMessages = this._validateExclusionAgreement()
+        break
       default:
-        errorMessages = this._validateSchedules();
+        errorMessages = this._validateSchedules()
     }
 
     return (
@@ -205,14 +205,14 @@ class ValidationMessages extends Component {
           </div>
         </Collapse>
       </div>
-    );
+    )
   }
 }
 
 ValidationMessages.defaultProps = {
   activeSheet: 0,
   validationMessages: null
-};
+}
 
 ValidationMessages.propTypes = {
   activeSheet: PropTypes.number,
@@ -222,6 +222,6 @@ ValidationMessages.propTypes = {
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
-};
+}
 
-export default ValidationMessages;
+export default ValidationMessages

@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Modal from '../../app/components/Modal';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Modal from '../../app/components/Modal'
 
 const RoundedNumericSpan = props => (
-  (props.value &&
-    <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span> ||
+  ((props.value &&
+    <span>{Number(props.value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>) ||
     <span><i>pending</i></span>
   )
-);
+)
 
 class ScheduleBGHGeniusProvisionModal extends React.Component {
   render () {
@@ -15,16 +15,16 @@ class ScheduleBGHGeniusProvisionModal extends React.Component {
       filteredSelections = this.props.availableSelections.filter((sel) => {
         if (this.props.matchFuelClass) {
           if (this.props.matchFuelClass !== sel.fuelClass) {
-            return false;
+            return false
           }
         }
         if (this.props.matchFuelType) {
           if (this.props.matchFuelType !== sel.fuelType) {
-            return false;
+            return false
           }
         }
-        return true;
-      });
+        return true
+      })
 
     return (
       <Modal
@@ -59,7 +59,7 @@ class ScheduleBGHGeniusProvisionModal extends React.Component {
           </div>
         </div>
       </Modal>
-    );
+    )
   }
 }
 
@@ -67,7 +67,7 @@ ScheduleBGHGeniusProvisionModal.defaultProps = {
   matchFuelType: null,
   matchFuelClass: null,
   handleCancel: null
-};
+}
 
 ScheduleBGHGeniusProvisionModal.propTypes = {
   availableSelections: PropTypes.arrayOf(PropTypes.shape({
@@ -79,6 +79,6 @@ ScheduleBGHGeniusProvisionModal.propTypes = {
   matchFuelClass: PropTypes.string,
   handleSelection: PropTypes.func.isRequired,
   handleCancel: PropTypes.func
-};
+}
 
-export default ScheduleBGHGeniusProvisionModal;
+export default ScheduleBGHGeniusProvisionModal

@@ -1,24 +1,24 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Dropzone from 'react-dropzone';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Dropzone from 'react-dropzone'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import CONFIG from '../../config';
-import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
+import CONFIG from '../../config'
+import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions'
 
 class SecureFileSubmissionFormDetails extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this.documentType = null;
-    this.rejectedFiles = [];
+    this.documentType = null
+    this.rejectedFiles = []
 
-    this._onDrop = this._onDrop.bind(this);
-    this._removeAttachment = this._removeAttachment.bind(this);
-    this._removeFile = this._removeFile.bind(this);
+    this._onDrop = this._onDrop.bind(this)
+    this._removeAttachment = this._removeAttachment.bind(this)
+    this._removeFile = this._removeFile.bind(this)
   }
 
   _getPlaceholders (documentType) {
@@ -26,85 +26,85 @@ class SecureFileSubmissionFormDetails extends Component {
       return {
         titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
-      };
+      }
     }
 
     if (this.props.documentType && this.props.documentType.theType === 'Evidence') {
       return {
         titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
-      };
+      }
     }
 
     if (this.props.documentType && this.props.documentType.theType === 'Records') {
       return {
         titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-      };
+      }
     }
 
     return {
       titlePlaceholder: '',
       commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-    };
+    }
   }
 
   _onDrop (files) {
-    const acceptedFiles = validateFiles(files);
-    const rejectedFiles = files.filter(file => !acceptedFiles.includes(file));
+    const acceptedFiles = validateFiles(files)
+    const rejectedFiles = files.filter(file => !acceptedFiles.includes(file))
 
     const attachedFiles = [
       ...this.props.fields.files,
       ...acceptedFiles
-    ];
+    ]
 
     const newFiles = attachedFiles.filter((item, position, arr) => (
       arr.findIndex(existingItem => (
-        existingItem.name === item.name)) === position));
+        existingItem.name === item.name)) === position))
 
     this.props.handleInputChange({
       target: {
         name: 'files',
         value: newFiles
       }
-    });
+    })
 
     this.rejectedFiles = [
       ...this.rejectedFiles,
       ...rejectedFiles
-    ];
+    ]
   }
 
   _removeAttachment (attachment) {
-    const found = this.props.fields.attachments.findIndex(item => (item === attachment));
-    this.props.fields.attachments.splice(found, 1);
+    const found = this.props.fields.attachments.findIndex(item => (item === attachment))
+    this.props.fields.attachments.splice(found, 1)
 
-    const attachedFiles = this.props.fields.attachments;
+    const attachedFiles = this.props.fields.attachments
 
     this.props.handleInputChange({
       target: {
         name: 'attachments',
         value: attachedFiles
       }
-    });
+    })
   }
 
   _removeFile (file) {
-    const found = this.props.fields.files.findIndex(item => (item === file));
-    this.props.fields.files.splice(found, 1);
+    const found = this.props.fields.files.findIndex(item => (item === file))
+    this.props.fields.files.splice(found, 1)
 
-    const attachedFiles = this.props.fields.files;
+    const attachedFiles = this.props.fields.files
 
     this.props.handleInputChange({
       target: {
         name: 'files',
         value: attachedFiles
       }
-    });
+    })
   }
 
   render () {
-    const { titlePlaceholder, commentPlaceholder } = this._getPlaceholders(this.documentType);
+    const { titlePlaceholder, commentPlaceholder } = this._getPlaceholders(this.documentType)
 
     return (
       <div className="credit-transaction-request-form-details">
@@ -345,14 +345,14 @@ class SecureFileSubmissionFormDetails extends Component {
           <div className="form-group col-md-12">{this.props.children}</div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 SecureFileSubmissionFormDetails.defaultProps = {
   children: null,
   edit: false
-};
+}
 
 SecureFileSubmissionFormDetails.propTypes = {
   children: PropTypes.oneOfType([
@@ -384,6 +384,6 @@ SecureFileSubmissionFormDetails.propTypes = {
     title: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired
-};
+}
 
-export default SecureFileSubmissionFormDetails;
+export default SecureFileSubmissionFormDetails

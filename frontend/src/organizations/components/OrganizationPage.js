@@ -1,15 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import history from '../../app/History';
-import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
-import OrganizationDetails from './OrganizationDetails';
-import OrganizationMembers from './OrganizationMembers';
+import Loading from '../../app/components/Loading'
+import * as Lang from '../../constants/langEnUs'
+import OrganizationDetails from './OrganizationDetails'
+import OrganizationMembers from './OrganizationMembers'
+import { useNavigate } from 'react-router'
 
 const OrganizationPage = (props) => {
-  const { isFetching, details } = props.organization;
+  const navigate = useNavigate()
+  const { isFetching, details } = props.organization
 
   return (
     <div className="page_organization">
@@ -32,7 +33,7 @@ const OrganizationPage = (props) => {
         >
           <button
             className="btn btn-default"
-            onClick={() => history.goBack()}
+            onClick={() => navigate(-1)}
             type="button"
           >
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
@@ -40,8 +41,8 @@ const OrganizationPage = (props) => {
         </div>
       ]}
     </div>
-  );
-};
+  )
+}
 
 OrganizationPage.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
@@ -69,6 +70,6 @@ OrganizationPage.propTypes = {
     }),
     isFetching: PropTypes.bool
   }).isRequired
-};
+}
 
-export default OrganizationPage;
+export default OrganizationPage

@@ -1,11 +1,11 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import NotificationsTable from './NotificationsTable';
+import NotificationsTable from './NotificationsTable'
 
 const NotificationsDetails = props => (
   <div className="page_notifications">
@@ -62,9 +62,16 @@ const NotificationsDetails = props => (
       toggleCheck={props.toggleCheck}
       updateNotification={props.updateNotification}
       isFetching={props.isFetching}
+      notificationsCount={props.notificationsCount}
+      page={props.page}
+      pageSize={props.pageSize}
+      filters={props.filters}
+      handlePageChange={props.handlePageChange}
+      handlePageSizeChange={props.handlePageSizeChange}
+      handleFiltersChange={props.handleFiltersChange}
     />
   </div>
-);
+)
 
 NotificationsDetails.propTypes = {
   fields: PropTypes.shape({
@@ -76,7 +83,14 @@ NotificationsDetails.propTypes = {
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
   updateNotification: PropTypes.func.isRequired,
-  updateNotifications: PropTypes.func.isRequired
-};
+  updateNotifications: PropTypes.func.isRequired,
+  notificationsCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired
+}
 
-export default NotificationsDetails;
+export default NotificationsDetails

@@ -1,11 +1,14 @@
-// defaults
+// local dev defaults
 
 window.tfrs_config = {
-  'keycloak.authority': 'http://localhost:8888/auth/realms/tfrs',
-  'keycloak.client_id': 'tfrs-app',
-  'keycloak.callback_url': 'http://localhost:5001/authCallback',
-  'keycloak.post_logout_url': 'http://localhost:5001/',
-  'debug.enabled': true,
+  api_base: 'http://localhost:8000/api',
+  'keycloak.realm': 'standard',
+  'keycloak.client_id': 'tfrs-on-gold-4308',
+  'keycloak.auth_url': 'https://dev.loginproxy.gov.bc.ca/auth',
+  'keycloak.callback_url': 'http://localhost:3000/',
+  'keycloak.post_logout_url': 'http://localhost:3000/',
+  'keycloak.siteminder_logout_url': 'https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl=',
+  'debug.enabled': false,
   'secure_document_upload.enabled': true,
   'secure_document_upload.max_file_size': 50000000,
   'fuel_codes.enabled': true,
@@ -14,4 +17,4 @@ window.tfrs_config = {
   'compliance_reporting.enabled': true,
   'credit_calculation_api.enabled': true,
   'exclusion_reports.enabled': true
-};
+}

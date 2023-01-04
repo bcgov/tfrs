@@ -1,27 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../app/components/Loading';
-import history from '../../app/History';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import CONFIG from '../../config';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
+import Loading from '../../app/components/Loading'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import CONFIG from '../../config'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
+import { useNavigate } from 'react-router'
 
 const DirectorReview = (props) => {
   const {
-    isFetching: fetchingComplianceReports,
+    isFinding: fetchingComplianceReports,
+    isGettingDashboard: fetchingDashboard,
     items: complianceReports
-  } = props.complianceReports;
+  } = props.complianceReports
+
+  const navigate = useNavigate()
 
   const {
-    isFetching: fetchingCreditTransfers,
+    isFinding: fetchingCreditTransfers,
     items: creditTransfers
-  } = props.creditTransfers;
+  } = props.creditTransfers
 
-  if (fetchingComplianceReports || fetchingCreditTransfers) {
-    return <Loading />;
+  if (fetchingComplianceReports || fetchingCreditTransfers || fetchingDashboard) {
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -30,55 +33,57 @@ const DirectorReview = (props) => {
     exclusionReports: 0,
     part3Awards: 0,
     total: 0
-  };
+  }
 
   if (CONFIG.COMPLIANCE_REPORTING.ENABLED &&
   typeof props.loggedInUser.hasPermission === 'function' &&
   props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)) {
     complianceReports.forEach((item) => {
-      let { status } = item;
-      const { supplementalReports, type } = item;
+      let { status } = item
+      const { supplementalReports, type } = item
 
       if (supplementalReports.length > 0) {
-        let [deepestSupplementalReport] = supplementalReports;
+        let [deepestSupplementalReport] = supplementalReports
 
         while (deepestSupplementalReport.supplementalReports &&
           deepestSupplementalReport.supplementalReports.length > 0) {
-          [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
+          [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports
         }
-        ({ status } = deepestSupplementalReport);
+        ({ status } = deepestSupplementalReport)
       }
 
       if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
       status.directorStatus === 'Unreviewed') {
         if (type === 'Compliance Report') {
-          awaitingReview.complianceReports += 1;
-          awaitingReview.total += 1;
+          awaitingReview.complianceReports += 1
+          awaitingReview.total += 1
         }
 
         if (type === 'Exclusion Report' && CONFIG.COMPLIANCE_REPORTING.ENABLED) {
-          awaitingReview.exclusionReports += 1;
-          awaitingReview.total += 1;
+          awaitingReview.exclusionReports += 1
+          awaitingReview.total += 1
         }
       }
-    });
+    })
   }
 
   if (typeof props.loggedInUser.hasPermission === 'function' &&
   props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) {
     creditTransfers.forEach((item) => {
-      if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
-        if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-          awaitingReview.creditTransfers += 1;
-          awaitingReview.total += 1;
-        }
+      if (!item.isRescinded) {
+        if (['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0) {
+          if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
+            awaitingReview.creditTransfers += 1
+            awaitingReview.total += 1
+          }
 
-        if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
-          awaitingReview.part3Awards += 1;
-          awaitingReview.total += 1;
+          if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
+            awaitingReview.part3Awards += 1
+            awaitingReview.total += 1
+          }
         }
       }
-    });
+    })
   }
 
   return (
@@ -107,9 +112,9 @@ const DirectorReview = (props) => {
                 }, {
                   id: 'status',
                   value: 'Reviewed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -134,9 +139,9 @@ const DirectorReview = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Manager'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -160,9 +165,9 @@ const DirectorReview = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Manager'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -185,9 +190,9 @@ const DirectorReview = (props) => {
                 }, {
                   id: 'status',
                   value: 'Reviewed'
-                }], 'credit-transfers');
+                }], 'credit-transfers')
 
-                return history.push(CREDIT_TRANSACTIONS.LIST);
+                return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
@@ -198,11 +203,11 @@ const DirectorReview = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 DirectorReview.defaultProps = {
-};
+}
 
 DirectorReview.propTypes = {
   complianceReports: PropTypes.shape({
@@ -215,6 +220,6 @@ DirectorReview.propTypes = {
   }).isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default DirectorReview;
+export default DirectorReview

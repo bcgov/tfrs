@@ -2,55 +2,55 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Loading from '../../app/components/Loading';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import Loading from '../../app/components/Loading'
 
-import { deleteFuelCode, getFuelCode } from '../../actions/fuelCodes';
-import Modal from '../../app/components/Modal';
-import history from '../../app/History';
-import FuelCodeDetails from './components/FuelCodeDetails';
-import { FUEL_CODES } from '../../constants/routes/Admin';
-import toastr from '../../utils/toastr';
+import { deleteFuelCode, getFuelCode } from '../../actions/fuelCodes'
+import Modal from '../../app/components/Modal'
+import FuelCodeDetails from './components/FuelCodeDetails'
+import { FUEL_CODES } from '../../constants/routes/Admin'
+import toastr from '../../utils/toastr'
+import { withRouter } from '../../utils/withRouter'
 
 class FuelCodeDetailContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
-    };
+    }
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id)
   }
 
   loadData (id) {
-    this.props.getFuelCode(id);
+    this.props.getFuelCode(id)
   }
 
   _handleDelete (event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { id } = this.props.fuelCode.item;
+    const { id } = this.props.fuelCode.item
 
     this.props.deleteFuelCode(id).then(() => {
-      history.push(FUEL_CODES.LIST);
-      toastr.fuelCodeSuccess('Cancelled');
-    });
+      this.props.navigate(FUEL_CODES.LIST)
+      toastr.fuelCodeSuccess('Cancelled')
+    })
 
-    return true;
+    return true
   }
 
   render () {
     const {
       errors, item, isFetching, success
-    } = this.props.fuelCode;
+    } = this.props.fuelCode
 
     if (isFetching) {
-      return <Loading />;
+      return <Loading />
     }
 
     if (success || (!isFetching && Object.keys(errors).length > 0)) {
@@ -67,15 +67,15 @@ class FuelCodeDetailContainer extends Component {
         >
           Are you sure you want to delete this draft?
         </Modal>
-      ]);
+      ])
     }
 
-    return <Loading />;
+    return <Loading />
   }
 }
 
 FuelCodeDetailContainer.defaultProps = {
-};
+}
 
 FuelCodeDetailContainer.propTypes = {
   deleteFuelCode: PropTypes.func.isRequired,
@@ -96,15 +96,13 @@ FuelCodeDetailContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   referenceData: PropTypes.shape({
     fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   fuelCode: {
@@ -117,14 +115,14 @@ const mapStateToProps = state => ({
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   deleteFuelCode: bindActionCreators(deleteFuelCode, dispatch),
   getFuelCode: bindActionCreators(getFuelCode, dispatch)
-});
+})
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FuelCodeDetailContainer);
+)(withRouter(FuelCodeDetailContainer))

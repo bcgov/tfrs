@@ -52,6 +52,6 @@ const EXCLUSION_REPORTS_NOTIFICATIONS = [{
   description: 'Rejected',
   key: 'rejected',
   recipients: ['fuel_supplier', 'government']
-}];
+}]
 
-export default EXCLUSION_REPORTS_NOTIFICATIONS;
+export default EXCLUSION_REPORTS_NOTIFICATIONS

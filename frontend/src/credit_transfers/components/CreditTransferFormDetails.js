@@ -1,13 +1,13 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values';
-import InputWithTooltip from '../../app/components/InputWithTooltip';
+import * as NumberFormat from '../../constants/numeralFormats'
+import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values'
+import InputWithTooltip from '../../app/components/InputWithTooltip'
 
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
@@ -16,7 +16,7 @@ class CreditTransferFormDetails extends Component {
       this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
       this.props.fields.fairMarketValuePerCredit !== null &&
       parseFloat(this.props.fields.fairMarketValuePerCredit) === 0
-    );
+    )
   }
 
   render () {
@@ -110,7 +110,9 @@ class CreditTransferFormDetails extends Component {
                     key={zd.description}
                     type="button"
                     className={`btn btn-default ${(this.props.fields.zeroDollarReason &&
-                      this.props.fields.zeroDollarReason.id === zd.id) ? 'active' : ''}`}
+                      this.props.fields.zeroDollarReason.id === zd.id)
+? 'active'
+: ''}`}
                     value={zd.id}
                     name="zeroDollarReason"
                     onClick={this.props.handleInputChange}
@@ -125,13 +127,13 @@ class CreditTransferFormDetails extends Component {
           {this.props.children}
         </div>
       </div>
-    );
+    )
   }
 }
 
 CreditTransferFormDetails.defaultProps = {
   children: null
-};
+}
 
 CreditTransferFormDetails.propTypes = {
   children: PropTypes.oneOfType([
@@ -166,6 +168,6 @@ CreditTransferFormDetails.propTypes = {
     })
   }).isRequired,
   totalValue: PropTypes.number.isRequired
-};
+}
 
-export default CreditTransferFormDetails;
+export default CreditTransferFormDetails

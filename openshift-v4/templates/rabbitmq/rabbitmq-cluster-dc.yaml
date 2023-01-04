@@ -228,12 +228,12 @@ objects:
 #            timeoutSeconds: 10
           readinessProbe:
             exec:
-              command: ["rabbitmqctl", "node_health_check", "--timeout", "10"]
+              command: ["rabbitmqctl", "node_health_check", "--timeout", "100"]
             failureThreshold: 3
             initialDelaySeconds: 60
-            periodSeconds: 10
+            periodSeconds: 120
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 110
           env:
           - name: RABBITMQ_DEFAULT_USER
             valueFrom:

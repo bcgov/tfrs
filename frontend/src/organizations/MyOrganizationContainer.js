@@ -3,37 +3,31 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { getMyOrganizationMembers } from '../actions/organizationActions';
-import OrganizationDetails from './components/OrganizationDetails';
-import OrganizationMembers from './components/OrganizationMembers';
+import { getMyOrganizationMembers } from '../actions/organizationActions'
+import OrganizationDetails from './components/OrganizationDetails'
+import OrganizationMembers from './components/OrganizationMembers'
 
-class MyOrganizationContainer extends Component {
-  componentDidMount () {
-    this.loadData();
-  }
+const MyOrganizationContainer = props => {
+  useEffect(() => {
+    props.getMyOrganizationMembers()
+  }, [])
 
-  loadData () {
-    this.props.getMyOrganizationMembers();
-  }
-
-  render () {
-    return ([
-      <OrganizationDetails
-        key="details"
-        loggedInUser={this.props.loggedInUser}
-        organization={this.props.loggedInUser.organization}
-      />,
-      <OrganizationMembers
-        key="members"
-        loggedInUser={this.props.loggedInUser}
-        members={this.props.myOrganizationMembers}
-      />
-    ]);
-  }
+  return ([
+    <OrganizationDetails
+      key="details"
+      loggedInUser={props.loggedInUser}
+      organization={props.loggedInUser.organization}
+    />,
+    <OrganizationMembers
+      key="members"
+      loggedInUser={props.loggedInUser}
+      members={props.myOrganizationMembers}
+    />
+  ])
 }
 
 MyOrganizationContainer.propTypes = {
@@ -61,7 +55,7 @@ MyOrganizationContainer.propTypes = {
       })
     }))
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
@@ -69,12 +63,12 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getMyOrganizationMembers: () => {
-    dispatch(getMyOrganizationMembers());
+    dispatch(getMyOrganizationMembers())
   }
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyOrganizationContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrganizationContainer)

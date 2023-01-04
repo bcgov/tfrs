@@ -1,23 +1,23 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import React from 'react'
+import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
 
-import 'react-table/react-table.css';
+import 'react-table/react-table.css'
 
-import ReactTable from '../../../app/components/StateSavingReactTable';
+import ReactTable from '../../../app/components/StateSavingReactTable'
 
 const PastAndFutureValuesTable = (props) => {
-  const valueColumns = [];
+  const valueColumns = []
 
   if (props.includeDensity) {
     valueColumns.push({
       accessor: item => item.density.toFixed(2),
       Header: `Density MJ/${props.densityUnit}`,
       id: 'density'
-    });
+    })
   }
 
   if (props.includeLimit) {
@@ -25,7 +25,7 @@ const PastAndFutureValuesTable = (props) => {
       accessor: item => item.density.toFixed(2),
       Header: 'Limit (gCO₂e/MJ)',
       id: 'limit'
-    });
+    })
   }
 
   if (props.includeFuelClass) {
@@ -33,7 +33,7 @@ const PastAndFutureValuesTable = (props) => {
       accessor: item => item.fuelClass,
       Header: 'Fuel Class',
       id: 'fuel-class'
-    });
+    })
   }
 
   if (props.includeRatio) {
@@ -41,7 +41,7 @@ const PastAndFutureValuesTable = (props) => {
       accessor: item => item.ratio.toFixed(1),
       Header: 'Ratio',
       id: 'ratio'
-    });
+    })
   }
 
   const dateColumns = [{
@@ -59,18 +59,20 @@ const PastAndFutureValuesTable = (props) => {
     className: 'col-date',
     Header: 'Updated',
     id: 'create-timestamp'
-  }];
+  }]
 
-  const columns = [...valueColumns, ...dateColumns];
+  const columns = [...valueColumns, ...dateColumns]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -88,8 +90,8 @@ const PastAndFutureValuesTable = (props) => {
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
-  );
-};
+  )
+}
 
 PastAndFutureValuesTable.defaultProps = {
   includeDensity: false,
@@ -97,7 +99,7 @@ PastAndFutureValuesTable.defaultProps = {
   includeRatio: false,
   includeFuelClass: false,
   densityUnit: ''
-};
+}
 
 PastAndFutureValuesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -106,6 +108,6 @@ PastAndFutureValuesTable.propTypes = {
   includeRatio: PropTypes.bool,
   includeFuelClass: PropTypes.bool,
   densityUnit: PropTypes.string
-};
+}
 
-export default PastAndFutureValuesTable;
+export default PastAndFutureValuesTable

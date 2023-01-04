@@ -1,0 +1,108 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: tfrs-network-policy
+metadata:
+  name: tfrs-network-policy
+parameters:
+  - name: SUFFIX
+    displayName: null
+    description: sample is -dev-97
+    required: true  
+  - name: ENVIRONMENT
+    displayName: null
+    description: such as dev, test or prod
+    required: true  
+objects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-tfrs-rabbitmq-accepts-${ENVIRONMENT}
+    spec:
+      ## Allow rabbitmq to accept communications from notification server
+      ## Allow rabbitmq to accept communications from backend
+      ## Allow rabbitmq to accept communications from scan handler
+      ## Allow rabbitmq to accept communications from scan coordinator
+      ## Allow rabbitmq to accept communications from nagios
+      ## Allow rabbitmq to accept communications from celery
+      ## Allow rabbitmq to accept communications from other rabbitmq pods
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: tfrs-rabbitmq
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-notification-server${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 5672          
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-backend${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 5672            
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-scan-handler${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 5432      
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-scan-coordinator${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 5672   
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: nagios
+          ports:
+            - protocol: TCP
+              port: 5672                             
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-celery${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 5672           
+        - from:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: tfrs-rabbitmq
+          ports:
+            - protocol: TCP
+              port: 5672     
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-tfrs-clamav-accepts-${ENVIRONMENT}
+    spec:
+      ## Allow clamav to accept communications from scan coordinator
+      ## Allow clamav to accept communications from backend
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: tfrs-clamav
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-scan-coordinator${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 3310     
+        - from:
+            - podSelector:
+                matchLabels:
+                  name: tfrs-backend${SUFFIX}
+          ports:
+            - protocol: TCP
+              port: 3310        
+

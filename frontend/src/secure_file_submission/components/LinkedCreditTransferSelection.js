@@ -1,14 +1,14 @@
-import React from 'react';
-import moment from 'moment-timezone';
-import numeral from 'numeral';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import moment from 'moment-timezone'
+import numeral from 'numeral'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import * as NumberFormat from '../../constants/numeralFormats';
-import filterNumber from '../../utils/filters';
-import ReactTable from '../../app/components/StateSavingReactTable';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
+import * as NumberFormat from '../../constants/numeralFormats'
+import filterNumber from '../../utils/filters'
+import ReactTable from '../../app/components/StateSavingReactTable'
 
 const LinkedCreditTransferSelection = (props) => {
   const columns = [{
@@ -32,16 +32,18 @@ const LinkedCreditTransferSelection = (props) => {
   }, {
     accessor: item => ([
       CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
-    ].includes(item.type.id) ? '' : item.creditsFrom.name),
+    ].includes(item.type.id)
+      ? ''
+      : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     },
     Header: 'Credits From',
     id: 'creditsFrom',
@@ -52,10 +54,10 @@ const LinkedCreditTransferSelection = (props) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     },
     Header: 'Credits To',
     id: 'creditsTo',
@@ -73,10 +75,10 @@ const LinkedCreditTransferSelection = (props) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return -1; // this is to fix sorting (value can't be negative)
+        return -1 // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.fairMarketValuePerCredit);
+      return parseFloat(item.fairMarketValuePerCredit)
     },
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
@@ -90,8 +92,8 @@ const LinkedCreditTransferSelection = (props) => {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
       : (
-        Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-      ).description),
+          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
+        ).description),
     className: 'col-status',
     Header: 'Status',
     id: 'status',
@@ -118,16 +120,18 @@ const LinkedCreditTransferSelection = (props) => {
     Header: 'Link',
     id: 'actions',
     minWidth: 50
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -146,17 +150,17 @@ const LinkedCreditTransferSelection = (props) => {
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
     />
-  );
-};
+  )
+}
 
 LinkedCreditTransferSelection.defaultProps = {
   creditTransfers: []
-};
+}
 
 LinkedCreditTransferSelection.propTypes = {
   establishLink: PropTypes.func.isRequired,
   creditTransfers: PropTypes.arrayOf(PropTypes.shape)
 
-};
+}
 
-export default LinkedCreditTransferSelection;
+export default LinkedCreditTransferSelection

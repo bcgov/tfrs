@@ -1,66 +1,37 @@
+import os
 import json
 import jwt
-from jwt import InvalidTokenError
-from jwt.algorithms import RSAAlgorithm
 import requests
 
 from cryptography.hazmat.primitives import serialization
 from django.core.cache import caches
 from django.conf import settings
+from django.db.models import Q
 from rest_framework import authentication
 from rest_framework import exceptions
 
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
 from api.services.KeycloakAPI import map_user
+from tfrs.settings import WELL_KNOWN_ENDPOINT
 
 cache = caches['keycloak']
-
 
 class UserAuthentication(authentication.BaseAuthentication):
     """
     Class to handle authentication when after logging into keycloak
     """
-    def _get_keys(self):
-        """
-        Assemble a list of valid signing public keys we use to verify the token
-        """
 
-        decoded_keys = {}
+    def refresh_jwk(self):
+        oidc_response = requests.get(WELL_KNOWN_ENDPOINT)
+        jwks_uri = json.loads(oidc_response.text)['jwks_uri']
+        self.jwks_uri = jwks_uri
+        certs_response = requests.get(jwks_uri)
+        jwks = json.loads(certs_response.text)
+        self.jwks = jwks
 
-        # We have a test key loaded
-        if settings.KEYCLOAK['RS256_KEY'] is not None:
-            decoded_keys['imported'] = settings.KEYCLOAK['RS256_KEY']
-
-        if not settings.KEYCLOAK['DOWNLOAD_CERTS']:
-            return decoded_keys
-
-        keys = cache.get('verification_keys')
-
-        if keys is None:
-            # Cache miss. Download a key directly from Keycloak
-            response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
-
-            if not response:
-                raise RuntimeError('keys not available from {}'.format(
-                    settings.KEYCLOAK['CERTS_URL']))
-
-            keys = response.json()
-
-            cache.set('verification_keys', keys, 600)
-
-        decoded_keys = {}
-
-        for key in keys['keys']:
-            if key['alg'] in ['RS256', 'RS384', 'RS512']:
-                decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(
-                    json.dumps(key)
-                ).public_bytes(
-                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                    encoding=serialization.Encoding.PEM
-                ).decode('utf-8')
-
-        return decoded_keys
+    def __init__(self):
+        self.refresh_jwk()
 
     def authenticate(self, request):
         """Verify the JWT token and find the correct user in the DB"""
@@ -72,21 +43,24 @@ class UserAuthentication(authentication.BaseAuthentication):
         auth = request.META.get('HTTP_AUTHORIZATION', None)
 
         if not auth:
+            print('Authorization header required')
             raise exceptions.AuthenticationFailed(
                 'Authorization header required')
 
         try:
             scheme, token = auth.split()
         except ValueError:
+            print('Invalid format for authorization header')
             raise exceptions.AuthenticationFailed(
                 'Invalid format for authorization header')
-
         if scheme != 'Bearer':
+            print('Authorization header invalid')
             raise exceptions.AuthenticationFailed(
                 'Authorization header invalid'
             )
 
         if not token:
+            print('No token found')
             raise exceptions.AuthenticationFailed(
                 'No token found'
             )
@@ -94,21 +68,27 @@ class UserAuthentication(authentication.BaseAuthentication):
         user_token = None
         token_validation_errors = []
 
-        keys = self._get_keys().items()
+        jwks_client = jwt.PyJWKClient(self.jwks_uri)
 
-        if len(keys) == 0:
-            raise exceptions.AuthenticationFailed(
-                'no keys available for verification')
+        try:
+            signing_key = jwks_client.get_signing_key_from_jwt(token)
+        except Exception as exc:
+            print(exc)
+            token_validation_errors.append(exc)
+            raise Exception(str(exc))
 
-        for _kid, key in keys:
-            try:
-                user_token = jwt.decode(token,
-                                        key=str(key),
-                                        audience=settings.KEYCLOAK['AUDIENCE'],
-                                        issuer=settings.KEYCLOAK['ISSUER'])
-                break
-            except InvalidTokenError as error:
-                token_validation_errors.append(error)
+        try:
+            user_token = jwt.decode(
+                token,
+                signing_key.key,
+                algorithms=["RS256"],
+                audience=settings.KEYCLOAK['AUDIENCE'],
+                options={"verify_exp": True},
+            )
+        except (jwt.InvalidTokenError, jwt.ExpiredSignature, jwt.DecodeError) as exc:
+            print(str(exc))
+            token_validation_errors.append(exc)
+            raise Exception(str(exc))
 
         if not user_token:
             raise exceptions.AuthenticationFailed(
@@ -116,51 +96,72 @@ class UserAuthentication(authentication.BaseAuthentication):
                 '\n'.join([str(error) for error in token_validation_errors])
             )
 
-        user_found_via_email = None
-
-        if 'user_id' not in user_token:
-            # try email
-            if 'email' in user_token:
-                creation_request = UserCreationRequest.objects.filter(
-                    keycloak_email__iexact=user_token['email']
-                )
-
-                if not creation_request.exists():
-                    raise exceptions.AuthenticationFailed(
-                        "User does not exist.")
-
-                if creation_request.count() > 1:
-                    _, preferred_username = user_token[
-                        'preferred_username'].split('\\')
-
-                    creation_request = creation_request.filter(
-                        external_username__iexact=preferred_username
-                    )
-
-                user_creation_request = creation_request.first()
-
-                if not user_creation_request.is_mapped:
-                    map_user(user_token['sub'],
-                             user_creation_request.user.username)
-
-                    user_creation_request.is_mapped = True
-                    user_creation_request.save()
-
-                user_found_via_email = user_creation_request.user.username
-            else:
-                raise exceptions.AuthenticationFailed(
-                    'user_id or email is required in jwt payload')
-
-        username = user_token['user_id'] if 'user_id' in user_token else user_found_via_email
-
+        # Check for existing mapped user
+        if 'preferred_username' in user_token:
+            try:
+                user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
+                return user, None
+            except User.DoesNotExist: 
+                print("User does not exist, falling through")
+                pass
+        
         try:
-            user = User.objects.get_by_natural_key(username)
+            # Which provider is user logging in with
+            if user_token['identity_provider'] == 'idir':
+                external_username = user_token['idir_username']
+            elif user_token['identity_provider'] == 'bceidbusiness':
+                external_username = user_token['bceid_username']
+            else:
+                raise Exception('unknown identity provider')
+        except Exception as exc:
+            raise Exception('identity provider invalid')
 
-            if not user.is_active:
+        # fall through to here if no mapped user is found
+        if 'email' in user_token:
+            # we map users by email and external_username
+            creation_request = UserCreationRequest.objects.filter(
+                keycloak_email__iexact=user_token['email']
+            ).filter(
+              external_username__iexact=external_username
+            )
+
+            # Ensure that idir users can only be mapped to bcgov org
+            # and external users are mapped only to supplier orgs
+            if user_token['identity_provider'] == 'idir':
+                creation_request.filter(user__organization=1)
+            elif user_token['identity_provider'] == 'bceidbusiness':
+                creation_request.filter(~Q(user__organization=1))
+            else:
+                raise Exception('unknown identity provider')
+
+            # filter out if the user has already been mapped
+            creation_request.filter(user__keycloak_user_id=None)
+
+            if not creation_request.exists():
+                print("No User with that configuration exists.")
                 raise exceptions.AuthenticationFailed(
-                    'user_id "{}" does not exist'.format(username))
-        except User.DoesNotExist:
+                    "No User with that configuration exists.")
+
+            user_creation_request = creation_request.first()
+
+            # map keycloak user to tfrs user
+            user = user_creation_request.user
+            user.keycloak_user_id = user_token['preferred_username']
+            if user_token['display_name']:
+                user._display_name = user_token['display_name']
+            user.save()
+
+            user_creation_request.is_mapped = True
+            user_creation_request.save()
+        else:
             raise exceptions.AuthenticationFailed(
-                'user_id "{}" does not exist'.format(username))
+                'preffered_username or email is required in jwt payload')
+        
+        try:
+            user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed('User is not active')
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed('User does not exist')
 
         return user, None

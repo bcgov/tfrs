@@ -1,17 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import Loading from '../../app/components/Loading';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import OrganizationsTable from './OrganizationsTable';
-import * as Routes from '../../constants/routes';
-import history from '../../app/History';
-import { download } from '../../utils/functions';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import Loading from '../../app/components/Loading'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import OrganizationsTable from './OrganizationsTable'
+import * as Routes from '../../constants/routes'
+import { download } from '../../utils/functions'
+import { useNavigate } from 'react-router'
 
 const OrganizationsPage = (props) => {
-  const { isFetching, items } = props.organizations;
-  const isEmpty = items.length === 0;
+  const navigate = useNavigate()
+  const { isFetching, items } = props.organizations
+  const isEmpty = items.length === 0
   return (
     <div className="page_organizations">
       <h1>{props.title}</h1>
@@ -20,7 +21,7 @@ const OrganizationsPage = (props) => {
           id="create-organization"
           className="btn btn-primary"
           type="button"
-          onClick={() => history.push(ORGANIZATIONS.ADD)}
+          onClick={() => navigate(ORGANIZATIONS.ADD)}
         >
           <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>
@@ -29,14 +30,14 @@ const OrganizationsPage = (props) => {
           className="btn btn-info"
           type="button"
           onClick={(e) => {
-            const element = e.target;
-            const original = element.innerHTML;
+            const element = e.target
+            const original = element.innerHTML
 
-            element.firstChild.textContent = ' Downloading...';
+            element.firstChild.textContent = ' Downloading...'
 
             return download(Routes.BASE_URL + ORGANIZATIONS.EXPORT).then(() => {
-              element.innerHTML = original;
-            });
+              element.innerHTML = original
+            })
           }}
         >
           <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
@@ -51,8 +52,8 @@ const OrganizationsPage = (props) => {
       />
       }
     </div>
-  );
-};
+  )
+}
 
 OrganizationsPage.propTypes = {
   organizations: PropTypes.shape({
@@ -60,6 +61,6 @@ OrganizationsPage.propTypes = {
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default OrganizationsPage;
+export default OrganizationsPage

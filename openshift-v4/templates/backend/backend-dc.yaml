@@ -30,12 +30,9 @@ parameters:
   required: true  
 - name: KEYCLOAK_SA_BASEURL
   displayName: KEYCLOAK_SA_BASEURL
-  description: 'Valid values: https://dev.oidc.gov.bc.ca, https://test.oidc.gov.bc.ca,
-    https://oidc.gov.bc.ca'
   required: true
 - name: KEYCLOAK_SA_CLIENT_ID
   displayName: KEYCLOAK_SA_CLIENT_ID
-  description: 'Valid values: tfrs-dev-django-sa, tfrs-django-sa, tfrs-django-sa'
   required: true
 - name: KEYCLOAK_SA_REALM
   displayName: KEYCLOAK_SA_REALM
@@ -47,8 +44,6 @@ parameters:
   required: true
 - name: KEYCLOAK_CERTS_URL
   displayName: KEYCLOAK_CERTS_URL
-  description: 'Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs,
-    https://test.oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://oidc.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
   required: true
 - name: KEYCLOAK_CLIENT_ID
   displayName: KEYCLOAK_CLIENT_ID
@@ -56,13 +51,9 @@ parameters:
   required: true
 - name: KEYCLOAK_ISSUER
   displayName: KEYCLOAK_ISSUER
-  description: 'Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs,
-    https://oidc.gov.bc.ca/auth/realms/tfrs'
   required: true
 - name: KEYCLOAK_REALM
   displayName: KEYCLOAK_REALM
-  description: 'Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs,
-    https://oidc.gov.bc.ca/auth/realms/tfrs'
   required: true
 - name: CPU_REQUEST
   displayName: Requested CPU
@@ -84,6 +75,14 @@ parameters:
   displayName: replicas
   description: replicas
   required: true
+- name: DB_SERVICE_NAME
+  displayName: The database service name
+  description: The database service name
+  required: true
+- name: WELL_KNOWN_ENDPOINT
+  displayName: The database service name
+  description: The database service name
+  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -103,8 +102,7 @@ objects:
   apiVersion: apps.openshift.io/v1
   metadata:
     name: ${NAME}-backend${SUFFIX}
-    generation: 1
-    creationTimestamp:
+    creationTimestamp: null
     labels:
       name: ${NAME}-backend${SUFFIX}
     annotations:
@@ -172,60 +170,64 @@ objects:
           - name: KEYCLOAK_REALM
             value: ${KEYCLOAK_REALM}
           - name: KEYCLOAK_SA_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-sa-client-secret
-                key: KEYCLOAK_SA_CLIENT_SECRET
-          - name: AMQP_HOST
-            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
-          - name: AMQP_USER
-            value: tfrs
-          - name: AMQP_VHOST
-            value: "/tfrs"
-          - name: BYPASS_CLAMAV
-            value: 'false'
+            value: notbeingused
           - name: EMAIL_FROM_ADDRESS
             value: donotreply@gov.bc.ca
           - name: EMAIL_SENDING_ENABLED
             value: 'true'
           - name: MINIO_BUCKET_NAME
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: BUCKET
           - name: SMTP_SERVER_HOST
             value: apps.smtp.gov.bc.ca
+          - name: SMTP_SERVER_PORT
+            value: '2500'
           - name: DATABASE_SERVICE_NAME
-            value: patroni-master${SUFFIX}
+            value: ${DB_SERVICE_NAME}
           - name: DATABASE_ENGINE
             value: postgresql
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-name
-          - name: APP_CONFIG
-            value: "/opt/app-root/src/gunicorn.cfg"
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-password
+          - name: POSTGRESQL_SERVICE_HOST
+            value: ${DB_SERVICE_NAME}.${NAMESPACE}.svc.cluster.local
+          - name: POSTGRESQL_SERVICE_PORT
+            value: '5432'
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: username
           - name: RABBITMQ_VHOST
-            value: "/tfrs"
+            value: "tfrs-vhost"
           - name: RABBITMQ_HOST
-            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
+            value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: tfrs_password
+                name: tfrs-rabbitmq-app
+                key: password
+          - name: RABBITMQ_PORT
+            value: '5672'
           - name: MINIO_ENDPOINT
-            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: ENDPOINT
           - name: MINIO_USE_SSL
             value: 'true'
           - name: DOCUMENTS_API_ENABLED
@@ -233,20 +235,13 @@ objects:
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_ACCESS_KEY
+                name: tfrs-object-storage
+                key: USER_ID
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_SECRET_KEY
-          - name: AMQP_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: tfrs_password
-          - name: CLAMAV_HOST
-            value: ${NAME}-clamav-${ENV_NAME}.${NAMESPACE}.svc.cluster.local
+                name: tfrs-object-storage
+                key: KEY
           - name: FUEL_CODES_API_ENABLED
             value: 'true'
           - name: CREDIT_CALCULATION_API_ENABLED
@@ -260,6 +255,10 @@ objects:
               secretKeyRef:
                 name: django-secret-key
                 key: DJANGO_SECRET_KEY
+          - name: APP_CONFIG
+            value: "/opt/app-root/src/gunicorn.cfg.py"
+          - name: WELL_KNOWN_ENDPOINT
+            value: "${WELL_KNOWN_ENDPOINT}"
           resources:
             limits:
               cpu: "${CPU_LIMIT}"
@@ -268,25 +267,21 @@ objects:
               cpu: "${CPU_REQUEST}"
               memory: "${MEMORY_REQUEST}"
           livenessProbe:
-            httpGet:
-              path: "/health"
+            tcpSocket:
               port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 30
+            initialDelaySeconds: 90
             timeoutSeconds: 3
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 10
           readinessProbe:
-            httpGet:
-              path: "/health"
+            tcpSocket:
               port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             timeoutSeconds: 3
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 10
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent

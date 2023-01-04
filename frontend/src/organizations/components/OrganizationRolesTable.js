@@ -1,17 +1,16 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import 'react-table/react-table.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import 'react-table/react-table.css'
 
-import { ROLES } from '../../constants/routes/Admin';
-import history from '../../app/History';
-import ReactTable from '../../app/components/StateSavingReactTable';
+import { ROLES } from '../../constants/routes/Admin'
+import ReactTable from '../../app/components/StateSavingReactTable'
 
 const OrganizationRolesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -22,16 +21,18 @@ const OrganizationRolesTable = (props) => {
     accessor: item => (item.description),
     Header: 'Role',
     id: 'role'
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -48,22 +49,22 @@ const OrganizationRolesTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
-              history.push(viewUrl);
+              const viewUrl = ROLES.DETAILS.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 OrganizationRolesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+}
 
-export default OrganizationRolesTable;
+export default OrganizationRolesTable

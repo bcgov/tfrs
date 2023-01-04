@@ -1,21 +1,26 @@
+import ActionTypes from '../constants/actionTypes/Keycloak'
+
 const persistTargetPathReducer = (state = {
   target: '/'
 }, action) => {
   switch (action.type) {
-    case 'redux-oidc/LOADING_USER':
-      if (action.currentRoute.location &&
-        !(action.currentRoute.location.pathname.match(/.*?authCallback/))) {
+    case ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS: {
+      const pathname = window.location.pathname
+
+      if (!pathname.match(/.*?authCallback/)) {
         return {
           ...state,
-          target: action.currentRoute.location.pathname
-        };
+          target: pathname
+        }
       }
 
-      return state;
-
+      return state
+    }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export { persistTargetPathReducer };
+export { persistTargetPathReducer }
+
+// TODO check if target path is needed after user login

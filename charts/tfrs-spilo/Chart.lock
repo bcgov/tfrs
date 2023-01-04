@@ -1,0 +1,6 @@
+dependencies:
+- name: spilo
+  repository: file://../spilo
+  version: 0.2.0
+digest: sha256:7511538016e34905d07c80deed4ac95eadf6e208c2f1e7036eebfcef7b296897
+generated: "2022-06-14T15:25:04.384659-07:00"

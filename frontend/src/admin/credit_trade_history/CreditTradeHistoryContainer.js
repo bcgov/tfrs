@@ -3,12 +3,12 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import CreditTradeHistoryPage from './components/CreditTradeHistoryPage';
-import AdminTabs from '../components/AdminTabs';
+import CreditTradeHistoryPage from './components/CreditTradeHistoryPage'
+import AdminTabs from '../components/AdminTabs'
 
 class CreditTradeHistoryContainer extends Component {
   render () {
@@ -21,7 +21,7 @@ class CreditTradeHistoryContainer extends Component {
       <CreditTradeHistoryPage
         key="page"
       />
-    ]);
+    ])
   }
 }
 
@@ -36,12 +36,12 @@ CreditTradeHistoryContainer.propTypes = {
       statusDisplay: PropTypes.string
     })
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTradeHistoryContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreditTradeHistoryContainer)

@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # Prevent running assemble in builders different than official STI image.
-# The official nodejs:0.10-onbuild already run npm install and use different
+# The official nodejs:8-onbuild already run npm install and use different
 # application folder.
-# if /user/src/app directory exists, quit this script with status 0
 [ -d "/usr/src/app" ] && exit 0
 
-# from "help set", it says "-e  Exit immediately if a command exits with a non-zero status."
 set -e
 
 # FIXME: Linking of global modules is disabled for now as it causes npm failures
@@ -20,75 +18,101 @@ set -e
 # Link the modules
 #npm link $module_list
 
-# there are options which modify the behavior of bash, they can be set or unset using shopt
-# -s means If optnames are specified, set those options. If no optnames are specified, list all options that are currently set.
-# -u can Unset optnames.
+safeLogging () {
+    if [[ $1 =~ http[s]?://.*@.*$ ]]; then
+        echo $1 | sed 's/^.*@/redacted@/'
+    else
+        echo $1
+    fi
+}
+
 shopt -s dotglob
-
-echo "---> Restore build artifacts ..."
-# not executed
-# if directory /tmp/artifacts/ exists, goes inside to then block
-if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
-	echo "---> Found build artifacts ..."
-    mv /tmp/artifacts/* ./
+if [ -d /tmp/artifacts ] && [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+    echo "---> Restoring previous build artifacts ..."
+    mv -T --verbose /tmp/artifacts/node_modules "${HOME}/node_modules"
 fi
 
-# tfrs/frontend/* were copied at /tmp/src, copy /tmp/src/* into /opt/app-root/src
 echo "---> Installing application source ..."
-cp -rl /tmp/src/* ./ && rm -r /tmp/src/*
+mv /tmp/src/* ./
 
-echo "---> Checking for artifacts and other goodies..."
-ls -la /tmp
+# Fix source directory permissions
+fix-permissions ./
 
-## Setup http/https proxy if needed
-
-# not executed
 if [ ! -z $HTTP_PROXY ]; then
-	echo "---> Setting npm http proxy to $HTTP_PROXY"
-	npm config set proxy $HTTP_PROXY
+    echo "---> Setting npm http proxy to" $(safeLogging $HTTP_PROXY)
+        npm config set proxy $HTTP_PROXY
 fi
 
-# not executed
 if [ ! -z $http_proxy ]; then
-	echo "---> Setting npm http proxy to $http_proxy"
-	npm config set proxy $http_proxy
+    echo "---> Setting npm http proxy to" $(safeLogging $http_proxy)
+        npm config set proxy $http_proxy
 fi
 
-# not executed
 if [ ! -z $HTTPS_PROXY ]; then
-	echo "---> Setting npm https proxy to $HTTPS_PROXY"
-	npm config set https-proxy $HTTPS_PROXY
+    echo "---> Setting npm https proxy to" $(safeLogging $HTTPS_PROXY)
+        npm config set https-proxy $HTTPS_PROXY
 fi
 
-# not executed
 if [ ! -z $https_proxy ]; then
-	echo "---> Setting npm https proxy to $https_proxy"
-	npm config set https-proxy $https_proxy
+    echo "---> Setting npm https proxy to" $(safeLogging $https_proxy)
+        npm config set https-proxy $https_proxy
 fi
 
 # Change the npm registry mirror if provided
-# not executed
 if [ -n "$NPM_MIRROR" ]; then
-	npm config set registry $NPM_MIRROR
+        npm config set registry $NPM_MIRROR
 fi
 
-echo "---> Building your Node application from source"
+# Set the DEV_MODE to false by default.
+if [ -z "$DEV_MODE" ]; then
+  export DEV_MODE=false
+fi
 
-# pull node packages from artifactory
-npm cache clean --force
-npm config set registry https://artifacts.developer.gov.bc.ca/artifactory/api/npm/npm-remote/
-curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD https://artifacts.developer.gov.bc.ca/artifactory/api/npm/auth >> ~/.npmrc
+# If NODE_ENV is not set by the user, then NODE_ENV is determined by whether
+# the container is run in development mode.
+if [ -z "$NODE_ENV" ]; then
+  if [ "$DEV_MODE" == true ]; then
+    export NODE_ENV=development
+  else
+    export NODE_ENV=production
+  fi
+fi
 
-# -d means --loglevel info
-npm install -d
+if [ "$NODE_ENV" != "production" ]; then
 
-# fix vulnerabilities
-# npm audit fix
+        echo "---> Building your Node application from source"
+        npm install
 
-# run webpack
-# create public/build folder under /opt/app-root/src
-# /opt/app-root/src/public/build has bundle.js and tokenRenewl.js
-npm run production
+else
+
+        echo "---> Installing all dependencies"
+        npm config set registry https://artifacts.developer.gov.bc.ca/artifactory/api/npm/npm-remote/
+        curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD https://artifacts.developer.gov.bc.ca/artifactory/api/npm/auth >> ~/.npmrc
+        NODE_ENV=development npm install
+
+        #do not fail when there is no build script
+        echo "---> Building in production mode"
+        npm run build --if-present
+
+        echo "---> Pruning the development dependencies"
+        npm prune
+
+        NPM_TMP=$(npm config get tmp)
+        if ! mountpoint $NPM_TMP; then
+                echo "---> Cleaning the $NPM_TMP/npm-*"
+                rm -rf $NPM_TMP/npm-*
+        fi
+
+        # Clear the npm's cache and tmp directories only if they are not a docker volumes
+        NPM_CACHE=$(npm config get cache)
+        if ! mountpoint $NPM_CACHE; then
+                echo "---> Cleaning the npm cache $NPM_CACHE"
+                #As of npm@5 even the 'npm cache clean --force' does not fully remove the cache directory
+                # instead of $NPM_CACHE* use $NPM_CACHE/*.
+                # We do not want to delete .npmrc file.
+                rm -rf "${NPM_CACHE:?}/"
+        fi
+fi
 
 # Fix source directory permissions
 fix-permissions ./

@@ -257,7 +257,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
     display_name = SerializerMethodField()
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -298,6 +298,44 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
                   'sort_date', 'original_report_id')
 
 
+class ComplianceReportDashboardListSerializer(serializers.ModelSerializer):
+    """
+    Dashboard List serializer for Compliance Reports
+    """
+    status = ComplianceReportWorkflowStateSerializer(read_only=True)
+    type = SlugRelatedField(slug_field='the_type', read_only=True)
+    supplemental_reports = SerializerMethodField()
+
+    def get_supplemental_reports(self, obj):
+        qs = obj.supplemental_reports.order_by('create_timestamp')
+        gov_org = Organization.objects.get(type=1)
+        organization = self.context['request'].user.organization
+
+        if organization == gov_org:
+            # If organization == Government
+            #  don't show "Draft" transactions
+            #  don't show "Deleted" transactions
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=[
+                    "Draft", "Deleted"
+                ])
+            )
+        else:
+            qs = qs.filter(
+                ~Q(status__fuel_supplier_status__status__in=["Deleted"])
+            )
+
+        return ComplianceReportDashboardListSerializer(
+            qs.all(),
+            read_only=True,
+            context=self.context,
+            many=True).data
+
+    class Meta:
+        model = ComplianceReport
+        fields = ('id', 'status', 'type', 'supplemental_reports')
+
+
 class ComplianceReportMinSerializer(serializers.ModelSerializer):
     """
     Basic Serializer for a Report (just shows the type and compliance period)
@@ -333,6 +371,7 @@ class ComplianceReportDetailSerializer(
     total_previous_credit_reductions = SerializerMethodField()
     credit_transactions = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
+    max_credit_offset_exclude_reserved = SerializerMethodField()
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
     previous_report_was_credit = SerializerMethodField()
@@ -355,7 +394,7 @@ class ComplianceReportDetailSerializer(
         return transactions
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -446,6 +485,18 @@ class ComplianceReportDetailSerializer(
             max_credit_offset = 0
 
         return max_credit_offset
+
+    def get_max_credit_offset_exclude_reserved(self, obj):
+        max_credit_offset_exclude_reserved = OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description,
+            exclude_reserved=True
+        )
+
+        if max_credit_offset_exclude_reserved < 0:
+            max_credit_offset_exclude_reserved = 0
+
+        return max_credit_offset_exclude_reserved
 
     def get_summary(self, obj):
         total_petroleum_diesel = Decimal(0)
@@ -610,7 +661,7 @@ class ComplianceReportDetailSerializer(
                   'summary', 'read_only', 'history', 'has_snapshot', 'actions',
                   'actor', 'deltas', 'display_name', 'supplemental_note',
                   'is_supplemental', 'total_previous_credit_reductions',
-                  'credit_transactions', 'max_credit_offset',
+                  'credit_transactions', 'max_credit_offset', "max_credit_offset_exclude_reserved",
                   'supplemental_number', 'last_accepted_offset',
                   'previous_report_was_credit']
 
@@ -1135,11 +1186,8 @@ class ComplianceReportUpdateSerializer(
     Update Serializer for the Compliance Report
     """
     status = ComplianceReportWorkflowStateSerializer(required=False)
-    type = SlugRelatedField(slug_field='the_type', read_only=True)
-    compliance_period = SlugRelatedField(
-        slug_field='description',
-        read_only=True
-    )
+    type = ComplianceReportTypeSerializer(read_only=True)
+    compliance_period = CompliancePeriodSerializer(read_only=True)
     organization = OrganizationDisplaySerializer(read_only=True)
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
@@ -1153,6 +1201,7 @@ class ComplianceReportUpdateSerializer(
     actor = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
+    max_credit_offset_exclude_reserved = SerializerMethodField()
     total_previous_credit_reductions = SerializerMethodField()
     supplemental_number = SerializerMethodField()
     last_accepted_offset = SerializerMethodField()
@@ -1163,7 +1212,7 @@ class ComplianceReportUpdateSerializer(
     disregard_status = False
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -1190,6 +1239,18 @@ class ComplianceReportUpdateSerializer(
             max_credit_offset = 0
 
         return max_credit_offset
+
+    def get_max_credit_offset_exclude_reserved(self, obj):
+        max_credit_offset_exclude_reserved = OrganizationService.get_max_credit_offset(
+            obj.organization,
+            obj.compliance_period.description,
+            exclude_reserved=True
+        )
+
+        if max_credit_offset_exclude_reserved < 0:
+            max_credit_offset_exclude_reserved = 0
+
+        return max_credit_offset_exclude_reserved
 
     def get_history(self, obj):
         """
@@ -1516,7 +1577,7 @@ class ComplianceReportUpdateSerializer(
 
         instance.update_user = request.user
         instance.save()
-
+        
         # all other fields are read-only
         return instance
 
@@ -1527,14 +1588,14 @@ class ComplianceReportUpdateSerializer(
             'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
             'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
             'display_name', 'supplemental_note', 'is_supplemental',
-            'max_credit_offset', 'total_previous_credit_reductions',
+            'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
             'supplemental_number', 'last_accepted_offset', 'history',
             'previous_report_was_credit'
         )
         read_only_fields = (
             'compliance_period', 'read_only', 'has_snapshot', 'organization',
             'actions', 'actor', 'display_name', 'is_supplemental',
-            'max_credit_offset', 'total_previous_credit_reductions',
+            'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
             'supplemental_number', 'last_accepted_offset', 'history'
         )
 

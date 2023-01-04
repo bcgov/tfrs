@@ -1,18 +1,19 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Overlay, Tooltip } from 'react-bootstrap';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Overlay, Tooltip } from 'react-bootstrap'
 
-import 'react-table/react-table.css';
-import moment from 'moment-timezone';
+import 'react-table/react-table.css'
+import moment from 'moment-timezone'
 
-import history from '../../../app/History';
-import { FUEL_CODES } from '../../../constants/routes/Admin';
-import ReactTable from '../../../app/components/StateSavingReactTable';
+import { FUEL_CODES } from '../../../constants/routes/Admin'
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
 
 const FuelCodesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -27,35 +28,35 @@ const FuelCodesTable = (props) => {
     sortMethod: (a, b, desc) => {
       // if the first set of digits are equal, we have to parse the decimals as a separate set
       // e.g. 101.10 is greater than 101.5
-      const currentSet = a.toString().split('.');
-      const previousSet = b.toString().split('.');
+      const currentSet = a.toString().split('.')
+      const previousSet = b.toString().split('.')
 
       if (currentSet[0] === previousSet[0]) {
-        const currentDecimal = (currentSet.length > 1) ? currentSet[1] : 0;
-        const previousDecimal = (previousSet.length > 1) ? previousSet[1] : 0;
+        const currentDecimal = (currentSet.length > 1) ? currentSet[1] : 0
+        const previousDecimal = (previousSet.length > 1) ? previousSet[1] : 0
 
         if (parseInt(currentDecimal, 10) > parseInt(previousDecimal, 10)) {
-          return 1;
+          return 1
         }
 
         if (parseInt(currentDecimal, 10) < parseInt(previousDecimal, 10)) {
-          return -1;
+          return -1
         }
 
-        return 0;
+        return 0
       }
 
       // Return either 1 or -1 to indicate a sort priority
       if (currentSet[0] > previousSet[0]) {
-        return 1;
+        return 1
       }
 
       if (currentSet[0] < previousSet[0]) {
-        return -1;
+        return -1
       }
       // returning 0, undefined or any falsey value will use subsequent sorts or
       // the index as a tiebreaker
-      return 0;
+      return 0
     },
     width: 200
   }, {
@@ -160,30 +161,32 @@ const FuelCodesTable = (props) => {
     Header: 'Last Updated On',
     id: 'updateTimestamp',
     width: 150
-  }];
+  }]
 
   const filterMethod = (filter, row) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   const handleTooltip = ({ target }, show, message) => {
     props.handleTooltip({
       message,
       show,
       target
-    });
-  };
+    })
+  }
 
   const getInvalidEffectiveDates = (row, items) => (
     items.find(item => (
       (item.effectiveDate <= row.effectiveDate && item.expiryDate >= row.effectiveDate) ||
       (item.effectiveDate <= row.expiryDate && item.effectiveDate >= row.effectiveDate)))
-  );
+  )
 
   return ([
     <ReactTable
@@ -203,35 +206,34 @@ const FuelCodesTable = (props) => {
           const filtered = props.items.filter(item =>
             (item.fuelCode === row.original.fuelCode) &&
             (item.fuelCodeVersion === row.original.fuelCodeVersion) &&
-            (item.fuelCodeVersionMinor !== row.original.fuelCodeVersionMinor));
-          const invalidDates = getInvalidEffectiveDates(row.original, filtered);
+            (item.fuelCodeVersionMinor !== row.original.fuelCodeVersionMinor))
+          const invalidDates = getInvalidEffectiveDates(row.original, filtered)
 
           return {
             onClick: (e) => {
-              const viewUrl = FUEL_CODES.DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              const viewUrl = FUEL_CODES.DETAILS.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             onMouseOver: (e) => {
-              let message = '';
+              let message = ''
 
               if (invalidDates) {
                 message = `The effective dates of this fuel code overlap with
-                  ${invalidDates.fuelCode}${invalidDates.fuelCodeVersion}.${invalidDates.fuelCodeVersionMinor}`;
+                  ${invalidDates.fuelCode}${invalidDates.fuelCodeVersion}.${invalidDates.fuelCodeVersionMinor}`
               }
 
-              const showTooltip = Boolean(invalidDates);
+              const showTooltip = Boolean(invalidDates)
 
-              handleTooltip(e, showTooltip, message);
+              handleTooltip(e, showTooltip, message)
             },
             onMouseOut: (e) => {
-              handleTooltip(e, false, '');
+              handleTooltip(e, false, '')
             },
             className: `clickable ${invalidDates ? 'has-error' : ''}`
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       key="table"
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
@@ -247,10 +249,10 @@ const FuelCodesTable = (props) => {
         {props.tooltips.message}
       </Tooltip>
     </Overlay>
-  ]);
-};
+  ])
+}
 
-FuelCodesTable.defaultProps = {};
+FuelCodesTable.defaultProps = {}
 
 FuelCodesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
@@ -277,6 +279,6 @@ FuelCodesTable.propTypes = {
       PropTypes.shape()
     ])
   }).isRequired
-};
+}
 
-export default FuelCodesTable;
+export default FuelCodesTable

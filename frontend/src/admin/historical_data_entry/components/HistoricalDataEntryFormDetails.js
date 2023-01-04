@@ -1,16 +1,16 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
 
-import * as NumberFormat from '../../../constants/numeralFormats';
+import * as NumberFormat from '../../../constants/numeralFormats'
 
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
-import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
-import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
-import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
+import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values'
+import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote'
+import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons'
 
 const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
@@ -227,7 +227,7 @@ const HistoricalDataEntryFormDetails = props => (
       </div>
     </div>
   </div>
-);
+)
 
 HistoricalDataEntryFormDetails.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -256,6 +256,6 @@ HistoricalDataEntryFormDetails.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired
-};
+}
 
-export default HistoricalDataEntryFormDetails;
+export default HistoricalDataEntryFormDetails

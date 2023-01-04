@@ -1,22 +1,23 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading';
-import history from '../../app/History';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_USERS from '../../constants/permissions/Users';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import USERS from '../../constants/routes/Users';
-import FuelSupplierTabs from './FuelSupplierTabs';
-import OrganizationMembersTable from './OrganizationMembersTable';
+import Loading from '../../app/components/Loading'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_USERS from '../../constants/permissions/Users'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import USERS from '../../constants/routes/Users'
+import FuelSupplierTabs from './FuelSupplierTabs'
+import OrganizationMembersTable from './OrganizationMembersTable'
+import { useNavigate } from 'react-router'
 
 const OrganizationMembers = (props) => {
-  const { isFetching, users } = props.members;
+  const { isFetching, users } = props.members
+  const navigate = useNavigate()
 
   return (
     <div className="organization-members">
@@ -35,13 +36,13 @@ const OrganizationMembers = (props) => {
               id="new-user"
               className="btn btn-primary"
               onClick={() => {
-                let addUrl = USERS.ADD;
+                let addUrl = USERS.ADD
 
                 if (props.loggedInUser.isGovernmentUser && props.organizationId) {
-                  addUrl = ORGANIZATIONS.ADD_USER.replace(':organizationId', props.organizationId);
+                  addUrl = ORGANIZATIONS.ADD_USER.replace(':organizationId', props.organizationId)
                 }
 
-                history.push(addUrl);
+                navigate(addUrl)
               }}
               type="button"
             >
@@ -60,13 +61,13 @@ const OrganizationMembers = (props) => {
         />
       }
     </div>
-  );
-};
+  )
+}
 
 OrganizationMembers.defaultProps = {
   loggedInUser: null,
   organizationId: null
-};
+}
 
 OrganizationMembers.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -90,9 +91,9 @@ OrganizationMembers.propTypes = {
     PropTypes.number,
     PropTypes.string
   ])
-};
+}
 
 const mapStateToProps = state => ({
-});
+})
 
-export default connect(mapStateToProps)(OrganizationMembers);
+export default connect(mapStateToProps)(OrganizationMembers)

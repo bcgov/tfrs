@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/Tables';
+import ActionTypes from '../constants/actionTypes/Tables'
 
 const tableState = (state = {
   savedState: {
@@ -11,15 +11,15 @@ const tableState = (state = {
         savedState: {
           ...state.savedState
         }
-      };
+      }
 
-      newState.savedState[action.key] = action.data;
+      newState.savedState[action.key] = action.data
 
-      return newState;
+      return newState
     }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default tableState;
+export default tableState

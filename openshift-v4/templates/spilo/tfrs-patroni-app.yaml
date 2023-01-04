@@ -1,0 +1,26 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: tfrs-patroni-app
+parameters:
+- name: APP_DB_PASSWORD
+  description: "trs user password"
+  required: true
+- name: APP_DB_USERNAME
+  description: "tfrs username"
+  required: true 
+- name: METABASE_PASSWORD
+  description: "metabase password"
+  required: true 
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: tfrs-patroni-app
+  stringData:
+    app-db-name: tfrs
+    app-db-password: ${APP_DB_PASSWORD}
+    app-db-username: ${APP_DB_USERNAME}
+    metabaseuser-name: metabaseuser
+    metabaseuser-password: ${METABASE_PASSWORD}
+  type: Opaque

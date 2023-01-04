@@ -23,7 +23,7 @@
   }
   
   .display-name {
-    background-image: url('/assets/images/bceid.png');
+    background-image: url('../public/assets/images/bceid.png');
     background-position-x: left;
     background-position-y: center;
     background-repeat: no-repeat;
@@ -66,7 +66,7 @@
 }
 
 #login {
-  background-image: url('/assets/images/bg.jpg');
+  background-image: url('../public/assets/images/bg.jpg');
   background-position-x: left;
   background-position-y: center;
   background-repeat: no-repeat;
@@ -155,7 +155,7 @@
   }
 
   .login-tfrs-brand {
-    background-image: url('/assets/images/BCID_H_rgb_pos.png');
+    background-image: url('../public/assets/images/BCID_H_rgb_pos.png');
     background-position-x: center;
     background-position-y: center;
     background-repeat: no-repeat;
@@ -248,7 +248,7 @@
     width: 100%;
 
     .login-tfrs-brand {
-      background-image: url('/assets/images/BCID_V_rgb_pos.png');
+      background-image: url('../public/assets/images/BCID_V_rgb_pos.png');
       background-position-x: 3rem;
       background-position-y: center;
       background-size: contain;

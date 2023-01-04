@@ -1,37 +1,33 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
-import AutocompletedInput from '../AutocompletedInput';
+import AutocompletedInput from '../AutocompletedInput'
 
 class OrganizationAutocomplete extends PureComponent {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-
-  componentDidMount () {
-    this._input.focus();
+    this.handleChange = this.handleChange.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
   handleChange (e) {
-    this.props.onChange(e.target.value);
+    this.props.onChange(e.target.value)
   }
 
   handleKeyDown (e) {
     if (e.which === 13 || e.which === 9) { // Enter Key or Tab Key
       if (this._input.state.highlightedIndex === null) {
-        this.props.cell.attributes.address = null;
+        this.props.cell.attributes.address = null
 
-        this.props.onKeyDown(e);
+        this.props.onKeyDown(e)
       }
     }
   }
 
   render () {
-    const { value, onCommit } = this.props;
-    const { attributes } = this.props.cell;
+    const { value, onCommit } = this.props
+    const { attributes } = this.props.cell
 
     return (
       <AutocompletedInput
@@ -40,7 +36,7 @@ class OrganizationAutocomplete extends PureComponent {
         className="data-editor"
         getItemValue={item => (item.name)}
         handleRef={(input) => {
-          this._input = input;
+          this._input = input
         }}
         handleInputChange={this.handleChange}
         inputProps={{
@@ -52,13 +48,13 @@ class OrganizationAutocomplete extends PureComponent {
         }}
         name="input"
         onSelectEvent={(item) => {
-          this.props.cell.attributes.address = item.organization_address;
-          onCommit(item.name);
+          this.props.cell.attributes.address = item.organization_address
+          onCommit(item.name)
           this.handleChange({
             target: {
               value: item.name
             }
-          });
+          })
         }}
         renderItem={(item, isHighlighted) => (
           <div
@@ -81,13 +77,13 @@ class OrganizationAutocomplete extends PureComponent {
         value={value}
         {...attributes}
       />
-    );
+    )
   }
 }
 
 OrganizationAutocomplete.defaultProps = {
   value: ''
-};
+}
 
 OrganizationAutocomplete.propTypes = {
   cell: PropTypes.shape({
@@ -100,6 +96,6 @@ OrganizationAutocomplete.propTypes = {
   onCommit: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   value: PropTypes.string
-};
+}
 
-export default OrganizationAutocomplete;
+export default OrganizationAutocomplete

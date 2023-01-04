@@ -1,0 +1,30 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: tfrs-patroni-admin
+parameters:
+- name: PASSWORD_ADMIN
+  description: "secret used by ADMIN"
+  from: "[a-zA-Z0-9]{20}"
+  generate: expression
+  required: true
+- name: PASSWORD_STANDBY
+  description: "secret used by STANDBY"
+  from: "[a-zA-Z0-9]{20}"
+  generate: expression
+  required: true
+- name: PASSWORD_SUPERUSER
+  description: "secret used by super user posgres"
+  from: "[a-zA-Z0-9]{20}"
+  generate: expression
+  required: true    
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: tfrs-patroni-admin
+  stringData:
+    password-admin: ${PASSWORD_ADMIN}
+    password-standby: ${PASSWORD_STANDBY}
+    password-superuser: ${PASSWORD_SUPERUSER}
+  type: Opaque

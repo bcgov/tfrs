@@ -35,6 +35,9 @@ SECRET_KEY = os.getenv(
     '9e4@&tw46$l31)zrqe3wi+-slqm(ruvz&se0^%9#6(_w3ui!c0'
 )
 
+WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT',
+  'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'

@@ -1,21 +1,22 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { connect } from 'react-redux';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { connect } from 'react-redux'
 
-import Loading from '../../../app/components/Loading';
-import * as Lang from '../../../constants/langEnUs';
-import OrganizationMembersTable from '../../../organizations/components/OrganizationMembersTable';
-import history from '../../../app/History';
-import PERMISSIONS_USERS from '../../../constants/permissions/Users';
-import USERS from '../../../constants/routes/Users';
-import { USERS as ADMIN_USERS } from '../../../constants/routes/Admin';
+import Loading from '../../../app/components/Loading'
+import * as Lang from '../../../constants/langEnUs'
+import OrganizationMembersTable from '../../../organizations/components/OrganizationMembersTable'
+import PERMISSIONS_USERS from '../../../constants/permissions/Users'
+import USERS from '../../../constants/routes/Users'
+import { USERS as ADMIN_USERS } from '../../../constants/routes/Admin'
+import { useNavigate } from 'react-router'
 
 const UsersPage = (props) => {
-  const { isFetching, users } = props.data;
+  const { isFetching, users } = props.data
+  const navigate = useNavigate()
 
   return (
     <div className="page_users">
@@ -29,7 +30,7 @@ const UsersPage = (props) => {
             <button
               id="new-user"
               className="btn btn-primary"
-              onClick={() => history.push(ADMIN_USERS.ADD)}
+              onClick={() => navigate(ADMIN_USERS.ADD)}
               type="button"
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
@@ -41,7 +42,7 @@ const UsersPage = (props) => {
             <ul className="dropdown-menu">
               <li>
                 <button
-                  onClick={() => history.push(USERS.ADD)}
+                  onClick={() => navigate(USERS.ADD)}
                   type="button"
                 >
                   <FontAwesomeIcon icon="user" /> Add Fuel Supplier User
@@ -60,8 +61,8 @@ const UsersPage = (props) => {
         />
       }
     </div>
-  );
-};
+  )
+}
 
 UsersPage.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -80,10 +81,10 @@ UsersPage.propTypes = {
       })
     }))
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
-export default connect(mapStateToProps)(UsersPage);
+export default connect(mapStateToProps)(UsersPage)

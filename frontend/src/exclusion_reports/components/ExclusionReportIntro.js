@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const ExclusionReportIntro = (props) => {
-  const exclusionReportDueDate = `20${Number(props.period.substr(-2)) + 1}`;
+  const exclusionReportDueDate = `20${Number(props.period.substr(-2)) + 1}`
 
   return (
     <div className="page-exclusion-report-intro">
@@ -38,12 +38,12 @@ const ExclusionReportIntro = (props) => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 ExclusionReportIntro.propTypes = {
   period: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
-};
+}
 
-export default ExclusionReportIntro;
+export default ExclusionReportIntro

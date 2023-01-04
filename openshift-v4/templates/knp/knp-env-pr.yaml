@@ -144,6 +144,7 @@ objects:
       name: allow-rabbitmq-accepts-notification-server${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from notification server
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -161,6 +162,7 @@ objects:
       name: allow-rabbitmq-accepts-backend${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from backend
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -178,6 +180,7 @@ objects:
       name: allow-rabbitmq-accepts-scan-handler${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from scan handler
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -195,6 +198,7 @@ objects:
       name: allow-rabbitmq-accepts-scan-coordinator${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from scan coordinator
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -212,6 +216,7 @@ objects:
       name: allow-rabbitmq-accepts-nagios
     spec:
       ## Allow rabbitmq to accept communications from nagios
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -229,6 +234,7 @@ objects:
       name: allow-rabbitmq-accepts-celery${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from celery
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -246,6 +252,7 @@ objects:
       name: allow-rabbitmq-accepts-itself${SUFFIX}
     spec:
       ## Allow rabbitmq to accept communications from other rabbitmq pods
+      ## to be deleted
       podSelector:
         matchLabels:
           app: tfrs${SUFFIX}-rabbitmq-cluster
@@ -256,13 +263,14 @@ objects:
                   app: tfrs${SUFFIX}-rabbitmq-cluster
           ports:
             - protocol: TCP
-              port: 5672                    
+              port: 5672     
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
       name: allow-clamav-accepts-backend${SUFFIX}
     spec:
       ## Allow clamav to accept communications from backend
+      ## to be deleted when tfrs-clamav deployed
       podSelector:
         matchLabels:
           name: tfrs-clamav-${ENVIRONMENT}
@@ -280,6 +288,7 @@ objects:
       name: allow-clamav-accepts-scan-coordinator${SUFFIX}
     spec:
       ## Allow clamav to accept communications from scan coordinator
+      ## to be deleted when tfrs-clamav deployed
       podSelector:
         matchLabels:
           name: tfrs-clamav-${ENVIRONMENT}
@@ -290,7 +299,7 @@ objects:
                   name: tfrs-scan-coordinator${SUFFIX}
           ports:
             - protocol: TCP
-              port: 3310                      
+              port: 3310        
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:

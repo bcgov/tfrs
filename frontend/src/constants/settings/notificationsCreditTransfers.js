@@ -66,6 +66,6 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
   permission: 'RESCIND_CREDIT_TRANSFER',
   recipients: ['fuel_supplier', 'government'],
   feature: 'credit_transfer'
-}];
+}]
 
-export default CREDIT_TRANSFER_NOTIFICATIONS;
+export default CREDIT_TRANSFER_NOTIFICATIONS

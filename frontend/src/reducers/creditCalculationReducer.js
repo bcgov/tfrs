@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/actionTypes/CreditCalculation';
+import ActionTypes from '../constants/actionTypes/CreditCalculation'
 
 const creditCalculation = (state = {
   item: {},
@@ -13,7 +13,7 @@ const creditCalculation = (state = {
         isFetching: true,
         item: {},
         success: false
-      };
+      }
     case ActionTypes.RECEIVE_CREDIT_CALCULATION:
       return {
         ...state,
@@ -21,17 +21,17 @@ const creditCalculation = (state = {
         isFetching: false,
         item: action.data,
         success: true
-      };
+      }
     case ActionTypes.ERROR:
       return {
         ...state,
         errors: action.errorMessage,
         isFetching: false,
         success: false
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default creditCalculation;
+export default creditCalculation

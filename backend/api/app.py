@@ -94,13 +94,6 @@ def check_external_services():
             print(_error)
             raise RuntimeError('Minio connection failed')
 
-    if KEYCLOAK['ENABLED']:
-        print('Keycloak enabled. Checking connection')
-
-        try:
-            list_users(get_token())
-        except Exception as _error:
-            raise RuntimeError('Keycloak connection failed')
 
     if EMAIL['ENABLED']:
         print('Email sending enabled. Checking connection')

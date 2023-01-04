@@ -35,24 +35,52 @@ module.exports = settings => {
       'CPU_LIMIT':phases[phase].backendCpuLimit,
       'MEMORY_REQUEST':phases[phase].backendMemoryRequest,
       'MEMORY_LIMIT':phases[phase].backendMemoryLimit,
-      'REPLICAS':phases[phase].backendReplicas
+      'REPLICAS':phases[phase].backendReplicas,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
+      'WELL_KNOWN_ENDPOINT':phases[phase].backendWellKnownEndpoint,
     }
   }))
+  
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'BACKEND_HOST':phases[phase].backendHost
+    }
+  }))  
 
   //deploy frontend
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker.yaml`, {
     'param': {
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
+      'NAMESPACE': phases[phase].namespace,
       'CPU_REQUEST': phases[phase].frontendCpuRequest,
       'CPU_LIMIT': phases[phase].frontendCpuLimit,
       'MEMORY_REQUEST': phases[phase].frontendMemoryRequest,
       'MEMORY_LIMIT': phases[phase].frontendMemoryLimit,
-      'REPLICAS':phases[phase].frontendReplicas
+      'REPLICAS':phases[phase].frontendReplicas,
+      'KEYCLOAK_AUTHORITY':phases[phase].frontendKeycloakAuthority,
+      'KEYCLOAK_CLIENT_ID':phases[phase].frontendKeycloakClientId,
+      'KEYCLOAK_CALLBACK_URL':phases[phase].frontendKeycloakCallbackUrl,
+      'KEYCLOAK_LOGOUT_URL':phases[phase].frontendKeycloakLogoutUrl,
+      'SITEMINDER_LOGOUT_URL':phases[phase].frontendSiteminderLogoutUrl,
+      'BACKEND_HOST':phases[phase].backendHost,
+      'DEBUG_ENABLED':phases[phase].frontendDebugEnabled,
     }
   }))
-
+/*
+  //deploy frontend
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-dc-docker-others.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'FRONTEND_HOST': phases[phase].frontendHost,
+    }
+  }))
+*/
   //deploy celery
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/celery/celery-dc.yaml`, {
     'param': {
@@ -64,7 +92,8 @@ module.exports = settings => {
       'CPU_REQUEST': phases[phase].celeryCpuRequest,
       'CPU_LIMIT': phases[phase].celeryCpuLimit,
       'MEMORY_REQUEST': phases[phase].celeryMemoryRequest,
-      'MEMORY_LIMIT': phases[phase].celeryMemoryLimit
+      'MEMORY_LIMIT': phases[phase].celeryMemoryLimit,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   })) 
 
@@ -80,6 +109,14 @@ module.exports = settings => {
       'CPU_LIMIT':phases[phase].notificationServerCpuLimit,
       'MEMORY_REQUEST':phases[phase].notificationServerMemoryRequest,
       'MEMORY_LIMIT':phases[phase].notificationServerMemoryLimit
+    }
+  }))
+
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/notification/notification-server-others-dc.yaml`, {
+    'param': {
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'FRONTEND_HOST': phases[phase].frontendHost
     }
   }))
 
@@ -106,12 +143,14 @@ module.exports = settings => {
       'NAMESPACE': phases[phase].namespace,
       'VERSION': phases[phase].tag,
       'CPU_REQUEST':phases[phase].scanHandlerCpuRequest,
-      'CPU_LIMIT':phases[phase].scanHandlerServerCpuLimit,
-      'MEMORY_REQUEST':phases[phase].scanHandlerServerMemoryRequest,
-      'MEMORY_LIMIT':phases[phase].scanHandlerServerMemoryLimit
+      'CPU_LIMIT':phases[phase].scanHandlerCpuLimit,
+      'MEMORY_REQUEST':phases[phase].scanHandlerMemoryRequest,
+      'MEMORY_LIMIT':phases[phase].scanHandlerMemoryLimit,
+      'DB_SERVICE_NAME':phases[phase].dbServiceName,
     }
   }))
 
+/*
   //only deploy on dev for Tracking PR
   if(phases[phase].phase === 'dev') {
 
@@ -137,13 +176,6 @@ module.exports = settings => {
       }
     }))  
 
-    objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/backend/backend-dc-others.yaml`, {
-      'param': {
-        'NAME': phases[phase].name,
-        'SUFFIX': phases[phase].suffix,
-        'BACKEND_HOST':phases[phase].backendHost
-      }
-    }))  
   }
 
   //only deploy schemaspy for test and prod
@@ -164,7 +196,7 @@ module.exports = settings => {
       }
     }))
   }
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,

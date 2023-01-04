@@ -1,15 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../app/components/Loading';
-import history from '../../app/History';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import Loading from '../../app/components/Loading'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import { useNavigate } from 'react-router'
 
 const ComplianceReports = (props) => {
-  const { isFetching, items } = props.complianceReports;
+  const { isFinding, items, isGettingDashboard } = props.complianceReports
+  const navigate = useNavigate()
 
-  if (isFetching) {
-    return <Loading />;
+  if (isFinding || isGettingDashboard) {
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -25,40 +26,40 @@ const ComplianceReports = (props) => {
       manager: 0,
       total: 0
     }
-  };
+  }
 
   items.forEach((item) => {
-    let { status } = item;
-    const { supplementalReports, type } = item;
-    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports';
+    let { status } = item
+    const { supplementalReports, type } = item
+    const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports'
 
     if (supplementalReports.length > 0) {
-      let [deepestSupplementalReport] = supplementalReports;
+      let [deepestSupplementalReport] = supplementalReports
 
       while (deepestSupplementalReport.supplementalReports &&
         deepestSupplementalReport.supplementalReports.length > 0) {
-        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports;
+        [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports
       }
-      ({ status } = deepestSupplementalReport);
+      ({ status } = deepestSupplementalReport)
     }
 
     if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed') {
-      awaitingReview[reportType].analyst += 1;
-      awaitingReview[reportType].total += 1;
+      awaitingReview[reportType].analyst += 1
+      awaitingReview[reportType].total += 1
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
     status.managerStatus === 'Unreviewed') {
-      awaitingReview[reportType].manager += 1;
-      awaitingReview[reportType].total += 1;
+      awaitingReview[reportType].manager += 1
+      awaitingReview[reportType].total += 1
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
     status.directorStatus === 'Unreviewed') {
-      awaitingReview[reportType].director += 1;
-      awaitingReview[reportType].total += 1;
+      awaitingReview[reportType].director += 1
+      awaitingReview[reportType].total += 1
     }
-  });
+  })
 
   return (
     <div className="dashboard-fieldset">
@@ -84,9 +85,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Submitted'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -105,9 +106,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Analyst'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -126,9 +127,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Manager'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -157,9 +158,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Submitted'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -178,9 +179,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Analyst'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -199,9 +200,9 @@ const ComplianceReports = (props) => {
                 }, {
                   id: 'current-status',
                   value: 'Manager'
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -218,28 +219,28 @@ const ComplianceReports = (props) => {
           <div>
             <button
               onClick={() => {
-                const currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear()
 
                 props.setFilter([{
                   id: 'compliance-period',
                   value: currentYear.toString()
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
               Current compliance period
             </button>
-            {` | `}
+            {' | '}
             <button
               onClick={() => {
                 props.setFilter([{
                   id: 'compliance-period',
                   value: ''
-                }], 'compliance-reporting');
+                }], 'compliance-reporting')
 
-                return history.push(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -249,11 +250,11 @@ const ComplianceReports = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 ComplianceReports.defaultProps = {
-};
+}
 
 ComplianceReports.propTypes = {
   complianceReports: PropTypes.shape({
@@ -261,6 +262,6 @@ ComplianceReports.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default ComplianceReports;
+export default ComplianceReports

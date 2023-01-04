@@ -1,28 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { OidcProvider } from 'redux-oidc';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
 
-import store from './store/store';
+import store from './store/store'
 
-import './app/FontAwesome';
+import './app/FontAwesome'
+import '../styles/index.scss'
 
-import Router from './router';
+import App from './app/App'
+import Loading from './app/components/Loading'
 
-import '../styles/index.scss';
-
-import configureAxios from './store/authorizationInterceptor';
-import userManager from './store/oidc-usermanager';
-
-// Inject the keycloak provider
-
-configureAxios();
+const persistor = persistStore(store)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <OidcProvider store={store} userManager={userManager}>
-      <Router />
-    </OidcProvider>
-  </Provider>,
-  document.getElementById('root')
-);
+  <BrowserRouter>
+    <Provider store={store}>
+      <PersistGate loading={<Loading/>} persistor={persistor}>
+        <App/>
+      </PersistGate>
+    </Provider>
+  </BrowserRouter>,
+  document.getElementById('root'))

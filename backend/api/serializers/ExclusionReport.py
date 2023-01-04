@@ -145,7 +145,7 @@ class ExclusionReportDetailSerializer(serializers.ModelSerializer):
     skip_deltas = False
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 
@@ -334,7 +334,7 @@ class ExclusionReportUpdateSerializer(serializers.ModelSerializer, ExclusionRepo
     display_name = serializers.SerializerMethodField()
 
     def get_display_name(self, obj):
-        if obj.nickname is not None and obj.nickname is not '':
+        if obj.nickname is not None and obj.nickname != '':
             return obj.nickname
         return obj.generated_nickname
 

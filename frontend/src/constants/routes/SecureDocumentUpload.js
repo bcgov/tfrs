@@ -1,5 +1,5 @@
-const API = '/documents';
-const BASE_PATH = '/part_3_agreements';
+const API = '/documents'
+const BASE_PATH = '/part_3_agreements'
 
 const SECURE_DOCUMENT_UPLOAD = {
   API,
@@ -8,6 +8,6 @@ const SECURE_DOCUMENT_UPLOAD = {
   DETAILS: `${BASE_PATH}/view/:id`,
   EDIT: `${BASE_PATH}/edit/:id`,
   LIST: BASE_PATH
-};
+}
 
-export default SECURE_DOCUMENT_UPLOAD;
+export default SECURE_DOCUMENT_UPLOAD

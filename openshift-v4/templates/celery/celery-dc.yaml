@@ -46,6 +46,10 @@ parameters:
   name: MEMORY_LIMIT
   value: 3Gi    
   required: true
+- name: DB_SERVICE_NAME
+  displayName: The database service name
+  description: The database service name
+  required: true  
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -106,53 +110,66 @@ objects:
           image: ''
           env:
           - name: RABBITMQ_VHOST
-            value: "/tfrs"
+            value: "tfrs-vhost"
           - name: RABBITMQ_USER
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-rabbitmq-app
+                key: username
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ${NAME}${SUFFIX}-rabbitmq-cluster-secret
-                key: tfrs_password
+                name: tfrs-rabbitmq-app
+                key: password
           - name: RABBITMQ_HOST
-            value: ${NAME}${SUFFIX}-rabbitmq-cluster.${NAMESPACE}.svc.cluster.local
+            value: tfrs-rabbitmq.${NAMESPACE}.svc.cluster.local
           - name: RABBITMQ_PORT
             value: '5672'
           - name: DATABASE_SERVICE_NAME
-            value: patroni-master${SUFFIX}
+            # value: patroni-master${SUFFIX}
+            value: ${DB_SERVICE_NAME}
           - name: DATABASE_ENGINE
             value: postgresql
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-name
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: patroni${SUFFIX}
+                # name: patroni${SUFFIX}
+                name: tfrs-patroni-app
                 key: app-db-password
           - name: MINIO_ENDPOINT
-            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: ENDPOINT
           - name: MINIO_USE_SSL
             value: 'true'
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_ACCESS_KEY
+                name: tfrs-object-storage
+                key: USER_ID
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_SECRET_KEY
+                name: tfrs-object-storage
+                key: KEY
           - name: MINIO_BUCKET_NAME
-            value: tfrs
+            valueFrom:
+              secretKeyRef:
+                name: tfrs-object-storage
+                key: BUCKET
           - name: EMAIL_FROM_ADDRESS
             value: tfrs@gov.bc.ca
           - name: EMAIL_SENDING_ENABLED

@@ -1,15 +1,15 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import Draggable from 'react-draggable';
+import PropTypes from 'prop-types'
+import React from 'react'
+import Draggable from 'react-draggable'
 
 const ScheduleATotals = (props) => {
   const formatNumber = (value) => {
     if (value === 0) {
-      return '-';
+      return '-'
     }
 
-    return value.toFixed(0).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-  };
+    return value.toFixed(0).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
 
   return (
     <Draggable bounds="parent">
@@ -64,8 +64,8 @@ const ScheduleATotals = (props) => {
         </div>
       </div>
     </Draggable>
-  );
-};
+  )
+}
 
 ScheduleATotals.propTypes = {
   totals: PropTypes.shape({
@@ -78,6 +78,6 @@ ScheduleATotals.propTypes = {
       transferred: PropTypes.number
     })
   }).isRequired
-};
+}
 
-export default ScheduleATotals;
+export default ScheduleATotals

@@ -1,17 +1,18 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
+import React from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
 
-import history from '../../app/History';
-import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
-import USERS from '../../constants/routes/Users';
-import ReactTable from '../../app/components/StateSavingReactTable';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin'
+import USERS from '../../constants/routes/Users'
+import ReactTable from '../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
 
 const OrganizationMembersTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => `${item.firstName} ${item.lastName}`,
     className: 'col-name',
@@ -43,16 +44,18 @@ const OrganizationMembersTable = (props) => {
     Header: 'Status',
     id: 'status',
     minWidth: 100
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -69,30 +72,30 @@ const OrganizationMembersTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              let viewUrl = USERS.DETAILS.replace(':id', row.original.id);
+              let viewUrl = USERS.DETAILS.replace(':id', row.original.id)
 
               if (document.location.pathname.indexOf('/admin/') >= 0) {
-                viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.original.id);
+                viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.original.id)
               }
 
-              history.push(viewUrl);
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 OrganizationMembersTable.defaultProps = {
   stateKey: 'organizations-members'
-};
+}
 
 OrganizationMembersTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
@@ -109,9 +112,9 @@ OrganizationMembersTable.propTypes = {
     hasPermission: PropTypes.func
   }).isRequired,
   stateKey: PropTypes.string
-};
+}
 
 const mapStateToProps = state => ({
-});
+})
 
-export default connect(mapStateToProps)(OrganizationMembersTable);
+export default connect(mapStateToProps)(OrganizationMembersTable)

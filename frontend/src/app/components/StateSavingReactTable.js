@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import ReactTable from 'react-table';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import connect from 'react-redux/es/connect/connect';
-import saveTableState from '../../actions/stateSavingReactTableActions';
+import React, { Component } from 'react'
+import ReactTable from 'react-table'
+import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import saveTableState from '../../actions/stateSavingReactTableActions'
 
 class ModifiedReactTable extends ReactTable {
   /*
@@ -13,7 +13,7 @@ class ModifiedReactTable extends ReactTable {
   So we're modifying it that it just returns true
   */
   filterData (data, filtered, defaultFilterMethod, allVisibleColumns) {
-    let filteredData = data;
+    let filteredData = data
 
     if (filtered.length) {
       filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
@@ -21,24 +21,24 @@ class ModifiedReactTable extends ReactTable {
 
         // Don't filter hidden columns or columns that have had their filters disabled
         if (!column || column.filterable === false) {
-          return filteredSoFar;
+          return filteredSoFar
         }
 
-        const filterMethod = column.filterMethod || defaultFilterMethod;
+        const filterMethod = column.filterMethod || defaultFilterMethod
 
         // If 'filterAll' is set to true, pass the entire dataset to the filter method
         if (column.filterAll) {
-          return filterMethod(nextFilter, filteredSoFar, column);
+          return filterMethod(nextFilter, filteredSoFar, column)
         }
-        return filteredSoFar.filter(row => filterMethod(nextFilter, row, column));
-      }, filteredData);
+        return filteredSoFar.filter(row => filterMethod(nextFilter, row, column))
+      }, filteredData)
 
       // Apply the filter to the subrows if we are pivoting, and then
       // filter any rows without subcolumns because it would be strange to show
       filteredData = filteredData
         .map((row) => {
           if (!row[this.props.subRowsKey]) {
-            return row;
+            return row
           }
           return {
             ...row,
@@ -48,22 +48,22 @@ class ModifiedReactTable extends ReactTable {
               defaultFilterMethod,
               allVisibleColumns
             )
-          };
-        });
+          }
+        })
     }
 
-    return filteredData;
+    return filteredData
   }
 }
 
 class StateSavingReactTable extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this._pageChanged = this._pageChanged.bind(this);
-    this._pageSizeChanged = this._pageSizeChanged.bind(this);
-    this._sortedChanged = this._sortedChanged.bind(this);
-    this._filteredChange = this._filteredChange.bind(this);
+    this._pageChanged = this._pageChanged.bind(this)
+    this._pageSizeChanged = this._pageSizeChanged.bind(this)
+    this._sortedChanged = this._sortedChanged.bind(this)
+    this._filteredChange = this._filteredChange.bind(this)
   }
 
   _pageSizeChanged (pageSize, pageIndex) {
@@ -71,21 +71,21 @@ class StateSavingReactTable extends Component {
       ...this.props.tableState,
       pageSize,
       page: pageIndex
-    });
+    })
   }
 
   _pageChanged (pageIndex) {
     this.props.saveTableState(this.props.stateKey, {
       ...this.props.tableState,
       page: pageIndex
-    });
+    })
   }
 
   _sortedChanged (newSorted, column, shiftKey) {
     this.props.saveTableState(this.props.stateKey, {
       ...this.props.tableState,
       sorted: newSorted
-    });
+    })
   }
 
   _filteredChange (filtered, column) {
@@ -93,7 +93,7 @@ class StateSavingReactTable extends Component {
       ...this.props.tableState,
       filtered,
       page: 0 // reset the page number after filtering
-    });
+    })
   }
 
   render () {
@@ -110,10 +110,10 @@ class StateSavingReactTable extends Component {
           onFilteredChange={this._filteredChange}
           {...this.props}
         />
-      );
+      )
     }
 
-    return <ReactTable {...this.props} />;
+    return <ReactTable {...this.props} />
   }
 }
 
@@ -122,7 +122,7 @@ StateSavingReactTable.defaultProps = {
   defaultPageSize: 5,
   defaultSorted: [],
   defaultFiltered: []
-};
+}
 
 StateSavingReactTable.propTypes = {
   stateKey: PropTypes.string.isRequired,
@@ -132,21 +132,22 @@ StateSavingReactTable.propTypes = {
   defaultFiltered: PropTypes.arrayOf(PropTypes.shape()),
   tableState: PropTypes.shape().isRequired,
   saveTableState: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = (state, ownProps) => ({
   tableState:
     ownProps.stateKey in state.rootReducer.tableState.savedState
-      ? state.rootReducer.tableState.savedState[ownProps.stateKey] : {
-        page: 0,
-        pageSize: ownProps.defaultPageSize,
-        sorted: ownProps.defaultSorted,
-        filtered: ownProps.defaultFiltered
-      }
-});
+      ? state.rootReducer.tableState.savedState[ownProps.stateKey]
+      : {
+          page: 0,
+          pageSize: ownProps.defaultPageSize,
+          sorted: ownProps.defaultSorted,
+          filtered: ownProps.defaultFiltered
+        }
+})
 
 const mapDispatchToProps = dispatch => ({
   saveTableState: bindActionCreators(saveTableState, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(StateSavingReactTable);
+export default connect(mapStateToProps, mapDispatchToProps)(StateSavingReactTable)

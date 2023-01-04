@@ -8,9 +8,9 @@
  * @return Boolean
  */
 const filterNumber = (search, value, precision = 2) => {
-  const filter = search.replace(/,/g, ''); // remove commas as we're going to convert it into a float
-  const string = parseFloat(value).toFixed(precision);
-  return string.includes(parseFloat(filter));
-};
+  const filter = search.replace(/,/g, '') // remove commas as we're going to convert it into a float
+  const string = parseFloat(value).toFixed(precision)
+  return string.includes(parseFloat(filter))
+}
 
-export default filterNumber;
+export default filterNumber

@@ -1,17 +1,18 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ReactTable from '../../../app/components/StateSavingReactTable';
-import history from '../../../app/History';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations'
+import { useNavigate } from 'react-router'
 
 const EnergyEffectivenessRatiosTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -40,10 +41,10 @@ const EnergyEffectivenessRatiosTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-diesel',
     Header: (
@@ -75,10 +76,10 @@ const EnergyEffectivenessRatiosTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-gasoline',
     Header: (
@@ -89,16 +90,18 @@ const EnergyEffectivenessRatiosTable = (props) => {
     ),
     id: 'gasoline',
     width: 200
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -117,28 +120,27 @@ const EnergyEffectivenessRatiosTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_DETAILS.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              const viewUrl = CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_DETAILS.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
-  );
-};
+  )
+}
 
-EnergyEffectivenessRatiosTable.defaultProps = {};
+EnergyEffectivenessRatiosTable.defaultProps = {}
 
 EnergyEffectivenessRatiosTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
-};
+}
 
-export default EnergyEffectivenessRatiosTable;
+export default EnergyEffectivenessRatiosTable

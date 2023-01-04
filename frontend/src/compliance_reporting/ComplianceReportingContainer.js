@@ -3,64 +3,70 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { toastr as reduxToastr } from 'react-redux-toastr';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { toastr as reduxToastr } from 'react-redux-toastr'
+import PropTypes from 'prop-types'
 
-import getCompliancePeriods from '../actions/compliancePeriodsActions';
-import { complianceReporting } from '../actions/complianceReporting';
-import { exclusionReports } from '../actions/exclusionReports';
-import CallableModal from '../app/components/CallableModal';
-import history from '../app/History';
-import ComplianceReportingPage from './components/ComplianceReportingPage';
-import CONFIG from '../config';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports';
-import toastr from '../utils/toastr';
+import getCompliancePeriods from '../actions/compliancePeriodsActions'
+import { complianceReporting } from '../actions/complianceReporting'
+import { exclusionReports } from '../actions/exclusionReports'
+import CallableModal from '../app/components/CallableModal'
+import ComplianceReportingPage from './components/ComplianceReportingPage'
+import CONFIG from '../config'
+import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
+import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
+import toastr from '../utils/toastr'
+import { withRouter } from '../utils/withRouter'
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this.currentYear = new Date().getFullYear();
+    this.currentYear = new Date().getFullYear()
 
     this.state = {
       reportType: 'compliance',
       selectedComplianceYear: this.currentYear,
       showModal: false
-    };
+    }
 
-    this._selectComplianceReport = this._selectComplianceReport.bind(this);
-    this._showModal = this._showModal.bind(this);
-    this.createComplianceReport = this.createComplianceReport.bind(this);
-    this.createExclusionReport = this.createExclusionReport.bind(this);
+    this._selectComplianceReport = this._selectComplianceReport.bind(this)
+    this._showModal = this._showModal.bind(this)
+    this.createComplianceReport = this.createComplianceReport.bind(this)
+    this.createExclusionReport = this.createExclusionReport.bind(this)
   }
 
   componentDidMount () {
-    this.loadData();
+    this.loadData()
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (nextProps.complianceReporting.success) {
-        history.push(COMPLIANCE_REPORTING.EDIT
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT
           .replace(':id', nextProps.complianceReporting.item.id)
-          .replace(':tab', 'intro'));
-        toastr.complianceReporting('Created');
+          .replace(':tab', 'intro'))
+        toastr.complianceReporting('Created')
       } else {
-        reduxToastr.error('Error saving');
+        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0
+          ? nextProps.complianceReporting.errorMessage
+          : 'Error saving'
+        reduxToastr.error(errorMessage)
       }
     }
 
     if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
       if (nextProps.exclusionReports.success) {
-        history.push(EXCLUSION_REPORTS.EDIT
+        this.props.navigate(EXCLUSION_REPORTS.EDIT
           .replace(':id', nextProps.exclusionReports.item.id)
-          .replace(':tab', 'intro'));
-        toastr.exclusionReports('Created');
+          .replace(':tab', 'intro'))
+        toastr.exclusionReports('Created')
       } else {
-        reduxToastr.error('Error saving');
+        const errorMessage = nextProps.exclusionReports.errorMessage.length > 0
+          ? nextProps.exclusionReports.errorMessage
+          : 'Error saving'
+        reduxToastr.error(errorMessage)
       }
     }
   }
@@ -69,13 +75,13 @@ class ComplianceReportingContainer extends Component {
     this.setState({
       reportType,
       selectedComplianceYear: complianceYear
-    });
+    })
   }
 
   _showModal (bool) {
     this.setState({
       showModal: bool
-    });
+    })
   }
 
   createComplianceReport (compliancePeriodDescription) {
@@ -85,9 +91,9 @@ class ComplianceReportingContainer extends Component {
       },
       type: 'Compliance Report',
       compliancePeriod: compliancePeriodDescription
-    };
+    }
 
-    this.props.createComplianceReport(payload);
+    this.props.createComplianceReport(payload)
   }
 
   createExclusionReport (compliancePeriodDescription) {
@@ -97,18 +103,18 @@ class ComplianceReportingContainer extends Component {
       },
       type: 'Exclusion Report',
       compliancePeriod: compliancePeriodDescription
-    };
+    }
 
-    this.props.createExclusionReport(payload);
+    this.props.createExclusionReport(payload)
   }
 
   loadData () {
     this.props.getCompliancePeriods();
-    this.props.getComplianceReports();
+    this.props.getComplianceReports({page: 1, pageSize: 10, filters: []});
   }
 
   render () {
-    const currentEffectiveDate = `${this.currentYear + 1}-01-01`;
+    const currentEffectiveDate = `${this.currentYear + 1}-01-01`
 
     return ([
       <ComplianceReportingPage
@@ -117,9 +123,11 @@ class ComplianceReportingContainer extends Component {
           compliancePeriod.effectiveDate >= CONFIG.COMPLIANCE_REPORTING.CREATE_EFFECTIVE_DATE)
           .reverse()}
         complianceReports={{
-          isFetching: this.props.complianceReports.isFinding,
-          items: this.props.complianceReports.items
+          isFetching: this.props.complianceReports.isFindingPaginated,
+          items: this.props.complianceReports.paginatedItems,
+          itemsCount: this.props.complianceReports.totalCount
         }}
+        getComplianceReports={this.props.getComplianceReports}
         createComplianceReport={this.createComplianceReport}
         createExclusionReport={this.createExclusionReport}
         key="compliance-reporting-list"
@@ -130,13 +138,13 @@ class ComplianceReportingContainer extends Component {
       />,
       <CallableModal
         close={() => {
-          this._showModal(false);
+          this._showModal(false)
         }}
         handleSubmit={() => {
           if (this.state.reportType === 'exclusion') {
-            this.createExclusionReport(this.state.selectedComplianceYear);
+            this.createExclusionReport(this.state.selectedComplianceYear)
           } else {
-            this.createComplianceReport(this.state.selectedComplianceYear);
+            this.createComplianceReport(this.state.selectedComplianceYear)
           }
         }}
         id="confirmCreate"
@@ -158,20 +166,21 @@ class ComplianceReportingContainer extends Component {
           to submit it to government. Do you want to create a new report?
         </p>
       </CallableModal>
-    ]);
+    ])
   }
 }
 
 ComplianceReportingContainer.defaultProps = {
   complianceReporting: {},
   exclusionReports: {}
-};
+}
 
 ComplianceReportingContainer.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReports: PropTypes.shape({
-    items: PropTypes.arrayOf(PropTypes.shape()),
-    isFinding: PropTypes.bool
+    paginatedItems: PropTypes.arrayOf(PropTypes.shape()),
+    isFindingPaginated: PropTypes.bool,
+    totalCount: PropTypes.number
   }).isRequired,
   complianceReporting: PropTypes.shape({
     isCreating: PropTypes.bool,
@@ -204,7 +213,7 @@ ComplianceReportingContainer.propTypes = {
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired
-};
+}
 
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items,
@@ -222,13 +231,13 @@ const mapStateToProps = state => ({
     success: state.rootReducer.exclusionReports.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
-  getComplianceReports: complianceReporting.find
+  getComplianceReports: complianceReporting.findPaginated
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

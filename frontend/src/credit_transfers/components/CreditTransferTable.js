@@ -1,22 +1,23 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
-import moment from 'moment-timezone';
-import numeral from 'numeral';
+import React from 'react'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
+import moment from 'moment-timezone'
+import numeral from 'numeral'
 
-import history from '../../app/History';
-import * as NumberFormat from '../../constants/numeralFormats';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import filterNumber from '../../utils/filters';
-import ReactTable from '../../app/components/StateSavingReactTable';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+import * as NumberFormat from '../../constants/numeralFormats'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
+import filterNumber from '../../utils/filters'
+import ReactTable from '../../app/components/StateSavingReactTable'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import { useNavigate } from 'react-router'
 
 const CreditTransferTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: 'complianceReport',
     className: 'col-compliance-report',
@@ -43,16 +44,18 @@ const CreditTransferTable = (props) => {
   }, {
     accessor: item => ([
       CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
-    ].includes(item.type.id) ? '' : item.creditsFrom.name),
+    ].includes(item.type.id)
+      ? ''
+      : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     },
     Header: 'Credits From',
     id: 'creditsFrom',
@@ -63,10 +66,10 @@ const CreditTransferTable = (props) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
         return (
           <div className="greyed-out">N/A</div>
-        );
+        )
       }
 
-      return row.value;
+      return row.value
     },
     Header: 'Credits To',
     id: 'creditsTo',
@@ -84,10 +87,10 @@ const CreditTransferTable = (props) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return -1; // this is to fix sorting (value can't be negative)
+        return -1 // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.fairMarketValuePerCredit);
+      return parseFloat(item.fairMarketValuePerCredit)
     },
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
@@ -101,21 +104,21 @@ const CreditTransferTable = (props) => {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
       : (
-        Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-      ).description),
+          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
+        ).description),
     className: 'col-status',
     filterMethod: (filter, row) => {
-      const values = filter.value.toLowerCase().split(',');
-      let found = false;
+      const values = filter.value.toLowerCase().split(',')
+      let found = false
 
       values.forEach((value) => {
-        const filterValue = value.trim();
+        const filterValue = value.trim()
         if (filterValue !== '' && row.status.toLowerCase().includes(filterValue)) {
-          found = true;
+          found = true
         }
-      });
+      })
 
-      return found;
+      return found
     },
     Header: 'Status',
     id: 'status',
@@ -126,16 +129,18 @@ const CreditTransferTable = (props) => {
     Header: 'Last Updated On',
     id: 'updateTimestamp',
     minWidth: 95
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -152,38 +157,38 @@ const CreditTransferTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              let viewUrl;
+              let viewUrl
               if (row.original.complianceReport) {
                 viewUrl = COMPLIANCE_REPORTING.EDIT
                   .replace(':id', row.original.complianceReport)
-                  .replace(':tab', 'schedule-assessment');
+                  .replace(':tab', 'schedule-assessment')
               } else {
-                viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
+                viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id)
               }
-              history.push(viewUrl);
+              navigate(viewUrl)
             },
             className: `clickable ${(row && row.original.id.toString() === props.highlight) && 'highlight'}`
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 CreditTransferTable.defaultProps = {
   highlight: null
-};
+}
 
 CreditTransferTable.propTypes = {
   highlight: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
-};
+}
 
-export default CreditTransferTable;
+export default CreditTransferTable

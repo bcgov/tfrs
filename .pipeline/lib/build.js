@@ -26,6 +26,7 @@ module.exports = settings => {
     }
   }))
 
+  /** to be deleted once 2.0.0 is on prod
   //build frontend
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-angular-app-bc.yaml`, {
     'param':{
@@ -36,8 +37,10 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
+  */
+
   
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc.yaml`, {
+  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
@@ -69,6 +72,7 @@ module.exports = settings => {
   }
 }))
 
+
 //build scan coordinator server
  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-coordinator/scan-coordinator-bc.yaml`, {
   'param':{
@@ -79,6 +83,7 @@ module.exports = settings => {
     'GIT_REF': oc.git.ref
   }
 }))
+
 
 //build scan handler server
 objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/scan-handler/scan-handler-bc.yaml`, {

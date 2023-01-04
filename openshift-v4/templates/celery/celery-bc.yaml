@@ -51,7 +51,7 @@ objects:
       source:
         type: Dockerfile
         dockerfile: |
-          FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.6.8-slim-stretch
+          FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.9.15
           ENV TFRS_RELEASE=${tfrs_release}
           RUN apt-get update \
               && apt-get install -y git \
@@ -71,18 +71,32 @@ objects:
       strategy:
         type: Docker
         dockerStrategy:
-          pullSecret:
-            name: docker-artifactory-secret
           noCache: true
           env:
             - name: tfrs_release
               value: ${RELEASE_BRANCH}
+            - name: ARTIFACTORY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artifacts-default-cgcynz
+                  key: username
+            - name: ARTIFACTORY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artifacts-default-cgcynz
+                  key: password
           forcePull: true
       output:
         to:
           kind: ImageStreamTag
           name: ${NAME}-celery:${VERSION}
-      resources: {}
+      resources: 
+        limits:
+          cpu: 1500m
+          memory: 1300Mi
+        requests:
+          cpu: 750m
+          memory: 650Mi
       postCommit: {}
       nodeSelector:
       successfulBuildsHistoryLimit: 5

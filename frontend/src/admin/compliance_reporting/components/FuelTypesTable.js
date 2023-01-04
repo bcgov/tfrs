@@ -1,12 +1,12 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import 'react-table/react-table.css';
+import 'react-table/react-table.css'
 
-import ReactTable from '../../../app/components/StateSavingReactTable';
+import ReactTable from '../../../app/components/StateSavingReactTable'
 
 const FuelTypesTable = (props) => {
   const columns = [{
@@ -19,16 +19,18 @@ const FuelTypesTable = (props) => {
     className: 'col-alternatives',
     Header: 'Description',
     id: 'alternatives'
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -45,15 +47,15 @@ const FuelTypesTable = (props) => {
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
-  );
-};
+  )
+}
 
-FuelTypesTable.defaultProps = {};
+FuelTypesTable.defaultProps = {}
 
 FuelTypesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired
-};
+}
 
-export default FuelTypesTable;
+export default FuelTypesTable

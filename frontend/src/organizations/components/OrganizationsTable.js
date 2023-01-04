@@ -1,17 +1,17 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import 'react-table/react-table.css';
-import numeral from 'numeral';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import 'react-table/react-table.css'
+import numeral from 'numeral'
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
-import ORGANIZATION_STATUSES from '../../constants/organizationStatuses';
-import ReactTable from '../../app/components/StateSavingReactTable';
+import * as NumberFormat from '../../constants/numeralFormats'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
+import ORGANIZATION_STATUSES from '../../constants/organizationStatuses'
+import ReactTable from '../../app/components/StateSavingReactTable'
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -21,9 +21,9 @@ const OrganizationsTable = (props) => {
     id: 'name',
     minWidth: 200,
     Cell: (row) => {
-      const viewUrl = ORGANIZATIONS.DETAILS.replace(':id', row.original.id);
+      const viewUrl = ORGANIZATIONS.DETAILS.replace(':id', row.original.id)
 
-      return <Link to={viewUrl}>{row.value}</Link>;
+      return <Link to={viewUrl}>{row.value}</Link>
     }
   }, {
     accessor: item => item.organizationBalance.validatedCredits,
@@ -55,9 +55,9 @@ const OrganizationsTable = (props) => {
   }, {
     accessor: item => item.organizationBalance.creditTradeId,
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value)
 
-      return <Link to={viewUrl}>{row.value}</Link>;
+      return <Link to={viewUrl}>{row.value}</Link>
     },
     className: 'col-last-transaction',
     Header: 'Last Transaction',
@@ -68,16 +68,18 @@ const OrganizationsTable = (props) => {
     filterable: false,
     id: 'actions',
     width: 50
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -94,13 +96,13 @@ const OrganizationsTable = (props) => {
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
-  );
-};
+  )
+}
 
 OrganizationsTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
-};
+}
 
-export default OrganizationsTable;
+export default OrganizationsTable

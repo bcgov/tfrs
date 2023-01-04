@@ -3,17 +3,17 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import ReactDataSheet from 'react-datasheet';
-import moment from 'moment-timezone';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import ReactDataSheet from 'react-datasheet'
+import moment from 'moment-timezone'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 class SnapshotDisplay extends Component {
   static decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
-      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
   static buildScheduleAGrid (snapshot) {
@@ -39,7 +39,7 @@ class SnapshotDisplay extends Component {
         className: 'header underlined',
         disableEvents: true
       }]
-    ];
+    ]
 
     if (snapshot.scheduleA) {
       snapshot.scheduleA.records.forEach(row => (
@@ -64,10 +64,10 @@ class SnapshotDisplay extends Component {
           value: row.quantity,
           valueViewer: SnapshotDisplay.decimalViewer(0)
         }])
-      ));
+      ))
     }
 
-    return grid;
+    return grid
   }
 
   static buildScheduleBGrid (snapshot) {
@@ -125,7 +125,7 @@ class SnapshotDisplay extends Component {
         disableEvents: true,
         value: 'Debits'
       }]
-    ];
+    ]
 
     if (snapshot.scheduleB) {
       snapshot.scheduleB.records.forEach(row => (
@@ -144,7 +144,8 @@ class SnapshotDisplay extends Component {
         }, {
           className: 'left',
           readOnly: true,
-          value: row.fuelCode != null ? row.fuelCodeDescription
+          value: row.fuelCode != null
+            ? row.fuelCodeDescription
             : (row.scheduleD_sheetIndex != null ? 'From Schedule D' : '')
         }, {
           readOnly: true,
@@ -183,7 +184,7 @@ class SnapshotDisplay extends Component {
           value: row.debits,
           valueViewer: SnapshotDisplay.decimalViewer(2)
         }])
-      ));
+      ))
 
       grid.push([{
         className: 'strong',
@@ -198,10 +199,10 @@ class SnapshotDisplay extends Component {
         readOnly: true,
         value: snapshot.scheduleB.totalDebits,
         valueViewer: SnapshotDisplay.decimalViewer(0)
-      }]);
+      }])
     }
 
-    return grid;
+    return grid
   }
 
   static buildScheduleCGrid (snapshot) {
@@ -227,7 +228,7 @@ class SnapshotDisplay extends Component {
         disableEvents: true,
         value: 'Rationale'
       }]
-    ];
+    ]
 
     if (snapshot.scheduleC) {
       snapshot.scheduleC.records.forEach(row => (
@@ -252,22 +253,22 @@ class SnapshotDisplay extends Component {
           readOnly: true,
           value: row.rationale
         }])
-      ));
+      ))
     }
 
-    return grid;
+    return grid
   }
 
   static buildScheduleDGrid (snapshot, i) {
-    const grid = [];
-    const sheet = snapshot.scheduleD.sheets[i];
+    const grid = []
+    const sheet = snapshot.scheduleD.sheets[i]
 
     grid.push([{
       className: 'header underlined',
       colSpan: 5,
       disableEvents: true,
       value: 'Parameters'
-    }]);
+    }])
 
     grid.push([{
       className: 'strong left',
@@ -302,7 +303,7 @@ class SnapshotDisplay extends Component {
       colSpan: 2,
       readOnly: true,
       value: sheet.feedstock
-    }]);
+    }])
 
     grid.push([{
       className: 'header',
@@ -334,7 +335,7 @@ class SnapshotDisplay extends Component {
       disableEvents: true,
       readOnly: true,
       value: 'Description'
-    }]);
+    }])
 
     sheet.inputs.forEach(row => (
       grid.push([{
@@ -358,7 +359,7 @@ class SnapshotDisplay extends Component {
         readOnly: true,
         value: row.description
       }])
-    ));
+    ))
 
     grid.push([{
       className: 'header',
@@ -375,7 +376,7 @@ class SnapshotDisplay extends Component {
       colSpan: 2,
       disableEvents: true,
       value: 'Value'
-    }]);
+    }])
 
     sheet.outputs.forEach(row => (
       grid.push([{
@@ -389,9 +390,9 @@ class SnapshotDisplay extends Component {
         value: row.intensity,
         valueViewer: SnapshotDisplay.decimalViewer(2)
       }])
-    ));
+    ))
 
-    return grid;
+    return grid
   }
 
   static buildSummaryGrid (snapshot) {
@@ -866,16 +867,16 @@ class SnapshotDisplay extends Component {
         value: snapshot.summary.totalPayable,
         valueViewer: SnapshotDisplay.decimalViewer(2)
       }]
-    ];
+    ]
 
-    return grid;
+    return grid
   }
 
   render () {
-    const { snapshot } = this.props;
+    const { snapshot } = this.props
 
     if (!snapshot) {
-      return (<p>???</p>);
+      return (<p>???</p>)
     }
 
     return (
@@ -972,7 +973,7 @@ class SnapshotDisplay extends Component {
           }
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -980,16 +981,16 @@ SnapshotDisplay.defaultProps = {
   snapshot: null,
   computedWarning: false,
   showHeaders: true
-};
+}
 
 SnapshotDisplay.propTypes = {
   snapshot: PropTypes.shape(),
   showHeaders: PropTypes.bool,
   computedWarning: PropTypes.bool
-};
+}
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(SnapshotDisplay);
+export default connect(mapStateToProps, mapDispatchToProps)(SnapshotDisplay)

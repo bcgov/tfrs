@@ -1,9 +1,9 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
+import React from 'react'
+import PropTypes from 'prop-types'
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
 
 const CarbonIntensityFormDetails = props => (
   <div className="default-carbon-intensity-details">
@@ -91,11 +91,11 @@ const CarbonIntensityFormDetails = props => (
       </div>
     </div>
   </div>
-);
+)
 
 CarbonIntensityFormDetails.defaultProps = {
   edit: false
-};
+}
 
 CarbonIntensityFormDetails.propTypes = {
   edit: PropTypes.bool,
@@ -116,6 +116,6 @@ CarbonIntensityFormDetails.propTypes = {
     ]),
     name: PropTypes.string
   }).isRequired
-};
+}
 
-export default CarbonIntensityFormDetails;
+export default CarbonIntensityFormDetails

@@ -1,5 +1,5 @@
-const API = '/compliance_reports';
-const BASE_PATH = '/compliance_reporting';
+const API = '/compliance_reports'
+const BASE_PATH = '/compliance_reporting'
 
 const COMPLIANCE_REPORTING = {
   API,
@@ -9,6 +9,6 @@ const COMPLIANCE_REPORTING = {
   EXPORT: `${API}/:id/xls`,
   SNAPSHOT: `${BASE_PATH}/snapshot/:id`,
   LIST: BASE_PATH
-};
+}
 
-export default COMPLIANCE_REPORTING;
+export default COMPLIANCE_REPORTING

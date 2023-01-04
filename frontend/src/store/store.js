@@ -1,93 +1,52 @@
-import createSagaMiddleware from 'redux-saga';
-import { createStore, compose, applyMiddleware } from 'redux';
-import persistState from 'redux-localstorage';
-import { createLogger } from 'redux-logger';
-import { reducer as OIDCReducer } from 'redux-oidc';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
-import createSocketIoMiddleware from 'redux-socket.io';
-import thunk from 'redux-thunk';
-import { reducer as toastrReducer } from 'react-redux-toastr';
-import io from 'socket.io-client';
+import createSagaMiddleware from 'redux-saga'
+import thunk from 'redux-thunk'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
-import rootReducer from '../reducers/reducer';
-import { SOCKETIO_URL } from '../constants/routes';
+import { createLogger } from 'redux-logger'
+import createSocketIoMiddleware from 'redux-socket.io'
+import { reducer as toastrReducer } from 'react-redux-toastr'
+import io from 'socket.io-client'
 
-import { persistTargetPathReducer } from '../reducers/persistTargetPathReducer';
+import rootReducer from '../reducers/reducer'
+import { SOCKETIO_URL } from '../constants/routes'
 
-import CONFIG from '../config';
-import sessionTimeoutSaga from './sessionTimeout';
-import authenticationStateSaga from './authenticationState';
-import notificationsSaga from './notificationTrigger';
-import socketAuthenticationSaga from './socketAuthentication';
-import autocompleteInvalidatorSaga from './autocompleteInvalidator';
-import { carbonIntensities } from '../actions/carbonIntensities';
-import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
-import { energyDensities } from '../actions/energyDensities';
-import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
-import { expectedUses } from '../actions/expectedUses';
-import { fuelClasses } from '../actions/fuelClasses';
-import { notionalTransferTypes } from '../actions/notionalTransferTypes';
-import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
-import { transactionTypes } from '../actions/transactionTypes';
-import { roles } from '../actions/roleActions';
-import autosaveSaga from './autosaveStore';
-import { complianceReporting } from '../actions/complianceReporting';
-import { exclusionReports } from '../actions/exclusionReports';
+import CONFIG from '../config'
+import keycloakReducer from '../reducers/keycloakReducer'
+import rootSaga from '../reducers/rootSaga'
 
-const middleware = routerMiddleware(history);
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware()
 
-const socket = io(SOCKETIO_URL);
-const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
+const socket = io(SOCKETIO_URL)
+const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/')
 
-const enhancer = compose(persistState(['targetPath'], { key: 'tfrs-state' }));
-
-const combinedReducers = (state = {}, action) => {
-  const currentRoute = state.routing || {};
-  return {
-    toastr: toastrReducer(state.toastr, action),
-    oidc: OIDCReducer(state.oidc, action),
-    routing: routerReducer(state.routing, action),
-    targetPath: persistTargetPathReducer(state.targetPath, { ...action, currentRoute }),
-    rootReducer: rootReducer(state.rootReducer, action)
-  };
-};
-
-const allMiddleware = [
-  thunk,
-  socketIoMiddleware,
-  sagaMiddleware,
-  middleware
-];
-
-if (CONFIG.DEBUG.ENABLED) {
-  allMiddleware.push(createLogger());
+const userAuthPersistConfig = {
+  key: 'userAuth',
+  storage
 }
 
-const store = createStore(
-  combinedReducers,
-  applyMiddleware(...allMiddleware),
-  enhancer
-);
+const combinedReducers = combineReducers({
+  toastr: toastrReducer,
+  userAuth: persistReducer(userAuthPersistConfig, keycloakReducer),
+  rootReducer
+})
 
-sagaMiddleware.run(sessionTimeoutSaga);
-sagaMiddleware.run(notificationsSaga, store);
-sagaMiddleware.run(authenticationStateSaga, store);
-sagaMiddleware.run(socketAuthenticationSaga, store);
-sagaMiddleware.run(autocompleteInvalidatorSaga, store);
-sagaMiddleware.run(autosaveSaga);
+const allMiddleware = [
+  socketIoMiddleware,
+  sagaMiddleware,
+  thunk
+]
 
-sagaMiddleware.run(roles.saga);
-sagaMiddleware.run(complianceReporting.saga);
-sagaMiddleware.run(exclusionReports.saga);
-sagaMiddleware.run(carbonIntensities.saga);
-sagaMiddleware.run(defaultCarbonIntensities.saga);
-sagaMiddleware.run(energyDensities.saga);
-sagaMiddleware.run(energyEffectivenessRatios.saga);
-sagaMiddleware.run(expectedUses.saga);
-sagaMiddleware.run(fuelClasses.saga);
-sagaMiddleware.run(notionalTransferTypes.saga);
-sagaMiddleware.run(petroleumCarbonIntensities.saga);
-sagaMiddleware.run(transactionTypes.saga);
+if (CONFIG.DEBUG.ENABLED) {
+  allMiddleware.push(createLogger())
+}
 
-export default store;
+const store = configureStore({
+  reducer: combinedReducers,
+  middleware: [...allMiddleware]
+})
+
+sagaMiddleware.run(rootSaga)
+
+export default store

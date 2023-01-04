@@ -1,44 +1,48 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import PermissionsTable from './PermissionsTable';
-import Loading from '../../app/components/Loading';
-import history from '../../app/History';
-import * as Lang from '../../constants/langEnUs';
+import PermissionsTable from './PermissionsTable'
+import Loading from '../../app/components/Loading'
+import * as Lang from '../../constants/langEnUs'
 
-const RoleDetails = props => (
-  <div className="page_role">
-    {props.role.isGetting && <Loading />}
-    {(!props.role.isGetting && props.role.details) &&
-      <div>
-        <h1>
-          {`${props.role.details.description}`}
-        </h1>
-        <div className="user_history">
-          <h3>Permissions</h3>
-          {props.role.details.permissions &&
-          <PermissionsTable
-            items={props.role.details.permissions}
-          />
-          }
+import { useNavigate } from 'react-router'
+
+const RoleDetails = props => {
+  const navigate = useNavigate()
+  return (
+    <div className="page_role">
+      {props.role.isGetting && <Loading />}
+      {(!props.role.isGetting && props.role.details) &&
+        <div>
+          <h1>
+            {`${props.role.details.description}`}
+          </h1>
+          <div className="user_history">
+            <h3>Permissions</h3>
+            {props.role.details.permissions &&
+            <PermissionsTable
+              items={props.role.details.permissions}
+            />
+            }
+          </div>
+          <div className="btn-container">
+            <button
+              className="btn btn-default"
+              onClick={() => navigate(-1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+            </button>
+          </div>
         </div>
-        <div className="btn-container">
-          <button
-            className="btn btn-default"
-            onClick={() => history.goBack()}
-            type="button"
-          >
-            <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
-          </button>
-        </div>
-      </div>
-    }
-  </div>
-);
+      }
+    </div>
+  )
+}
 
 RoleDetails.propTypes = {
   role: PropTypes.shape({
@@ -49,6 +53,6 @@ RoleDetails.propTypes = {
     errors: PropTypes.shape({}),
     isGetting: PropTypes.bool.isRequired
   }).isRequired
-};
+}
 
-export default RoleDetails;
+export default RoleDetails

@@ -1,39 +1,39 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 class CheckBox extends Component {
   componentDidMount () {
     const obj = {
       id: this.props.id
-    };
+    }
 
     if (this.props.field) {
-      obj.field = this.props.field;
+      obj.field = this.props.field
     }
 
     if (this.props.type) {
-      obj.type = this.props.type;
+      obj.type = this.props.type
     }
 
     if (this.props.value) {
-      obj.value = true;
+      obj.value = true
     } else {
-      obj.value = false;
+      obj.value = false
     }
 
-    this.props.addToFields(obj);
+    this.props.addToFields(obj)
   }
 
   render () {
-    const checkboxes = this.props.fields.filter(field => field.id === this.props.id);
+    const checkboxes = this.props.fields.filter(field => field.id === this.props.id)
 
-    let checkbox = null;
+    let checkbox = null
     if (checkboxes.length === 1) {
-      [checkbox] = checkboxes;
+      [checkbox] = checkboxes
     } else {
       checkbox = checkboxes.find(field =>
-        field.field === this.props.field && field.type === this.props.type);
+        field.field === this.props.field && field.type === this.props.type)
     }
 
     if (checkbox && checkbox.value) {
@@ -46,7 +46,7 @@ class CheckBox extends Component {
           })}
           size="2x"
         />
-      );
+      )
     }
 
     return (
@@ -57,7 +57,7 @@ class CheckBox extends Component {
           type: this.props.type
         })}
         size="2x"
-      />);
+      />)
   }
 }
 
@@ -65,7 +65,7 @@ CheckBox.defaultProps = {
   field: null,
   type: null,
   value: false
-};
+}
 
 CheckBox.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -78,6 +78,6 @@ CheckBox.propTypes = {
   toggleCheck: PropTypes.func.isRequired,
   type: PropTypes.string,
   value: PropTypes.bool
-};
+}
 
-export default CheckBox;
+export default CheckBox

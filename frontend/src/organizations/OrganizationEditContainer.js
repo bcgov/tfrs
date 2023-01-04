@@ -3,24 +3,25 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
 
-import { addOrganization, getOrganization, updateOrganization } from '../actions/organizationActions';
-import { getUpdatedLoggedInUser } from '../actions/userActions';
-import Loading from '../app/components/Loading';
-import OrganizationEditForm from './components/OrganizationEditForm';
-import history from '../app/History';
-import toastr from '../utils/toastr';
-import ORGANIZATION from '../constants/routes/Organizations';
-import Modal from '../app/components/Modal';
-import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
+import { addOrganization, getOrganization, updateOrganization } from '../actions/organizationActions'
+import { getUpdatedLoggedInUser } from '../actions/userActions'
+import Loading from '../app/components/Loading'
+import OrganizationEditForm from './components/OrganizationEditForm'
+import toastr from '../utils/toastr'
+import ORGANIZATION from '../constants/routes/Organizations'
+import Modal from '../app/components/Modal'
+import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations'
+import { withRouter } from '../utils/withRouter'
+import $ from 'jquery'
 
 class OrganizationEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -37,44 +38,44 @@ class OrganizationEditContainer extends Component {
         actionsType: 1,
         status: 1
       }
-    };
+    }
 
-    this.submitted = false;
+    this.submitted = false
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleCreate = this._handleCreate.bind(this);
-    this._handleUpdate = this._handleUpdate.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleCreate = this._handleCreate.bind(this)
+    this._handleUpdate = this._handleUpdate.bind(this)
   }
 
   componentDidMount () {
     if (this.props.mode === 'add') {
-      return;
+      return
     }
 
-    this.loadData(this.props.match.params.id);
+    this.loadData(this.props.params.id)
   }
 
-  componentWillReceiveProps (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     if (props.mode === 'add') {
-      return;
+      return
     }
 
-    this.loadPropsToFieldState(props);
+    this.loadPropsToFieldState(props)
   }
 
   loadData (id) {
-    this.props.getOrganization(id);
+    this.props.getOrganization(id)
   }
 
   loadPropsToFieldState (props) {
     if (Object.keys(props.organization.details).length !== 0 && !this.submitted) {
-      const org = props.organization.details;
-      let addr = {};
+      const org = props.organization.details
+      let addr = {}
 
       if (org.organizationAddress != null) {
         addr = {
           ...org.organizationAddress
-        };
+        }
       }
 
       this.setState({
@@ -85,7 +86,7 @@ class OrganizationEditContainer extends Component {
           type: props.organization.details.type,
           ...addr
         }
-      });
+      })
     }
   }
 
@@ -93,34 +94,34 @@ class OrganizationEditContainer extends Component {
     return (
       <Modal
         handleSubmit={(event) => {
-          this._handleCreate();
+          this._handleCreate()
         }}
         id="confirmSubmit"
         key="confirmSubmit"
       >
         Are you sure you want to create this organization?
       </Modal>
-    );
+    )
   }
 
   _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
-    const numericFields = ['type', 'actionsType', 'status'];
+    const { value, name } = event.target
+    const fieldState = { ...this.state.fields }
+    const numericFields = ['type', 'actionsType', 'status']
 
     if (numericFields.includes(name)) {
-      fieldState[name] = parseInt(value, 10);
+      fieldState[name] = parseInt(value, 10)
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
     }
 
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   _handleUpdate (event) {
-    event.preventDefault();
+    event.preventDefault()
 
     const data = {
       name: this.state.fields.name,
@@ -137,22 +138,22 @@ class OrganizationEditContainer extends Component {
         county: this.state.fields.county,
         country: this.state.fields.country
       }
-    };
-
-    let viewUrl = ORGANIZATION.MINE;
-
-    if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
-      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
     }
 
-    this.props.updateOrganization(data, this.props.match.params.id).then(() => {
-      // update the session for the logged in user (in case the user information got updated)
-      this.props.getUpdatedLoggedInUser();
-      history.push(viewUrl);
-      toastr.organizationSuccess();
-    });
+    let viewUrl = ORGANIZATION.MINE
 
-    return false;
+    if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
+      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.params.id)
+    }
+
+    this.props.updateOrganization(data, this.props.params.id).then(() => {
+      // update the session for the logged in user (in case the user information got updated)
+      this.props.getUpdatedLoggedInUser()
+      this.props.navigate(viewUrl)
+      toastr.organizationSuccess()
+    })
+
+    return false
   }
 
   _handleCreate () {
@@ -171,24 +172,24 @@ class OrganizationEditContainer extends Component {
         county: this.state.fields.county,
         country: this.state.fields.country
       }
-    };
+    }
 
     this.props.addOrganization(data).then((id) => {
-      const viewUrl = ORGANIZATION.DETAILS.replace(':id', id);
-      history.push(viewUrl);
-      toastr.organizationSuccess('Organization created.');
-    });
+      const viewUrl = ORGANIZATION.DETAILS.replace(':id', id)
+      this.props.navigate(viewUrl)
+      toastr.organizationSuccess('Organization created.')
+    })
 
-    return false;
+    return false
   }
 
   render () {
     const isFetching = this.props.organization.isFetching ||
       this.props.referenceData.isFetching ||
-      !this.props.referenceData.isSuccessful;
+      !this.props.referenceData.isSuccessful
 
     if (isFetching) {
-      return (<Loading />);
+      return (<Loading />)
     }
 
     switch (this.props.mode) {
@@ -197,14 +198,14 @@ class OrganizationEditContainer extends Component {
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           handleSubmit={() => {
-            $('#confirmSubmit').modal('show');
+            $('#confirmSubmit').modal('show')
           }}
           key="organization-edit-form"
           loggedInUser={this.props.loggedInUser}
           mode={this.props.mode}
           referenceData={this.props.referenceData}
         />,
-        this._modalConfirm()]);
+        this._modalConfirm()])
       case 'gov_edit':
       case 'edit':
         return (<OrganizationEditForm
@@ -214,9 +215,9 @@ class OrganizationEditContainer extends Component {
           loggedInUser={this.props.loggedInUser}
           mode={this.props.mode}
           referenceData={this.props.referenceData}
-        />);
+        />)
       default:
-        return (<div />);
+        return (<div />)
     }
   }
 }
@@ -225,7 +226,7 @@ OrganizationEditContainer.defaultProps = {
   match: null,
   organization: null,
   referenceData: null
-};
+}
 
 OrganizationEditContainer.propTypes = {
   getUpdatedLoggedInUser: PropTypes.func.isRequired,
@@ -240,10 +241,8 @@ OrganizationEditContainer.propTypes = {
       statusDisplay: PropTypes.string
     })
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    })
+  params: PropTypes.shape({
+    id: PropTypes.string
   }),
   organization: PropTypes.shape({
     details: PropTypes.shape({
@@ -278,7 +277,7 @@ OrganizationEditContainer.propTypes = {
   getOrganization: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
@@ -293,13 +292,13 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.referenceData.isFetching,
     isSuccessful: state.rootReducer.referenceData.success
   }
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
   getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   updateOrganization: bindActionCreators(updateOrganization, dispatch),
   addOrganization: bindActionCreators(addOrganization, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrganizationEditContainer))

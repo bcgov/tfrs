@@ -1,102 +1,102 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails';
-import Errors from '../../app/components/Errors';
-import Tooltip from '../../app/components/Tooltip';
-import history from '../../app/History';
-import * as Lang from '../../constants/langEnUs';
-import DOCUMENT_STATUSES from '../../constants/documentStatuses';
+import getCompliancePeriods from '../../actions/compliancePeriodsActions'
+import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails'
+import Errors from '../../app/components/Errors'
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
+import DOCUMENT_STATUSES from '../../constants/documentStatuses'
+import { useNavigate } from 'react-router'
 
-class SecureFileSubmissionForm extends Component {
-  componentDidMount () {
-    this.props.getCompliancePeriods();
-  }
+const SecureFileSubmissionForm = props => {
+  const navigate = useNavigate()
 
-  render () {
-    return (
-      <div className="credit-transaction-requests">
-        <h1>{this.props.edit ? 'Edit' : 'New'} {this.props.documentType ? this.props.documentType.description : ''} Submission</h1>
-        <form
-          onSubmit={(event, status) =>
-            this.props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
-        >
-          <SecureFileSubmissionFormDetails
-            categories={this.props.categories}
-            compliancePeriods={this.props.compliancePeriods}
-            documentType={this.props.documentType}
-            edit={this.props.edit}
-            fields={this.props.fields}
-            handleInputChange={this.props.handleInputChange}
-          />
+  useEffect(() => {
+    props.getCompliancePeriods()
+  }, [])
 
-          {Object.keys(this.props.errors).length > 0 &&
-            <Errors errors={this.props.errors} />
-          }
+  return (
+    <div className="credit-transaction-requests">
+      <h1>{props.edit ? 'Edit' : 'New'} {props.documentType ? props.documentType.description : ''} Submission</h1>
+      <form
+        onSubmit={(event, status) =>
+          props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
+      >
+        <SecureFileSubmissionFormDetails
+          categories={props.categories}
+          compliancePeriods={props.compliancePeriods}
+          documentType={props.documentType}
+          edit={props.edit}
+          fields={props.fields}
+          handleInputChange={props.handleInputChange}
+        />
 
-          <div className="credit-transaction-requests-actions">
-            <div className="btn-container">
+        {Object.keys(props.errors).length > 0 &&
+          <Errors errors={props.errors} />
+        }
+
+        <div className="credit-transaction-requests-actions">
+          <div className="btn-container">
+            <button
+              className="btn btn-default"
+              onClick={() => navigate(-1)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+            </button>
+            {props.availableActions.includes('Cancelled') &&
               <button
-                className="btn btn-default"
-                onClick={() => history.goBack()}
+                className="btn btn-danger"
+                data-target="#confirmDelete"
+                data-toggle="modal"
                 type="button"
               >
-                <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+                <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
               </button>
-              {this.props.availableActions.includes('Cancelled') &&
-                <button
-                  className="btn btn-danger"
-                  data-target="#confirmDelete"
-                  data-toggle="modal"
-                  type="button"
-                >
-                  <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
-                </button>
-              }
-              {this.props.availableActions.includes('Draft') &&
+            }
+            {props.availableActions.includes('Draft') &&
+            <button
+              className="btn btn-default"
+              type="submit"
+            >
+              <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
+            </button>
+            }
+            {props.availableActions.includes('Submitted') &&
+            <Tooltip
+              show={props.formValidationMessage.length > 0}
+              title={props.formValidationMessage}
+            >
               <button
-                className="btn btn-default"
-                type="submit"
+                className="btn btn-primary"
+                data-target="#confirmSubmit"
+                data-toggle="modal"
+                disabled={props.formValidationMessage.length > 0}
+                type="button"
               >
-                <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
+                <FontAwesomeIcon icon="upload" /> {Lang.BTN_SUBMIT}
               </button>
-              }
-              {this.props.availableActions.includes('Submitted') &&
-              <Tooltip
-                show={this.props.formValidationMessage.length > 0}
-                title={this.props.formValidationMessage}
-              >
-                <button
-                  className="btn btn-primary"
-                  data-target="#confirmSubmit"
-                  data-toggle="modal"
-                  disabled={this.props.formValidationMessage.length > 0}
-                  type="button"
-                >
-                  <FontAwesomeIcon icon="upload" /> {Lang.BTN_SUBMIT}
-                </button>
-              </Tooltip>
-              }
-            </div>
+            </Tooltip>
+            }
           </div>
-        </form>
-      </div>
-    );
-  }
+        </div>
+      </form>
+    </div>
+  )
 }
 
 SecureFileSubmissionForm.defaultProps = {
   edit: false,
   formValidationMessage: ['Form is missing one or more required fields.'],
   id: 0
-};
+}
 
 SecureFileSubmissionForm.propTypes = {
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -119,14 +119,14 @@ SecureFileSubmissionForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number
-};
+}
 
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionForm)

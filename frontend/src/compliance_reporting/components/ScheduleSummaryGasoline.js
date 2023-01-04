@@ -1,8 +1,8 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import { numericColumn, numericInput, totalViewer } from './Columns';
-import Tooltip from '../../app/components/Tooltip';
+import { numericColumn, numericInput, totalViewer } from './Columns'
+import Tooltip from '../../app/components/Tooltip'
 
 class ScheduleSummaryGasoline {
   constructor (readOnly = false) {
@@ -29,7 +29,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 1 `}
+            {'Line 1 '}
             <Tooltip
               className="info"
               show
@@ -49,7 +49,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 2 `}
+            {'Line 2 '}
             <Tooltip
               className="info"
               show
@@ -69,7 +69,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 3 `}
+            {'Line 3 '}
             <Tooltip
               className="info"
               show
@@ -89,7 +89,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 4 `}
+            {'Line 4 '}
             <Tooltip
               className="info"
               show
@@ -110,7 +110,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 5 `}
+            {'Line 5 '}
             <Tooltip
               className="info"
               show
@@ -130,7 +130,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 6 `}
+            {'Line 6 '}
             <Tooltip
               className="info"
               show
@@ -159,7 +159,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 7 `}
+            {'Line 7 '}
             <Tooltip
               className="info"
               show
@@ -188,7 +188,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 8 `}
+            {'Line 8 '}
             <Tooltip
               className="info"
               show
@@ -217,7 +217,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 9 `}
+            {'Line 9 '}
             <Tooltip
               className="info"
               show
@@ -247,7 +247,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 10 `}
+            {'Line 10 '}
             <Tooltip
               className="info"
               show
@@ -267,7 +267,7 @@ class ScheduleSummaryGasoline {
         readOnly: true,
         value: (
           <div>
-            {`Line 11 `}
+            {'Line 11 '}
             <Tooltip
               className="info"
               show
@@ -281,8 +281,8 @@ class ScheduleSummaryGasoline {
         ...totalViewer,
         className: 'total numeric'
       }]
-    ];
+    ]
   }
 }
 
-export default ScheduleSummaryGasoline;
+export default ScheduleSummaryGasoline

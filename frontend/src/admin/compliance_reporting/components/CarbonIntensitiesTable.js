@@ -1,16 +1,16 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-
-import ReactTable from '../../../app/components/StateSavingReactTable';
-import history from '../../../app/History';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import ReactTable from '../../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
 
 const CarbonIntensitiesTable = (props) => {
+  const navigate = useNavigate()
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
@@ -32,10 +32,10 @@ const CarbonIntensitiesTable = (props) => {
           >
             <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
-        );
+        )
       }
 
-      return <div>{row.value} <span className="spacer" /></div>;
+      return <div>{row.value} <span className="spacer" /></div>
     },
     className: 'col-density',
     Header: (
@@ -45,16 +45,18 @@ const CarbonIntensitiesTable = (props) => {
     ),
     id: 'carbon-intensity',
     width: 250
-  }];
+  }]
 
   const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id])
-      .toLowerCase()
-      .includes(filter.value.toLowerCase()) : true;
-  };
+    const id = filter.pivotId || filter.id
+    return row[id] !== undefined
+      ? String(row[id])
+        .toLowerCase()
+        .includes(filter.value.toLowerCase())
+      : true
+  }
 
-  const filterable = true;
+  const filterable = true
 
   return (
     <ReactTable
@@ -73,26 +75,25 @@ const CarbonIntensitiesTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = props.viewUrl.replace(':id', row.original.id);
-
-              history.push(viewUrl);
+              const viewUrl = props.viewUrl.replace(':id', row.original.id)
+              navigate(viewUrl)
             },
             className: 'clickable'
-          };
+          }
         }
 
-        return {};
+        return {}
       }}
       pageSizeOptions={props.pageSizeOptions}
     />
-  );
-};
+  )
+}
 
 CarbonIntensitiesTable.defaultProps = {
   defaultPageSize: 10,
   pageSizeOptions: [5, 10, 15, 20, 25],
   stateKey: 'carbon-intensity'
-};
+}
 
 CarbonIntensitiesTable.propTypes = {
   defaultPageSize: PropTypes.number,
@@ -103,6 +104,6 @@ CarbonIntensitiesTable.propTypes = {
   pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   stateKey: PropTypes.string,
   viewUrl: PropTypes.string.isRequired
-};
+}
 
-export default CarbonIntensitiesTable;
+export default CarbonIntensitiesTable

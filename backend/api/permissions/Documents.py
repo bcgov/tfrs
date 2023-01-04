@@ -42,7 +42,7 @@ class DocumentPermissions(permissions.BasePermission):
 
         is_government = request.user.is_government_user
 
-        if is_government and obj.status.status is not 'Draft':
+        if is_government and obj.status.status != 'Draft':
             return True
 
         return obj.create_user.organization.id == request.user.organization.id

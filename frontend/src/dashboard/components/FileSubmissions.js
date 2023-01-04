@@ -1,15 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import Loading from '../../app/components/Loading';
-import history from '../../app/History';
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import Loading from '../../app/components/Loading'
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
+import { useNavigate } from 'react-router'
 
 const FileSubmissions = (props) => {
-  const { isFetching, items } = props.documentUploads;
+  const { isFetching, items, itemsCount } = props.documentUploads
+  const navigate = useNavigate()
 
   if (isFetching) {
-    return <Loading />;
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -18,20 +19,19 @@ const FileSubmissions = (props) => {
       submitted: 0,
       total: 0
     }
-  };
-
+  }
   items.forEach((item) => {
     if (item.status.status === 'Submitted') {
-      awaitingReview.documentUploads.submitted += 1;
-      awaitingReview.documentUploads.total += 1;
+      awaitingReview.documentUploads.submitted += 1
+      awaitingReview.documentUploads.total += 1
     }
 
     if (item.status.status === 'Received') {
-      awaitingReview.documentUploads.received += 1;
-      awaitingReview.documentUploads.total += 1;
+      awaitingReview.documentUploads.received += 1
+      awaitingReview.documentUploads.total += 1
     }
-  });
-
+  })
+  
   return (
     <div className="dashboard-fieldset">
       <h1>File Submissions</h1>
@@ -50,9 +50,9 @@ const FileSubmissions = (props) => {
                 props.setFilter([{
                   id: 'status',
                   value: 'Submitted'
-                }], 'sfs');
+                }], 'sfs')
 
-                return history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
               }}
               type="button"
             >
@@ -67,9 +67,9 @@ const FileSubmissions = (props) => {
                 props.setFilter([{
                   id: 'status',
                   value: 'Received'
-                }], 'sfs');
+                }], 'sfs')
 
-                return history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
               }}
               type="button"
             >
@@ -79,11 +79,11 @@ const FileSubmissions = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 FileSubmissions.defaultProps = {
-};
+}
 
 FileSubmissions.propTypes = {
   documentUploads: PropTypes.shape({
@@ -91,6 +91,6 @@ FileSubmissions.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired
-};
+}
 
-export default FileSubmissions;
+export default FileSubmissions

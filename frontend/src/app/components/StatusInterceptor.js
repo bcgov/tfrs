@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class StatusInterceptor extends Component {
   static render401Message () {
@@ -14,7 +14,7 @@ class StatusInterceptor extends Component {
           for help.
         </p>
       </div>
-    );
+    )
   }
 
   static render403Message () {
@@ -29,7 +29,7 @@ class StatusInterceptor extends Component {
           for help.
         </p>
       </div>
-    );
+    )
   }
 
   static render404Message () {
@@ -38,7 +38,7 @@ class StatusInterceptor extends Component {
         <p>The requested page could not be found.</p>
         <p>To trade this page for a valid one click <a href="/">here</a> or learn more about the Renewable and Low Carbon Fuel Requirements Regulation <a href="http://www.gov.bc.ca/lowcarbonfuels/" rel="noopener noreferrer" target="_blank">here</a></p>
       </div>
-    );
+    )
   }
 
   static render500Message () {
@@ -49,7 +49,7 @@ class StatusInterceptor extends Component {
           notified and will look into it. Please try again later.
         </p>
       </div>
-    );
+    )
   }
 
   static render502Message () {
@@ -60,7 +60,7 @@ class StatusInterceptor extends Component {
           notified and will look into it. Please try again later.
         </p>
       </div>
-    );
+    )
   }
 
   static renderDefaultMessage () {
@@ -69,29 +69,29 @@ class StatusInterceptor extends Component {
         <p>Server Error!</p>
         <p>An API error occurred.</p>
       </div>
-    );
+    )
   }
 
   render () {
     switch (this.props.statusCode) {
       case 401:
-        return StatusInterceptor.render401Message();
+        return StatusInterceptor.render401Message()
       case 403:
-        return StatusInterceptor.render403Message();
+        return StatusInterceptor.render403Message()
       case 404:
-        return StatusInterceptor.render404Message();
+        return StatusInterceptor.render404Message()
       case 500:
-        return StatusInterceptor.render500Message();
+        return StatusInterceptor.render500Message()
       case 502:
-        return StatusInterceptor.render502Message();
+        return StatusInterceptor.render502Message()
       default:
-        return StatusInterceptor.renderDefaultMessage();
+        return StatusInterceptor.renderDefaultMessage()
     }
   }
 }
 
 StatusInterceptor.propTypes = {
   statusCode: PropTypes.number.isRequired
-};
+}
 
-export default StatusInterceptor;
+export default StatusInterceptor

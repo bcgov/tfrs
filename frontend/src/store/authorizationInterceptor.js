@@ -1,23 +1,23 @@
-import axios from 'axios';
-import userManager from './oidc-usermanager';
-import CONFIG from '../config';
+import axios from 'axios'
+import CONFIG from '../config'
+import store from './store'
 
 function configureAxios () {
   if (CONFIG.KEYCLOAK) {
     axios.interceptors.request.use((config) => {
-      const loadconfig = async () => {
-        const user = await userManager.getUser();
+      const loadconfig = () => {
+        const token = store.getState().userAuth.idToken
         return {
           ...config,
           headers: {
-            Authorization: `Bearer ${user.id_token}`
+            Authorization: `Bearer ${token}`
           }
-        };
-      };
+        }
+      }
 
-      return loadconfig();
-    });
+      return loadconfig()
+    })
   }
 }
 
-export default configureAxios;
+export default configureAxios

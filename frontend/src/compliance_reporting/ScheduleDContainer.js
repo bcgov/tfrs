@@ -3,111 +3,111 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ScheduleDOutput from './components/ScheduleDOutput';
-import ScheduleDSheet from './components/ScheduleDSheet';
-import ScheduleDTabs from './components/ScheduleDTabs';
-import Modal from '../app/components/Modal';
-import Select from '../app/components/Spreadsheet/Select';
-import Tooltip from '../app/components/Tooltip';
+import ScheduleDOutput from './components/ScheduleDOutput'
+import ScheduleDSheet from './components/ScheduleDSheet'
+import ScheduleDTabs from './components/ScheduleDTabs'
+import Modal from '../app/components/Modal'
+import Select from '../app/components/Spreadsheet/Select'
+import Tooltip from '../app/components/Tooltip'
 import {
   SCHEDULE_D,
   SCHEDULE_D_INPUT,
   SCHEDULE_D_INPUT_ERROR_KEYS
-} from '../constants/schedules/scheduleColumns';
+} from '../constants/schedules/scheduleColumns'
 
-import ValidationMessages from './components/ValidationMessages';
+import ValidationMessages from './components/ValidationMessages'
 
 class ScheduleDContainer extends Component {
   static clearErrorOutput (_output) {
-    const output = _output;
+    const output = _output
     output.forEach((row, index) => {
-      const { className } = row[1];
+      const { className } = row[1]
 
       if (className && className.indexOf('error') >= 0) {
         output[index][1] = {
           ...row[1],
           className: className.replace(/error/g, '')
-        };
+        }
       }
-    });
+    })
 
-    return output;
+    return output
   }
 
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       activeSheet: 0,
       sheets: [],
       loaded: false
-    };
+    }
 
-    this.rowNumber = 1;
-    this.scheduleB = null;
+    this.rowNumber = 1
+    this.scheduleB = null
 
-    this._addHeaders = this._addHeaders.bind(this);
-    this._addSheet = this._addSheet.bind(this);
-    this._deleteActiveSheet = this._deleteActiveSheet.bind(this);
-    this._handleSheetChanged = this._handleSheetChanged.bind(this);
-    this._gridStateToPayload = this._gridStateToPayload.bind(this);
-    this._setActiveSheet = this._setActiveSheet.bind(this);
-    this._validate = this._validate.bind(this);
-    this.loadInitialState = this.loadInitialState.bind(this);
+    this._addHeaders = this._addHeaders.bind(this)
+    this._addSheet = this._addSheet.bind(this)
+    this._deleteActiveSheet = this._deleteActiveSheet.bind(this)
+    this._handleSheetChanged = this._handleSheetChanged.bind(this)
+    this._gridStateToPayload = this._gridStateToPayload.bind(this)
+    this._setActiveSheet = this._setActiveSheet.bind(this)
+    this._validate = this._validate.bind(this)
+    this.loadInitialState = this.loadInitialState.bind(this)
   }
 
   componentDidMount () {
     if (this.props.scheduleState.scheduleD || (this.props.snapshot && this.props.readOnly)) {
       // it's probably more elegant to use getDerivedStateFromProps,
       // but it is defined static and we need to access instance methods to set the headers
-      this.componentWillReceiveProps(this.props);
+      this.UNSAFE_componentWillReceiveProps(this.props)
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleD) {
-      this._addSheet();
+      this._addSheet()
     } else {
-      this.loadInitialState();
+      this.loadInitialState()
     }
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    const { sheets, loaded } = this.state;
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
+    const { sheets, loaded } = this.state
 
-    let source = nextProps.scheduleState.scheduleD;
+    let source = nextProps.scheduleState.scheduleD
 
     if (nextProps.scheduleState && nextProps.scheduleState.scheduleB) {
-      this.scheduleB = nextProps.scheduleState.scheduleB;
+      this.scheduleB = nextProps.scheduleState.scheduleB
     }
 
     if (nextProps.snapshot && this.props.readOnly) {
-      source = nextProps.snapshot.scheduleD;
+      source = nextProps.snapshot.scheduleD
     } else if (!this.props.scheduleState.scheduleD ||
       !this.props.scheduleState.scheduleD.sheets) {
-      source = this.props.complianceReport.scheduleD;
+      source = this.props.complianceReport.scheduleD
     }
 
     if (!source && this.props.complianceReport && this.props.complianceReport.scheduleD) {
-      source = this.props.complianceReport.scheduleD;
+      source = this.props.complianceReport.scheduleD
     }
 
     if (source && source.sheets && !loaded) {
       if ((sheets.length) < source.sheets.length) {
-        this._addSheet(source.sheets.length - (sheets.length));
+        this._addSheet(source.sheets.length - (sheets.length))
       }
 
       for (let i = 0; i < source.sheets.length; i += 1) {
-        const sheet = source.sheets[i];
+        const sheet = source.sheets[i]
         if (sheets.length < i) {
-          sheets.push(this._addHeaders(sheets.length));
+          sheets.push(this._addHeaders(sheets.length))
         }
 
-        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType;
-        sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock;
-        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass;
+        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType
+        sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock
+        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass
 
         for (let j = 0; j < sheet.inputs.length; j += 1) {
           if (j >= sheets[i].grid.length - 1) {
@@ -129,90 +129,90 @@ class ScheduleDContainer extends Component {
             }, {
               className: 'text',
               readOnly: nextProps.readOnly
-            }]);
+            }])
           }
 
-          sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell;
-          sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName;
-          sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value;
-          sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units;
-          sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description;
+          sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell
+          sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName
+          sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value
+          sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units
+          sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description
         }
 
         // zero remaining rows
         for (let row = sheet.inputs.length + 1; row < sheets[i].grid.length; row += 1) {
-          sheets[i].grid[row][SCHEDULE_D.CELL].value = null;
-          sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null;
-          sheets[i].grid[row][SCHEDULE_D.VALUE].value = null;
-          sheets[i].grid[row][SCHEDULE_D.UNITS].value = null;
-          sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null;
+          sheets[i].grid[row][SCHEDULE_D.CELL].value = null
+          sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null
+          sheets[i].grid[row][SCHEDULE_D.VALUE].value = null
+          sheets[i].grid[row][SCHEDULE_D.UNITS].value = null
+          sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null
         }
 
         for (let j = 0; j < sheet.outputs.length; j += 1) {
           const rowIndex = sheets[i].output.findIndex(x =>
-            x[0].value === sheet.outputs[j].description);
+            x[0].value === sheet.outputs[j].description)
           if (rowIndex !== -1) {
             sheets[i].output[rowIndex][1] = {
               ...sheets[i].output[rowIndex][1],
               readOnly: nextProps.readOnly,
               value: sheet.outputs[j].intensity
-            };
+            }
           }
         }
 
-        sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output);
+        sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output)
 
         if (!this.props.snapshot && !this.props.validating) {
-          sheets[i] = this._validate(sheets[i], i);
+          sheets[i] = this._validate(sheets[i], i)
         }
       }
 
-      this.setState({ sheets, loaded: true });
+      this.setState({ sheets, loaded: true })
     } else if (source && source.sheets && loaded) {
       if (!this.props.snapshot && !this.props.validating) {
         for (let i = 0; i < source.sheets.length; i += 1) {
-          sheets[i] = this._validate(sheets[i], i);
+          sheets[i] = this._validate(sheets[i], i)
         }
       }
     }
   }
 
   loadInitialState () {
-    this.rowNumber = 1;
+    this.rowNumber = 1
 
-    const sheets = [];
+    const sheets = []
 
     for (let i = 0; i < this.props.complianceReport.scheduleD.sheets.length; i += 1) {
       const sheet = {
         ...this.props.complianceReport.scheduleD.sheets[i]
-      };
-      sheet.inputs = [];
-      sheet.outputs = [];
+      }
+      sheet.inputs = []
+      sheet.outputs = []
 
       for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].inputs.length; j += 1) {
-        sheet.inputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].inputs[j] });
+        sheet.inputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].inputs[j] })
       }
       for (let j = 0; j < this.props.complianceReport.scheduleD.sheets[i].outputs.length; j += 1) {
-        sheet.outputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].outputs[j] });
+        sheet.outputs.push({ ...this.props.complianceReport.scheduleD.sheets[i].outputs[j] })
       }
 
-      sheets.push(sheet);
+      sheets.push(sheet)
       this.props.updateScheduleState({
         scheduleD: {
           sheets
         }
-      });
+      })
     }
   }
 
   _addHeaders (_id) {
-    let id = _id;
+    let id = _id
 
     if (this.state.sheets.length > 0) {
-      id = this.state.sheets[this.state.sheets.length - 1].id + 1;
+      id = this.state.sheets[this.state.sheets.length - 1].id + 1
     }
 
-    const { compliancePeriod } = this.props.complianceReport;
+    const { compliancePeriod } = this.props.complianceReport
 
     return {
       grid: [
@@ -224,7 +224,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Worksheet Name `}
+              {'Worksheet Name '}
               <Tooltip
                 className="info"
                 show
@@ -239,7 +239,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Cell `}
+              {'Cell '}
               <Tooltip
                 className="info"
                 show
@@ -254,7 +254,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Value `}
+              {'Value '}
               <Tooltip
                 className="info"
                 show
@@ -269,7 +269,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Units `}
+              {'Units '}
               <Tooltip
                 className="info"
                 show
@@ -284,7 +284,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Description `}
+              {'Description '}
               <Tooltip
                 className="info"
                 show
@@ -306,7 +306,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Feedstock `}
+              {'Feedstock '}
               <Tooltip
                 className="info"
                 show
@@ -321,7 +321,7 @@ class ScheduleDContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {`Fuel Class `}
+              {'Fuel Class '}
               <Tooltip
                 className="info"
                 show
@@ -360,112 +360,112 @@ class ScheduleDContainer extends Component {
       ],
       id,
       output: ScheduleDOutput(this.props.readOnly)
-    };
+    }
   }
 
   _addSheet (sheetsToAdd = 1, newSheet = false) {
-    const { sheets } = this.state;
+    const { sheets } = this.state
 
     for (let i = 0; i < sheetsToAdd; i += 1) {
-      const sheet = this._addHeaders(sheets.length);
+      const sheet = this._addHeaders(sheets.length)
 
-      sheets.push(sheet);
+      sheets.push(sheet)
 
       if (newSheet) {
         for (let j = 0; j < sheet.output.length; j += 1) {
-          sheet.output[j][1].value = 0;
+          sheet.output[j][1].value = 0
         }
       }
     }
 
     this.setState({
       sheets
-    });
+    })
   }
 
   _deleteActiveSheet () {
-    const { activeSheet, sheets } = this.state;
+    const { activeSheet, sheets } = this.state
 
-    const index = sheets.findIndex(sheet => (sheet.id === activeSheet));
-    sheets.splice(index, 1);
+    const index = sheets.findIndex(sheet => (sheet.id === activeSheet))
+    sheets.splice(index, 1)
 
     if (sheets.length === 0) {
-      const sheet = this._addHeaders(sheets.length);
+      const sheet = this._addHeaders(sheets.length)
 
-      sheets.push(sheet);
+      sheets.push(sheet)
     }
 
-    const { id } = sheets[0]; // default to the first one
+    const { id } = sheets[0] // default to the first one
 
     this.setState({
       activeSheet: id,
       sheets
-    });
+    })
 
     setTimeout(() => {
       this._gridStateToPayload({
         sheets
-      });
-    }, 1000);
+      })
+    }, 1000)
   }
 
   _getFuelClasses (row, id) {
-    const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
+    const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE]
 
     const selectedFuel = this.props.referenceData.approvedFuels
-      .find(fuel => fuel.name === fuelType.value);
+      .find(fuel => fuel.name === fuelType.value)
 
     if (selectedFuel) {
-      return selectedFuel.fuelClasses;
+      return selectedFuel.fuelClasses
     }
 
-    return [];
+    return []
   }
 
   _handleSheetChanged (gridObject, id) {
-    const { sheets } = this.state;
+    const { sheets } = this.state
 
-    const index = sheets.findIndex(sheet => (sheet.id === id));
+    const index = sheets.findIndex(sheet => (sheet.id === id))
 
     if (index < 0) {
-      return;
+      return
     }
 
     if (gridObject.grid) {
       sheets[index] = {
         ...sheets[index],
         grid: gridObject.grid
-      };
+      }
     }
 
     if (gridObject.input) {
       sheets[index] = {
         ...sheets[index],
         input: gridObject.input
-      };
+      }
     }
 
     if (gridObject.output) {
       sheets[index] = {
         ...sheets[index],
         output: gridObject.output
-      };
+      }
     }
 
     this.setState({
       sheets
-    });
+    })
 
     this._gridStateToPayload({
       sheets
-    });
+    })
   }
 
   _gridStateToPayload (state) {
-    const sheets = [];
+    const sheets = []
 
     for (let i = 0; i < state.sheets.length; i += 1) {
-      const sheet = state.sheets[i];
+      const sheet = state.sheets[i]
 
       const sheetRecord = {
         fuelClass: sheet.input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value,
@@ -473,7 +473,7 @@ class ScheduleDContainer extends Component {
         fuelType: sheet.input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value,
         inputs: [],
         outputs: []
-      };
+      }
 
       for (let j = 1; j < sheet.grid.length; j += 1) {
         const inputRecord = {
@@ -483,40 +483,40 @@ class ScheduleDContainer extends Component {
           value: sheet.grid[j][SCHEDULE_D.VALUE].value,
           units: sheet.grid[j][SCHEDULE_D.UNITS].value,
           description: sheet.grid[j][SCHEDULE_D.DESCRIPTION].value
-        };
+        }
         const atLeastOneCellFilled = (
           inputRecord.cell || inputRecord.worksheetName || inputRecord.value ||
           inputRecord.units || inputRecord.description
-        );
+        )
         if (atLeastOneCellFilled) {
-          sheetRecord.inputs.push(inputRecord);
+          sheetRecord.inputs.push(inputRecord)
         }
       }
 
-      let outputHasContent = false;
+      let outputHasContent = false
 
       for (let j = 0; j < sheet.output.length; j += 1) {
-        const isTotalField = sheet.output[j][1].readOnly;
+        const isTotalField = sheet.output[j][1].readOnly
 
         if (!isTotalField) {
           const outputRecord = {
             description: sheet.output[j][0].value,
             intensity: Number.isNaN(Number(sheet.output[j][1].value)) ? 0 : sheet.output[j][1].value
-          };
+          }
 
           if (outputRecord.intensity !== '') {
-            sheetRecord.outputs.push(outputRecord);
+            sheetRecord.outputs.push(outputRecord)
           }
 
           if (outputRecord.intensity !== 0) {
-            outputHasContent = true;
+            outputHasContent = true
           }
         }
       }
 
       if (sheetRecord.fuelClass || sheetRecord.feedstock ||
         sheetRecord.fuelType || sheetRecord.inputs.length > 0 || outputHasContent) {
-        sheets.push(sheetRecord);
+        sheets.push(sheetRecord)
       }
     }
 
@@ -525,100 +525,100 @@ class ScheduleDContainer extends Component {
         scheduleD: {
           sheets
         }
-      });
+      })
     } else {
       this.props.updateScheduleState({
         scheduleD: null
-      });
+      })
     }
   }
 
   _setActiveSheet (id) {
     this.setState({
       activeSheet: id
-    });
+    })
   }
 
   _validate (_sheet, sheetIndex) {
-    const sheet = _sheet;
+    const sheet = _sheet
 
     if (
       this.props.valid ||
       (this.props.validationMessages && !this.props.validationMessages.scheduleD)
     ) {
-      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS);
+      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS)
 
-      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output)
 
       errorKeys.forEach((errorKey) => {
-        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
+        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey]
 
-        sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '');
-      });
-      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
+        sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '')
+      })
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output)
     } else if (
       this.props.validationMessages &&
       this.props.validationMessages.scheduleD &&
       this.props.validationMessages.scheduleD.sheets &&
       this.props.validationMessages.scheduleD.sheets.length > (sheetIndex)) {
-      const errors = Object.keys(this.props.validationMessages.scheduleD.sheets[sheetIndex]);
-      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS);
+      const errors = Object.keys(this.props.validationMessages.scheduleD.sheets[sheetIndex])
+      const errorKeys = Object.keys(SCHEDULE_D_INPUT_ERROR_KEYS)
 
-      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output);
+      sheet.output = ScheduleDContainer.clearErrorOutput(sheet.output)
 
       errorKeys.forEach((errorKey) => {
-        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
+        const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey]
 
         if (errors.indexOf(errorKey) < 0) {
-          sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '');
+          sheet.input[1][col].className = sheet.input[1][col].className.replace(/error/g, '')
         }
-      });
+      })
 
       errors.forEach((errorKey) => {
         if (errorKey in SCHEDULE_D_INPUT_ERROR_KEYS) {
-          const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey];
-          let { className } = sheet.input[1][col];
+          const col = SCHEDULE_D_INPUT_ERROR_KEYS[errorKey]
+          let { className } = sheet.input[1][col]
 
           if (sheet.input[1][col].className.indexOf('error') < 0) {
-            className += ' error';
+            className += ' error'
           }
 
           sheet.input[1][col] = {
             ...sheet.input[1][col],
             className
-          };
+          }
         }
-      });
+      })
 
       if (errors.indexOf('outputs') >= 0) {
-        const { outputs } = this.props.validationMessages.scheduleD.sheets[sheetIndex];
+        const { outputs } = this.props.validationMessages.scheduleD.sheets[sheetIndex]
 
         outputs.forEach((outputError) => {
-          const rowLabel = outputError.replace(/Missing value for /g, '');
+          const rowLabel = outputError.replace(/Missing value for /g, '')
 
-          const index = sheet.output.findIndex(row => (row[0].value === rowLabel));
+          const index = sheet.output.findIndex(row => (row[0].value === rowLabel))
 
           if (index >= 0) {
-            let { className } = sheet.output[index][1];
+            let { className } = sheet.output[index][1]
 
             if (sheet.output[index][1].className.indexOf('error') < 0) {
-              className += ' error';
+              className += ' error'
             }
 
             sheet.output[index][1] = {
               ...sheet.output[index][1],
               className
-            };
+            }
           }
-        });
+        })
       }
     }
 
-    return sheet;
+    return sheet
   }
 
   renderSheets () {
-    const { sheets } = this.state;
+    const { sheets } = this.state
 
     return (
       <div className="page_schedule spreadsheet-component" key="sheets">
@@ -642,7 +642,7 @@ class ScheduleDContainer extends Component {
           The approved version of GHGenius must be used as defined in section 11.06 (1)
           of the Renewable and Low Carbon Fuel Requirements Regulation and specified in
           <em> Information Bulletin RLCF-011 - Approved Version of GHGenius</em>,
-          {` available from `}
+          {' available from '}
           <a href="https://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">
           www.gov.bc.ca/lowcarbonfuels
           </a>.
@@ -662,11 +662,11 @@ class ScheduleDContainer extends Component {
         </p>
 
         <p>
-          {`It is recommended that users consult `}
+          {'It is recommended that users consult '}
           <em>
             Information Bulletin RLCF-010 - Using GHGenius in B.C.
           </em>
-          {`, available from `}
+          {', available from '}
           <a href="https://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">
           www.gov.bc.ca/lowcarbonfuels
           </a>, before attempting to use GHGenius.
@@ -711,7 +711,7 @@ class ScheduleDContainer extends Component {
 
         <Modal
           handleSubmit={() => {
-            this._deleteActiveSheet();
+            this._deleteActiveSheet()
           }}
           id="confirmDelete"
           title="Confirm Delete"
@@ -719,13 +719,13 @@ class ScheduleDContainer extends Component {
           Do you want to delete this entry?
         </Modal>
       </div>
-    );
+    )
   }
 
   render () {
     return ([
       this.renderSheets()
-    ]);
+    ])
   }
 }
 
@@ -734,7 +734,7 @@ ScheduleDContainer.defaultProps = {
   match: {},
   validationMessages: null,
   snapshot: null
-};
+}
 
 ScheduleDContainer.propTypes = {
   complianceReport: PropTypes.shape({
@@ -760,12 +760,12 @@ ScheduleDContainer.propTypes = {
   valid: PropTypes.bool.isRequired,
   validating: PropTypes.bool.isRequired,
   validationMessages: PropTypes.shape()
-};
+}
 
 const mapStateToProps = state => ({
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
-});
+})
 
-export default connect(mapStateToProps, null)(ScheduleDContainer);
+export default connect(mapStateToProps, null)(ScheduleDContainer)

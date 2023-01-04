@@ -3,59 +3,54 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tab, Tabs } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tab, Tabs } from 'react-bootstrap'
 
-import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
-import Loading from '../../app/components/Loading';
-import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails';
-import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios'
+import Loading from '../../app/components/Loading'
+import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails'
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable'
+import { useParams } from 'react-router'
 
-class EnergyEffectivenessRatioDetailContainer extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-    };
+const EnergyEffectivenessRatioDetailContainer = props => {
+  const { id } = useParams()
+
+  useEffect(() => {
+    props.getEnergyEffectivenessRatio(id)
+  }, [id])
+
+  const { item, isFetching, success } = props.energyEffectivenessRatio
+
+  if (success && !isFetching && item) {
+    return (
+      <Tabs defaultActiveKey="details" id="citabs">
+        <Tab eventKey="details" title="Current">
+          <EnergyEffectivenessRatioDetails
+            item={item}
+            loggedInUser={props.loggedInUser}
+            title="Energy Effectiveness Ratio Details"
+          />
+        </Tab>
+        <Tab eventKey="allValues" title="Past And Future">
+          <h1>Past and Future Values</h1>
+
+          <PastAndFutureValuesTable
+            items={item.allValues}
+            includeFuelClass
+            includeRatio
+          />
+        </Tab>
+      </Tabs>
+    )
   }
 
-  componentDidMount () {
-    this.props.getEnergyEffectivenessRatio(this.props.match.params.id);
-  }
-
-  render () {
-    const { item, isFetching, success } = this.props.energyEffectivenessRatio;
-
-    if (success && !isFetching && item) {
-      return (
-        <Tabs defaultActiveKey="details" id="citabs">
-          <Tab eventKey="details" title="Current">
-            <EnergyEffectivenessRatioDetails
-              item={item}
-              loggedInUser={this.props.loggedInUser}
-              title="Energy Effectiveness Ratio Details"
-            />
-          </Tab>
-          <Tab eventKey="allValues" title="Past And Future">
-            <h1>Past and Future Values</h1>
-
-            <PastAndFutureValuesTable
-              items={item.allValues}
-              includeFuelClass
-              includeRatio
-            />
-          </Tab>
-        </Tabs>
-      )
-    }
-
-    return <Loading />;
-  }
+  return <Loading />
 }
 
 EnergyEffectivenessRatioDetailContainer.defaultProps = {
-};
+}
 
 EnergyEffectivenessRatioDetailContainer.propTypes = {
   energyEffectivenessRatio: PropTypes.shape({
@@ -64,13 +59,8 @@ EnergyEffectivenessRatioDetailContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getEnergyEffectivenessRatio: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired
-};
+  loggedInUser: PropTypes.shape().isRequired
+}
 
 const mapStateToProps = state => ({
   energyEffectivenessRatio: {
@@ -79,13 +69,13 @@ const mapStateToProps = state => ({
     success: state.rootReducer.energyEffectivenessRatios.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
-});
+})
 
 const mapDispatchToProps = {
   getEnergyEffectivenessRatio: energyEffectivenessRatios.get
-};
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EnergyEffectivenessRatioDetailContainer);
+)(EnergyEffectivenessRatioDetailContainer)

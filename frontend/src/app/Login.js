@@ -1,37 +1,40 @@
-import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { connect } from 'react-redux'
 
-import CONFIG from '../config';
-import CallableModal from '../app/components/CallableModal';
-import * as Lang from '../constants/langEnUs';
+import CallableModal from '../app/components/CallableModal'
+import * as Lang from '../constants/langEnUs'
+import { login } from '../actions/keycloakActions'
+import { IDENTITY_PROVIDERS } from '../constants/auth'
 
 class Login extends React.Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props)
 
     this.state = {
       hideModal: false
-    };
+    }
 
-    this.userAgent = window.navigator.userAgent;
-    this.redirectUri = window.location.href;
+    this.userAgent = window.navigator.userAgent
+    this.redirectUri = window.location.href
 
-    this._closeModal = this._closeModal.bind(this);
+    this._closeModal = this._closeModal.bind(this)
   }
 
   _closeModal () {
     this.setState({
       hideModal: true
-    });
+    })
   }
 
   render () {
-    const { hideModal } = this.state;
+    const { hideModal } = this.state
+    const { login } = this.props
 
-    let showModal = false;
+    let showModal = false
 
     if (!hideModal && (this.userAgent.indexOf('MSIE ') >= 0 || this.userAgent.indexOf('Trident/') >= 0)) {
-      showModal = true;
+      showModal = true
     }
 
     return (
@@ -44,10 +47,26 @@ class Login extends React.Component {
           <div className="card-tfrs">
             <div className="buttons-section">
               <div className="oidc">
-                <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=bceid`} id="link-bceid" className="oidc"> <span className="text">Login with</span> <span className="display-name">BCeID</span></a>
+                <button
+                  type="button"
+                  onClick={() => login(IDENTITY_PROVIDERS.BCEID_BUSINESS)}
+                  id="link-bceid"
+                  className="button"
+                >
+                  <span className="text"> Login with </span>
+                  <span className="display-name"> BCeID </span>
+                </button>
               </div>
               <div className="oidc">
-                <a href={`${CONFIG.KEYCLOAK.AUTHORITY}/protocol/openid-connect/auth?response_type=token&client_id=${CONFIG.KEYCLOAK.CLIENT_ID}&redirect_uri=${this.redirectUri}&kc_idp_hint=idir`} id="link-idir" className="oidc"> <span className="text">Login with</span> <span className="display-name">IDIR</span></a>
+                <button
+                  type="button"
+                  onClick={() => login(IDENTITY_PROVIDERS.IDIR)}
+                  id="link-idir"
+                  className="button"
+                >
+                  <span className="text">Login with</span>
+                  <span className="display-name"> IDIR </span>
+                </button>
               </div>
             </div>
           </div>
@@ -57,7 +76,7 @@ class Login extends React.Component {
           cancelLabel={Lang.BTN_OK}
           className="login-modal"
           close={() => {
-            this._closeModal();
+            this._closeModal()
           }}
           id="no-ie"
           show={showModal}
@@ -74,7 +93,7 @@ class Login extends React.Component {
             <p>Please consider using a different browser such as Chrome, Firefox or Safari.</p>
             <button
               onClick={() => {
-                this._closeModal();
+                this._closeModal()
               }}
               type="button"
             >
@@ -83,8 +102,18 @@ class Login extends React.Component {
           </div>
         </CallableModal>
       </div>
-    );
+    )
   }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  authenticated: state.userAuth.authenticated
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (idpHint) => dispatch(login(idpHint))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

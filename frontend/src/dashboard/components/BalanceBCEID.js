@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import numeral from 'numeral';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Tooltip from '../../app/components/Tooltip';
-import * as NumberFormat from '../../constants/numeralFormats';
-import ORGANIZATIONS from '../../constants/routes/Organizations';
+import Tooltip from '../../app/components/Tooltip'
+import * as NumberFormat from '../../constants/numeralFormats'
+import ORGANIZATIONS from '../../constants/routes/Organizations'
 
 const BalanceBCEID = props => (
   <div className="dashboard-card balance">
@@ -48,10 +48,10 @@ const BalanceBCEID = props => (
       </a>
     </div>
   </div>
-);
+)
 
 BalanceBCEID.defaultProps = {
-};
+}
 
 BalanceBCEID.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -64,6 +64,6 @@ BalanceBCEID.propTypes = {
       })
     })
   }).isRequired
-};
+}
 
-export default BalanceBCEID;
+export default BalanceBCEID

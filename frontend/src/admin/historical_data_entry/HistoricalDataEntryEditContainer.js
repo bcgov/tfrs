@@ -3,14 +3,14 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 
-import * as Lang from '../../constants/langEnUs';
-import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
-import { getFuelSuppliers } from '../../actions/organizationActions';
+import * as Lang from '../../constants/langEnUs'
+import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin'
+import { getFuelSuppliers } from '../../actions/organizationActions'
 import {
   addCommentToCreditTransfer,
   getCreditTransfer,
@@ -18,16 +18,16 @@ import {
   prepareCreditTransfer,
   updateCommentOnCreditTransfer,
   updateCreditTransfer
-} from '../../actions/creditTransfersActions';
-import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import history from '../../app/History';
-import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
+} from '../../actions/creditTransfersActions'
+import getCompliancePeriods from '../../actions/compliancePeriodsActions'
+import HistoricalDataEntryForm from './components/HistoricalDataEntryForm'
+import { withRouter } from '../../utils/withRouter'
 
-const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
+const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE]
 
 class HistoricalDataEntryEditContainer extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       fields: {
@@ -43,83 +43,83 @@ class HistoricalDataEntryEditContainer extends Component {
       },
       totalValue: 0,
       validationErrors: {}
-    };
+    }
 
-    this.submitted = false;
+    this.submitted = false
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    this.loadData(this.props.match.params.id);
-    this.props.getCompliancePeriods();
-    this.props.getFuelSuppliers();
+    this.loadData(this.props.params.id)
+    this.props.getCompliancePeriods()
+    this.props.getFuelSuppliers()
   }
 
-  componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
+  UNSAFE_componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props)
   }
 
   _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+    const { value, name } = event.target
+    const fieldState = { ...this.state.fields }
 
     if (typeof fieldState[name] === 'object') {
-      this.changeObjectProp(parseInt(value, 10), name);
+      this.changeObjectProp(parseInt(value, 10), name)
     } else {
-      fieldState[name] = value;
+      fieldState[name] = value
       this.setState({
         fields: fieldState
-      }, () => this.computeTotalValue(name));
+      }, () => this.computeTotalValue(name))
     }
   }
 
   _handleSubmit (event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.submitted = true;
+    this.submitted = true
 
-    const data = this.props.prepareCreditTransfer(this.state.fields);
-    const { id } = this.props.item;
-    const { comment } = this.state.fields;
+    const data = this.props.prepareCreditTransfer(this.state.fields)
+    const { id } = this.props.item
+    const { comment } = this.state.fields
 
     this.props.updateCreditTransfer(id, data).then(() => {
       if (comment !== '') {
-        this._saveComment(comment);
+        this._saveComment(comment)
       }
 
-      this.props.invalidateCreditTransfers();
-      history.push(HISTORICAL_DATA_ENTRY.LIST);
-    });
+      this.props.invalidateCreditTransfers()
+      this.props.navigate(HISTORICAL_DATA_ENTRY.LIST)
+    })
 
-    return false;
+    return false
   }
 
   _saveComment (comment) {
-    const { item } = this.props;
+    const { item } = this.props
     // API data structure
     const data = {
       creditTrade: this.props.item.id,
       comment,
       privilegedAccess: false
-    };
+    }
 
     if (item.comments.length > 0) {
       // we only allow one comment per entry in the Historical Data Entry
-      return this.props.updateCommentOnCreditTransfer(item.comments[0].id, data);
+      return this.props.updateCommentOnCreditTransfer(item.comments[0].id, data)
     }
 
-    return this.props.addCommentToCreditTransfer(data);
+    return this.props.addCommentToCreditTransfer(data)
   }
 
   changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
+    const fieldState = { ...this.state.fields }
 
-    fieldState[name] = { id: id || 0 };
+    fieldState[name] = { id: id || 0 }
     this.setState({
       fields: fieldState
-    });
+    })
   }
 
   computeTotalValue (name) {
@@ -127,17 +127,17 @@ class HistoricalDataEntryEditContainer extends Component {
       this.setState({
         totalValue:
           this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
-      });
+      })
     }
   }
 
   loadData (id) {
-    this.props.getCreditTransfer(id);
+    this.props.getCreditTransfer(id)
   }
 
   loadPropsToFieldState (props) {
     if (Object.keys(props.item).length !== 0 && !this.submitted) {
-      const { item } = props;
+      const { item } = props
 
       const fieldState = {
         // we only allow one comment per entry in the Historical Data Entry
@@ -150,12 +150,12 @@ class HistoricalDataEntryEditContainer extends Component {
         tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),
         zeroDollarReason: (item.zeroReason) ? item.zeroReason.id.toString() : ''
-      };
+      }
 
       this.setState({
         fields: fieldState,
         totalValue: item.totalValue
-      });
+      })
     }
   }
 
@@ -173,13 +173,13 @@ class HistoricalDataEntryEditContainer extends Component {
         totalValue={this.state.totalValue}
         validationErrors={this.state.validationErrors}
       />
-    );
+    )
   }
 }
 
 HistoricalDataEntryEditContainer.defaultProps = {
   errors: {}
-};
+}
 
 HistoricalDataEntryEditContainer.propTypes = {
   addCommentToCreditTransfer: PropTypes.func.isRequired,
@@ -194,15 +194,13 @@ HistoricalDataEntryEditContainer.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number
   }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  params: PropTypes.shape({
+    id: PropTypes.string.isRequired
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   compliancePeriods: state.rootReducer.compliancePeriods.items,
@@ -210,7 +208,7 @@ const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
@@ -221,6 +219,6 @@ const mapDispatchToProps = dispatch => ({
   prepareCreditTransfer: fields => prepareCreditTransfer(fields),
   updateCommentOnCreditTransfer: bindActionCreators(updateCommentOnCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HistoricalDataEntryEditContainer))

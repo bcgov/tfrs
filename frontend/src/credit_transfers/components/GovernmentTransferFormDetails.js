@@ -1,10 +1,10 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import InputWithTooltip from '../../app/components/InputWithTooltip';
+import InputWithTooltip from '../../app/components/InputWithTooltip'
 
 const GovernmentTransferFormDetails = props => (
   <div className="credit-transaction-details">
@@ -88,11 +88,11 @@ const GovernmentTransferFormDetails = props => (
       </div>
     </div>
   </div>
-);
+)
 
 GovernmentTransferFormDetails.defaultProps = {
   children: null
-};
+}
 
 GovernmentTransferFormDetails.propTypes = {
   children: PropTypes.oneOfType([
@@ -121,6 +121,6 @@ GovernmentTransferFormDetails.propTypes = {
     })
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired
-};
+}
 
-export default GovernmentTransferFormDetails;
+export default GovernmentTransferFormDetails

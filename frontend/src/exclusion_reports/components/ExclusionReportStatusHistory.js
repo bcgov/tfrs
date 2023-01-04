@@ -1,46 +1,46 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
 
 class ExclusionReportingStatusHistory extends Component {
   static actionFor (h) {
-    let action = (<strong>{h.status.fuelSupplierStatus}</strong>);
-    let roleDisplay = null;
+    let action = (<strong>{h.status.fuelSupplierStatus}</strong>)
+    let roleDisplay = null
 
     if (h.status.directorStatus === 'Accepted') {
-      action = (<strong>Accepted</strong>);
+      action = (<strong>Accepted</strong>)
 
       if (h.userRole) {
-        roleDisplay = h.userRole.description;
+        roleDisplay = h.userRole.description
 
         if (h.userRole.name === 'GovDeputyDirector' ||
           h.userRole.name === 'GovDirector') {
-          roleDisplay = roleDisplay.replace('Government ', '');
+          roleDisplay = roleDisplay.replace('Government ', '')
         }
       }
     } else if (h.status.directorStatus === 'Rejected') {
-      action = (<strong>Rejected</strong>);
+      action = (<strong>Rejected</strong>)
 
       if (h.userRole) {
-        roleDisplay = h.userRole.description;
+        roleDisplay = h.userRole.description
 
         if (h.userRole.name === 'GovDeputyDirector' ||
           h.userRole.name === 'GovDirector') {
-          roleDisplay = roleDisplay.replace('Government ', '');
+          roleDisplay = roleDisplay.replace('Government ', '')
         }
       }
     } else if (h.status.managerStatus === 'Recommended') {
-      action = (<span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>);
+      action = (<span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>)
     } else if (h.status.managerStatus === 'Not Recommended') {
-      action = (<span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>);
+      action = (<span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>)
     } else if (h.status.managerStatus === 'Requested Supplemental') {
-      action = (<strong>Supplemental Requested </strong>);
+      action = (<strong>Supplemental Requested </strong>)
     } else if (h.status.analystStatus === 'Recommended') {
-      action = (<span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>);
+      action = (<span><strong>Reviewed</strong> and <strong>Recommended Acceptance</strong> </span>)
     } else if (h.status.analystStatus === 'Not Recommended') {
-      action = (<span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>);
+      action = (<span><strong>Reviewed</strong> and <strong>Recommended Rejection</strong> </span>)
     } else if (h.status.analystStatus === 'Requested Supplemental') {
-      action = (<strong>Supplemental Requested </strong>);
+      action = (<strong>Supplemental Requested </strong>)
     }
 
     return (
@@ -60,20 +60,20 @@ class ExclusionReportingStatusHistory extends Component {
         </span>
         }
       </span>
-    );
+    )
   }
 
   render () {
     if (!this.props.complianceReport.history || this.props.complianceReport.history.length === 0) {
-      return false;
+      return false
     }
-    const currentId = this.props.complianceReport.id;
+    const currentId = this.props.complianceReport.id
 
     const showCurrent = (this.props.complianceReport.history.filter(
       c => (c.complianceReport === this.props.complianceReport.id)
-    ).length === 0);
+    ).length === 0)
 
-    const { deltas } = this.props.complianceReport;
+    const { deltas } = this.props.complianceReport
 
     const distinctReports = this.props.complianceReport.history.reduce(
       (m, value) => {
@@ -82,13 +82,13 @@ class ExclusionReportingStatusHistory extends Component {
             displayName: value.displayName,
             id: value.complianceReport,
             history: []
-          });
+          })
         }
-        m.find(v => v.displayName === value.displayName).history.push(value);
-        return m;
+        m.find(v => v.displayName === value.displayName).history.push(value)
+        return m
       },
       []
-    );
+    )
 
     return (
       <div className="panel-group">
@@ -102,8 +102,8 @@ class ExclusionReportingStatusHistory extends Component {
         }
         {distinctReports.length > 0 &&
         distinctReports.map((r) => {
-          const currentDelta = deltas ? deltas.find(f => f.ancestorDisplayName === r.displayName) : null;
-          let deltaPanel = null;
+          const currentDelta = deltas ? deltas.find(f => f.ancestorDisplayName === r.displayName) : null
+          let deltaPanel = null
 
           if (currentDelta) {
             deltaPanel = (
@@ -123,7 +123,7 @@ class ExclusionReportingStatusHistory extends Component {
                   </ul>
                 </div>
               </div>
-            );
+            )
           }
 
           return ([
@@ -144,10 +144,10 @@ class ExclusionReportingStatusHistory extends Component {
                 </ul>
               </div>
             </div>
-          ]);
+          ])
         })}
       </div>
-    );
+    )
   }
 }
 
@@ -164,7 +164,7 @@ ExclusionReportingStatusHistory.defaultProps = {
   onSwitchHandler: () => {
   },
   reportType: 'Compliance Report'
-};
+}
 
 ExclusionReportingStatusHistory.propTypes = {
   complianceReport: PropTypes.shape({
@@ -196,6 +196,6 @@ ExclusionReportingStatusHistory.propTypes = {
   }),
   onSwitchHandler: PropTypes.func,
   reportType: PropTypes.string
-};
+}
 
-export default ExclusionReportingStatusHistory;
+export default ExclusionReportingStatusHistory

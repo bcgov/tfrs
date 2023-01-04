@@ -3,58 +3,50 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import ComplianceReportingPage from './components/ComplianceReportingPage';
+import ComplianceReportingPage from './components/ComplianceReportingPage'
 
-import AdminTabs from '../components/AdminTabs';
-import { carbonIntensities } from '../../actions/carbonIntensities';
-import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
-import { energyDensities } from '../../actions/energyDensities';
-import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
-import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
+import AdminTabs from '../components/AdminTabs'
+import { carbonIntensities } from '../../actions/carbonIntensities'
+import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities'
+import { energyDensities } from '../../actions/energyDensities'
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios'
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities'
 
-class ComplianceReportingContainer extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-    };
-  }
+const ComplianceReportingContainer = props => {
+  useEffect(() => {
+    props.loadCarbonIntensities()
+    props.loadDefaultCarbonIntensities()
+    props.loadEnergyDensities()
+    props.loadEnergyEffectivenessRatios()
+    props.loadPetroleumCarbonIntensities()
+  }, [])
 
-  componentDidMount () {
-    this.props.loadCarbonIntensities();
-    this.props.loadDefaultCarbonIntensities();
-    this.props.loadEnergyDensities();
-    this.props.loadEnergyEffectivenessRatios();
-    this.props.loadPetroleumCarbonIntensities();
-  }
-
-  render () {
-    return ([
-      <AdminTabs
-        active="compliance-reporting"
-        key="nav"
-        loggedInUser={this.props.loggedInUser}
-      />,
-      <ComplianceReportingPage
-        carbonIntensityLimits={this.props.carbonIntensityLimits}
-        defaultCarbonIntensities={this.props.defaultCarbonIntensities}
-        energyDensities={this.props.energyDensities}
-        energyEffectivenessRatios={this.props.energyEffectivenessRatios}
-        fuelTypes={this.props.referenceData.approvedFuels}
-        key="compliance-reporting"
-        loggedInUser={this.props.loggedInUser}
-        petroleumCarbonIntensities={this.props.petroleumCarbonIntensities}
-        title="Compliance Reporting"
-      />
-    ]);
-  }
+  return ([
+    <AdminTabs
+      active="compliance-reporting"
+      key="nav"
+      loggedInUser={props.loggedInUser}
+    />,
+    <ComplianceReportingPage
+      carbonIntensityLimits={props.carbonIntensityLimits}
+      defaultCarbonIntensities={props.defaultCarbonIntensities}
+      energyDensities={props.energyDensities}
+      energyEffectivenessRatios={props.energyEffectivenessRatios}
+      fuelTypes={props.referenceData.approvedFuels}
+      key="compliance-reporting"
+      loggedInUser={props.loggedInUser}
+      petroleumCarbonIntensities={props.petroleumCarbonIntensities}
+      title="Compliance Reporting"
+    />
+  ])
 }
 
 ComplianceReportingContainer.defaultProps = {
-};
+}
 
 ComplianceReportingContainer.propTypes = {
   carbonIntensityLimits: PropTypes.shape({
@@ -86,7 +78,7 @@ ComplianceReportingContainer.propTypes = {
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
-};
+}
 
 const mapStateToProps = state => ({
   carbonIntensityLimits: {
@@ -113,7 +105,7 @@ const mapStateToProps = state => ({
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
-});
+})
 
 const mapDispatchToProps = {
   loadCarbonIntensities: carbonIntensities.find,
@@ -121,6 +113,6 @@ const mapDispatchToProps = {
   loadDefaultCarbonIntensities: defaultCarbonIntensities.find,
   loadEnergyEffectivenessRatios: energyEffectivenessRatios.find,
   loadPetroleumCarbonIntensities: petroleumCarbonIntensities.find
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer)

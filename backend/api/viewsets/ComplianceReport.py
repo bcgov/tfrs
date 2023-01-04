@@ -17,12 +17,15 @@ from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
     ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
-    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer
+    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer, \
+    ComplianceReportDashboardListSerializer
 from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
 from auditable.views import AuditableMixin
+from api.paginations import BasicPagination
+from django.db.models import Q
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -39,10 +42,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     queryset = ComplianceReport.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
-    ordering = ('compliance_period__effective_date', '-update_timestamp', '-create_timestamp',)
+    ordering = ('compliance_period__effective_date',
+                '-update_timestamp', '-create_timestamp',)
     serializer_class = ComplianceReportListSerializer
     serializer_classes = {
         'default': ComplianceReportListSerializer,
+        'dashboard': ComplianceReportDashboardListSerializer,
         'update': ComplianceReportUpdateSerializer,
         'partial_update': ComplianceReportUpdateSerializer,
         'validate_partial': ComplianceReportValidationSerializer,
@@ -51,6 +56,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         'retrieve': ComplianceReportDetailSerializer,
         'types': ComplianceReportTypeSerializer,
     }
+    pagination_class = BasicPagination
 
     def get_queryset(self):
         """
@@ -58,8 +64,122 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         for the currently authenticated user.
         """
         user = self.request.user
-        return ComplianceReportService.get_organization_compliance_reports(
+        qs = ComplianceReportService.get_organization_compliance_reports(
             user.organization)
+
+        request = self.request
+        if self.action == 'list' or self.action == 'paginated':
+            qs = qs.annotate(Count('supplements')).filter(supplements__count=0)\
+                .order_by('-compliance_period__effective_date')
+
+            if self.action == 'paginated':
+                filters = request.data.get('filters')
+                if filters:
+                    for filter in filters:
+                        id = filter.get('id')
+                        value = filter.get('value')
+                        if id and value:
+                            if id == 'compliance-period':
+                                qs = qs.filter(
+                                    compliance_period__description__exact=value)
+                            elif id == 'organization':
+                                qs = qs.filter(
+                                    organization__name__icontains=value)
+                            elif id == 'displayname':
+                                qs = qs.filter(Q(nickname__isnull=True) | Q(
+                                    nickname__icontains=value))
+                                # possible todo: deal with case where generated nicknames are used
+                            elif id == 'status':
+                                qs = self.filter_compliance_status(
+                                    qs, value.lower())
+                            elif id == 'supplemental-status':
+                                # todo; same as the todo above, along with the fact that we'll have to somehow define (annotate)
+                                # a deepest_supplemental_report field (via some sort of aggregation) which we can then filter on
+                                pass
+                            elif id == 'current-status':
+                                # todo; same as the todo above
+                                pass
+                            elif id == 'updateTimestamp':
+                                query = self.filter_timestamp(value)
+                                qs = qs.filter(query)
+        return qs
+
+    def filter_timestamp(self, date):
+        date_query = None
+        date_tuple = date.split('-')
+        for i in range(len(date_tuple)):
+            date_value = date_tuple[i].replace(" ", "")
+            if not date_value:
+                continue
+
+            if i is 0:
+                query = Q(update_timestamp__year=(date_value))
+            elif i is 1:
+                query = Q(update_timestamp__month=(date_value))
+            elif i is 2:
+                query = Q(update_timestamp__day=(date_value))
+
+            if date_query == None:
+                date_query = query
+            else:
+                date_query = date_query & query
+
+        if date_query == None:
+            date_query = Q(update_timestamp__icontains=(date))
+
+        return date_query
+
+    def filter_compliance_status(self, qs, value):
+        if value in 'recommended':
+            return qs.filter(
+                (Q(status__manager_status__status__icontains=value) |
+                 Q(status__analyst_status__status__icontains=value)) &
+                (~Q(status__director_status__status__icontains='Accepted') &
+                    ~Q(status__director_status__status__icontains='Rejected'))
+            )
+
+        if value in 'supplemental requested':
+            return qs.filter(
+                Q(status__manager_status__status__icontains=value) |
+                Q(status__analyst_status__status__icontains=value)
+            )
+        if value in 'accepted':
+            return qs.filter(
+                Q(status__director_status__status__icontains=value)
+            )
+        if value in 'rejected':
+            return qs.filter(
+                Q(status__director_status__status__icontains=value)
+            )
+        if value in 'recommended acceptance - manager':
+            return qs.filter(
+                Q(status__manager_status__status__icontains=value)
+            )
+        if value in 'recommended rejection - manager':
+            return qs.filter(
+                Q(status__manager_status__status__icontains=value)
+            )
+        if value in 'recommended acceptance - analyst':
+            return qs.filter(
+                Q(status__analyst_status__status__icontains=value)
+            )
+        if value in 'recommended rejection - analyst':
+            return qs.filter(
+                Q(status__analyst_status__status__icontains=value)
+            )
+        return qs.filter(
+            Q(status__fuel_supplier_status__status__icontains=value)
+        )
+
+    def get_simple_queryset(self):
+        """
+        This view should return a list of all the compliance reports
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        qs = ComplianceReportService.get_organization_compliance_reports(
+            user.organization)
+        return qs
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
@@ -154,12 +274,24 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        qs = self.get_queryset().annotate(Count('supplements')).filter(supplements__count=0)\
-            .order_by('-compliance_period__effective_date')
+        qs = self.get_queryset()
 
-        sorted_qs = sorted(list(qs.all()), key=lambda x: [x.compliance_period.effective_date, x.sort_date])
+        sorted_qs = sorted(list(qs.all()), key=lambda x: [
+                           x.compliance_period.effective_date, x.sort_date])
 
-        serializer = self.get_serializer(sorted_qs, many=True, context={'request': request})
+        serializer = self.get_serializer(
+            sorted_qs, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['post'])
+    def paginated(self, request):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
@@ -225,7 +357,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             return Response(deserializer.errors)
 
         patched_obj = deserializer.save()
-        serializer = ComplianceReportDetailSerializer(patched_obj, context={'request': request})
+        serializer = ComplianceReportDetailSerializer(
+            patched_obj, context={'request': request})
 
         result = serializer.data
         transaction.savepoint_rollback(sid)
@@ -241,12 +374,15 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         obj = self.get_object()
 
         try:
-            snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj).snapshot
+            snapshot = ComplianceReportSnapshot.objects.get(
+                compliance_report=obj).snapshot
         except:
             if obj.type.the_type == 'Exclusion Report':
-                serializer = ExclusionReportDetailSerializer(obj, context={'request': request})
+                serializer = ExclusionReportDetailSerializer(
+                    obj, context={'request': request})
             else:
-                serializer = ComplianceReportDetailSerializer(obj, context={'request': request})
+                serializer = ComplianceReportDetailSerializer(
+                    obj, context={'request': request})
 
             snapshot = serializer.data
 
@@ -271,3 +407,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         workbook.save(response)
 
         return response
+
+    @action(detail=False, methods=['get'])
+    def dashboard(self, request):
+        qs = self.get_simple_queryset()
+        serializer = self.get_serializer(
+            qs, many=True, context={'request': request})
+        return Response(serializer.data)

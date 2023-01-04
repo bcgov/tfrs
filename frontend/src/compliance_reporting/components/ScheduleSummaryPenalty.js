@@ -1,4 +1,4 @@
-import { totalViewer } from './Columns';
+import { totalViewer } from './Columns'
 
 class ScheduleSummaryPenalty {
   constructor () {
@@ -53,8 +53,8 @@ class ScheduleSummaryPenalty {
         ...totalViewer,
         className: 'total numeric'
       }]
-    ];
+    ]
   }
 }
 
-export default ScheduleSummaryPenalty;
+export default ScheduleSummaryPenalty

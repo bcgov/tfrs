@@ -1,0 +1,65 @@
+global:
+  imageRegistry: "artifacts.developer.gov.bc.ca/docker-remote"
+  imagePullSecrets: 
+    - default-dockercfg-qh29b
+
+image:
+  repository: bitnami/rabbitmq
+  tag: 3.11.2-debian-11-r0
+  debug: false
+
+## RabbitMQ pods' Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext.enabled Enable RabbitMQ pods' Security Context
+## @param podSecurityContext.fsGroup Set RabbitMQ pod's Security Context fsGroup
+##
+podSecurityContext:
+  enabled: true
+  fsGroup: 1004400000
+
+## @param containerSecurityContext.enabled Enabled RabbitMQ containers' Security Context
+## @param containerSecurityContext.runAsUser Set RabbitMQ containers' Security Context runAsUser
+## @param containerSecurityContext.runAsNonRoot Set RabbitMQ container's Security Context runAsNonRoot
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+## Example:
+##   containerSecurityContext:
+##     capabilities:
+##       drop: ["NET_RAW"]
+##     readOnlyRootFilesystem: true
+##
+containerSecurityContext:
+  enabled: true
+  runAsUser: 1004400000
+  runAsNonRoot: true
+
+## @param podLabels RabbitMQ Pod labels. Evaluated as a template
+## Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+##
+podLabels: 
+  environment: prod
+  name: 0ab226
+
+pdb:
+  create: false
+
+replicaCount: 2
+
+persistence:
+  size: 500Mi
+
+## the pass in the secret tfrs-rabbitmq and erlangCookie is there too
+auth:
+  username: rabbitmq-admin
+
+readinessProbe:
+  initialDelaySeconds: 60
+
+resources:
+  requests:
+    cpu: 80m
+    memory: 250Mi
+
+resources:
+  limits:
+    cpu: 160m
+    memory: 500Mi

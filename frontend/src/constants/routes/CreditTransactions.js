@@ -1,5 +1,5 @@
-const API = '/credit_trades';
-const BASE_PATH = '/credit_transactions';
+const API = '/credit_trades'
+const BASE_PATH = '/credit_transactions'
 
 const CREDIT_TRANSACTIONS = {
   ADD: `${BASE_PATH}/add`,
@@ -9,6 +9,6 @@ const CREDIT_TRANSACTIONS = {
   DETAILS: `${BASE_PATH}/view/:id`,
   HIGHLIGHT: `${BASE_PATH}/highlight/:id`,
   LIST: BASE_PATH
-};
+}
 
-export default CREDIT_TRANSACTIONS;
+export default CREDIT_TRANSACTIONS

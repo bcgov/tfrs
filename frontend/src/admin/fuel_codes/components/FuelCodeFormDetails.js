@@ -1,44 +1,44 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import AutocompletedInput from '../../../app/components/AutocompletedInput';
-import InputWithTooltip from '../../../app/components/InputWithTooltip';
+import AutocompletedInput from '../../../app/components/AutocompletedInput'
+import InputWithTooltip from '../../../app/components/InputWithTooltip'
 
 class FuelCodeFormDetails extends Component {
   constructor (props) {
-    super(props);
+    super(props)
 
-    this._getPartiallyRenewableIcons = this._getPartiallyRenewableIcons.bind(this);
-    this._showPartiallyRenewableCheckbox = this._showPartiallyRenewableCheckbox.bind(this);
-    this._togglePartiallyRenewable = this._togglePartiallyRenewable.bind(this);
+    this._getPartiallyRenewableIcons = this._getPartiallyRenewableIcons.bind(this)
+    this._showPartiallyRenewableCheckbox = this._showPartiallyRenewableCheckbox.bind(this)
+    this._togglePartiallyRenewable = this._togglePartiallyRenewable.bind(this)
   }
 
   _getPartiallyRenewableIcons () {
     if (this.props.fields.partiallyRenewable) {
-      return ['far', 'check-square'];
+      return ['far', 'check-square']
     }
 
-    return ['far', 'square'];
+    return ['far', 'square']
   }
 
   _showPartiallyRenewableCheckbox () {
     return this.props.approvedFuels.find(fuel => (fuel.name === this.props.fields.fuel &&
-      fuel.isPartiallyRenewable));
+      fuel.isPartiallyRenewable))
   }
 
   _togglePartiallyRenewable () {
-    const partiallyRenewable = !this.props.fields.partiallyRenewable;
+    const partiallyRenewable = !this.props.fields.partiallyRenewable
 
     this.props.handleInputChange({
       target: {
         name: 'partiallyRenewable',
         value: partiallyRenewable
       }
-    });
+    })
   }
 
   render () {
@@ -62,9 +62,9 @@ class FuelCodeFormDetails extends Component {
                         maxLength: 11,
                         name: 'fuelCode',
                         onPaste: (event) => {
-                          const clipboard = event.clipboardData.getData('Text');
+                          const clipboard = event.clipboardData.getData('Text')
                           if (clipboard.match(/\D/g)) {
-                            event.preventDefault();
+                            event.preventDefault()
                           }
                         },
                         readOnly: this.props.edit,
@@ -411,13 +411,13 @@ class FuelCodeFormDetails extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 FuelCodeFormDetails.defaultProps = {
   edit: false
-};
+}
 
 FuelCodeFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -449,6 +449,6 @@ FuelCodeFormDetails.propTypes = {
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired
-};
+}
 
-export default FuelCodeFormDetails;
+export default FuelCodeFormDetails

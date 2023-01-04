@@ -1,0 +1,242 @@
+# Default values for ClamAV.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  # TODO: Switch to clamav/clamav container
+  repository: mailu/clamav
+  tag: master@sha256:48c846508ebbb12dbce8389ca638e6314d988bfa0cae6e141370496a59a37e15  # If not defined, uses appVersion
+  pullPolicy: IfNotPresent
+
+priorityClassName: ""
+
+## Optionally specify an array of imagePullSecrets.
+## Secrets must be manually created in the namespace.
+## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+##
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1004420000
+  runAsGroup: 1004420000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+
+serviceAccount:
+  create: false
+  name: ""
+  automountServiceAccountToken: false
+  annotations: {}
+
+service:
+  type: ClusterIP
+  port: 3310
+  # nodePort: 30100
+  annotations: {}
+
+ingress:
+  enabled: false
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+## Ref: https://linux.die.net/man/5/clamd.conf
+## Note: will completely override default clamd.conf file at https://github.com/Mailu/Mailu/tree/master/optional/clamav/conf
+clamdConfig: |
+  ###############
+  # General
+  ###############
+
+  DatabaseDirectory /data
+  TemporaryDirectory /tmp
+  LogTime yes
+  # CUSTOM: Use pid file in tmp
+  PidFile /tmp/clamd.pid
+  LocalSocket /tmp/clamd.sock
+  # CUSTOM: Set local socket group to defined group id
+  LocalSocketGroup 1004420000
+  TCPSocket 3310
+  Foreground yes
+
+  ###############
+  # Results
+  ###############
+
+  DetectPUA yes
+  ExcludePUA NetTool
+  ExcludePUA PWTool
+  HeuristicAlerts yes
+  Bytecode yes
+
+  ###############
+  # Scan
+  ###############
+
+  ScanPE yes
+  DisableCertCheck yes
+  ScanELF yes
+  AlertBrokenExecutables yes
+  ScanOLE2 yes
+  ScanPDF yes
+  ScanSWF yes
+  ScanMail yes
+  PhishingSignatures yes
+  PhishingScanURLs yes
+  ScanHTML yes
+  ScanArchive yes
+
+  ###############
+  # Scan
+  ###############
+
+  MaxScanSize 150M
+  MaxFileSize 500M
+  MaxRecursion 10
+  MaxFiles 15000
+  MaxEmbeddedPE 10M
+  MaxHTMLNormalize 10M
+  MaxHTMLNoTags 2M
+  MaxScriptNormalize 5M
+  MaxZipTypeRcg 1M
+  MaxPartitions 128
+  MaxIconsPE 200
+  PCREMatchLimit 10000
+  PCRERecMatchLimit 10000
+
+## Ref: https://linux.die.net/man/5/freshclam.conf
+## Note: will completely override default clamd.conf file at https://github.com/Mailu/Mailu/tree/master/optional/clamav/conf
+freshclamConfig: |
+  ###############
+  # General
+  ###############
+
+  DatabaseDirectory /data
+  UpdateLogFile /dev/stdout
+  LogTime yes
+  # CUSTOM: Use pid file in tmp
+  PidFile /tmp/freshclam.pid
+  # CUSTOM: Set defined user
+  DatabaseOwner 1004420000
+
+  ###############
+  # Updates
+  ###############
+
+  DatabaseMirror database.clamav.net
+  ScriptedUpdates yes
+  NotifyClamd /etc/clamav/clamd.conf
+  Bytecode yes
+
+# Use freshclamConfig to define the content of /etc/clamav/freshclam.conf. Example:
+# freshclamConfig: |
+#   HTTPProxyServer your-proxy.example.com
+#   HTTPProxyPort 8080
+#   DatabaseDirectory /data
+#   LogSyslog yes
+#   LogTime yes
+#   PidFile /run/clamav/freshclam.pid
+#   DatabaseOwner root
+#   DatabaseMirror database.clamav.net
+#   ScriptedUpdates yes
+#   NotifyClamd /etc/clamav/clamd.conf
+#   SafeBrowsing yes
+#   Bytecode yes
+
+resources: 
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 280m
+    memory: 2Gi
+  requests:
+    cpu: 140m
+    memory: 1Gi
+
+# Additional pod labels
+podLabels: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+livenessProbe:
+  initialDelaySeconds: 150
+  periodSeconds: 15
+  failureThreshold: 10
+  timeoutSeconds: 1
+
+readinessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 15
+  failureThreshold: 10
+  timeoutSeconds: 1
+
+hpa:
+  enabled: false
+  maxReplicas: 2
+  # average total CPU usage per pod (1-100)
+  cpu: 80
+  # average memory usage per pod (100Mi-1Gi)
+  # memory: "1000Mi"
+  # requests: "500m"
+
+podDisruptionBudget:
+  enabled: false
+  # minAvailable: 1
+  # maxUnavailable: 1
+
+## extraVolumes Optionally specify extra list of additional volumes for the Clam Pod(s)
+##
+extraVolumes: []
+## extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Clam container(s)
+##
+extraVolumeMounts: []
+
+## Clamav data dir persistence
+persistentVolume:
+  ## If true, a Persistent Volume Claim is created, otherwise it uses an emptyDir
+  ##
+  enabled: yes
+
+  ## Persistent Volume Claim annotations
+  ##
+  annotations: {}
+
+  ## Persistent Volume access modes
+  ## Must match those of existing PV or dynamic provisioner
+  ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  accessModes:
+  - ReadWriteOnce
+
+  ## Persistent Volume Size
+  ##
+  size: 1Gi
+
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "netapp-file-standard"

@@ -5,7 +5,7 @@ const SCHEDULE_A = {
   FUEL_CLASS: 3,
   TRANSFER_TYPE: 4,
   QUANTITY: 5
-};
+}
 
 const SCHEDULE_A_ERROR_KEYS = {
   tradingPartner: 1,
@@ -13,7 +13,7 @@ const SCHEDULE_A_ERROR_KEYS = {
   fuelClass: 3,
   transferType: 4,
   quantity: 5
-};
+}
 
 const SCHEDULE_B = {
   ROW_NUMBER: 0,
@@ -30,7 +30,7 @@ const SCHEDULE_B = {
   ENERGY_CONTENT: 11,
   CREDIT: 12,
   DEBIT: 13
-};
+}
 
 const SCHEDULE_B_ERROR_KEYS = {
   fuelType: 1,
@@ -40,7 +40,7 @@ const SCHEDULE_B_ERROR_KEYS = {
   scheduleD_sheetIndex: 4,
   quantity: 5,
   intensity: 8
-};
+}
 
 const SCHEDULE_C = {
   ROW_NUMBER: 0,
@@ -50,14 +50,14 @@ const SCHEDULE_C = {
   UNITS: 4,
   EXPECTED_USE: 5,
   EXPECTED_USE_OTHER: 6
-};
+}
 
 const SCHEDULE_C_ERROR_KEYS = {
   fuelType: 1,
   fuelClass: 2,
   quantity: 3,
   expectedUse: 5
-};
+}
 
 const SCHEDULE_D = {
   WORKSHEET_NAME: 1,
@@ -65,19 +65,19 @@ const SCHEDULE_D = {
   VALUE: 3,
   UNITS: 4,
   DESCRIPTION: 5
-};
+}
 
 const SCHEDULE_D_INPUT = {
   FUEL_TYPE: 0,
   FEEDSTOCK: 1,
   FUEL_CLASS: 2
-};
+}
 
 const SCHEDULE_D_INPUT_ERROR_KEYS = {
   fuelType: 0,
   feedstock: 1,
   fuelClass: 2
-};
+}
 
 const SCHEDULE_D_OUTPUT = {
   FUEL_DISPENSING: 0,
@@ -94,7 +94,7 @@ const SCHEDULE_D_OUTPUT = {
   FUEL_USE: 11,
   TOTAL: 12,
   CARBON_INTENSITY: 13
-};
+}
 
 const SCHEDULE_SUMMARY = {
   LINE_1: 1,
@@ -131,7 +131,7 @@ const SCHEDULE_SUMMARY = {
   PART_2_DIESEL_PAYABLE: 2,
   PART_3_PAYABLE: 3,
   TOTAL_PENALTY: 4
-};
+}
 
 const SCHEDULE_PENALTY = {
   LINE_11: 1,
@@ -139,7 +139,7 @@ const SCHEDULE_PENALTY = {
   LINE_28: 3,
   TOTAL_NON_COMPLIANCE: 4,
   AMOUNT_ENCLOSED: 5
-};
+}
 
 export {
   SCHEDULE_A,
@@ -154,4 +154,4 @@ export {
   SCHEDULE_D_OUTPUT,
   SCHEDULE_PENALTY,
   SCHEDULE_SUMMARY
-};
+}
