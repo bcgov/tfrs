@@ -18,7 +18,7 @@ objects:
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
-      name: allow-tfrs-rabbitmq-accepts${ENVIRONMENT}
+      name: allow-tfrs-rabbitmq-accepts-${ENVIRONMENT}
     spec:
       ## Allow rabbitmq to accept communications from notification server
       ## Allow rabbitmq to accept communications from backend

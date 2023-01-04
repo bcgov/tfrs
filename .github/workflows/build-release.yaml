@@ -182,10 +182,11 @@ jobs:
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,tim738745
-          minimum-approvals: 3
+          minimum-approvals: 2
           issue-title: "TFRS ${{ env.RELEASE_NAME }} Prod Deployment"
 
       - name: Run deploy
         run: |
           cd .pipeline
-          echo "no prod deploy yet"
+          npm install
+          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=prod 
