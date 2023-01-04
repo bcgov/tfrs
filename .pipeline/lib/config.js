@@ -22,7 +22,7 @@ const phases = {
             frontendKeycloakLogoutUrl: `https://tfrs-dev.${ocpName}.gov.bc.ca`, 
             frontendHost: `tfrs-dev.${ocpName}.gov.bc.ca`, frontendSiteminderLogoutUrl: 'https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl=',
             frontendDebugEnabled: 'true',
-        backendCpuRequest: '200m', backendCpuLimit: '400m', backendMemoryRequest: '600mi', backendMemoryLimit: '1200mi', backendHealthCheckDelay: 30, 
+        backendCpuRequest: '200m', backendCpuLimit: '400m', backendMemoryRequest: '600Mi', backendMemoryLimit: '1200Mi', backendHealthCheckDelay: 30, 
             backendHost: `tfrs-backend-dev.${ocpName}.gov.bc.ca`, backendReplicas: 2,
             backendKeycloakSaBaseurl: 'https://dev.loginproxy.gov.bc.ca',
             backendKeycloakSaClientId: 'tfrs-on-gold-4308',
