@@ -45,7 +45,8 @@ objects:
     creationTimestamp:
     labels:
       frontend: 'true'
-    annotations: {}
+    annotations:
+      haproxy.router.openshift.io/timeout: 1200s
   spec:
     host: ${FRONTEND_HOST}
     to:

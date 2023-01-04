@@ -41,7 +41,8 @@ objects:
   metadata:
     name: ${NAME}-backend${SUFFIX}
     creationTimestamp: 
-    annotations: {}
+    annotations:
+      haproxy.router.openshift.io/timeout: 1200s
   spec:
     host: ${BACKEND_HOST}
     to:
