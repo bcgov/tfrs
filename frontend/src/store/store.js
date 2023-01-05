@@ -5,12 +5,12 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { createLogger } from 'redux-logger'
-import createSocketIoMiddleware from 'redux-socket.io'
 import { reducer as toastrReducer } from 'react-redux-toastr'
-import io from 'socket.io-client'
+// import createSocketIoMiddleware from 'redux-socket.io'
+// import io from 'socket.io-client'
 
 import rootReducer from '../reducers/reducer'
-import { SOCKETIO_URL } from '../constants/routes'
+// import { SOCKETIO_URL } from '../constants/routes'
 
 import CONFIG from '../config'
 import keycloakReducer from '../reducers/keycloakReducer'
@@ -18,8 +18,8 @@ import rootSaga from '../reducers/rootSaga'
 
 export const sagaMiddleware = createSagaMiddleware()
 
-const socket = io(SOCKETIO_URL)
-const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/')
+// const socket = io(SOCKETIO_URL)
+// const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/')
 
 const userAuthPersistConfig = {
   key: 'userAuth',
@@ -33,7 +33,7 @@ const combinedReducers = combineReducers({
 })
 
 const allMiddleware = [
-  socketIoMiddleware,
+  // socketIoMiddleware,
   sagaMiddleware,
   thunk
 ]

@@ -34,18 +34,18 @@ export const resetAuth = () => ({
   type: ActionTypes.RESET_AUTH
 })
 
-export const loginKeycloakUserSuccess = (idToken, refreshToken, expiry) => ({
-  payload: { idToken, refreshToken, expiry },
+export const loginKeycloakUserSuccess = (idToken, refreshToken, expiry, refreshExpiry) => ({
+  payload: { idToken, refreshToken, expiry, refreshExpiry },
   type: ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS
 })
 
-export const loginKeycloakRefreshSuccess = (refreshToken, expiry) => ({
-  payload: { refreshToken, expiry },
+export const loginKeycloakRefreshSuccess = (refreshToken, expiry, refreshExpiry) => ({
+  payload: { refreshToken, expiry, refreshExpiry },
   type: ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS
 })
 
-export const loginKeycloakSilentRefreshSuccess = (idToken, refreshToken, expiry) => ({
-  payload: { idToken, refreshToken, expiry },
+export const loginKeycloakSilentRefreshSuccess = (idToken, refreshToken, expiry, refreshExpiry) => ({
+  payload: { idToken, refreshToken, expiry, refreshExpiry },
   type: ActionTypes.LOGIN_KEYCLOAK_SILENT_REFRESH_SUCCESS
 })
 

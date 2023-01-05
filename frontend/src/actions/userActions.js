@@ -41,7 +41,6 @@ const updateUser = (id, payload) => (dispatch) => {
 }
 
 const getLoggedInUser = () => (dispatch) => {
-  console.log('getLoggedInUser')
   dispatch(getLoggedInUserRequest())
   const url = Routes.BASE_URL + Routes.CURRENT_USER
   axios.get(url)

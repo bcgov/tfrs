@@ -7,6 +7,7 @@ const keycloakReducer = (state = {
   refreshToken: null,
   loggingIn: false,
   expiry: null,
+  refreshExpiry: null,
   errors: {}
 }, action) => {
   switch (action.type) {
@@ -32,6 +33,7 @@ const keycloakReducer = (state = {
         idToken: null,
         refreshToken: null,
         expiry: null,
+        refreshExpiry: null,
         keycloak: null,
         loggingIn: false,
         authenticated: false,
@@ -55,6 +57,7 @@ const keycloakReducer = (state = {
         idToken: action.payload.idToken,
         refreshToken: action.payload.refreshToken,
         expiry: action.payload.expiry,
+        refreshExpiry: action.payload.refreshExpiry,
         authenticated: true,
         loggingIn: false,
         errors: {}
@@ -64,6 +67,7 @@ const keycloakReducer = (state = {
         ...state,
         refreshToken: action.payload.refreshToken,
         expiry: action.payload.expiry,
+        refreshExpiry: action.payload.refreshExpiry,
         authenticated: true,
         loggingIn: false,
         errors: {}
@@ -74,6 +78,7 @@ const keycloakReducer = (state = {
         idToken: action.payload.idToken,
         refreshToken: action.payload.refreshToken,
         expiry: action.payload.expiry,
+        refreshExpiry: action.payload.refreshExpiry,
         authenticated: true,
         loggingIn: false,
         errors: {}
