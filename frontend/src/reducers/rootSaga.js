@@ -22,9 +22,7 @@ import { complianceReporting } from '../actions/complianceReporting'
 import { exclusionReports } from '../actions/exclusionReports'
 
 function * rootSaga () {
-  console.log('Waiting for rehydration')
   yield take(REHYDRATE) // Wait for rehydrate to prevent sagas from running with empty store
-  console.log('Rehydrated')
 
   sagaMiddleware.run(sessionTimeoutSaga, store)
   sagaMiddleware.run(notificationsSaga, store)

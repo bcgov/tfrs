@@ -21,20 +21,18 @@ function * resetTimer (store) {
   // Check for expired token
   const now = Math.round(Date.now() / 1000)
   const timeLeft = (expiry - now) * 1000
-  console.log('Session Time Left - ' + timeLeft / 1000)
-  if (timeLeft < 0) {
-    yield put(logout())
-  }
-  // Montior remaining session length
+
+  // Reset session timers
   yield put({ type: 'SESSION_TIMEOUT_RESET' })
-  yield delay(timeLeft - (30000)) // 30 seconds before expiry
+  yield delay(timeLeft) // silent refresh when idToken expires
   yield call(silentTokenRefreshSaga, store)
-  yield delay(timeLeft - 15000) // 15 seconds before expiry
+  yield delay(5000) // retry after 5 seconds if first attempt failed
   yield call(silentTokenRefreshSaga, store)
-  yield delay(timeLeft - 10000)
-  // If silent renew fails, we then show the continue session button
+  yield delay(5000)
+
+  // If silent renew fails, show the continue session button
   yield put({ type: 'SESSION_TIMEOUT_WARNING' })
-  yield delay(60000)
+  yield delay(60000) // wait 60 seconds for user to continue session
   yield put({ type: 'SESSION_TIMEOUT_EXPIRED' })
   yield put(logout())
 }
