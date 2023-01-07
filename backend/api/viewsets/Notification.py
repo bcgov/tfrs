@@ -77,9 +77,25 @@ class NotificationViewSet(AuditableMixin,
                     if id and value:
                         if id == 'notification':
                             #todo: this can be improved
-                            qs = qs.filter(message__icontains = value)
+                            notification_split = value.split()
+                            q_object = None
+                            for x in notification_split:
+                                q_sub_object = Q(message__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
                         elif id == 'date':
-                            qs = qs.filter(update_timestamp__icontains = value)
+                            date_split = value.split("-")
+                            q_object = None
+                            for x in date_split:
+                                q_sub_object = Q(update_timestamp__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
                         elif id == 'user':
                             user_split = value.split()
                             q_object = None
@@ -88,7 +104,7 @@ class NotificationViewSet(AuditableMixin,
                                 if not q_object:
                                     q_object = q_sub_object
                                 else:
-                                    q_object = q_object | q_sub_object
+                                    q_object = q_object & q_sub_object
                             qs = qs.filter(q_object)
                         elif id == 'creditTrade':
                             if value.isnumeric():
@@ -98,7 +114,15 @@ class NotificationViewSet(AuditableMixin,
                             else:
                                 qs = qs.none()
                         elif id == 'organization':
-                            qs = qs.filter(related_organization__name__icontains = value)
+                            organization_split = value.split()
+                            q_object = None
+                            for x in organization_split:
+                                q_sub_object = Q(related_organization__name__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
         return qs
 
 
