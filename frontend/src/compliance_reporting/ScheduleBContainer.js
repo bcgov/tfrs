@@ -427,7 +427,8 @@ class ScheduleBContainer extends Component {
         fuelClass: grid[row][SCHEDULE_B.FUEL_CLASS].value,
         fuelCode: grid[row][SCHEDULE_B.FUEL_CODE].value,
         fuelType: grid[row][SCHEDULE_B.FUEL_TYPE].value,
-        provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value
+        provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value,
+        scheduleD_sheetIndex: props.complianceReport.scheduleB.records[row-2].scheduleDSheetIndex
       }
 
       const response = ComplianceReportingService.computeCredits(context, values)
@@ -504,8 +505,9 @@ class ScheduleBContainer extends Component {
           grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select
           grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (cellProps) => {
             const selectedOption = cellProps.cell.getOptions().find(e =>
-              String(e.id) === String(cellProps.value))
+              String(e.id) === String(response.parameters.scheduleD_sheetIndex))
             if (selectedOption) {
+              grid[row][SCHEDULE_B.FUEL_CODE].value = selectedOption.id
               return <span>{selectedOption.descriptiveName}</span>
             }
             return <span>{cellProps.value}</span>
