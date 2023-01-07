@@ -138,9 +138,17 @@ class SpreadSheetBuilder(object):
                                 credit_trade.fair_market_value_per_credit,
                                 value_format)
 
-            worksheet.write(row_index, 7, credit_trade.status.friendly_name)
-            worksheet.write(row_index, 8, credit_trade.trade_effective_date,
-                            date_format)
+            if credit_trade.is_rescinded:
+                worksheet.write(row_index, 7, "Rescinded")
+            elif (not user.is_government_user) and (credit_trade.status.friendly_name == "Reviewed"):
+                worksheet.write(row_index, 7, "Signed")
+            else:
+                worksheet.write(row_index, 7, credit_trade.status.friendly_name)
+            
+            if credit_trade.trade_effective_date:
+                worksheet.write(row_index, 8, credit_trade.trade_effective_date, date_format)
+            elif credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"] and credit_trade.update_timestamp:
+                worksheet.write(row_index, 8, credit_trade.update_timestamp.date(), date_format)
 
             comments = credit_trade.unprivileged_comments
 
