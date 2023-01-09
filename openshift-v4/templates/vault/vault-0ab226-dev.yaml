@@ -1,0 +1,56 @@
+## Deployment for Testing Vault K8s Auth
+# sed -e "s/0ab226/$0ab226_PLATE/g" -e "s/silver/$silver_NAME/g" -e "s/nonprod/$nonprod/g" -e "s/dev/$dev/g" deployment.yaml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: vault-test
+  namespace: 0ab226-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-test
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: vault-test
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-secret-helloworld: 0ab226-nonprod/helloworld
+        vault.hashicorp.com/agent-inject-template-helloworld: |
+          {{- with secret "0ab226-nonprod/helloworld" }}
+          {{ .Data.data.hello }}
+          {{ .Data.data.firstname }}
+          {{ end }}
+        vault.hashicorp.com/agent-inject-token: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/auth-path: auth/k8s-silver
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: 0ab226-nonprod
+    spec:
+      containers:
+        - name: vault
+          image: 'docker.io/hashicorp/vault:1.8.3'
+          command:
+            - /bin/sh
+          args:
+            - '-c'
+            - while true; do cat /vault/secrets/helloworld; sleep 10; done
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: 0ab226-vault
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
