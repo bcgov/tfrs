@@ -1,0 +1,36 @@
+
+2.0.0 Migration:
+
+1. Deploy Clamav - done
+
+2. Deploy Rabbitmq
+    2.1 Create Rabbitmq route for management console - done
+    2.2 Create tfrs user and tfrs-vhost on Rabbitmq - done
+
+3. Create secrets:
+    3.1 Create secret tfrs-patroni-app - done
+    3.2 Create secret tfrs-rabbitmq-app - done
+    3.3 Create secret tfrs-object-storage - done
+
+4. Update config.js - Done
+
+5. Bring up maintanence page and make sure the prod url is redirected to the maintanence page - Done
+
+6. Disable nagios - Done
+
+7. Bring down tfrs-clamav-prod and tfrs-prod-rabbitmq-cluster  - Done
+
+8. Apply knps - Done
+
+9. Update the GitHub Action based pipeline to deploy on prod and limit two approvals - Done
+
+10. Run the pipeline and approve the prod deployment - Done
+
+11. Change the route back to the right URL, and bring down the maintanence page - Done
+
+Post 2.0.0 Migration:
+
+The Minio instance was brought up after the migration as TFRS not able to work with object storage well. The uploaded documents are not appear in the object storage.
+Before 2.1.0 is deployed on the IFRS prod, this issue needs to be resolved.
+
+
