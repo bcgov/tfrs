@@ -49,12 +49,12 @@ class ScheduleAssessmentContainer extends Component {
     }
 
     let hasDirectorAssessment = false;
-    if (this.props.complianceReport && ['Accepted','Rejected'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
+    if (this.props.complianceReport && ['Accepted'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
       hasDirectorAssessment = true
     } else if (this.props.complianceReport &&
       this.props.complianceReport.history &&
       this.props.complianceReport.history.find(h =>
-        (['Accepted','Rejected'].indexOf(h.status.directorStatus) >= 0))
+        (['Accepted'].indexOf(h.status.directorStatus) >= 0))
     ) {
       hasDirectorAssessment = true;
     }
