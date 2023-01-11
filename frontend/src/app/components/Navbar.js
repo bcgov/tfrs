@@ -68,6 +68,8 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container-fluid">
+          <div id='navbar-main-items'>
+
           <NavLink
             // TODO Cleanup NavLinks for router v6
             // activeClassName="active"
@@ -177,6 +179,7 @@ class Navbar extends Component {
             Organization Details
           </NavLink>
           }
+          </div>
           <div id="user-options">
             {this.props.loggedInUser.displayName &&
               <div
