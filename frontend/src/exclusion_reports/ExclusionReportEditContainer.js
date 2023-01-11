@@ -162,6 +162,7 @@ class ExclusionReportEditContainer extends Component {
   }
 
   loadData () {
+    this.props.getComplianceReports()
     this.props.getExclusionReport(this.props.params.id)
   }
 
@@ -371,6 +372,11 @@ class ExclusionReportEditContainer extends Component {
         id={this.props.params.id}
         actions={this.props.exclusionReports.item.actions}
         actor={this.props.exclusionReports.item.actor}
+        compliancePeriod={period}
+        exclusionReports={this.props.exclusionReports}
+        complianceReports={{
+          items: this.props.complianceReports.items
+        }}
         edit={this.edit}
         key="exclusionReportButtons"
         loggedInUser={this.props.loggedInUser}
@@ -540,7 +546,16 @@ ExclusionReportEditContainer.propTypes = {
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool,
     success: PropTypes.bool,
-    item: PropTypes.object
+    item: PropTypes.shape({
+      actions: PropTypes.arrayOf(PropTypes.string),
+      actor: PropTypes.string,
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ])
+    })
   }),
   exclusionReports: PropTypes.shape({
     isGetting: PropTypes.bool,
@@ -624,6 +639,7 @@ const
       snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot,
       item: state.rootReducer.complianceReporting.item
     },
+    complianceReports: state.rootReducer.complianceReporting,
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,

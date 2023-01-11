@@ -22,6 +22,19 @@ const getValidationMessages = (props) => {
   if (props.validating) {
     return 'Identifying potential issues...'
   }
+  let type = props.exclusionReports.item.type.theType
+  let period = props.compliancePeriod
+  const found = props.complianceReports.items.find(item => (
+    item.status.fuelSupplierStatus === 'Submitted' &&
+    item.compliancePeriod.description === period &&
+    item.type === type
+  ))
+  if (found && !props.exclusionReports.item.isSupplemental) {
+    return `An ${type} for ${period} has already been submitted to the Government of British Columbia. 
+      If the information in the previous report does not completely and accurately disclose the information 
+      required to be included in the report, please create a supplemental report by opening the previous
+       report and clicking on the "Create Supplemental Report" button.`
+  }
 
   return ''
 }
