@@ -176,10 +176,7 @@ objects:
           - name: EMAIL_SENDING_ENABLED
             value: 'true'
           - name: MINIO_BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: tfrs-object-storage
-                key: BUCKET
+            value: tfrs
           - name: SMTP_SERVER_HOST
             value: apps.smtp.gov.bc.ca
           - name: SMTP_SERVER_PORT
@@ -224,10 +221,7 @@ objects:
           - name: RABBITMQ_PORT
             value: '5672'
           - name: MINIO_ENDPOINT
-            valueFrom:
-              secretKeyRef:
-                name: tfrs-object-storage
-                key: ENDPOINT
+            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
           - name: MINIO_USE_SSL
             value: 'true'
           - name: DOCUMENTS_API_ENABLED
@@ -235,13 +229,13 @@ objects:
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: tfrs-object-storage
-                key: USER_ID
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_ACCESS_KEY
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: tfrs-object-storage
-                key: KEY
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_SECRET_KEY
           - name: FUEL_CODES_API_ENABLED
             value: 'true'
           - name: CREDIT_CALCULATION_API_ENABLED
