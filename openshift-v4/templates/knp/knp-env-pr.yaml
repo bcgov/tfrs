@@ -339,7 +339,7 @@ objects:
     metadata:
       name: allow-minio-accepts-backed
     spec:
-      ## Allow minio to accept communications from celery
+      ## Allow minio to accept communications from backend
       podSelector:
         matchLabels:
           name: tfrs-minio-${ENVIRONMENT}

@@ -45,7 +45,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
         },
   test: {namespace:'0ab226-test'    , name: `${name}`, phase: 'test'  , changeId:changeId, suffix: `-test`  , 
-        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`, dbServiceName: 'patroni-master-test',
+        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`, dbServiceName: 'tfrs-spilo',
         frontendCpuRequest: '40m', frontendCpuLimit: '80m', frontendMemoryRequest: '60Mi', frontendMemoryLimit: '120Mi', frontendReplicas: 2,
             frontendKeycloakAuthority: 'https://test.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-test.${ocpName}.gov.bc.ca`,
             frontendKeycloakLogoutUrl: `https://tfrs-test.${ocpName}.gov.bc.ca`, 

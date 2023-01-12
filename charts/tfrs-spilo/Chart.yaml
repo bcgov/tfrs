@@ -1,6 +1,6 @@
 apiVersion: v2
-name: itvr-spilo
-description: A Helm chart for setting up splio for itvr project on Openshift
+name: tfrs-spilo
+description: A Helm chart for setting up splio for tfrs project on Openshift
 
 # A chart can be either an 'application' or a 'library' chart.
 #
