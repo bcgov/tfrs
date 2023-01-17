@@ -17,7 +17,6 @@ import ORGANIZATION from '../constants/routes/Organizations'
 import Modal from '../app/components/Modal'
 import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations'
 import { withRouter } from '../utils/withRouter'
-import * as $AB from 'jquery'
 
 class OrganizationEditContainer extends Component {
   constructor (props) {
