@@ -421,6 +421,14 @@ class ScheduleBContainer extends Component {
         )
       }
 
+      // Check for existing scheduleDSheetIndex from records
+      let scheduleDSheetIndex = null
+      const scheduleBRecords = props.complianceReport?.scheduleB?.records
+      if (scheduleBRecords != null) {
+        const record = scheduleBRecords[row - 2]
+        scheduleDSheetIndex = record ? record.scheduleDSheetIndex : null
+      }
+
       const values = {
         customIntensity: grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value,
         quantity: grid[row][SCHEDULE_B.QUANTITY].value,
@@ -428,7 +436,7 @@ class ScheduleBContainer extends Component {
         fuelCode: grid[row][SCHEDULE_B.FUEL_CODE].value,
         fuelType: grid[row][SCHEDULE_B.FUEL_TYPE].value,
         provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value,
-        scheduleD_sheetIndex: props.complianceReport.scheduleB.records[row-2].scheduleDSheetIndex
+        scheduleD_sheetIndex: scheduleDSheetIndex
       }
 
       const response = ComplianceReportingService.computeCredits(context, values)
