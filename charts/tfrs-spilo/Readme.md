@@ -16,7 +16,10 @@
     * It includes AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_ENDPOINT
     * The values are in sync with secret tfrs-object-storage
 
-* Verify values-test.yaml
+* Verify values-test.yaml. Create the bucket on object storage if needed
+
+* Add new KNPs templates/knp/knp-env-pr-new-tfrs-spilo.yaml
+    * oc process -f ./knp-env-pr-new-tfrs-spilo.yaml ENVIRONMENT=test | oc apply -f - -n 0ab226-test    
 
 ## Heml command
 helm install -n 0ab226-test -f ./values-test.yaml tfrs-spilo .
@@ -58,9 +61,9 @@ helm uninstall -n 0ab226-test tfrs-spilo
     * make an empty dir /home/postgres/migration and cd into it
     * backup tfrs database: pg_dump tfrs > tfrs.sql
 * Restore tfrs database
-    psql tfrs < ./tfrs.sql >> ./restore.log 2>&1
-* Add new KNPs templates/knp/knp-env-pr-new-tfrs-spilo.yaml
-    * oc process -f ./knp-env-pr-new-tfrs-spilo.yaml ENVIRONMENT=test | oc apply -f - -n 0ab226-test    
+    * psql tfrs < ./tfrs.sql >> ./restore.log 2>&1
+    * verify the restore.log when complete
+
 * Point the applications to v14 cluster, update the enviuronment variables for
     * backend: DATABASE_SERVICE_NAME, POSTGRESQL_SERVICE_HOST
     * celery: DATABASE_SERVICE_NAME
@@ -68,8 +71,7 @@ helm uninstall -n 0ab226-test tfrs-spilo
 * Bring down the v10 cluster
 * Bring down the maintenance page
 * Bring up the tfrs appliation
-* Update patroni backup on backup minio
-
+* Update patroni backup to only backup minio data
 * Update metabase connection from CTHUB
 * Update dbServiceName to be tfrs-spilo in .pipeline/lib/config.js
 
