@@ -18,12 +18,14 @@ class SecureFileSubmissionContainer extends Component {
       page: 1,
       pageSize: 10,
       filters: [],
+      sort: [],
       refreshCounter: 0
     }
 
     this.handlePageChange = this.handlePageChange.bind(this)
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
     this.handleFiltersChange = this.handleFiltersChange.bind(this)
+    this.handleSortChange = this.handleSortChange.bind(this)
   }
 
   componentDidMount () {
@@ -31,12 +33,12 @@ class SecureFileSubmissionContainer extends Component {
   }
 
   loadData () {
-    this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
+    this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
-      this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters)
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter || this.state.sort !== prevState.sort) {
+      this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
     }
   }
   handlePageChange (page) {
@@ -51,6 +53,10 @@ class SecureFileSubmissionContainer extends Component {
     this.setState({ filters })
   }
 
+  handleSortChange (sort) {
+    this.setState({ sort })
+  }
+
   render () {
     return (
       <SecureFileSubmissionsPage
@@ -62,9 +68,11 @@ class SecureFileSubmissionContainer extends Component {
         page={this.state.page}
         pageSize={this.state.pageSize}
         filters={this.state.filters}
+        sort={this.state.sort}
         handlePageChange={this.handlePageChange}
         handlePageSizeChange={this.handlePageSizeChange}
         handleFiltersChange={this.handleFiltersChange}
+        handleSortChange={this.handleSortChange}
         title="Secure File Submissions"
       />
     )
@@ -86,7 +94,7 @@ SecureFileSubmissionContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
-  requestURL: PropTypes.func.isRequired
+  requestURL: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({

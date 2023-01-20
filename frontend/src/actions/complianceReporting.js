@@ -202,7 +202,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     const page = data.page
     const pageSize = data.pageSize
     const filters = data.filters
-    return axios.post(`${this.baseUrl}/paginated?page=${page}&size=${pageSize}`, { filters })
+    const sorts = data.sorts
+    return axios.post(`${this.baseUrl}/paginated?page=${page}&size=${pageSize}`, { filters, sorts })
   }
 
   * findPaginatedHandler () {

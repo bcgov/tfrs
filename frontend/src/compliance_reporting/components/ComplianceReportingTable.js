@@ -22,17 +22,19 @@ class ComplianceReportingTable extends Component {
     this.state = {
       page: 1,
       pageSize: 10,
-      filters: []
+      filters: [],
+      sorts: []
     }
 
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
     this.handleFiltersChange = this.handleFiltersChange.bind(this);
+    this.handleSortsChange = this.handleSortsChange.bind(this);
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters) {
-      this.props.getComplianceReports({page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters})
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.sorts !== prevState.sorts) {
+      this.props.getComplianceReports({page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts})
     }
   }
 
@@ -46,6 +48,10 @@ class ComplianceReportingTable extends Component {
 
   handleFiltersChange (filters) {
     this.setState({filters: filters});
+  }
+
+  handleSortsChange (sorts) {
+    this.setState({sorts: sorts});
   }
 
   render () {
@@ -206,6 +212,11 @@ class ComplianceReportingTable extends Component {
         onFilteredChange={(filtered, column) => {
           this.handlePageChange(1);
           this.handleFiltersChange(filtered);
+        }}
+        sorts={this.state.sorts}
+        onSortedChange={(sorts, column) => {
+          this.handlePageChange(1)
+          this.handleSortsChange(sorts)
         }}
       />
     )

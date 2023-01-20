@@ -28,7 +28,8 @@ class NotificationsContainer extends Component {
       page: 1,
       pageSize: 10,
       filters: [],
-      refreshCounter: 0
+      refreshCounter: 0,
+      sort: []
     }
 
     this._selectIdForModal = this._selectIdForModal.bind(this)
@@ -38,10 +39,11 @@ class NotificationsContainer extends Component {
     this.handlePageChange = this.handlePageChange.bind(this)
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
     this.handleFiltersChange = this.handleFiltersChange.bind(this)
+    this.handleSortChange = this.handleSortChange.bind(this)
   }
 
   componentDidMount () {
-    this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters)
+    this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
     // this.props.autoloadNotificationsEnable();
   }
 
@@ -50,8 +52,8 @@ class NotificationsContainer extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter) {
-      this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters)
+    if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.refreshCounter !== prevState.refreshCounter || this.state.sort !== prevState.sort) {
+      this.props.getNotifications(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
     }
   }
 
@@ -139,6 +141,10 @@ class NotificationsContainer extends Component {
     this.setState({ filters })
   }
 
+  handleSortChange (sort) {
+    this.setState({ sort })
+  }
+
   render () {
     return ([
       <NotificationsDetails
@@ -154,9 +160,11 @@ class NotificationsContainer extends Component {
         page={this.state.page}
         pageSize={this.state.pageSize}
         filters={this.state.filters}
+        sort={this.state.sort}
         handlePageChange={this.handlePageChange}
         handlePageSizeChange={this.handlePageSizeChange}
         handleFiltersChange={this.handleFiltersChange}
+        handleSortChange={this.handleSortChange}
       />,
       <Modal
         handleSubmit={() => this._updateNotifications({ isArchived: true })}
