@@ -8,44 +8,43 @@ import 'react-table/react-table.css'
 
 import ReactTable from '../../app/components/StateSavingReactTable'
 
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
-import ComplianceReportStatus from './ComplianceReportStatus';
-import { withRouter } from '../../utils/withRouter';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports'
+import ComplianceReportStatus from './ComplianceReportStatus'
+import { withRouter } from '../../utils/withRouter'
 import { calculatePages} from '../../utils/functions'
 
 class ComplianceReportingTable extends Component {
-
   constructor (props) {
-    super(props);
+    super(props)
 
     this.state = {
       page: 1,
       pageSize: 10,
-      filters: []
+      filters: props.filters
     }
 
-    this.handlePageChange = this.handlePageChange.bind(this);
-    this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
-    this.handleFiltersChange = this.handleFiltersChange.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this)
+    this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
+    this.handleFiltersChange = this.handleFiltersChange.bind(this)
   }
 
   componentDidUpdate (prevProps, prevState) {
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters) {
-      this.props.getComplianceReports({page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters})
+      this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters })
     }
   }
 
   handlePageChange (page) {
-    this.setState({page: page});
+    this.setState({ page })
   }
 
   handlePageSizeChange (pageSize) {
-    this.setState({pageSize: pageSize});
+    this.setState({ pageSize })
   }
 
   handleFiltersChange (filters) {
-    this.setState({filters: filters});
+    this.setState({ filters })
   }
 
   render () {
@@ -104,18 +103,18 @@ class ComplianceReportingTable extends Component {
       minWidth: 75
     }, {
       accessor: (item) => {
-        let report = item
-        const { supplementalReports } = item
+        // Temporarily left commented out for posterity and client feedback
+        // let report = item
+        // const { supplementalReports } = item
+        // if (supplementalReports.length > 0) {
+        //   [report] = supplementalReports
+        // }
+        // while (report.supplementalReports && report.supplementalReports.length > 0) {
+        //   [report] = report.supplementalReports
+        // }
+        // return ComplianceReportStatus(report)
 
-        if (supplementalReports.length > 0) {
-          [report] = supplementalReports
-        }
-
-        while (report.supplementalReports && report.supplementalReports.length > 0) {
-          [report] = report.supplementalReports
-        }
-
-        return ComplianceReportStatus(report)
+        return ComplianceReportStatus(item)
       },
       className: 'col-status',
       Header: 'Current Status',
@@ -137,7 +136,7 @@ class ComplianceReportingTable extends Component {
       )
     }]
 
-    const filterable = true;
+    const filterable = true
 
     return (
       <ReactTable
@@ -196,16 +195,16 @@ class ComplianceReportingTable extends Component {
         pageSize={this.state.pageSize}
         pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
         onPageChange={(pageIndex) => {
-          this.handlePageChange(pageIndex + 1);
+          this.handlePageChange(pageIndex + 1)
         }}
         onPageSizeChange={(pageSize, pageIndex) => {
-          this.handlePageChange(1);
-          this.handlePageSizeChange(pageSize);
+          this.handlePageChange(1)
+          this.handlePageSizeChange(pageSize)
         }}
         filtered={this.state.filters}
         onFilteredChange={(filtered, column) => {
-          this.handlePageChange(1);
-          this.handleFiltersChange(filtered);
+          this.handlePageChange(1)
+          this.handleFiltersChange(filtered)
         }}
       />
     )
@@ -230,6 +229,6 @@ ComplianceReportingTable.propTypes = {
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   getComplianceReports: PropTypes.func.isRequired
-};
+}
 
 export default withRouter(ComplianceReportingTable)

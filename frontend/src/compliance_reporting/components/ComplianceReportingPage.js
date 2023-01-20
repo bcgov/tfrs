@@ -2,15 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from '../../app/components/Loading'
-import CONFIG from '../../config';
-import * as Lang from '../../constants/langEnUs';
-import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport';
-import ComplianceReportingTable from './ComplianceReportingTable';
+import CONFIG from '../../config'
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import ComplianceReportingTable from './ComplianceReportingTable'
 
 const ComplianceReportingPage = (props) => {
-  const { isFetching, items, itemsCount } = props.complianceReports;
-  const isEmpty = items.length === 0;
+  const { isFetching, items, itemsCount } = props.complianceReports
+  const isEmpty = items.length === 0
+  const filters = props.savedState['compliance-reporting']?.filtered
   return (
     <div className="page-compliance-reporting">
       <h1>{props.title}</h1>
@@ -112,6 +112,7 @@ const ComplianceReportingPage = (props) => {
         isFetching={isFetching}
         isEmpty={isEmpty}
         loggedInUser={props.loggedInUser}
+        filters={filters}
       />
     </div>
   )
@@ -134,7 +135,8 @@ ComplianceReportingPage.propTypes = {
   }).isRequired,
   selectComplianceReport: PropTypes.func.isRequired,
   showModal: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  savedState: PropTypes.shape().isRequired
 }
 
 export default ComplianceReportingPage
