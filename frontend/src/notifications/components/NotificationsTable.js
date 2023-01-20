@@ -31,6 +31,7 @@ const NotificationsTable = (props) => {
     ),
     className: 'col-mark',
     filterable: false,
+    sortable: false,
     Header: 'Mark',
     id: 'mark',
     width: 50
@@ -162,7 +163,8 @@ const NotificationsTable = (props) => {
     filterable: false,
     Header: '',
     id: 'actions',
-    width: 50
+    width: 50,
+    sortable: false
   }]
 
   const filterable = true
@@ -195,6 +197,11 @@ const NotificationsTable = (props) => {
         props.handlePageChange(1)
         props.handleFiltersChange(filtered)
       }}
+      sort={props.sort}
+      onSortedChange={(sort, column) => {
+        props.handlePageChange(1)
+        props.handleSortChange(sort)
+      }}
     />
   )
 }
@@ -214,7 +221,8 @@ NotificationsTable.propTypes = {
   handlePageChange: PropTypes.func.isRequired,
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleFiltersChange: PropTypes.func.isRequired
+  handleFiltersChange: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired
 }
 
 export default NotificationsTable

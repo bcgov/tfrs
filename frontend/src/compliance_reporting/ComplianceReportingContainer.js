@@ -110,7 +110,7 @@ class ComplianceReportingContainer extends Component {
 
   loadData () {
     this.props.getCompliancePeriods();
-    this.props.getComplianceReports({page: 1, pageSize: 10, filters: []});
+    this.props.getComplianceReports({page: 1, pageSize: 10, filters: [], sorts: []});
   }
 
   render () {
