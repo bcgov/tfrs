@@ -111,8 +111,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = qs.filter(
                                     organization__name__icontains=value)
                             elif id == 'displayname':
-                                qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))) \
-                                  .filter(display_name__icontains=value)
+                                qs = self.filter_displayname(qs, value.lower())
                             elif id == 'status':
                                 qs = self.filter_compliance_status(
                                     qs, value.lower())
@@ -127,6 +126,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             elif id == 'updateTimestamp':
                                 query = self.filter_timestamp(value)
                                 qs = qs.filter(query)
+        return qs
+
+    def filter_displayname(self, qs, value):
+        if 'exclusion report'.find(value) != -1:
+            qs = qs.filter(Q(type__the_type='Exclusion Report'))
+        elif 'compliance report'.find(value) != -1:
+            qs = qs.filter(Q(type__the_type='Compliance Report'))
+        else:
+            qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' for '), F('compliance_period__description'))).filter(display_name__icontains=value)
+
         return qs
 
     def filter_timestamp(self, date):
