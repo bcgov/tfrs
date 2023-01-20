@@ -7,11 +7,12 @@ import * as Routes from '../constants/routes'
 /*
  * Get Notifications
  */
-const getNotifications = (pageNumber, pageSize, filters) => (dispatch) => {
+const getNotifications = (pageNumber, pageSize, filters, sort) => (dispatch) => {
   dispatch(getNotificationsRequest())
   const url = Routes.BASE_URL + Routes.NOTIFICATIONS.PROCESSED_LIST + '?page=' + pageNumber + '&size=' + pageSize
   const data = {
-    filters
+    filters,
+    sort
   }
   axios.post(url, data)
     .then((response) => {

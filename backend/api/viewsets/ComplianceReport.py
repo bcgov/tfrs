@@ -24,7 +24,8 @@ from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
 from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
-from django.db.models import Q
+from django.db.models import Q, F, Value
+from django.db.models.functions import Concat
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -68,10 +69,35 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         request = self.request
         if self.action == 'list' or self.action == 'paginated':
-            qs = qs.annotate(Count('supplements')).filter(supplements__count=0)\
-                .order_by('-compliance_period__effective_date')
-
+            qs = qs.annotate(Count('supplements')).filter(supplements__count=0)
             if self.action == 'paginated':
+                sorts = request.data.get('sorts')
+                if sorts:
+                    sortCondition = sorts[0].get('desc')
+                    sortId = sorts[0].get('id')
+                    key_maps = {'compliance-period':'compliance_period__description', 'organization':'organization__name', 'updateTimestamp':'compliance_period__effective_date'}
+                    if sortId=='displayname':
+                        if sortCondition:
+                            qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))).order_by('-display_name')
+                        else:
+                            qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))).order_by('display_name')
+                    elif sortId=='status':
+                        if sortCondition:
+                            qs =qs.order_by('-status__director_status__status', '-status__manager_status__status', '-status__analyst_status__status', '-status__fuel_supplier_status__status')
+                        else:
+                            qs = qs.order_by('status__director_status__status', 'status__manager_status__status', 'status__analyst_status__status', 'status__fuel_supplier_status__status')
+                    elif  sortId == 'supplemental-status':
+                        # todo;
+                        pass
+                    elif sortId == 'current-status':
+                        # todo;
+                        pass
+                    else:
+                        sortType = "-" if sortCondition else ""
+                        sortString = f"{sortType}{key_maps[sortId]}"
+                        qs = qs.order_by(sortString)
+                else:
+                    qs=qs.order_by('-compliance_period__effective_date')
                 filters = request.data.get('filters')
                 if filters:
                     for filter in filters:
@@ -80,12 +106,13 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                         if id and value:
                             if id == 'compliance-period':
                                 qs = qs.filter(
-                                    compliance_period__description__exact=value)
+                                    compliance_period__description__icontains=value)
                             elif id == 'organization':
                                 qs = qs.filter(
                                     organization__name__icontains=value)
                             elif id == 'displayname':
-                                qs = self.filter_displayname(qs, value.lower())
+                                qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))) \
+                                  .filter(display_name__icontains=value)
                             elif id == 'status':
                                 qs = self.filter_compliance_status(
                                     qs, value.lower())
@@ -100,17 +127,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             elif id == 'updateTimestamp':
                                 query = self.filter_timestamp(value)
                                 qs = qs.filter(query)
-        return qs
-
-    def filter_displayname(self, qs, value):
-        if value in 'exclusion report':
-            qs = qs.filter(Q(type__the_type='Exclusion Report'))
-        elif value in 'compliance report':
-            qs = qs.filter(Q(type__the_type='Compliance Report'))
-        else:
-            qs = qs.filter(Q(nickname__isnull=True) | Q(
-                nickname__icontains=value))
-
         return qs
 
     def filter_timestamp(self, date):
@@ -140,7 +156,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     def filter_compliance_status(self, qs, value):
 
-        if value in 'submitted':
+        if 'submitted'.find(value) != -1:
           return qs.filter(
               Q(status__analyst_status__status='Unreviewed') &
               Q(status__director_status__status='Unreviewed') &
@@ -148,23 +164,23 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
               Q(status__manager_status__status='Unreviewed')
           )
 
-        if value in 'accepted':
+        if 'accepted'.find(value) != -1:
             return qs.filter(
                 Q(status__director_status__status='Accepted')
             )
 
-        if value in 'supplemental requested':
+        if 'supplemental requested'.find(value) != -1:
             return qs.filter(
                 Q(status__manager_status__status='Requested Supplemental') |
                 Q(status__analyst_status__status='Requested Supplemental')
             )
 
-        if value in 'rejected':
+        if 'rejected'.find(value) != -1:
             return qs.filter(
                 Q(status__director_status__status='Rejected')
             )
 
-        if value == 'recommended acceptance - manager' or value in 'manager': 
+        if value == 'recommended acceptance - manager' or 'manager'.find(value) != -1:
             return qs.filter(
                 Q(status__manager_status__status='Recommended') &
                 ~Q(status__director_status__status='Accepted') &
@@ -172,19 +188,18 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 ~Q(status__analyst_status__status='Requested Supplemental')
             )
 
-        print(value in 'analyst')
-        if value == 'recommended acceptance - analyst' or value in 'analyst':
+        if value == 'recommended acceptance - analyst' or 'analyst'.find(value) != -1:
             return qs.filter(
                 Q(status__analyst_status__status='Recommended') &
                 Q(status__director_status__status='Unreviewed') &
                 Q(status__manager_status__status='Unreviewed')
             )
 
-        if value == 'recommended rejection - manager' or value in 'rejection':
+        if value == 'recommended rejection - manager' or 'rejection'.find(value) != -1:
             return qs.filter(
                 Q(status__manager_status__status='Not Recommended')
             )
-        if value == 'recommended rejection - analyst' or value in 'rejection':
+        if value == 'recommended rejection - analyst' or 'rejection'.find(value) != -1:
             return qs.filter(
                 Q(status__analyst_status__status='Not Recommended')
             )

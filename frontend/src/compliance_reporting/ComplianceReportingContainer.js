@@ -115,7 +115,7 @@ class ComplianceReportingContainer extends Component {
       filters = filtered
     }
     this.props.getCompliancePeriods()
-    this.props.getComplianceReports({ page: 1, pageSize: 10, filters })
+    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
   }
 
   render () {
@@ -246,6 +246,6 @@ const mapDispatchToProps = {
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
   getComplianceReports: complianceReporting.findPaginated
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

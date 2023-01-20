@@ -116,11 +116,12 @@ const deleteDocumentUploadRequestError = error => ({
 /*
  * Get Documents
  */
-const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[]) => (dispatch) => {
+const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[], sort=[]) => (dispatch) => {
   dispatch(getDocumentUploadRequests())
   const url = Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/paginated?page=' + pageNumber + '&size=' + pageSize
   const data = {
-    filters
+    filters,
+    sort
   }
   return axios.post(url, data)
     .then((response) => {
