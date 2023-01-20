@@ -3,7 +3,7 @@ import json
 
 from django.db import transaction
 from django.db.models import Count
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
@@ -17,8 +17,7 @@ from api.serializers.ComplianceReport import \
     ComplianceReportTypeSerializer, ComplianceReportListSerializer, \
     ComplianceReportCreateSerializer, ComplianceReportUpdateSerializer, \
     ComplianceReportDeleteSerializer, ComplianceReportDetailSerializer, \
-    ComplianceReportValidationSerializer, ComplianceReportSnapshotSerializer, \
-    ComplianceReportDashboardListSerializer
+    ComplianceReportValidationSerializer, ComplianceReportDashboardListSerializer
 from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
@@ -112,20 +111,31 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = qs.filter(
                                     organization__name__icontains=value)
                             elif id == 'displayname':
-                                qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))).filter(display_name__icontains=value)
+                                qs = self.filter_displayname(qs, value.lower())
                             elif id == 'status':
                                 qs = self.filter_compliance_status(
                                     qs, value.lower())
                             elif id == 'supplemental-status':
-                                # todo; same as the todo above, along with the fact that we'll have to somehow define (annotate)
-                                # a deepest_supplemental_report field (via some sort of aggregation) which we can then filter on
+                                qs = self.filter_supplemental_status(
+                                    qs, value.lower())
                                 pass
                             elif id == 'current-status':
-                                # todo; same as the todo above
+                                qs = self.filter_current_status(
+                                    qs, value.lower())
                                 pass
                             elif id == 'updateTimestamp':
                                 query = self.filter_timestamp(value)
                                 qs = qs.filter(query)
+        return qs
+
+    def filter_displayname(self, qs, value):
+        if 'exclusion report'.find(value) != -1:
+            qs = qs.filter(Q(type__the_type='Exclusion Report'))
+        elif 'compliance report'.find(value) != -1:
+            qs = qs.filter(Q(type__the_type='Compliance Report'))
+        else:
+            qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' for '), F('compliance_period__description'))).filter(display_name__icontains=value)
+
         return qs
 
     def filter_timestamp(self, date):
@@ -154,46 +164,88 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return date_query
 
     def filter_compliance_status(self, qs, value):
-        if 'recommended'.find(value) != -1:
+
+        if 'submitted'.find(value) != -1:
+          return qs.filter(
+              Q(status__analyst_status__status='Unreviewed') &
+              Q(status__director_status__status='Unreviewed') &
+              Q(status__fuel_supplier_status__status='Submitted') &
+              Q(status__manager_status__status='Unreviewed')
+          )
+
+        if 'accepted'.find(value) != -1:
             return qs.filter(
-                (Q(status__manager_status__status__icontains=value) |
-                 Q(status__analyst_status__status__icontains=value)) &
-                (~Q(status__director_status__status__icontains='Accepted') &
-                    ~Q(status__director_status__status__icontains='Rejected'))
+                Q(status__director_status__status='Accepted')
             )
 
         if 'supplemental requested'.find(value) != -1:
             return qs.filter(
-                Q(status__manager_status__status__icontains=value) |
-                Q(status__analyst_status__status__icontains=value)
+                Q(status__manager_status__status='Requested Supplemental') |
+                Q(status__analyst_status__status='Requested Supplemental')
             )
-        if 'accepted'.find(value) != -1:
-            return qs.filter(
-                Q(status__director_status__status__icontains=value)
-            )
+
         if 'rejected'.find(value) != -1:
             return qs.filter(
-                Q(status__director_status__status__icontains=value)
+                Q(status__director_status__status='Rejected')
             )
-        if 'recommended acceptance - manager'.find(value) != -1:
+
+        if value == 'recommended acceptance - manager' or 'manager'.find(value) != -1:
             return qs.filter(
-                Q(status__manager_status__status__icontains=value)
+                Q(status__manager_status__status='Recommended') &
+                ~Q(status__director_status__status='Accepted') &
+                ~Q(status__director_status__status='Rejected') &
+                ~Q(status__analyst_status__status='Requested Supplemental')
             )
-        if 'recommended rejection - manager'.find(value) != -1:
+
+        if value == 'recommended acceptance - analyst' or 'analyst'.find(value) != -1:
             return qs.filter(
-                Q(status__manager_status__status__icontains=value)
+                Q(status__analyst_status__status='Recommended') &
+                Q(status__director_status__status='Unreviewed') &
+                Q(status__manager_status__status='Unreviewed')
             )
-        if 'recommended acceptance - analyst'.find(value) != -1:
+
+        if value == 'recommended rejection - manager' or 'rejection'.find(value) != -1:
             return qs.filter(
-                Q(status__analyst_status__status__icontains=value)
+                Q(status__manager_status__status='Not Recommended')
             )
-        if 'recommended rejection - analyst'.find(value) != -1:
+        if value == 'recommended rejection - analyst' or 'rejection'.find(value) != -1:
             return qs.filter(
-                Q(status__analyst_status__status__icontains=value)
+                Q(status__analyst_status__status='Not Recommended')
             )
-        return qs.filter(
-            Q(status__fuel_supplier_status__status__icontains=value)
-        )
+
+        return qs
+
+    def filter_supplemental_status(self, qs, value):
+        try:
+            latest_supplementals = self.get_latest_supplemental_reports()
+            ids = [s.id for s in latest_supplementals]
+            supplemental_reports = ComplianceReport.objects.filter(id__in=ids)
+            qs = self.filter_compliance_status(supplemental_reports, value)
+        except Exception as e:
+            print(e)
+        return qs
+
+    def filter_current_status(self, qs, value):
+        try:
+            latest_supplementals = self.get_latest_supplemental_reports()
+            ids = [s.id for s in latest_supplementals]
+            supplemental_reports = ComplianceReport.objects.filter(id__in=ids)
+            original_reports = qs.filter(Q(supplemental_reports=None))
+            unique_reports = original_reports | supplemental_reports
+            qs = self.filter_compliance_status(unique_reports, value)
+        except Exception as e:
+            print(e)
+        return qs
+
+    def get_latest_supplemental_reports(self):
+        latest_supplementals = ComplianceReport.objects.raw("""
+            select distinct on (p.id) c.*
+            from compliance_report p 
+              left join compliance_report c on p.id = c.supplements_id
+            where c.status_id is not NULL
+            order by p.id desc, c.create_timestamp desc
+        """)
+        return latest_supplementals
 
     def get_simple_queryset(self):
         """
