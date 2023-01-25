@@ -1,7 +1,7 @@
 'use strict';
 const options= require('@bcgov/pipeline-cli').Util.parseArguments()
 const changeId = options.pr //aka pull-request
-const version = '2.0.0'
+const version = '2.1.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
 
@@ -13,7 +13,7 @@ options.git.repository='tfrs'
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
-            releaseBranch: 'release-2.0.0'
+            releaseBranch: 'release-2.1.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`, dbServiceName: 'tfrs-spilo',
@@ -45,7 +45,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
         },
   test: {namespace:'0ab226-test'    , name: `${name}`, phase: 'test'  , changeId:changeId, suffix: `-test`  , 
-        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`, dbServiceName: 'patroni-master-test',
+        instance: `${name}-test`  , version:`${version}`, tag:`test-${version}`, dbServiceName: 'tfrs-spilo',
         frontendCpuRequest: '40m', frontendCpuLimit: '80m', frontendMemoryRequest: '60Mi', frontendMemoryLimit: '120Mi', frontendReplicas: 2,
             frontendKeycloakAuthority: 'https://test.loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: `https://tfrs-test.${ocpName}.gov.bc.ca`,
             frontendKeycloakLogoutUrl: `https://tfrs-test.${ocpName}.gov.bc.ca`, 

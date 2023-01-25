@@ -162,6 +162,7 @@ class ExclusionReportEditContainer extends Component {
   }
 
   loadData () {
+    this.props.getComplianceReports()
     this.props.getExclusionReport(this.props.params.id)
   }
 
@@ -296,6 +297,10 @@ class ExclusionReportEditContainer extends Component {
     if (this.props.exclusionReports.isGetting || !this.props.exclusionReports.item) {
       return (<Loading />)
     }
+    
+    if (this.props.complianceReporting.isGetting || this.props.complianceReporting.isFinding) {
+      return (<Loading />)
+    }
 
     if (this.props.complianceReporting.snapshotIsLoading) {
       return (<Loading />)
@@ -371,6 +376,11 @@ class ExclusionReportEditContainer extends Component {
         id={this.props.params.id}
         actions={this.props.exclusionReports.item.actions}
         actor={this.props.exclusionReports.item.actor}
+        compliancePeriod={period}
+        exclusionReports={this.props.exclusionReports}
+        complianceReports={{
+          items: this.props.complianceReports.items
+        }}
         edit={this.edit}
         key="exclusionReportButtons"
         loggedInUser={this.props.loggedInUser}
@@ -536,14 +546,26 @@ ExclusionReportEditContainer.propTypes = {
   createComplianceReport: PropTypes.func.isRequired,
   validateExclusionReport: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
+    isGetting: PropTypes.bool,
+    isFinding: PropTypes.bool,
     isCreating: PropTypes.bool,
     snapshot: PropTypes.shape(),
     snapshotIsLoading: PropTypes.bool,
     success: PropTypes.bool,
-    item: PropTypes.object
+    item: PropTypes.shape({
+      actions: PropTypes.arrayOf(PropTypes.string),
+      actor: PropTypes.string,
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ])
+    })
   }),
   exclusionReports: PropTypes.shape({
     isGetting: PropTypes.bool,
+    isFinding: PropTypes.bool,
     isRemoving: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
@@ -622,8 +644,11 @@ const
       errorMessage: state.rootReducer.complianceReporting.errorMessage,
       snapshot: state.rootReducer.complianceReporting.snapshotItem,
       snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot,
-      item: state.rootReducer.complianceReporting.item
+      item: state.rootReducer.complianceReporting.item,
+      isFinding: state.rootReducer.complianceReporting.isFinding,
+      isGetting: state.rootReducer.complianceReporting.isGetting,
     },
+    complianceReports: state.rootReducer.complianceReporting,
     loggedInUser: state.rootReducer.userRequest.loggedInUser,
     referenceData: {
       approvedFuels: state.rootReducer.referenceData.data.approvedFuels,

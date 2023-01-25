@@ -66,9 +66,11 @@ const NotificationsDetails = props => (
       page={props.page}
       pageSize={props.pageSize}
       filters={props.filters}
+      sort={props.sort}
       handlePageChange={props.handlePageChange}
       handlePageSizeChange={props.handlePageSizeChange}
       handleFiltersChange={props.handleFiltersChange}
+      handleSortChange={props.handleSortChange}
     />
   </div>
 )
@@ -90,7 +92,8 @@ NotificationsDetails.propTypes = {
   handlePageChange: PropTypes.func.isRequired,
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleFiltersChange: PropTypes.func.isRequired
+  handleFiltersChange: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired
 }
 
 export default NotificationsDetails

@@ -81,8 +81,6 @@ const SecureFileSubmissionsPage = (props) => {
           }
         </div>
       </div>
-      {isFetching && <Loading />}
-      {!isFetching &&
       <SecureFileSubmissionTable
         items={items}
         isFetching={isFetching}
@@ -91,12 +89,13 @@ const SecureFileSubmissionsPage = (props) => {
         page={props.page}
         pageSize={props.pageSize}
         filters={props.filters}
+        sort={props.sort}
         handlePageChange={props.handlePageChange}
         handlePageSizeChange={props.handlePageSizeChange}
         handleFiltersChange={props.handleFiltersChange}
+        handleSortChange={props.handleSortChange}
         loggedInUser={props.loggedInUser}
       />
-      }
     </div>
   )
 }

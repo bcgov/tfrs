@@ -116,7 +116,8 @@ class ComplianceReportingService {
       customIntensity,
       fuelCode,
       scheduleDIntensityValue,
-      quantity
+      quantity,
+      scheduleD_sheetIndex
     } = sourceValues
 
     if (!fuelType) {
@@ -141,7 +142,8 @@ class ComplianceReportingService {
           scheduleDSelectionRequired: false,
           intensityInputRequired: false,
           singleFuelClassAvailable: false,
-          singleProvisionAvailable: false
+          singleProvisionAvailable: false,
+          scheduleD_sheetIndex: false
         }
       }
     }
@@ -211,7 +213,8 @@ class ComplianceReportingService {
         scheduleDSelectionRequired: false,
         intensityInputRequired: false,
         singleFuelClassAvailable: false,
-        singleProvisionAvailable: false
+        singleProvisionAvailable: false,
+        scheduleD_sheetIndex: scheduleD_sheetIndex
       }
     }
 

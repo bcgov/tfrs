@@ -421,13 +421,22 @@ class ScheduleBContainer extends Component {
         )
       }
 
+      // Check for existing scheduleDSheetIndex from records
+      let scheduleDSheetIndex = null
+      const scheduleBRecords = props.complianceReport?.scheduleB?.records
+      if (scheduleBRecords != null) {
+        const record = scheduleBRecords[row - 2]
+        scheduleDSheetIndex = record ? record.scheduleDSheetIndex : null
+      }
+
       const values = {
         customIntensity: grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value,
         quantity: grid[row][SCHEDULE_B.QUANTITY].value,
         fuelClass: grid[row][SCHEDULE_B.FUEL_CLASS].value,
         fuelCode: grid[row][SCHEDULE_B.FUEL_CODE].value,
         fuelType: grid[row][SCHEDULE_B.FUEL_TYPE].value,
-        provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value
+        provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value,
+        scheduleD_sheetIndex: scheduleDSheetIndex
       }
 
       const response = ComplianceReportingService.computeCredits(context, values)
@@ -504,8 +513,9 @@ class ScheduleBContainer extends Component {
           grid[row][SCHEDULE_B.FUEL_CODE].dataEditor = Select
           grid[row][SCHEDULE_B.FUEL_CODE].valueViewer = (cellProps) => {
             const selectedOption = cellProps.cell.getOptions().find(e =>
-              String(e.id) === String(cellProps.value))
+              String(e.id) === String(response.parameters.scheduleD_sheetIndex))
             if (selectedOption) {
+              grid[row][SCHEDULE_B.FUEL_CODE].value = selectedOption.id
               return <span>{selectedOption.descriptiveName}</span>
             }
             return <span>{cellProps.value}</span>

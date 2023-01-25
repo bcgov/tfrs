@@ -112,7 +112,64 @@ class DocumentViewSet(AuditableMixin,
             )
         request = self.request
         if request.path.endswith('paginated') and request.method == 'POST':
-            qs = qs.order_by('-id')
+            sort = request.data.get('sort')
+            filters = request.data.get('filters')
+            key_maps = {'title':'title', 'status':'status__status', 'attachment-type':'type__description', 'updateTimestamp': 'update_timestamp',  'organization':'create_user', 'id': 'id', 'credit-transaction-id':'credit_trades'}
+            if sort:
+                sortCondition = sort[0].get('desc')
+                sortId = sort[0].get('id')
+                sortType = "-" if sortCondition else ""
+                sortString = f"{sortType}{key_maps[sortId]}"
+                qs = qs.order_by(sortString)
+            if filters:
+                for filter in filters:
+                    id = filter.get('id')
+                    value = filter.get('value')
+                    if id and value:
+                        if id == 'id':
+                            qs = qs.filter(id__icontains = value)
+                        if id == 'organization':
+                            organization_split = value.split()
+                            q_object = None
+                            for x in organization_split:
+                                q_sub_object = Q(create_user__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
+                        if id =='status':
+                            qs = qs.filter(status__status__icontains = value)
+                        if id == 'attachment-type':
+                            type_split = value.split()
+                            q_object = None
+                            for x in type_split:
+                                q_sub_object = Q(type__description__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
+                        if id == 'title':
+                            title_split = value.split()
+                            q_object = None
+                            for x in title_split:
+                                q_sub_object = Q(title__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
+                        if id == 'updateTimestamp':
+                            date_split = value.split("-")
+                            q_object = None
+                            for x in date_split:
+                                q_sub_object = Q(update_timestamp__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
         return qs
 
     def perform_create(self, serializer):

@@ -1,8 +1,8 @@
-@import './variables.scss';
+@import "./variables.scss";
 
-.level2Navigation .container, .level2Navigation .container-fluid {
+.level2Navigation .container,
+.level2Navigation .container-fluid {
   position: relative;
-
   a {
     border-bottom: 1px solid transparent;
     text-decoration: none;
@@ -64,7 +64,7 @@
             text-align: left;
           }
         }
-  
+
         .dropdown-menu-caret {
           color: $white;
           margin: 0;
@@ -78,7 +78,7 @@
           display: none;
         }
       }
-  
+
       .open .caret {
         color: $grey;
       }
@@ -124,24 +124,31 @@
       display: none;
     }
 
-    @media (max-width: 999px) {
+    @media (max-width: 1100px) {
       .dropdown-hidden-item {
         display: block !important;
       }
 
       a.navbar-item {
-        display: none;        
+        display: none;
       }
     }
-  }
-
-  @media (max-width: 919px) {
-    padding-right: 7rem;
   }
 }
 
 .navbar-nav {
   .active {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@media (max-width: 1100px) {
+  .level2Navigation .container-fluid {
+    #user-options {
+      width: 20%;
+    }
+    #navbar-main-items {
+      width: 80%;
+    }
   }
 }

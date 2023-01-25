@@ -20,7 +20,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from api.models import CreditTrade, CreditTradeComment
+from api.models import  CreditTradeComment
+from api.models.CreditTrade import CreditTrade
+
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
 
@@ -35,22 +37,25 @@ class CreditTradeCommentActions(object):
     def available_comment_actions(request, trade: CreditTrade):
         available_actions = []
 
-        if CreditTradeCommentPermissions.user_can_comment(
-                request.user, trade, False):
-            available_actions.append('ADD_COMMENT')
+        if not trade.is_rescinded and trade.status.status not in ['Declined', 'Cancelled', 'Refused', 'Approved']:
 
-        if CreditTradeCommentPermissions.user_can_comment(
-                request.user, trade, True):
-            available_actions.append('ADD_PRIVILEGED_COMMENT')
+            if CreditTradeCommentPermissions.user_can_comment(
+                    request.user, trade, False):
+                available_actions.append('ADD_COMMENT')
 
-        return available_actions
+            if CreditTradeCommentPermissions.user_can_comment(
+                    request.user, trade, True):
+                available_actions.append('ADD_PRIVILEGED_COMMENT')
+
+            return available_actions
 
     @staticmethod
     def available_individual_comment_actions(request, comment: CreditTradeComment):
         available_actions = []
+        trade = CreditTrade.objects.filter(id=comment.credit_trade_id).first()
 
         if CreditTradeCommentPermissions.user_can_edit_comment(
-                request.user, comment):
+                request.user, comment) and not trade.is_rescinded and trade.status.status not in ['Declined', 'Cancelled', 'Refused', 'Approved']:
             available_actions = ['EDIT_COMMENT']
 
         return available_actions

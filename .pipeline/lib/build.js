@@ -25,20 +25,6 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-
-  /** to be deleted once 2.0.0 is on prod
-  //build frontend
-  objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-angular-app-bc.yaml`, {
-    'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'GIT_URL': oc.git.http_url,
-      'GIT_REF': oc.git.ref
-    }
-  }))
-  */
-
   
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{

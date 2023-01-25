@@ -149,27 +149,21 @@ objects:
                 name: tfrs-patroni-app
                 key: app-db-password
           - name: MINIO_ENDPOINT
-            valueFrom:
-              secretKeyRef:
-                name: tfrs-object-storage
-                key: ENDPOINT
+            value: ${NAME}-minio-${ENV_NAME}.apps.silver.devops.gov.bc.ca:443
           - name: MINIO_USE_SSL
             value: 'true'
           - name: MINIO_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: tfrs-object-storage
-                key: USER_ID
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_ACCESS_KEY
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: tfrs-object-storage
-                key: KEY
+                name: ${NAME}-minio-${ENV_NAME}
+                key: MINIO_SECRET_KEY
           - name: MINIO_BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: tfrs-object-storage
-                key: BUCKET
+            value: tfrs
           - name: EMAIL_FROM_ADDRESS
             value: tfrs@gov.bc.ca
           - name: EMAIL_SENDING_ENABLED

@@ -15,7 +15,8 @@ from api.permissions.Notifications import NotificationPermissions
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
-from django.db.models import Q
+from django.db.models import Q, F, Value
+from django.db.models.functions import Concat
 
 class NotificationToken(object):
 
@@ -65,10 +66,25 @@ class NotificationViewSet(AuditableMixin,
             is_archived=False,
             user=user
         )
-
+        
         request = self.request
         if request.path.endswith('processed_list') and request.method == 'POST':
-            qs = qs.order_by('-create_timestamp')
+            sort = request.data.get('sort')
+            key_maps = {'notification':'message', 'date':'create_timestamp', 'creditTrade':'related_credit_trade__id', 'organization':'related_organization__name'}
+            if sort:
+                sortCondition = sort[0].get('desc')
+                sortId = sort[0].get('id')
+                if sortId=='user':
+                    if sortCondition:
+                        qs = qs = qs.annotate(display_name=Concat(F('originating_user__first_name'), Value(' '), F('originating_user__last_name'))).order_by('-display_name')
+                    else:
+                        qs = qs = qs.annotate(display_name=Concat(F('originating_user__first_name'), Value(' '), F('originating_user__last_name'))).order_by('display_name')
+                else:
+                    sortType = "-" if sortCondition else ""
+                    sortString = f"{sortType}{key_maps[sortId]}"
+                    qs = qs.order_by(sortString)
+            else:
+                qs = qs.order_by('-create_timestamp')
             filters = request.data.get('filters')
             if filters:
                 for filter in filters:
@@ -77,9 +93,25 @@ class NotificationViewSet(AuditableMixin,
                     if id and value:
                         if id == 'notification':
                             #todo: this can be improved
-                            qs = qs.filter(message__icontains = value)
+                            notification_split = value.split()
+                            q_object = None
+                            for x in notification_split:
+                                q_sub_object = Q(message__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
                         elif id == 'date':
-                            qs = qs.filter(update_timestamp__icontains = value)
+                            date_split = value.split("-")
+                            q_object = None
+                            for x in date_split:
+                                q_sub_object = Q(update_timestamp__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
                         elif id == 'user':
                             user_split = value.split()
                             q_object = None
@@ -88,7 +120,7 @@ class NotificationViewSet(AuditableMixin,
                                 if not q_object:
                                     q_object = q_sub_object
                                 else:
-                                    q_object = q_object | q_sub_object
+                                    q_object = q_object & q_sub_object
                             qs = qs.filter(q_object)
                         elif id == 'creditTrade':
                             if value.isnumeric():
@@ -98,7 +130,15 @@ class NotificationViewSet(AuditableMixin,
                             else:
                                 qs = qs.none()
                         elif id == 'organization':
-                            qs = qs.filter(related_organization__name__icontains = value)
+                            organization_split = value.split()
+                            q_object = None
+                            for x in organization_split:
+                                q_sub_object = Q(related_organization__name__icontains = x)
+                                if not q_object:
+                                    q_object = q_sub_object
+                                else:
+                                    q_object = q_object & q_sub_object
+                            qs = qs.filter(q_object)
         return qs
 
 

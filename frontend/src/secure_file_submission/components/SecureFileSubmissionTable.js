@@ -96,14 +96,14 @@ const SecureFileSubmissionTable = (props) => {
     minWidth: 65
   }]
 
-  const filterMethod = (filter, row, column) => {
-    const id = filter.pivotId || filter.id
-    return row[id] !== undefined
-      ? String(row[id])
-        .toLowerCase()
-        .includes(filter.value.toLowerCase())
-      : true
-  }
+  // const filterMethod = (filter, row, column) => {
+  //   const id = filter.pivotId || filter.id
+  //   return row[id] !== undefined
+  //     ? String(row[id])
+  //       .toLowerCase()
+  //       .includes(filter.value.toLowerCase())
+  //     : true
+  // }
 
   const filterable = true
 
@@ -114,12 +114,7 @@ const SecureFileSubmissionTable = (props) => {
       columns={columns}
       data={props.items}
       isFetching={props.isFetching}
-      defaultFilterMethod={filterMethod}
       filterable={filterable}
-      defaultSorted={[{
-        id: 'id',
-        desc: true
-      }]}
       getTrProps={(state, row) => {
         if (row && row.original) {
           const securityScanFailed = row.original.status && row.original.status.status === 'Security Scan Failed'
@@ -151,6 +146,11 @@ const SecureFileSubmissionTable = (props) => {
       onFilteredChange={(filtered, column) => {
         props.handlePageChange(1)
         props.handleFiltersChange(filtered)
+      }}
+      sort={props.sort}
+      onSortedChange={(sort, column) => {
+        props.handlePageChange(1)
+        props.handleSortChange(sort)
       }}
     />
   )
@@ -184,7 +184,9 @@ SecureFileSubmissionTable.propTypes = {
   handleFiltersChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  handleFiltersChange: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired
 }
 
 export default SecureFileSubmissionTable

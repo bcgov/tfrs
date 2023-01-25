@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import Tooltip from '../../app/components/Tooltip'
 import * as Lang from '../../constants/langEnUs'
-import $ from 'jquery'
 
 const bootstrapClassFor = (extraConfirmType) => {
   switch (extraConfirmType) {

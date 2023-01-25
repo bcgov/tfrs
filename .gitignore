@@ -108,3 +108,4 @@ dev/
 node_modules/
 
 .sql.gz
+*.sql

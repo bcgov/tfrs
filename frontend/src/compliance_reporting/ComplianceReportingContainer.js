@@ -109,8 +109,13 @@ class ComplianceReportingContainer extends Component {
   }
 
   loadData () {
-    this.props.getCompliancePeriods();
-    this.props.getComplianceReports({page: 1, pageSize: 10, filters: []});
+    let filters = []
+    if ('compliance-reporting' in this.props.savedState) {
+      const { filtered } = this.props.savedState['compliance-reporting']
+      filters = filtered
+    }
+    this.props.getCompliancePeriods()
+    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
   }
 
   render () {
@@ -135,6 +140,7 @@ class ComplianceReportingContainer extends Component {
         selectComplianceReport={this._selectComplianceReport}
         showModal={this._showModal}
         title="Compliance Reporting"
+        savedState={this.props.savedState}
       />,
       <CallableModal
         close={() => {
@@ -212,7 +218,8 @@ ComplianceReportingContainer.propTypes = {
   }),
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape().isRequired
+  loggedInUser: PropTypes.shape().isRequired,
+  savedState: PropTypes.shape().isRequired
 }
 
 const mapStateToProps = state => ({
@@ -230,7 +237,8 @@ const mapStateToProps = state => ({
     item: state.rootReducer.exclusionReports.item,
     success: state.rootReducer.exclusionReports.success
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  savedState: state.rootReducer.tableState.savedState
 })
 
 const mapDispatchToProps = {
@@ -238,6 +246,6 @@ const mapDispatchToProps = {
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
   getComplianceReports: complianceReporting.findPaginated
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

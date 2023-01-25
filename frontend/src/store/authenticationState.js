@@ -20,12 +20,14 @@ export default function * authenticationStateSaga (store) {
   const now = Math.round(Date.now() / 1000)
   const expired = now > expiry
 
+  // Callbacks for session login
   yield all([
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_USER_SUCCESS, getBackendUser),
     takeLatest(ActionTypes.LOGIN_KEYCLOAK_REFRESH_SUCCESS, getBackendUser),
     takeLatest(ActionTypes.SESSION_TIMEOUT_CONTINUE, silentTokenRefreshSaga, store)
   ])
 
+  // Initialize Keycloak
   const kc = new Keycloak({
     url: CONFIG.KEYCLOAK.AUTH_URL,
     realm: CONFIG.KEYCLOAK.REALM,
@@ -36,8 +38,8 @@ export default function * authenticationStateSaga (store) {
 
   yield put({ type: ActionTypes.LOGGING_IN })
 
+  // Login session
   if (idToken && refreshToken && !expired) {
-    console.log('Refreshing Token - Started')
     // Refreshing existing token
     const refreshAuthenticated = yield kc.init({
       pkceMethod: 'S256',
@@ -48,8 +50,11 @@ export default function * authenticationStateSaga (store) {
       refreshToken
     })
     if (refreshAuthenticated) {
-      console.log('Refreshing Token - Success')
-      yield put(loginKeycloakRefreshSuccess(kc.refreshToken, kc.tokenParsed.exp))
+      yield put(loginKeycloakRefreshSuccess(
+        kc.refreshToken,
+        kc.tokenParsed.exp,
+        kc.refreshTokenParsed.exp
+      ))
     } else {
       yield put(logout())
     }
@@ -61,7 +66,12 @@ export default function * authenticationStateSaga (store) {
       idpHint: 'idir'
     })
     if (authenticated) {
-      yield put(loginKeycloakUserSuccess(kc.idToken, kc.refreshToken, kc.idTokenParsed.exp))
+      yield put(loginKeycloakUserSuccess(
+        kc.idToken,
+        kc.refreshToken,
+        kc.idTokenParsed.exp,
+        kc.refreshTokenParsed.exp
+      ))
     }
   }
   yield put({ type: ActionTypes.LOGGING_IN_DONE })
@@ -73,17 +83,17 @@ function * getBackendUser (action) {
 }
 
 export function * silentTokenRefreshSaga (store) {
-  console.log('Silent Token Refresh - Started')
   const state = store.getState()
   const { keycloak } = state.userAuth
   if (keycloak) {
-    console.log('Silent Token Refresh - Authenticating')
     const authenticated = yield keycloak.updateToken(5)
     if (authenticated) {
-      console.log('Silent Token Refresh - Success')
-      yield put(loginKeycloakSilentRefreshSuccess(keycloak.idToken, keycloak.refreshToken, keycloak.idTokenParsed.exp))
-    } else {
-      console.log('Silent Token Refresh - Failed')
+      yield put(loginKeycloakSilentRefreshSuccess(
+        keycloak.idToken,
+        keycloak.refreshToken,
+        keycloak.idTokenParsed.exp,
+        keycloak.refreshTokenParsed.exp
+      ))
     }
   }
 }
