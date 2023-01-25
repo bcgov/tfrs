@@ -8,7 +8,8 @@
       "last_name": "Gov",
       "organization": [
         "Government of British Columbia"
-      ]
+      ],
+      "keycloak_user_id": "gov_director"
     },
     "model": "api.user",
     "pk": null
@@ -34,7 +35,8 @@
       "last_name": "Gov",
       "organization": [
         "Government of British Columbia"
-      ]
+      ],
+      "keycloak_user_id": "gov_analyst"
     },
     "model": "api.user",
     "pk": null
@@ -60,7 +62,8 @@
       "last_name": "Gov",
       "organization": [
         "Government of British Columbia"
-      ]
+      ],
+      "keycloak_user_id": "gov_manager"
     },
     "model": "api.user",
     "pk": null
@@ -86,7 +89,8 @@
       "last_name": "Admin",
       "organization": [
         "Government of British Columbia"
-      ]
+      ],
+      "keycloak_user_id": "gov_admin"
     },
     "model": "api.user",
     "pk": null

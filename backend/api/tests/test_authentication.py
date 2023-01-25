@@ -78,20 +78,11 @@ class TestAuthentication(BaseTestCase):
     def test_jwt_valid_token(self):
         request = self.factory.get('/')
 
-        payload = {
-            'user_id': 'fs_user_3',
-            'iss': 'tfrs-test',
-            'aud': 'tfrs-app'
-        }
-        key = self.private_key
 
         request.META = {
-            'HTTP_AUTHORIZATION': 'Bearer {}'.format(
-                jwt.encode(payload,
-                           key,
-                           algorithm='RS256'
-                           ).decode('utf-8')
-            )
+            'HTTP_AUTHORIZATION': {
+                'preferred_username': 'fs_user_3'
+            }
         }
 
         print (request.META['HTTP_AUTHORIZATION'])

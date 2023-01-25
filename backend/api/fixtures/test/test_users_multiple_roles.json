@@ -8,7 +8,8 @@
       "last_name": "Role",
       "organization": [
         "Government of British Columbia"
-      ]
+      ],
+      "keycloak_user_id": "gov_multi_role"
     },
     "model": "api.user",
     "pk": null

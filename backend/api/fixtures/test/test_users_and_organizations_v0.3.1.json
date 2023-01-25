@@ -56,7 +56,8 @@
       "last_name": "Supplier 1",
       "organization": [
         "Test Org 1"
-      ]
+      ],
+      "keycloak_user_id": "fs_user_1"
     },
     "model": "api.user",
     "pk": null
@@ -82,7 +83,8 @@
       "last_name": "Supplier 2",
       "organization": [
         "Test Org 2"
-      ]
+      ],
+      "keycloak_user_id": "fs_user_2"
     },
     "model": "api.user",
     "pk": null
@@ -108,7 +110,8 @@
       "last_name": "Supplier 3",
       "organization": [
         "Test Org 3"
-      ]
+      ],
+      "keycloak_user_id": "fs_user_3"
     },
     "model": "api.user",
     "pk": null
