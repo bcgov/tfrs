@@ -1,7 +1,7 @@
 'use strict';
 const options= require('@bcgov/pipeline-cli').Util.parseArguments()
 const changeId = options.pr //aka pull-request
-const version = '2.1.0'
+const version = '2.2.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
 
