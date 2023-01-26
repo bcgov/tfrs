@@ -8,7 +8,8 @@
       "last_name": "FS",
       "organization": [
         "Air Liquide Canada Inc."
-      ]
+      ],
+      "keycloak_user_id": "fs_air_liquide"
     },
     "model": "api.user",
     "pk": null
@@ -34,7 +35,8 @@
       "last_name": "FS",
       "organization": [
         "Husky Oil Ltd."
-      ]
+      ],
+      "keycloak_user_id": "fs_husky"
     },
     "model": "api.user",
     "pk": null
@@ -60,7 +62,8 @@
       "last_name": "FS",
       "organization": [
         "Shell Canada Products"
-      ]
+      ],
+      "keycloak_user_id": "fs_shell"
     },
     "model": "api.user",
     "pk": null
