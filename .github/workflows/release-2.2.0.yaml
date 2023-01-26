@@ -1,4 +1,5 @@
-## For each release, the value of workflow name, branches and PR_NUMBER need to be adjusted accordingly
+## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
+## For each release, update lib/config.js: version and releaseBranch
 
 name: TFRS release-2.2.0
 
