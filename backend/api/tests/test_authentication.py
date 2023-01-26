@@ -61,10 +61,12 @@ class TestAuthentication(BaseTestCase):
 
         request = self.factory.get('/')
         request.META = {
-            'HTTP_AUTHORIZATION': 'garbage'
+            'HTTP_AUTHORIZATION': {
+                'preferred_username': 'garbage'
+            }
         }
 
-        with self.assertRaises(exceptions.AuthenticationFailed):
+        with self.assertRaises(User.DoesNotExist):
             _user, _auth = self.userauth.authenticate(request)
 
     def test_jwt_no_token(self):
