@@ -63,7 +63,6 @@ services:
       python3 manage.py makemigrations &&
       python3 manage.py migrate &&
       python3 manage.py createcachetable &&
-      python3 manage.py load_ops_data api/fixtures/development/dockerized.py &&
       supervisord"
     ports:
       - 8000:8000
