@@ -11,7 +11,7 @@ on:
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 2040
+  PR_NUMBER: 2047
   RELEASE_NAME: release-2.2.0
 
 jobs:
