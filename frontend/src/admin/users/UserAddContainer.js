@@ -49,7 +49,7 @@ class UserAddContainer extends Component {
     this.loadData()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
+  componentDidUpdate (nextProps) {
     if (nextProps.organization.id !== this.props.organization.id) {
       this.setState({
         fields: {

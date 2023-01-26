@@ -56,13 +56,12 @@ class HistoricalDataEntryContainer extends Component {
     this.props.getCompliancePeriods()
     this.props.getFuelSuppliers()
   }
-
-  UNSAFE_componentWillReceiveProps (props) {
-    const fieldState = { ...this.state.fields }
-
-    this.setState({
-      fields: fieldState
-    })
+  
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!nextProps.historicalData.isFetching) {
+      return nextProps.items
+    }
+    return null
   }
 
   loadData () {

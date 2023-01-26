@@ -40,7 +40,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     this.props.getEnergyEffectivenessRatio(this.props.params.id)
   }
 
-  UNSAFE_componentWillReceiveProps (props) {
+  componentDidUpdate (props) {
     if (this.props.energyEffectivenessRatio.isUpdating &&
       !props.energyEffectivenessRatio.isUpdating) {
       if (this.props.energyEffectivenessRatio.success) {
