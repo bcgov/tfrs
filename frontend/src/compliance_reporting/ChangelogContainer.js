@@ -18,14 +18,16 @@ class ChangelogContainer extends Component {
 
   componentDidMount () {
     if (this.props.snapshot) {
-      this.UNSAFE_componentWillReceiveProps(this.props)
+      this.componentDidUpdate(this.props)
     } else if (this.props.complianceReport && !this.props.complianceReport.hasSnapshot) {
       this.props.recomputeRequest()
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    this.setState(this._recomputeDerivedStateFromProps(nextProps))
+  componentDidUpdate (nextProps) {
+    if (nextProps != this.props) {
+      this.setState(this._recomputeDerivedStateFromProps(nextProps))
+    }
   }
 
   _recomputeDerivedStateFromProps (nextProps) {

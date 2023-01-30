@@ -6,13 +6,13 @@ import { bindActionCreators } from 'redux'
 import ActionTypes from '../../constants/actionTypes/Keycloak'
 
 class SessionTimer extends Component {
-  UNSAFE_componentWillReceiveProps (newProps) {
-    const oldProps = this.props
-    if (!oldProps.warning && newProps.warning) {
-      $('#session-expiry-modal').modal('show')
-    }
-  }
 
+componentDidUpdate (newProps) {
+  const oldProps = this.props
+  if (!oldProps.warning && newProps.warning) {
+    $('#session-expiry-modal').modal('show')
+  }
+}
   render () {
     return (
       <div

@@ -124,95 +124,97 @@ class ScheduleCContainer extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    const { grid } = this.state
+  componentDidUpdate (nextProps, nextContext) {
+    if (nextProps != this.props) {
+      const { grid } = this.state
 
-    if (nextProps.snapshot && this.props.readOnly) {
-      let source = nextProps.snapshot.scheduleC
+      if (nextProps.snapshot && this.props.readOnly) {
+        let source = nextProps.snapshot.scheduleC
 
-      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleC) {
-        source = this.props.complianceReport.scheduleC
-      }
-
-      if (!source || !source.records) {
-        return
-      }
-
-      if ((grid.length - 2) < source.records.length) {
-        this._addRow(source.records.length - (grid.length - 2))
-      }
-
-      for (let i = 0; i < source.records.length; i += 1) {
-        const row = i + 2
-        const record = source.records[i]
-
-        grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType
-        grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass
-        grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale
-        grid[row][SCHEDULE_C.QUANTITY].value = record.quantity
-        grid[row][SCHEDULE_C.UNITS].value = record.unitOfMeasure
-      }
-    } else {
-      let source = nextProps.scheduleState.scheduleC
-
-      if (!this.props.scheduleState.scheduleC ||
-        !this.props.scheduleState.scheduleC.records) {
-        source = this.props.complianceReport.scheduleC
-      }
-
-      if (!source) {
-        return
-      }
-
-      const { records } = source
-
-      if ((grid.length - 2) < records.length) {
-        this._addRow(records.length - (grid.length - 2))
-      }
-
-      for (let i = 0; i < records.length; i += 1) {
-        const row = 2 + i
-        const record = records[i]
-        const qty = Number(record.quantity)
-
-        grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType
-        grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass
-        grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly
-        grid[row][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty
-
-        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-          fuel.name === record.fuelType)
-
-        grid[row][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-          ? selectedFuel.unitOfMeasure.name
-          : ''
-
-        if (!this.props.validating) {
-          grid[row] = this._validate(grid[row], i)
+        if (!source && this.props.complianceReport && this.props.complianceReport.scheduleC) {
+          source = this.props.complianceReport.scheduleC
         }
-      }
 
-      // zero remaining rows
-      for (let row = records.length + 2; row < grid.length; row += 1) {
-        grid[row][SCHEDULE_C.FUEL_TYPE].value = null
-        grid[row][SCHEDULE_C.FUEL_CLASS].value = null
-        grid[row][SCHEDULE_C.EXPECTED_USE].value = null
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = null
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = null
-        grid[row][SCHEDULE_C.QUANTITY].value = null
-
-        if (!this.props.validating) {
-          grid[row] = this._validate(grid[row], row)
+        if (!source || !source.records) {
+          return
         }
-      }
-    } // end read-write
 
-    this.setState({
-      grid
-    })
+        if ((grid.length - 2) < source.records.length) {
+          this._addRow(source.records.length - (grid.length - 2))
+        }
+
+        for (let i = 0; i < source.records.length; i += 1) {
+          const row = i + 2
+          const record = source.records[i]
+
+          grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType
+          grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass
+          grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale
+          grid[row][SCHEDULE_C.QUANTITY].value = record.quantity
+          grid[row][SCHEDULE_C.UNITS].value = record.unitOfMeasure
+        }
+      } else {
+        let source = nextProps.scheduleState.scheduleC
+
+        if (!this.props.scheduleState.scheduleC ||
+          !this.props.scheduleState.scheduleC.records) {
+          source = this.props.complianceReport.scheduleC
+        }
+
+        if (!source) {
+          return
+        }
+
+        const { records } = source
+
+        if ((grid.length - 2) < records.length) {
+          this._addRow(records.length - (grid.length - 2))
+        }
+
+        for (let i = 0; i < records.length; i += 1) {
+          const row = 2 + i
+          const record = records[i]
+          const qty = Number(record.quantity)
+
+          grid[row][SCHEDULE_C.FUEL_TYPE].value = record.fuelType
+          grid[row][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass
+          grid[row][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (record.expectedUse !== 'Other') || nextProps.readOnly
+          grid[row][SCHEDULE_C.QUANTITY].value = Number.isNaN(qty) ? '' : qty
+
+          const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+            fuel.name === record.fuelType)
+
+          grid[row][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+            ? selectedFuel.unitOfMeasure.name
+            : ''
+
+          if (!this.props.validating) {
+            grid[row] = this._validate(grid[row], i)
+          }
+        }
+
+        // zero remaining rows
+        for (let row = records.length + 2; row < grid.length; row += 1) {
+          grid[row][SCHEDULE_C.FUEL_TYPE].value = null
+          grid[row][SCHEDULE_C.FUEL_CLASS].value = null
+          grid[row][SCHEDULE_C.EXPECTED_USE].value = null
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].value = null
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = null
+          grid[row][SCHEDULE_C.QUANTITY].value = null
+
+          if (!this.props.validating) {
+            grid[row] = this._validate(grid[row], row)
+          }
+        }
+      } // end read-write
+
+      this.setState({
+        grid
+      })
+    }
   }
 
   loadInitialState () {

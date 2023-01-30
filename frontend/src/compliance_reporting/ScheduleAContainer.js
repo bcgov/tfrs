@@ -118,65 +118,67 @@ class ScheduleAContainer extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    const { grid } = this.state
+  componentDidUpdate (nextProps, nextContext) {
+    if (nextProps =! this.props) {
+      const { grid } = this.state
 
-    let source = nextProps.scheduleState.scheduleA
+      let source = nextProps.scheduleState.scheduleA
 
-    if (nextProps.snapshot && this.props.readOnly) {
-      source = nextProps.snapshot.scheduleA
-    } else if (!this.props.scheduleState.scheduleA ||
-      !this.props.scheduleState.scheduleA.records) {
-      source = this.props.complianceReport.scheduleA
-    }
-
-    if (!source && this.props.complianceReport && this.props.complianceReport.scheduleA) {
-      source = this.props.complianceReport.scheduleA
-    }
-
-    if (!source) {
-      return
-    }
-
-    const { records } = source
-
-    if ((grid.length - 1) < records.length) {
-      this._addRow(records.length - (grid.length - 1))
-    }
-
-    for (let i = 0; i < records.length; i += 1) {
-      const row = 1 + i
-      const record = records[i]
-      const qty = Number(record.quantity)
-
-      grid[row][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner
-      grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress
-      grid[row][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass
-      grid[row][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType
-      grid[row][SCHEDULE_A.QUANTITY].value = Number.isNaN(qty) ? '' : qty
-
-      if (!this.props.validating) {
-        grid[row] = this._validate(grid[row], i)
+      if (nextProps.snapshot && this.props.readOnly) {
+        source = nextProps.snapshot.scheduleA
+      } else if (!this.props.scheduleState.scheduleA ||
+        !this.props.scheduleState.scheduleA.records) {
+        source = this.props.complianceReport.scheduleA
       }
-    }
 
-    // zero remaining rows
-    for (let row = records.length + 1; row < grid.length; row += 1) {
-      grid[row][SCHEDULE_A.LEGAL_NAME].value = null
-      grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null
-      grid[row][SCHEDULE_A.FUEL_CLASS].value = null
-      grid[row][SCHEDULE_A.TRANSFER_TYPE].value = null
-      grid[row][SCHEDULE_A.QUANTITY].value = null
-      if (!this.props.validating) {
-        grid[row] = this._validate(grid[row], row)
+      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleA) {
+        source = this.props.complianceReport.scheduleA
       }
+
+      if (!source) {
+        return
+      }
+
+      const { records } = source
+
+      if ((grid.length - 1) < records.length) {
+        this._addRow(records.length - (grid.length - 1))
+      }
+
+      for (let i = 0; i < records.length; i += 1) {
+        const row = 1 + i
+        const record = records[i]
+        const qty = Number(record.quantity)
+
+        grid[row][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner
+        grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress
+        grid[row][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass
+        grid[row][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType
+        grid[row][SCHEDULE_A.QUANTITY].value = Number.isNaN(qty) ? '' : qty
+
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], i)
+        }
+      }
+
+      // zero remaining rows
+      for (let row = records.length + 1; row < grid.length; row += 1) {
+        grid[row][SCHEDULE_A.LEGAL_NAME].value = null
+        grid[row][SCHEDULE_A.POSTAL_ADDRESS].value = null
+        grid[row][SCHEDULE_A.FUEL_CLASS].value = null
+        grid[row][SCHEDULE_A.TRANSFER_TYPE].value = null
+        grid[row][SCHEDULE_A.QUANTITY].value = null
+        if (!this.props.validating) {
+          grid[row] = this._validate(grid[row], row)
+        }
+      }
+
+      this._calculateTotal(grid)
+
+      this.setState({
+        grid
+      })
     }
-
-    this._calculateTotal(grid)
-
-    this.setState({
-      grid
-    })
   }
 
   loadInitialState () {
