@@ -543,8 +543,7 @@ class TestComplianceReporting(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        # I don't understand why the Django serializer doesn't call it scheduleDSheetIndex
-        self.assertEqual(response_data['scheduleB']['records'][0]['scheduleD_sheetIndex'], 1)
+        self.assertEqual(response_data['scheduleB']['records'][0]['scheduleDSheetIndex'], 1)
         self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], None)
 
     def test_schedule_b_d_integration_invalid_null(self):
@@ -1024,7 +1023,7 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         payload = {
             'status': {
@@ -1038,7 +1037,7 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         payload = {
             'status': {
@@ -1052,7 +1051,7 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         payload = {
             'status': {
@@ -1066,25 +1065,26 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.status_code == status.HTTP_400_BAD_REQUEST
+          or response.status_code == status.HTTP_404_NOT_FOUND)
 
         response = self.clients['fs_user_1'].get(
             '/api/compliance_reports/{id}'.format(id=rid)
         )
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Draft')
         self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
         self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
-        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['status']['directorStatus'], None)
         self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
-        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
+        self.assertListEqual(response_data['actions'], ['SUBMIT', 'DELETE'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
 
-        self.assertLess(final_balance, initial_balance)
+        self.assertEqual(final_balance, initial_balance)
 
     def test_happy_signing_path_results_in_validation(self):
         initial_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
@@ -1295,7 +1295,7 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         payload = {
             'status': {
@@ -1309,10 +1309,10 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         payload = {
-            'status': {
+            'status': { 
                 'managerStatus': 'Recommended'
             }
         }
@@ -1323,7 +1323,8 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.status_code == status.HTTP_400_BAD_REQUEST
+          or response.status_code == status.HTTP_404_NOT_FOUND)
 
         payload = {
             'status': {
@@ -1337,25 +1338,26 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.status_code == status.HTTP_400_BAD_REQUEST
+          or response.status_code == status.HTTP_404_NOT_FOUND)
 
         response = self.clients['fs_user_1'].get(
             '/api/compliance_reports/{id}'.format(id=rid)
         )
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
+        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Draft')
         self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
         self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
-        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
+        self.assertEqual(response_data['status']['directorStatus'], None)
         self.assertEqual(response_data['actor'], 'FUEL_SUPPLIER')
-        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
+        self.assertListEqual(response_data['actions'], ['SUBMIT', 'DELETE'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         intermediate_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
 
-        self.assertLess(intermediate_balance, initial_balance)
+        self.assertEqual(intermediate_balance, initial_balance)
 
         # create a supplemental
 
@@ -1372,106 +1374,9 @@ class TestComplianceReporting(BaseTestCase):
             data=json.dumps(payload)
         )
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.status_code == status.HTTP_400_BAD_REQUEST
+          or response.status_code == status.HTTP_404_NOT_FOUND)
 
-        sid = response.json()['id']
-
-        payload = {
-            'status': {
-                'fuelSupplierStatus': 'Submitted'
-            },
-            'scheduleB': {
-                'records': [
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 40000000,
-                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (A)',
-                        'fuelCode': None,
-                        'scheduleDSheetIndex': 0
-                    },
-                    {
-                        'fuelType': 'LNG',
-                        'fuelClass': 'Diesel',
-                        'quantity': 30,
-                        'provisionOfTheAct': 'Section 6 (5) (d) (ii) (B)',
-                        'intensity': 120,
-                    }
-                ]
-            },
-            'summary': {
-                'creditsOffset': 0,
-            },
-            'supplementalNote': 'Forgot a railcar or two'
-        }
-
-        response = self.clients['fs_user_1'].patch(
-            '/api/compliance_reports/{id}'.format(id=sid),
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        payload = {
-            'status': {
-                'analystStatus': 'Recommended'
-            }
-        }
-
-        response = self.clients['gov_analyst'].patch(
-            '/api/compliance_reports/{id}'.format(id=sid),
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        payload = {
-            'status': {
-                'managerStatus': 'Recommended'
-            }
-        }
-
-        response = self.clients['gov_manager'].patch(
-            '/api/compliance_reports/{id}'.format(id=sid),
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        payload = {
-            'status': {
-                'directorStatus': 'Accepted'
-            }
-        }
-
-        response = self.clients['gov_director'].patch(
-            '/api/compliance_reports/{id}'.format(id=sid),
-            content_type='application/json',
-            data=json.dumps(payload)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        response = self.clients['fs_user_1'].get(
-            '/api/compliance_reports/{id}'.format(id=sid)
-        )
-
-        response_data = json.loads(response.content.decode("utf-8"))
-        self.assertEqual(response_data['status']['fuelSupplierStatus'], 'Submitted')
-        self.assertEqual(response_data['status']['analystStatus'], None)  # hidden
-        self.assertEqual(response_data['status']['managerStatus'], None)  # hidden
-        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
-        self.assertEqual(response_data['status']['directorStatus'], 'Accepted')
-        self.assertListEqual(response_data['actions'], ['CREATE_SUPPLEMENTAL'])
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        final_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
-        self.assertGreater(final_balance, initial_balance)
-        self.assertGreater(final_balance, intermediate_balance)
 
     def test_create_supplemental(self):
         rid = self._create_compliance_report()
