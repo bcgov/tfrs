@@ -1,5 +1,5 @@
-// import Autocomplete from 'react-autocomplete';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import Autocomplete from 'react-autocomplete';
+//import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -73,7 +73,7 @@ class AutocompletedInput extends Component {
 
   render () {
     return (
-      <ReactSearchAutocomplete
+      <Autocomplete
         autoFocus={true}
         autoComplete="off"
         getItemValue={this.props.getItemValue}
@@ -83,7 +83,7 @@ class AutocompletedInput extends Component {
         onSelect={this._onSelect}
         renderItem={this.props.renderItem}
         renderMenu={this.props.renderMenu}
-        refs={(input) => { this.props.handleRef && this.props.handleRef(input) }} // todo: name changed to refs to avoid deprecation error, review for better solution
+        ref={(input) => { this.props.handleRef && this.props.handleRef(input) }}
         renderInput={props => (
           <input
             type="text"
