@@ -151,7 +151,7 @@ class ComplianceReportingEditContainer extends Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
+  componentDidUpdate (nextProps, nextContext) {
     const { tab } = nextProps.params
 
     if (tab !== this.props.params.tab) {
