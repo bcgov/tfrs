@@ -51,26 +51,28 @@ class DashboardContainer extends Component {
     this._getOrganizations()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    if (nextProps.unreadNotificationsCount) {
-      this._getUnreadNotificationCount(nextProps)
-    }
-
-    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
-      if (nextProps.complianceReporting.success) {
-        this.props.navigate(COMPLIANCE_REPORTING.EDIT
-          .replace(':id', nextProps.complianceReporting.item.id)
-          .replace(':tab', 'intro'))
-        toastr.complianceReporting('Created')
+  componentDidUpdate (nextProps, nextContext) {
+    if (nextProps != this.props){
+      if (nextProps.unreadNotificationsCount) {
+        this._getUnreadNotificationCount(nextProps)
       }
-    }
-
-    if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
-      if (nextProps.exclusionReports.success) {
-        this.props.navigate(EXCLUSION_REPORTS.EDIT
-          .replace(':id', nextProps.exclusionReports.item.id)
-          .replace(':tab', 'intro'))
-        toastr.exclusionReports('Created')
+  
+      if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
+        if (nextProps.complianceReporting.success) {
+          this.props.navigate(COMPLIANCE_REPORTING.EDIT
+            .replace(':id', nextProps.complianceReporting.item.id)
+            .replace(':tab', 'intro'))
+          toastr.complianceReporting('Created')
+        }
+      }
+  
+      if (this.props.exclusionReports.isCreating && !nextProps.exclusionReports.isCreating) {
+        if (nextProps.exclusionReports.success) {
+          this.props.navigate(EXCLUSION_REPORTS.EDIT
+            .replace(':id', nextProps.exclusionReports.item.id)
+            .replace(':tab', 'intro'))
+          toastr.exclusionReports('Created')
+        }
       }
     }
   }

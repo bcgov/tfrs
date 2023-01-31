@@ -40,7 +40,7 @@ class CarbonIntensityLimitEditContainer extends Component {
     this.props.getCarbonIntensityLimit(this.props.params.id)
   }
 
-  UNSAFE_componentWillReceiveProps (props) {
+  componentDidUpdate(props){  
     if (this.props.carbonIntensityLimit.isUpdating && !props.carbonIntensityLimit.isUpdating) {
       if (props.carbonIntensityLimit.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)

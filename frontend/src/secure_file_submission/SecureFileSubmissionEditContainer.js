@@ -58,8 +58,10 @@ class SecureFileSubmissionEditContainer extends Component {
     this.loadData(this.props.params.id)
   }
 
-  UNSAFE_componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props)
+  componentDidUpdate (props) {
+    if (props != this.props) {
+      this.loadPropsToFieldState(props)
+    }
   }
 
   changeObjectProp (id, name) {
