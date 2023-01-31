@@ -65,7 +65,7 @@ sonar-project.properties
 ## Documentation
 - [TFRS Readme](https://raw.githubusercontent.com/bcgov/tfrs/master/README.md)
 - [TFRS Project Documentation](https://github.com/bcgov/tfrs/wiki)
-- [TFRS Developer Documentation](https://github.com/bcgov/tfrs-docs/)
+- [TFRS Developer Documentation](./developer-guide.md)
 
 ## Getting Help or Reporting an Issue
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/tfrs/issues/).
