@@ -22,8 +22,8 @@
     * oc process -f ./knp-env-pr-new-tfrs-spilo.yaml ENVIRONMENT=test | oc apply -f - -n 0ab226-test    
 
 ## Heml command
-helm install -n 0ab226-test -f ./values-test.yaml tfrs-spilo .
-helm uninstall -n 0ab226-test tfrs-spilo
+XX helm install -n 0ab226-test -f ./values-test.yaml tfrs-spilo .
+XX helm uninstall -n 0ab226-test tfrs-spilo
 
 ## Migrate Postgresql 10 on Patroni to 14 on Spilo container
 
@@ -33,7 +33,7 @@ helm uninstall -n 0ab226-test tfrs-spilo
 
 ### Create tfrs database user and database
 * Login to the tfrs-spilo leader pod
-* If the username contains upper case letters, should be double quoted
+    * If the username contains upper case letters, should be double quoted
     * create user for tfrs database, the username should be the same on v10 otherwise the restore may encounter issue
         * create user [username] with password '[password]'
         * The password can be found in secret tfrs-patroni-app
@@ -56,9 +56,12 @@ helm uninstall -n 0ab226-test tfrs-spilo
     verify permissions are granted:  select * from information_schema.role_table_grants where grantee='metabaseuser';
 
 ## Backup the existing v10 database and restore to v14 cluster
-* Make sure the application is stopped
-* Login to patroni-test leader pod
-    * make an empty dir /home/postgres/migration and cd into it
+* Make sure the application is route to the maintenance page
+* Bring down all TFRS apps but not the old patroni cluster and patroni-backup
+* Backup database on patroni-backup
+* bring down patroni-backup
+* Login to patroni-test leader pod and make sure there is no Lag
+    * make an empty dir /home/postgres/pgdata/migration and cd into it
     * backup tfrs database: pg_dump tfrs > tfrs.sql
 * Restore tfrs database
     * psql tfrs < ./tfrs.sql >> ./restore.log 2>&1

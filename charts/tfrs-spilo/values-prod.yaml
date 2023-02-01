@@ -5,7 +5,7 @@ spilo:
   credentials:
     useExistingSecret: true
     existingSecret:
-      name: itvr-patroni-admin
+      name: tfrs-patroni-admin
       superuserKey: password-superuser
       adminKey: password-admin
       standbyKey: password-standby
@@ -13,16 +13,16 @@ spilo:
   continuousArchive:
     enabled: true
     scheduleCronJob: "0 */3 * * *"
-    retainBackups: 3
+    retainBackups: 10
     storage: s3
     s3:
-      bucket: itvrpr
-      secretName: itvr-db-backup-s3
+      bucket: tfrspr/postgresbackup
+      secretName: tfrs-db-backup-s3
 
   shipLogs:
     enabled: false
 #    s3:
-#      bucket: s3://itvrpr
+#      bucket: s3://tfrspr
 #      shipSchedule: 0 7 * * *
 
   persistentVolume:
