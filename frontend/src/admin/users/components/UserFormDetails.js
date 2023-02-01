@@ -5,7 +5,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 // import Autosuggest from 'react-bootstrap-autosuggest';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import AutocompletedInput from '../../../app/components/AutocompletedInput'
 
 import CheckBox from '../../../app/components/CheckBox'
 // import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
@@ -189,35 +189,27 @@ const UserFormDetails = props => (
               {props.loggedInUser.isGovernmentUser &&
                 document.location.pathname.indexOf('/users/add') === 0 &&
                 <>
-                  <ReactSearchAutocomplete
-                    autoComplete="on"
-                    // getItemValue={this.props.getItemValue}
-                    // inputProps={this.props.inputProps}
-                    name="organization"
-                    placeholder="Select an Organization..."
-                    items={props.fuelSuppliers}
-                    onChange={(selected) => {
-                      props.handleInputChange({
-                        target: {
-                          name: 'organization',
-                          value: selected
-                        }
-                      })
+                  <AutocompletedInput
+                    additionalParams="&exclude_self=true"
+                    autocompleteFieldName="organization.name"
+                    getItemValue={item => (item.name)}
+                    handleInputChange={props.handleInputChange}
+                    inputProps={{
+                      id: 'organizationName',
+                      maxLength: 100,
+                      name: 'organizationName',
+                      required: true
                     }}
-                    renderItem={(item) => (<div>{item.name}</div>)}
-                    value={props.fields.organization}
-                    // renderMenu={this.props.renderMenu}
-                    // ref={(input) => { this.props.handleRef && this.props.handleRef(input); }}
-                    // renderInput={props => (
-                    //   <input
-                    //     type="text"
-                    //     onKeyPress={this._onKeyPress}
-                    //     className="form-control"
-                    //     {...props}
-                    //   />
-                    // )}
-                    // selectOnBlur={this.props.selectOnBlur}
-                    wrapperStyle={{}}
+                    renderItem={(item, isHighlighted) => (
+                      <div
+                        className={`autocomplete-item ${isHighlighted ? 'highlight' : ''}`}
+                        key={item.name}
+                      >
+                        {item.name}
+                      </div>
+                    )}
+                    onSelectEvent={props.handleOrganizationSelect}
+                    value={props.fields.organizationName}
                   />
 
                   {/* <Autosuggest
@@ -379,6 +371,7 @@ UserFormDetails.propTypes = {
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,
+  handleOrganizationSelect: PropTypes.func,
   isAdding: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,

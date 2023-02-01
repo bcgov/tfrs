@@ -49,7 +49,6 @@
     "react-redux-toastr": "7.6.10",
     "react-router": "^6.4.2",
     "react-router-dom": "^6.4.2",
-    "react-search-autocomplete": "^8.0.0",
     "react-autocomplete": "^1.8.1",
     "react-table": "6.10.3",
     "react-text-mask": "^5.5.0",
