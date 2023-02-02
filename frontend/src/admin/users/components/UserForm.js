@@ -22,6 +22,7 @@ const UserForm = props => {
           fields={props.fields}
           fuelSuppliers={props.fuelSuppliers}
           handleInputChange={props.handleInputChange}
+          handleOrganizationSelect={props.handleOrganizationSelect}
           isAdding={props.isAdding}
           loggedInUser={props.loggedInUser}
           roles={props.roles}
@@ -75,6 +76,7 @@ UserForm.propTypes = {
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,
+  handleOrganizationSelect: PropTypes.func,
   isAdding: PropTypes.bool,
   loggedInUser: PropTypes.shape({
   }).isRequired,
