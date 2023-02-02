@@ -114,9 +114,10 @@ class BaseTestCase(TestCase):
         # override the jwt verification keys for testing
 
         settings.KEYCLOAK['ENABLED'] = True
+        settings.KEYCLOAK['TESTING_ENABLED'] = True
         settings.KEYCLOAK['DOWNLOAD_CERTS'] = False
-        settings.KEYCLOAK['ISSUER'] = 'tfrs-test'
-        settings.KEYCLOAK['AUDIENCE'] = 'tfrs-app'
+        settings.KEYCLOAK['ISSUER'] = 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard'
+        settings.KEYCLOAK['AUDIENCE'] = 'tfrs-on-gold-4308'
         settings.KEYCLOAK['RS256_KEY'] = private_key.public_key().public_bytes(
             format=serialization.PublicFormat.SubjectPublicKeyInfo,
             encoding=serialization.Encoding.PEM
@@ -139,17 +140,9 @@ class BaseTestCase(TestCase):
             map(lambda user: (
                 user.username,
                 LoggingClient(
-                    HTTP_AUTHORIZATION='Bearer {}'.format(
-                        jwt.encode(
-                            payload={
-                                'user_id': str(user.username),
-                                'iss': 'tfrs-test',
-                                'aud': 'tfrs-app'
-                            },
-                            key=self.private_key,
-                            algorithm='RS256'
-                        ).decode('utf-8')
-                    )
+                    HTTP_AUTHORIZATION={
+                      'preferred_username': str(user.username)
+                    }
                 )), self.users.values()))
 
         from_organization = Organization.objects.get_by_natural_key(

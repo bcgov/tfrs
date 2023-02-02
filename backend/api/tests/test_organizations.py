@@ -63,9 +63,8 @@ class TestOrganizations(BaseTestCase):
 
         response = self.clients['fs_user_1'].get("/api/organizations/mine")
         response_data = json.loads(response.content.decode("utf-8"))
-
         self.assertEqual("Test Address 1",
-                         response_data['organizationAddress']['addressLine_1'])
+                         response_data['organizationAddress']['addressLine1'])
         self.assertEqual("Test City",
                          response_data['organizationAddress']['city'])
 

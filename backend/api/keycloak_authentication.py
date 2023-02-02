@@ -31,7 +31,8 @@ class UserAuthentication(authentication.BaseAuthentication):
         self.jwks = jwks
 
     def __init__(self):
-        self.refresh_jwk()
+        if not settings.KEYCLOAK['TESTING_ENABLED']:
+            self.refresh_jwk()
 
     def authenticate(self, request):
         """Verify the JWT token and find the correct user in the DB"""
@@ -46,6 +47,14 @@ class UserAuthentication(authentication.BaseAuthentication):
             print('Authorization header required')
             raise exceptions.AuthenticationFailed(
                 'Authorization header required')
+
+        if settings.KEYCLOAK['TESTING_ENABLED']:
+            try:
+                user = User.objects.get(keycloak_user_id=auth['preferred_username'])
+                return user, None
+            except User.DoesNotExist as exc:
+                print("Testing User does not exist")
+                raise User.DoesNotExist(str(exc))
 
         try:
             scheme, token = auth.split()

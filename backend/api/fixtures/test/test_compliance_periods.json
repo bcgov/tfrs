@@ -108,5 +108,35 @@
     },
     "model": "api.complianceperiod",
     "pk": "11"
+  },
+  {
+    "fields": {
+        "description": "2021",
+        "display_order": "12",
+        "effective_date": "2021-01-01",
+        "expiration_date": "2021-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "12"
+  },
+  {
+    "fields": {
+        "description": "2022",
+        "display_order": "13",
+        "effective_date": "2022-01-01",
+        "expiration_date": "2022-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "13"
+  },
+  {
+    "fields": {
+        "description": "2023",
+        "display_order": "14",
+        "effective_date": "2023-01-01",
+        "expiration_date": "2023-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "14"
   }
 ]
