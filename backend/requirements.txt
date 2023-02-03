@@ -10,7 +10,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 coverage==6.5.0
 cryptography==3.4.7
-Django==3.2.16
+Django==3.2.17
 django-celery-beat==1.4.0
 django-cors-headers==3.10.1
 django-debug-toolbar==1.11.1
