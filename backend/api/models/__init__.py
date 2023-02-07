@@ -72,5 +72,6 @@ from . import ProvisionOfTheAct
 from . import ApprovedFuelProvision
 from . import TransactionType
 from . import ComplianceReportHistory
+from . import UserLoginHistory
 
 patch_fields()

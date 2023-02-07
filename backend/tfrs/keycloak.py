@@ -16,5 +16,5 @@ def config():
         'SERVICE_ACCOUNT_KEYCLOAK_API_BASE': os.getenv('KEYCLOAK_SA_BASEURL', 'https://dev.loginproxy.gov.bc.ca'),
         'SERVICE_ACCOUNT_CLIENT_SECRET': os.getenv('KEYCLOAK_SA_CLIENT_SECRET', ''),
         'RS256_KEY': None,
-        'TESTING_ENABLED': False
+        'TESTING_ENABLED': os.getenv('TESTING_ENABLED', False)
     }

@@ -3,15 +3,16 @@ import json
 import jwt
 import requests
 
-from cryptography.hazmat.primitives import serialization
 from django.core.cache import caches
 from django.conf import settings
 from django.db.models import Q
+from django.http import HttpResponseServerError
 from rest_framework import authentication
 from rest_framework import exceptions
 
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
+from api.models.UserLoginHistory import UserLoginHistory
 from api.services.KeycloakAPI import map_user
 from tfrs.settings import WELL_KNOWN_ENDPOINT
 
@@ -34,9 +35,29 @@ class UserAuthentication(authentication.BaseAuthentication):
         if not settings.KEYCLOAK['TESTING_ENABLED']:
             self.refresh_jwk()
 
+    def create_login_history(self, user_token, success = False, error = None, path = ''):
+        # We only want to create a user_login_request when the current user is fetched
+        if path != '/api/users/current':
+            return
+            
+        try:
+            email = user_token['email']
+            username = parse_external_username(user_token)
+            id = user_token['preferred_username']
+            print(email, username, id, success, error)
+            UserLoginHistory.objects.create(
+                keycloak_email=email,
+                external_username=username,
+                keycloak_user_id=id,
+                is_login_successful=success,
+                login_error_message=error
+            )
+        except Exception as exc:
+            print('User history object create failed.', exc)
+            pass
+
     def authenticate(self, request):
         """Verify the JWT token and find the correct user in the DB"""
-
         if not settings.KEYCLOAK['ENABLED']:
             # fall through
             return None
@@ -109,21 +130,13 @@ class UserAuthentication(authentication.BaseAuthentication):
         if 'preferred_username' in user_token:
             try:
                 user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
+                if user:
+                    self.create_login_history(user_token, True, None, request.path)
                 return user, None
-            except User.DoesNotExist: 
-                print("User does not exist, falling through")
+            except User.DoesNotExist:
                 pass
         
-        try:
-            # Which provider is user logging in with
-            if user_token['identity_provider'] == 'idir':
-                external_username = user_token['idir_username']
-            elif user_token['identity_provider'] == 'bceidbusiness':
-                external_username = user_token['bceid_username']
-            else:
-                raise Exception('unknown identity provider')
-        except Exception as exc:
-            raise Exception('identity provider invalid')
+        external_username = parse_external_username(user_token)
 
         # fall through to here if no mapped user is found
         if 'email' in user_token:
@@ -141,15 +154,17 @@ class UserAuthentication(authentication.BaseAuthentication):
             elif user_token['identity_provider'] == 'bceidbusiness':
                 creation_request.filter(~Q(user__organization=1))
             else:
-                raise Exception('unknown identity provider')
+                error_text = 'Unknown identity provider.'
+                self.create_login_history(user_token, False, error_text, request.path)
+                return None
 
             # filter out if the user has already been mapped
             creation_request.filter(user__keycloak_user_id=None)
 
             if not creation_request.exists():
-                print("No User with that configuration exists.")
-                raise exceptions.AuthenticationFailed(
-                    "No User with that configuration exists.")
+                error_text = 'No User with that configuration exists.'
+                self.create_login_history(user_token, False, error_text, request.path)
+                return None
 
             user_creation_request = creation_request.first()
 
@@ -160,17 +175,39 @@ class UserAuthentication(authentication.BaseAuthentication):
                 user._display_name = user_token['display_name']
             user.save()
 
+            self.create_login_history(user_token, True, None, request.path)
             user_creation_request.is_mapped = True
             user_creation_request.save()
         else:
-            raise exceptions.AuthenticationFailed(
-                'preffered_username or email is required in jwt payload')
+            error_text = 'preffered_username or email is required in jwt payload.'
+            self.create_login_history(user_token, False, error_text, request.path)
+            return None
         
         try:
             user = User.objects.get(keycloak_user_id=user_token['preferred_username'])
             if not user.is_active:
-                raise exceptions.AuthenticationFailed('User is not active')
+                error_text = 'User is not active.'
+                self.create_login_history(user_token, False, error_text, request.path)
+                return None
         except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('User does not exist')
+            error_text = 'User does not exist.'
+            self.create_login_history(user_token, False, error_text, request.path)
+            return None
 
         return user, None
+
+
+def parse_external_username(user_token):
+    try:
+        # Which provider is user logging in with
+        if user_token['identity_provider'] == 'idir':
+            external_username = user_token['idir_username']
+        elif user_token['identity_provider'] == 'bceidbusiness':
+            external_username = user_token['bceid_username']
+        else:
+            raise Exception('Unknown identity provider.')
+    except Exception as exc:
+        raise Exception('Invalid identity provider.')
+    
+    return external_username
+
