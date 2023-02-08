@@ -15,24 +15,11 @@ const DirectorReview = (props) => {
     isGettingDashboard: fetchingDashboard,
     items: complianceReports,
   } = props.complianceReports;
-  console.log(
-    fetchingComplianceReports,
-    fetchingCreditTransfers,
-    fetchingDashboard,
-    "18"
-  );
+
   const navigate = useNavigate();
 
   const { isFinding: fetchingCreditTransfers, items: creditTransfers } =
     props.creditTransfers;
-
-  // if (
-  //   fetchingComplianceReports ||
-  //   fetchingCreditTransfers ||
-  //   fetchingDashboard
-  // ) {
-  //   return <Loading />;
-  // }
 
   const awaitingReview = {
     complianceReports: 0,
