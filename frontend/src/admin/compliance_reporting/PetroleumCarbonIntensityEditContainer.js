@@ -37,7 +37,7 @@ class PetroleumCarbonIntensityEditContainer extends Component {
     this.props.getPetroleumCarbonIntensity(this.props.params.id)
   }
 
-  UNSAFE_componentWillReceiveProps (props) {
+  componentDidUpdate (props) {
     if (this.props.carbonIntensity.isUpdating && !props.carbonIntensity.isUpdating) {
       if (props.carbonIntensity.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)

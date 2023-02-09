@@ -65,7 +65,7 @@ class ScheduleDContainer extends Component {
     if (this.props.scheduleState.scheduleD || (this.props.snapshot && this.props.readOnly)) {
       // it's probably more elegant to use getDerivedStateFromProps,
       // but it is defined static and we need to access instance methods to set the headers
-      this.UNSAFE_componentWillReceiveProps(this.props)
+      this.componentDidUpdate(this.props)
       // we already have the state. don't load it. just render it.
     } else if (!this.props.complianceReport.scheduleD) {
       this._addSheet()
@@ -74,104 +74,106 @@ class ScheduleDContainer extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    const { sheets, loaded } = this.state
+  componentDidUpdate (nextProps, nextContext) {
+    if (nextProps != this.props) {
+      const { sheets, loaded } = this.state
 
-    let source = nextProps.scheduleState.scheduleD
+      let source = nextProps.scheduleState.scheduleD
 
-    if (nextProps.scheduleState && nextProps.scheduleState.scheduleB) {
-      this.scheduleB = nextProps.scheduleState.scheduleB
-    }
-
-    if (nextProps.snapshot && this.props.readOnly) {
-      source = nextProps.snapshot.scheduleD
-    } else if (!this.props.scheduleState.scheduleD ||
-      !this.props.scheduleState.scheduleD.sheets) {
-      source = this.props.complianceReport.scheduleD
-    }
-
-    if (!source && this.props.complianceReport && this.props.complianceReport.scheduleD) {
-      source = this.props.complianceReport.scheduleD
-    }
-
-    if (source && source.sheets && !loaded) {
-      if ((sheets.length) < source.sheets.length) {
-        this._addSheet(source.sheets.length - (sheets.length))
+      if (nextProps.scheduleState && nextProps.scheduleState.scheduleB) {
+        this.scheduleB = nextProps.scheduleState.scheduleB
       }
 
-      for (let i = 0; i < source.sheets.length; i += 1) {
-        const sheet = source.sheets[i]
-        if (sheets.length < i) {
-          sheets.push(this._addHeaders(sheets.length))
+      if (nextProps.snapshot && this.props.readOnly) {
+        source = nextProps.snapshot.scheduleD
+      } else if (!this.props.scheduleState.scheduleD ||
+        !this.props.scheduleState.scheduleD.sheets) {
+        source = this.props.complianceReport.scheduleD
+      }
+
+      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleD) {
+        source = this.props.complianceReport.scheduleD
+      }
+
+      if (source && source.sheets && !loaded) {
+        if ((sheets.length) < source.sheets.length) {
+          this._addSheet(source.sheets.length - (sheets.length))
         }
 
-        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType
-        sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock
-        sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass
-
-        for (let j = 0; j < sheet.inputs.length; j += 1) {
-          if (j >= sheets[i].grid.length - 1) {
-            sheets[i].grid.push([{
-              readOnly: true,
-              value: j + 1
-            }, {
-              className: 'text',
-              readOnly: nextProps.readOnly
-            }, {
-              className: 'text',
-              readOnly: nextProps.readOnly
-            }, {
-              className: 'text',
-              readOnly: nextProps.readOnly
-            }, {
-              className: 'text',
-              readOnly: nextProps.readOnly
-            }, {
-              className: 'text',
-              readOnly: nextProps.readOnly
-            }])
+        for (let i = 0; i < source.sheets.length; i += 1) {
+          const sheet = source.sheets[i]
+          if (sheets.length < i) {
+            sheets.push(this._addHeaders(sheets.length))
           }
 
-          sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell
-          sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName
-          sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value
-          sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units
-          sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description
-        }
+          sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value = sheet.fuelType
+          sheets[i].input[1][SCHEDULE_D_INPUT.FEEDSTOCK].value = sheet.feedstock
+          sheets[i].input[1][SCHEDULE_D_INPUT.FUEL_CLASS].value = sheet.fuelClass
 
-        // zero remaining rows
-        for (let row = sheet.inputs.length + 1; row < sheets[i].grid.length; row += 1) {
-          sheets[i].grid[row][SCHEDULE_D.CELL].value = null
-          sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null
-          sheets[i].grid[row][SCHEDULE_D.VALUE].value = null
-          sheets[i].grid[row][SCHEDULE_D.UNITS].value = null
-          sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null
-        }
+          for (let j = 0; j < sheet.inputs.length; j += 1) {
+            if (j >= sheets[i].grid.length - 1) {
+              sheets[i].grid.push([{
+                readOnly: true,
+                value: j + 1
+              }, {
+                className: 'text',
+                readOnly: nextProps.readOnly
+              }, {
+                className: 'text',
+                readOnly: nextProps.readOnly
+              }, {
+                className: 'text',
+                readOnly: nextProps.readOnly
+              }, {
+                className: 'text',
+                readOnly: nextProps.readOnly
+              }, {
+                className: 'text',
+                readOnly: nextProps.readOnly
+              }])
+            }
 
-        for (let j = 0; j < sheet.outputs.length; j += 1) {
-          const rowIndex = sheets[i].output.findIndex(x =>
-            x[0].value === sheet.outputs[j].description)
-          if (rowIndex !== -1) {
-            sheets[i].output[rowIndex][1] = {
-              ...sheets[i].output[rowIndex][1],
-              readOnly: nextProps.readOnly,
-              value: sheet.outputs[j].intensity
+            sheets[i].grid[1 + j][SCHEDULE_D.CELL].value = sheet.inputs[j].cell
+            sheets[i].grid[1 + j][SCHEDULE_D.WORKSHEET_NAME].value = sheet.inputs[j].worksheetName
+            sheets[i].grid[1 + j][SCHEDULE_D.VALUE].value = sheet.inputs[j].value
+            sheets[i].grid[1 + j][SCHEDULE_D.UNITS].value = sheet.inputs[j].units
+            sheets[i].grid[1 + j][SCHEDULE_D.DESCRIPTION].value = sheet.inputs[j].description
+          }
+
+          // zero remaining rows
+          for (let row = sheet.inputs.length + 1; row < sheets[i].grid.length; row += 1) {
+            sheets[i].grid[row][SCHEDULE_D.CELL].value = null
+            sheets[i].grid[row][SCHEDULE_D.WORKSHEET_NAME].value = null
+            sheets[i].grid[row][SCHEDULE_D.VALUE].value = null
+            sheets[i].grid[row][SCHEDULE_D.UNITS].value = null
+            sheets[i].grid[row][SCHEDULE_D.DESCRIPTION].value = null
+          }
+
+          for (let j = 0; j < sheet.outputs.length; j += 1) {
+            const rowIndex = sheets[i].output.findIndex(x =>
+              x[0].value === sheet.outputs[j].description)
+            if (rowIndex !== -1) {
+              sheets[i].output[rowIndex][1] = {
+                ...sheets[i].output[rowIndex][1],
+                readOnly: nextProps.readOnly,
+                value: sheet.outputs[j].intensity
+              }
             }
           }
+
+          sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output)
+
+          if (!this.props.snapshot && !this.props.validating) {
+            sheets[i] = this._validate(sheets[i], i)
+          }
         }
 
-        sheets[i].output = ScheduleDSheet.calculateTotal(sheets[i].output)
-
+        this.setState({ sheets, loaded: true })
+      } else if (source && source.sheets && loaded) {
         if (!this.props.snapshot && !this.props.validating) {
-          sheets[i] = this._validate(sheets[i], i)
-        }
-      }
-
-      this.setState({ sheets, loaded: true })
-    } else if (source && source.sheets && loaded) {
-      if (!this.props.snapshot && !this.props.validating) {
-        for (let i = 0; i < source.sheets.length; i += 1) {
-          sheets[i] = this._validate(sheets[i], i)
+          for (let i = 0; i < source.sheets.length; i += 1) {
+            sheets[i] = this._validate(sheets[i], i)
+          }
         }
       }
     }
