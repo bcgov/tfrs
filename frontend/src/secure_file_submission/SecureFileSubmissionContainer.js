@@ -41,6 +41,7 @@ class SecureFileSubmissionContainer extends Component {
       this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
     }
   }
+
   handlePageChange (page) {
     this.setState({ page })
   }

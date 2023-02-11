@@ -92,7 +92,7 @@ class ExclusionReportEditContainer extends Component {
     this.loadData()
   }
 
-  componentDidUpdate (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { tab } = nextProps.params
 
     if (tab !== this.props.params.tab) {

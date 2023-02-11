@@ -90,16 +90,14 @@ class CreditTransferAddContainer extends Component {
     this.props.getSigningAuthorityAssertions()
   }
 
-  componentDidUpdate (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     // Set the initiator as the logged in user's organization
-    if (props != this.props) {
-      const fieldState = { ...this.state.fields }
-      fieldState.initiator = this.props.loggedInUser.organization
-      this.setState({
-        fields: fieldState,
-        creditsFrom: fieldState.initiator
-      })
-    }
+    const fieldState = { ...this.state.fields }
+    fieldState.initiator = this.props.loggedInUser.organization
+    this.setState({
+      fields: fieldState,
+      creditsFrom: fieldState.initiator
+    })
   }
 
   _addComment (privileged = false) {

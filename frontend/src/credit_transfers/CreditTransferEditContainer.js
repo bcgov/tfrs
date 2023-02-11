@@ -78,10 +78,8 @@ class CreditTransferEditContainer extends Component {
     this.props.getSigningAuthorityAssertions()
   }
 
-  componentDidUpdate (props) {
-    if (props != this.props) {
-      this.loadPropsToFieldState(props)
-    }
+  UNSAFE_componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props)
   }
 
   loadData (id) {

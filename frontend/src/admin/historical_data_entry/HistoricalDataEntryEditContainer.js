@@ -57,10 +57,8 @@ class HistoricalDataEntryEditContainer extends Component {
     this.props.getFuelSuppliers()
   }
 
-  componentDidUpdate(props) {
-    if (props.item !== this.props.item) {
-      this.loadPropsToFieldState(props)
-    }
+  UNSAFE_componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props)
   }
 
   _handleInputChange (event) {

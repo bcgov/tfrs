@@ -54,14 +54,12 @@ class OrganizationEditContainer extends Component {
     this.loadData(this.props.params.id)
   }
 
-  componentDidUpdate (props) {
-    if (props != this.props) {
-      if (props.mode === 'add') {
-        return
-      }
-  
-      this.loadPropsToFieldState(props)
+  UNSAFE_componentWillReceiveProps (props) {
+    if (props.mode === 'add') {
+      return
     }
+
+    this.loadPropsToFieldState(props)
   }
 
   loadData (id) {

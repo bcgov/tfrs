@@ -53,10 +53,8 @@ class UserEditContainer extends Component {
     this.loadData(this.props.params.id)
   }
 
-  componentDidUpdate(props) {
-    if (props != this.props) {
-      this.loadPropsToFieldState(props)
-    }
+  UNSAFE_componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props)
   }
 
   loadData (id) {
