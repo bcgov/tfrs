@@ -38,7 +38,7 @@ class EnergyDensityEditContainer extends Component {
     this.props.getEnergyDensity(this.props.params.id)
   }
 
-  componentDidUpdate (props) {
+  UNSAFE_componentWillReceiveProps (props) {
     if (this.props.energyDensity.isUpdating && !props.energyDensity.isUpdating) {
       if (props.energyDensity.success) {
         this.props.navigate(CREDIT_CALCULATIONS.LIST)

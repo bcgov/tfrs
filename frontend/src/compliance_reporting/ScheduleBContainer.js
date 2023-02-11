@@ -335,7 +335,7 @@ class ScheduleBContainer extends Component {
   componentDidMount () {
     if (this.props.scheduleState.scheduleB || (this.props.snapshot && this.props.readOnly)) {
       // we already have the state. don't load it. just render it.
-      this.componentDidUpdate(this.props)
+      this.UNSAFE_componentWillReceiveProps(this.props)
     } else if (!this.props.complianceReport.scheduleB) {
       this._addRow(5)
     } else {
@@ -343,56 +343,54 @@ class ScheduleBContainer extends Component {
     }
   }
 
-  componentDidUpdate (nextProps) {
-    if (nextProps != this.props) {
-      let { grid } = this.state
+  UNSAFE_componentWillReceiveProps (nextProps) {
+    let { grid } = this.state
 
-      if (nextProps.snapshot && this.props.readOnly) {
-        // just use the snapshot
-        let source = nextProps.snapshot.scheduleB
+    if (nextProps.snapshot && this.props.readOnly) {
+      // just use the snapshot
+      let source = nextProps.snapshot.scheduleB
 
-        if (!source && this.props.complianceReport && this.props.complianceReport.scheduleB) {
-          source = this.props.complianceReport.scheduleB
-        }
+      if (!source && this.props.complianceReport && this.props.complianceReport.scheduleB) {
+        source = this.props.complianceReport.scheduleB
+      }
 
-        if (!source || !source.records) {
-          return
-        }
+      if (!source || !source.records) {
+        return
+      }
 
-        if ((grid.length - 2) < source.records.length) {
-          this._addRow(source.records.length - (grid.length - 2))
-        }
+      if ((grid.length - 2) < source.records.length) {
+        this._addRow(source.records.length - (grid.length - 2))
+      }
 
-        grid = ScheduleBContainer.snapshotToGrid(source.records, grid)
+      grid = ScheduleBContainer.snapshotToGrid(source.records, grid)
 
-        this._calculateTotal(grid)
-      } else {
-        let source = nextProps.scheduleState.scheduleB
+      this._calculateTotal(grid)
+    } else {
+      let source = nextProps.scheduleState.scheduleB
 
-        if (!this.props.scheduleState.scheduleB ||
-          !this.props.scheduleState.scheduleB.records) {
-          source = this.props.complianceReport.scheduleB
-        }
+      if (!this.props.scheduleState.scheduleB ||
+        !this.props.scheduleState.scheduleB.records) {
+        source = this.props.complianceReport.scheduleB
+      }
 
-        if (!source) {
-          return
-        }
+      if (!source) {
+        return
+      }
 
-        const { records } = source
+      const { records } = source
 
-        // in read-write mode
-        if ((grid.length - 2) < records.length) {
-          this._addRow(records.length - (grid.length - 2))
-        }
+      // in read-write mode
+      if ((grid.length - 2) < records.length) {
+        this._addRow(records.length - (grid.length - 2))
+      }
 
-        grid = this._recordsToGrid(records, grid)
+      grid = this._recordsToGrid(records, grid)
 
-        this.recomputeDerivedState(nextProps, {
-          ...this.state,
-          grid
-        })
-      } // end read-write prop load
-    }
+      this.recomputeDerivedState(nextProps, {
+        ...this.state,
+        grid
+      })
+    } // end read-write prop load
   }
 
   loadInitialState () {

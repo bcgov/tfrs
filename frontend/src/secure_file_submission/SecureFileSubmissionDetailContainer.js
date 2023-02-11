@@ -57,23 +57,21 @@ class SecureFileSubmissionDetailContainer extends Component {
     this.props.getDocumentUpload(id)
   }
 
-  componentDidUpdate (newProps) {
-    if (newProps != this.props) {
-      let hasFailures = false
+  UNSAFE_componentWillReceiveProps (newProps) {
+    let hasFailures = false
 
-      const attachments = newProps.documentUpload.item.attachments
-      if (attachments) {
-        attachments.forEach(attachment => {
-          if (attachment.securityScanStatus === 'FAIL') {
-            hasFailures = true
-          }
-        })
-      }
+    const attachments = newProps.documentUpload.item.attachments
+    if (attachments) {
+      attachments.forEach(attachment => {
+        if (attachment.securityScanStatus === 'FAIL') {
+          hasFailures = true
+        }
+      })
+    }
 
-      this.setState({
-        hasFailures
-        })
-      }
+    this.setState({
+      hasFailures
+    })
   }
 
   _addComment (privileged = false) {

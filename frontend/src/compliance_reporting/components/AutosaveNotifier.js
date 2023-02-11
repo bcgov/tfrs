@@ -13,7 +13,7 @@ class AutosaveNotifier extends Component {
     this.tick = this.tick.bind(this)
   }
 
-  componentDidUpdate (nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.saving && !nextProps.saving && this.mounted) {
       this.setState({
         showMessage: true

@@ -14,23 +14,21 @@ class UserSettings extends Component {
     }
   }
 
-  componentDidUpdate (newProps) {
-    if (newProps != this.props) {
-      if (newProps.unreadNotificationsCount != null) {
-        let unreadCount = 0
-  
-        if (newProps.unreadNotificationsCount > 0 && newProps.unreadNotificationsCount < 1000) {
-          unreadCount = newProps.unreadNotificationsCount
-        }
-  
-        if (unreadCount > 1000) {
-          unreadCount = '∞'
-        }
-  
-        this.setState({
-          unreadCount
-        })
+  UNSAFE_componentWillReceiveProps (newProps) {
+    if (newProps.unreadNotificationsCount != null) {
+      let unreadCount = 0
+
+      if (newProps.unreadNotificationsCount > 0 && newProps.unreadNotificationsCount < 1000) {
+        unreadCount = newProps.unreadNotificationsCount
       }
+
+      if (unreadCount > 1000) {
+        unreadCount = '∞'
+      }
+
+      this.setState({
+        unreadCount
+      })
     }
   }
 
