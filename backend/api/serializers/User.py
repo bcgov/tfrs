@@ -184,6 +184,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'phone', instance.phone)
         instance.title = validated_data.get(
             'title', instance.title)
+
+        UserCreationRequest.objects.filter(user_id=instance.id).update(external_username=request.data["external_username"], keycloak_email=request.data["keycloak_email"] )
+        
         instance.save()
 
         return instance
