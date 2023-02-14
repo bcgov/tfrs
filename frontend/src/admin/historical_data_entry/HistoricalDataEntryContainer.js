@@ -59,7 +59,6 @@ class HistoricalDataEntryContainer extends Component {
 
   UNSAFE_componentWillReceiveProps (props) {
     const fieldState = { ...this.state.fields }
-
     this.setState({
       fields: fieldState
     })

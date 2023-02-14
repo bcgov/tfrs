@@ -62,7 +62,7 @@ class App extends Component {
       return <Unverified />
     }
 
-    if (!loggedInUser?.username) {
+    if (!loggedInUser?.username && userRequest.isFetching) {
       return <Loading />
     }
 
@@ -73,6 +73,8 @@ class App extends Component {
       errorRequest.error &&
       errorRequest.error.status) {
       content = <StatusInterceptor statusCode={errorRequest.error.status} />
+    } else if (!loggedInUser?.username) {
+      return <Unverified />
     } else {
       content = <Router/>
     }

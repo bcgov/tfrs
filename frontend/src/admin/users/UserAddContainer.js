@@ -26,6 +26,7 @@ class UserAddContainer extends Component {
         lastName: '',
         email: '',
         organization: null,
+        organizationName: '',
         mobilePhone: '',
         status: 'active',
         title: '',
@@ -40,6 +41,7 @@ class UserAddContainer extends Component {
 
     this._addToFields = this._addToFields.bind(this)
     this._handleInputChange = this._handleInputChange.bind(this)
+    this._handleOrganizationSelect = this._handleOrganizationSelect.bind(this)
     this._handleSubmit = this._handleSubmit.bind(this)
     this._toggleCheck = this._toggleCheck.bind(this)
   }
@@ -110,6 +112,15 @@ class UserAddContainer extends Component {
       fieldState[name] = value
     }
 
+    this.setState({
+      fields: fieldState
+    })
+  }
+
+  _handleOrganizationSelect (organization) {
+    const fieldState = { ...this.state.fields }
+    fieldState.organization = organization
+    fieldState.organizationName = organization.name;
     this.setState({
       fields: fieldState
     })
@@ -197,6 +208,7 @@ class UserAddContainer extends Component {
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
+        handleOrganizationSelect={this._handleOrganizationSelect}
         isAdding
         key="userForm"
         loggedInUser={this.props.loggedInUser}

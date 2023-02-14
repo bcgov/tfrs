@@ -208,7 +208,9 @@
       vertical-align: middle;
     }
   }
-
+.btn-text{
+  display: flex;
+  }
   .value {
     color: $dark-yellow;
     display: inline-block;

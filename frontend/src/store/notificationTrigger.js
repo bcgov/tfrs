@@ -11,8 +11,8 @@ const TRIGGERING_ACTIONS = [
 
 function * fetchNotifications (store) {
   yield delay(1000) // debounce
-
-  if (store.getState().rootReducer.userRequest.isAuthenticated) {
+  if (store.getState().rootReducer.userRequest.isAuthenticated &&
+        store.getState().rootReducer.userRequest.loggedInUser?.id) {
     yield put(getNotificationsCount())
   }
 

@@ -193,6 +193,8 @@ spec:
           successThreshold: 1
           failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
         {{- end }}
+        securityContext:
+          allowPrivilegeEscalation: true        
       affinity:
         # Make sure we don't schedule multiple pods on the same node
         podAntiAffinity:

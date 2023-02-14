@@ -51,7 +51,7 @@ objects:
                   name: tfrs-scan-handler${SUFFIX}
           ports:
             - protocol: TCP
-              port: 5432      
+              port: 5672      
         - from:
             - podSelector:
                 matchLabels:
@@ -80,6 +80,12 @@ objects:
           ports:
             - protocol: TCP
               port: 5672     
+            - protocol: TCP
+              port: 15672     
+            - protocol: TCP
+              port: 25672     
+            - protocol: TCP
+              port: 4369                                             
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:

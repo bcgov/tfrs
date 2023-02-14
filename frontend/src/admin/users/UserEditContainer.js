@@ -115,8 +115,14 @@ class UserEditContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target
     const fieldState = { ...this.state.fields }
-
     fieldState[name] = value
+
+    if (['keycloakEmail', 'externalUsername'].indexOf(name) >= 0) {
+      fieldState.userCreationRequest[name] = value
+    } else {
+      fieldState[name] = value
+    }
+
     this.setState({
       fields: fieldState
     })
@@ -134,9 +140,11 @@ class UserEditContainer extends Component {
     }
 
     // API data structure
-    const data = {
+    const data = {            
       cellPhone: this.state.fields.mobilePhone,
-      email,
+      email:this.state.fields.email,
+      keycloak_email: this.state.fields.userCreationRequest.keycloakEmail,   
+      external_username:this.state.fields.userCreationRequest.externalUsername,   
       firstName: this.state.fields.firstName,
       lastName: this.state.fields.lastName,
       organization: this.state.fields.organization ? this.state.fields.organization.id : null,
@@ -150,7 +158,6 @@ class UserEditContainer extends Component {
       is_active: this.state.fields.status === 'active',
       title: this.state.fields.title
     }
-
     const { id } = this.props.user.details
 
     let viewUrl = USERS.DETAILS.replace(':id', id)
