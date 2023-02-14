@@ -15,6 +15,10 @@ env:
   PR_NUMBER: 2097
   RELEASE_NAME: release-2.3.0
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
   unit-test:
