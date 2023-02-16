@@ -63,6 +63,7 @@ const UserFormDetails = props => (
                   required="required"
                   type="email"
                   value={props.fields.userCreationRequest.keycloakEmail}
+                  disabled={!props.loggedInUser.isGovernmentUser && props.fields.isMapped}
                 />
             </label>
           </div>
@@ -84,6 +85,7 @@ const UserFormDetails = props => (
                   required="required"
                   type="text"
                   value={props.fields.userCreationRequest.externalUsername}
+                  disabled={!props.loggedInUser.isGovernmentUser && props.fields.isMapped}
                 />
             </label>
           </div>

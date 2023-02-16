@@ -36,7 +36,8 @@ class UserEditContainer extends Component {
         status: 'active',
         title: '',
         workPhone: '',
-        roles: []
+        roles: [],
+        isMapped: false
       }
     }
 
@@ -90,7 +91,8 @@ class UserEditContainer extends Component {
         roles: props.user.details.roles.map(role => ({
           id: role.id,
           value: true
-        }))
+        })),
+        isMapped: props.user.details.isMapped
       }
 
       this.setState({
