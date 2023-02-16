@@ -55,7 +55,6 @@ const UserFormDetails = props => (
                 'Email address associated with the BCeID user account:'}
               {document.location.pathname.indexOf('/admin/users/') >= 0 &&
                 'IDIR Email Address:'}
-              {!props.isAdding &&
                 <input
                   className="form-control"
                   id="keycloak-email"
@@ -64,8 +63,8 @@ const UserFormDetails = props => (
                   required="required"
                   type="email"
                   value={props.fields.userCreationRequest.keycloakEmail}
+                  disabled={!props.loggedInUser.isGovernmentUser && props.fields.isMapped}
                 />
-              }
             </label>
           </div>
         </div>
@@ -77,7 +76,6 @@ const UserFormDetails = props => (
                 'BCeID:'}
               {document.location.pathname.indexOf('/admin/users/') >= 0 &&
                 'IDIR Username:'}
-              {!props.isAdding &&
                 <input
                   className="form-control"
                   id="external-username"
@@ -87,8 +85,8 @@ const UserFormDetails = props => (
                   required="required"
                   type="text"
                   value={props.fields.userCreationRequest.externalUsername}
+                  disabled={!props.loggedInUser.isGovernmentUser && props.fields.isMapped}
                 />
-              }
             </label>
           </div>
         </div>

@@ -30,6 +30,7 @@ from auditable.models import Auditable
 from api.managers.UserManager import UserManager
 
 from .ComplianceReportHistory import ComplianceReportHistory
+from .UserCreationRequest import UserCreationRequest
 from .CreditTradeHistory import CreditTradeHistory
 from .Permission import Permission
 from .Role import Role
@@ -165,6 +166,17 @@ class User(AbstractUser, Auditable):
             return True
 
         return False
+    
+    @property
+    def is_mapped(self):
+        """
+        Has a user logged in and claimed this user account?
+        """
+        user = UserCreationRequest.objects.filter(user_id=self.id).first()
+        if user:
+            return user.is_mapped
+        else:
+            return False
 
     @property
     def display_name(self):

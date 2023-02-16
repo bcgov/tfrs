@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email',
             'username', 'display_name', 'is_active',
             'organization', 'roles', 'is_government_user', 'permissions',
-            'phone', 'cell_phone', 'title')
+            'phone', 'cell_phone', 'title', 'is_mapped')
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -184,9 +184,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'phone', instance.phone)
         instance.title = validated_data.get(
             'title', instance.title)
-
-        UserCreationRequest.objects.filter(user_id=instance.id).update(external_username=request.data["external_username"], keycloak_email=request.data["keycloak_email"] )
         
+        # if a user is mapped, then we limit the supplier's ability to edit external user account info
+        if request.user.is_government_user or not instance.is_mapped:
+            UserCreationRequest.objects.filter(user_id=instance.id) \
+              .update(external_username=request.data["external_username"], keycloak_email=request.data["keycloak_email"])
+
         instance.save()
 
         return instance
@@ -195,7 +198,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
-            'roles', 'is_active', 'organization', 'cell_phone', 'title'
+            'roles', 'is_active', 'organization', 'cell_phone', 'title', 'is_mapped'
         )
         read_only_fields = (
             'organization', 'id', 'is_government_user'
@@ -246,4 +249,4 @@ class UserViewSerializer(serializers.ModelSerializer):
         fields = (
             'cell_phone', 'display_name', 'email', 'first_name', 'id',
             'is_active', 'last_name', 'organization', 'phone', 'roles',
-            'user_creation_request', 'title')
+            'user_creation_request', 'title', 'is_mapped')

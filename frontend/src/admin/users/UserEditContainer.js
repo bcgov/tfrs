@@ -36,7 +36,8 @@ class UserEditContainer extends Component {
         status: 'active',
         title: '',
         workPhone: '',
-        roles: []
+        roles: [],
+        isMapped: false
       }
     }
 
@@ -90,7 +91,8 @@ class UserEditContainer extends Component {
         roles: props.user.details.roles.map(role => ({
           id: role.id,
           value: true
-        }))
+        })),
+        isMapped: props.user.details.isMapped
       }
 
       this.setState({
@@ -133,18 +135,12 @@ class UserEditContainer extends Component {
 
     this.submitted = true
 
-    let email = this.state.fields.userCreationRequest.keycloakEmail
-
-    if (this.state.fields.email) {
-      ({ email } = this.state.fields)
-    }
-
     // API data structure
-    const data = {            
+    const data = {
       cellPhone: this.state.fields.mobilePhone,
-      email:this.state.fields.email,
-      keycloak_email: this.state.fields.userCreationRequest.keycloakEmail,   
-      external_username:this.state.fields.userCreationRequest.externalUsername,   
+      email: this.state.fields.email,
+      keycloak_email: this.state.fields.userCreationRequest.keycloakEmail,
+      external_username: this.state.fields.userCreationRequest.externalUsername,
       firstName: this.state.fields.firstName,
       lastName: this.state.fields.lastName,
       organization: this.state.fields.organization ? this.state.fields.organization.id : null,
