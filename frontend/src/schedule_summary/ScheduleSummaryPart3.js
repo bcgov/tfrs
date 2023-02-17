@@ -1,8 +1,7 @@
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
-import { numericColumn, numericInput, totalViewer } from './Columns'
-import Tooltip from '../../app/components/Tooltip'
+import { numericColumn, numericInput, totalViewer } from '../compliance_reporting/components/Columns'
+import Tooltip from '../app/components/Tooltip'
 
 class ScheduleSummaryPart3 {
   constructor () {
@@ -238,5 +237,6 @@ class ScheduleSummaryPart3 {
     ]
   }
 }
+
 
 export default ScheduleSummaryPart3
