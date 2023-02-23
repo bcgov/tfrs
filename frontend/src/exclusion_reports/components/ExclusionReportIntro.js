@@ -30,6 +30,10 @@ const ExclusionReportIntro = (props) => {
         from <a href="http://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">www.gov.bc.ca/lowcarbonfuels</a>.
           <strong> This report does not apply to petroleum-based gasoline or petroleum-based diesel fuel.</strong>
         </p>
+        <h3>About this form</h3>
+        <p>
+          <strong>Before reporting electricity for compliance periods prior to 2022, please review Information Bulletin RLCF-020 to confirm you meet all the conditions to be the Part 3 fuel supplier for the electricity supply prior to 2022. In most cases, the utility was the Part 3 fuel supplier for electricity supplied prior to 2022. For questions, please email the Low Carbon Fuels Branch at <a href="mailto:lcfs@gov.bc.ca" target="_blank">lcfs@gov.bc.ca</a>.</strong>
+        </p>
 
         <h3>Questions?</h3>
         <p>
