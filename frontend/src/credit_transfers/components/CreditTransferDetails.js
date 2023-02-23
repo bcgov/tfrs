@@ -62,7 +62,7 @@ const CreditTransferDetails = props => (
         <h1>
           {props.tradeType.id &&
             getCreditTransferType(props.tradeType.id)
-          }
+          } — ID: {props.id}
         </h1>
         {[
           CREDIT_TRANSFER_TYPES.buy.id,
