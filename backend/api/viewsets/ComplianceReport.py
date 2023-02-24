@@ -146,11 +146,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             if not date_value:
                 continue
 
-            if i is 0:
+            if i == 0:
                 query = Q(update_timestamp__year=(date_value))
-            elif i is 1:
+            elif i == 1:
                 query = Q(update_timestamp__month=(date_value))
-            elif i is 2:
+            elif i == 2:
                 query = Q(update_timestamp__day=(date_value))
 
             if date_query == None:

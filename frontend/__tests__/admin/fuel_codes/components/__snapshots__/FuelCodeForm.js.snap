@@ -38,7 +38,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     BCLCF
                   </span>
                   <div
-                    style={Object {}}
+                    style={{}}
                   >
                     <input
                       aria-autocomplete="list"
@@ -77,7 +77,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               >
                 Company (full legal operating name):
                 <div
-                  style={Object {}}
+                  style={{}}
                 >
                   <input
                     aria-autocomplete="list"
@@ -124,13 +124,16 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   className=""
                 >
                   <input
+                    autoComplete="off"
                     className="form-control"
                     data-number-to-fixed={2}
                     id="carbon-intensity"
                     max="999.99"
-                    min="0"
+                    maxLength="7"
+                    min="-999.99"
                     name="carbonIntensity"
                     onChange={[Function]}
+                    onKeyDown={null}
                     onKeyPress={[Function]}
                     onPaste={[Function]}
                     placeholder=""
@@ -258,7 +261,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               >
                 Feedstock:
                 <div
-                  style={Object {}}
+                  style={{}}
                 >
                   <input
                     aria-autocomplete="list"
@@ -298,7 +301,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               >
                 Feedstock Location (e.g. US Central, Manitoba, Japan):
                 <div
-                  style={Object {}}
+                  style={{}}
                 >
                   <input
                     aria-autocomplete="list"
@@ -334,7 +337,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               >
                 Feedstock Misc (e.g. methane capture, no peat, etc.):
                 <div
-                  style={Object {}}
+                  style={{}}
                 >
                   <input
                     aria-autocomplete="list"
@@ -374,7 +377,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               >
                 Fuel Production Facility Location (City, Province/State/Country):
                 <div
-                  style={Object {}}
+                  style={{}}
                 >
                   <input
                     aria-autocomplete="list"
@@ -440,7 +443,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   multiple={true}
                   name="feedstockTransportMode"
                   onChange={[Function]}
-                  value={Array []}
+                  value={[]}
                 >
                   <option
                     value="Truck"
@@ -472,7 +475,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   multiple={true}
                   name="fuelTransportMode"
                   onChange={[Function]}
-                  value={Array []}
+                  value={[]}
                 >
                   <option
                     value="Truck"
@@ -500,7 +503,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
             >
               Former Company Name:
               <div
-                style={Object {}}
+                style={{}}
               >
                 <input
                   aria-autocomplete="list"
@@ -589,9 +592,8 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
         >
           <button
             className="btn btn-primary"
-            data-target="#confirmSubmit"
-            data-toggle="modal"
             disabled={true}
+            onClick={[Function]}
             type="button"
           >
              Add

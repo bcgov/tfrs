@@ -12,14 +12,18 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'node'],
   moduleNameMapper: {
-    '^.+\\.(css|less|scss)$': '<rootDir>/__mocks__/style.js'
+    '^.+\\.(css|less|scss)$': '<rootDir>/__mocks__/style.js',
+    'react-markdown': '<rootDir>/node_modules/react-markdown/react-markdown.min.js'
   },
-  testURL: 'http://localhost/',
+  testEnvironmentOptions: {
+    url: 'http://localhost/'
+  },
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
   transformIgnorePatterns: [
     'node_modules/(?!(react.*|@babel.*|es.*)/)'
   ],
-  verbose: true
-};
+  verbose: true,
+  testEnvironment: 'jsdom'
+}

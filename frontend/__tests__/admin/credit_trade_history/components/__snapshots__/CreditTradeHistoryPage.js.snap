@@ -9,7 +9,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
   </h1>
   <div
     className="ReactTable"
-    style={Object {}}
+    style={{}}
   >
     <div
       className="rt-table"
@@ -18,7 +18,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
       <div
         className="rt-thead -header"
         style={
-          Object {
+          {
             "minWidth": "475px",
           }
         }
@@ -32,7 +32,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
@@ -56,7 +56,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
@@ -80,7 +80,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "100 0 auto",
                 "maxWidth": "100px",
                 "width": "100px",
@@ -99,7 +99,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "100 0 auto",
                 "maxWidth": null,
                 "width": "100px",
@@ -123,7 +123,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "100 0 auto",
                 "maxWidth": null,
                 "width": "100px",
@@ -147,7 +147,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             onClick={[Function]}
             role="columnheader"
             style={
-              Object {
+              {
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
@@ -171,7 +171,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
       <div
         className="rt-tbody"
         style={
-          Object {
+          {
             "minWidth": "475px",
           }
         }
@@ -183,13 +183,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -odd"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -204,7 +204,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -219,7 +219,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -234,7 +234,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -249,7 +249,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -264,7 +264,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -284,13 +284,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -even"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -305,7 +305,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -320,7 +320,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -335,7 +335,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -350,7 +350,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -365,7 +365,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -385,13 +385,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -odd"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -406,7 +406,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -421,7 +421,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -436,7 +436,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -451,7 +451,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -466,7 +466,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -486,13 +486,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -even"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -507,7 +507,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -522,7 +522,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -537,7 +537,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -552,7 +552,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -567,7 +567,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -587,13 +587,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -odd"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -608,7 +608,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -623,7 +623,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -638,7 +638,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -653,7 +653,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -668,7 +668,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -688,13 +688,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -even"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -709,7 +709,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -724,7 +724,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -739,7 +739,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -754,7 +754,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -769,7 +769,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -789,13 +789,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -odd"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -810,7 +810,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -825,7 +825,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -840,7 +840,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -855,7 +855,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -870,7 +870,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -890,13 +890,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -even"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -911,7 +911,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -926,7 +926,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -941,7 +941,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -956,7 +956,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -971,7 +971,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -991,13 +991,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -odd"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -1012,7 +1012,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -1027,7 +1027,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -1042,7 +1042,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -1057,7 +1057,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -1072,7 +1072,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -1092,13 +1092,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
           <div
             className="rt-tr -padRow -even"
             role="row"
-            style={Object {}}
+            style={{}}
           >
             <div
               className="rt-td col-user"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -1113,7 +1113,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-action"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "50 0 auto",
                   "maxWidth": null,
                   "width": "50px",
@@ -1128,7 +1128,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-id"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": "100px",
                   "width": "100px",
@@ -1143,7 +1143,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-initiator"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -1158,7 +1158,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-respondent"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "100 0 auto",
                   "maxWidth": null,
                   "width": "100px",
@@ -1173,7 +1173,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="rt-td col-timestamp"
               role="gridcell"
               style={
-                Object {
+                {
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
@@ -1218,6 +1218,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               className="-pageJump"
             >
               <input
+                aria-label="jump to page"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onKeyPress={[Function]}
@@ -1238,57 +1239,44 @@ exports[`CreditTradeHistoryPage should display 1`] = `
             className="select-wrap -pageSizeOptions"
           >
             <select
+              aria-label="rows per page"
               onChange={[Function]}
               value={10}
             >
               <option
                 value={5}
               >
-                5
-                 
-                rows
+                5 rows
               </option>
               <option
                 value={10}
               >
-                10
-                 
-                rows
+                10 rows
               </option>
               <option
                 value={15}
               >
-                15
-                 
-                rows
+                15 rows
               </option>
               <option
                 value={20}
               >
-                20
-                 
-                rows
+                20 rows
               </option>
               <option
                 value={25}
               >
-                25
-                 
-                rows
+                25 rows
               </option>
               <option
                 value={50}
               >
-                50
-                 
-                rows
+                50 rows
               </option>
               <option
                 value={100}
               >
-                100
-                 
-                rows
+                100 rows
               </option>
             </select>
           </span>
