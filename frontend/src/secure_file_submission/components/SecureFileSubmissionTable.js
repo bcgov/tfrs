@@ -9,8 +9,7 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
-import { calculatePages} from '../../utils/functions'
-
+import { calculatePages } from '../../utils/functions'
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -21,7 +20,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'ID',
     resizable: false,
     width: 45
-   }, {
+  }, {
     accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -79,7 +78,7 @@ const SecureFileSubmissionTable = (props) => {
     minWidth: 70
   }, {
     accessor: (item) => {
-      let historyFound = false;
+      let historyFound = false
       if (item.history) {
         historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
       }
@@ -185,7 +184,6 @@ SecureFileSubmissionTable.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  handleFiltersChange: PropTypes.func.isRequired,
   handleSortChange: PropTypes.func.isRequired
 }
 

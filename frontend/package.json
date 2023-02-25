@@ -101,7 +101,7 @@
   "scripts": {
     "start": "node start",
     "start:notifications": "node server-notifications.js",
-    "lint": "eslint src",
+    "lint": "eslint src --fix",
     "build": "webpack",
     "build-prod": "webpack --env production",
     "test": "jest --coverage",

@@ -1,6 +1,5 @@
 import { totalViewer } from '../compliance_reporting/components/Columns'
 
-
 class ScheduleSummaryPenalty {
   constructor () {
     return [
@@ -57,6 +56,5 @@ class ScheduleSummaryPenalty {
     ]
   }
 }
-
 
 export default ScheduleSummaryPenalty

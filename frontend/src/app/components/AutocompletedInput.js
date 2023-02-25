@@ -1,5 +1,5 @@
-import Autocomplete from 'react-autocomplete';
-//import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import Autocomplete from 'react-autocomplete'
+// import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'

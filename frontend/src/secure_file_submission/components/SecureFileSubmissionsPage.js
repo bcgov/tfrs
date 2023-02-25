@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
-import Loading from '../../app/components/Loading'
 import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
@@ -113,7 +112,7 @@ SecureFileSubmissionsPage.propTypes = {
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default SecureFileSubmissionsPage

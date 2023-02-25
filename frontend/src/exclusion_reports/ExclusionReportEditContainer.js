@@ -297,7 +297,7 @@ class ExclusionReportEditContainer extends Component {
     if (this.props.exclusionReports.isGetting || !this.props.exclusionReports.item) {
       return (<Loading />)
     }
-    
+
     if (this.props.complianceReporting.isGetting || this.props.complianceReporting.isFinding) {
       return (<Loading />)
     }
@@ -646,7 +646,7 @@ const
       snapshotIsLoading: state.rootReducer.complianceReporting.isGettingSnapshot,
       item: state.rootReducer.complianceReporting.item,
       isFinding: state.rootReducer.complianceReporting.isFinding,
-      isGetting: state.rootReducer.complianceReporting.isGetting,
+      isGetting: state.rootReducer.complianceReporting.isGetting
     },
     complianceReports: state.rootReducer.complianceReporting,
     loggedInUser: state.rootReducer.userRequest.loggedInUser,

@@ -1,21 +1,21 @@
 /*
  * Presentational component
  */
-import React from 'react';
-import PropTypes from 'prop-types';
-import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import moment from 'moment-timezone';
+import React from 'react'
+import PropTypes from 'prop-types'
+import 'react-table/react-table.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import moment from 'moment-timezone'
 
-import CheckBox from '../../app/components/CheckBox';
-import NOTIFICATION_TYPES from '../../constants/notificationTypes';
-import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports';
-import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import ReactTable from '../../app/components/StateSavingReactTable';
-import { useNavigate } from 'react-router';
-import { calculatePages} from '../../utils/functions'
+import CheckBox from '../../app/components/CheckBox'
+import NOTIFICATION_TYPES from '../../constants/notificationTypes'
+import EXCLUSION_REPORTS from '../../constants/routes/ExclusionReports'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
+import ReactTable from '../../app/components/StateSavingReactTable'
+import { useNavigate } from 'react-router'
+import { calculatePages } from '../../utils/functions'
 
 const NotificationsTable = (props) => {
   const navigate = useNavigate()

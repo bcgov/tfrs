@@ -116,7 +116,7 @@ const deleteDocumentUploadRequestError = error => ({
 /*
  * Get Documents
  */
-const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[], sort=[]) => (dispatch) => {
+const getDocumentUploads = (pageNumber = 1, pageSize = 10, filters = [], sort = []) => (dispatch) => {
   dispatch(getDocumentUploadRequests())
   const url = Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/paginated?page=' + pageNumber + '&size=' + pageSize
   const data = {
@@ -129,7 +129,7 @@ const getDocumentUploads = (pageNumber=1, pageSize=10, filters=[], sort=[]) => (
     }).catch((error) => {
       dispatch(getDocumentUploadRequestsError(error.response))
     })
-  }
+}
 
 const getDocumentUploadRequests = () => ({
   name: ReducerTypes.GET_DOCUMENT_UPLOADS_REQUEST,
@@ -140,7 +140,7 @@ const getDocumentUploadRequestsSuccess = requests => ({
   name: ReducerTypes.RECEIVE_DOCUMENT_UPLOADS_REQUEST,
   type: ActionTypes.RECEIVE_REQUESTS,
   data: requests.results,
-  totalCount:  requests.count,
+  totalCount: requests.count,
   receivedAt: Date.now()
 })
 
