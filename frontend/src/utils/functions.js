@@ -173,9 +173,9 @@ const validateFiles = files => (
 
 const calculatePages = (numberOfItems, pageSize) => {
   if (numberOfItems === 0) {
-    return 1;
+    return 1
   }
-  return Math.ceil(numberOfItems / pageSize);
+  return Math.ceil(numberOfItems / pageSize)
 }
 const cellFormatNumeric = cellValue => ({
   className: 'numeric',
@@ -218,4 +218,4 @@ const cellFormatTotal = cellValue => ({
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
   formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal
-};
+}

@@ -7,8 +7,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import ReactDataSheet from "react-datasheet";
+import ReactDataSheet from 'react-datasheet'
 import 'react-datasheet/lib/react-datasheet.css'
 import ValidationMessages from './components/ValidationMessages'
 import getCreditCalculation from '../actions/creditCalculation'
@@ -17,16 +16,13 @@ import ScheduleSummaryGasoline from '../schedule_summary/ScheduleSummaryGasoline
 import ScheduleSummaryPart3 from '../schedule_summary/ScheduleSummaryPart3'
 import ScheduleSummaryPenalty from '../schedule_summary/ScheduleSummaryPenalty'
 import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
-import { formatNumeric } from '../utils/functions'
 import CallableModal from '../app/components/CallableModal'
 import Loading from '../app/components/Loading'
-import Tooltip from '../app/components/Tooltip'
 import * as Lang from '../constants/langEnUs'
 import * as DieselSummaryContainer from '../schedule_summary/DieselSummaryContainer'
 import * as GasolineSummaryConatiner from '../schedule_summary/GasolineSummaryContainer'
 import * as Part3SummaryContainer from '../schedule_summary/Part3SummaryContainer'
 import * as PenaltySummaryContainer from '../schedule_summary/PenaltySummaryContainer'
-
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
@@ -71,137 +67,129 @@ class ScheduleSummaryContainer extends Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-      const { diesel, gasoline } = this.state
-      let { part3, penalty, showModal } = this.state
-      // const val = false
-      if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly ) {
-        const { summary } = nextProps.snapshot
-       
-        GasolineSummaryConatiner.tableData(gasoline, summary)
-        DieselSummaryContainer.tableData(diesel,summary)
-        Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport)
-        PenaltySummaryContainer.tableData(penalty, summary)
-        
-      } else {
-        // read-write
-        if (nextProps.validating || !nextProps.valid) {
-          return
-        }
+    const { diesel, gasoline } = this.state
+    let { part3, penalty, showModal } = this.state
+    // const val = false
+    if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
+      const { summary } = nextProps.snapshot
 
-        if (nextProps.recomputing) {
-          return
-        }
+      GasolineSummaryConatiner.tableData(gasoline, summary)
+      DieselSummaryContainer.tableData(diesel, summary)
+      Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport)
+      PenaltySummaryContainer.tableData(penalty, summary)
+    } else {
+      // read-write
+      if (nextProps.validating || !nextProps.valid) {
+        return
+      }
 
-        this.populateSchedules()
-        GasolineSummaryConatiner.populateSchedules(this.props, this.state,this.setState )
-        DieselSummaryContainer.populateSchedules(this.props, this.state, this.setState)
-        Part3SummaryContainer.populateSchedules(this.props, this.state, this.setState)
-        PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setState)
+      if (nextProps.recomputing) {
+        return
+      }
 
+      this.populateSchedules()
+      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setState)
+      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setState)
+      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setState)
+      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setState, gasoline, diesel, part3)
 
-        let { summary } = nextProps.complianceReport
+      let { summary } = nextProps.complianceReport
 
-        if (nextProps.scheduleState) {
-          ({ summary } = nextProps.scheduleState)
-        }
+      if (nextProps.scheduleState) {
+        ({ summary } = nextProps.scheduleState)
+      }
 
-        if (!summary) {
-          return
-        }
+      if (!summary) {
+        return
+      }
 
-        const {
-          isSupplemental,
-          totalPreviousCreditReductions,
-          supplementalNumber,
-          lastAcceptedOffset,
-          history,
-          status,
-          previousReportWasCredit
-        } = this.props.complianceReport
+      const {
+        isSupplemental,
+        lastAcceptedOffset
+      } = this.props.complianceReport
 
-        let updateCreditsOffsetA = false
-        let skipFurtherUpdateCreditsOffsetA = false
-        DieselSummaryContainer.lineData(diesel, summary)
-        
-        // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
-        GasolineSummaryConatiner.lineData(gasoline, summary)
-        
-        Part3SummaryContainer.lineData(part3, summary, isSupplemental, updateCreditsOffsetA,lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA)
+      const updateCreditsOffsetA = false
+      const skipFurtherUpdateCreditsOffsetA = false
+      DieselSummaryContainer.lineData(diesel, summary)
 
-        // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
-        PenaltySummaryContainer.lineData(penalty, part3, gasoline , diesel)
+      // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
+      GasolineSummaryConatiner.lineData(gasoline, summary)
 
-        penalty = this._calculateNonCompliancePayable(penalty)
+      Part3SummaryContainer.lineData(part3, summary, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA)
 
-        if (!isSupplemental &&
+      // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
+      PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
+
+      penalty = this._calculateNonCompliancePayable(penalty)
+
+      if (!isSupplemental &&
           (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
             diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
             gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
             gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
             part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset)) {
-          showModal = true
+        showModal = true
 
-          this.props.updateScheduleState({
-            summary: {
-              ...summary,
-              creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-              dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
-              dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
-              gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
-              gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
-            }
-          })
-        } else if (updateCreditsOffsetA) {
-          this.props.updateScheduleState({
-            summary: {
-              ...summary,
-              creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-              creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
-            }
-          })
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        })
+      } else if (updateCreditsOffsetA) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
+          }
+        })
 
-          this.setState({
-            ...this.state,
-            alreadyUpdated: true
-          })
-        } else if (isSupplemental &&
+        this.setState({
+          ...this.state,
+          alreadyUpdated: true
+        })
+      } else if (isSupplemental &&
           (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
             diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
             gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
             gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
             (part3[SCHEDULE_SUMMARY.LINE_26_B][2].value > 0 && (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0))) {
-          showModal = true
+        showModal = true
 
-          this.props.updateScheduleState({
-            summary: {
-              ...summary,
-              creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-              creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
-              dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
-              dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
-              gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
-              gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
-            }
-          })
-        } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
-          this.props.updateScheduleState({
-            summary: {
-              ...summary,
-              creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
-            }
-          })
-        }
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
+            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+          }
+        })
+      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
+          }
+        })
       }
-
-      this.setState({
-        diesel,
-        gasoline,
-        part3,
-        penalty,
-        showModal
-      })
     }
 
+    this.setState({
+      diesel,
+      gasoline,
+      part3,
+      penalty,
+      showModal
+    })
+  }
 
   loadInitialState () {
     if (this.props.complianceReport.summary) {
@@ -249,7 +237,7 @@ class ScheduleSummaryContainer extends Component {
     })
   }
 
- populateSchedules () {
+  populateSchedules () {
     if (this.props.complianceReport.hasSnapshot && this.props.snapshot && this.props.readOnly) {
       return
     }
@@ -295,7 +283,6 @@ class ScheduleSummaryContainer extends Component {
     })
   }
 
-  
   _gridStateToPayload (state) {
     let shouldUpdate = false
     const compareOn = [
@@ -355,7 +342,7 @@ class ScheduleSummaryContainer extends Component {
       return (<Loading />)
     }
     return (
-      
+
       [<div className="schedule-summary spreadsheet-component" key=''>
       {!this.props.readOnly &&
       <ValidationMessages
@@ -365,9 +352,9 @@ class ScheduleSummaryContainer extends Component {
         validationMessages={this.props.validationMessages}
       />
       }
-  
+
       <h1>Part 2 - Renewable Fuel Requirement Summary</h1>
-  
+
       <div className="row">
         <div className="col-lg-6">
           <ReactDataSheet
@@ -377,7 +364,7 @@ class ScheduleSummaryContainer extends Component {
             valueRenderer={cell => cell.value}
           />
         </div>
-  
+
         <div className="col-lg-6">
           <ReactDataSheet
             className="spreadsheet"
@@ -387,11 +374,11 @@ class ScheduleSummaryContainer extends Component {
           />
         </div>
       </div>
-  
+
       <div className="row">
         <div className="col-lg-6">
           <h1>Part 3 - Low Carbon Fuel Requirement Summary</h1>
-  
+
           <ReactDataSheet
             className="spreadsheet"
             data={this.state.part3}
@@ -399,10 +386,10 @@ class ScheduleSummaryContainer extends Component {
             valueRenderer={cell => cell.value}
           />
         </div>
-  
+
         <div className="col-lg-6">
           <h1>Part 2 and Part 3 Non-compliance Penalty Payable Summary</h1>
-  
+
           <ReactDataSheet
             className="spreadsheet"
             data={this.state.penalty}
@@ -410,9 +397,8 @@ class ScheduleSummaryContainer extends Component {
           />
         </div>
       </div>
-    </div>
-      
-      ,
+    </div>,
+
       <CallableModal
         cancelLabel={Lang.BTN_OK}
         close={() => {
@@ -430,7 +416,7 @@ class ScheduleSummaryContainer extends Component {
           It is recommended you complete this section after all schedules are complete.
         </p>
       </CallableModal>
-    ])
+      ])
   }
 }
 

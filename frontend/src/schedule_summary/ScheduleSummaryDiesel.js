@@ -4,7 +4,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { numericColumn, numericInput, totalViewer } from '../compliance_reporting/components/Columns'
 import Tooltip from '../app/components/Tooltip'
 
-
 class ScheduleSummaryDiesel {
   constructor (readOnly = false) {
     return [
@@ -283,6 +282,5 @@ class ScheduleSummaryDiesel {
     ]
   }
 }
-
 
 export default ScheduleSummaryDiesel

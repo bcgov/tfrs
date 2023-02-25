@@ -120,7 +120,7 @@ class UserAddContainer extends Component {
   _handleOrganizationSelect (organization) {
     const fieldState = { ...this.state.fields }
     fieldState.organization = organization
-    fieldState.organizationName = organization.name;
+    fieldState.organizationName = organization.name
     this.setState({
       fields: fieldState
     })

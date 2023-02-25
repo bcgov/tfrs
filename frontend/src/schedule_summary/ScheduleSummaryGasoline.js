@@ -285,5 +285,4 @@ class ScheduleSummaryGasoline {
   }
 }
 
-
 export default ScheduleSummaryGasoline

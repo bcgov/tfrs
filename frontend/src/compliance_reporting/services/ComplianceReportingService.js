@@ -214,7 +214,7 @@ class ComplianceReportingService {
         intensityInputRequired: false,
         singleFuelClassAvailable: false,
         singleProvisionAvailable: false,
-        scheduleD_sheetIndex: scheduleD_sheetIndex
+        scheduleD_sheetIndex
       }
     }
 

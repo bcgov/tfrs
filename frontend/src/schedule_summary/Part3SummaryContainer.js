@@ -1,70 +1,68 @@
-import React from "react";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import Tooltip from "../app/components/Tooltip";
-import { _calculateNonCompliancePayable } from "./PenaltySummaryContainer";
-import { SCHEDULE_SUMMARY } from "../constants/schedules/scheduleColumns";
-import { _handleCellsChanged } from "../compliance_reporting/ScheduleSummaryContainer";
-import { cellFormatNumeric, cellFormatTotal } from "../utils/functions";
+import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import Tooltip from '../app/components/Tooltip'
+import { _calculateNonCompliancePayable } from './PenaltySummaryContainer'
+import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
+import { _handleCellsChanged } from '../compliance_reporting/ScheduleSummaryContainer'
+import { cellFormatNumeric, cellFormatTotal } from '../utils/functions'
 
-function tableData(
+function tableData (
   part3,
   summary,
   { isSupplemental, supplementalNumber }
 ) {
-  
-  part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines["23"]);
-  part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines["24"]);
-  part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines["25"]);
-  part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines["26"]);
+  part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
+  part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
+  part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
+  part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
   part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(
-    summary.lines["26A"]
-  );
+    summary.lines['26A']
+  )
   part3[SCHEDULE_SUMMARY.LINE_26_B][2] = cellFormatNumeric(
-    summary.lines["26B"]
-  );
+    summary.lines['26B']
+  )
   part3[SCHEDULE_SUMMARY.LINE_27][2] = cellFormatNumeric(
-    summary.lines["27"] < 0 ? summary.lines["27"] : 0
-  );
-  part3[SCHEDULE_SUMMARY.LINE_28][2] = cellFormatTotal(summary.lines["28"]);
+    summary.lines['27'] < 0 ? summary.lines['27'] : 0
+  )
+  part3[SCHEDULE_SUMMARY.LINE_28][2] = cellFormatTotal(summary.lines['28'])
 
   if (!isSupplemental) {
     Part3NonSupplimentalData(part3, 'tableData')
-   
   } else {
     // is supplemental
     part3[
       SCHEDULE_SUMMARY.LINE_26_B
-    ][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
+    ][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`
   }
-  return part3;
+  return part3
 }
 
-function lineData(
+function lineData (
   part3,
   summary,
-  isSupplemental,
+  { isSupplemental, supplementalNumber },
   updateCreditsOffsetA,
   lastAcceptedOffset,
   skipFurtherUpdateCreditsOffsetA
 ) {
-  part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+  part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
   if (!isSupplemental) {
     Part3NonSupplimentalData(part3, 'lineData')
   } else {
     // is supplemental
-    Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA);
+    Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, supplementalNumber)
   }
 
-  part3 = calculatePart3Payable(part3);
-  return part3;
+  part3 = calculatePart3Payable(part3)
+  return part3
 }
 function Part3NonSupplimentalData (part3, functionName) {
-  if (functionName == 'tableData'){
+  if (functionName === 'tableData') {
     part3[SCHEDULE_SUMMARY.LINE_26][0].value =
-    "Banked credits used to offset outstanding debits (if applicable)";
-  part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
+    'Banked credits used to offset outstanding debits (if applicable)'
+    part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
     <div>
-      {"Line 26 "}
+      {'Line 26 '}
       <Tooltip
         className="info"
         show
@@ -73,40 +71,40 @@ function Part3NonSupplimentalData (part3, functionName) {
         <FontAwesomeIcon icon="info-circle" />
       </Tooltip>
     </div>
-  );
-  
-  part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
-    ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
-    additionalTooltip:
-      "The value entered here cannot be more than your organization's available credit balance for this compliance period or the net debit balance in Line 25.",
-  };
-  
-  part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = "hidden";
-  part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = "hidden";
-  part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
-    className: "hidden",
-    value: "",
-  };
-  part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = "hidden";
-  part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = "hidden";
-  part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = "hidden";
-  part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
-    className: "hidden",
-    value: "",
-  };
-  part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = "hidden";
+    )
+
+    part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
+      ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
+      additionalTooltip:
+      "The value entered here cannot be more than your organization's available credit balance for this compliance period or the net debit balance in Line 25."
+    }
+
+    part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
+      className: 'hidden',
+      value: ''
+    }
+    part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+      className: 'hidden',
+      value: ''
+    }
+    part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden'
   }
 
-  if (functionName == 'lineData') {
-    const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
+  if (functionName === 'lineData') {
+    const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1
     if (line25value && line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
-      part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+      part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     }
     part3[SCHEDULE_SUMMARY.LINE_26][0].value =
-      "Banked credits used to offset outstanding debits (if applicable)";
+      'Banked credits used to offset outstanding debits (if applicable)'
     part3[SCHEDULE_SUMMARY.LINE_26][1].value = (
       <div>
-        {"Line 26 "}
+        {'Line 26 '}
         <Tooltip
           className="info"
           show
@@ -115,43 +113,41 @@ function Part3NonSupplimentalData (part3, functionName) {
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>
       </div>
-    );
+    )
 
     part3[SCHEDULE_SUMMARY.LINE_26][2].attributes = {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
       additionalTooltip:
-        "The value entered here cannot be more than your organization's available credit balance for this compliance period or the net debit balance in Line 25.",
-    };
+        "The value entered here cannot be more than your organization's available credit balance for this compliance period or the net debit balance in Line 25."
+    }
 
-    part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = "hidden";
-    part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = "hidden";
+    part3[SCHEDULE_SUMMARY.LINE_26_A][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_A][1].className = 'hidden'
     part3[SCHEDULE_SUMMARY.LINE_26_A][2] = {
-      className: "hidden",
-      value: "",
-    };
-    part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = "hidden";
-    part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = "hidden";
-    part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = "hidden";
+      className: 'hidden',
+      value: ''
+    }
+    part3[SCHEDULE_SUMMARY.LINE_26_A][3].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_B][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_26_B][1].className = 'hidden'
     part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
-      className: "hidden",
-      value: "",
-    };
-    part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = "hidden";
+      className: 'hidden',
+      value: ''
+    }
+    part3[SCHEDULE_SUMMARY.LINE_26_B][3].className = 'hidden'
   }
-
- 
 }
 
-function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA) {
-  part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
+function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, supplementalNumber) {
+  part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB
 
   part3[
     SCHEDULE_SUMMARY.LINE_26_B
-  ][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`;
+  ][0].value = `Banked credits used to offset outstanding debits - Supplemental Report #${supplementalNumber}`
   const debits =
     Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) !== 0
       ? Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) * -1
-      : 0;
+      : 0
 
   // if we result in a positive credit offset
   if (
@@ -161,9 +157,9 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset
   }
 
   // if after adjustments we still end up in a debit position
@@ -177,9 +173,9 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     ) <= 0 &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions
   } else if (
     lastAcceptedOffset !== null &&
     lastAcceptedOffset > debits &&
@@ -189,23 +185,23 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value !== lastAcceptedOffset ||
       part3[SCHEDULE_SUMMARY.LINE_26][2].value !== debits)
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset
   }
 
   // was the previous supplemental, submitted and hasnt been accepted/rejected yet?
   if (
-    status.fuelSupplierStatus === "Draft" &&
+    status.fuelSupplierStatus === 'Draft' &&
     history &&
-    history[0].status.fuelSupplierStatus === "Submitted" &&
+    history[0].status.fuelSupplierStatus === 'Submitted' &&
     !history[0].status.directorStatus &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
+    updateCreditsOffsetA = true
 
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions;
-    skipFurtherUpdateCreditsOffsetA = true;
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = totalPreviousCreditReductions
+    skipFurtherUpdateCreditsOffsetA = true
   }
 
   if (
@@ -213,9 +209,9 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > 0 &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = 0;
-    skipFurtherUpdateCreditsOffsetA = true;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = 0
+    skipFurtherUpdateCreditsOffsetA = true
   }
 
   if (
@@ -224,8 +220,8 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     !skipFurtherUpdateCreditsOffsetA &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = lastAcceptedOffset
   }
 
   // if we still dont have LINE26A at this point, let's use the total credit reductions so far
@@ -234,9 +230,9 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     part3[SCHEDULE_SUMMARY.LINE_26_A][2].value <= 0 &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
+    updateCreditsOffsetA = true
     part3[SCHEDULE_SUMMARY.LINE_26_A][2].value =
-      totalPreviousCreditReductions || summary.creditsOffsetA;
+      totalPreviousCreditReductions || summary.creditsOffsetA
   }
 
   if (
@@ -245,36 +241,36 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
     summary.creditsOffsetA > 0 &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
-    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = summary.creditsOffsetA;
+    updateCreditsOffsetA = true
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = summary.creditsOffsetA
   }
 
-  let creditsOffsetA = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value);
+  let creditsOffsetA = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
   if (isNaN(creditsOffsetA)) {
-    creditsOffsetA = 0;
+    creditsOffsetA = 0
   }
 
-  let creditsOffsetB = Number(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value);
+  let creditsOffsetB = Number(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value)
   if (isNaN(creditsOffsetB)) {
-    creditsOffsetB = 0;
+    creditsOffsetB = 0
   }
 
-  const previousLine26 = part3[SCHEDULE_SUMMARY.LINE_26][2].value;
+  const previousLine26 = part3[SCHEDULE_SUMMARY.LINE_26][2].value
 
-  part3[SCHEDULE_SUMMARY.LINE_26][2].value = creditsOffsetA + creditsOffsetB;
+  part3[SCHEDULE_SUMMARY.LINE_26][2].value = creditsOffsetA + creditsOffsetB
 
-  const creditsOffset = part3[SCHEDULE_SUMMARY.LINE_26][2].value;
+  const creditsOffset = part3[SCHEDULE_SUMMARY.LINE_26][2].value
 
   if (creditsOffset > 0 && debits > 0 && creditsOffset > debits) {
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits;
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = debits
   }
 
   // if (debits < 0 && creditsOffset > 0 && lastAcceptedOffset <= debits) {
   const netTotal =
     Number(part3[SCHEDULE_SUMMARY.LINE_23][2].value) +
-    Number(part3[SCHEDULE_SUMMARY.LINE_24][2].value);
+    Number(part3[SCHEDULE_SUMMARY.LINE_24][2].value)
   if (netTotal > 0 && creditsOffset > 0 && !skipFurtherUpdateCreditsOffsetA) {
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0;
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
   }
 
   if (
@@ -282,116 +278,116 @@ function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAccept
       Number(part3[SCHEDULE_SUMMARY.LINE_26][2].value) &&
     !this.state.alreadyUpdated
   ) {
-    updateCreditsOffsetA = true;
+    updateCreditsOffsetA = true
   }
 
   const max26BValue =
     part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
-    part3[SCHEDULE_SUMMARY.LINE_25][2].value;
+    part3[SCHEDULE_SUMMARY.LINE_25][2].value
 
   if (max26BValue > 0) {
-    part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = 0;
+    part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = 0
   }
 }
 
-function populateSchedules(props, state, setState) {
+function populateSchedules (props, state, setState) {
   if (props.complianceReport.hasSnapshot && props.snapshot && props.readOnly) {
-    return;
+    return
   }
 
   if (!props.scheduleState.summary) {
-    return;
+    return
   }
 
   if (Object.keys(props.recomputedTotals).length === 0) {
-    return;
+    return
   }
 
-  let { part3 } = state;
+  let { part3 } = state
 
-  part3 = _calculatePart3(props, state, setState);
+  part3 = _calculatePart3(props, state, setState)
   setState({
     ...state,
-    part3,
-  });
+    part3
+  })
 }
-function calculatePart3Payable(part3) {
-  const grid = part3;
-  let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value);
+function calculatePart3Payable (part3) {
+  const grid = part3
+  let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value)
 
-  const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value);
+  const balance = Number(grid[SCHEDULE_SUMMARY.LINE_25][2].value)
 
-  let outstandingBalance = 0;
-  let payable = 0;
+  let outstandingBalance = 0
+  let payable = 0
 
   if (Number.isNaN(credits)) {
-    credits = 0;
+    credits = 0
   }
 
-  outstandingBalance = balance + Number(credits);
-  payable = outstandingBalance * -200; // negative symbol so that the product is positive
+  outstandingBalance = balance + Number(credits)
+  payable = outstandingBalance * -200 // negative symbol so that the product is positive
 
   if (balance > 0) {
-    outstandingBalance = "";
-    payable = "";
+    outstandingBalance = ''
+    payable = ''
   }
 
   grid[SCHEDULE_SUMMARY.LINE_27][2] = {
     ...grid[SCHEDULE_SUMMARY.LINE_27][2],
-    value: outstandingBalance,
-  };
+    value: outstandingBalance
+  }
 
   grid[SCHEDULE_SUMMARY.LINE_28][2] = {
     ...grid[SCHEDULE_SUMMARY.LINE_28][2],
-    value: payable,
-  };
+    value: payable
+  }
 
-  return grid;
+  return grid
 }
-function _calculatePart3(props, state, setState) {
-  const { part3 } = state;
-  let { penalty } = state;
-  const { summary } = props.scheduleState;
-  const { maxCreditOffset, isSupplemental } = props.complianceReport;
+function _calculatePart3 (props, state, setState) {
+  const { part3 } = state
+  let { penalty } = state
+  const { summary } = props.scheduleState
+  const { maxCreditOffset, isSupplemental } = props.complianceReport
 
-  let totalCredits = 0;
-  let totalDebits = 0;
+  let totalCredits = 0
+  let totalDebits = 0
   if (props.recomputedTotals.scheduleB) {
-    ({ totalCredits, totalDebits } = props.recomputedTotals.scheduleB);
+    ({ totalCredits, totalDebits } = props.recomputedTotals.scheduleB)
   }
 
   if (summary.creditsOffset) {
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset;
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
   }
 
   if (summary.creditsOffsetB) {
-    part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB;
+    part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB
   }
 
   part3[SCHEDULE_SUMMARY.LINE_23][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_23][2],
-    value: Math.round(totalCredits),
-  };
+    value: Math.round(totalCredits)
+  }
 
   part3[SCHEDULE_SUMMARY.LINE_24][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_24][2],
-    value: -1 * Math.round(totalDebits),
-  };
+    value: -1 * Math.round(totalDebits)
+  }
 
-  const netTotal = totalCredits - totalDebits;
+  const netTotal = totalCredits - totalDebits
 
   part3[SCHEDULE_SUMMARY.LINE_25][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_25][2],
-    value: Math.round(netTotal),
-  };
+    value: Math.round(netTotal)
+  }
 
-  let maxValue = "";
+  let maxValue = ''
 
   if (netTotal < 0) {
-    maxValue = Math.round(netTotal * -1);
+    maxValue = Math.round(netTotal * -1)
 
     if (maxCreditOffset < maxValue) {
-      maxValue = maxCreditOffset;
+      maxValue = maxCreditOffset
     }
   }
 
@@ -400,9 +396,9 @@ function _calculatePart3(props, state, setState) {
     readOnly: netTotal >= 0 || this.props.readOnly || isSupplemental,
     attributes: {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
-      maxValue,
-    },
-  };
+      maxValue
+    }
+  }
 
   if (isSupplemental) {
     if (
@@ -411,10 +407,10 @@ function _calculatePart3(props, state, setState) {
       0
     ) {
       part3[SCHEDULE_SUMMARY.LINE_26][2].value =
-        part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1;
+        part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1
     }
 
-    let max26BValue = 0;
+    let max26BValue = 0
 
     // we only have a max value for LINE 26 B if we're in a deficit, if it's positive
     // that means we're getting a credit and there's no point in enabling LINE_26_B
@@ -422,11 +418,11 @@ function _calculatePart3(props, state, setState) {
       max26BValue =
         (part3[SCHEDULE_SUMMARY.LINE_25][2].value +
           part3[SCHEDULE_SUMMARY.LINE_26_A][2].value) *
-        -1;
+        -1
     }
 
     if (max26BValue < maxValue) {
-      maxValue = max26BValue;
+      maxValue = max26BValue
     }
 
     part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
@@ -434,28 +430,28 @@ function _calculatePart3(props, state, setState) {
       readOnly: netTotal >= 0 || this.props.readOnly || maxValue <= 0,
       attributes: {
         ...part3[SCHEDULE_SUMMARY.LINE_26_B][2].attributes,
-        maxValue,
+        maxValue
       },
-      value: maxValue <= 0 ? 0 : part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
-    };
+      value: maxValue <= 0 ? 0 : part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
+    }
   }
 
   penalty[SCHEDULE_PENALTY.LINE_28][2] = {
     ...penalty[SCHEDULE_PENALTY.LINE_28][2],
-    value: part3[SCHEDULE_SUMMARY.LINE_28][2].value,
-  };
+    value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
+  }
 
-  penalty = _calculateNonCompliancePayable(penalty);
+  penalty = _calculateNonCompliancePayable(penalty)
   setState({
     ...state,
     part3,
-    penalty,
-  });
+    penalty
+  })
 
-  return part3;
+  return part3
 }
-function _handlePart3Changed(changes, addition = null) {
-  _handleCellsChanged("part3", changes, addition);
+function _handlePart3Changed (changes, addition = null) {
+  _handleCellsChanged('part3', changes, addition)
 }
 
 export {
@@ -464,5 +460,5 @@ export {
   _handlePart3Changed,
   tableData,
   lineData,
-  populateSchedules,
-};
+  populateSchedules
+}

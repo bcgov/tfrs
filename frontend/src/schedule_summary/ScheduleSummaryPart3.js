@@ -238,5 +238,4 @@ class ScheduleSummaryPart3 {
   }
 }
 
-
 export default ScheduleSummaryPart3
