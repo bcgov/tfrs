@@ -40,17 +40,18 @@ function tableData (
 function lineData (
   part3,
   summary,
-  { isSupplemental, supplementalNumber },
+  complianceReport,
   updateCreditsOffsetA,
   lastAcceptedOffset,
   skipFurtherUpdateCreditsOffsetA
 ) {
+  const { isSupplemental } = complianceReport
   part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
   if (!isSupplemental) {
     Part3NonSupplimentalData(part3, 'lineData')
   } else {
     // is supplemental
-    Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, supplementalNumber)
+    Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
   }
 
   part3 = calculatePart3Payable(part3)
@@ -138,7 +139,13 @@ function Part3NonSupplimentalData (part3, functionName) {
   }
 }
 
-function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, supplementalNumber) {
+function Part3SupplementalData (part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport) {
+  const {
+    supplementalNumber,
+    totalPreviousCreditReductions,
+    previousReportWasCredit
+  } = complianceReport
+
   part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB
 
   part3[

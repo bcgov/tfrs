@@ -117,7 +117,7 @@ class ComplianceReportingService {
       fuelCode,
       scheduleDIntensityValue,
       quantity,
-      scheduleD_sheetIndex
+      scheduleD_sheetIndex // eslint-disable-line camelcase
     } = sourceValues
 
     if (!fuelType) {
@@ -214,7 +214,7 @@ class ComplianceReportingService {
         intensityInputRequired: false,
         singleFuelClassAvailable: false,
         singleProvisionAvailable: false,
-        scheduleD_sheetIndex
+        scheduleD_sheetIndex // eslint-disable-line camelcase
       }
     }
 
