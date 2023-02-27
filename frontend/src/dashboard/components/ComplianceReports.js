@@ -259,6 +259,8 @@ ComplianceReports.defaultProps = {
 ComplianceReports.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isFinding: PropTypes.bool,
+    isGettingDashboard: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired

@@ -8,7 +8,9 @@ const RoundedNumericSpan = props => (
     <span><i>pending</i></span>
   )
 )
-
+RoundedNumericSpan.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+}
 class ScheduleBGHGeniusProvisionModal extends React.Component {
   render () {
     const

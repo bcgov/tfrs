@@ -92,7 +92,8 @@ CarbonIntensityForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   item: PropTypes.shape(),
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 export default withRouter(CarbonIntensityForm)

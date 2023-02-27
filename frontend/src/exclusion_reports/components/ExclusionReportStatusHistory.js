@@ -192,7 +192,8 @@ ExclusionReportingStatusHistory.propTypes = {
     id: PropTypes.number,
     organization: PropTypes.shape({
       name: PropTypes.string
-    })
+    }),
+    deltas: PropTypes.arrayOf(PropTypes.shape())
   }),
   onSwitchHandler: PropTypes.func,
   reportType: PropTypes.string

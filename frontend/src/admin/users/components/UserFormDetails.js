@@ -345,7 +345,9 @@ UserFormDetails.propTypes = {
       externalUsername: PropTypes.string,
       keycloakEmail: PropTypes.string
     }),
-    workPhone: PropTypes.string
+    workPhone: PropTypes.string,
+    isMapped: PropTypes.bool,
+    organizationName: PropTypes.string.isRequired
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,

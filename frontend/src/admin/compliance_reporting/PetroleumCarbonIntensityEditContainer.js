@@ -152,7 +152,8 @@ PetroleumCarbonIntensityEditContainer.propTypes = {
   params: PropTypes.shape({
     id: PropTypes.string.isRequired
   }).isRequired,
-  updatePetroleumCarbonIntensity: PropTypes.func.isRequired
+  updatePetroleumCarbonIntensity: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

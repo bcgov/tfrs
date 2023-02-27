@@ -239,7 +239,9 @@ ComplianceReportingTable.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  getComplianceReports: PropTypes.func.isRequired
+  getComplianceReports: PropTypes.func.isRequired,
+  filters: PropTypes.bool,
+  navigate: PropTypes.func.isRequired
 }
 
 export default withRouter(ComplianceReportingTable)

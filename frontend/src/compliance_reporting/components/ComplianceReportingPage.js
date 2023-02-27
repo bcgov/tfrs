@@ -127,7 +127,8 @@ ComplianceReportingPage.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape)
+    items: PropTypes.arrayOf(PropTypes.shape),
+    itemsCount: PropTypes.number
   }).isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({

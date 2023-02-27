@@ -74,7 +74,8 @@ ChangelogContainer.propTypes = {
   recomputeRequest: PropTypes.func.isRequired,
   recomputing: PropTypes.bool.isRequired,
   recomputedTotals: PropTypes.shape(),
-  snapshot: PropTypes.shape()
+  snapshot: PropTypes.shape(),
+  valid: PropTypes.bool
 }
 
 const mapStateToProps = state => ({})

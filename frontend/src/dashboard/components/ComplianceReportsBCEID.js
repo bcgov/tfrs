@@ -278,6 +278,7 @@ ComplianceReportsBCEID.defaultProps = {
 ComplianceReportsBCEID.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isGettingDashboard: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape({

@@ -95,7 +95,8 @@ SecureFileSubmissionContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
-  requestURL: PropTypes.func.isRequired
+  requestURL: PropTypes.func.isRequired,
+  totalCount: PropTypes.number
 }
 
 const mapStateToProps = state => ({

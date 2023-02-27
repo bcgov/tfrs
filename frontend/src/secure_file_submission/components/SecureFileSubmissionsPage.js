@@ -106,13 +106,22 @@ SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape)
+    items: PropTypes.arrayOf(PropTypes.shape),
+    itemsCount: PropTypes.number
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sort: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  handleFiltersChange: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired
 }
 
 export default SecureFileSubmissionsPage

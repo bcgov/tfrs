@@ -58,7 +58,8 @@ SessionTimer.defaultProps = {
 
 SessionTimer.propTypes = {
   warning: PropTypes.bool.isRequired,
-  expired: PropTypes.bool.isRequired
+  expired: PropTypes.bool.isRequired,
+  handleContinue: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

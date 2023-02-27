@@ -460,11 +460,27 @@ ScheduleSummaryContainer.propTypes = {
         PropTypes.number,
         PropTypes.string
       ]),
+      dieselClassObligation: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
+      dieselClassPreviouslyRetained: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
       gasolineClassDeferred: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
       ]),
       gasolineClassRetained: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
+      gasolineClassObligation: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
+      gasolineClassPreviouslyRetained: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
       ]),

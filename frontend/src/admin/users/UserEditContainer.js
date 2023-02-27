@@ -275,7 +275,8 @@ UserEditContainer.propTypes = {
     }),
     isFetching: PropTypes.bool
   }),
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

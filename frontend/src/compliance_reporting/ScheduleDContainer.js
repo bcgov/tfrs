@@ -749,7 +749,8 @@ ScheduleDContainer.propTypes = {
   scheduleState: PropTypes.shape({
     scheduleD: PropTypes.shape({
       sheets: PropTypes.arrayOf(PropTypes.shape())
-    })
+    }),
+    scheduleB: PropTypes.shape({})
   }).isRequired,
   snapshot: PropTypes.shape({
     scheduleD: PropTypes.shape({

@@ -260,7 +260,8 @@ UserAddContainer.propTypes = {
   organization: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string
-  })
+  }),
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

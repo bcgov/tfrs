@@ -690,7 +690,9 @@ CreditTransferViewContainer.propTypes = {
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
     documents: PropTypes.arrayOf(PropTypes.shape),
-    status: PropTypes.shape({}),
+    status: PropTypes.shape({
+      id: PropTypes.number
+    }),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
@@ -728,7 +730,20 @@ CreditTransferViewContainer.propTypes = {
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
-    ])
+    ]),
+    initiator: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    type: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    respondent: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    compliancePeriod: PropTypes.string,
+    note: PropTypes.string,
+    tradeEffectiveDate: PropTypes.string,
+    comments: PropTypes.string
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -747,7 +762,8 @@ CreditTransferViewContainer.propTypes = {
   partialUpdateCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired,
-  signingAuthorityAssertions: PropTypes.shape().isRequired
+  signingAuthorityAssertions: PropTypes.shape().isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
