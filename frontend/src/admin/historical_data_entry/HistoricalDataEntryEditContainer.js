@@ -192,14 +192,18 @@ HistoricalDataEntryEditContainer.propTypes = {
   invalidateCreditTransfers: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
-    id: PropTypes.number
+    id: PropTypes.number,
+    comments: PropTypes.shape({
+      length: PropTypes.number
+    })
   }).isRequired,
   params: PropTypes.shape({
     id: PropTypes.string.isRequired
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
-  updateCreditTransfer: PropTypes.func.isRequired
+  updateCreditTransfer: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

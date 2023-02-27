@@ -199,6 +199,9 @@ ComplianceReportingContainer.propTypes = {
         PropTypes.string
       ]),
       id: PropTypes.number
+    }),
+    errorMessage: PropTypes.shape({
+      length: PropTypes.number
     })
   }),
   createComplianceReport: PropTypes.func.isRequired,
@@ -214,12 +217,16 @@ ComplianceReportingContainer.propTypes = {
         PropTypes.string
       ]),
       id: PropTypes.number
+    }),
+    errorMessage: PropTypes.shape({
+      length: PropTypes.number
     })
   }),
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  savedState: PropTypes.shape().isRequired
+  savedState: PropTypes.shape().isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

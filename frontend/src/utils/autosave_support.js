@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
@@ -11,6 +12,13 @@ const getDisplayName = WrappedComponent => (
 function autosaved (config) {
   return function component (WrappedComponent) {
     class AutosaveSupport extends Component {
+      static propTypes = {
+        location: PropTypes.object.isRequired,
+        loadState: PropTypes.func.isRequired,
+        saveState: PropTypes.func.isRequired,
+        clearState: PropTypes.func.isRequired
+      }
+
       constructor (props) {
         super(props)
 

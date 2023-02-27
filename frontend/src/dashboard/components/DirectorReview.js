@@ -260,10 +260,12 @@ DirectorReview.defaultProps = {}
 DirectorReview.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isGettingDashboard: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   creditTransfers: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isFinding: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape().isRequired,

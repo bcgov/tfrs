@@ -783,9 +783,9 @@ class ComplianceReportingEditContainer extends Component {
                 />
               </div>
               <div>
-                <ReactMarkdown
-                  children={assertion.description.substr(1)}
-                />
+                <ReactMarkdown>
+                  {assertion.description.substr(1)}
+                </ReactMarkdown>
               </div>
             </div>
           ))}
@@ -844,6 +844,7 @@ ComplianceReportingEditContainer.propTypes = {
     isGetting: PropTypes.bool,
     isRemoving: PropTypes.bool,
     isUpdating: PropTypes.bool,
+    isFinding: PropTypes.bool,
     item: PropTypes.shape({
       actions: PropTypes.arrayOf(PropTypes.string),
       actor: PropTypes.string,
@@ -866,7 +867,8 @@ ComplianceReportingEditContainer.propTypes = {
       type: PropTypes.oneOfType([
         PropTypes.shape({}),
         PropTypes.string
-      ])
+      ]),
+      maxCreditOffsetExcludeReserved: PropTypes.number
     }),
     isRecomputing: PropTypes.bool,
     recomputeResult: PropTypes.object,
@@ -912,7 +914,8 @@ ComplianceReportingEditContainer.propTypes = {
   }).isRequired,
   updateComplianceReport: PropTypes.func.isRequired,
   updateStateToSave: PropTypes.func.isRequired,
-  validateComplianceReport: PropTypes.func.isRequired
+  validateComplianceReport: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const

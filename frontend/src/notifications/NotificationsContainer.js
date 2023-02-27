@@ -200,7 +200,8 @@ NotificationsContainer.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   getNotifications: PropTypes.func.isRequired,
   autoloadNotificationsEnable: PropTypes.func.isRequired,
-  autoloadNotificationsDisable: PropTypes.func.isRequired
+  autoloadNotificationsDisable: PropTypes.func.isRequired,
+  totalCount: PropTypes.number
 }
 
 const mapStateToProps = state => ({

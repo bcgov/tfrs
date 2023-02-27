@@ -414,9 +414,9 @@ class ExclusionReportEditContainer extends Component {
                 />
               </div>
               <div>
-                <ReactMarkdown
-                  children={assertion.description.substr(1)}
-                />
+                <ReactMarkdown>
+                  {assertion.description.substr(1)}
+                </ReactMarkdown>
               </div>
             </div>
           ))}
@@ -553,6 +553,7 @@ ExclusionReportEditContainer.propTypes = {
     snapshotIsLoading: PropTypes.bool,
     success: PropTypes.bool,
     item: PropTypes.shape({
+      id: PropTypes.number,
       actions: PropTypes.arrayOf(PropTypes.string),
       actor: PropTypes.string,
       compliancePeriod: PropTypes.oneOfType([
@@ -607,8 +608,13 @@ ExclusionReportEditContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool
   }).isRequired,
+  match: PropTypes.shape({}),
+  complianceReports: PropTypes.shape({
+    items: PropTypes.shape()
+  }),
   updateExclusionReport: PropTypes.func.isRequired,
-  updateStateToSave: PropTypes.func.isRequired
+  updateStateToSave: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const

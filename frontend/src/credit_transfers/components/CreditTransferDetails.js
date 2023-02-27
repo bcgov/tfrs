@@ -288,7 +288,8 @@ CreditTransferDetails.propTypes = {
       organizationBalance: PropTypes.shape({
         deductions: PropTypes.number,
         validatedCredits: PropTypes.number
-      })
+      }),
+      statusDisplay: PropTypes.string
     }),
     roles: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number

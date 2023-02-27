@@ -26,7 +26,8 @@ const RolesPage = (props) => {
 RolesPage.propTypes = {
   data: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-    isFinding: PropTypes.bool.isRequired
+    isFinding: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired
   }).isRequired
 }
 

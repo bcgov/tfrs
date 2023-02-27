@@ -523,14 +523,17 @@ Navbar.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
-        validatedCredits: PropTypes.number
+        validatedCredits: PropTypes.number,
+        deductions: PropTypes.number
       })
     }),
     roles: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number
     }))
   }).isRequired,
-  unreadNotificationsCount: PropTypes.number
+  unreadNotificationsCount: PropTypes.number,
+  navigate: PropTypes.func.isRequired,
+  logout: PropTypes.bool.isRequired
 }
 
 const mapDispatchToProps = dispatch => ({

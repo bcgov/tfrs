@@ -424,6 +424,7 @@ SecureFileSubmissionEditContainer.propTypes = {
   getDocumentUpload: PropTypes.func.isRequired,
   item: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.shape()),
+    actions: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number
   }).isRequired,
   loggedInUser: PropTypes.shape({
@@ -447,7 +448,8 @@ SecureFileSubmissionEditContainer.propTypes = {
   partialUpdateDocument: PropTypes.func.isRequired,
   scanDocumentAttachments: PropTypes.func.isRequired,
   uploadDocument: PropTypes.func.isRequired,
-  validationErrors: PropTypes.shape()
+  validationErrors: PropTypes.shape(),
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

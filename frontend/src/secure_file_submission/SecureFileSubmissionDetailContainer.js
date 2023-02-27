@@ -362,6 +362,7 @@ SecureFileSubmissionDetailContainer.propTypes = {
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
       id: PropTypes.number,
+      actions: PropTypes.arrayOf(PropTypes.string),
       attachments: PropTypes.arrayOf(PropTypes.shape)
     }),
     success: PropTypes.bool
@@ -392,7 +393,8 @@ SecureFileSubmissionDetailContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape)
   }),
   linkDocument: PropTypes.func.isRequired,
-  unlinkDocument: PropTypes.func.isRequired
+  unlinkDocument: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

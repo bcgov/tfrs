@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Loading from '../app/components/Loading'
 import { connect } from 'react-redux'
@@ -33,6 +34,16 @@ function withReferenceData (config) {
 
     ReferenceDataSupport
       .displayName = `ReferenceDataSupport(${getDisplayName(WrappedComponent)})`
+
+    ReferenceDataSupport.propTypes = {
+      referenceData: PropTypes.shape({
+        isFetching: PropTypes.bool.isRequired
+      }).isRequired,
+      compliancePeriods: PropTypes.shape({
+        isFetching: PropTypes.bool.isRequired
+      }).isRequired,
+      getCompliancePeriods: PropTypes.func.isRequired
+    }
 
     const
       mapStateToProps = state => ({

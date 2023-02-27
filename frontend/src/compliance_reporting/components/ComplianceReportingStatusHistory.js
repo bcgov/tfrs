@@ -186,6 +186,7 @@ ComplianceReportingStatusHistory.propTypes = {
         description: PropTypes.string
       })
     ]),
+    deltas: PropTypes.arrayOf(PropTypes.shape()),
     displayName: PropTypes.string,
     history: PropTypes.arrayOf(PropTypes.shape({
       creditTradeUpdateTime: PropTypes.string,

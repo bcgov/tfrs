@@ -200,14 +200,16 @@ CreditTransferVisualRepresentation.propTypes = {
     organizationBalance: PropTypes.shape({
       deductions: PropTypes.number,
       validatedCredits: PropTypes.number
-    })
+    }),
+    statusDisplay: PropTypes.string
   }),
   creditsTo: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number,
     organizationBalance: PropTypes.shape({
       validatedCredits: PropTypes.number
-    })
+    }),
+    statusDisplay: PropTypes.string
   }),
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool

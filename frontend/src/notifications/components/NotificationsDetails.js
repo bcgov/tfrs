@@ -93,7 +93,8 @@ NotificationsDetails.propTypes = {
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleFiltersChange: PropTypes.func.isRequired,
-  handleSortChange: PropTypes.func.isRequired
+  handleSortChange: PropTypes.func.isRequired,
+  sort: PropTypes.arrayOf(PropTypes.object)
 }
 
 export default NotificationsDetails

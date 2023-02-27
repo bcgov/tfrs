@@ -280,7 +280,8 @@ FuelCodeAddContainer.propTypes = {
     transportModes: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

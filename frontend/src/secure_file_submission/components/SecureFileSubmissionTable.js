@@ -169,7 +169,7 @@ SecureFileSubmissionTable.propTypes = {
     }),
     listTitle: PropTypes.string,
     type: PropTypes.shape({
-      id: PropTypes.integer
+      id: PropTypes.number
     })
   })).isRequired,
   itemsCount: PropTypes.number.isRequired,
@@ -180,6 +180,7 @@ SecureFileSubmissionTable.propTypes = {
   handlePageChange: PropTypes.func.isRequired,
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sort: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleFiltersChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
