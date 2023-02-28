@@ -35,7 +35,7 @@ const Unverified = (props) => {
 }
 
 Unverified.propTypes = {
-  logout: PropTypes.bool.isRequired
+  logout: PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = (dispatch) => {
