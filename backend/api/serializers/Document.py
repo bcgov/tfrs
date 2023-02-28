@@ -92,19 +92,21 @@ class DocumentSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Documents
     """
+    create_user = UserMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
+    history = DocumentHistorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Document
         fields = (
             'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
-            'milestone', 'update_timestamp', 'update_user', 'credit_trades')
+            'milestone', 'update_timestamp', 'update_user', 'credit_trades', 'history')
 
         read_only_fields = (
             'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
-            'milestone', 'update_timestamp', 'update_user', 'credit_trades')
+            'milestone', 'update_timestamp', 'update_user', 'credit_trades', 'history')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
