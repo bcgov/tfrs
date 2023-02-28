@@ -19,7 +19,6 @@ objects:
       ## Allow tfrs-spilo to accept communications from backend
       ## Allow tfrs-spilo to accept communications from backend-mid
       ## Allow tfrs-spilo to accept communications from scan-handler
-      ## Allow tfrs-spilo to accept communications from self
       ## Allow tfrs-spilo to accept communications from schema-public
       ## Allow tfrs-spilo to accept communications from schema-audit
       ## Allow tfrs-spilo to accept communications from celery
@@ -44,7 +43,6 @@ objects:
           ports:
             - protocol: TCP
               port: 5432              
-
         - from:
             - podSelector:
                 matchLabels:
@@ -52,15 +50,6 @@ objects:
           ports:
             - protocol: TCP
               port: 5432      
-        - from:
-            - podSelector:
-                matchLabels:
-                  app.kubernetes.io/instance: tfrs-spilo
-          ports:
-            - protocol: TCP
-              port: 5432    
-            - protocol: TCP
-              port: 8008     
         - from:
             - podSelector:
                 matchLabels:
