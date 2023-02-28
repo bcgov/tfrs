@@ -200,9 +200,11 @@ ComplianceReportingContainer.propTypes = {
       ]),
       id: PropTypes.number
     }),
-    errorMessage: PropTypes.shape({
-      length: PropTypes.number
-    })
+    errorMessage: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.string,
+      PropTypes.shape()
+    ])
   }),
   createComplianceReport: PropTypes.func.isRequired,
   createExclusionReport: PropTypes.func.isRequired,
@@ -218,9 +220,11 @@ ComplianceReportingContainer.propTypes = {
       ]),
       id: PropTypes.number
     }),
-    errorMessage: PropTypes.shape({
-      length: PropTypes.number
-    })
+    errorMessage: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.string,
+      PropTypes.shape()
+    ])
   }),
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,

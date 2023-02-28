@@ -121,7 +121,7 @@ ScheduleTabs.propTypes = {
   compliancePeriod: PropTypes.string,
   complianceReport: PropTypes.shape({
     status: PropTypes.shape(),
-    history: PropTypes.shape()
+    history: PropTypes.arrayOf(PropTypes.shape())
   }),
   id: PropTypes.string,
   hasSnapshot: PropTypes.bool,

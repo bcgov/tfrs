@@ -533,7 +533,7 @@ Navbar.propTypes = {
   }).isRequired,
   unreadNotificationsCount: PropTypes.number,
   navigate: PropTypes.func.isRequired,
-  logout: PropTypes.bool.isRequired
+  logout: PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = dispatch => ({

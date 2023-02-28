@@ -70,7 +70,7 @@ ChangelogContainer.propTypes = {
   complianceReport: PropTypes.shape({
     hasSnapshot: PropTypes.bool
   }).isRequired,
-  isValidating: PropTypes.bool.isRequired,
+  isValidating: PropTypes.bool,
   recomputeRequest: PropTypes.func.isRequired,
   recomputing: PropTypes.bool.isRequired,
   recomputedTotals: PropTypes.shape(),
