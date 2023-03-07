@@ -59,5 +59,4 @@ describe('Part3 Line Data', () => {
     const result = lineData(part3, summary, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
-
 })
