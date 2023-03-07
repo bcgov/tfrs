@@ -1,10 +1,10 @@
-import { SCHEDULE_SUMMARY } from '../../../src/constants/schedules/scheduleColumns'
 import {
   calculatePart3Payable,
   Part3SupplementalData
-} from '../../../src/schedule_summary/Part3SummaryContainer'
-import ScheduleSummaryPart3 from '../../../src/schedule_summary/ScheduleSummaryPart3'
-import { cellFormatNumeric } from '../../../src/utils/functions'
+} from '../../Part3SummaryContainer'
+import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
+import { cellFormatNumeric } from '../../../utils/functions'
+import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
 
 test('updates LINE_26_B and LINE_26_A correctly when we have a positive credit offset', () => {
   let part3 = new ScheduleSummaryPart3()

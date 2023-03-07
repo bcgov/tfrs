@@ -1,9 +1,9 @@
 import React from 'react'
-import { SCHEDULE_SUMMARY } from '../../../src/constants/schedules/scheduleColumns'
-import { tableData } from '../../../src/schedule_summary/Part3SummaryContainer'
-import Tooltip from '../../../src/app/components/Tooltip'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import ScheduleSummaryPart3 from '../../../src/schedule_summary/ScheduleSummaryPart3'
+import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
+import { tableData } from '../../Part3SummaryContainer'
+import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
+import Tooltip from '../../../app/components/Tooltip'
 
 test('tableData function with non-supplemental data', () => {
   const part3 = new ScheduleSummaryPart3()

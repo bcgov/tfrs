@@ -1,12 +1,7 @@
-import { SCHEDULE_SUMMARY } from '../../../src/constants/schedules/scheduleColumns'
-import {
-  lineData
-} from '../../../src/schedule_summary/Part3SummaryContainer'
-// import Tooltip from '../../../src/app/components/Tooltip'
-// import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
-import ScheduleSummaryPart3 from '../../../src/schedule_summary/ScheduleSummaryPart3'
-import { cellFormatNumeric } from '../../../src/utils/functions'
+import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
+import { cellFormatNumeric } from '../../../utils/functions'
+import { lineData } from '../../Part3SummaryContainer'
+import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
 
 test('non-supplemental line 26 is 0 when line 25 is > 0', () => {
   const part3 = new ScheduleSummaryPart3()
