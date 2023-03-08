@@ -3,6 +3,14 @@ const ComplianceReportStatus = (item) => {
     return 'Supplemental Requested'
   }
 
+  if (item.status.analystStatus === 'Recommended') {
+    return 'Recommended Acceptance - Analyst'
+  }
+
+  if (item.status.analystStatus === 'Not Recommended') {
+    return 'Recommended Rejection - Analyst'
+  }
+
   if (item.status.analystStatus === 'Requested Supplemental') {
     return 'Supplemental Requested'
   }
@@ -21,14 +29,6 @@ const ComplianceReportStatus = (item) => {
 
   if (item.status.managerStatus === 'Not Recommended') {
     return 'Recommended Rejection - Manager'
-  }
-
-  if (item.status.analystStatus === 'Recommended') {
-    return 'Recommended Acceptance - Analyst'
-  }
-
-  if (item.status.analystStatus === 'Not Recommended') {
-    return 'Recommended Rejection - Analyst'
   }
 
   if (item.status.fuelSupplierStatus) {

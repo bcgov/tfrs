@@ -235,12 +235,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         
         if 'recommended'.find(value) != -1:
             return qs.filter(
-                (Q(status__manager_status__status='Recommended') &
-                ~Q(status__director_status__status__in=['Accepted', 'Rejected']) &
-                ~Q(status__analyst_status__status='Requested Supplemental')) |
-                (Q(status__analyst_status__status='Recommended') &
-                Q(status__director_status__status='Unreviewed') &
-                Q(status__manager_status__status='Unreviewed'))
+                (Q(supplements__status__manager_status__status='Recommended') &
+                ~Q(supplements__status__director_status__status__in=['Accepted', 'Rejected']) &
+                ~Q(supplements__status__analyst_status__status='Requested Supplemental')) |
+                (Q(supplements__status__analyst_status__status='Recommended') &
+                Q(supplements__status__director_status__status='Unreviewed') &
+                Q(supplements__status__manager_status__status='Unreviewed'))
             )
 
         if 'recommended acceptance - manager'.find(value) != -1 or 'manager'.find(value) != -1:
@@ -274,12 +274,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             ids = [s.id for s in latest_supplementals]
             supplemental_reports = ComplianceReportService.get_organization_compliance_reports(
             self.request.user.organization).filter(id__in=ids)
-            # original_reports = qs.filter(Q(supplemental_reports__isnull=False))
             
             original_reports = qs.filter(Q(supplemental_reports=None))
             unique_reports = original_reports | supplemental_reports
-            for i in unique_reports:
-                print(i.supplements)
             qs = self.filter_supplemental_report_status(unique_reports, value)
         except Exception as e:
             print(e)
