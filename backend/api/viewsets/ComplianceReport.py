@@ -123,6 +123,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = self.filter_current_status(
                                     qs, value.lower())
                                 pass
+                            elif id == 'managerIds':
+                                qs = self.filter_manager_status(
+                                    qs, value)
+                                pass
                             elif id == 'updateTimestamp':
                                 query = self.filter_timestamp(value)
                                 qs = qs.filter(query)
@@ -236,6 +240,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         except Exception as e:
             print(e)
         return qs
+
+    def filter_manager_status(self, qs, value):
+        try:
+            supplemental_reports = ComplianceReport.objects.filter(id__in=value)           
+        except Exception as e:
+            print(e)
+        return supplemental_reports
+
 
     def get_latest_supplemental_reports(self):
         latest_supplementals = ComplianceReport.objects.raw("""
