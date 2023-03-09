@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router'
 const ComplianceReports = (props) => {
   const { isFinding, items, isGettingDashboard } = props.complianceReports
   const navigate = useNavigate()
-  const managerIds = []
+  const complianceManagerIds = []
+  const exclusionManagerIds= []
 
   if (isFinding || isGettingDashboard) {
     return <Loading />
@@ -52,7 +53,11 @@ const ComplianceReports = (props) => {
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
     status.managerStatus === 'Unreviewed' && status.directorStatus === "Unreviewed") {
-      managerIds.push(id)
+      if (reportType === 'complianceReports') {
+        complianceManagerIds.push(id)
+      }else {
+        exclusionManagerIds.push(id)
+      }
       awaitingReview[reportType].manager += 1
       awaitingReview[reportType].total += 1
     }
@@ -102,8 +107,18 @@ const ComplianceReports = (props) => {
               onClick={() => {
                 props.setFilter([{
                   id:'managerIds',
-                  value: managerIds
-                }  
+                  value: {
+                    ids : complianceManagerIds
+                  }
+                },{
+                  tableId: [ {
+                    id: 'displayname',
+                    value: 'Compliance Report'
+                  }, {
+                    id: 'current-status',
+                    value: 'Analyst'
+                  }]
+                }
               ], 'compliance-reporting')
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
@@ -171,13 +186,21 @@ const ComplianceReports = (props) => {
                 props.setFilter([{
                   id: 'compliance-period',
                   value: ''
+                },{
+                  id:'managerIds',
+                  value: {
+                    ids : exclusionManagerIds
+                  }
                 }, {
-                  id: 'displayname',
-                  value: 'Exclusion Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Analyst'
-                }], 'compliance-reporting')
+                  tableId: [ {
+                    id: 'displayname',
+                    value: 'Exclusion Report'
+                  }, {
+                    id: 'current-status',
+                    value: 'Analyst'
+                  }]
+                }
+              ], 'compliance-reporting')
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
               }}

@@ -110,6 +110,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             elif id == 'organization':
                                 qs = qs.filter(
                                     organization__name__icontains=value)
+                            elif id == 'managerIds':
+                                qs = self.filter_manager_status(
+                                    qs, value['ids'])
+                                pass
                             elif id == 'displayname':
                                 qs = self.filter_displayname(qs, value.lower())
                             elif id == 'status':
@@ -123,10 +127,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = self.filter_current_status(
                                     qs, value.lower())
                                 pass
-                            elif id == 'managerIds':
-                                qs = self.filter_manager_status(
-                                    qs, value)
-                                pass
+                            
                             elif id == 'updateTimestamp':
                                 query = self.filter_timestamp(value)
                                 qs = qs.filter(query)
