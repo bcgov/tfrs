@@ -300,7 +300,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         latest_supplementals = ComplianceReport.objects.raw("""
             select distinct on (p.id) c.*
             from compliance_report p 
-            left join compliance_report c on p.id = c.id
+              left join compliance_report c on p.id = c.supplements_id
             where c.status_id is not NULL
             order by p.id desc, c.create_timestamp desc
         """)
