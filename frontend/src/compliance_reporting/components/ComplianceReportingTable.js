@@ -33,7 +33,7 @@ class ComplianceReportingTable extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.sorts !== prevState.sorts) {
-      // this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
+      this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
     }
   }
 
@@ -240,7 +240,7 @@ ComplianceReportingTable.propTypes = {
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   getComplianceReports: PropTypes.func.isRequired,
-  filters: PropTypes.bool,
+  filters: PropTypes.any,
   navigate: PropTypes.func.isRequired
 }
 
