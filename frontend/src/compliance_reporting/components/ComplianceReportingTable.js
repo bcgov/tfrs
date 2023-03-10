@@ -141,7 +141,7 @@ class ComplianceReportingTable extends Component {
         </span>
       )
     }]
-
+    const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
 
     return (
@@ -207,7 +207,7 @@ class ComplianceReportingTable extends Component {
           this.handlePageChange(1)
           this.handlePageSizeChange(pageSize)
         }}
-        filtered={this.state.filters}
+        filtered={tableHeader?.tableId || this.state.filters}
         onFilteredChange={(filtered, column) => {
           this.handlePageChange(1)
           this.handleFiltersChange(filtered)
@@ -240,7 +240,7 @@ ComplianceReportingTable.propTypes = {
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   getComplianceReports: PropTypes.func.isRequired,
-  filters: PropTypes.bool,
+  filters: PropTypes.any,
   navigate: PropTypes.func.isRequired
 }
 
