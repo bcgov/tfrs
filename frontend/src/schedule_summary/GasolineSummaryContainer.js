@@ -278,15 +278,11 @@ function calculateGasolineTotal (grid) {
 
   return totals
 }
-function _handleGasolineChanged (changes, addition = null) {
-  _handleCellsChanged('gasoline', changes, addition)
-}
 
 export {
   _calculateGasoline,
   calculateGasolinePayable,
   calculateGasolineTotal,
-  _handleGasolineChanged,
   tableData,
   lineData,
   populateSchedules

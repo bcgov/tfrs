@@ -259,15 +259,11 @@ function _calculateDiesel (props, state) {
 
   return diesel
 }
-function _handleDieselChanged (changes, addition = null) {
-  _handleCellsChanged('diesel', changes, addition)
-}
 
 export {
   calculateDieselPayable,
   calculateDieselTotal,
   _calculateDiesel,
-  _handleDieselChanged,
   tableData,
   lineData,
   populateSchedules
