@@ -86,7 +86,9 @@ class ComplianceReportingTable extends Component {
       id: 'displayname',
       minWidth: 75
     }, {
-      accessor: ComplianceReportStatus,
+      accessor: (item) => {
+        return ComplianceReportStatus(item)
+      },
       className: 'col-status',
       Header: 'Original Status',
       id: 'status',
