@@ -50,6 +50,7 @@ class ScheduleSummaryContainer extends Component {
     this._handlePart3Changed = Part3SummaryContainer._handlePart3Changed.bind(this)
     this._gridStateToPayload = this._gridStateToPayload.bind(this)
     this._calculateNonCompliancePayable = PenaltySummaryContainer._calculateNonCompliancePayable.bind(this)
+    this.setStateBound = this.setState.bind(this)
   }
 
   componentDidMount () {
@@ -88,10 +89,10 @@ class ScheduleSummaryContainer extends Component {
       }
 
       this.populateSchedules()
-      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setState)
-      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setState)
-      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setState)
-      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setState, gasoline, diesel, part3)
+      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setStateBound)
+      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setStateBound, gasoline, diesel, part3)
 
       let { summary } = nextProps.complianceReport
 
@@ -120,7 +121,7 @@ class ScheduleSummaryContainer extends Component {
       // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
       PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
 
-      penalty = this._calculateNonCompliancePayable(penalty)
+      penalty = this._calculateNonCompliancePayable(penalty, this.props)
 
       if (!isSupplemental &&
           (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
@@ -272,7 +273,7 @@ class ScheduleSummaryContainer extends Component {
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     }
 
-    penalty = this._calculateNonCompliancePayable(penalty)
+    penalty = this._calculateNonCompliancePayable(penalty, this.props)
 
     this.setState({
       ...this.state,
@@ -630,7 +631,7 @@ export function _handleCellsChanged (gridName, changes, addition = null) {
         value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
       }
 
-      penalty = this._calculateNonCompliancePayable(penalty)
+      penalty = this._calculateNonCompliancePayable(penalty, this.props)
     }
 
     if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26_B)) {
@@ -658,7 +659,7 @@ export function _handleCellsChanged (gridName, changes, addition = null) {
         value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
       }
 
-      penalty = this._calculateNonCompliancePayable(penalty)
+      penalty = this._calculateNonCompliancePayable(penalty, this.props)
     }
   })
 

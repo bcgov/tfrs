@@ -406,7 +406,7 @@ function _calculatePart3 (props, state, setState) {
 
   part3[SCHEDULE_SUMMARY.LINE_26][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_26][2],
-    readOnly: netTotal >= 0 || this.props.readOnly || isSupplemental,
+    readOnly: netTotal >= 0 || props.readOnly || isSupplemental,
     attributes: {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2].attributes,
       maxValue
@@ -440,7 +440,7 @@ function _calculatePart3 (props, state, setState) {
 
     part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_26_B][2],
-      readOnly: netTotal >= 0 || this.props.readOnly || maxValue <= 0,
+      readOnly: netTotal >= 0 || props.readOnly || maxValue <= 0,
       attributes: {
         ...part3[SCHEDULE_SUMMARY.LINE_26_B][2].attributes,
         maxValue
@@ -454,7 +454,7 @@ function _calculatePart3 (props, state, setState) {
     value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
   }
 
-  penalty = _calculateNonCompliancePayable(penalty)
+  penalty = _calculateNonCompliancePayable(penalty, props)
   setState({
     ...state,
     part3,
