@@ -464,14 +464,9 @@ function _calculatePart3 (props, state, setState) {
   return part3
 }
 
-function _handlePart3Changed (changes, addition = null) {
-  _handleCellsChanged('part3', changes, addition)
-}
-
 export {
   calculatePart3Payable,
   _calculatePart3,
-  _handlePart3Changed,
   tableData,
   lineData,
   populateSchedules,
