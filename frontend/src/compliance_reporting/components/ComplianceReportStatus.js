@@ -14,6 +14,13 @@ const ComplianceReportStatus = (item) => {
   if (item.status.analystStatus === 'Requested Supplemental') {
     return 'Supplemental Requested'
   }
+  if (props.status.analystStatus === 'Recommended') {
+    return 'Recommended Acceptance - Analyst'
+  }
+
+  if (props.status.analystStatus === 'Not Recommended') {
+    return 'Recommended Rejection - Analyst'
+  }
 
   if (item.status.directorStatus === 'Accepted') {
     return 'Accepted'
