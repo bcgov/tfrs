@@ -40,6 +40,7 @@ function tableData (
 function lineData (
   part3,
   summary,
+  period,
   complianceReport,
   updateCreditsOffsetA,
   lastAcceptedOffset,
@@ -53,7 +54,7 @@ function lineData (
     // is supplemental
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
   }
-  part3 = calculatePart3Payable(part3)
+  part3 = calculatePart3Payable(part3, period)
   return part3
 }
 
@@ -323,7 +324,7 @@ function populateSchedules (props, state, setState) {
   })
 }
 
-function calculatePart3Payable (part3) {
+function calculatePart3Payable (part3, period) {
   const grid = part3
   let credits = Number(grid[SCHEDULE_SUMMARY.LINE_26][2].value)
 
@@ -337,7 +338,12 @@ function calculatePart3Payable (part3) {
   }
 
   outstandingBalance = balance + Number(credits)
-  payable = outstandingBalance * -200 // negative symbol so that the product is positive
+  if(Number(period) <= 2022){
+    payable = outstandingBalance * -200 // negative symbol so that the product is positive
+  }
+  else{
+    payable = outstandingBalance * -600 // negative symbol so that the product is positive
+  }
 
   if (balance > 0) {
     outstandingBalance = ''
