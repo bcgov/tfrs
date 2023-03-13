@@ -42,14 +42,11 @@ class ScheduleSummaryContainer extends Component {
     }
 
     this.rowNumber = 1
-
     this._closeModal = this._closeModal.bind(this)
-    this._handleCellsChanged = _handleCellsChanged.bind(this)
-    this._handleDieselChanged = DieselSummaryContainer._handleDieselChanged.bind(this)
-    this._handleGasolineChanged = GasolineSummaryConatiner._handleGasolineChanged.bind(this)
-    this._handlePart3Changed = Part3SummaryContainer._handlePart3Changed.bind(this)
+    this._handleCellsChanged = this._handleCellsChanged.bind(this)
     this._gridStateToPayload = this._gridStateToPayload.bind(this)
     this._calculateNonCompliancePayable = PenaltySummaryContainer._calculateNonCompliancePayable.bind(this)
+    this.setStateBound = this.setState.bind(this)
   }
 
   componentDidMount () {
@@ -88,10 +85,10 @@ class ScheduleSummaryContainer extends Component {
       }
 
       this.populateSchedules()
-      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setState)
-      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setState)
-      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setState)
-      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setState, gasoline, diesel, part3)
+      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setStateBound)
+      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setStateBound, gasoline, diesel, part3)
 
       let { summary } = nextProps.complianceReport
 
@@ -120,7 +117,7 @@ class ScheduleSummaryContainer extends Component {
       // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
       PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
 
-      penalty = this._calculateNonCompliancePayable(penalty)
+      penalty = this._calculateNonCompliancePayable(penalty, this.props)
 
       if (!isSupplemental &&
           (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
@@ -188,6 +185,125 @@ class ScheduleSummaryContainer extends Component {
       part3,
       penalty,
       showModal
+    })
+  }
+
+  _handleCellsChanged (gridName, changes, addition = null) {
+    let grid = this.state[gridName].map(row => [...row])
+    let { penalty } = this.state
+
+    changes.forEach((change) => {
+      const {
+        cell, row, col, value
+      } = change
+
+      if (cell.component) {
+        return
+      }
+
+      grid[row][col] = {
+        ...grid[row][col],
+        value
+      }
+
+      if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26)) {
+        const numericValue = Number(String(value).replace(/,/g, ''))
+        grid[row][col] = {
+          ...grid[row][col],
+          value: numericValue
+        }
+
+        grid = Part3SummaryContainer.calculatePart3Payable(grid)
+
+        penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+          ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+          value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
+        }
+
+        penalty = this._calculateNonCompliancePayable(penalty, this.props)
+      }
+
+      if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26_B)) {
+        let numericValue = Number(String(value).replace(/,/g, ''))
+
+        const { maxValue } = grid[row][col].attributes
+
+        if (numericValue > maxValue) {
+          numericValue = maxValue
+        }
+
+        grid[row][col] = {
+          ...grid[row][col],
+          value: numericValue
+        }
+
+        const creditOffsetA = Number(String(grid[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
+
+        grid[SCHEDULE_SUMMARY.LINE_26][2].value = creditOffsetA + numericValue
+
+        grid = Part3SummaryContainer.calculatePart3Payable(grid)
+
+        penalty[SCHEDULE_PENALTY.LINE_28][2] = {
+          ...penalty[SCHEDULE_PENALTY.LINE_28][2],
+          value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
+        }
+
+        penalty = this._calculateNonCompliancePayable(penalty, this.props)
+      }
+    })
+
+    if (gridName === 'diesel') {
+      grid[SCHEDULE_SUMMARY.LINE_21][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_21][2],
+        value: DieselSummaryContainer.calculateDieselTotal(grid)
+      }
+
+      grid[SCHEDULE_SUMMARY.LINE_22][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_22][2],
+        value: DieselSummaryContainer.calculateDieselPayable(grid)
+      }
+    }
+
+    if (gridName === 'gasoline') {
+      grid[SCHEDULE_SUMMARY.LINE_10][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_10][2],
+        value: GasolineSummaryConatiner.calculateGasolineTotal(grid)
+      }
+
+      grid[SCHEDULE_SUMMARY.LINE_11][2] = {
+        ...grid[SCHEDULE_SUMMARY.LINE_11][2],
+        value: GasolineSummaryConatiner.calculateGasolinePayable(grid)
+      }
+    }
+
+    switch (gridName) {
+      case 'diesel':
+        this._gridStateToPayload({
+          [gridName]: grid,
+          gasoline: this.state.gasoline,
+          part3: this.state.part3
+        })
+        break
+      case 'gasoline':
+        this._gridStateToPayload({
+          [gridName]: grid,
+          diesel: this.state.diesel,
+          part3: this.state.part3
+        })
+        break
+      case 'part3':
+        this._gridStateToPayload({
+          [gridName]: grid,
+          diesel: this.state.diesel,
+          gasoline: this.state.gasoline
+        })
+        break
+      default:
+    }
+
+    this.setState({
+      [gridName]: grid,
+      penalty
     })
   }
 
@@ -272,7 +388,7 @@ class ScheduleSummaryContainer extends Component {
       value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
     }
 
-    penalty = this._calculateNonCompliancePayable(penalty)
+    penalty = this._calculateNonCompliancePayable(penalty, this.props)
 
     this.setState({
       ...this.state,
@@ -360,7 +476,9 @@ class ScheduleSummaryContainer extends Component {
           <ReactDataSheet
             className="spreadsheet"
             data={this.state.gasoline}
-            onCellsChanged={this.state.handleGasolineChanged}
+            onCellsChanged={(changes, addition = null) => {
+              this._handleCellsChanged('gasoline', changes, addition)
+            }}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -369,7 +487,9 @@ class ScheduleSummaryContainer extends Component {
           <ReactDataSheet
             className="spreadsheet"
             data={this.state.diesel}
-            onCellsChanged={this.state.handleDieselChanged}
+            onCellsChanged={(changes, addition = null) => {
+              this._handleCellsChanged('diesel', changes, addition)
+            }}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -382,7 +502,9 @@ class ScheduleSummaryContainer extends Component {
           <ReactDataSheet
             className="spreadsheet"
             data={this.state.part3}
-            onCellsChanged={this.state.handlePart3Changed}
+            onCellsChanged={(changes, addition = null) => {
+              this._handleCellsChanged('part3', changes, addition)
+            }}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -597,124 +719,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getCreditCalculation: bindActionCreators(getCreditCalculation, dispatch)
 })
-
-export function _handleCellsChanged (gridName, changes, addition = null) {
-  let grid = this.state[gridName].map(row => [...row])
-  let { penalty } = this.state
-
-  changes.forEach((change) => {
-    const {
-      cell, row, col, value
-    } = change
-
-    if (cell.component) {
-      return
-    }
-
-    grid[row][col] = {
-      ...grid[row][col],
-      value
-    }
-
-    if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26)) {
-      const numericValue = Number(String(value).replace(/,/g, ''))
-      grid[row][col] = {
-        ...grid[row][col],
-        value: numericValue
-      }
-
-      grid = Part3SummaryContainer.calculatePart3Payable(grid)
-
-      penalty[SCHEDULE_PENALTY.LINE_28][2] = {
-        ...penalty[SCHEDULE_PENALTY.LINE_28][2],
-        value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
-      }
-
-      penalty = this._calculateNonCompliancePayable(penalty)
-    }
-
-    if (gridName === 'part3' && (row === SCHEDULE_SUMMARY.LINE_26_B)) {
-      let numericValue = Number(String(value).replace(/,/g, ''))
-
-      const { maxValue } = grid[row][col].attributes
-
-      if (numericValue > maxValue) {
-        numericValue = maxValue
-      }
-
-      grid[row][col] = {
-        ...grid[row][col],
-        value: numericValue
-      }
-
-      const creditOffsetA = Number(String(grid[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
-
-      grid[SCHEDULE_SUMMARY.LINE_26][2].value = creditOffsetA + numericValue
-
-      grid = Part3SummaryContainer.calculatePart3Payable(grid)
-
-      penalty[SCHEDULE_PENALTY.LINE_28][2] = {
-        ...penalty[SCHEDULE_PENALTY.LINE_28][2],
-        value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
-      }
-
-      penalty = this._calculateNonCompliancePayable(penalty)
-    }
-  })
-
-  if (gridName === 'diesel') {
-    grid[SCHEDULE_SUMMARY.LINE_21][2] = {
-      ...grid[SCHEDULE_SUMMARY.LINE_21][2],
-      value: DieselSummaryContainer.calculateDieselTotal(grid)
-    }
-
-    grid[SCHEDULE_SUMMARY.LINE_22][2] = {
-      ...grid[SCHEDULE_SUMMARY.LINE_22][2],
-      value: DieselSummaryContainer.calculateDieselPayable(grid)
-    }
-  }
-
-  if (gridName === 'gasoline') {
-    grid[SCHEDULE_SUMMARY.LINE_10][2] = {
-      ...grid[SCHEDULE_SUMMARY.LINE_10][2],
-      value: GasolineSummaryConatiner.calculateGasolineTotal(grid)
-    }
-
-    grid[SCHEDULE_SUMMARY.LINE_11][2] = {
-      ...grid[SCHEDULE_SUMMARY.LINE_11][2],
-      value: GasolineSummaryConatiner.calculateGasolinePayable(grid)
-    }
-  }
-
-  switch (gridName) {
-    case 'diesel':
-      this._gridStateToPayload({
-        [gridName]: grid,
-        gasoline: this.state.gasoline,
-        part3: this.state.part3
-      })
-      break
-    case 'gasoline':
-      this._gridStateToPayload({
-        [gridName]: grid,
-        diesel: this.state.diesel,
-        part3: this.state.part3
-      })
-      break
-    case 'part3':
-      this._gridStateToPayload({
-        [gridName]: grid,
-        diesel: this.state.diesel,
-        gasoline: this.state.gasoline
-      })
-      break
-    default:
-  }
-
-  this.setState({
-    [gridName]: grid,
-    penalty
-  })
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleSummaryContainer)

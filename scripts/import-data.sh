@@ -18,7 +18,7 @@ fi
 
 # defaults set to test
 project_name='0ab226-test'
-pod_name='patroni-test-0'
+pod_name='tfrs-spilo-0'
 env='test'
 
 local_container=$2
@@ -32,7 +32,7 @@ echo
 # prod variables
 if [ $1 = "prod" ]; then
   project_name='0ab226-prod'
-  pod_name='patroni-prod-0'
+  pod_name='tfrs-spilo-0'
   env='prod'
 else
   echo '** Using test variables'
