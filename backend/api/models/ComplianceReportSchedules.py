@@ -689,7 +689,7 @@ class ScheduleDSheetInput(Commentable):
         db_comment="Spreadsheet cell address"
     )
     value = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=True,
         null=True,
         db_comment="Value entered in spreadsheet cell"
@@ -701,7 +701,7 @@ class ScheduleDSheetInput(Commentable):
         db_comment="Unit (eg percent, L) of value in spreadsheet cell"
     )
     description = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=True,
         null=True,
         db_comment="Description or purpose of the value"
