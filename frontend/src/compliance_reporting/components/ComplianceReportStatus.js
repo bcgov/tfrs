@@ -14,11 +14,11 @@ const ComplianceReportStatus = (item) => {
   if (item.status.analystStatus === 'Requested Supplemental') {
     return 'Supplemental Requested'
   }
-  if (props.status.analystStatus === 'Recommended') {
+  if (item.status.analystStatus === 'Recommended') {
     return 'Recommended Acceptance - Analyst'
   }
 
-  if (props.status.analystStatus === 'Not Recommended') {
+  if (item.status.analystStatus === 'Not Recommended') {
     return 'Recommended Rejection - Analyst'
   }
 

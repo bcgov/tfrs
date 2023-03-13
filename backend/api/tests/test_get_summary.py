@@ -1,0 +1,40 @@
+from unittest import TestCase
+from decimal import Decimal
+from datetime import datetime
+from api.serializers.ComplianceReport import ComplianceReportDetailSerializer
+from unittest.mock import MagicMock, Mock
+
+
+class TestComplianceReportDetailSerializer(TestCase):
+    def setUp(self):
+        self.serializer = ComplianceReportDetailSerializer()
+        self.serializer.summary = None
+
+        self.serializer.schedule_a = MagicMock(
+            net_gasoline_class_transferred=Decimal('10'),
+            net_diesel_class_transferred=Decimal('20')
+        )
+        self.serializer.schedule_b = MagicMock(
+            total_petroleum_diesel=Decimal('30'),
+            total_petroleum_gasoline=Decimal('40'),
+            total_renewable_diesel=Decimal('50'),
+            total_renewable_gasoline=Decimal('60'),
+            total_credits=Decimal('70'),
+            total_debits=Decimal('80')
+        )
+        self.serializer.schedule_c = MagicMock(
+            total_petroleum_diesel=Decimal('90'),
+            total_petroleum_gasoline=Decimal('100'),
+            total_renewable_diesel=Decimal('110'),
+            total_renewable_gasoline=Decimal('120')
+        )
+
+    def test_get_summary_for_year_lt_2023(self):
+        self.serializer.create_timestamp = Mock(year=2022)
+        result = self.serializer.get_summary(self.serializer)['total_payable']
+        self.assertEqual(result, Decimal('2000.00'))
+
+    def test_get_summary_for_year_gt_2022(self):
+        self.serializer.create_timestamp = Mock(year=2023)
+        result = self.serializer.get_summary(self.serializer)['total_payable']
+        self.assertEqual(result, Decimal('6000.00'))

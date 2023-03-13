@@ -509,6 +509,7 @@ class ComplianceReportDetailSerializer(
         net_diesel_class_transferred = Decimal(0)
 
         lines = {}
+        created_on = obj.create_timestamp.year
 
         if obj.summary is not None:
             lines['6'] = obj.summary.gasoline_class_retained \
@@ -604,7 +605,10 @@ class ComplianceReportDetailSerializer(
         lines['25'] = lines['23'] - lines['24']
         lines['27'] = lines['25'] + lines['26']
 
-        lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
+        if created_on < 2023:
+            lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
+        else:
+            lines['28'] = (lines['27'] * Decimal('-600.00')).max(Decimal(0))
 
         total_payable = lines['11'] + lines['22'] + lines['28']
 

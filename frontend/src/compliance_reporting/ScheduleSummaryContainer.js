@@ -31,7 +31,7 @@ class ScheduleSummaryContainer extends Component {
     this.state = {
       diesel: new ScheduleSummaryDiesel(props.readOnly),
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
-      part3: new ScheduleSummaryPart3(),
+      part3: new ScheduleSummaryPart3(props.period),
       penalty: new ScheduleSummaryPenalty(),
       showModal: false,
       totals: {
@@ -112,7 +112,7 @@ class ScheduleSummaryContainer extends Component {
       // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
       GasolineSummaryConatiner.lineData(gasoline, summary)
 
-      Part3SummaryContainer.lineData(part3, summary, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA)
+      Part3SummaryContainer.lineData(part3, summary, this.props.period, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA)
 
       // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
       PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
