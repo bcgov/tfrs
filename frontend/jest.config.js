@@ -25,5 +25,8 @@ module.exports = {
     'node_modules/(?!(react.*|@babel.*|es.*)/)'
   ],
   verbose: true,
-  testEnvironment: 'jsdom'
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: [
+    "<rootDir>/setupTests.js"
+  ]
 }

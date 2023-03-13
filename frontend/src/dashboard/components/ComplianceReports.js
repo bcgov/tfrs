@@ -31,6 +31,7 @@ const ComplianceReports = (props) => {
   }
 
   items.forEach((item) => {
+    // console.log(item)
     let {  id } = item
     let { status } = item
     const { supplementalReports, type } = item
@@ -53,6 +54,7 @@ const ComplianceReports = (props) => {
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
     status.managerStatus === 'Unreviewed' && status.directorStatus === "Unreviewed") {
+      // console.log(complianceManagerIds)
       if (reportType === 'complianceReports') {
         complianceManagerIds.push(id)
       }else {

@@ -54,6 +54,8 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
+    // console.log(this.props.items, '972==items')
+    console.log(JSON.stringify(this.props.items[0]))
     const columns = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
