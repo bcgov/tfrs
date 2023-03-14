@@ -295,7 +295,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             original_reports = qs.filter(Q(supplemental_reports=None))
             unique_reports = original_reports | supplemental_reports
             qs = self.filter_compliance_status(unique_reports, value)
-            qs = qs.annotate(Count('supplements')).filter(supplements__count=0)
         except Exception as e:
             print(e)
         return qs
