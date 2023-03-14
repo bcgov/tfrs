@@ -10,6 +10,7 @@ const ComplianceReports = (props) => {
   const navigate = useNavigate()
   const complianceManagerIds = []
   const exclusionManagerIds= []
+  const placeholder = []
 
   if (isFinding || isGettingDashboard) {
     return <Loading />
@@ -31,7 +32,9 @@ const ComplianceReports = (props) => {
   }
 
   items.forEach((item) => {
+    let deepestSupplementalReport = null;
     let {  id } = item
+    let id_2 = id
     let { status } = item
     const { supplementalReports, type } = item
     const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports'
@@ -43,7 +46,7 @@ const ComplianceReports = (props) => {
         deepestSupplementalReport.supplementalReports.length > 0) {
         [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports
       }
-      ({ status } = deepestSupplementalReport)
+      ({ status, id:id_2 } = deepestSupplementalReport)
     }
 
     if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed') {
@@ -53,13 +56,23 @@ const ComplianceReports = (props) => {
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
     status.managerStatus === 'Unreviewed' && status.directorStatus === "Unreviewed") {
-      if (reportType === 'complianceReports') {
+      if(placeholder.includes(id_2)){
+        return 
+      }
+      else {
+        placeholder.push(id_2)
+      }
+      if (reportType === 'complianceReports'){
         complianceManagerIds.push(id)
+        awaitingReview[reportType].manager += 1
+        awaitingReview[reportType].total += 1
+
       }else {
         exclusionManagerIds.push(id)
+        awaitingReview[reportType].manager += 1
+        awaitingReview[reportType].total += 1
       }
-      awaitingReview[reportType].manager += 1
-      awaitingReview[reportType].total += 1
+      
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
