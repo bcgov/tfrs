@@ -278,9 +278,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             ids = [s.id for s in latest_supplementals]
             supplemental_reports = ComplianceReportService.get_organization_compliance_reports(
             self.request.user.organization).filter(id__in=ids)
-            
-            original_reports = qs.filter(Q(supplemental_reports=None))
-            unique_reports = original_reports | supplemental_reports
+            unique_reports = supplemental_reports.filter(Q(supplements_id__isnull=False))
             qs = self.filter_supplemental_report_status(unique_reports, value)
         except Exception as e:
             print(e)
@@ -292,8 +290,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             ids = [s.id for s in latest_supplementals]
             supplemental_reports = ComplianceReportService.get_organization_compliance_reports(
             self.request.user.organization).filter(id__in=ids)
-            original_reports = qs.filter(Q(supplemental_reports=None))
+            original_reports = qs.filter(Q(supplements_id__isnull=True))
             unique_reports = original_reports | supplemental_reports
+            unique_reports = unique_reports.filter(Q(supplements_id__isnull=True))
             qs = self.filter_compliance_status(unique_reports, value)
         except Exception as e:
             print(e)
