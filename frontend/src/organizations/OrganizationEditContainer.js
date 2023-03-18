@@ -3,220 +3,263 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
 
-import { addOrganization, getOrganization, updateOrganization } from '../actions/organizationActions'
-import { getUpdatedLoggedInUser } from '../actions/userActions'
-import Loading from '../app/components/Loading'
-import OrganizationEditForm from './components/OrganizationEditForm'
-import toastr from '../utils/toastr'
-import ORGANIZATION from '../constants/routes/Organizations'
-import Modal from '../app/components/Modal'
-import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations'
-import { withRouter } from '../utils/withRouter'
+import {
+  addOrganization,
+  getOrganization,
+  updateOrganization,
+} from "../actions/organizationActions";
+import { getUpdatedLoggedInUser } from "../actions/userActions";
+import Loading from "../app/components/Loading";
+import OrganizationEditForm from "./components/OrganizationEditForm";
+import toastr from "../utils/toastr";
+import ORGANIZATION from "../constants/routes/Organizations";
+import Modal from "../app/components/Modal";
+import PERMISSIONS_ORGANIZATIONS from "../constants/permissions/Organizations";
+import { withRouter } from "../utils/withRouter";
 
 class OrganizationEditContainer extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       fields: {
-        name: '',
-        addressLine_1: '',
-        addressLine_2: '',
-        addressLine_3: '',
-        city: '',
-        postalCode: '',
-        state: '',
-        county: '',
-        country: '',
-        type: 2,
-        actionsType: 1,
-        status: 1
-      }
+        org_name: "",
+        org_addressLine1: "",
+        org_addressLine2: "",
+        org_city: "",
+        org_postalCode: "",
+        org_state: "",
+        org_country: "",
+        org_type: 2,
+        org_actionsType: 1,
+        org_status: 1,
+        att_representativeName: "",
+        att_streetAddress: "",
+        att_otherAddress: "",
+        att_city: "",
+        att_province: "",
+        att_country: "",
+        att_postalCode: "",
+      },
+    };
+
+    this.submitted = false;
+
+    this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleCreate = this._handleCreate.bind(this);
+    this._handleUpdate = this._handleUpdate.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.mode === "add") {
+      return;
     }
 
-    this.submitted = false
-
-    this._handleInputChange = this._handleInputChange.bind(this)
-    this._handleCreate = this._handleCreate.bind(this)
-    this._handleUpdate = this._handleUpdate.bind(this)
+    this.loadData(this.props.params.id);
   }
 
-  componentDidMount () {
-    if (this.props.mode === 'add') {
-      return
+  UNSAFE_componentWillReceiveProps(props) {
+    if (props.mode === "add") {
+      return;
     }
 
-    this.loadData(this.props.params.id)
+    this.loadPropsToFieldState(props);
   }
 
-  UNSAFE_componentWillReceiveProps (props) {
-    if (props.mode === 'add') {
-      return
-    }
-
-    this.loadPropsToFieldState(props)
+  loadData(id) {
+    this.props.getOrganization(id);
   }
 
-  loadData (id) {
-    this.props.getOrganization(id)
-  }
-
-  loadPropsToFieldState (props) {
-    if (Object.keys(props.organization.details).length !== 0 && !this.submitted) {
-      const org = props.organization.details
-      let addr = {}
+  loadPropsToFieldState(props) {
+    if (
+      Object.keys(props.organization.details).length !== 0 &&
+      !this.submitted
+    ) {
+      const org = props.organization.details;
+      let addr = {};
 
       if (org.organizationAddress != null) {
         addr = {
-          ...org.organizationAddress
-        }
+          ...org.organizationAddress,
+        };
       }
 
       this.setState({
         fields: {
-          name: props.organization.details.name,
-          status: props.organization.details.status,
-          actionsType: props.organization.details.actionsType,
-          type: props.organization.details.type,
-          ...addr
-        }
-      })
+          org_name: props.organization.details.name,
+          org_status: props.organization.details.status,
+          org_actionsType: props.organization.details.actionsType,
+          org_type: props.organization.details.type,
+          org_addressLine1: addr.addressLine1,
+          org_addressLine2: addr.addressLine2,
+          org_city: addr.city,
+          org_state: addr.state,
+          org_country: addr.country,
+          org_postalCode: addr.postalCode,
+          att_representativeName: addr.attorneyRepresentativename,
+          att_streetAddress: addr.attorneyStreetAddress,
+          att_otherAddress: addr.attorneyAddressOther,
+          att_city: addr.attorneyCity,
+          att_province: addr.attorneyProvince,
+          att_country: addr.attorneyCountry,
+          att_postalCode: addr.attorneyPostalCode,
+        },
+      });
     }
   }
 
-  _modalConfirm () {
+  _modalConfirm() {
     return (
       <Modal
         handleSubmit={(event) => {
-          this._handleCreate()
+          this._handleCreate();
         }}
         id="confirmSubmit"
         key="confirmSubmit"
       >
         Are you sure you want to create this organization?
       </Modal>
-    )
+    );
   }
 
-  _handleInputChange (event) {
-    const { value, name } = event.target
-    const fieldState = { ...this.state.fields }
-    const numericFields = ['type', 'actionsType', 'status']
+  _handleInputChange(event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
+    const numericFields = ["type", "actionsType", "status"];
 
     if (numericFields.includes(name)) {
-      fieldState[name] = parseInt(value, 10)
+      fieldState[name] = parseInt(value, 10);
     } else {
-      fieldState[name] = value
+      fieldState[name] = value;
     }
 
     this.setState({
-      fields: fieldState
-    })
+      fields: fieldState,
+    });
   }
 
-  _handleUpdate (event) {
-    event.preventDefault()
+  _handleUpdate(event) {
+    event.preventDefault();
 
     const data = {
-      name: this.state.fields.name,
-      type: this.state.fields.type,
-      actionsType: this.state.fields.actionsType,
-      status: this.state.fields.status,
+      name: this.state.fields.org_name,
+      type: this.state.fields.org_type,
+      actionsType: this.state.fields.org_actionsType,
+      status: this.state.fields.org_status,
       organizationAddress: {
-        addressLine_1: this.state.fields.addressLine1,
-        addressLine_2: this.state.fields.addressLine2,
-        addressLine_3: this.state.fields.addressLine3,
-        city: this.state.fields.city,
-        postalCode: this.state.fields.postalCode,
-        state: this.state.fields.state,
-        county: this.state.fields.county,
-        country: this.state.fields.country
-      }
-    }
+        addressLine_1: this.state.fields.org_addressLine1,
+        addressLine_2: this.state.fields.org_addressLine2,
+        city: this.state.fields.org_city,
+        postalCode: this.state.fields.org_postalCode,
+        state: this.state.fields.org_state,
+        country: this.state.fields.org_country,
+        attorney_representativename: this.state.fields.att_representativeName,
+        attorney_streetAddress: this.state.fields.att_streetAddress,
+        attorney_address_other: this.state.fields.att_otherAddress,
+        attorney_city: this.state.fields.att_city,
+        attorney_province: this.state.fields.att_province,
+        attorney_country: this.state.fields.att_country,
+        attorney_postalCode: this.state.fields.att_postalCode,
+      },
+    };
 
-    let viewUrl = ORGANIZATION.MINE
+    let viewUrl = ORGANIZATION.MINE;
 
-    if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
-      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.params.id)
+    if (
+      this.props.loggedInUser.hasPermission(
+        PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS
+      )
+    ) {
+      viewUrl = ORGANIZATION.DETAILS.replace(":id", this.props.params.id);
     }
 
     this.props.updateOrganization(data, this.props.params.id).then(() => {
       // update the session for the logged in user (in case the user information got updated)
-      this.props.getUpdatedLoggedInUser()
-      this.props.navigate(viewUrl)
-      toastr.organizationSuccess()
-    })
+      this.props.getUpdatedLoggedInUser();
+      this.props.navigate(viewUrl);
+      toastr.organizationSuccess();
+    });
 
-    return false
+    return false;
   }
 
-  _handleCreate () {
+  _handleCreate() {
     const data = {
-      name: this.state.fields.name,
-      type: this.state.fields.type,
-      actionsType: this.state.fields.actionsType,
-      status: this.state.fields.status,
+      name: this.state.fields.org_name,
+      type: this.state.fields.org_type,
+      actionsType: this.state.fields.org_actionsType,
+      status: this.state.fields.org_status,
       organizationAddress: {
-        addressLine_1: this.state.fields.addressLine1,
-        addressLine_2: this.state.fields.addressLine2,
-        addressLine_3: this.state.fields.addressLine3,
-        city: this.state.fields.city,
-        postalCode: this.state.fields.postalCode,
-        state: this.state.fields.state,
-        county: this.state.fields.county,
-        country: this.state.fields.country
-      }
-    }
+        addressLine_1: this.state.fields.org_addressLine1,
+        addressLine_2: this.state.fields.org_addressLine2,
+        city: this.state.fields.org_city,
+        postalCode: this.state.fields.org_postalCode,
+        state: this.state.fields.org_state,
+        country: this.state.fields.org_country,
+        attorney_representativename: this.state.fields.att_representativeName,
+        attorney_streetAddress: this.state.fields.att_streetAddress,
+        attorney_address_other: this.state.fields.att_otherAddress,
+        attorney_city: this.state.fields.att_city,
+        attorney_province: this.state.fields.att_province,
+        attorney_country: this.state.fields.att_country,
+        attorney_postalCode: this.state.fields.att_postalCode,
+      },
+    };
 
     this.props.addOrganization(data).then((id) => {
-      const viewUrl = ORGANIZATION.DETAILS.replace(':id', id)
-      this.props.navigate(viewUrl)
-      toastr.organizationSuccess('Organization created.')
-    })
+      const viewUrl = ORGANIZATION.DETAILS.replace(":id", id);
+      this.props.navigate(viewUrl);
+      toastr.organizationSuccess("Organization created.");
+    });
 
-    return false
+    return false;
   }
 
-  render () {
-    const isFetching = this.props.organization.isFetching ||
+  render() {
+    const isFetching =
+      this.props.organization.isFetching ||
       this.props.referenceData.isFetching ||
-      !this.props.referenceData.isSuccessful
+      !this.props.referenceData.isSuccessful;
 
     if (isFetching) {
-      return (<Loading />)
+      return <Loading />;
     }
 
     switch (this.props.mode) {
-      case 'add':
-        return ([<OrganizationEditForm
-          fields={this.state.fields}
-          handleInputChange={this._handleInputChange}
-          handleSubmit={() => {
-            $('#confirmSubmit').modal('show')
-          }}
-          key="organization-edit-form"
-          loggedInUser={this.props.loggedInUser}
-          mode={this.props.mode}
-          referenceData={this.props.referenceData}
-        />,
-        this._modalConfirm()])
-      case 'gov_edit':
-      case 'edit':
-        return (<OrganizationEditForm
-          fields={this.state.fields}
-          handleInputChange={this._handleInputChange}
-          handleSubmit={this._handleUpdate}
-          loggedInUser={this.props.loggedInUser}
-          mode={this.props.mode}
-          referenceData={this.props.referenceData}
-        />)
+      case "add":
+        return [
+          <OrganizationEditForm
+            fields={this.state.fields}
+            handleInputChange={this._handleInputChange}
+            handleSubmit={() => {
+              $("#confirmSubmit").modal("show");
+            }}
+            key="organization-edit-form"
+            loggedInUser={this.props.loggedInUser}
+            mode={this.props.mode}
+            referenceData={this.props.referenceData}
+          />,
+          this._modalConfirm(),
+        ];
+      case "gov_edit":
+      case "edit":
+        return (
+          <OrganizationEditForm
+            fields={this.state.fields}
+            handleInputChange={this._handleInputChange}
+            handleSubmit={this._handleUpdate}
+            loggedInUser={this.props.loggedInUser}
+            mode={this.props.mode}
+            referenceData={this.props.referenceData}
+          />
+        );
       default:
-        return (<div />)
+        return <div />;
     }
   }
 }
@@ -224,8 +267,8 @@ class OrganizationEditContainer extends Component {
 OrganizationEditContainer.defaultProps = {
   match: null,
   organization: null,
-  referenceData: null
-}
+  referenceData: null,
+};
 
 OrganizationEditContainer.propTypes = {
   getUpdatedLoggedInUser: PropTypes.func.isRequired,
@@ -235,70 +278,81 @@ OrganizationEditContainer.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
-        validatedCredits: PropTypes.number
+        validatedCredits: PropTypes.number,
       }),
-      statusDisplay: PropTypes.string
-    })
+      statusDisplay: PropTypes.string,
+    }),
   }).isRequired,
   params: PropTypes.shape({
-    id: PropTypes.string
+    id: PropTypes.string,
   }),
   organization: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
-        validatedCredits: PropTypes.number
+        validatedCredits: PropTypes.number,
       }),
       status: PropTypes.number,
       type: PropTypes.number,
-      actionsType: PropTypes.number
+      actionsType: PropTypes.number,
     }),
-    isFetching: PropTypes.bool
+    isFetching: PropTypes.bool,
   }),
   referenceData: PropTypes.shape({
-    organizationTypes: PropTypes.arrayOf(PropTypes.shape({
-      type: PropTypes.string,
-      id: PropTypes.number
-    })),
-    organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape({
-      the_type: PropTypes.string,
-      id: PropTypes.number
-    })),
-    organizationStatuses: PropTypes.arrayOf(PropTypes.shape({
-      status: PropTypes.string,
-      id: PropTypes.number
-    })),
+    organizationTypes: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.string,
+        id: PropTypes.number,
+      })
+    ),
+    organizationActionsTypes: PropTypes.arrayOf(
+      PropTypes.shape({
+        the_type: PropTypes.string,
+        id: PropTypes.number,
+      })
+    ),
+    organizationStatuses: PropTypes.arrayOf(
+      PropTypes.shape({
+        status: PropTypes.string,
+        id: PropTypes.number,
+      })
+    ),
     isFetching: PropTypes.bool,
-    isSuccessful: PropTypes.bool
+    isSuccessful: PropTypes.bool,
   }),
   updateOrganization: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
-  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']).isRequired,
-  navigate: PropTypes.func.isRequired
-}
+  mode: PropTypes.oneOf(["add", "edit", "admin_edit"]).isRequired,
+  navigate: PropTypes.func.isRequired,
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
-    isFetching: state.rootReducer.organizationRequest.isFetching
+    isFetching: state.rootReducer.organizationRequest.isFetching,
   },
   referenceData: {
     organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
-    organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
-    organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
+    organizationStatuses:
+      state.rootReducer.referenceData.data.organizationStatuses,
+    organizationActionsTypes:
+      state.rootReducer.referenceData.data.organizationActionsTypes,
     isFetching: state.rootReducer.referenceData.isFetching,
-    isSuccessful: state.rootReducer.referenceData.success
-  }
-})
+    isSuccessful: state.rootReducer.referenceData.success,
+  },
+});
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
   getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   updateOrganization: bindActionCreators(updateOrganization, dispatch),
-  addOrganization: bindActionCreators(addOrganization, dispatch)
-})
+  addOrganization: bindActionCreators(addOrganization, dispatch),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrganizationEditContainer))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(OrganizationEditContainer));
