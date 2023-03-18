@@ -44,5 +44,7 @@ class OrganizationAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationAddress
         fields = (
-            'id', 'address_line_1', 'address_line_2', 'address_line_3',
-            'city', 'postal_code', 'state', 'county', 'country')
+            'id', 'address_line_1', 'address_line_2',
+            'city', 'postal_code', 'state', 'country','attorney_city',
+            'attorney_postal_code','attorney_province','attorney_country','attorney_address_other',
+            'attorney_street_address','attorney_representativename')

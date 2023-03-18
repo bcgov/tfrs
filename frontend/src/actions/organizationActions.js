@@ -170,7 +170,7 @@ const addOrganizationSuccess = response => ({
 
 const updateOrganization = (data, id) => (dispatch) => {
   dispatch(updateOrganizationRequest({ id, data }))
-
+  
   return axios.put(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}`, data)
     .then((response) => {
       dispatch(updateOrganizationSuccess(response.data))
