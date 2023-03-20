@@ -142,11 +142,13 @@ const Current = props => (
 
 Current.defaultProps = {
   computedWarning: false,
+  dirtyWarning: false,
   snapshot: null
 }
 
 Current.propTypes = {
   computedWarning: PropTypes.bool,
+  dirtyWarning: PropTypes.bool,
   snapshot: PropTypes.shape()
 }
 

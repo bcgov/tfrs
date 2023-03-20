@@ -421,7 +421,8 @@ CreditTransferAddContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   signingAuthorityAssertions: PropTypes.shape().isRequired,
-  validationErrors: PropTypes.shape()
+  validationErrors: PropTypes.shape(),
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

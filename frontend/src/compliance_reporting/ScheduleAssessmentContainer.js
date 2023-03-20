@@ -48,7 +48,7 @@ class ScheduleAssessmentContainer extends Component {
       return <Loading />
     }
 
-    let hasDirectorAssessment = false;
+    let hasDirectorAssessment = false
     if (this.props.complianceReport && ['Accepted'].indexOf(this.props.complianceReport.status.directorStatus) >= 0) {
       hasDirectorAssessment = true
     } else if (this.props.complianceReport &&
@@ -56,11 +56,11 @@ class ScheduleAssessmentContainer extends Component {
       this.props.complianceReport.history.find(h =>
         (['Accepted'].indexOf(h.status.directorStatus) >= 0))
     ) {
-      hasDirectorAssessment = true;
+      hasDirectorAssessment = true
     }
 
     if (!this.props.loggedInUser.isGovernmentUser && !hasDirectorAssessment) {
-      return null;
+      return null
     }
 
     let part2Compliant = 'Did not supply Part 2 fuel'

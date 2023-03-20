@@ -1,11 +1,11 @@
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
-import { numericColumn, numericInput, totalViewer } from './Columns'
-import Tooltip from '../../app/components/Tooltip'
+import { numericColumn, numericInput, totalViewer } from '../compliance_reporting/components/Columns'
+import Tooltip from '../app/components/Tooltip'
 
 class ScheduleSummaryPart3 {
-  constructor () {
+  constructor (period) {
+    period = Number(period)
     return [
       [{
         className: 'summary-label header',
@@ -221,7 +221,9 @@ class ScheduleSummaryPart3 {
             <Tooltip
               className="info"
               show
-              title="This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty."
+              title={
+                period < 2023 ? "This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty." : "This line displays the penalty payable based on the information provided and is calculated using the $600 per outstanding debit non-compliance penalty."
+              }
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>

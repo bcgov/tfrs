@@ -22,8 +22,8 @@ const getValidationMessages = (props) => {
   if (props.validating) {
     return 'Identifying potential issues...'
   }
-  let type = props.exclusionReports.item.type.theType
-  let period = props.compliancePeriod
+  const type = props.exclusionReports.item.type.theType
+  const period = props.compliancePeriod
   const found = props.complianceReports.items.find(item => (
     item.status.fuelSupplierStatus === 'Submitted' &&
     item.compliancePeriod.description === period &&

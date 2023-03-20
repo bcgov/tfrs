@@ -282,7 +282,8 @@ FuelCodeForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 export default withRouter(FuelCodeForm)

@@ -6,10 +6,6 @@ labels:
 metadata:
   name: tfrs-network-policy
 parameters:
-  - name: SUFFIX
-    displayName: null
-    description: sample is -dev-97
-    required: true  
   - name: ENVIRONMENT
     displayName: null
     description: such as dev, test or prod
@@ -24,7 +20,6 @@ objects:
       ## Allow rabbitmq to accept communications from backend
       ## Allow rabbitmq to accept communications from scan handler
       ## Allow rabbitmq to accept communications from scan coordinator
-      ## Allow rabbitmq to accept communications from nagios
       ## Allow rabbitmq to accept communications from celery
       ## Allow rabbitmq to accept communications from other rabbitmq pods
       podSelector:
@@ -34,42 +29,35 @@ objects:
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-notification-server${SUFFIX}
+                  name: tfrs-notification-server-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 5672          
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-backend${SUFFIX}
+                  name: tfrs-backend-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 5672            
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-scan-handler${SUFFIX}
+                  name: tfrs-scan-handler-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 5672      
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-scan-coordinator${SUFFIX}
+                  name: tfrs-scan-coordinator-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 5672   
         - from:
             - podSelector:
                 matchLabels:
-                  app: nagios
-          ports:
-            - protocol: TCP
-              port: 5672                             
-        - from:
-            - podSelector:
-                matchLabels:
-                  name: tfrs-celery${SUFFIX}
+                  name: tfrs-celery-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 5672           
@@ -100,14 +88,14 @@ objects:
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-scan-coordinator${SUFFIX}
+                  name: tfrs-scan-coordinator-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 3310     
         - from:
             - podSelector:
                 matchLabels:
-                  name: tfrs-backend${SUFFIX}
+                  name: tfrs-backend-${ENVIRONMENT}
           ports:
             - protocol: TCP
               port: 3310        

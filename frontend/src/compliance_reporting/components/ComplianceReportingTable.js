@@ -86,7 +86,9 @@ class ComplianceReportingTable extends Component {
       id: 'displayname',
       minWidth: 75
     }, {
-      accessor: ComplianceReportStatus,
+      accessor: (item) => {
+        return ComplianceReportStatus(item)
+      },
       className: 'col-status',
       Header: 'Original Status',
       id: 'status',
@@ -141,7 +143,7 @@ class ComplianceReportingTable extends Component {
         </span>
       )
     }]
-
+    const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
 
     return (
@@ -207,7 +209,7 @@ class ComplianceReportingTable extends Component {
           this.handlePageChange(1)
           this.handlePageSizeChange(pageSize)
         }}
-        filtered={this.state.filters}
+        filtered={tableHeader?.tableId || this.state.filters}
         onFilteredChange={(filtered, column) => {
           this.handlePageChange(1)
           this.handleFiltersChange(filtered)
@@ -239,7 +241,9 @@ ComplianceReportingTable.propTypes = {
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  getComplianceReports: PropTypes.func.isRequired
+  getComplianceReports: PropTypes.func.isRequired,
+  filters: PropTypes.any,
+  navigate: PropTypes.func.isRequired
 }
 
 export default withRouter(ComplianceReportingTable)

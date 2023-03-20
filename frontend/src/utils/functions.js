@@ -1,3 +1,4 @@
+import React from 'react'
 import axios from 'axios'
 import CONFIG from '../config'
 
@@ -172,12 +173,49 @@ const validateFiles = files => (
 
 const calculatePages = (numberOfItems, pageSize) => {
   if (numberOfItems === 0) {
-    return 1;
+    return 1
   }
-  return Math.ceil(numberOfItems / pageSize);
+  return Math.ceil(numberOfItems / pageSize)
 }
+const cellFormatNumeric = cellValue => ({
+  className: 'numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    if (Number(value) < 0) {
+      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>
+    }
+
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
+
+const cellFormatTotal = cellValue => ({
+  className: 'numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    if (Number(value) < 0) {
+      return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>
+    }
+
+    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
 
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages
-};
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal
+}

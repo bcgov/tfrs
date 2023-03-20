@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { connect } from 'react-redux'
@@ -104,6 +105,10 @@ class Login extends React.Component {
       </div>
     )
   }
+}
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

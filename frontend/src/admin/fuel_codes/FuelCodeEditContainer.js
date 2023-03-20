@@ -255,7 +255,8 @@ FuelCodeEditContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
-  updateFuelCode: PropTypes.func.isRequired
+  updateFuelCode: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

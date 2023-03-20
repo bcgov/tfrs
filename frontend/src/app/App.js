@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { IntlProvider } from 'react-intl'
 import { connect } from 'react-redux'
@@ -103,6 +104,27 @@ class App extends Component {
       </IntlProvider>
     )
   }
+}
+
+App.propTypes = {
+  keycloak: PropTypes.shape({
+    authenticated: PropTypes.bool
+  }).isRequired,
+  loggingIn: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    username: PropTypes.string
+  }).isRequired,
+  userRequest: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    serverError: PropTypes.bool
+  }).isRequired,
+  errorRequest: PropTypes.shape({
+    hasErrors: PropTypes.bool,
+    error: PropTypes.shape({
+      status: PropTypes.bool
+    })
+  }).isRequired,
+  unreadNotificationsCount: PropTypes.number
 }
 
 const mapStateToProps = state => ({

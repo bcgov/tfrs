@@ -101,7 +101,8 @@ FuelCodeDetailContainer.propTypes = {
   }).isRequired,
   referenceData: PropTypes.shape({
     fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired
+  }).isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

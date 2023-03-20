@@ -555,7 +555,10 @@ CreditTransferEditContainer.propTypes = {
       id: PropTypes.number,
       comment: PropTypes.string
     })),
-    actions: PropTypes.arrayOf(PropTypes.shape({}))
+    actions: PropTypes.arrayOf(PropTypes.shape({})),
+    type: PropTypes.shape({
+      id: PropTypes.number
+    })
   }).isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -573,7 +576,8 @@ CreditTransferEditContainer.propTypes = {
   signingAuthorityAssertions: PropTypes.shape().isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired,
-  validationErrors: PropTypes.shape()
+  validationErrors: PropTypes.shape(),
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

@@ -9,8 +9,7 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
-import { calculatePages} from '../../utils/functions'
-
+import { calculatePages } from '../../utils/functions'
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -21,7 +20,7 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'ID',
     resizable: false,
     width: 45
-   }, {
+  }, {
     accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -73,13 +72,21 @@ const SecureFileSubmissionTable = (props) => {
     id: 'title',
     minWidth: 100
   }, {
+    accessor: (item) => {
+      if (item.creditTrades.length > 0){
+        return `${item.creditTrades[0].id}`
+      }
+      else{
+        return '-';
+      }
+    },
     className: 'col-credit-transaction-id',
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
   }, {
     accessor: (item) => {
-      let historyFound = false;
+      let historyFound = false
       if (item.history) {
         historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'))
       }
@@ -170,7 +177,7 @@ SecureFileSubmissionTable.propTypes = {
     }),
     listTitle: PropTypes.string,
     type: PropTypes.shape({
-      id: PropTypes.integer
+      id: PropTypes.number
     })
   })).isRequired,
   itemsCount: PropTypes.number.isRequired,
@@ -181,11 +188,11 @@ SecureFileSubmissionTable.propTypes = {
   handlePageChange: PropTypes.func.isRequired,
   handlePageSizeChange: PropTypes.func.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sort: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleFiltersChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
   }).isRequired,
-  handleFiltersChange: PropTypes.func.isRequired,
   handleSortChange: PropTypes.func.isRequired
 }
 

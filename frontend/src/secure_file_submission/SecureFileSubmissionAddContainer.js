@@ -328,7 +328,8 @@ SecureFileSubmissionAddContainer.propTypes = {
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
   scanDocumentAttachments: PropTypes.func.isRequired,
-  uploadDocument: PropTypes.func.isRequired
+  uploadDocument: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired
 
 }
 

@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ComplianceReports Should render the component 1`] = `
+<div
+  className="dashboard-fieldset"
+>
+  <h1>
+    Compliance & Exclusion Reports
+  </h1>
+  There are:
+  <div>
+    <div
+      className="value"
+    >
+      0
+    </div>
+    <div
+      className="content"
+    >
+      <h2>
+        compliance reports in progress:
+      </h2>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting government analyst review
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting compliance manager review
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting Director review
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      className="value"
+    >
+      0
+    </div>
+    <div
+      className="content"
+    >
+      <h2>
+        exclusion reports in progress:
+      </h2>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting government analyst review
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting compliance manager review
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          0
+           awaiting Director review
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      className="content"
+    >
+      <h2>
+        View all reports:
+      </h2>
+      <div>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          Current compliance period
+        </button>
+         | 
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          All/historical
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -16,6 +16,7 @@ from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentCreditTrade import DocumentCreditTrade
+from api.models.DocumentHistory import DocumentHistory
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.CreditTrade import CreditTradeListSerializer
 from api.serializers.Document import \
@@ -30,6 +31,8 @@ from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
 from api.paginations import BasicPagination
+from django.db.models import OuterRef, Subquery
+from django.db.models.functions import TruncDate
 class DocumentViewSet(AuditableMixin,
                       mixins.CreateModelMixin,
                       mixins.ListModelMixin,
@@ -43,6 +46,8 @@ class DocumentViewSet(AuditableMixin,
     permission_classes = (DocumentPermissions,)
     http_method_names = ['delete', 'get', 'put', 'post', 'patch']
     queryset = Document.objects.all()
+    submitted_history = DocumentHistory.objects.filter(document=OuterRef('pk'), status__status='Submitted').order_by('-create_timestamp')
+    queryset = queryset.annotate(submitted_date=Subquery(submitted_history.annotate(submitted_date=TruncDate('create_timestamp')).values('submitted_date')[:1]))
     ordering = ('-id',)
     serializer_class = DocumentSerializer
     serializer_classes = {
@@ -114,7 +119,7 @@ class DocumentViewSet(AuditableMixin,
         if request.path.endswith('paginated') and request.method == 'POST':
             sort = request.data.get('sort')
             filters = request.data.get('filters')
-            key_maps = {'title':'title', 'status':'status__status', 'attachment-type':'type__description', 'updateTimestamp': 'update_timestamp',  'organization':'create_user', 'id': 'id', 'credit-transaction-id':'credit_trades'}
+            key_maps = {'title':'title', 'status':'status__status', 'attachment-type':'type__description', 'updateTimestamp': 'submitted_date',  'organization':'create_user__organization__name', 'id': 'id', 'credit-transaction-id':'credit_trades'}
             if sort:
                 sortCondition = sort[0].get('desc')
                 sortId = sort[0].get('id')
@@ -132,7 +137,7 @@ class DocumentViewSet(AuditableMixin,
                             organization_split = value.split()
                             q_object = None
                             for x in organization_split:
-                                q_sub_object = Q(create_user__icontains = x)
+                                q_sub_object = Q(create_user__organization__name__icontains = x)
                                 if not q_object:
                                     q_object = q_sub_object
                                 else:
@@ -160,11 +165,13 @@ class DocumentViewSet(AuditableMixin,
                                 else:
                                     q_object = q_object & q_sub_object
                             qs = qs.filter(q_object)
+                        if id == 'credit-transaction-id':
+                            qs = qs.filter(credit_trades__id__icontains = value)
                         if id == 'updateTimestamp':
                             date_split = value.split("-")
                             q_object = None
                             for x in date_split:
-                                q_sub_object = Q(update_timestamp__icontains = x)
+                                q_sub_object = Q(submitted_date__contains = x)
                                 if not q_object:
                                     q_object = q_sub_object
                                 else:

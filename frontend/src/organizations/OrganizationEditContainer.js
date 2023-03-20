@@ -275,7 +275,8 @@ OrganizationEditContainer.propTypes = {
   updateOrganization: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
-  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']).isRequired
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']).isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

@@ -120,7 +120,7 @@ class UserAddContainer extends Component {
   _handleOrganizationSelect (organization) {
     const fieldState = { ...this.state.fields }
     fieldState.organization = organization
-    fieldState.organizationName = organization.name;
+    fieldState.organizationName = organization.name
     this.setState({
       fields: fieldState
     })
@@ -260,7 +260,8 @@ UserAddContainer.propTypes = {
   organization: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string
-  })
+  }),
+  navigate: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

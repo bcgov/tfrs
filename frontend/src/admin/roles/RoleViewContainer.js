@@ -34,10 +34,10 @@ RoleViewContainer.propTypes = {
   getRole: PropTypes.func.isRequired,
   params: PropTypes.shape({
     id: PropTypes.string.isRequired
-  }).isRequired,
+  }),
   role: PropTypes.shape({
     details: PropTypes.shape({}),
-    error: PropTypes.shape({}),
+    error: PropTypes.arrayOf(PropTypes.shape({})),
     isFetching: PropTypes.bool
   })
 }

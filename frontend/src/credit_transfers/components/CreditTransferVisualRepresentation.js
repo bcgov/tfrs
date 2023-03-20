@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import numeral from "numeral";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import numeral from 'numeral'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as NumberFormat from "../../constants/numeralFormats";
+import * as NumberFormat from '../../constants/numeralFormats'
 import {
   CREDIT_TRANSFER_STATUS,
-  CREDIT_TRANSFER_TYPES,
-} from "../../constants/values";
-import { getCreditTransferType } from "../../actions/creditTransfersActions";
+  CREDIT_TRANSFER_TYPES
+} from '../../constants/values'
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
 
 class CreditTransferVisualRepresentation extends Component {
-  _renderPart3Award() {
+  _renderPart3Award () {
     return (
       <div className='row visual-representation container'>
         <div className='col-xs-10 col-sm-8 col-md-4'>
@@ -21,17 +21,17 @@ class CreditTransferVisualRepresentation extends Component {
         </div>
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
-            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{" "}
-            credit{this.props.numberOfCredits > 1 && "s"}
+            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
+            credit{this.props.numberOfCredits > 1 && 's'}
           </div>
-          <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{" "}
+          <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
-    );
+    )
   }
 
-  _renderRetirement() {
+  _renderRetirement () {
     return (
       <div className='row visual-representation container'>
         <div className='col-xs-10 col-sm-8 col-md-4'>
@@ -41,42 +41,42 @@ class CreditTransferVisualRepresentation extends Component {
         </div>
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
-            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{" "}
-            credit{this.props.numberOfCredits > 2 && "s"}
+            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
+            credit{this.props.numberOfCredits > 2 && 's'}
           </div>
-          <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />{" "}
+          <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
-    );
+    )
   }
 
-  _creditTransferIcon() {
+  _creditTransferIcon () {
     if (Number(this.props.numberOfCredits) === 0) {
-      return { icon: "minus", className: "" };
+      return { icon: 'minus', className: '' }
     }
 
     if (this.props.totalValue === 0.0) {
       if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) {
-        return { icon: "arrow-left", className: "" };
+        return { icon: 'arrow-left', className: '' }
       }
       if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id) {
-        return { icon: "arrow-left", className: "fa-flip-horizontal" };
+        return { icon: 'arrow-left', className: 'fa-flip-horizontal' }
       }
     }
 
     switch (this.props.tradeType.id) {
       case CREDIT_TRANSFER_TYPES.buy.id:
       case CREDIT_TRANSFER_TYPES.sell.id:
-        return { icon: "exchange-alt", className: "" };
+        return { icon: 'exchange-alt', className: '' }
       default:
-        return { icon: "minus", className: "" };
+        return { icon: 'minus', className: '' }
     }
   }
 
-  _renderCreditTransfer() {
-    const creditsFromStatus = this.props.creditsFrom.statusDisplay;
-    const creditsToStatus = this.props.creditsTo.statusDisplay;
+  _renderCreditTransfer () {
+    const creditsFromStatus = this.props.creditsFrom.statusDisplay
+    const creditsToStatus = this.props.creditsTo.statusDisplay
 
     return (
       <div className='row visual-representation container'>
@@ -88,7 +88,7 @@ class CreditTransferVisualRepresentation extends Component {
             {[
               CREDIT_TRANSFER_STATUS.accepted.id,
               CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
-              CREDIT_TRANSFER_STATUS.notRecommended.id,
+              CREDIT_TRANSFER_STATUS.notRecommended.id
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
@@ -105,20 +105,20 @@ class CreditTransferVisualRepresentation extends Component {
                   )
                   <div
                     className={
-                      creditsFromStatus === "Inactive" ? "text-danger" : ""
+                      creditsFromStatus === 'Inactive' ? 'text-danger' : ''
                     }
                   >
                     {creditsFromStatus}
                   </div>
                 </div>
-              )}
+            )}
           </div>
         )}
         <div className='col-xs-12 col-md-2 arrow'>
           {Number(this.props.numberOfCredits) > 0 && (
             <div>
-              {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{" "}
-              credit{this.props.numberOfCredits > 1 && "s"}
+              {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
+              credit{this.props.numberOfCredits > 1 && 's'}
             </div>
           )}
           <FontAwesomeIcon
@@ -140,7 +140,7 @@ class CreditTransferVisualRepresentation extends Component {
             {[
               CREDIT_TRANSFER_STATUS.accepted.id,
               CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
-              CREDIT_TRANSFER_STATUS.notRecommended.id,
+              CREDIT_TRANSFER_STATUS.notRecommended.id
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
@@ -151,47 +151,47 @@ class CreditTransferVisualRepresentation extends Component {
                     ).format(NumberFormat.INT)}`}
                   <div
                     className={
-                      creditsToStatus === "Inactive" ? "text-danger" : ""
+                      creditsToStatus === 'Inactive' ? 'text-danger' : ''
                     }
                   >
                     {creditsToStatus}
                   </div>
                 </div>
-              )}
+            )}
           </div>
         )}
       </div>
-    );
+    )
   }
 
-  render() {
+  render () {
     switch (this.props.tradeType.id) {
       case CREDIT_TRANSFER_TYPES.part3Award.id:
       case CREDIT_TRANSFER_TYPES.validation.id:
-        return this._renderPart3Award();
+        return this._renderPart3Award()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
-        return this._renderRetirement();
+        return this._renderRetirement()
 
       default:
-        return this._renderCreditTransfer();
+        return this._renderCreditTransfer()
     }
   }
 }
 
 CreditTransferVisualRepresentation.defaultProps = {
   creditsFrom: {
-    name: "From",
+    name: 'From'
   },
   creditsTo: {
-    name: "To",
+    name: 'To'
   },
-  numberOfCredits: "",
+  numberOfCredits: '',
   status: {
-    id: 0,
+    id: 0
   },
-  zeroDollarReason: null,
-};
+  zeroDollarReason: null
+}
 
 CreditTransferVisualRepresentation.propTypes = {
   creditsFrom: PropTypes.shape({
@@ -199,34 +199,36 @@ CreditTransferVisualRepresentation.propTypes = {
     id: PropTypes.number,
     organizationBalance: PropTypes.shape({
       deductions: PropTypes.number,
-      validatedCredits: PropTypes.number,
+      validatedCredits: PropTypes.number
     }),
+    statusDisplay: PropTypes.string
   }),
   creditsTo: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number,
     organizationBalance: PropTypes.shape({
-      validatedCredits: PropTypes.number,
+      validatedCredits: PropTypes.number
     }),
+    statusDisplay: PropTypes.string
   }),
   loggedInUser: PropTypes.shape({
-    isGovernmentUser: PropTypes.bool,
+    isGovernmentUser: PropTypes.bool
   }).isRequired,
   numberOfCredits: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   status: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.number
   }),
   totalValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
   tradeType: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
-    theType: PropTypes.string,
+    theType: PropTypes.string
   }).isRequired,
   zeroDollarReason: PropTypes.shape({
     id: PropTypes.number,
-    reason: PropTypes.string,
-  }),
-};
+    reason: PropTypes.string
+  })
+}
 
-export default CreditTransferVisualRepresentation;
+export default CreditTransferVisualRepresentation

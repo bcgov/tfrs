@@ -1,36 +1,20 @@
+# Quick Start allow all network policies
 
-## For Aporeto network security policies  
+## knp-quick-start.yaml
+It has the following three policies, these policies will open all communications. Typically they can be applied at the early stage of the project during the development phase.
+* deny-by-default
+* allow-from-openshift-ingress
+* allow-all-internal
 
-### remove all Aporeto network security policies  
-oc get nsp -n <namespace>
-oc delete nsp,en --all -n <namespace>
+# Application Network Security Policies
+Applying the following policies allows TFRS applications communicated properly under security rules.
+* 1-base.yaml
+* 2-apps.yaml
+* 3-spilo.yaml
+* 4-clamav-rabbitmq.yaml
 
-### Apply generic Aporeto network security policies
-oc process -f nsp-generic.yaml NAMESPACE_PREFIX=<LICENS_PLATE_HERE> ENVIRONMENT=<ENVIRONMENT_NAME_HERE> | oc apply -f - -n <namespace>
-Note: once it is applied, the application will NOT be blocked by Aporeto. Aporeto should become transparent.
-
-## For the new network policies
-
-### For tools project, apply quick start  
-oc process -f knp-quick-start.yaml NAMESPACE_PREFIX=<LICENS_PLATE_HERE> ENVIRONMENT=<ENVIRONMENT_NAME_HERE> | oc apply -f - -n <namespace>
-Note : the quick start include three knps: deny-by-default, allow-from-openshift-ingress and allow-all-internal. Once the quick start is applied, the application will NOT be blocked by Openshift network policies.
-
-### For environment projects
-oc process -f knp-env-base.yaml | oc create -f - -n <Namespace>
-oc process -f knp-env-non-pr.yaml ENVIRONMENT=<ENVIRONMENT_NAME_HERE> | oc create -f - -n <Namespace>
-#### For Dev
-Apply knp-env-pr.yaml through pipeline
-#### For Test and Prod
-oc process -f knp-env-pr.yaml SUFFIX=-test ENVIRONMENT=test | oc create -f - -n <Namespace>
-oc process -f knp-env-pr.yaml SUFFIX=-prod ENVIRONMENT=prod | oc create -f - -n <Namespace>
-
-## Setup the new network policies on Test
-oc get nsp -n 0ab226-test
-oc delete nsp,en --all -n 0ab226-test
-oc process -f nsp-generic.yaml NAMESPACE_PREFIX=0ab226 ENVIRONMENT=test | oc apply -f - -n 0ab226-test
-oc process -f knp-env-base.yaml ENVIRONMENT=test | oc create -f - -n 0ab226-test 
-oc process -f knp-env-non-pr.yaml ENVIRONMENT=test | oc create -f - -n 0ab226-test
-oc process -f knp-env-pr.yaml SUFFIX=-test ENVIRONMENT=test | oc create -f - -n 0ab226-test
+# Security Model
+* knp-diagram-1.0.0.drawio: the security model under TFRS V1.*
+* knp-diagram-2.0.0.drawio: the security model under TFRS V2.*
 
 
-    

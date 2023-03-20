@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   # TODO: Switch to clamav/clamav container
@@ -164,10 +164,10 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 280m
+    cpu: 1000m
     memory: 2Gi
   requests:
-    cpu: 140m
+    cpu: 500m
     memory: 1Gi
 
 # Additional pod labels
@@ -180,16 +180,16 @@ tolerations: []
 affinity: {}
 
 livenessProbe:
-  initialDelaySeconds: 150
+  initialDelaySeconds: 210
   periodSeconds: 15
-  failureThreshold: 10
-  timeoutSeconds: 1
+  failureThreshold: 20
+  timeoutSeconds: 3
 
 readinessProbe:
-  initialDelaySeconds: 120
+  initialDelaySeconds: 180
   periodSeconds: 15
-  failureThreshold: 10
-  timeoutSeconds: 1
+  failureThreshold: 20
+  timeoutSeconds: 3
 
 hpa:
   enabled: false

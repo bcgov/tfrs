@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
-import Loading from '../../app/components/Loading'
 import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload'
@@ -107,13 +106,22 @@ SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape)
+    items: PropTypes.arrayOf(PropTypes.shape),
+    itemsCount: PropTypes.number
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   title: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sort: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePageSizeChange: PropTypes.func.isRequired,
+  handleFiltersChange: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired
 }
 
 export default SecureFileSubmissionsPage

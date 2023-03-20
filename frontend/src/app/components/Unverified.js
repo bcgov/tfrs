@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { logout } from '../../actions/keycloakActions'
@@ -33,9 +34,13 @@ const Unverified = (props) => {
   )
 }
 
+Unverified.propTypes = {
+  logout: PropTypes.func.isRequired
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: () => dispatch(logout())
+    logout: () => dispatch(logout)
   }
 }
 
