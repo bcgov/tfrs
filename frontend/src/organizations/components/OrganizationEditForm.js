@@ -1,20 +1,20 @@
 /*
  * Presentational component
  */
-import React from "react";
-import PropTypes from "prop-types";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from "../../constants/langEnUs";
-import PERMISSIONS_ORGANIZATIONS from "../../constants/permissions/Organizations";
-import { useNavigate } from "react-router";
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import { useNavigate } from 'react-router'
 
 const OrganizationEditForm = (props) => {
-  const navigate = useNavigate();
-  const orgStatuses = props.referenceData.organizationStatuses;
+  const navigate = useNavigate()
+  const orgStatuses = props.referenceData.organizationStatuses
   return (
     <div className="organization-edit-details">
-      <h1>{props.mode === "add" ? "Create " : "Edit "} Organization</h1>
+      <h1>{props.mode === 'add' ? 'Create ' : 'Edit '} Organization</h1>
       <div className="main-form">
         <div className="row">
           <div className="col-sm-6">
@@ -35,12 +35,12 @@ const OrganizationEditForm = (props) => {
                         name="org_status"
                         value={orgStatuses[0].id}
                         onChange={props.handleInputChange}
-                        checked={orgStatuses[0].id == props.fields.org_status}
+                        checked={orgStatuses[0].id === props.fields.org_status}
                       />
-                        <span> {orgStatuses[0].description} </span></label>{" "}
+                        <span> {orgStatuses[0].description} </span></label>{' '}
                     </div>
                     <div key={orgStatuses[1].id}>
-                      
+
                       <label htmlFor='org-status-inactive'>
                         <input
                         type="radio"
@@ -49,8 +49,8 @@ const OrganizationEditForm = (props) => {
                         value={orgStatuses[1].id}
                         onChange={props.handleInputChange}
                         checked={orgStatuses[1].id == props.fields.org_status}
-                      /> 
-                      <span> {orgStatuses[1].description}</span></label>{" "}
+                      />
+                      <span> {orgStatuses[1].description}</span></label>{' '}
                     </div>
                   </div>
                 </label>
@@ -58,7 +58,7 @@ const OrganizationEditForm = (props) => {
             )}
           </div>
           <div className="col-sm-6">
-            {props.mode === "add" && (
+            {props.mode === 'add' && (
               <div className="form-group">
                 <label htmlFor="org-type">
                   <div className="col-sm-4"> Supplier Type : </div>
@@ -66,7 +66,7 @@ const OrganizationEditForm = (props) => {
                     .filter((t) => t.id !== 1)
                     .map((t) => (
                       <div className="col-sm-8" key={t.id}>
-                        {" "}
+                        {' '}
                         <input
                           type="radio"
                           id='org-type'
@@ -119,7 +119,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-address-line-1"
                   name="org_addressLine1"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_addressLine1 || ""}
+                  value={props.fields.org_addressLine1 || ''}
                 />
               </label>
             </div>
@@ -132,7 +132,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-address-line-2"
                   name="org_addressLine2"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_addressLine2 || ""}
+                  value={props.fields.org_addressLine2 || ''}
                 />
               </label>
             </div>
@@ -145,7 +145,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-city"
                   name="org_city"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_city || ""}
+                  value={props.fields.org_city || ''}
                 />
               </label>
             </div>
@@ -158,7 +158,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-state"
                   name="org_state"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_state || ""}
+                  value={props.fields.org_state || ''}
                 />
               </label>
             </div>
@@ -171,7 +171,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-country"
                   name="org_country"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_country || ""}
+                  value={props.fields.org_country || ''}
                 />
               </label>
             </div>
@@ -184,7 +184,7 @@ const OrganizationEditForm = (props) => {
                   id="organization-postal-code"
                   name="org_postalCode"
                   onChange={props.handleInputChange}
-                  value={props.fields.org_postalCode || ""}
+                  value={props.fields.org_postalCode || ''}
                 />
               </label>
             </div>
@@ -194,7 +194,7 @@ const OrganizationEditForm = (props) => {
             <h3>Corporation or Attorney in B.C.</h3>
             <div className="form-group">
               <label htmlFor="att-representativeName">
-                Name of Representative <span>(optional)</span> :{" "}
+                Name of Representative <span>(optional)</span> :{' '}
               <input
                 className="form-control"
                 id="att-representativeName"
@@ -222,7 +222,7 @@ const OrganizationEditForm = (props) => {
             <div className="form-group">
               <label htmlFor="att-otherAddress">
                 Address Other <span>(optional) :</span>
-             
+
               <input
                 className="form-control"
                 type="text"
@@ -309,42 +309,40 @@ const OrganizationEditForm = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 OrganizationEditForm.defaultProps = {
   fields: {},
   loggedInUser: null,
   referenceData: {},
-  mode: "add",
-};
+  mode: 'add'
+}
 
 OrganizationEditForm.propTypes = {
   fields: PropTypes.shape({
     name: PropTypes.string,
     addressLine1: PropTypes.string,
     addressLine2: PropTypes.string,
-    // addressLine3: PropTypes.string,
     city: PropTypes.string,
     postalCode: PropTypes.string,
     state: PropTypes.string,
     country: PropTypes.string,
-    // county: PropTypes.string,
     actionsType: PropTypes.number,
     status: PropTypes.number,
-    type: PropTypes.number,
+    type: PropTypes.number
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func,
+    hasPermission: PropTypes.func
   }),
   referenceData: PropTypes.shape({
     organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
-    organizationTypes: PropTypes.arrayOf(PropTypes.shape()),
+    organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
-  mode: PropTypes.oneOf(["add", "edit", "admin_edit"]),
-};
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
+}
 
-export default OrganizationEditForm;
+export default OrganizationEditForm
