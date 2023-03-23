@@ -5,7 +5,7 @@ import {
 import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
 import { cellFormatNumeric } from '../../../utils/functions'
 import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
-import FontAwesome from '../../../app/FontAwesome'
+import FontAwesome from '../../../app/FontAwesome' // eslint-disable-line no-unused-vars
 
 describe('Part3 Summary Container', () => {
   test('updates LINE_26_B and LINE_26_A correctly when we have a positive credit offset', () => {

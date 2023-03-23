@@ -542,6 +542,8 @@ class ComplianceReportDetailSerializer(
                 if obj.summary.credits_offset_a is not None else Decimal(0)
             lines['26B'] = obj.summary.credits_offset_b \
                 if obj.summary.credits_offset_b is not None else Decimal(0)
+            lines['26C'] = obj.summary.credits_offset_c \
+                if obj.summary.credits_offset_c is not None else Decimal(0)
         else:
             lines['6'] = Decimal(0)
             lines['7'] = Decimal(0)
@@ -554,6 +556,7 @@ class ComplianceReportDetailSerializer(
             lines['26'] = Decimal(0)
             lines['26A'] = Decimal(0)
             lines['26B'] = Decimal(0)
+            lines['26C'] = Decimal(0)
 
         if obj.schedule_a:
             net_gasoline_class_transferred += \
@@ -1129,8 +1132,17 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_previously_retained
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
-                summary.credits_offset_a = original_summary.credits_offset_a or \
-                    original_summary.credits_offset
+                
+                # if credit_offset_c exists, it means we gave back credits 
+                # in the previous supplemental report so credit_offset_a
+                # needs to be offset by credits_offset_c to account for this
+                # otherwise these credits could be claimed again
+                if original_summary.credits_offset_c > 0:
+                    summary.credits_offset_a = original_summary.credits_offset_a \
+                      - original_summary.credits_offset_c
+                else:
+                    summary.credits_offset_a = original_summary.credits_offset_a or \
+                        original_summary.credits_offset
 
                 if original_report.status.director_status_id == 'Rejected':
                     current = original_report

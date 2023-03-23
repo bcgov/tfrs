@@ -3,7 +3,7 @@ import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
 import { cellFormatNumeric } from '../../../utils/functions'
 import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
 import ScheduleSummaryPenalty from '../../ScheduleSummaryPenalty'
-import FontAwesome from '../../../app/FontAwesome'
+import FontAwesome from '../../../app/FontAwesome' // eslint-disable-line no-unused-vars
 
 describe('Calculate Part3', () => {
   test('basic credit positive scenarios', () => {
@@ -13,6 +13,7 @@ describe('Calculate Part3', () => {
       creditsOffset: 0,
       creditsOffsetA: 0,
       creditsOffsetB: 0,
+      creditsOffsetC: 0,
       lines: {
         23: '472522',
         24: '467545'
@@ -66,6 +67,7 @@ describe('Calculate Part3', () => {
       creditsOffset: 500,
       creditsOffsetA: 83106,
       creditsOffsetB: 1600,
+      creditsOffsetC: 0,
       lines: {
         23: '422522',
         24: '467545',
@@ -112,5 +114,6 @@ describe('Calculate Part3', () => {
     expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(500)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe('')
     expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(0)
   })
 })

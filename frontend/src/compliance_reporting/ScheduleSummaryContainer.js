@@ -64,7 +64,7 @@ class ScheduleSummaryContainer extends Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    const { diesel, gasoline } = this.state
+    const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
     // const val = false
     if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
@@ -112,7 +112,7 @@ class ScheduleSummaryContainer extends Component {
       // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
       GasolineSummaryConatiner.lineData(gasoline, summary)
 
-      Part3SummaryContainer.lineData(part3, summary, this.props.period, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA)
+      part3 = Part3SummaryContainer.lineData(part3, summary, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, alreadyUpdated, this.props.period)
 
       // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
       PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
@@ -163,6 +163,7 @@ class ScheduleSummaryContainer extends Component {
             ...summary,
             creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
             creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
+            creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value,
             dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
             dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
             gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
@@ -321,7 +322,8 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassRetained: src.gasolineClassRetained,
         creditsOffset: src.creditsOffset,
         creditsOffsetA: src.creditsOffsetA,
-        creditsOffsetB: src.creditsOffsetB
+        creditsOffsetB: src.creditsOffsetB,
+        creditsOffsetC: src.creditsOffsetC
       }
       this.props.updateScheduleState({
         summary: initialState
@@ -338,7 +340,8 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassRetained: 0,
         creditsOffset: 0,
         creditsOffsetA: 0,
-        creditsOffsetB: 0
+        creditsOffsetB: 0,
+        creditsOffsetC: 0
       }
       this.props.updateScheduleState({
         summary: initialState
@@ -406,7 +409,7 @@ class ScheduleSummaryContainer extends Component {
       'dieselClassPreviouslyRetained', 'dieselClassObligation',
       'gasolineClassDeferred', 'gasolineClassRetained',
       'gasolineClassPreviouslyRetained', 'gasolineClassObligation',
-      'creditsOffset', 'creditsOffsetA', 'creditsOffsetB'
+      'creditsOffset', 'creditsOffsetA', 'creditsOffsetB', 'creditsOffsetC'
     ]
 
     const nextState = {
@@ -421,7 +424,8 @@ class ScheduleSummaryContainer extends Component {
         gasolineClassRetained: state.gasoline[SCHEDULE_SUMMARY.LINE_6][2].value,
         creditsOffset: state.part3[SCHEDULE_SUMMARY.LINE_26][2].value,
         creditsOffsetA: state.part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
-        creditsOffsetB: state.part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
+        creditsOffsetB: state.part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
+        creditsOffsetC: state.part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
       }
     }
 
@@ -615,6 +619,10 @@ ScheduleSummaryContainer.propTypes = {
         PropTypes.string
       ]),
       creditsOffsetB: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string
+      ]),
+      creditsOffsetC: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
       ])

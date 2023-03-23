@@ -313,5 +313,6 @@ class ScheduleSummaryDetailSerializer(serializers.ModelSerializer):
             'diesel_class_obligation', 'diesel_class_previously_retained',
             'gasoline_class_retained', 'gasoline_class_deferred',
             'gasoline_class_obligation', 'gasoline_class_previously_retained',
-            'credits_offset', 'credits_offset_a', 'credits_offset_b'
+            'credits_offset', 'credits_offset_a', 'credits_offset_b', 
+            'credits_offset_c'
         )
