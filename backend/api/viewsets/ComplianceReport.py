@@ -439,6 +439,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     def paginated(self, request):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
+        if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
+            if request.data.get('sorts')[0].get('desc'):
+                page = sorted(page, key=lambda x: [x.sort_date])
+            else:
+                page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
