@@ -142,7 +142,21 @@ class ComplianceReportingTable extends Component {
           }
         </span>
       )
-    }]
+    },{
+      accessor: item => item.updateTimestamp,
+      className:'col-date',
+      Header: 'Submission Date',
+      id:'submissionDate',
+      minWidth:95,
+      Cell: row => (
+        <span>
+          {
+            row.original.updateTimestamp && moment(row.original.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
+          }
+        </span>
+      )
+    }
+  ]
     const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
 

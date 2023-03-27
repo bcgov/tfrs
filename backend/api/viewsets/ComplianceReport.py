@@ -26,7 +26,7 @@ from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
 from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
-
+from django.db.models import Max
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
@@ -75,7 +75,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 if sorts:
                     sortCondition = sorts[0].get('desc')
                     sortId = sorts[0].get('id')
-                    key_maps = {'compliance-period':'compliance_period__description', 'organization':'organization__name', 'updateTimestamp':'compliance_period__effective_date'}
+                    key_maps = {'compliance-period':'compliance_period__description',
+                                 'organization':'organization__name',
+                                   'updateTimestamp':'compliance_period__effective_date',
+                                    'submissionDate':'compliance_reports__update_timestamp'}
                     if sortId=='displayname':
                         if sortCondition:
                             qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))).order_by('-display_name')
@@ -94,7 +97,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                     else:
                         sortType = "-" if sortCondition else ""
                         sortString = f"{sortType}{key_maps[sortId]}"
-                        qs = qs.order_by(sortString)
+                        if sortType:
+                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('-reports_updatedtime')
+                        else:
+                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('reports_updatedtime')
+                        
                 else:
                     qs=qs.order_by('-compliance_period__effective_date')
                 filters = request.data.get('filters')
@@ -432,6 +439,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     def paginated(self, request):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
+        if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
+            if request.data.get('sorts')[0].get('desc'):
+                page = sorted(page, key=lambda x: [x.sort_date])
+            else:
+                page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
