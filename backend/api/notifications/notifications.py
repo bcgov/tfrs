@@ -139,6 +139,7 @@ class AMQPNotificationService:
             return
 
         email_recipient = notification.user.email
+        organization_name = notification.user.organization.name
         from email.message import EmailMessage
         import smtplib
         msg = EmailMessage()
@@ -173,7 +174,7 @@ class AMQPNotificationService:
         line-height: 20px;
         padding-top: 20px;
         padding-bottom: 20px;">
-        <p style="margin-left: 20px;">You have received a new notification in TFRS.</p>
+        <p style="margin-left: 20px;">{organization_name} has received a new notification in TFRS.</p>
         <p style="margin-left: 20px;">Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a>
         to view it.</p>
         </td>
@@ -182,7 +183,7 @@ class AMQPNotificationService:
         </table>
         </body>
         </html>
-        """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
+        """.format(bcgov_cid=bcgov_cid[1:-1], organization_name=organization_name), subtype='html')
 
         with open('assets/bcgov.png', 'rb') as image:
             msg.get_payload()[1].add_related(
