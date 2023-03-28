@@ -345,6 +345,11 @@ function Part3SupplementalData (
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = line26A + line25
   }
 
+  if (part3[SCHEDULE_SUMMARY.LINE_25][2].value > 0) {
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
+    part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = 0
+  }
+
   return part3
 }
 
@@ -390,7 +395,10 @@ function calculatePart3Payable (part3, period) {
 
   // if we have a positive balance, or there are credits that need to be payed back,
   // we then know that there is no outstanding balance or penalty payable
-  if (balance > 0 || part3[SCHEDULE_SUMMARY.LINE_26_C][2].value > 0) {
+  if (balance > 0 ||
+      part3[SCHEDULE_SUMMARY.LINE_26_C][2].value > 0 ||
+      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + balance === 0
+  ) {
     outstandingBalance = ''
     payable = ''
   }

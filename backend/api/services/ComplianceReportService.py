@@ -280,7 +280,9 @@ class ComplianceReportService(object):
         if is_supplemental and Decimal(lines['25']) < 0 and \
                 (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
             required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
-        elif is_supplemental and Decimal(lines['26C']) > 0:
+        
+        if is_supplemental and Decimal(lines['26C']) > 0:
+            print("*** DIRECTOR 26C Increase to Credits ***")
             # 26C captures credits that need to be returned to the supplier,
             # due to a decrease in debit position and previously spent credits
             required_credit_transaction = Decimal(lines['26C'])

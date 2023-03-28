@@ -174,7 +174,9 @@ class ScheduleSummaryContainer extends Component {
         this.props.updateScheduleState({
           summary: {
             ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
+            creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
           }
         })
       }

@@ -536,13 +536,13 @@ class ComplianceReportDetailSerializer(
             lines['20'] = obj.summary.diesel_class_obligation \
                 if obj.summary.diesel_class_obligation is not None \
                 else Decimal(0)
-            lines['26'] = obj.summary.credits_offset \
+            lines['26'] = Decimal(obj.summary.credits_offset) \
                 if obj.summary.credits_offset is not None else Decimal(0)
-            lines['26A'] = obj.summary.credits_offset_a \
+            lines['26A'] = Decimal(obj.summary.credits_offset_a) \
                 if obj.summary.credits_offset_a is not None else Decimal(0)
-            lines['26B'] = obj.summary.credits_offset_b \
+            lines['26B'] = Decimal(obj.summary.credits_offset_b) \
                 if obj.summary.credits_offset_b is not None else Decimal(0)
-            lines['26C'] = obj.summary.credits_offset_c \
+            lines['26C'] = Decimal(obj.summary.credits_offset_c) \
                 if obj.summary.credits_offset_c is not None else Decimal(0)
         else:
             lines['6'] = Decimal(0)
@@ -607,6 +607,18 @@ class ComplianceReportDetailSerializer(
         lines['24'] = total_debits
         lines['25'] = lines['23'] - lines['24']
         lines['27'] = lines['25'] + lines['26']
+
+        # if previously spent credits (26A) add up to the debit position 
+        # then there is no penalty amount
+        if lines['26A'] is not None and \
+          lines['26A'] > 0 and (lines['26A'] + lines['25'] == 0):
+            lines['27'] = 0
+
+        # 26C represents credits that need to be returned to the fuel supplier
+        # line 27 should end up being zero in this situation because
+        # 26C is the difference between lines 26A and 25 when 26A > 25
+        if lines['26C'] is not None and lines['26C'] > 0:
+            lines['27'] = 0 # lines['25'] + lines['26A'] - lines['26C']
 
         if created_on < 2023:
             lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
@@ -1133,16 +1145,20 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
                 
-                # if credit_offset_c exists, it means we gave back credits 
-                # in the previous supplemental report so credit_offset_a
-                # needs to be offset by credits_offset_c to account for this
-                # otherwise these credits could be claimed again
-                if original_summary.credits_offset_c > 0:
-                    summary.credits_offset_a = original_summary.credits_offset_a \
-                      - original_summary.credits_offset_c
-                else:
-                    summary.credits_offset_a = original_summary.credits_offset_a or \
-                        original_summary.credits_offset
+                try:
+                    # if credit_offset_c exists, it means we gave back credits 
+                    # in the previous supplemental report so credit_offset_a
+                    # needs to be offset by credits_offset_c to account for this
+                    # otherwise these credits could be claimed again
+                    if original_summary.credits_offset_c is not None and \
+                      original_summary.credits_offset_c > 0:
+                        summary.credits_offset_a = original_summary.credits_offset_a \
+                          - original_summary.credits_offset_c
+                    else:
+                        summary.credits_offset_a = original_summary.credits_offset_a or \
+                            original_summary.credits_offset
+                except Exception as err:
+                    print("Line 26C error", err)
 
                 if original_report.status.director_status_id == 'Rejected':
                     current = original_report

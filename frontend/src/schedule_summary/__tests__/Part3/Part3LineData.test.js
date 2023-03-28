@@ -60,4 +60,27 @@ describe('Part3 Line Data', () => {
     const result = lineData(part3, summary, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
+
+  test('is-supplemental with excess spent credits', () => {
+    const part3 = new ScheduleSummaryPart3()
+    const complianceReport = {
+      isSupplemental: true,
+      status: {
+        fuelSupplierStatus: 'Draft'
+      }
+    }
+    const summary = {
+      lines: {
+        25: -1000,
+        '26A': 2000
+      },
+      creditsOffset: 500,
+      creditsOffsetB: 0,
+      creditsOffsetC: 0
+    }
+    part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A'])
+    const result = lineData(part3, summary, complianceReport)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(1000)
+  })
 })
