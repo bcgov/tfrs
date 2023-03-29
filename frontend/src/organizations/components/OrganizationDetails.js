@@ -11,9 +11,24 @@ import ORGANIZATIONS from '../../constants/routes/Organizations'
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
+import AddressBuilder from '../../app/components/AddressBuilder'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
+  const {
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    postalCode,
+    country,
+    attorneyAddressOther,
+    attorneyStreetAddress,
+    attorneyCity,
+    attorneyPostalCode,
+    attorneyCountry
+    } = props.organization.organizationAddress;
+
   return (
     <div className="page_organization">
       <div>
@@ -64,9 +79,14 @@ const OrganizationDetails = props => {
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: "300px" }}><strong>Head Office Address:</strong></dt>
-            <dd>{props.organization.organizationAddress.addressLine1 && `${props.organization.organizationAddress.addressLine1}, `}{props.organization.organizationAddress.addressLine2 && `${props.organization.organizationAddress.addressLine2}, `}{props.organization.organizationAddress.addressLine3 && `${props.organization.organizationAddress.addressLine3}, `}{props.organization.organizationAddress.city && `${props.organization.organizationAddress.city}, `}
-              {props.organization.organizationAddress.postalCode && `${props.organization.organizationAddress.postalCode}, `}
-              {props.organization.organizationAddress.country}</dd>
+            <dd>{AddressBuilder({
+              address_line_1: addressLine1,
+              address_line_2: addressLine2,
+              city: city,
+              state: state,
+              postal_code: postalCode,
+              country: country
+            })}</dd>
           </dl>
         </div>
         }
@@ -74,9 +94,13 @@ const OrganizationDetails = props => {
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: "300px" }}><strong>Corporation or BC Attorney address:</strong></dt>
-            <dd>{props.organization.organizationAddress.attorneyAddressOther}, {props.organization.organizationAddress.attorneyStreetAddress && `${props.organization.organizationAddress.attorneyStreetAddress}, `}{props.organization.organizationAddress.attorneyCity && `${props.organization.organizationAddress.attorneyCity}, `}
-              {props.organization.organizationAddress.attorneyPostalCode && `${props.organization.organizationAddress.attorneyPostalCode}, `}
-              {props.organization.organizationAddress.attorneyCountry}</dd>
+            <dd>{AddressBuilder({
+              address_line_1: attorneyAddressOther,
+              address_line_2: attorneyStreetAddress,
+              city: attorneyCity,
+              postal_code: attorneyPostalCode,
+              country: attorneyCountry
+            })}</dd>
           </dl>
         </div>
         }
