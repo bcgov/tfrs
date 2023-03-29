@@ -1310,7 +1310,7 @@ class ComplianceReportUpdateSerializer(
 
         if summary_data and instance.supplements_id and \
                 summary_data.get('credits_offset_b', 0) and \
-                summary_data.get('credits_offset_b', 0) > max_credit_offset:
+                summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
             raise (serializers.ValidationError(
                 'Insufficient available credit balance. Please adjust Line 26b.'
             ))
