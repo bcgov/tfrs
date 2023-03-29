@@ -7,28 +7,6 @@ metadata:
 parameters:
 - name: ENV_NAME
   required: true
-- name: KEYCLOAK_CLIENT_ID
-  displayName: KEYCLOAK_CLIENT_ID
-  description: 'Valid values: tfrs-dev, tfrs, tfrs'
-  required: true
-- name: KEYCLOAK_SA_REALM
-  displayName: KEYCLOAK_SA_REALM
-  description: 'Valid values: tfrs-dev, tfrs, tfrs'
-  required: true
-- name: KEYCLOAK_SA_CLIENT_ID
-  displayName: KEYCLOAK_SA_CLIENT_ID
-  description: 'Valid values: tfrs-dev-django-sa, tfrs-django-sa, tfrs-django-sa'
-  required: true
-- name: KEYCLOAK_SA_BASEURL
-  displayName: KEYCLOAK_SA_BASEURL
-  description: 'Valid values: https://dev.oidc.gov.bc.ca, https://test.oidc.gov.bc.ca,
-    https://oidc.gov.bc.ca'
-  required: true
-- name: KEYCLOAK_REALM
-  displayName: KEYCLOAK_REALM
-  description: 'Valid values: https://dev.oidc.gov.bc.ca/auth/realms/tfrs-dev, https://test.oidc.gov.bc.ca/auth/realms/tfrs,
-    https://oidc.gov.bc.ca/auth/realms/tfrs'
-  required: true
 - name: SMTP_SERVER_HOST
   displayName: SMTP_SERVER_HOST
   description: All environment use same email server
@@ -135,21 +113,6 @@ objects:
               secretKeyRef:
                 name: tfrs-minio-${ENV_NAME}
                 key: MINIO_SECRET_KEY
-          - name: KEYCLOAK_SA_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-sa-client-secret
-                key: KEYCLOAK_SA_CLIENT_SECRET
-          - name: KEYCLOAK_CLIENT_ID
-            value: "${KEYCLOAK_CLIENT_ID}"
-          - name: KEYCLOAK_SA_REALM
-            value: "${KEYCLOAK_SA_REALM}"
-          - name: KEYCLOAK_SA_CLIENT_ID
-            value: "${KEYCLOAK_SA_CLIENT_ID}"
-          - name: KEYCLOAK_SA_BASEURL
-            value: "${KEYCLOAK_SA_BASEURL}"
-          - name: KEYCLOAK_REALM
-            value: "${KEYCLOAK_REALM}"
           - name: SMTP_SERVER_HOST
             value: "${SMTP_SERVER_HOST}"
           - name: DATABASE_SERVICE_NAME
