@@ -578,10 +578,11 @@ class ComplianceReportingEditContainer extends Component {
     if (item.hasSnapshot &&
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
-      ({ organizationAddress } = this.props.complianceReporting.snapshot.organization)
+      organizationAddress = this.props.complianceReporting.snapshot.organization.organizationAddress
+      console.log(this.props.complianceReporting.snapshot.organization.organizationAddress)
     } else if (this.props.loggedInUser.organization.organizationAddress &&
       !this.props.loggedInUser.isGovernmentUser) {
-      ({ organizationAddress } = this.props.loggedInUser.organization)
+        organizationAddress  = this.props.loggedInUser.organization.organizationAddress
     }
 
     return ([
@@ -614,18 +615,32 @@ class ComplianceReportingEditContainer extends Component {
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>
       </h3>,
-      <p className="schedule-organization-address" key="organization-address">
-        {organizationAddress &&
-        AddressBuilder({
+      <br/>,
+      <p className="schedule-organization-address" key="organization-address"> 
+        {organizationAddress
+      ? ["Head Office:", AddressBuilder({
           address_line_1: organizationAddress.addressLine1,
           address_line_2: organizationAddress.addressLine2,
           address_line_3: organizationAddress.addressLine3,
           city: organizationAddress.city,
           state: organizationAddress.state,
           postal_code: organizationAddress.postalCode
-        })
+        })]:null
         }
       </p>,
+      <p className="schedule-organization-address" key="organization-attorney-address">
+      {organizationAddress.attorneyAddressOther ? 
+      ["B.C. Attorney Office: ",
+      AddressBuilder({
+        address_line_1: organizationAddress.attorneyAddressOther,
+        address_line_2: organizationAddress.attorneyStreetAddress,
+        address_line_3: organizationAddress.addressLine3,
+        city: organizationAddress.attorneyCity,
+        state: organizationAddress.state,
+        postal_code: organizationAddress.attorneyPostalCode
+      })]:null
+      }
+    </p>,
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}

@@ -2,7 +2,7 @@ const AddressBuilder = (prop) => {
   let address = ''
 
   if (prop.address_line_1) {
-    address += prop.address_line_1
+    address += ` ${prop.address_line_1}`
   }
 
   if (prop.address_line_2) {
@@ -14,7 +14,7 @@ const AddressBuilder = (prop) => {
   }
 
   if (prop.city) {
-    address += ` ${prop.city}`
+    address += `, ${prop.city}`
   }
 
   if (prop.state) {
