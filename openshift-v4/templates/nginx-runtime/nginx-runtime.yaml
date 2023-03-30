@@ -37,12 +37,14 @@ objects:
     source:
       contextDir: openshift-v4/templates/nginx-runtime
       git:
-        ref: openshift-v4-migration
+        ref: master
         uri: https://github.com/bcgov/tfrs.git
       type: Git
     strategy:
       dockerStrategy: {}
       type: Docker
+      pullSecret:
+        name: docker-artifactory-secret
     triggers: []
   status:
     lastVersion: 0
