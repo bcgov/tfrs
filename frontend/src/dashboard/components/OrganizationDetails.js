@@ -35,7 +35,7 @@ const OrganizationDetails = props => {
       </div>
 
       {props.loggedInUser &&
-      props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER) &&
+      props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER) &&  props.loggedInUser.isGovernmentUser &&
       <div>
         <div className="content">
           <button

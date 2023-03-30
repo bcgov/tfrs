@@ -13,5 +13,6 @@ const ORGANIZATIONS = {
   ROLES: `${BASE_PATH}/roles`,
   PART_3: 'https://www2.gov.bc.ca/gov/content?id=053E5694562A4F538D73A427B3B43DEC'
 }
+delete ORGANIZATIONS.EDIT;
 
 export default ORGANIZATIONS
