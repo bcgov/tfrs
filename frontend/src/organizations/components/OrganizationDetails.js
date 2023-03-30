@@ -45,21 +45,6 @@ const OrganizationDetails = props => {
         <h1>
           {props.organization.name}
         </h1>
-        <div className="actions-container">
-          {props.loggedInUser &&
-          (props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) ||
-            props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER)
-          ) &&
-          <button
-            id="edit-organization"
-            className="btn btn-info"
-            type="button"
-            onClick={() => navigate(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}
-          >
-            <FontAwesomeIcon icon="edit" /> Edit
-          </button>
-          }
-        </div>
         {props.organization.organizationAddress &&
         <div className="address">
           <dl className="dl-horizontal">
