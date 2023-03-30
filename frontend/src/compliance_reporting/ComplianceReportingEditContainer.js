@@ -579,7 +579,6 @@ class ComplianceReportingEditContainer extends Component {
       this.props.complianceReporting.snapshot &&
       this.props.complianceReporting.snapshot.organization.organizationAddress) {
       organizationAddress = this.props.complianceReporting.snapshot.organization.organizationAddress
-      console.log(this.props.complianceReporting.snapshot.organization.organizationAddress)
     } else if (this.props.loggedInUser.organization.organizationAddress &&
       !this.props.loggedInUser.isGovernmentUser) {
         organizationAddress  = this.props.loggedInUser.organization.organizationAddress
@@ -621,10 +620,10 @@ class ComplianceReportingEditContainer extends Component {
       ? ["Head Office:", AddressBuilder({
           address_line_1: organizationAddress.addressLine1,
           address_line_2: organizationAddress.addressLine2,
-          address_line_3: organizationAddress.addressLine3,
           city: organizationAddress.city,
           state: organizationAddress.state,
-          postal_code: organizationAddress.postalCode
+          postal_code: organizationAddress.postalCode,
+          country: organizationAddress.country
         })]:null
         }
       </p>,
@@ -634,10 +633,9 @@ class ComplianceReportingEditContainer extends Component {
       AddressBuilder({
         address_line_1: organizationAddress.attorneyAddressOther,
         address_line_2: organizationAddress.attorneyStreetAddress,
-        address_line_3: organizationAddress.addressLine3,
         city: organizationAddress.attorneyCity,
-        state: organizationAddress.state,
-        postal_code: organizationAddress.attorneyPostalCode
+        postal_code: organizationAddress.attorneyPostalCode,
+        country: organizationAddress.attorneyCountry
       })]:null
       }
     </p>,
