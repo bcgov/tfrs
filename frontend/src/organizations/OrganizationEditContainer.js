@@ -26,6 +26,9 @@ class OrganizationEditContainer extends Component {
   constructor (props) {
     super(props)
 
+    this.att_province = 'BC'
+    this.att_country = 'Canada'
+
     this.state = {
       fields: {
         org_name: '',
@@ -42,10 +45,11 @@ class OrganizationEditContainer extends Component {
         att_streetAddress: '',
         att_otherAddress: '',
         att_city: '',
-        att_province: '',
-        att_country: '',
+        att_province: this.att_province,
+        att_country: this.att_country,
         att_postalCode: ''
-      }
+      },
+      formIsValid: false
     }
 
     this.submitted = false
@@ -61,6 +65,14 @@ class OrganizationEditContainer extends Component {
     }
 
     this.loadData(this.props.params.id)
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.fields !== this.state.fields) {
+      this.setState({
+        formIsValid: this._formIsValid()
+      })
+    }
   }
 
   UNSAFE_componentWillReceiveProps (props) {
@@ -105,8 +117,8 @@ class OrganizationEditContainer extends Component {
           att_streetAddress: addr.attorneyStreetAddress,
           att_otherAddress: addr.attorneyAddressOther,
           att_city: addr.attorneyCity,
-          att_province: addr.attorneyProvince,
-          att_country: addr.attorneyCountry,
+          att_province: this.att_province,
+          att_country: this.att_country,
           att_postalCode: addr.attorneyPostalCode
         }
       })
@@ -141,6 +153,42 @@ class OrganizationEditContainer extends Component {
     this.setState({
       fields: fieldState
     })
+  }
+
+  _formIsValid () {
+    if (!this.state.fields.org_name) {
+      return false
+    }
+    if (!this.state.fields.org_addressLine1) {
+      return false
+    }
+    if (!this.state.fields.org_city) {
+      return false
+    }
+    if (!this.state.fields.org_state) {
+      return false
+    }
+    if (!this.state.fields.org_country) {
+      return false
+    }
+    if (!this.state.fields.org_postalCode) {
+      return false
+    }
+    if (this.state.fields.att_representativeName || this.state.fields.att_streetAddress || this.state.fields.att_otherAddress || this.state.fields.att_city || this.state.fields.att_postalCode) {
+      if (!this.state.fields.att_representativeName) {
+        return false
+      }
+      if (!this.state.fields.att_streetAddress) {
+        return false
+      }
+      if (!this.state.fields.att_city) {
+        return false
+      }
+      if (!this.state.fields.att_postalCode) {
+        return false
+      }
+    }
+    return true
   }
 
   _handleUpdate (event) {
@@ -243,6 +291,7 @@ class OrganizationEditContainer extends Component {
             loggedInUser={this.props.loggedInUser}
             mode={this.props.mode}
             referenceData={this.props.referenceData}
+            formIsValid={this.state.formIsValid}
           />,
           this._modalConfirm()
         ]
@@ -256,6 +305,7 @@ class OrganizationEditContainer extends Component {
             loggedInUser={this.props.loggedInUser}
             mode={this.props.mode}
             referenceData={this.props.referenceData}
+            formIsValid={this.state.formIsValid}
           />
         )
       default:

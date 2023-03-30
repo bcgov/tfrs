@@ -58,29 +58,27 @@ const OrganizationEditForm = (props) => {
             )}
           </div>
           <div className="col-sm-6">
-            {props.mode === 'add' && (
-              <div className="form-group">
-                <label htmlFor="org-type">
-                  <div className="col-sm-4"> Supplier Type : </div>
-                  {props.referenceData.organizationTypes
-                    .filter((t) => t.id !== 1)
-                    .map((t) => (
-                      <div className="col-sm-8" key={t.id}>
-                        {' '}
-                        <input
-                          type="radio"
-                          id='org-type'
-                          name="org_type"
-                          value={t.id}
-                          defaultChecked
-                          onChange={props.handleInputChange}
-                        />
-                        <span> {t.description}</span>
-                      </div>
-                    ))}
-                </label>
-              </div>
-            )}
+            <div className="form-group">
+              <label htmlFor="org-type">
+                <div className="col-sm-4"> Supplier Type : </div>
+                {props.referenceData.organizationTypes
+                  .filter((t) => t.id !== 1)
+                  .map((t) => (
+                    <div className="col-sm-8" key={t.id}>
+                      {' '}
+                      <input
+                        type="radio"
+                        id='org-type'
+                        name="org_type"
+                        value={t.id}
+                        defaultChecked
+                        onChange={props.handleInputChange}
+                      />
+                      <span> {t.description}</span>
+                    </div>
+                  ))}
+              </label>
+            </div>
           </div>
         </div>
         <div className="row">
@@ -96,7 +94,6 @@ const OrganizationEditForm = (props) => {
                     className="form-control"
                     id="organization-name"
                     name="org_name"
-                    placeholder="Fuel Supplier Name"
                     onChange={props.handleInputChange}
                     value={props.fields.org_name}
                   />
@@ -113,7 +110,7 @@ const OrganizationEditForm = (props) => {
 
             <div className="form-group">
               <label htmlFor="organization-address-line-1">
-                Address Line 1:
+                Street Address / PO Box:
                 <input
                   className="form-control"
                   id="organization-address-line-1"
@@ -126,7 +123,7 @@ const OrganizationEditForm = (props) => {
 
             <div className="form-group">
               <label htmlFor="organization-address-line-2">
-                Address Line 2:
+                Address Other (optional):
                 <input
                   className="form-control"
                   id="organization-address-line-2"
@@ -200,7 +197,6 @@ const OrganizationEditForm = (props) => {
                 id="att-representativeName"
                 type="text"
                 name="att_representativeName"
-                placeholder="BC Attorney Firm Inc."
                 onChange={props.handleInputChange}
                 value={props.fields.att_representativeName}
                 />
@@ -213,7 +209,6 @@ const OrganizationEditForm = (props) => {
                 id="att-streetAddress"
                 type="text"
                 name="att_streetAddress"
-                placeholder="4567 Linden Way"
                 onChange={props.handleInputChange}
                 value={props.fields.att_streetAddress}
               />
@@ -240,7 +235,6 @@ const OrganizationEditForm = (props) => {
                 type="text"
                 id="att-city"
                 name="att_city"
-                placeholder="Vancover"
                 onChange={props.handleInputChange}
                 value={props.fields.att_city}
               />
@@ -249,12 +243,11 @@ const OrganizationEditForm = (props) => {
             <div className="form-group">
               <label htmlFor="att-province">Province
               <input
+                disabled
                 className="form-control"
                 id="att-province"
                 type="text"
                 name="att_province"
-                placeholder="BC"
-                onChange={props.handleInputChange}
                 value={props.fields.att_province}
               />
               </label>
@@ -262,12 +255,11 @@ const OrganizationEditForm = (props) => {
             <div className="form-group">
               <label htmlFor="att-country">Country:
               <input
+                disabled
                 className="form-control"
                 id="att-country"
                 type="text"
                 name="att_country"
-                placeholder="CA"
-                onChange={props.handleInputChange}
                 value={props.fields.att_country}
               />
               </label>
@@ -279,7 +271,6 @@ const OrganizationEditForm = (props) => {
                 id="att-postalCode"
                 type="text"
                 name="att_postalCode"
-                placeholder="V8V 1V1"
                 onChange={props.handleInputChange}
                 value={props.fields.att_postalCode}
               />
@@ -299,6 +290,7 @@ const OrganizationEditForm = (props) => {
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
           </button>
           <button
+            disabled={!props.formIsValid}
             className="btn btn-primary"
             id="save-organization"
             onClick={(e) => props.handleSubmit(e)}
@@ -342,7 +334,8 @@ OrganizationEditForm.propTypes = {
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
     organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
-  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']),
+  formIsValid: PropTypes.bool.isRequired
 }
 
 export default OrganizationEditForm
