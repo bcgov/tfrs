@@ -8,10 +8,15 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
 import { useNavigate } from 'react-router'
+import NotFound from '../../app/components/NotFound'
 
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
   const orgStatuses = props.referenceData.organizationStatuses
+  if(!props.isGovernmentUser && props.mode === 'edit'){
+    return <NotFound />
+  }
+  else{
   return (
     <div className="organization-edit-details">
       <h1>{props.mode === 'add' ? 'Create ' : 'Edit '} Organization</h1>
@@ -301,7 +306,7 @@ const OrganizationEditForm = (props) => {
         </div>
       </div>
     </div>
-  )
+  )}
 }
 
 OrganizationEditForm.defaultProps = {

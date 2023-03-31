@@ -15,19 +15,21 @@ import AddressBuilder from '../../app/components/AddressBuilder'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
-  const {
-    addressLine1,
-    addressLine2,
-    city,
-    state,
-    postalCode,
-    country,
-    attorneyAddressOther,
-    attorneyStreetAddress,
-    attorneyCity,
-    attorneyPostalCode,
-    attorneyCountry
-    } = props.organization.organizationAddress;
+  if (props.organization.organizationAddress) {
+    const {
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      postalCode,
+      country,
+      attorneyAddressOther,
+      attorneyStreetAddress,
+      attorneyCity,
+      attorneyPostalCode,
+      attorneyCountry
+      } = props.organization.organizationAddress;
+  }
 
   return (
     <div className="page_organization">
@@ -62,6 +64,7 @@ const OrganizationDetails = props => {
         </h1>
         <div className="actions-container">
           {props.loggedInUser &&
+          props.isGovernmentUser &&
           (props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) ||
             props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER)
           ) &&
@@ -90,7 +93,8 @@ const OrganizationDetails = props => {
           </dl>
         </div>
         }
-        {props.organization.organizationAddress.attorneyAddressOther &&
+        {props.organization.organizationAddress &&
+        props.organization.organizationAddress.attorneyAddressOther &&
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: "300px" }}><strong>Corporation or BC Attorney address:</strong></dt>
