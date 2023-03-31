@@ -11,9 +11,24 @@ import ORGANIZATIONS from '../../constants/routes/Organizations'
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
+import AddressBuilder from '../../app/components/AddressBuilder'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
+  const {
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    postalCode,
+    country,
+    attorneyAddressOther,
+    attorneyStreetAddress,
+    attorneyCity,
+    attorneyPostalCode,
+    attorneyCountry
+    } = props.organization.organizationAddress;
+
   return (
     <div className="page_organization">
       <div>
@@ -63,40 +78,56 @@ const OrganizationDetails = props => {
         {props.organization.organizationAddress &&
         <div className="address">
           <dl className="dl-horizontal">
-            <dt>Address:</dt>
-            <dd>{props.organization.organizationAddress.addressLine1}</dd>
-            <dt />
-            <dd>{props.organization.organizationAddress.addressLine2}</dd>
-            <dt />
-            <dd>{props.organization.organizationAddress.addressLine3}</dd>
-            <dt />
-            <dd>{props.organization.organizationAddress.city && `${props.organization.organizationAddress.city}, `}
-              {props.organization.organizationAddress.postalCode && `${props.organization.organizationAddress.postalCode}, `}
-              {props.organization.organizationAddress.country}
-            </dd>
+            <dt style={{ width: "300px" }}><strong>Head Office Address:</strong></dt>
+            <dd>{AddressBuilder({
+              address_line_1: addressLine1,
+              address_line_2: addressLine2,
+              city: city,
+              state: state,
+              postal_code: postalCode,
+              country: country
+            })}</dd>
           </dl>
         </div>
         }
+        {props.organization.organizationAddress.attorneyAddressOther &&
+        <div className="address">
+          <dl className="dl-horizontal">
+            <dt style={{ width: "300px" }}><strong>Corporation or BC Attorney address:</strong></dt>
+            <dd>{AddressBuilder({
+              address_line_1: attorneyAddressOther,
+              address_line_2: attorneyStreetAddress,
+              city: attorneyCity,
+              postal_code: attorneyPostalCode,
+              country: attorneyCountry
+            })}</dd>
+          </dl>
+        </div>
+        }
+        <div className="address">
+          <dl className="dl-horizontal">
+            <dt style={{ width: "300px" }}>&nbsp;</dt>
+            <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
+          </dl>
+        </div>
         <div className="status">
           <dl className="dl-horizontal">
-            <dt>Status:</dt>
-            <dd>{props.organization.statusDisplay}</dd>
-            <dt />
+            <dt style={{ width: "300px" }}><strong>Status:</strong></dt>
+            <dd><strong>{props.organization.statusDisplay} — </strong>
             {props.organization.statusDisplay === 'Inactive' &&
-              <dd className="status-description">
+              <span className="status-description">
                 An inactive organization is not actively supplying fuel in British Columbia
                 and cannot purchase low carbon fuel credits.
-              </dd>
+              </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
-              <dd className="status-description">
+              <span className="status-description">
                 An active organization is one that is actively &quot;supplying&quot; fuel in
                 British Columbia as defined under the
-                <strong>
-                  {' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act '}
-                </strong>.
-              </dd>
+                  {' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act '}.
+              </span>
             }
+            </dd>
           </dl>
         </div>
       </div>

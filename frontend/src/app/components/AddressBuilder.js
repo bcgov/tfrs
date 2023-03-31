@@ -6,15 +6,11 @@ const AddressBuilder = (prop) => {
   }
 
   if (prop.address_line_2) {
-    address += ` ${prop.address_line_2}`
-  }
-
-  if (prop.address_line_3) {
-    address += ` ${prop.address_line_3}`
+    address += `, ${prop.address_line_2}`
   }
 
   if (prop.city) {
-    address += ` ${prop.city}`
+    address += `, ${prop.city}`
   }
 
   if (prop.state) {
@@ -23,6 +19,10 @@ const AddressBuilder = (prop) => {
 
   if (prop.postal_code) {
     address += `, ${prop.postal_code}`
+  }
+
+  if (prop.country) {
+    address += `, ${prop.country}`
   }
 
   return address
