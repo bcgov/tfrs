@@ -50,14 +50,14 @@ const CreditTransactions = (props) => {
                   value: 'Credit Transfer'
                 }, {
                   id: 'status',
-                  value: 'Proposed,Signed'
+                  value: 'Proposed,Signed,Draft'
                 }], 'credit-transfers')
 
                 return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
-              Credit transfer(s) in progress
+              Credit transfer(s) in progress (including draft)
             </button>
           </div>
         </div>
