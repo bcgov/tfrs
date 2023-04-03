@@ -266,6 +266,9 @@ class ComplianceReportingEditContainer extends Component {
     const { id } = this.props.params
     const period = this.props.complianceReporting.item.compliancePeriod.description
 
+    console.log('_updateScheduleState original', schedules)
+    console.log('_updateScheduleState mergedState', mergedState)
+
     if (schedules.summary && schedules.summary.dieselClassDeferred) {
       schedules.summary.dieselClassDeferred =
         String(schedules.summary.dieselClassDeferred).replace(/,/g, '')
@@ -354,6 +357,8 @@ class ComplianceReportingEditContainer extends Component {
         ...mergedState
       }
     })
+
+    console.log('_updateScheduleState AFTER state', this.state.schedules)
   }
 
   _handleDelete () {
@@ -428,7 +433,9 @@ class ComplianceReportingEditContainer extends Component {
 
     if (payload.summary) {
       const { summary } = payload
+      console.log('submitting summary: ', summary)
       payload.summary = ComplianceReportingEditContainer.cleanSummaryValues(summary)
+      console.log('submitting summary clean: ', payload.summary)
     }
 
     this.status = status
@@ -456,6 +463,7 @@ class ComplianceReportingEditContainer extends Component {
   }
 
   _handleRecomputeRequest () {
+    console.log('_handleRecomputeRequest')
     const { schedules } = this.state
 
     const { id } = this.props.params

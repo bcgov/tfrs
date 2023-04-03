@@ -64,122 +64,136 @@ class ScheduleSummaryContainer extends Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
+    // console.log("UNSAFE_componentWillReceiveProps: ", nextProps)
     const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
-    // const val = false
+
+    // If snapshot exists then we are not in edit mode and can just return the tabledata
     if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot
-
       GasolineSummaryConatiner.tableData(gasoline, summary)
       DieselSummaryContainer.tableData(diesel, summary)
       Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport)
       PenaltySummaryContainer.tableData(penalty, summary)
-    } else {
-      // read-write
-      if (nextProps.validating || !nextProps.valid) {
-        return
-      }
+      this.setState({
+        diesel,
+        gasoline,
+        part3,
+        penalty,
+        showModal
+      })
+      return
+    }
 
-      if (nextProps.recomputing) {
-        return
-      }
+    // Wait on validating data api call
+    if (nextProps.validating || !nextProps.valid) {
+      return
+    }
 
-      this.populateSchedules()
-      GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setStateBound)
-      DieselSummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
-      Part3SummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
-      PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setStateBound, gasoline, diesel, part3)
+    // Recomputing calls the update serializer and recalculates all values
+    if (nextProps.recomputing) {
+      return
+    }
 
-      let { summary } = nextProps.complianceReport
+    // populateSchedules initializes the important table fields for each table
+    // penalty needs to go last because it uses the other 3 in its calculations
+    GasolineSummaryConatiner.populateSchedules(this.props, this.state, this.setStateBound)
+    DieselSummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+    Part3SummaryContainer.populateSchedules(this.props, this.state, this.setStateBound)
+    PenaltySummaryContainer.populateSchedules(this.props, this.state, this.setStateBound, gasoline, diesel, part3)
 
-      if (nextProps.scheduleState) {
-        ({ summary } = nextProps.scheduleState)
-      }
+    let { summary } = nextProps.complianceReport
+    if (nextProps.scheduleState) {
+      ({ summary } = nextProps.scheduleState)
+    }
+    if (!summary) {
+      return
+    }
 
-      if (!summary) {
-        return
-      }
+    const {
+      isSupplemental,
+      lastAcceptedOffset
+    } = this.props.complianceReport
 
-      const {
-        isSupplemental,
-        lastAcceptedOffset
-      } = this.props.complianceReport
+    const updateCreditsOffsetA = false
+    const skipFurtherUpdateCreditsOffsetA = false
 
-      const updateCreditsOffsetA = false
-      const skipFurtherUpdateCreditsOffsetA = false
-      DieselSummaryContainer.lineData(diesel, summary)
+    // Perform all line calculations for each table
+    DieselSummaryContainer.lineData(diesel, summary)
+    // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
+    GasolineSummaryConatiner.lineData(gasoline, summary)
+    part3 = Part3SummaryContainer.lineData(part3, summary, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, alreadyUpdated, this.props.period)
+    penalty = PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
+    penalty = this._calculateNonCompliancePayable(penalty, this.props)
 
-      // diesel[SCHEDULE_SUMMARY.LINE_20][2].value = summary.dieselClassObligation
-      GasolineSummaryConatiner.lineData(gasoline, summary)
+    if (!isSupplemental &&
+        (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+          diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+          gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+          gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+          part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset)) {
+      showModal = true
 
-      part3 = Part3SummaryContainer.lineData(part3, summary, this.props.complianceReport, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, alreadyUpdated, this.props.period)
+      this.props.updateScheduleState({
+        summary: {
+          ...summary,
+          creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+          dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+          dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+          gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+          gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+        }
+      })
+    } else if (updateCreditsOffsetA) {
+      this.props.updateScheduleState({
+        summary: {
+          ...summary,
+          creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+          creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
+        }
+      })
 
-      // part3 = Part3SummaryContainer.calculatePart3Payable(part3)
-      PenaltySummaryContainer.lineData(penalty, part3, gasoline, diesel)
+      this.setState({
+        ...this.state,
+        alreadyUpdated: true
+      })
+    } else if (isSupplemental &&
+        (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
+          diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
+          gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
+          gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
+          (part3[SCHEDULE_SUMMARY.LINE_26_B][2].value > 0 && (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0))) {
+      showModal = true
 
-      penalty = this._calculateNonCompliancePayable(penalty, this.props)
-
-      if (!isSupplemental &&
-          (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
-            diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
-            gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
-            gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
-            part3[SCHEDULE_SUMMARY.LINE_26][2].value < summary.creditsOffset)) {
-        showModal = true
-
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
-            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
-            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
-            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
-          }
-        })
-      } else if (updateCreditsOffsetA) {
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
-          }
-        })
-
-        this.setState({
-          ...this.state,
-          alreadyUpdated: true
-        })
-      } else if (isSupplemental &&
-          (diesel[SCHEDULE_SUMMARY.LINE_17][2].value < summary.dieselClassRetained ||
-            diesel[SCHEDULE_SUMMARY.LINE_19][2].value < summary.dieselClassDeferred ||
-            gasoline[SCHEDULE_SUMMARY.LINE_6][2].value < summary.gasolineClassRetained ||
-            gasoline[SCHEDULE_SUMMARY.LINE_8][2].value < summary.gasolineClassDeferred ||
-            (part3[SCHEDULE_SUMMARY.LINE_26_B][2].value > 0 && (part3[SCHEDULE_SUMMARY.LINE_26][2].value + part3[SCHEDULE_SUMMARY.LINE_25][2].value) > 0))) {
-        showModal = true
-
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-            creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
-            creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value,
-            dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
-            dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
-            gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
-            gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
-          }
-        })
-      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value,
-            creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
-          }
-        })
-      }
+      this.props.updateScheduleState({
+        summary: {
+          ...summary,
+          creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+          creditsOffsetB: part3[SCHEDULE_SUMMARY.LINE_26_B][2].value,
+          dieselClassDeferred: diesel[SCHEDULE_SUMMARY.LINE_19][2].value,
+          dieselClassRetained: diesel[SCHEDULE_SUMMARY.LINE_17][2].value,
+          gasolineClassDeferred: gasoline[SCHEDULE_SUMMARY.LINE_8][2].value,
+          gasolineClassRetained: gasoline[SCHEDULE_SUMMARY.LINE_6][2].value
+        }
+      })
+    } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
+      console.log('isSupplemental credit offset set equal')
+      this.props.updateScheduleState({
+        summary: {
+          ...summary,
+          creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+          creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
+        }
+      })
+    } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26_C][2].value !== summary.creditsOffsetC) {
+      console.log('PART 3 LINE 26 C CORRECTION')
+      this._gridStateToPayload({
+        ...this.state,
+        summary: {
+          ...summary,
+          creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
+        }
+      })
     }
 
     this.setState({
@@ -358,52 +372,6 @@ class ScheduleSummaryContainer extends Component {
     })
   }
 
-  populateSchedules () {
-    if (this.props.complianceReport.hasSnapshot && this.props.snapshot && this.props.readOnly) {
-      return
-    }
-
-    if (!this.props.scheduleState.summary) {
-      return
-    }
-
-    if (Object.keys(this.props.recomputedTotals).length === 0) {
-      return
-    }
-
-    let {
-      diesel,
-      gasoline,
-      part3,
-      penalty
-    } = this.state
-
-    penalty[SCHEDULE_PENALTY.LINE_11][2] = {
-      ...penalty[SCHEDULE_PENALTY.LINE_11][2],
-      value: GasolineSummaryConatiner.calculateGasolinePayable(gasoline)
-    }
-
-    penalty[SCHEDULE_PENALTY.LINE_22][2] = {
-      ...penalty[SCHEDULE_PENALTY.LINE_22][2],
-      value: DieselSummaryContainer.calculateDieselPayable(diesel)
-    }
-
-    penalty[SCHEDULE_PENALTY.LINE_28][2] = {
-      ...penalty[SCHEDULE_PENALTY.LINE_28][2],
-      value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
-    }
-
-    penalty = this._calculateNonCompliancePayable(penalty, this.props)
-
-    this.setState({
-      ...this.state,
-      diesel,
-      gasoline,
-      part3,
-      penalty
-    })
-  }
-
   _gridStateToPayload (state) {
     let shouldUpdate = false
     const compareOn = [
@@ -447,6 +415,7 @@ class ScheduleSummaryContainer extends Component {
     }
 
     if (shouldUpdate) {
+      // console.log('UPDATING SCHEDULE STATE', nextState.summary)
       this.props.updateScheduleState({
         summary: nextState.summary
       })

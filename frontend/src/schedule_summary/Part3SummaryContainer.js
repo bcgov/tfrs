@@ -418,7 +418,6 @@ function calculatePart3Payable (part3, period) {
 
 function _calculatePart3 (props, state, setState) {
   const { part3 } = state
-  let { penalty } = state
   const { summary } = props.scheduleState
   const { maxCreditOffset, isSupplemental } = props.complianceReport
 
@@ -512,16 +511,9 @@ function _calculatePart3 (props, state, setState) {
     }
   }
 
-  penalty[SCHEDULE_PENALTY.LINE_28][2] = {
-    ...penalty[SCHEDULE_PENALTY.LINE_28][2],
-    value: part3[SCHEDULE_SUMMARY.LINE_28][2].value
-  }
-
-  penalty = _calculateNonCompliancePayable(penalty, props)
   setState({
     ...state,
-    part3,
-    penalty
+    part3
   })
 
   return part3

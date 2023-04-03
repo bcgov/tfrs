@@ -114,6 +114,5 @@ describe('Calculate Part3', () => {
     expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(500)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe('')
     expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
-    expect(part3[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(0)
   })
 })

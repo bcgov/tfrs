@@ -281,10 +281,11 @@ class ComplianceReportService(object):
                 (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
             required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
         
+         # Code 26C is used to identify credits that must be refunded to the supplier.
+         # This occurs when our debit position decreases and we have already spent credits. 
+         # In such cases, any excess credits must be returned to the supplier.
         if is_supplemental and Decimal(lines['26C']) > 0:
             print("*** DIRECTOR 26C Increase to Credits ***")
-            # 26C captures credits that need to be returned to the supplier,
-            # due to a decrease in debit position and previously spent credits
             required_credit_transaction = Decimal(lines['26C'])
 
         if required_credit_transaction > Decimal(0):

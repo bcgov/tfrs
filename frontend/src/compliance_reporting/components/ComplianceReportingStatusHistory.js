@@ -73,9 +73,6 @@ class ComplianceReportingStatusHistory extends Component {
     }
     const currentId = this.props.complianceReport.id
 
-    const showCurrent = (this.props.complianceReport.history.filter(c =>
-      (c.complianceReport === this.props.complianceReport.id)).length === 0)
-
     const { deltas } = this.props.complianceReport
 
     const distinctReports = this.props.complianceReport.history.reduce(
@@ -97,14 +94,14 @@ class ComplianceReportingStatusHistory extends Component {
 
     return (
       <div className="panel-group">
-        {showCurrent &&
+        {/* {showCurrent && // Removed draft state from history - Remove once confirmed by business area
         <div className="panel panel-default report-history-panel">
           <div className="panel-body" onClick={() => this.props.onSwitchHandler(-1, 'snapshot')}>
             <span className="title">{this.props.complianceReport.displayName}</span><br />
             <strong>Draft</strong>
           </div>
         </div>
-        }
+        } */}
         {distinctReports.length > 0 &&
         distinctReports.map((r) => {
           const currentDelta = deltas
@@ -113,7 +110,7 @@ class ComplianceReportingStatusHistory extends Component {
             : null
           let deltaPanel = null
 
-          if (currentDelta && !this.props.hideChangelogs) {
+          if (currentDelta && !this.props.hideChangelogs && mainReport) {
             deltaPanel = (
               <div
                 className="panel panel-default report-history-panel indented"
@@ -186,6 +183,12 @@ ComplianceReportingStatusHistory.propTypes = {
         description: PropTypes.string
       })
     ]),
+    status: PropTypes.shape({
+      fuelSupplierStatus: PropTypes.string,
+      analystStatus: PropTypes.string,
+      managerStatus: PropTypes.string,
+      directorStatus: PropTypes.string
+    }),
     deltas: PropTypes.arrayOf(PropTypes.shape()),
     displayName: PropTypes.string,
     history: PropTypes.arrayOf(PropTypes.shape({

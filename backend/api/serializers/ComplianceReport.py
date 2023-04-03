@@ -509,7 +509,6 @@ class ComplianceReportDetailSerializer(
         net_diesel_class_transferred = Decimal(0)
 
         lines = {}
-        created_on = obj.create_timestamp.year
 
         if obj.summary is not None:
             lines['6'] = obj.summary.gasoline_class_retained \
@@ -608,19 +607,21 @@ class ComplianceReportDetailSerializer(
         lines['25'] = lines['23'] - lines['24']
         lines['27'] = lines['25'] + lines['26']
 
-        # if previously spent credits (26A) add up to the debit position 
+        # If previously spent credits (26A) are greater than 
+        # the debit position in this compliance period 
         # then there is no penalty amount
-        if lines['26A'] is not None and \
-          lines['26A'] > 0 and (lines['26A'] + lines['25'] == 0):
+        if lines['26A'] is not None and lines['26A'] > 0:
             lines['27'] = 0
-
-        # 26C represents credits that need to be returned to the fuel supplier
-        # line 27 should end up being zero in this situation because
+        
+        # 26C represents credits that need to be returned to the fuel supplier.
+        # Line 27 should end up being zero in this situation because
         # 26C is the difference between lines 26A and 25 when 26A > 25
         if lines['26C'] is not None and lines['26C'] > 0:
-            lines['27'] = 0 # lines['25'] + lines['26A'] - lines['26C']
+            lines['27'] = 0 # eqv. to lines['25'] + lines['26A'] - lines['26C']
 
-        if created_on < 2023:
+        # Penalty adjustment made by business area for
+        # 2023 and above compliance periods
+        if int(obj.compliance_period.description) <= 2022:
             lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
         else:
             lines['28'] = (lines['27'] * Decimal('-600.00')).max(Decimal(0))
@@ -1034,20 +1035,20 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         status_data = validated_data.pop('status')
         status = ComplianceReportWorkflowState.objects.create(**status_data)
-        cr = ComplianceReport.objects.create(
+        new_compliance_report = ComplianceReport.objects.create(
             status=status,
             **validated_data)
         if 'supplements' in validated_data and \
                 validated_data['supplements'] is not None:
             # need to copy all the schedule entries
-            original_report = validated_data['supplements']
-            if original_report.schedule_a is not None:
+            previous_report = validated_data['supplements']
+            if previous_report.schedule_a is not None:
                 schedule_a = ScheduleA.objects.create()
-                cr.schedule_a = schedule_a
+                new_compliance_report.schedule_a = schedule_a
                 schedule_a.save()
-                cr.save()
+                new_compliance_report.save()
                 for original_record in \
-                        original_report.schedule_a.records.all():
+                        previous_report.schedule_a.records.all():
                     record = ScheduleARecord()
                     record.schedule = schedule_a
                     record.trading_partner = original_record.trading_partner
@@ -1057,13 +1058,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.transfer_type = original_record.transfer_type
                     record.save()
 
-            if original_report.schedule_b is not None:
+            if previous_report.schedule_b is not None:
                 schedule_b = ScheduleB.objects.create()
-                cr.schedule_b = schedule_b
+                new_compliance_report.schedule_b = schedule_b
                 schedule_b.save()
-                cr.save()
+                new_compliance_report.save()
                 for original_record in \
-                        original_report.schedule_b.records.all():
+                        previous_report.schedule_b.records.all():
                     record = ScheduleBRecord()
                     record.schedule = schedule_b
                     record.provision_of_the_act = \
@@ -1077,13 +1078,13 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                         original_record.schedule_d_sheet_index
                     record.save()
 
-            if original_report.schedule_c is not None:
+            if previous_report.schedule_c is not None:
                 schedule_c = ScheduleC.objects.create()
-                cr.schedule_c = schedule_c
+                new_compliance_report.schedule_c = schedule_c
                 schedule_c.save()
-                cr.save()
+                new_compliance_report.save()
                 for original_record in \
-                        original_report.schedule_c.records.all():
+                        previous_report.schedule_c.records.all():
                     record = ScheduleCRecord()
                     record.schedule = schedule_c
                     record.quantity = original_record.quantity
@@ -1093,12 +1094,12 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.rationale = original_record.rationale
                     record.save()
 
-            if original_report.schedule_d is not None:
+            if previous_report.schedule_d is not None:
                 schedule_d = ScheduleD.objects.create()
-                cr.schedule_d = schedule_d
+                new_compliance_report.schedule_d = schedule_d
                 schedule_d.save()
-                cr.save()
-                for original_sheet in original_report.schedule_d.sheets.all():
+                new_compliance_report.save()
+                for original_sheet in previous_report.schedule_d.sheets.all():
                     sheet = ScheduleDSheet()
                     sheet.schedule = schedule_d
                     sheet.feedstock = original_sheet.feedstock
@@ -1122,11 +1123,11 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                         output.description = original_output.description
                         output.save()
 
-            if original_report.summary is not None:
+            if previous_report.summary is not None:
                 summary = ScheduleSummary.objects.create()
-                cr.summary = summary
-                cr.save()
-                original_summary = original_report.summary
+                new_compliance_report.summary = summary
+                new_compliance_report.save()
+                original_summary = previous_report.summary
                 summary.gasoline_class_retained = \
                     original_summary.gasoline_class_retained
                 summary.gasoline_class_deferred = \
@@ -1135,7 +1136,6 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_retained
                 summary.diesel_class_deferred = \
                     original_summary.diesel_class_deferred
-                summary.credits_offset = original_summary.credits_offset
                 summary.gasoline_class_previously_retained = \
                     original_summary.gasoline_class_previously_retained
                 summary.gasoline_class_obligation = \
@@ -1145,23 +1145,22 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.diesel_class_obligation = \
                     original_summary.diesel_class_obligation
                 
-                try:
-                    # if credit_offset_c exists, it means we gave back credits 
-                    # in the previous supplemental report so credit_offset_a
-                    # needs to be offset by credits_offset_c to account for this
-                    # otherwise these credits could be claimed again
-                    if original_summary.credits_offset_c is not None and \
-                      original_summary.credits_offset_c > 0:
-                        summary.credits_offset_a = original_summary.credits_offset_a \
-                          - original_summary.credits_offset_c
-                    else:
-                        summary.credits_offset_a = original_summary.credits_offset_a or \
-                            original_summary.credits_offset
-                except Exception as err:
-                    print("Line 26C error", err)
+                summary.credits_offset = original_summary.credits_offset
+                summary.credits_offset_a = original_summary.credits_offset_a or \
+                    original_summary.credits_offset
 
-                if original_report.status.director_status_id == 'Rejected':
-                    current = original_report
+                # If credit_offset_c exists on an accepted supplemental report, 
+                # it means we gave back credits so credit_offset_a
+                # needs to be offset by credits_offset_c to account for this
+                # otherwise these credits could be claimed again
+                if previous_report.status.director_status_id == 'Accepted':
+                    if previous_report.credits_offset_c is not None \
+                        and previous_report.credits_offset_c > 0:
+                        summary.credits_offset_a = previous_report.credits_offset_a \
+                          - previous_report.credits_offset_c
+                    
+                if previous_report.status.director_status_id == 'Rejected':
+                    current = previous_report
                     accepted_found = False
 
                     while current.supplements is not None and not accepted_found:
@@ -1176,11 +1175,11 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
                 summary.save()
 
-            if original_report.exclusion_agreement is not None:
+            if previous_report.exclusion_agreement is not None:
                 exclusion_agreement = ExclusionAgreement.objects.create()
-                cr.exclusion_agreement = exclusion_agreement
+                new_compliance_report.exclusion_agreement = exclusion_agreement
                 exclusion_agreement.save()
-                for original_record in original_report.exclusion_agreement.records.all():
+                for original_record in previous_report.exclusion_agreement.records.all():
                     record = ExclusionAgreementRecord()
                     record.exclusion_agreement = exclusion_agreement
                     record.transaction_partner = \
@@ -1193,7 +1192,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.transaction_type = original_record.transaction_type
                     record.save()
 
-        return cr
+        return new_compliance_report
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -1314,6 +1313,8 @@ class ComplianceReportUpdateSerializer(
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
+
+        # print("UPDATE SERIALIZER", self.strip_summary)
 
         if instance.read_only and not self.disregard_status and \
                 not request.user.organization.id == 1:
@@ -1565,6 +1566,7 @@ class ComplianceReportUpdateSerializer(
             instance.save()
 
         if 'summary' in validated_data and not self.strip_summary:
+            # print('*** not strip_summary update summary')
             summary_data = validated_data.pop('summary')
 
             if instance.summary:
@@ -1580,6 +1582,7 @@ class ComplianceReportUpdateSerializer(
 
         if instance.status.fuel_supplier_status.status in ['Submitted'] and \
                 not instance.has_snapshot:
+            # print('*** creating supplemental Snapshot ***', instance)
             # Create a snapshot
             request = self.context.get('request')
             ser = ComplianceReportDetailSerializer(
@@ -1599,7 +1602,8 @@ class ComplianceReportUpdateSerializer(
                 create_timestamp=datetime.now(),
                 snapshot=snap
             )
-
+        # print("compare update statuses")
+        # print(previous_director_status, instance.status.director_status.status)
         if previous_director_status not in ['Accepted'] and \
                 instance.status.director_status.status in ['Accepted']:
             # should create a PVR
