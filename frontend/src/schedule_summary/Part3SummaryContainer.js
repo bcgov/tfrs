@@ -339,8 +339,8 @@ function Part3SupplementalData (
   // credits than the now debits scenario, then we need to give the difference
   // back to the supplier
   if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > part3[SCHEDULE_SUMMARY.LINE_25][2].value) {
-    const line25 = part3[SCHEDULE_SUMMARY.LINE_25][2].value
-    const line26A = part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
+    const line25 = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+    const line26A = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = line26A + line25
   }
@@ -349,6 +349,16 @@ function Part3SupplementalData (
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = 0
   }
+
+  // console.log('LINE_23', part3[SCHEDULE_SUMMARY.LINE_23][2].value)
+  // console.log('LINE_24', part3[SCHEDULE_SUMMARY.LINE_24][2].value)
+  // console.log('LINE_25', part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  // console.log('LINE_26', part3[SCHEDULE_SUMMARY.LINE_26][2].value)
+  // console.log('LINE_26_A', part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
+  // console.log('LINE_26_B', part3[SCHEDULE_SUMMARY.LINE_26_B][2].value)
+  // console.log('LINE_26_C', part3[SCHEDULE_SUMMARY.LINE_26_C][2].value)
+  // console.log('LINE_27', part3[SCHEDULE_SUMMARY.LINE_27][2].value)
+  // console.log('LINE_28', part3[SCHEDULE_SUMMARY.LINE_28][2].value)
 
   return part3
 }

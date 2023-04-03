@@ -81,7 +81,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="organization-address-line-1"
           >
-            Address Line 1:
+            Street Address / PO Box:
             <input
               className="form-control"
               id="organization-address-line-1"
@@ -97,7 +97,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="organization-address-line-2"
           >
-            Address Line 2:
+            Address Other (optional):
             <input
               className="form-control"
               id="organization-address-line-2"
@@ -195,7 +195,6 @@ exports[`OrganizationEditForm Should render the component 1`] = `
               id="att-representativeName"
               name="att_representativeName"
               onChange={[MockFunction]}
-              placeholder="BC Attorney Firm Inc."
               type="text"
               value=""
             />
@@ -213,7 +212,6 @@ exports[`OrganizationEditForm Should render the component 1`] = `
               id="att-streetAddress"
               name="att_streetAddress"
               onChange={[MockFunction]}
-              placeholder="4567 Linden Way"
               type="text"
               value=""
             />
@@ -251,7 +249,6 @@ exports[`OrganizationEditForm Should render the component 1`] = `
               id="att-city"
               name="att_city"
               onChange={[MockFunction]}
-              placeholder="Vancover"
               type="text"
               value=""
             />
@@ -266,10 +263,9 @@ exports[`OrganizationEditForm Should render the component 1`] = `
             Province
             <input
               className="form-control"
+              disabled={true}
               id="att-province"
               name="att_province"
-              onChange={[MockFunction]}
-              placeholder="BC"
               type="text"
               value=""
             />
@@ -284,10 +280,9 @@ exports[`OrganizationEditForm Should render the component 1`] = `
             Country:
             <input
               className="form-control"
+              disabled={true}
               id="att-country"
               name="att_country"
-              onChange={[MockFunction]}
-              placeholder="CA"
               type="text"
               value=""
             />
@@ -305,7 +300,6 @@ exports[`OrganizationEditForm Should render the component 1`] = `
               id="att-postalCode"
               name="att_postalCode"
               onChange={[MockFunction]}
-              placeholder="V8V 1V1"
               type="text"
               value="200001"
             />
@@ -330,6 +324,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
       </button>
       <button
         className="btn btn-primary"
+        disabled={true}
         id="save-organization"
         onClick={[Function]}
         type="submit"

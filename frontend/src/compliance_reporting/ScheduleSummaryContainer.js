@@ -177,7 +177,7 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
-      console.log('isSupplemental credit offset set equal')
+      // console.log('isSupplemental credit offset set equal')
       this.props.updateScheduleState({
         summary: {
           ...summary,
@@ -186,7 +186,7 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26_C][2].value !== summary.creditsOffsetC) {
-      console.log('PART 3 LINE 26 C CORRECTION')
+      // console.log('PART 3 LINE 26 C CORRECTION')
       this._gridStateToPayload({
         ...this.state,
         summary: {
