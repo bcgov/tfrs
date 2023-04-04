@@ -1,4 +1,3 @@
-import os
 import json
 import jwt
 import requests
@@ -6,15 +5,13 @@ import requests
 from django.core.cache import caches
 from django.conf import settings
 from django.db.models import Q
-from django.http import HttpResponseServerError
 from rest_framework import authentication
 from rest_framework import exceptions
 
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
 from api.models.UserLoginHistory import UserLoginHistory
-from api.services.KeycloakAPI import map_user
-from tfrs.settings import WELL_KNOWN_ENDPOINT
+from tfrs.settings import WELL_KNOWN_ENDPOINT, UNIT_TESTING_ENABLED, KEYCLOAK_AUDIENCE
 
 cache = caches['keycloak']
 
@@ -32,7 +29,7 @@ class UserAuthentication(authentication.BaseAuthentication):
         self.jwks = jwks
 
     def __init__(self):
-        if not settings.KEYCLOAK['TESTING_ENABLED']:
+        if not UNIT_TESTING_ENABLED:
             self.refresh_jwk()
 
     def create_login_history(self, user_token, success = False, error = None, path = ''):
@@ -58,9 +55,6 @@ class UserAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request):
         """Verify the JWT token and find the correct user in the DB"""
-        if not settings.KEYCLOAK['ENABLED']:
-            # fall through
-            return None
 
         auth = request.META.get('HTTP_AUTHORIZATION', None)
 
@@ -69,7 +63,7 @@ class UserAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed(
                 'Authorization header required')
 
-        if settings.KEYCLOAK['TESTING_ENABLED']:
+        if UNIT_TESTING_ENABLED:
             try:
                 user = User.objects.get(keycloak_user_id=auth['preferred_username'])
                 return user, None
@@ -112,7 +106,7 @@ class UserAuthentication(authentication.BaseAuthentication):
                 token,
                 signing_key.key,
                 algorithms=["RS256"],
-                audience=settings.KEYCLOAK['AUDIENCE'],
+                audience=KEYCLOAK_AUDIENCE,
                 options={"verify_exp": True},
             )
         except (jwt.InvalidTokenError, jwt.ExpiredSignature, jwt.DecodeError) as exc:

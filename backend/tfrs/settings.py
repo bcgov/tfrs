@@ -18,7 +18,6 @@ from pika import ConnectionParameters, PlainCredentials
 
 from . import minio
 from . import amqp
-from . import keycloak
 from . import email
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +36,10 @@ SECRET_KEY = os.getenv(
 
 WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT',
   'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration')
+
+KEYCLOAK_AUDIENCE = os.getenv('KEYCLOAK_AUDIENCE', 'tfrs-on-gold-4308')
+
+UNIT_TESTING_ENABLED = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -146,8 +149,6 @@ AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
     virtual_host=AMQP['VHOST'],
     credentials=PlainCredentials(AMQP['USER'], AMQP['PASSWORD'])
 )
-
-KEYCLOAK = keycloak.config()
 
 EMAIL = email.config()
 
