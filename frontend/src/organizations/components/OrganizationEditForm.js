@@ -193,10 +193,10 @@ const OrganizationEditForm = (props) => {
           </div>
 
           <div className="col-sm-5">
-            <h3>Corporation or Attorney in B.C.</h3>
+            <h3>Corporation or Attorney in B.C. (optional)</h3>
             <div className="form-group">
               <label htmlFor="att-representativeName">
-                Name of Representative <span>(optional)</span> :{' '}
+                Name of Representative:{' '}
               <input
                 className="form-control"
                 id="att-representativeName"
@@ -208,7 +208,7 @@ const OrganizationEditForm = (props) => {
                 </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-streetAddress">Street Address / PO Box
+              <label htmlFor="att-streetAddress">Street Address / PO Box:
               <input
                 className="form-control"
                 id="att-streetAddress"
@@ -234,7 +234,7 @@ const OrganizationEditForm = (props) => {
                </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-city">City
+              <label htmlFor="att-city">City:
               <input
                 className="form-control"
                 type="text"
@@ -246,7 +246,7 @@ const OrganizationEditForm = (props) => {
               </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-province">Province
+              <label htmlFor="att-province">Province:
               <input
                 disabled
                 className="form-control"

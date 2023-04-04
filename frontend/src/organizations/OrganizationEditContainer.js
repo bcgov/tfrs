@@ -142,7 +142,7 @@ class OrganizationEditContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target
     const fieldState = { ...this.state.fields }
-    const numericFields = ['type', 'actionsType', 'status']
+    const numericFields = ['org_type', 'org_actionsType', 'org_status']
 
     if (numericFields.includes(name)) {
       fieldState[name] = parseInt(value, 10)
