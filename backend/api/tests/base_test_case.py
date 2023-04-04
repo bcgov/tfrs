@@ -103,38 +103,13 @@ class BaseTestCase(TestCase):
         self.patcher = mock.patch('api.notifications.notifications.send_amqp_notification')
         self.patcher.start()
 
-        # generate a new RSA key
-
-        private_key = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=2048,
-            backend=default_backend()
-        )
-
-        # override the jwt verification keys for testing
-
-        settings.KEYCLOAK['ENABLED'] = True
-        settings.KEYCLOAK['TESTING_ENABLED'] = True
-        settings.KEYCLOAK['DOWNLOAD_CERTS'] = False
-        settings.KEYCLOAK['ISSUER'] = 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard'
-        settings.KEYCLOAK['AUDIENCE'] = 'tfrs-on-gold-4308'
-        settings.KEYCLOAK['RS256_KEY'] = private_key.public_key().public_bytes(
-            format=serialization.PublicFormat.SubjectPublicKeyInfo,
-            encoding=serialization.Encoding.PEM
-        ).decode('utf-8')
-
-        # the private half, used to sign our jwt (keycloak does this in actual use)
-
-        self.private_key = private_key.private_bytes(
-            format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.NoEncryption(),
-            encoding=serialization.Encoding.PEM
-        ).decode('utf-8')
-
         self.users = dict(map(
             lambda u: (u, User.objects.get_by_natural_key(u)),
             self.usernames
         ))
+
+        # override the user authentication for testing
+        settings.UNIT_TESTING_ENABLED = True
 
         self.clients = dict(
             map(lambda user: (
