@@ -25,6 +25,7 @@ const OrganizationDetails = props => {
     attorneyAddressOther,
     attorneyStreetAddress,
     attorneyCity,
+    attorneyProvince,
     attorneyPostalCode,
     attorneyCountry
   } = (props.organization.organizationAddress ? props.organization.organizationAddress : {})
@@ -92,14 +93,15 @@ const OrganizationDetails = props => {
         </div>
         }
         {props.organization.organizationAddress &&
-        props.organization.organizationAddress.attorneyAddressOther &&
+        props.organization.organizationAddress.attorneyStreetAddress &&
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Corporation or BC Attorney address:</strong></dt>
             <dd>{AddressBuilder({
-              address_line_1: attorneyAddressOther,
-              address_line_2: attorneyStreetAddress,
+              address_line_1: attorneyStreetAddress,
+              address_line_2: attorneyAddressOther,
               city: attorneyCity,
+              state: attorneyProvince,
               postal_code: attorneyPostalCode,
               country: attorneyCountry
             })}</dd>
