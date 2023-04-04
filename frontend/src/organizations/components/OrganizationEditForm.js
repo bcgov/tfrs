@@ -208,7 +208,7 @@ const OrganizationEditForm = (props) => {
                 </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-streetAddress">Street Address / PO Box
+              <label htmlFor="att-streetAddress">Street Address / PO Box:
               <input
                 className="form-control"
                 id="att-streetAddress"
