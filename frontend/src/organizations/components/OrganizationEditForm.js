@@ -300,6 +300,7 @@ const OrganizationEditForm = (props) => {
             id="save-organization"
             onClick={(e) => props.handleSubmit(e)}
             type="submit"
+            data-target='#confirmSubmit'
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
           </button>

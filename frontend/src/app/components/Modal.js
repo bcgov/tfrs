@@ -1,137 +1,226 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
+import { Modal as RModal } from "react-bootstrap";
 
-import Tooltip from '../../app/components/Tooltip'
-import * as Lang from '../../constants/langEnUs'
+import Tooltip from "../../app/components/Tooltip";
+import * as Lang from "../../constants/langEnUs";
 
 const bootstrapClassFor = (extraConfirmType) => {
   switch (extraConfirmType) {
-    case 'warning':
-      return 'alert alert-warning'
-    case 'error':
-      return 'alert alert-danger'
-    case 'info':
+    case "warning":
+      return "alert alert-warning";
+    case "error":
+      return "alert alert-danger";
+    case "info":
     default:
-      return 'alert alert-primary'
+      return "alert alert-primary";
   }
-}
+};
 
 class Modal extends React.Component {
-  componentDidMount () {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+    };
+    this.handleCloseModal = this._handleCloseModal.bind(this)
+  }
+
+  componentDidMount() {
     if (this.props.initiallyShown) {
-      this.show()
+      this.show();
     }
+    document.addEventListener("click", (e) => {
+      const targetedId = e.target.getAttribute("data-target")?.slice(1);
+      console.log(targetedId, '97==trgt')
+      if (targetedId === this.props.id) {
+        this.setState({ show: true });
+      }
+    });
 
-    if (this.props.handleCancel) {
-      $(this.element).on('hidden.bs.modal', (e) => {
-        this.props.handleCancel()
-      })
+    // if (this.props.handleCancel) {
+    //   $(this.element).on("hidden.bs.modal", (e) => {
+    //     this.props.handleCancel();
+    //     this.setState({ show: false });
+    //   });
+    // }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click',this._handleCloseModal.bind(this), false )
+  }
+  _handleCloseModal () {
+    this.setState({show: false})
+    if(this.props.handleCancel){
+      this.props.handleCancel()
     }
   }
 
-  show () {
-    $(this.element).modal('show')
+  show() {
+    this.setState({ show: true });
   }
 
-  render () {
+  render() {
     return (
-      <div
-        className="modal fade"
+      <RModal
         id={this.props.id}
-        ref={element => (this.element = element)}
+        ref={(element) => (this.element = element)}
         tabIndex="-1"
         role="dialog"
         aria-labelledby="confirmSubmitLabel"
+        show={this.state.show}
+        onHide={this.handleCloseModal}
       >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
+        <RModal.Header>
+          <button
+            type="button"
+            className="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            onClick={this.handleCloseModal}
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <RModal.Title id="confirmSubmitLabel">
+            {this.props.title}
+          </RModal.Title>
+        </RModal.Header>
+        <RModal.Body>
+          {this.props.showExtraConfirm && (
+            <div className={bootstrapClassFor(this.props.extraConfirmType)}>
+              {this.props.extraConfirmText}
+            </div>
+          )}
+          {this.props.children}
+        </RModal.Body>
+        <RModal.Footer>
+          <button
+            type="button"
+            className="btn btn-default"
+            data-dismiss="modal"
+            onClick={this.handleCloseModal}
+          >
+            {this.props.cancelLabel}
+          </button>
+          {this.props.showConfirmButton && (
+            <Tooltip
+              show={this.props.disabled}
+              title={this.props.tooltipMessage}
+            >
               <button
+                id="modal-yes"
                 type="button"
-                className="close"
+                className="btn btn-primary"
                 data-dismiss="modal"
-                aria-label="Close"
+                disabled={
+                  !(
+                    !this.props.showExtraConfirm ||
+                    this.props.canBypassExtraConfirm
+                  ) || this.props.disabled
+                }
+                onClick={this.props.handleSubmit}
               >
-                <span aria-hidden="true">&times;</span>
+                {this.props.confirmLabel}
               </button>
-              <h4
-                className="modal-title"
-                id="confirmSubmitLabel"
-              >
-                {this.props.title}
-              </h4>
-            </div>
-            <div className="modal-body">
-              {this.props.showExtraConfirm &&
-              <div className={bootstrapClassFor(this.props.extraConfirmType)}>
-                {this.props.extraConfirmText}
-              </div>
-              }
-              {this.props.children}
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-default"
-                data-dismiss="modal"
-              >
-                {this.props.cancelLabel}
-              </button>
-              {this.props.showConfirmButton &&
-              <Tooltip
-                show={this.props.disabled}
-                title={this.props.tooltipMessage}
-              >
-                <button
-                  id="modal-yes"
-                  type="button"
-                  className="btn btn-primary"
-                  data-dismiss="modal"
-                  disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
-                    this.props.disabled}
-                  onClick={this.props.handleSubmit}
-                >
-                  {this.props.confirmLabel}
-                </button>
-              </Tooltip>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+            </Tooltip>
+          )}
+        </RModal.Footer>
+      </RModal>
+    );
   }
 }
+// <div
+//   className="modal fade"
+//   id={this.props.id}
+//   ref={element => (this.element = element)}
+//   tabIndex="-1"
+//   role="dialog"
+//   aria-labelledby="confirmSubmitLabel"
+// >
+//   <div className="modal-dialog" role="document">
+//     <div className="modal-content">
+//       <div className="modal-header">
+//         <button
+//           type="button"
+//           className="close"
+//           data-dismiss="modal"
+//           aria-label="Close"
+//         >
+//           <span aria-hidden="true">&times;</span>
+//         </button>
+//         <h4
+//           className="modal-title"
+//           id="confirmSubmitLabel"
+//         >
+//           {this.props.title}
+//         </h4>
+//       </div>
+//       <div className="modal-body">
+//         {this.props.showExtraConfirm &&
+//         <div className={bootstrapClassFor(this.props.extraConfirmType)}>
+//           {this.props.extraConfirmText}
+//         </div>
+//         }
+//         {this.props.children}
+//       </div>
+//       <div className="modal-footer">
+//         <button
+//           type="button"
+//           className="btn btn-default"
+//           data-dismiss="modal"
+//           onClick={this.props?.handleCancel}
+//         >
+//           {this.props.cancelLabel}
+//         </button>
+//         {this.props.showConfirmButton &&
+//         <Tooltip
+//           show={this.props.disabled}
+//           title={this.props.tooltipMessage}
+//         >
+//           <button
+//             id="modal-yes"
+//             type="button"
+//             className="btn btn-primary"
+//             data-dismiss="modal"
+//             disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
+//               this.props.disabled}
+//             onClick={this.props.handleSubmit}
+//           >
+//             {this.props.confirmLabel}
+//           </button>
+//         </Tooltip>
+//         }
+//       </div>
+//     </div>
+//   </div>
+// </div>
 
 Modal.defaultProps = {
   canBypassExtraConfirm: true,
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   disabled: false,
-  extraConfirmText: '',
-  extraConfirmType: 'info',
+  extraConfirmText: "",
+  extraConfirmType: "info",
   handleCancel: null,
   handleSubmit: null,
   initiallyShown: false,
   showConfirmButton: true,
   showExtraConfirm: false,
-  title: 'Confirmation',
-  tooltipMessage: ''
-}
+  title: "Confirmation",
+  tooltipMessage: "",
+};
 
 Modal.propTypes = {
   cancelLabel: PropTypes.string,
   canBypassExtraConfirm: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
+    PropTypes.node,
   ]).isRequired,
   confirmLabel: PropTypes.string,
   disabled: PropTypes.bool,
   extraConfirmText: PropTypes.string,
-  extraConfirmType: PropTypes.oneOf([
-    'info', 'warning', 'error'
-  ]),
+  extraConfirmType: PropTypes.oneOf(["info", "warning", "error"]),
   handleSubmit: PropTypes.func,
   handleCancel: PropTypes.func,
   id: PropTypes.string.isRequired,
@@ -139,7 +228,7 @@ Modal.propTypes = {
   showConfirmButton: PropTypes.bool,
   showExtraConfirm: PropTypes.bool,
   title: PropTypes.string,
-  tooltipMessage: PropTypes.string
-}
+  tooltipMessage: PropTypes.string,
+};
 
-export default Modal
+export default Modal;
