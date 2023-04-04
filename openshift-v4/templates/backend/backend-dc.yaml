@@ -52,6 +52,10 @@ parameters:
   displayName: The database service name
   description: The database service name
   required: true
+- name: KEYCLOAK_AUDIENCE
+  displayName: The keycloak audience
+  description: The keycloak audience
+  required: true  
 - name: WELL_KNOWN_ENDPOINT
   displayName: The database service name
   description: The database service name
@@ -204,6 +208,8 @@ objects:
                 key: DJANGO_SECRET_KEY
           - name: APP_CONFIG
             value: "/opt/app-root/src/gunicorn.cfg.py"
+          - name: KEYCLOAK_AUDIENCE
+            value: "${KEYCLOAK_AUDIENCE}"            
           - name: WELL_KNOWN_ENDPOINT
             value: "${WELL_KNOWN_ENDPOINT}"
           resources:
