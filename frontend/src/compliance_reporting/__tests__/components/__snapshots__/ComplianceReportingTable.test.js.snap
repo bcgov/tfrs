@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ComplianceReportingTable Checking Functionality 1`] = `
+exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
 <div
   className="ReactTable searchable complianceReportListTable"
   style={{}}

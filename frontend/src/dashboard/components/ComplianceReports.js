@@ -9,7 +9,7 @@ const ComplianceReports = (props) => {
   const { isFinding, items, isGettingDashboard } = props.complianceReports
   const navigate = useNavigate()
   const complianceManagerIds = []
-  const exclusionManagerIds= []
+  const exclusionManagerIds = []
   const placeholder = []
 
   if (isFinding || isGettingDashboard) {
@@ -32,9 +32,8 @@ const ComplianceReports = (props) => {
   }
 
   items.forEach((item) => {
-    let deepestSupplementalReport = null;
-    let {  id } = item
-    let id_2 = id
+    const { id } = item
+    let id2 = id
     let { status } = item
     const { supplementalReports, type } = item
     const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports'
@@ -46,7 +45,7 @@ const ComplianceReports = (props) => {
         deepestSupplementalReport.supplementalReports.length > 0) {
         [deepestSupplementalReport] = deepestSupplementalReport.supplementalReports
       }
-      ({ status, id:id_2 } = deepestSupplementalReport)
+      ({ status, id: id2 } = deepestSupplementalReport)
     }
 
     if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed') {
@@ -55,24 +54,21 @@ const ComplianceReports = (props) => {
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
-    status.managerStatus === 'Unreviewed' && status.directorStatus === "Unreviewed") {
-      if(placeholder.includes(id_2)){
-        return 
+    status.managerStatus === 'Unreviewed' && status.directorStatus === 'Unreviewed') {
+      if (placeholder.includes(id2)) {
+        return
+      } else {
+        placeholder.push(id2)
       }
-      else {
-        placeholder.push(id_2)
-      }
-      if (reportType === 'complianceReports'){
+      if (reportType === 'complianceReports') {
         complianceManagerIds.push(id)
         awaitingReview[reportType].manager += 1
         awaitingReview[reportType].total += 1
-
-      }else {
+      } else {
         exclusionManagerIds.push(id)
         awaitingReview[reportType].manager += 1
         awaitingReview[reportType].total += 1
       }
-      
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
@@ -84,7 +80,7 @@ const ComplianceReports = (props) => {
 
   return (
     <div className="dashboard-fieldset">
-      <h1>Compliance &amp; Exclusion Reports</h1>
+      <h1>Compliance &amp Exclusion Reports</h1>
       There are:
 
       <div>
@@ -119,12 +115,13 @@ const ComplianceReports = (props) => {
             <button
               onClick={() => {
                 props.setFilter([{
-                  id:'managerIds',
+                  id: 'managerIds',
                   value: {
-                    ids : complianceManagerIds
+                    ids: complianceManagerIds
                   }
-                },{
-                  tableId: [ {
+                },
+                {
+                  tableId: [{
                     id: 'displayname',
                     value: 'Compliance Report'
                   }, {
@@ -132,13 +129,13 @@ const ComplianceReports = (props) => {
                     value: 'Analyst'
                   }]
                 }
-              ], 'compliance-reporting')
+                ], 'compliance-reporting')
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
-              {awaitingReview.complianceReports.manager} awaiting compliance manager review 
+              {awaitingReview.complianceReports.manager} awaiting compliance manager review
             </button>
           </div>
           <div>
@@ -199,13 +196,14 @@ const ComplianceReports = (props) => {
                 props.setFilter([{
                   id: 'compliance-period',
                   value: ''
-                },{
-                  id:'managerIds',
+                },
+                {
+                  id: 'managerIds',
                   value: {
-                    ids : exclusionManagerIds
+                    ids: exclusionManagerIds
                   }
                 }, {
-                  tableId: [ {
+                  tableId: [{
                     id: 'displayname',
                     value: 'Exclusion Report'
                   }, {
@@ -213,13 +211,13 @@ const ComplianceReports = (props) => {
                     value: 'Analyst'
                   }]
                 }
-              ], 'compliance-reporting')
+                ], 'compliance-reporting')
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
-              {awaitingReview.exclusionReports.manager} awaiting compliance manager review 
+              {awaitingReview.exclusionReports.manager} awaiting compliance manager review
             </button>
           </div>
           <div>

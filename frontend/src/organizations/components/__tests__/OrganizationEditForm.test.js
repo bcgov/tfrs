@@ -1,11 +1,9 @@
 import React from 'react'
-import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import * as router from 'react-router-dom'
 import { render, screen, fireEvent } from '@testing-library/react'
 import renderer from 'react-test-renderer'
 import OrganizationEditForm from '../OrganizationEditForm'
-import PERMISSIONS_ORGANIZATIONS from '../../../constants/permissions/Organizations'
+import FontAwesome from '../../../../src/app/FontAwesome' // eslint-disable-line no-unused-vars
 
 const mockedNavigator = jest.fn()
 jest.mock('react-router-dom', () => ({
@@ -49,9 +47,11 @@ describe('OrganizationEditForm', () => {
         { id: 1 },
         { id: 2, description: 'Part 3 Fuel Supplier' }
       ]
-    }
+    },
+    formIsValid: true
   }
   test('Should render the component', () => {
+    props.isGovernmentUser = true
     const component = renderer.create(
       <BrowserRouter>
         <OrganizationEditForm {...props} />
@@ -63,6 +63,7 @@ describe('OrganizationEditForm', () => {
   })
 
   test('Checking SaveButton', () => {
+    props.isGovernmentUser = true
     render(
       <BrowserRouter>
         <OrganizationEditForm {...props} />
@@ -70,6 +71,7 @@ describe('OrganizationEditForm', () => {
     )
 
     const saveBtnEl = screen.getByRole('button', { name: /Save/i })
+    console.log(saveBtnEl)
     fireEvent.click(saveBtnEl)
     expect(props.handleSubmit).toHaveBeenCalledTimes(1)
   })
@@ -107,6 +109,7 @@ describe('OrganizationEditForm', () => {
 
   test('Checking Edit mode of the organization', () => {
     props.mode = 'edit'
+    props.isGovernmentUser = true
     render(
       <BrowserRouter>
         <OrganizationEditForm {...props} />
