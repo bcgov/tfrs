@@ -143,7 +143,7 @@ class AMQPNotificationService:
         from email.message import EmailMessage
         import smtplib
         msg = EmailMessage()
-        msg.set_content('You have received a new notification in TFRS.\nPlease sign in to view it.')
+        msg.set_content('{organization_name} has received a new notification in TFRS.\nPlease sign in to view it.'.format(organization_name=organization_name))
         bcgov_cid = make_msgid()
         msg.add_alternative("""\
         <html>
