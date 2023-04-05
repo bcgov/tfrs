@@ -145,7 +145,8 @@ OrganizationDetails.defaultProps = {
 
 OrganizationDetails.propTypes = {
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
+    hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool
   }),
   organization: PropTypes.shape({
     id: PropTypes.number,
@@ -157,7 +158,12 @@ OrganizationDetails.propTypes = {
       city: PropTypes.string,
       postalCode: PropTypes.string,
       state: PropTypes.string,
-      country: PropTypes.string
+      country: PropTypes.string,
+      attorneyAddressOther: PropTypes.string,
+      attorneyCity: PropTypes.string,
+      attorneyCountry: PropTypes.string,
+      attorneyPostalCode: PropTypes.string,
+      attorneyStreetAddress: PropTypes.string
     }),
     organizationBalance: PropTypes.shape({
       deductions: PropTypes.number,
