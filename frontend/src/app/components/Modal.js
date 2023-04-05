@@ -1,57 +1,59 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Modal as RModal } from "react-bootstrap";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Modal as RModal } from 'react-bootstrap'
 
-import Tooltip from "../../app/components/Tooltip";
-import * as Lang from "../../constants/langEnUs";
+import Tooltip from '../../app/components/Tooltip'
+import * as Lang from '../../constants/langEnUs'
 
 const bootstrapClassFor = (extraConfirmType) => {
   switch (extraConfirmType) {
-    case "warning":
-      return "alert alert-warning";
-    case "error":
-      return "alert alert-danger";
-    case "info":
+    case 'warning':
+      return 'alert alert-warning'
+    case 'error':
+      return 'alert alert-danger'
+    case 'info':
     default:
-      return "alert alert-primary";
+      return 'alert alert-primary'
   }
-};
+}
 
 class Modal extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      show: false,
-    };
+      show: false
+    }
     this.handleCloseModal = this._handleCloseModal.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.initiallyShown) {
-      this.show();
+      this.show()
     }
-    document.addEventListener("click", (e) => {
-      const targetedId = e.target.getAttribute("data-target")?.slice(1);
+    document.addEventListener('click', (e) => {
+      const targetedId = e.target.getAttribute('data-target')?.slice(1)
       if (targetedId === this.props.id) {
-        this.setState({ show: true });
+        this.setState({ show: true })
       }
-    });
+    })
   }
-  componentWillUnmount() {
-    document.removeEventListener('click',this._handleCloseModal.bind(this), false )
+
+  componentWillUnmount () {
+    document.removeEventListener('click', this._handleCloseModal.bind(this), false)
   }
+
   _handleCloseModal () {
-    this.setState({show: false})
-    if(this.props.handleCancel){
+    this.setState({ show: false })
+    if (this.props.handleCancel) {
       this.props.handleCancel()
     }
   }
 
-  show() {
-    this.setState({ show: true });
+  show () {
+    this.setState({ show: true })
   }
 
-  render() {
+  render () {
     return (
       <RModal
         id={this.props.id}
@@ -117,7 +119,7 @@ class Modal extends React.Component {
           )}
         </RModal.Footer>
       </RModal>
-    );
+    )
   }
 }
 
@@ -126,28 +128,28 @@ Modal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   disabled: false,
-  extraConfirmText: "",
-  extraConfirmType: "info",
+  extraConfirmText: '',
+  extraConfirmType: 'info',
   handleCancel: null,
   handleSubmit: null,
   initiallyShown: false,
   showConfirmButton: true,
   showExtraConfirm: false,
-  title: "Confirmation",
-  tooltipMessage: "",
-};
+  title: 'Confirmation',
+  tooltipMessage: ''
+}
 
 Modal.propTypes = {
   cancelLabel: PropTypes.string,
   canBypassExtraConfirm: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
+    PropTypes.node
   ]).isRequired,
   confirmLabel: PropTypes.string,
   disabled: PropTypes.bool,
   extraConfirmText: PropTypes.string,
-  extraConfirmType: PropTypes.oneOf(["info", "warning", "error"]),
+  extraConfirmType: PropTypes.oneOf(['info', 'warning', 'error']),
   handleSubmit: PropTypes.func,
   handleCancel: PropTypes.func,
   id: PropTypes.string.isRequired,
@@ -155,7 +157,7 @@ Modal.propTypes = {
   showConfirmButton: PropTypes.bool,
   showExtraConfirm: PropTypes.bool,
   title: PropTypes.string,
-  tooltipMessage: PropTypes.string,
-};
+  tooltipMessage: PropTypes.string
+}
 
-export default Modal;
+export default Modal
