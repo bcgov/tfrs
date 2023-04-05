@@ -19,7 +19,7 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, complianceReport)
+    const result = lineData(part3, summary, 2023, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(0)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].className).toBe('numeric')
   })
@@ -38,7 +38,7 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, complianceReport)
+    const result = lineData(part3, summary, 2023, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
 
@@ -57,7 +57,7 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, complianceReport)
+    const result = lineData(part3, summary, 2023, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
 })

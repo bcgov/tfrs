@@ -5,7 +5,7 @@ exports[`ComplianceReports Should render the component 1`] = `
   className="dashboard-fieldset"
 >
   <h1>
-    Compliance & Exclusion Reports
+    Compliance &amp Exclusion Reports
   </h1>
   There are:
   <div>
