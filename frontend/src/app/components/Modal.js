@@ -32,18 +32,10 @@ class Modal extends React.Component {
     }
     document.addEventListener("click", (e) => {
       const targetedId = e.target.getAttribute("data-target")?.slice(1);
-      console.log(targetedId, '97==trgt')
       if (targetedId === this.props.id) {
         this.setState({ show: true });
       }
     });
-
-    // if (this.props.handleCancel) {
-    //   $(this.element).on("hidden.bs.modal", (e) => {
-    //     this.props.handleCancel();
-    //     this.setState({ show: false });
-    //   });
-    // }
   }
   componentWillUnmount() {
     document.removeEventListener('click',this._handleCloseModal.bind(this), false )
@@ -128,71 +120,6 @@ class Modal extends React.Component {
     );
   }
 }
-// <div
-//   className="modal fade"
-//   id={this.props.id}
-//   ref={element => (this.element = element)}
-//   tabIndex="-1"
-//   role="dialog"
-//   aria-labelledby="confirmSubmitLabel"
-// >
-//   <div className="modal-dialog" role="document">
-//     <div className="modal-content">
-//       <div className="modal-header">
-//         <button
-//           type="button"
-//           className="close"
-//           data-dismiss="modal"
-//           aria-label="Close"
-//         >
-//           <span aria-hidden="true">&times;</span>
-//         </button>
-//         <h4
-//           className="modal-title"
-//           id="confirmSubmitLabel"
-//         >
-//           {this.props.title}
-//         </h4>
-//       </div>
-//       <div className="modal-body">
-//         {this.props.showExtraConfirm &&
-//         <div className={bootstrapClassFor(this.props.extraConfirmType)}>
-//           {this.props.extraConfirmText}
-//         </div>
-//         }
-//         {this.props.children}
-//       </div>
-//       <div className="modal-footer">
-//         <button
-//           type="button"
-//           className="btn btn-default"
-//           data-dismiss="modal"
-//           onClick={this.props?.handleCancel}
-//         >
-//           {this.props.cancelLabel}
-//         </button>
-//         {this.props.showConfirmButton &&
-//         <Tooltip
-//           show={this.props.disabled}
-//           title={this.props.tooltipMessage}
-//         >
-//           <button
-//             id="modal-yes"
-//             type="button"
-//             className="btn btn-primary"
-//             data-dismiss="modal"
-//             disabled={!((!this.props.showExtraConfirm) || this.props.canBypassExtraConfirm) ||
-//               this.props.disabled}
-//             onClick={this.props.handleSubmit}
-//           >
-//             {this.props.confirmLabel}
-//           </button>
-//         </Tooltip>
-//         }
-//       </div>
-//     </div>
-//   </div>
-// </div>
 
 Modal.defaultProps = {
   canBypassExtraConfirm: true,
