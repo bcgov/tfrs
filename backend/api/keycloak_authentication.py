@@ -11,7 +11,8 @@ from rest_framework import exceptions
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
 from api.models.UserLoginHistory import UserLoginHistory
-from tfrs.settings import WELL_KNOWN_ENDPOINT, UNIT_TESTING_ENABLED, KEYCLOAK_AUDIENCE
+from tfrs.settings import WELL_KNOWN_ENDPOINT, KEYCLOAK_AUDIENCE
+import tfrs.settings
 
 cache = caches['keycloak']
 
@@ -29,7 +30,8 @@ class UserAuthentication(authentication.BaseAuthentication):
         self.jwks = jwks
 
     def __init__(self):
-        if not UNIT_TESTING_ENABLED:
+        self.unit_testing_enabled = getattr(tfrs.settings, 'UNIT_TESTING_ENABLED', False)
+        if not self.unit_testing_enabled:
             self.refresh_jwk()
 
     def create_login_history(self, user_token, success = False, error = None, path = ''):
@@ -63,7 +65,7 @@ class UserAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed(
                 'Authorization header required')
 
-        if UNIT_TESTING_ENABLED:
+        if self.unit_testing_enabled:
             try:
                 user = User.objects.get(keycloak_user_id=auth['preferred_username'])
                 return user, None
@@ -71,6 +73,7 @@ class UserAuthentication(authentication.BaseAuthentication):
                 print("Testing User does not exist")
                 raise User.DoesNotExist(str(exc))
 
+        print("auth", auth)
         try:
             scheme, token = auth.split()
         except ValueError:
