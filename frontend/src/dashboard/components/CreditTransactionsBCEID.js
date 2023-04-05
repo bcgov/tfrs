@@ -22,7 +22,7 @@ const CreditTransactions = (props) => {
 
   items.forEach((item) => {
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-      if (!item.isRescinded && ['Accepted', 'Submitted'].indexOf(item.status.status) >= 0) {
+      if (!item.isRescinded && ['Accepted', 'Submitted', 'Draft'].indexOf(item.status.status) >= 0) {
         inProgress.creditTransfers += 1
       }
     }

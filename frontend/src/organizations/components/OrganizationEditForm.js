@@ -13,7 +13,7 @@ import NotFound from '../../app/components/NotFound'
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
   const orgStatuses = props.referenceData.organizationStatuses
-  if (!props.isGovernmentUser && props.mode === 'edit') {
+  if(!props.loggedInUser.isGovernmentUser && props.mode === 'edit'){
     return <NotFound />
   } else {
     return (
@@ -190,10 +190,10 @@ const OrganizationEditForm = (props) => {
           </div>
 
           <div className="col-sm-5">
-            <h3>Corporation or Attorney in B.C.</h3>
+            <h3>Corporation or Attorney in B.C. (optional)</h3>
             <div className="form-group">
               <label htmlFor="att-representativeName">
-                Name of Representative <span>(optional)</span> :{' '}
+                Name of Representative:{' '}
               <input
                 className="form-control"
                 id="att-representativeName"
@@ -205,7 +205,7 @@ const OrganizationEditForm = (props) => {
                 </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-streetAddress">Street Address / PO Box
+              <label htmlFor="att-streetAddress">Street Address / PO Box:
               <input
                 className="form-control"
                 id="att-streetAddress"
@@ -231,7 +231,7 @@ const OrganizationEditForm = (props) => {
                </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-city">City
+              <label htmlFor="att-city">City:
               <input
                 className="form-control"
                 type="text"
@@ -243,7 +243,7 @@ const OrganizationEditForm = (props) => {
               </label>
             </div>
             <div className="form-group">
-              <label htmlFor="att-province">Province
+              <label htmlFor="att-province">Province:
               <input
                 disabled
                 className="form-control"
@@ -342,11 +342,11 @@ OrganizationEditForm.propTypes = {
     att_province: PropTypes.string,
     att_postalCode: PropTypes.string
   }),
-  isGovernmentUser: PropTypes.bool,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
+    hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool
   }),
   referenceData: PropTypes.shape({
     organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
