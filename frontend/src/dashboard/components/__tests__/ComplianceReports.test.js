@@ -1,33 +1,33 @@
-import React from "react";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import renderer from "react-test-renderer";
-import { screen, render, fireEvent } from "@testing-library/react";
-import store from "../../../store/store";
-import ComplianceReports from "../ComplianceReports";
+import React from 'react'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
+import renderer from 'react-test-renderer'
+import { screen, render, fireEvent } from '@testing-library/react'
+import store from '../../../store/store'
+import ComplianceReports from '../ComplianceReports'
 
-describe("ComplianceReports", () => {
-  test("Should render the component", () => {
+describe('ComplianceReports', () => {
+  test('Should render the component', () => {
     const props = {
       complianceReports: {
         isFinding: false,
         isGettingDashboard: false,
-        items: [],
+        items: []
       },
-      setFilter: jest.fn(),
-    };
+      setFilter: jest.fn()
+    }
     const component = renderer.create(
       <BrowserRouter>
         <Provider store={store}>
           <ComplianceReports {...props} />
         </Provider>
       </BrowserRouter>
-    );
-    const tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+    )
+    const tree = component.toJSON()
+    expect(tree).toMatchSnapshot()
+  })
 
-  //   test("Checking the Analyst Count", () => {
+  //   test('Checking the Analyst Count', () => {
   //     const props = {
   //       complianceReports: {
   //         isFinding: false,
@@ -36,30 +36,30 @@ describe("ComplianceReports", () => {
   //           {
   //             id: 654,
   //             status: {
-  //               analystStatus: "Unreviewed",
-  //               directorStatus: "Unreviewed",
-  //               fuelSupplierStatus: "Submitted",
-  //               managerStatus: "Unreviewed",
+  //               analystStatus: 'Unreviewed',
+  //               directorStatus: 'Unreviewed',
+  //               fuelSupplierStatus: 'Submitted',
+  //               managerStatus: 'Unreviewed',
   //             },
-  //             type: "Compliance Report",
+  //             type: 'Compliance Report',
   //             supplementalReports: [],
   //           },
   //         ],
   //       },
   //       setFilter: jest.fn(),
-  //     };
+  //     }
   //     const component = renderer.create(
   //       <BrowserRouter>
   //         <Provider store={store}>
   //           <ComplianceReports {...props} />
   //         </Provider>
   //       </BrowserRouter>
-  //     );
-  //     const tree = component.toJSON();
-  //     expect(tree).toMatchSnapshot();
-  //   });
+  //     )
+  //     const tree = component.toJSON()
+  //     expect(tree).toMatchSnapshot()
+  //   })
 
-  //   test("Checking the Manager Count", () => {
+  //   test('Checking the Manager Count', () => {
   //     const props = {
   //       complianceReports: {
   //         isFinding: false,
@@ -68,17 +68,17 @@ describe("ComplianceReports", () => {
   //           {
   //             id: 294,
   //             status: {
-  //               analystStatus: "Unreviewed",
-  //               directorStatus: "Unreviewed",
-  //               managerStatus: "Unreviewed",
+  //               analystStatus: 'Unreviewed',
+  //               directorStatus: 'Unreviewed',
+  //               managerStatus: 'Unreviewed',
   //             },
-  //             type: "Compliance Report",
+  //             type: 'Compliance Report',
   //             supplementalReports: [
   //               {
   //                 status: {
-  //                   analystStatus: "Recommended",
-  //                   directorStatus: "Unreviewed",
-  //                   managerStatus: "Unreviewed",
+  //                   analystStatus: 'Recommended',
+  //                   directorStatus: 'Unreviewed',
+  //                   managerStatus: 'Unreviewed',
   //                 },
   //               },
   //             ],
@@ -86,16 +86,16 @@ describe("ComplianceReports", () => {
   //           {
   //             id: 295,
   //             status: {},
-  //             type: "Exclusion Report",
+  //             type: 'Exclusion Report',
   //             supplementalReports: [
   //               {
   //                 status: {},
   //                 supplementalReports: [
   //                   {
   //                     status: {
-  //                       analystStatus: "Recommended",
-  //                       directorStatus: "Unreviewed",
-  //                       managerStatus: "Unreviewed",
+  //                       analystStatus: 'Recommended',
+  //                       directorStatus: 'Unreviewed',
+  //                       managerStatus: 'Unreviewed',
   //                     },
   //                   },
   //                 ],
@@ -105,19 +105,19 @@ describe("ComplianceReports", () => {
   //         ],
   //       },
   //       setFilter: jest.fn(),
-  //     };
+  //     }
   //     const component = renderer.create(
   //       <BrowserRouter>
   //         <Provider store={store}>
   //           <ComplianceReports {...props} />
   //         </Provider>
   //       </BrowserRouter>
-  //     );
-  //     const tree = component.toJSON();
-  //     expect(tree).toMatchSnapshot();
-  //   });
+  //     )
+  //     const tree = component.toJSON()
+  //     expect(tree).toMatchSnapshot()
+  //   })
 
-  //   test("Checking the Director Count", () => {
+  //   test('Checking the Director Count', () => {
   //     const props = {
   //       complianceReports: {
   //         isFinding: false,
@@ -126,17 +126,17 @@ describe("ComplianceReports", () => {
   //           {
   //             id: 294,
   //             status: {
-  //               analystStatus: "Unreviewed",
-  //               directorStatus: "Unreviewed",
-  //               managerStatus: "Unreviewed",
+  //               analystStatus: 'Unreviewed',
+  //               directorStatus: 'Unreviewed',
+  //               managerStatus: 'Unreviewed',
   //             },
-  //             type: "Compliance Report",
+  //             type: 'Compliance Report',
   //             supplementalReports: [
   //               {
   //                 status: {
-  //                   analystStatus: "Recommended'",
-  //                   directorStatus: "Unreviewed",
-  //                   managerStatus: "Not Recommended",
+  //                   analystStatus: 'Recommended'',
+  //                   directorStatus: 'Unreviewed',
+  //                   managerStatus: 'Not Recommended',
   //                 },
   //               },
   //             ],
@@ -144,19 +144,19 @@ describe("ComplianceReports", () => {
   //         ],
   //       },
   //       setFilter: jest.fn(),
-  //     };
+  //     }
   //     const component = renderer.create(
   //       <BrowserRouter>
   //         <Provider store={store}>
   //           <ComplianceReports {...props} />
   //         </Provider>
   //       </BrowserRouter>
-  //     );
-  //     const tree = component.toJSON();
-  //     expect(tree).toMatchSnapshot();
-  //   });
+  //     )
+  //     const tree = component.toJSON()
+  //     expect(tree).toMatchSnapshot()
+  //   })
 
-  test("Checking the analyst count click event", () => {
+  test('Checking the analyst count click event', () => {
     const props = {
       complianceReports: {
         isFinding: false,
@@ -165,61 +165,61 @@ describe("ComplianceReports", () => {
           {
             id: 654,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              fuelSupplierStatus: "Submitted",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              fuelSupplierStatus: 'Submitted',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
-            supplementalReports: [],
+            type: 'Compliance Report',
+            supplementalReports: []
           },
           {
             id: 655,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              fuelSupplierStatus: "Submitted",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              fuelSupplierStatus: 'Submitted',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
-            supplementalReports: [],
+            type: 'Compliance Report',
+            supplementalReports: []
           },
           {
             id: 656,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              fuelSupplierStatus: "Submitted",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              fuelSupplierStatus: 'Submitted',
+              managerStatus: 'Unreviewed'
             },
-            type: "Exclusion Report",
-            supplementalReports: [],
-          },
-        ],
+            type: 'Exclusion Report',
+            supplementalReports: []
+          }
+        ]
       },
-      setFilter: jest.fn(),
-    };
+      setFilter: jest.fn()
+    }
     render(
       <BrowserRouter>
         <Provider store={store}>
           <ComplianceReports {...props} />
         </Provider>
       </BrowserRouter>
-    );
-    const complianceBtnEl = screen.getByRole("button", {
-      name: "2 awaiting government analyst review",
-    });
-    const exclusionBtnEl = screen.getByRole("button", {
-      name: "1 awaiting government analyst review",
-    });
-    const complianceBtn = fireEvent.click(complianceBtnEl);
-    const exclusionBtn = fireEvent.click(exclusionBtnEl);
-    expect(complianceBtn).toBe(true);
-    expect(exclusionBtn).toBe(true);
-    expect(props.setFilter).toHaveBeenCalledTimes(2);
-  });
+    )
+    const complianceBtnEl = screen.getByRole('button', {
+      name: '2 awaiting government analyst review'
+    })
+    const exclusionBtnEl = screen.getByRole('button', {
+      name: '1 awaiting government analyst review'
+    })
+    const complianceBtn = fireEvent.click(complianceBtnEl)
+    const exclusionBtn = fireEvent.click(exclusionBtnEl)
+    expect(complianceBtn).toBe(true)
+    expect(exclusionBtn).toBe(true)
+    expect(props.setFilter).toHaveBeenCalledTimes(2)
+  })
 
-  test("Checking the Manager Count click", () => {
+  test('Checking the Manager Count click', () => {
     const props = {
       complianceReports: {
         isFinding: false,
@@ -228,83 +228,83 @@ describe("ComplianceReports", () => {
           {
             id: 293,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
+            type: 'Compliance Report',
             supplementalReports: [
               {
                 status: {
-                  analystStatus: "Recommended",
-                  directorStatus: "Unreviewed",
-                  managerStatus: "Unreviewed",
-                },
-              },
-            ],
+                  analystStatus: 'Recommended',
+                  directorStatus: 'Unreviewed',
+                  managerStatus: 'Unreviewed'
+                }
+              }
+            ]
           },
           {
             id: 294,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
+            type: 'Compliance Report',
             supplementalReports: [
               {
                 status: {
-                  analystStatus: "Recommended",
-                  directorStatus: "Unreviewed",
-                  managerStatus: "Unreviewed",
-                },
-              },
-            ],
+                  analystStatus: 'Recommended',
+                  directorStatus: 'Unreviewed',
+                  managerStatus: 'Unreviewed'
+                }
+              }
+            ]
           },
           {
             id: 295,
             status: {},
-            type: "Exclusion Report",
+            type: 'Exclusion Report',
             supplementalReports: [
               {
                 status: {},
                 supplementalReports: [
                   {
                     status: {
-                      analystStatus: "Recommended",
-                      directorStatus: "Unreviewed",
-                      managerStatus: "Unreviewed",
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+                      analystStatus: 'Recommended',
+                      directorStatus: 'Unreviewed',
+                      managerStatus: 'Unreviewed'
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
-      setFilter: jest.fn(),
-    };
+      setFilter: jest.fn()
+    }
     render(
       <BrowserRouter>
         <Provider store={store}>
           <ComplianceReports {...props} />
         </Provider>
       </BrowserRouter>
-    );
-    const complianceBtnEl = screen.getByRole("button", {
-      name: "2 awaiting compliance manager review",
-    });
-    const exclusionBtnEl = screen.getByRole("button", {
-      name: "1 awaiting compliance manager review",
-    });
-    const complianceBtn = fireEvent.click(complianceBtnEl);
-    const exclusionBtn = fireEvent.click(exclusionBtnEl);
-    expect(complianceBtn).toBe(true);
-    expect(exclusionBtn).toBe(true);
-    expect(props.setFilter).toHaveBeenCalledTimes(2);
-  });
+    )
+    const complianceBtnEl = screen.getByRole('button', {
+      name: '2 awaiting compliance manager review'
+    })
+    const exclusionBtnEl = screen.getByRole('button', {
+      name: '1 awaiting compliance manager review'
+    })
+    const complianceBtn = fireEvent.click(complianceBtnEl)
+    const exclusionBtn = fireEvent.click(exclusionBtnEl)
+    expect(complianceBtn).toBe(true)
+    expect(exclusionBtn).toBe(true)
+    expect(props.setFilter).toHaveBeenCalledTimes(2)
+  })
 
-  test("Checking the Director Count click", () => {
+  test('Checking the Director Count click', () => {
     const props = {
       complianceReports: {
         isFinding: false,
@@ -313,103 +313,103 @@ describe("ComplianceReports", () => {
           {
             id: 294,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
+            type: 'Compliance Report',
             supplementalReports: [
               {
                 status: {
-                  analystStatus: "Recommended'",
-                  directorStatus: "Unreviewed",
-                  managerStatus: "Not Recommended",
-                },
-              },
-            ],
+                  analystStatus: 'Recommended',
+                  directorStatus: 'Unreviewed',
+                  managerStatus: 'Not Recommended'
+                }
+              }
+            ]
           },
           {
             id: 295,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              managerStatus: 'Unreviewed'
             },
-            type: "Compliance Report",
+            type: 'Compliance Report',
             supplementalReports: [
               {
                 status: {
-                  analystStatus: "Recommended'",
-                  directorStatus: "Unreviewed",
-                  managerStatus: "Not Recommended",
-                },
-              },
-            ],
+                  analystStatus: 'Recommended',
+                  directorStatus: 'Unreviewed',
+                  managerStatus: 'Not Recommended'
+                }
+              }
+            ]
           },
           {
             id: 296,
             status: {
-              analystStatus: "Unreviewed",
-              directorStatus: "Unreviewed",
-              managerStatus: "Unreviewed",
+              analystStatus: 'Unreviewed',
+              directorStatus: 'Unreviewed',
+              managerStatus: 'Unreviewed'
             },
-            type: "Exclusion Report",
+            type: 'Exclusion Report',
             supplementalReports: [
               {
                 status: {
-                  analystStatus: "Recommended'",
-                  directorStatus: "Unreviewed",
-                  managerStatus: "Not Recommended",
-                },
-              },
-            ],
-          },
-        ],
+                  analystStatus: 'Recommended',
+                  directorStatus: 'Unreviewed',
+                  managerStatus: 'Not Recommended'
+                }
+              }
+            ]
+          }
+        ]
       },
-      setFilter: jest.fn(),
-    };
+      setFilter: jest.fn()
+    }
     render(
       <BrowserRouter>
         <Provider store={store}>
           <ComplianceReports {...props} />
         </Provider>
       </BrowserRouter>
-    );
-    const complianceBtnEl = screen.getByRole("button", {
-      name: "2 awaiting Director review",
-    });
-    const exclusionBtnEl = screen.getByRole("button", {
-      name: "1 awaiting Director review",
-    });
-    const complianceBtn = fireEvent.click(complianceBtnEl);
-    const exclusionBtn = fireEvent.click(exclusionBtnEl);
-    expect(complianceBtn).toBe(true);
-    expect(exclusionBtn).toBe(true);
-    expect(props.setFilter).toHaveBeenCalledTimes(2);
-  });
+    )
+    const complianceBtnEl = screen.getByRole('button', {
+      name: '2 awaiting Director review'
+    })
+    const exclusionBtnEl = screen.getByRole('button', {
+      name: '1 awaiting Director review'
+    })
+    const complianceBtn = fireEvent.click(complianceBtnEl)
+    const exclusionBtn = fireEvent.click(exclusionBtnEl)
+    expect(complianceBtn).toBe(true)
+    expect(exclusionBtn).toBe(true)
+    expect(props.setFilter).toHaveBeenCalledTimes(2)
+  })
 
-  test("Check Current Compliance Period Btn and All/historical Btn", () => {
+  test('Check Current Compliance Period Btn and All/historical Btn', () => {
     const props = {
-        complianceReports: {
-          isFinding: false,
-          isGettingDashboard: false,
-          items: [],
-        },
-        setFilter: jest.fn(),
-      };
+      complianceReports: {
+        isFinding: false,
+        isGettingDashboard: false,
+        items: []
+      },
+      setFilter: jest.fn()
+    }
     render(
       <BrowserRouter>
         <Provider store={store}>
           <ComplianceReports {...props} />
         </Provider>
       </BrowserRouter>
-    );
+    )
     const complianceBtnEl = screen.getByText('Current compliance period')
     const historicalBtnEl = screen.getByText('All/historical')
     const complianceBtn = fireEvent.click(complianceBtnEl)
     expect(complianceBtn).toBe(true)
-    const historicalBtn  = fireEvent.click(historicalBtnEl)
+    const historicalBtn = fireEvent.click(historicalBtnEl)
     expect(historicalBtn).toBe(true)
     expect(props.setFilter).toHaveBeenCalledTimes(2)
-  });
-});
+  })
+})
