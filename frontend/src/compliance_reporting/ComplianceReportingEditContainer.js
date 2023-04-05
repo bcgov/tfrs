@@ -574,14 +574,8 @@ class ComplianceReportingEditContainer extends Component {
     }
 
     let organizationAddress = null
-
-    if (item.hasSnapshot &&
-      this.props.complianceReporting.snapshot &&
-      this.props.complianceReporting.snapshot.organization.organizationAddress) {
-      organizationAddress = this.props.complianceReporting.snapshot.organization.organizationAddress
-    } else if (this.props.loggedInUser.organization.organizationAddress &&
-      !this.props.loggedInUser.isGovernmentUser) {
-        organizationAddress  = this.props.loggedInUser.organization.organizationAddress
+    if (item && item.organization && item.organization.organizationAddress) {
+      organizationAddress = item.organization.organizationAddress
     }
 
     return ([
@@ -614,29 +608,34 @@ class ComplianceReportingEditContainer extends Component {
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>
       </h3>,
-      <br/>,
-      <p className="schedule-organization-address" key="organization-address"> 
+      <br key="break"/>,
+      <p className="schedule-organization-address" key="organization-address">
         {organizationAddress
-      ? ["Head Office:", AddressBuilder({
-          address_line_1: organizationAddress.addressLine1,
-          address_line_2: organizationAddress.addressLine2,
-          city: organizationAddress.city,
-          state: organizationAddress.state,
-          postal_code: organizationAddress.postalCode,
-          country: organizationAddress.country
-        })]:null
+          ? ['Head Office: ', AddressBuilder({
+              address_line_1: organizationAddress.addressLine1,
+              address_line_2: organizationAddress.addressLine2,
+              city: organizationAddress.city,
+              state: organizationAddress.state,
+              postal_code: organizationAddress.postalCode,
+              country: organizationAddress.country
+            })]
+          : null
         }
       </p>,
       <p className="schedule-organization-address" key="organization-attorney-address">
-      {organizationAddress.attorneyAddressOther ? 
-      ["B.C. Attorney Office: ",
-      AddressBuilder({
-        address_line_1: organizationAddress.attorneyAddressOther,
-        address_line_2: organizationAddress.attorneyStreetAddress,
-        city: organizationAddress.attorneyCity,
-        postal_code: organizationAddress.attorneyPostalCode,
-        country: organizationAddress.attorneyCountry
-      })]:null
+      {organizationAddress
+        ? ['B.C. Attorney Office: ',
+            organizationAddress.attorneyRepresentativename ? organizationAddress.attorneyRepresentativename + ', ' : '',
+            AddressBuilder({
+              address_line_1: organizationAddress.attorneyStreetAddress,
+              address_line_2: organizationAddress.attorneyAddressOther,
+              city: organizationAddress.attorneyCity,
+              state: organizationAddress.attorneyProvince,
+              postal_code: organizationAddress.attorneyPostalCode,
+              country: organizationAddress.attorneyCountry
+            })
+          ]
+        : null
       }
     </p>,
       <ScheduleTabs
@@ -874,7 +873,10 @@ ComplianceReportingEditContainer.propTypes = {
         PropTypes.number,
         PropTypes.string
       ]),
-      organization: PropTypes.shape(),
+      organization: PropTypes.shape({
+        name: PropTypes.string,
+        organizationAddress: PropTypes.shape()
+      }),
       readOnly: PropTypes.bool,
       status: PropTypes.shape(),
       type: PropTypes.oneOfType([
