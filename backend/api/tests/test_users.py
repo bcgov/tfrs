@@ -28,6 +28,7 @@ from rest_framework import status
 
 from .base_test_case import BaseTestCase
 from api.models.User import User
+from api.models.UserCreationRequest import UserCreationRequest
 
 
 class TestUsers(BaseTestCase):
@@ -115,3 +116,32 @@ class TestUsers(BaseTestCase):
         self.assertEqual(user.phone, '123456788')
         self.assertEqual(user.cell_phone, '123456789')
         self.assertNotEqual(user.username, 'new_user_1')
+
+    def test_update_self_with_external_info(self):
+        """Test that updating external user info works"""
+
+        payload = {
+            'external_username': 'bceid1',
+            'keycloak_email': 'email1@test.com'
+        }
+
+        user = User.objects.get(id=self.users['fs_user_1'].id)
+
+        user_creation_request = UserCreationRequest.objects.create(
+            external_username='',
+            keycloak_email='',
+            user=self.users['fs_user_1']
+        )
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/users/{}'.format(user.id),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # not all fields should've been updated
+        user_creation_request = UserCreationRequest.objects.filter(user=self.users['fs_user_1'].id).first()
+
+        self.assertEqual(user_creation_request.external_username, 'bceid1')
+        self.assertEqual(user_creation_request.keycloak_email, 'email1@test.com')

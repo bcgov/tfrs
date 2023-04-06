@@ -48,12 +48,6 @@ class OrganizationAddress(Auditable, EffectiveDates):
         null=True,
         db_comment="The second line of the organization's address."
     )
-    address_line_3 = models.CharField(
-        blank=True,
-        max_length=100,
-        null=True,
-        db_comment="The third line of the organization's address."
-    )
     city = models.CharField(
         blank=True,
         max_length=100,
@@ -72,12 +66,6 @@ class OrganizationAddress(Auditable, EffectiveDates):
         null=True,
         db_comment="State or Province"
     )
-    county = models.CharField(
-        blank=True,
-        max_length=50,
-        null=True,
-        db_comment="County Name"
-    )
     country = models.CharField(
         blank=True,
         max_length=100,
@@ -90,6 +78,49 @@ class OrganizationAddress(Auditable, EffectiveDates):
         null=True,
         db_comment="Other Address Details"
     )
+    attorney_city = models.CharField(
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="City"
+    )
+    attorney_postal_code = models.CharField(
+        blank=True,
+        max_length=10,
+        null=True,
+        db_comment="Postal Code"
+    )
+    attorney_province = models.CharField(
+        blank=True,
+        max_length=50,
+        null=True,
+        db_comment="Province"
+    )
+    attorney_country = models.CharField(
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="Attorney Country"
+    )
+    attorney_address_other = models.CharField(
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="Other Address Details"
+    )
+    attorney_street_address = models.CharField(
+        blank=True,
+        max_length=500,
+        null=True,
+        db_comment="Street Addrees PO Box"
+    )
+    attorney_representativename = models.CharField(
+        blank=True,
+        max_length=500,
+        null=True,
+        db_comment="Representative Name"
+    )
+
 
     class Meta:
         db_table = 'organization_address'

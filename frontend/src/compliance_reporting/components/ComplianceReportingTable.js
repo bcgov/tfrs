@@ -111,18 +111,15 @@ class ComplianceReportingTable extends Component {
       minWidth: 75
     }, {
       accessor: (item) => {
-        // Temporarily left commented out for posterity and client feedback
-        // let report = item
-        // const { supplementalReports } = item
-        // if (supplementalReports.length > 0) {
-        //   [report] = supplementalReports
-        // }
-        // while (report.supplementalReports && report.supplementalReports.length > 0) {
-        //   [report] = report.supplementalReports
-        // }
-        // return ComplianceReportStatus(report)
-
-        return ComplianceReportStatus(item)
+        let report = item
+        const { supplementalReports } = item
+        if (supplementalReports.length > 0) {
+          [report] = supplementalReports
+        }
+        while (report.supplementalReports && report.supplementalReports.length > 0) {
+          [report] = report.supplementalReports
+        }
+        return ComplianceReportStatus(report)
       },
       className: 'col-status',
       Header: 'Current Status',
@@ -142,7 +139,22 @@ class ComplianceReportingTable extends Component {
           }
         </span>
       )
-    }]
+    },
+    {
+      accessor: item => item.updateTimestamp,
+      className: 'col-date',
+      Header: 'Submission Date',
+      id: 'submissionDate',
+      minWidth: 95,
+      Cell: row => (
+        <span>
+          {
+            row.original.updateTimestamp && moment(row.original.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
+          }
+        </span>
+      )
+    }
+    ]
     const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
 

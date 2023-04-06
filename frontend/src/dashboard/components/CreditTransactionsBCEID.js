@@ -22,7 +22,7 @@ const CreditTransactions = (props) => {
 
   items.forEach((item) => {
     if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
-      if (!item.isRescinded && ['Accepted', 'Submitted'].indexOf(item.status.status) >= 0) {
+      if (!item.isRescinded && ['Accepted', 'Submitted', 'Draft'].indexOf(item.status.status) >= 0) {
         inProgress.creditTransfers += 1
       }
     }
@@ -50,14 +50,14 @@ const CreditTransactions = (props) => {
                   value: 'Credit Transfer'
                 }, {
                   id: 'status',
-                  value: 'Proposed,Signed'
+                  value: 'Proposed,Signed,Draft'
                 }], 'credit-transfers')
 
                 return navigate(CREDIT_TRANSACTIONS.LIST)
               }}
               type="button"
             >
-              Credit transfer(s) in progress
+              Credit transfer(s) in progress (including draft)
             </button>
           </div>
         </div>

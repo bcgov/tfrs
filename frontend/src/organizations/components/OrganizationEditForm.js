@@ -8,194 +8,274 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
 import { useNavigate } from 'react-router'
+import NotFound from '../../app/components/NotFound'
 
-const OrganizationEditForm = props => {
+const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
-  return (
+  const orgStatuses = props.referenceData.organizationStatuses
+  if(!props.loggedInUser.isGovernmentUser && props.mode === 'edit'){
+    return <NotFound />
+  } else {
+    return (
     <div className="organization-edit-details">
-      <h1>
-        {props.mode === 'add' ? 'Create ' : 'Edit '} Organization
-      </h1>
+      <h1>{props.mode === 'add' ? 'Create ' : 'Edit '} Organization</h1>
       <div className="main-form">
         <div className="row">
           <div className="col-sm-6">
-            <div className="form-group">
-              <label htmlFor="organization-name">Organization Name:
-                {props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
-                <input
-                  className="form-control"
-                  id="organization-name"
-                  name="name"
-                  placeholder="Fuel Supplier Name"
-                  onChange={props.handleInputChange}
-                  value={props.fields.name}
-                />
-                }
-                {!props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
-                <div className="form-control read-only">{props.fields.name}</div>
-                }
-              </label>
-            </div>
-          </div>
-          {props.mode === 'add' &&
-            <div className="col-sm-6">
+            {props.loggedInUser.hasPermission(
+              PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS
+            ) && (
               <div className="form-group">
-                <label htmlFor="organization-type">Organization Type:
-                  <select
-                    className="form-control"
-                    id="organization-type"
-                    name="type"
-                    onChange={props.handleInputChange}
-                    value={props.fields.type}
-                  >
-                    {props.referenceData.organizationTypes.filter(t => (t.id !== 1))
-                      .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
-                  </select>
+                <label htmlFor="org_status" className="col-sm-4">
+                  <div className="col-sm-4"> Supplier Status: </div>
+                  <div className="col-sm-6">
+                    <div key={orgStatuses[0].id}>
+                      <label htmlFor='org-status-active'>
+                      <input
+                        type="radio"
+                        id='org-status-active'
+                        name="org_status"
+                        value={orgStatuses[0].id}
+                        onChange={props.handleInputChange}
+                        checked={orgStatuses[0].id === props.fields.org_status}
+                      />
+                        <span> {orgStatuses[0].description} </span></label>{' '}
+                    </div>
+                    <div key={orgStatuses[1].id}>
+
+                      <label htmlFor='org-status-inactive'>
+                        <input
+                        type="radio"
+                        id='org-status-inactive'
+                        name="org_status"
+                        value={orgStatuses[1].id}
+                        onChange={props.handleInputChange}
+                        checked={orgStatuses[1].id === props.fields.org_status}
+                      />
+                      <span> {orgStatuses[1].description}</span></label>{' '}
+                    </div>
+                  </div>
                 </label>
               </div>
-            </div>
-          }
-        </div>
-
-        {props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) &&
-        <div className="row">
+            )}
+          </div>
           <div className="col-sm-6">
             <div className="form-group">
-              <label htmlFor="organization-status">Organization Status:
-                <select
-                  className="form-control"
-                  id="organization-status"
-                  name="status"
-                  onChange={props.handleInputChange}
-                  value={props.fields.status}
-                >
-                  {props.referenceData.organizationStatuses
-                    .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
-                </select>
+              <label htmlFor="org-type">
+                <div className="col-sm-4"> Supplier Type : </div>
+                {props.referenceData.organizationTypes
+                  .filter((t) => t.id !== 1)
+                  .map((t) => (
+                    <div className="col-sm-8" key={t.id}>
+                      {' '}
+                      <input
+                        type="radio"
+                        id='org-type'
+                        name="org_type"
+                        value={t.id}
+                        defaultChecked
+                        onChange={props.handleInputChange}
+                      />
+                      <span> {t.description}</span>
+                    </div>
+                  ))}
               </label>
             </div>
           </div>
         </div>
-        }
-
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-5">
+            <h3>Head Office:</h3>
             <div className="form-group">
-              <label htmlFor="organization-address-line-1">Address Line 1:
+              <label htmlFor="organization-name">
+                Organization Name:
+                {props.loggedInUser.hasPermission(
+                  PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS
+                ) && (
+                  <input
+                    className="form-control"
+                    id="organization-name"
+                    name="org_name"
+                    onChange={props.handleInputChange}
+                    value={props.fields.org_name}
+                  />
+                )}
+                {!props.loggedInUser.hasPermission(
+                  PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS
+                ) && (
+                  <div className="form-control read-only">
+                    {props.fields.org_name}
+                  </div>
+                )}
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="organization-address-line-1">
+                Street Address / PO Box:
                 <input
                   className="form-control"
                   id="organization-address-line-1"
-                  name="addressLine1"
+                  name="org_addressLine1"
                   onChange={props.handleInputChange}
-                  value={props.fields.addressLine1 || ''}
+                  value={props.fields.org_addressLine1 || ''}
                 />
               </label>
             </div>
-          </div>
-        </div>
 
-        <div className="row">
-          <div className="col-sm-6">
             <div className="form-group">
-              <label htmlFor="organization-address-line-2">Address Line 2:
+              <label htmlFor="organization-address-line-2">
+                Address Other (optional):
                 <input
                   className="form-control"
                   id="organization-address-line-2"
-                  name="addressLine2"
+                  name="org_addressLine2"
                   onChange={props.handleInputChange}
-                  value={props.fields.addressLine2 || ''}
+                  value={props.fields.org_addressLine2 || ''}
                 />
               </label>
             </div>
-          </div>
 
-          <div className="col-sm-6">
             <div className="form-group">
-              <label htmlFor="organization-address-line-3">Address Line 3:
-                <input
-                  className="form-control"
-                  id="organization-address-line-3"
-                  name="addressLine3"
-                  onChange={props.handleInputChange}
-                  value={props.fields.addressLine3 || ''}
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label htmlFor="organization-city">City:
+              <label htmlFor="organization-city">
+                City:
                 <input
                   className="form-control"
                   id="organization-city"
-                  name="city"
+                  name="org_city"
                   onChange={props.handleInputChange}
-                  value={props.fields.city || ''}
+                  value={props.fields.org_city || ''}
                 />
               </label>
             </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label htmlFor="organization-postal-code">Postal Code / ZIP:
-                <input
-                  className="form-control"
-                  id="organization-postal-code"
-                  name="postalCode"
-                  onChange={props.handleInputChange}
-                  value={props.fields.postalCode || ''}
-                />
-              </label>
-            </div>
-          </div>
-        </div>
 
-        <div className="row">
-          <div className="col-sm-6">
             <div className="form-group">
-              <label htmlFor="organization-county">County:
-                <input
-                  className="form-control"
-                  id="organization-county"
-                  name="county"
-                  onChange={props.handleInputChange}
-                  value={props.fields.county || ''}
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label htmlFor="organization-state">Province / State:
+              <label htmlFor="organization-state">
+                Province / State:
                 <input
                   className="form-control"
                   id="organization-state"
-                  name="state"
+                  name="org_state"
                   onChange={props.handleInputChange}
-                  value={props.fields.state || ''}
+                  value={props.fields.org_state || ''}
+                />
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="organization-country">
+                Country:
+                <input
+                  className="form-control"
+                  id="organization-country"
+                  name="org_country"
+                  onChange={props.handleInputChange}
+                  value={props.fields.org_country || ''}
+                />
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="organization-postal-code">
+                Postal Code / ZIP:
+                <input
+                  className="form-control"
+                  id="organization-postal-code"
+                  name="org_postalCode"
+                  onChange={props.handleInputChange}
+                  value={props.fields.org_postalCode || ''}
                 />
               </label>
             </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-5">
+            <h3>Corporation or Attorney in B.C. (optional)</h3>
             <div className="form-group">
-              <label htmlFor="organization-country">Country:
-                <input
-                  className="form-control"
-                  id="organization-country"
-                  name="country"
-                  onChange={props.handleInputChange}
-                  value={props.fields.country || ''}
+              <label htmlFor="att-representativeName">
+                Name of Representative:{' '}
+              <input
+                className="form-control"
+                id="att-representativeName"
+                type="text"
+                name="att_representativeName"
+                onChange={props.handleInputChange}
+                value={props.fields.att_representativeName}
                 />
+                </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-streetAddress">Street Address / PO Box:
+              <input
+                className="form-control"
+                id="att-streetAddress"
+                type="text"
+                name="att_streetAddress"
+                onChange={props.handleInputChange}
+                value={props.fields.att_streetAddress}
+              />
+              </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-otherAddress">
+                Address Other <span>(optional) :</span>
+
+              <input
+                className="form-control"
+                type="text"
+                name="att_otherAddress"
+                id="att-otherAddress"
+                onChange={props.handleInputChange}
+                value={props.fields.att_otherAddress}
+              />
+               </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-city">City:
+              <input
+                className="form-control"
+                type="text"
+                id="att-city"
+                name="att_city"
+                onChange={props.handleInputChange}
+                value={props.fields.att_city}
+              />
+              </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-province">Province:
+              <input
+                disabled
+                className="form-control"
+                id="att-province"
+                type="text"
+                name="att_province"
+                value={props.fields.att_province}
+              />
+              </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-country">Country:
+              <input
+                disabled
+                className="form-control"
+                id="att-country"
+                type="text"
+                name="att_country"
+                value={props.fields.att_country}
+              />
+              </label>
+            </div>
+            <div className="form-group">
+              <label htmlFor="att-postalCode">Postal Code :
+              <input
+                className="form-control"
+                id="att-postalCode"
+                type="text"
+                name="att_postalCode"
+                onChange={props.handleInputChange}
+                value={props.fields.att_postalCode}
+              />
               </label>
             </div>
           </div>
@@ -212,9 +292,10 @@ const OrganizationEditForm = props => {
             <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
           </button>
           <button
+            disabled={!props.formIsValid}
             className="btn btn-primary"
             id="save-organization"
-            onClick={e => props.handleSubmit(e)}
+            onClick={(e) => props.handleSubmit(e)}
             type="submit"
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
@@ -222,7 +303,8 @@ const OrganizationEditForm = props => {
         </div>
       </div>
     </div>
-  )
+    )
+  }
 }
 
 OrganizationEditForm.defaultProps = {
@@ -237,27 +319,42 @@ OrganizationEditForm.propTypes = {
     name: PropTypes.string,
     addressLine1: PropTypes.string,
     addressLine2: PropTypes.string,
-    addressLine3: PropTypes.string,
     city: PropTypes.string,
     postalCode: PropTypes.string,
     state: PropTypes.string,
     country: PropTypes.string,
-    county: PropTypes.string,
     actionsType: PropTypes.number,
     status: PropTypes.number,
-    type: PropTypes.number
+    type: PropTypes.number,
+    org_status: PropTypes.number,
+    org_name: PropTypes.string,
+    org_addressLine1: PropTypes.string,
+    org_addressLine2: PropTypes.string,
+    org_city: PropTypes.string,
+    org_country: PropTypes.string,
+    org_postalCode: PropTypes.string,
+    org_state: PropTypes.string,
+    att_representativeName: PropTypes.string,
+    att_city: PropTypes.string,
+    att_country: PropTypes.string,
+    att_otherAddress: PropTypes.string,
+    att_streetAddress: PropTypes.string,
+    att_province: PropTypes.string,
+    att_postalCode: PropTypes.string
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
+    hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool
   }),
   referenceData: PropTypes.shape({
     organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
     organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
-  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']),
+  formIsValid: PropTypes.bool.isRequired
 }
 
 export default OrganizationEditForm

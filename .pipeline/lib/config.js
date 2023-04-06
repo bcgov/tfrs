@@ -1,7 +1,7 @@
 'use strict';
 const options= require('@bcgov/pipeline-cli').Util.parseArguments()
 const changeId = options.pr //aka pull-request
-const version = '2.4.0'
+const version = '2.5.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
 
@@ -13,7 +13,7 @@ options.git.repository='tfrs'
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
-            releaseBranch: 'release-2.4.0'
+            releaseBranch: 'release-2.5.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`, dbServiceName: 'tfrs-spilo',
@@ -24,14 +24,7 @@ const phases = {
             frontendDebugEnabled: 'true',
         backendCpuRequest: '200m', backendCpuLimit: '400m', backendMemoryRequest: '600Mi', backendMemoryLimit: '1200Mi', backendHealthCheckDelay: 30, 
             backendHost: `tfrs-backend-dev.${ocpName}.gov.bc.ca`, backendReplicas: 2,
-            backendKeycloakSaBaseurl: 'https://dev.loginproxy.gov.bc.ca',
-            backendKeycloakSaClientId: 'tfrs-on-gold-4308',
-            backendKeycloakSaRealm: 'standard',
             backendKeycloakAudience: 'tfrs-on-gold-4308',
-            backendKeycloakCertsUrl: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
-            backendKeycloakClientId: 'tfrs-on-gold-4308',
-            backendKeycloakIssuer: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard',
-            backendKeycloakRealm: 'standard',
             backendWellKnownEndpoint: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
             celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
@@ -53,14 +46,7 @@ const phases = {
             frontendDebugEnabled: 'true',
         backendCpuRequest: '200m', backendCpuLimit: '400m', backendMemoryRequest: '600Mi', backendMemoryLimit: '1200Mi', backendHealthCheckDelay: 30, 
             backendHost: `tfrs-backend-test.${ocpName}.gov.bc.ca`, backendReplicas: 4,
-            backendKeycloakSaBaseurl: 'https://test.loginproxy.gov.bc.ca',
-            backendKeycloakSaClientId: 'tfrs-on-gold-4308',
-            backendKeycloakSaRealm: 'standard',
             backendKeycloakAudience: 'tfrs-on-gold-4308',
-            backendKeycloakCertsUrl: 'https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
-            backendKeycloakClientId: 'tfrs-on-gold-4308',
-            backendKeycloakIssuer: 'https://test.loginproxy.gov.bc.ca/auth/realms/standard',
-            backendKeycloakRealm: 'standard',
             backendWellKnownEndpoint: 'https://test.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
         celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
@@ -82,14 +68,7 @@ const phases = {
             frontendDebugEnabled: 'false',
         backendCpuRequest: '200m', backendCpuLimit: '400m', backendMemoryRequest: '600Mi', backendMemoryLimit: '1200Mi', backendHealthCheckDelay: 30, 
             backendHost: `tfrs-backend-prod.${ocpName}.gov.bc.ca`, backendReplicas: 4,
-            backendKeycloakSaBaseurl: 'https://oidc.gov.bc.ca',
-            backendKeycloakSaClientId: 'tfrs-on-gold-4308',
-            backendKeycloakSaRealm: 'standard',
             backendKeycloakAudience: 'tfrs-on-gold-4308',
-            backendKeycloakCertsUrl: 'https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
-            backendKeycloakClientId: 'tfrs-on-gold-4308',
-            backendKeycloakIssuer: 'https://loginproxy.gov.bc.ca/auth/realms/standard',
-            backendKeycloakRealm: 'standard',
             backendWellKnownEndpoint: 'https://loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
         celeryCpuRequest: '100m', celeryCpuLimit: '250mm', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',

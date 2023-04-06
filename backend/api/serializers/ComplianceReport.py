@@ -605,7 +605,9 @@ class ComplianceReportDetailSerializer(
         lines['25'] = lines['23'] - lines['24']
         lines['27'] = lines['25'] + lines['26']
 
-        if created_on < 2023:
+        # Penalty adjustment made by business area for
+        # 2023 and above compliance periods
+        if int(obj.compliance_period.description) <= 2022:
             lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
         else:
             lines['28'] = (lines['27'] * Decimal('-600.00')).max(Decimal(0))
@@ -1310,7 +1312,7 @@ class ComplianceReportUpdateSerializer(
 
         if summary_data and instance.supplements_id and \
                 summary_data.get('credits_offset_b', 0) and \
-                summary_data.get('credits_offset_b', 0) > max_credit_offset:
+                summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
             raise (serializers.ValidationError(
                 'Insufficient available credit balance. Please adjust Line 26b.'
             ))

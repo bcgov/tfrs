@@ -27,33 +27,6 @@ parameters:
 - name: VERSION
   displayName: null
   description: image tag name for output
-  required: true  
-- name: KEYCLOAK_SA_BASEURL
-  displayName: KEYCLOAK_SA_BASEURL
-  required: true
-- name: KEYCLOAK_SA_CLIENT_ID
-  displayName: KEYCLOAK_SA_CLIENT_ID
-  required: true
-- name: KEYCLOAK_SA_REALM
-  displayName: KEYCLOAK_SA_REALM
-  description: 'Valid values: tfrs-dev, tfrs, tfrs'
-  required: true
-- name: KEYCLOAK_AUDIENCE
-  displayName: KEYCLOAK_AUDIENCE
-  description: 'Valid values: tfrs-dev, tfrs, tfrs'
-  required: true
-- name: KEYCLOAK_CERTS_URL
-  displayName: KEYCLOAK_CERTS_URL
-  required: true
-- name: KEYCLOAK_CLIENT_ID
-  displayName: KEYCLOAK_CLIENT_ID
-  description: 'Valid values: tfrs-dev, tfrs, tfrs'
-  required: true
-- name: KEYCLOAK_ISSUER
-  displayName: KEYCLOAK_ISSUER
-  required: true
-- name: KEYCLOAK_REALM
-  displayName: KEYCLOAK_REALM
   required: true
 - name: CPU_REQUEST
   displayName: Requested CPU
@@ -79,6 +52,10 @@ parameters:
   displayName: The database service name
   description: The database service name
   required: true
+- name: KEYCLOAK_AUDIENCE
+  displayName: The keycloak audience
+  description: The keycloak audience
+  required: true  
 - name: WELL_KNOWN_ENDPOINT
   displayName: The database service name
   description: The database service name
@@ -151,26 +128,6 @@ objects:
           - containerPort: 8080
             protocol: TCP
           env:
-          - name: KEYCLOAK_SA_BASEURL
-            value: ${KEYCLOAK_SA_BASEURL}
-          - name: KEYCLOAK_SA_CLIENT_ID
-            value: ${KEYCLOAK_SA_CLIENT_ID}
-          - name: KEYCLOAK_SA_REALM
-            value: ${KEYCLOAK_SA_REALM}
-          - name: KEYCLOAK_AUDIENCE
-            value: ${KEYCLOAK_AUDIENCE}
-          - name: KEYCLOAK_CERTS_URL
-            value: ${KEYCLOAK_CERTS_URL}
-          - name: KEYCLOAK_CLIENT_ID
-            value: ${KEYCLOAK_CLIENT_ID}
-          - name: KEYCLOAK_ENABLED
-            value: 'true'
-          - name: KEYCLOAK_ISSUER
-            value: ${KEYCLOAK_ISSUER}
-          - name: KEYCLOAK_REALM
-            value: ${KEYCLOAK_REALM}
-          - name: KEYCLOAK_SA_CLIENT_SECRET
-            value: notbeingused
           - name: EMAIL_FROM_ADDRESS
             value: donotreply@gov.bc.ca
           - name: EMAIL_SENDING_ENABLED
@@ -251,6 +208,8 @@ objects:
                 key: DJANGO_SECRET_KEY
           - name: APP_CONFIG
             value: "/opt/app-root/src/gunicorn.cfg.py"
+          - name: KEYCLOAK_AUDIENCE
+            value: "${KEYCLOAK_AUDIENCE}"            
           - name: WELL_KNOWN_ENDPOINT
             value: "${WELL_KNOWN_ENDPOINT}"
           resources:

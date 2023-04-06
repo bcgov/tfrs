@@ -1,7 +1,7 @@
 global:
   imageRegistry: "artifacts.developer.gov.bc.ca/docker-remote"
   imagePullSecrets: 
-    - default-dockercfg-qh29b
+    - docker-artifactory-secret
 
 image:
   repository: bitnami/rabbitmq

@@ -31,11 +31,10 @@ from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 from minio import Minio
 
-from api.services.KeycloakAPI import list_users, get_token
 from db_comments.db_actions import create_db_comments, \
     create_db_comments_from_models
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, \
-    KEYCLOAK, EMAIL, TESTING, RUNSERVER
+    EMAIL, RUNSERVER
 
 
 class APIAppConfig(AppConfig):
