@@ -187,8 +187,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         
         # if a user is mapped, then we limit the supplier's ability to edit external user account info
         if request.user.is_government_user or not instance.is_mapped:
-            UserCreationRequest.objects.filter(user_id=instance.id) \
-              .update(external_username=request.data["external_username"], keycloak_email=request.data["keycloak_email"])
+            external_user_info = {}
+            if request.data.get("external_username") is not None:
+                external_user_info['external_username'] = request.data["external_username"]
+            if request.data.get("keycloak_email") is not None:
+                external_user_info['keycloak_email'] = request.data["keycloak_email"]
+            if external_user_info:
+                UserCreationRequest.objects.filter(user_id=instance.id) \
+                  .update(**external_user_info)
 
         instance.save()
 

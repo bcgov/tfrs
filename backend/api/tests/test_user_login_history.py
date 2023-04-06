@@ -1,5 +1,4 @@
-from django.test import TestCase
-from api.models import UserLoginHistory
+from api.models.UserLoginHistory import UserLoginHistory
 from api.tests.base_test_case import BaseTestCase
 
 class UserLoginHistoryTestCase(BaseTestCase):
