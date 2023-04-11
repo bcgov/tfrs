@@ -186,7 +186,7 @@ class SecureFileSubmissionFormDetails extends Component {
               </div>
               <div className="row">
                 <div className="form-group col-md-12">
-                  <p className='instructions'>Use the Attachment Type category "Other" to submit documents and attachments associated with existing:</p>
+                  <p className='instructions'>Use the Attachment Type category &quot;Other&quot; to submit documents and attachments associated with existing:</p>
                   <ul>
                     <li>Compliance Reports</li>
                     <li>Exclusion Reports</li>
@@ -194,7 +194,7 @@ class SecureFileSubmissionFormDetails extends Component {
                     <li>Initiative Plans</li>
                     <li>Credit Transaction Proposal</li>
                   </ul>
-                  <p className='instructions'>Use the Comment field to identify what records this file submission apply to. For example, "This submission pertains to our 2021 Compliance Report".</p>
+                  <p className='instructions'>Use the Comment field to identify what records this file submission apply to. For example, &quot;This submission pertains to our 2021 Compliance Report&quot;.</p>
                 </div>
               </div>
             </div>

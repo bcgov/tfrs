@@ -12,13 +12,13 @@ describe('Part3 Table Data', () => {
       }
     }
     const props = {
-      period : 2022
+      period: 2022
     }
     const part3 = new ScheduleSummaryPart3(props.period)
     const result = tableData(part3, summary, { isSupplemental: false })
     expect(result[SCHEDULE_SUMMARY.LINE_28][1].value.props.children).toEqual([
       'Line 28 ',
-      <Tooltip
+      <Tooltip // eslint-disable-line react/jsx-key
         className="info"
         show
         title="This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty."
@@ -33,13 +33,13 @@ describe('Part3 Table Data', () => {
       }
     }
     const props = {
-      period : 2023
+      period: 2023
     }
     const part3 = new ScheduleSummaryPart3(props.period)
     const result = tableData(part3, summary, { isSupplemental: false })
     expect(result[SCHEDULE_SUMMARY.LINE_28][1].value.props.children).toEqual([
       'Line 28 ',
-      <Tooltip
+      <Tooltip // eslint-disable-line react/jsx-key
         className="info"
         show
         title="This line displays the penalty payable based on the information provided and is calculated using the $600 per outstanding debit non-compliance penalty."
