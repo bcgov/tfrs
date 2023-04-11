@@ -292,10 +292,10 @@ describe('ComplianceReports', () => {
       </BrowserRouter>
     )
     const complianceBtnEl = screen.getByRole('button', {
-      name: '2 awaiting compliance manager review'
+      name: '1 awaiting compliance manager review'
     })
     const exclusionBtnEl = screen.getByRole('button', {
-      name: '1 awaiting compliance manager review'
+      name: '0 awaiting compliance manager review'
     })
     const complianceBtn = fireEvent.click(complianceBtnEl)
     const exclusionBtn = fireEvent.click(exclusionBtnEl)

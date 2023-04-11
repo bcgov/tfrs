@@ -20,7 +20,7 @@ function tableData (
   part3[SCHEDULE_SUMMARY.LINE_26_B][2] = cellFormatNumeric(
     summary.lines['26B']
   )
-  part3[SCHEDULE_SUMMARY.LINE_26_B][2] = cellFormatNumeric(
+  part3[SCHEDULE_SUMMARY.LINE_26_C][2] = cellFormatNumeric(
     summary.lines['26C']
   )
   part3[SCHEDULE_SUMMARY.LINE_27][2] = cellFormatNumeric(

@@ -109,7 +109,7 @@ describe('OrganizationEditForm', () => {
 
   test('Checking Edit mode of the organization', () => {
     props.mode = 'edit'
-    props.isGovernmentUser = true
+    props.loggedInUser.isGovernmentUser = true
     render(
       <BrowserRouter>
         <OrganizationEditForm {...props} />
