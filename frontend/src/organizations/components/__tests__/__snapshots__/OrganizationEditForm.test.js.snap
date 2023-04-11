@@ -176,7 +176,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
         className="col-sm-5"
       >
         <h3>
-          Corporation or Attorney in B.C.
+          Corporation or Attorney in B.C. (optional)
         </h3>
         <div
           className="form-group"
@@ -184,11 +184,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="att-representativeName"
           >
-            Name of Representative 
-            <span>
-              (optional)
-            </span>
-             :
+            Name of Representative:
              
             <input
               className="form-control"
@@ -206,7 +202,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="att-streetAddress"
           >
-            Street Address / PO Box
+            Street Address / PO Box:
             <input
               className="form-control"
               id="att-streetAddress"
@@ -243,7 +239,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="att-city"
           >
-            City
+            City:
             <input
               className="form-control"
               id="att-city"
@@ -260,7 +256,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
           <label
             htmlFor="att-province"
           >
-            Province
+            Province:
             <input
               className="form-control"
               disabled={true}
