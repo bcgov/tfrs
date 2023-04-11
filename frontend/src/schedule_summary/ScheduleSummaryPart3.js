@@ -184,6 +184,40 @@ class ScheduleSummaryPart3 {
         readOnly: true,
         value: 'Credits'
       }], // line 26b
+      [{ // line 26c
+        className: 'text',
+        readOnly: true,
+        value: 'Banked credits spent that will be returned due to debit decrease - Supplemental Report'
+      }, {
+        className: 'line',
+        readOnly: true,
+        value: (
+          <div>
+            {'Line 26c '}
+            <Tooltip
+              className="info"
+              show
+              title="If a previous supplemental report used more credits to cover a debit position than is now required, the difference is returned."
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        )
+      }, {
+        ...numericInput,
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 0,
+          maxLength: '20',
+          placement: 'right',
+          step: '1'
+        },
+        className: 'tooltip-large number',
+        readOnly: true
+      }, {
+        readOnly: true,
+        value: 'Credits'
+      }], // line 26c
       [{ // line 27
         className: 'text total',
         readOnly: true,
@@ -222,7 +256,12 @@ class ScheduleSummaryPart3 {
               className="info"
               show
               title={
-                period < 2023 ? "This line displays the penalty payable based on the information provided and is calculated using the $200 per outstanding debit non-compliance penalty." : "This line displays the penalty payable based on the information provided and is calculated using the $600 per outstanding debit non-compliance penalty."
+                period < 2023
+                  ? 'This line displays the penalty payable based on the ' +
+                  'information provided and is calculated using the $200 per outstanding ' +
+                  'debit non-compliance penalty.'
+                  : 'This line displays the penalty payable based on the information provided' +
+                  ' and is calculated using the $600 per outstanding debit non-compliance penalty.'
               }
             >
               <FontAwesomeIcon icon="info-circle" />
