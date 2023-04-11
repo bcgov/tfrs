@@ -31,7 +31,8 @@ class DBComments(object):
     @classmethod
     def db_table_name(cls):
         """database table name"""
-        return cls._meta.db_table
+        meta = getattr(cls, '_meta', None)
+        return meta.db_table if meta else None
 
     @classmethod
     def db_table_comment_or_name(cls):
