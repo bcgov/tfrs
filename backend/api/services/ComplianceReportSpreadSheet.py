@@ -286,6 +286,7 @@ class ComplianceReportSpreadsheet(object):
             '26': 'Banked credits used to offset outstanding debits (if applicable)',
             '26A': 'Banked credits used to offset outstanding debits - Previous Reports',
             '26B': 'Banked credits used to offset outstanding debits - Supplemental Report',
+            '26C': 'Banked credits spent that will be returned due to debit decrease - Supplemental Report',
             '27': 'Outstanding debit balance',
             '28': 'Part 3 non-compliance penalty payable'
         }

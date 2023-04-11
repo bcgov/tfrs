@@ -46,6 +46,7 @@ class ComplianceReportingEditContainer extends Component {
       creditsOffset: Number(summary.creditsOffset),
       creditsOffsetA: Number(summary.creditsOffsetA),
       creditsOffsetB: Number(summary.creditsOffsetB),
+      creditsOffsetC: Number(summary.creditsOffsetC),
       dieselClassDeferred: Number(summary.dieselClassDeferred),
       dieselClassObligation: Number(summary.dieselClassObligation),
       dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
@@ -508,6 +509,10 @@ class ComplianceReportingEditContainer extends Component {
 
       if (isSupplemental && summary && !summary.creditsOffsetB) {
         summary.creditsOffsetB = 0
+      }
+
+      if (isSupplemental && summary && !summary.creditsOffsetC) {
+        summary.creditsOffsetC = 0
       }
 
       this.props.recomputeTotals({

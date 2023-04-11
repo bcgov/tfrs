@@ -665,6 +665,26 @@ class ScheduleDeltas extends Component {
       }], [{
         className: 'strong center',
         readOnly: true,
+        value: 'Line 26c'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits spent that will be returned due to debit decrease - Supplemental Report'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26C').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('26C').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('26C')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
         value: 'Line 27'
       }, {
         className: 'left',
