@@ -35,6 +35,9 @@ class ComplianceReportingTable extends Component {
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.sorts !== prevState.sorts) {
       this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
     }
+    if (JSON.stringify(this.props.filters) !== JSON.stringify(prevState.filters)) {
+      this.setState({filters: this.props.filters})
+    }
   }
 
   handlePageChange (page) {
@@ -47,13 +50,133 @@ class ComplianceReportingTable extends Component {
 
   handleFiltersChange (filters) {
     this.setState({ filters })
+    console.log('filters', filters)
+  }
+  sortFunc (val1, val2, desc) {
+    console.log('desc', desc)
+    if (desc) {
+      if (val1 > val2) {
+        return 1
+      }
+      if (val1 < val2) {
+        return -1
+      }
+      return 0
+    }else {
+      if (val2 > val1 ) {
+        return 1
+      }
+      if (val2 < val1) {
+        return -1
+      }
+      return 0
+    }
   }
 
   handleSortsChange (sorts) {
     this.setState({ sorts })
+    // const [sortCol] = sorts
+    // console.log('sorts', sorts, sortCol, this.props.items)
+    // switch(sortCol.id) {
+    //   case 'current-status': {
+    //     this.props.items.sort((a,b)=>{
+    //       const status1 = ComplianceReportStatus(a)
+    //       const status2 = ComplianceReportStatus(b)
+    //       const val = this.sortFunc(status1, status2, sortCol.desc)
+    //       return val
+    //     })
+    //     break;
+    //   }
+    //   case 'compliance-period-type': {
+    //     this.props.items.sort((a,b)=> {
+    //       const val = this.sortFunc(a.type, b.type, sortCol.desc)
+    //       return val
+    //     })
+    //     break;
+    //   }
+    //   case 'compliance-period': {
+    //     this.props.items.sort((a,b)=> {
+    //       console.log(a, 'dezc')
+    //       const val = this.sortFunc(a.compliancePeriod.description, b.compliancePeriod.description, sortCol.desc)
+    //       return val
+    //     })
+    //     break;
+    //   }
+    //   case 'updateTimestamp': {
+    //     this.props.items.sort((a,b)=> {
+    //       console.log(a.sortDate, 'sort')
+    //       if(sortCol.desc) {
+    //         return moment.utc(a.sortDate).diff(moment.utc(b.sortDate))
+    //       }else {
+    //         return moment.utc(b.sortDate).diff(moment.utc(a.sortDate))
+    //       }
+            
+    //     })
+    //     break
+    //   }
+    //   default: ''
+    // }
   }
 
   render () {
+    const cols = [{
+      accessor: item => (item.groupId),
+      className: 'col-groupId',
+      Header: 'Group ID',
+      id: 'groupId',
+      minWidth: 25,
+      show: false
+    }, {
+      accessor: (item) => {
+        if (item.supplements !== null) {
+          return ''
+        }
+        return (item.compliancePeriod ? item.compliancePeriod.description : '')
+      },
+      className: 'col-compliance-year',
+      Header: 'Compliance Period',
+      id: 'compliance-period',
+      minWidth: 50
+    }, {
+      accessor: item => item.type,
+      className: 'col-type',
+      Header:'Type',
+      id:'compliance-period-type',
+      minWidth:50
+    }, {
+      accessor: (item) => {
+        // Temporarily left commented out for posterity and client feedback
+        // let report = item
+        // const { supplementalReports } = item
+        // if (supplementalReports.length > 0) {
+        //   [report] = supplementalReports
+        // }
+        // while (report.supplementalReports && report.supplementalReports.length > 0) {
+        //   [report] = report.supplementalReports
+        // }
+        // return ComplianceReportStatus(report)
+
+        return ComplianceReportStatus(item)
+      },
+      className: 'col-status',
+      Header: 'Current Status',
+      id: 'current-status',
+      minWidth: 75
+    }, {
+      accessor: item => (item.sortDate ? item.sortDate : null),
+      className: 'col-date',
+      Header: 'Last Status Update',
+      id: 'updateTimestamp',
+      minWidth: 95,
+      Cell: row => (
+        <span>
+          {row.original.sortDate
+            ? moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
+            : '-'
+          }
+        </span>
+      )
+    }]
     const columns = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -162,10 +285,10 @@ class ComplianceReportingTable extends Component {
       <ReactTable
         stateKey="compliance-reporting"
         className="searchable complianceReportListTable"
-        columns={columns}
+        columns={cols}
         data={this.props.items}
         loading={this.props.isFetching}
-        filterable={filterable}
+        // filterable={filterable}
         getTrProps={(state, row) => {
           const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even'
           if (row && row.original) {
@@ -174,7 +297,7 @@ class ComplianceReportingTable extends Component {
                 let tab = 'intro'
                 let { status } = row.original
                 const { groupId, supplementalReports, type } = row.original
-
+                console.log('row', row.original)
                 if (supplementalReports.length > 0) {
                   let [deepestSupplementalReport] = supplementalReports
 

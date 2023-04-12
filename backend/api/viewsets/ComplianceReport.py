@@ -66,8 +66,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         user = self.request.user
         qs = ComplianceReportService.get_organization_compliance_reports(
             user.organization)
-
+        print('69:', qs)
         request = self.request
+        query_result = []
         if self.action == 'list' or self.action == 'paginated':
             qs = qs.annotate(Count('supplements')).filter(supplements__count=0)
             if self.action == 'paginated':
@@ -127,12 +128,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                     qs, value.lower())
                             elif id == 'supplemental-status':
                                 qs = self.filter_supplemental_status(
-                                    qs, value.lower())
+                                    qs, value)
                             elif id == 'current-status':
                                 qs = self.filter_current_status(
-                                    qs, value.lower())
+                                    qs, value)
+                                print('135:', qs)
+                                qs1 = list(qs)
+                                query_result.extend(qs)
                             elif id == 'updateTimestamp':
                                 qs = self.filter_timestamp(qs, value)
+       
         return qs
 
     def filter_displayname(self, qs, value):
@@ -157,30 +162,41 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         qs = qs.filter(date_query)
         return qs
 
-    def filter_compliance_status(self, qs, value):
-
-        if 'submitted'.find(value) != -1:
+    def filter_compliance_status_old(self, qs, value):
+        
+        print('164:', value)
+        print('166:','accepted'.find(value[0]))
+        if 'submitted'.find(value[0]) != -1:
+          print('oooooo')
           return qs.filter(
               Q(status__analyst_status__status='Unreviewed') &
               Q(status__director_status__status='Unreviewed') &
               Q(status__fuel_supplier_status__status='Submitted') &
               Q(status__manager_status__status='Unreviewed')
           )
-
-        if 'accepted'.find(value) != -1:
+        #print('172:','accepted'.find(value))
+        if 'Accepted' in value:
+            print('177:')
+            print('178:',qs.filter(
+                Q(status__director_status__status='Accepted')
+            ))
             return qs.filter(
                 Q(status__director_status__status='Accepted')
             )
 
-        if 'supplemental requested'.find(value) != -1:
+        if 'supplemental requested' in value:
             return qs.filter(
                 Q(status__manager_status__status='Requested Supplemental') |
                 Q(status__analyst_status__status='Requested Supplemental')
             )
 
-        if 'rejected'.find(value) != -1:
+        if 'Rejected' in value:
             return qs.filter(
                 Q(status__director_status__status='Rejected')
+            )
+        if 'Draft' in value:
+            return qs.filter(
+                Q(status__fuel_supplier_status__status='Draft')
             )
         if 'recommended'.find(value) != -1:
             return qs.filter(
@@ -218,6 +234,86 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             )
         
         return qs
+    
+    def filter_compliance_status(self, qs, value):
+        
+        print('164:', value)
+        print('166:','accepted'.find(value[0]))
+        query_result = []
+        for val in value:
+            if val == 'Accepted' :     
+                print('246:',qs.filter(
+                    Q(status__director_status__status='Accepted')
+                ))
+                qs1 = qs.filter(
+                    Q(status__director_status__status='Accepted')
+                )
+                query_result.extend(qs1)
+
+            if val == 'supplemental requested':
+                qs_sup = qs.filter(
+                    Q(status__manager_status__status='Requested Supplemental') |
+                    Q(status__analyst_status__status='Requested Supplemental')
+                )
+                print('259:', qs_sup)
+                query_result.extend(qs_sup)
+
+            if val == 'Rejected':
+                qs_rej = qs.filter(
+                    Q(status__director_status__status='Rejected')
+                )
+                query_result.extend(qs_rej)
+            if val == 'Draft':
+                qs_draft = qs.filter(
+                    Q(status__fuel_supplier_status__status='Draft'))
+                query_result.extend(qs_draft)
+            if val == 'submitted':
+                print('oooooo')
+                return qs.filter(
+                    Q(status__analyst_status__status='Unreviewed') &
+                    Q(status__director_status__status='Unreviewed') &
+                    Q(status__fuel_supplier_status__status='Submitted') &
+                    Q(status__manager_status__status='Unreviewed')
+                )
+
+            if val == 'recommended':
+                return qs.filter(
+                    (Q(status__manager_status__status='Recommended') &
+                    ~Q(status__director_status__status__in=['Accepted', 'Rejected']) &
+                    ~Q(status__analyst_status__status='Requested Supplemental')) |
+                    (Q(status__analyst_status__status='Recommended') &
+                    Q(status__director_status__status='Unreviewed') &
+                    Q(status__manager_status__status='Unreviewed'))
+                )
+
+            if val == 'recommended acceptance - analyst' or val == 'analyst':
+                return qs.filter(
+                    Q(status__analyst_status__status='Recommended') &
+                    Q(status__director_status__status='Unreviewed') &
+                    Q(status__manager_status__status='Unreviewed')
+                )
+            
+            if val == 'recommended rejection - analyst' or val == 'rejection':
+                return qs.filter(
+                    Q(status__analyst_status__status='Not Recommended')
+                )
+            
+            if val == 'recommended acceptance - manager' or val =='manager':
+                return qs.filter(
+                    Q(status__manager_status__status='Recommended') &
+                    ~Q(status__director_status__status='Accepted') &
+                    ~Q(status__director_status__status='Rejected') &
+                    ~Q(status__analyst_status__status='Requested Supplemental')
+                )
+
+            if val == 'recommended rejection - manager' or val == 'rejection':
+                return qs.filter(
+                    Q(status__manager_status__status='Not Recommended')
+                )
+                
+        print('314:', query_result)
+        return query_result
+
 
     def filter_supplemental_report_status(self, qs, value):
         if 'submitted'.find(value) != -1:
@@ -293,6 +389,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     def filter_current_status(self, qs, value):
         try:
+            print("298:",value)
             latest_supplementals = self.get_latest_supplemental_reports()
             ids = [s.id for s in latest_supplementals]
             supplemental_reports = ComplianceReportService.get_organization_compliance_reports(
@@ -301,6 +398,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             unique_reports = original_reports | supplemental_reports
             unique_reports = unique_reports.filter(Q(supplements_id__isnull=True))
             qs = self.filter_compliance_status(unique_reports, value)
+            print('401:', qs)
         except Exception as e:
             print(e)
         return qs
@@ -437,21 +535,27 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-        sorts = request.data.get('sorts')
-        if sorts:
-            if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
-                if request.data.get('sorts')[0].get('desc'):
-                    page = sorted(page, key=lambda x: [x.sort_date])
-                else:
-                    page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        try:
+            queryset = self.get_queryset()
+            print('445:',queryset)
+            page = self.paginate_queryset(queryset)
+            sorts = request.data.get('sorts')
+            if sorts:
+                if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
+                    if request.data.get('sorts')[0].get('desc'):
+                        page = sorted(page, key=lambda x: [x.sort_date])
+                    else:
+                        page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
+        
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+            serializer = self.get_serializer(queryset, many=True)
+        except Exception as e:
+            print(e, "2nd ")
         return Response(serializer.data)
+        
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def types(self, request):

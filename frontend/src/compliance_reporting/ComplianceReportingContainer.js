@@ -18,6 +18,7 @@ import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
 import toastr from '../utils/toastr'
 import { withRouter } from '../utils/withRouter'
+import { getOrganizations } from '../actions/organizationActions'
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -114,6 +115,7 @@ class ComplianceReportingContainer extends Component {
       const { filtered } = this.props.savedState['compliance-reporting']
       filters = filtered
     }
+    this.props.getOrganizations()
     this.props.getCompliancePeriods()
     this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
   }
@@ -141,6 +143,7 @@ class ComplianceReportingContainer extends Component {
         showModal={this._showModal}
         title="Compliance Reporting"
         savedState={this.props.savedState}
+        organizations={this.props.organizations}
       />,
       <CallableModal
         close={() => {
@@ -230,7 +233,14 @@ ComplianceReportingContainer.propTypes = {
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   savedState: PropTypes.shape().isRequired,
-  navigate: PropTypes.func.isRequired
+  navigate: PropTypes.func.isRequired,
+  organizations: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    item: PropTypes.shape({
+      compliancePeriod: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired
 }
 
 const mapStateToProps = state => ({
@@ -249,14 +259,20 @@ const mapStateToProps = state => ({
     success: state.rootReducer.exclusionReports.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  savedState: state.rootReducer.tableState.savedState
+  savedState: state.rootReducer.tableState.savedState,
+  organizations: {
+    items: state.rootReducer.organizations.items,
+    isFetching: state.rootReducer.organizations.isFetching
+  }
 })
 
-const mapDispatchToProps = {
+const mapDispatchToProps ={
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
-  getComplianceReports: complianceReporting.findPaginated
-}
+  getComplianceReports: complianceReporting.findPaginated,
+  getOrganizations
+  }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))
