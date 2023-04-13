@@ -6,9 +6,9 @@ replicaCount: 1
 
 image:
   # TODO: Switch to clamav/clamav container
-  repository: artifacts.developer.gov.bc.ca/docker-remote/mailu/mailu/clamav
+  repository: ghcr.io/mailu/clamav
   tag: master@sha256:48c846508ebbb12dbce8389ca638e6314d988bfa0cae6e141370496a59a37e15  # If not defined, uses appVersion
-  pullPolicy: docker-artifactory-secret
+  pullPolicy: Always
 
 priorityClassName: ""
 
