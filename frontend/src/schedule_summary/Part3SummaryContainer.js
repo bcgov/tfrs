@@ -299,31 +299,11 @@ function Part3SupplementalData (
     creditsOffsetC = 0
   }
 
-  const previousLine26 = part3[SCHEDULE_SUMMARY.LINE_26][2].value
-
-  // seems to be redundant code, left for future reference
-  // const previousLine26 = part3[SCHEDULE_SUMMARY.LINE_26][2].value
-
   const creditsOffset = creditsOffsetA + creditsOffsetB
   part3[SCHEDULE_SUMMARY.LINE_26][2].value = creditsOffset
 
   if (creditsOffset > 0 && netBalance > 0 && creditsOffset > netBalance) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = netBalance
-  }
-
-  // if (debits < 0 && creditsOffset > 0 && lastAcceptedOffset <= debits) {
-  const netTotal =
-    Number(part3[SCHEDULE_SUMMARY.LINE_23][2].value) +
-    Number(part3[SCHEDULE_SUMMARY.LINE_24][2].value)
-  if (netTotal > 0 && creditsOffset > 0 && !skipFurtherUpdateCreditsOffsetA) {
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
-  }
-
-  if (
-    Number(previousLine26) !==
-      Number(part3[SCHEDULE_SUMMARY.LINE_26][2].value) // && !alreadyUpdated
-  ) {
-    updateCreditsOffsetA = true
   }
 
   const max26BValue =
@@ -334,17 +314,20 @@ function Part3SupplementalData (
     part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = 0
   }
 
-  // if previous supplemental reports that has been accepted used more
-  // credits than the now debits scenario, then we need to give the difference
+  const line25 = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  const line26A = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
+
+  // If previously accepted reports have spent credits that are larger
+  // than the current debits scenario, then we need to give the difference
   // back to the supplier
-  if (part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > part3[SCHEDULE_SUMMARY.LINE_25][2].value) {
-    const line25 = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-    const line26A = Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
+  if (line25 <= 0 && (line26A > (line25 * -1))) {
+    // part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = line26A + line25
   }
 
-  if (part3[SCHEDULE_SUMMARY.LINE_25][2].value > 0) {
+  // If the supplier is in a credits positive scenario then
+  // there will be no credits used
+  if (line25 > 0) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = 0
   }
@@ -395,19 +378,38 @@ function calculatePart3Payable (part3, period) {
     credits = 0
   }
 
+  // Default value for oustanding balance is credits - debits
   outstandingBalance = balance + Number(credits)
+
+  // If we have a positive balance, or there are credits that need to be given back to the supplier,
+  // then there is no outstanding balance or penalty payable
+  if (balance > 0 || part3[SCHEDULE_SUMMARY.LINE_26_C][2].value > 0) {
+    outstandingBalance = 0
+  }
+
+  // If the supplier has previously spent credits more than this current supplementary balance
+  // then there is no oustanding balance or penalty payable
+  if (balance <= 0 && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + balance >= 0) {
+    outstandingBalance = 0
+  }
+
+  // If there is still a negative balance after accounting for previously spent credits
+  // then there will be a payable penalty based on
+  // balance + previously spent credits + any credits now being used
+  if (balance <= 0 && balance + part3[SCHEDULE_SUMMARY.LINE_26_A][2].value < 0) {
+    outstandingBalance = balance +
+      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
+      part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
+  }
+
+  // Calculate amount payable penalty
   if (Number(period) <= 2022) {
     payable = outstandingBalance * -200 // negative symbol so that the product is positive
   } else {
     payable = outstandingBalance * -600 // negative symbol so that the product is positive
   }
 
-  // if we have a positive balance, or there are credits that need to be payed back,
-  // we then know that there is no outstanding balance or penalty payable
-  if (balance > 0 ||
-      part3[SCHEDULE_SUMMARY.LINE_26_C][2].value > 0 ||
-      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + balance === 0
-  ) {
+  if (payable === 0) {
     outstandingBalance = ''
     payable = ''
   }
@@ -421,6 +423,16 @@ function calculatePart3Payable (part3, period) {
     ...part3[SCHEDULE_SUMMARY.LINE_28][2],
     value: payable
   }
+
+  // console.log('LINE_23', part3[SCHEDULE_SUMMARY.LINE_23][2].value)
+  // console.log('LINE_24', part3[SCHEDULE_SUMMARY.LINE_24][2].value)
+  // console.log('LINE_25', part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  // console.log('LINE_26', part3[SCHEDULE_SUMMARY.LINE_26][2].value)
+  // console.log('LINE_26_A', part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
+  // console.log('LINE_26_B', part3[SCHEDULE_SUMMARY.LINE_26_B][2].value)
+  // console.log('LINE_26_C', part3[SCHEDULE_SUMMARY.LINE_26_C][2].value)
+  // console.log('LINE_27', part3[SCHEDULE_SUMMARY.LINE_27][2].value)
+  // console.log('LINE_28', part3[SCHEDULE_SUMMARY.LINE_28][2].value)
 
   return part3
 }
