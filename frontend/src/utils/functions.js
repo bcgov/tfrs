@@ -215,7 +215,34 @@ const cellFormatTotal = cellValue => ({
   }
 })
 
+const atLeastOneAttorneyAddressFieldExists = (address) => {
+  if (address) {
+    if (address.attorneyRepresentativename) {
+      return true
+    }
+    if (address.attorneyStreetAddress) {
+      return true
+    }
+    if (address.attorneyAddressOther) {
+      return true
+    }
+    if (address.attorneyCity) {
+      return true
+    }
+    if (address.attorneyProvince) {
+      return true
+    }
+    if (address.attorneyPostalCode) {
+      return true
+    }
+    if (address.attorneyCountry) {
+      return true
+    }
+  }
+  return false
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists
 }

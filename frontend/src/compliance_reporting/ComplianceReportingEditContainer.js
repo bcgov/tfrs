@@ -38,6 +38,7 @@ import autosaved from '../utils/autosave_support'
 import ChangelogContainer from './ChangelogContainer'
 import Tooltip from '../app/components/Tooltip'
 import { withRouter } from '../utils/withRouter'
+import { atLeastOneAttorneyAddressFieldExists } from '../utils/functions'
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -628,7 +629,7 @@ class ComplianceReportingEditContainer extends Component {
         }
       </p>,
       <p className="schedule-organization-address" key="organization-attorney-address">
-      {organizationAddress
+      {organizationAddress && atLeastOneAttorneyAddressFieldExists(organizationAddress)
         ? ['B.C. Attorney Office: ',
             organizationAddress.attorneyRepresentativename ? organizationAddress.attorneyRepresentativename + ', ' : '',
             AddressBuilder({
