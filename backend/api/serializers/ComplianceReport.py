@@ -1148,19 +1148,21 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_obligation
                 
                 summary.credits_offset = original_summary.credits_offset
-                summary.credits_offset_a = original_summary.credits_offset_a or \
-                    original_summary.credits_offset
-                
-                # If credit_offset_c exists on an accepted supplemental report, 
-                # it means we gave back credits so credit_offset_a
-                # needs to be offset by credits_offset_c to account for this
-                # otherwise these credits could be claimed again
-                if previous_report.status.director_status_id == 'Accepted':
-                    if previous_report.credits_offset_c is not None \
-                        and previous_report.credits_offset_c > 0:
-                        summary.credits_offset_a = previous_report.credits_offset_a \
-                          - previous_report.credits_offset_c
+                summary.credits_offset_a = original_summary.credits_offset or \
+                    original_summary.credits_offset_a
 
+                credits_offset_c = original_summary.get('credits_offset_c')
+                if credits_offset_c is not None and credits_offset_c > 0:
+                    # If credit_offset_c exists on an accepted supplemental report, 
+                    # it means we gave back credits, so credit_offset_a
+                    # needs to be offset by credits_offset_c to account for this
+                    # otherwise these credits could be claimed again
+                    if previous_report.status.director_status_id == 'Accepted':
+                        summary.credits_offset_a = original_summary.credits_offset_a \
+                          - credits_offset_c
+                    else:
+                        summary.credits_offset_a = original_summary.credits_offset_a
+                
                 if previous_report.status.director_status_id == 'Rejected':
                     current = previous_report
                     accepted_found = False

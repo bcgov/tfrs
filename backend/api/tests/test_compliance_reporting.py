@@ -1218,7 +1218,7 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertGreater(final_balance, initial_balance)
 
-    def test_happy_signing_path_results_in_validation(self):
+    def test_happy_signing_path_results_in_validation_quantity(self):
         initial_balance = self.users['fs_user_1'].organization.organization_balance['validated_credits']
 
         rid = self._create_compliance_report()

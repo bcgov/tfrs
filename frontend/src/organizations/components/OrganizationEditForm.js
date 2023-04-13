@@ -13,7 +13,7 @@ import NotFound from '../../app/components/NotFound'
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
   const orgStatuses = props.referenceData.organizationStatuses
-  if(!props.loggedInUser.isGovernmentUser && props.mode === 'edit'){
+  if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
     return <NotFound />
   } else {
     return (

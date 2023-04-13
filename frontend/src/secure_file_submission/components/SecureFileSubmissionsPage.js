@@ -25,7 +25,7 @@ const SecureFileSubmissionsPage = (props) => {
       }
       {!props.loggedInUser.isGovernmentUser &&
       <p className="instructions">
-        Use the New Submission category "Other" to submit documents associated with existing: Compliance and Exclusion Reports, Carbon Intensity Applications, Initiative Plans and Credit Transaction Proposals.
+        Use the New Submission category &quot;Other&quot; to submit documents associated with existing: Compliance and Exclusion Reports, Carbon Intensity Applications, Initiative Plans and Credit Transaction Proposals.
       </p>
       }
       <div className="right-toolbar-container">

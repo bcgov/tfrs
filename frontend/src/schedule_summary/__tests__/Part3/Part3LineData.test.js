@@ -113,4 +113,70 @@ describe('Part3 Line Data', () => {
     expect(result[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(200)
     expect(result[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(100)
   })
+
+  test('supplemental debit scenario with previously spent credits less than debits', () => {
+    const part3 = new ScheduleSummaryPart3()
+    const complianceReport = {
+      isSupplemental: true,
+      status: {
+        fuelSupplierStatus: 'Draft'
+      }
+    }
+    const summary = {
+      lines: {
+        23: 2519,
+        24: 6933,
+        25: -4414,
+        '26A': 1087
+      },
+      creditsOffset: 1087,
+      creditsOffsetB: 0,
+      creditsOffsetC: 0
+    }
+    part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
+    part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
+    part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A'])
+
+    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2022)
+    expect(result[SCHEDULE_SUMMARY.LINE_25][2].value).toBe(-4414)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(1087)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(undefined)
+    expect(result[SCHEDULE_SUMMARY.LINE_27][2].value).toBe(-3327)
+    expect(result[SCHEDULE_SUMMARY.LINE_28][2].value).toBe(665400)
+  })
+
+  test('supplemental debit scenario with previously spent credits more than debits', () => {
+    const part3 = new ScheduleSummaryPart3()
+    const complianceReport = {
+      isSupplemental: true,
+      status: {
+        fuelSupplierStatus: 'Draft'
+      }
+    }
+    const summary = {
+      lines: {
+        23: 2519,
+        24: 6933,
+        25: -4414,
+        '26A': 5000
+      },
+      creditsOffset: 5000,
+      creditsOffsetB: 0,
+      creditsOffsetC: 0
+    }
+    part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
+    part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
+    part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A'])
+
+    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2022)
+    expect(result[SCHEDULE_SUMMARY.LINE_25][2].value).toBe(-4414)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(5000)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
+    expect(result[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(586)
+    expect(result[SCHEDULE_SUMMARY.LINE_27][2].value).toBe('')
+    expect(result[SCHEDULE_SUMMARY.LINE_28][2].value).toBe('')
+  })
 })

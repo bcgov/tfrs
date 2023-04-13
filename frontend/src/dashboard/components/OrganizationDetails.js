@@ -93,6 +93,7 @@ OrganizationDetails.defaultProps = {
 }
 
 OrganizationDetails.propTypes = {
+  isGovernmentUser: PropTypes.bool,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     organization: PropTypes.shape({
