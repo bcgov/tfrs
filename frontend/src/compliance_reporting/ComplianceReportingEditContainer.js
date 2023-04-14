@@ -502,11 +502,14 @@ class ComplianceReportingEditContainer extends Component {
         summary.creditsOffset = 0
       }
 
-      const { isSupplemental } = report.item
+      const {
+        isSupplemental,
+        totalPreviousCreditReductions
+      } = report.item
 
-      // if (isSupplemental && summary && !summary.creditsOffsetA) {
-      //   summary.creditsOffsetA = totalPreviousCreditReductions;
-      // }
+      if (isSupplemental && summary && !summary.creditsOffsetA) {
+        summary.creditsOffsetA = totalPreviousCreditReductions
+      }
 
       if (isSupplemental && summary && !summary.creditsOffsetB) {
         summary.creditsOffsetB = 0
@@ -875,6 +878,7 @@ ComplianceReportingEditContainer.propTypes = {
       hasSnapshot: PropTypes.bool,
       id: PropTypes.number,
       isSupplemental: PropTypes.bool,
+      totalPreviousCreditReductions: PropTypes.number,
       maxCreditOffset: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
