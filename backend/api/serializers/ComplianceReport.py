@@ -1151,7 +1151,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 summary.credits_offset_a = original_summary.credits_offset or \
                     original_summary.credits_offset_a
 
-                credits_offset_c = original_summary.get('credits_offset_c')
+                credits_offset_c = original_summary.credits_offset_c
                 if credits_offset_c is not None and credits_offset_c > 0:
                     # If credit_offset_c exists on an accepted supplemental report, 
                     # it means we gave back credits, so credit_offset_a
