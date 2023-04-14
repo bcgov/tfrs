@@ -153,7 +153,7 @@ jobs:
         uses: trstringer/manual-approval@v1.6.0
         with:
           secret: ${{ github.TOKEN }}
-          approvers: AlexZorkin,emi-hi,tim738745,vibhiquartech,kuanfandevops
+          approvers: AlexZorkin,emi-hi,tim738745,kuanfandevops,jig-patel
           minimum-approvals: 1
           issue-title: "TFRS ${{ env.RELEASE_NAME }} Test Deployment"
 
