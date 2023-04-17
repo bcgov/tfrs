@@ -68,11 +68,12 @@ This project follows the commit message conventions outlined by [Convential Comm
 
 We also extend this prefix convention to the naming of **branches**, eg: `docs/add-readme` or `feat/some-feature`.
 
-To add additional uniqueness to branch names and avoid collisions we prefix our branch names with the developer's first name, and the suffix the branch name with the ticket number of the task being worked on. template: <prefix>/<developername>-<worksummary>-<ticketnumber>
+To add additional uniqueness to branch names and avoid naming collisions we prefix our branch names with the developer's first name, and suffix the branch name with the ticket number of the task being worked on. template: `<prefix>/<developername>-<worksummary>-<ticketnumber>`
+
 Here are a few examples of branch names:
-feat/alex-updates-to-compliance-reports-1047
-fix/john-button-logic-fix-2048
-chore/alice-linting-fixes-3013
+`feat/alex-updates-to-compliance-reports-1047`
+`fix/john-button-logic-fix-2048`
+`chore/alice-linting-fixes-3013`
 
 ### Database Postgres
 
