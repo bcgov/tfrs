@@ -336,6 +336,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
       </button>
       <button
         className="btn btn-primary"
+        data-target="#confirmSubmit"
         disabled={false}
         id="save-organization"
         onClick={[Function]}
