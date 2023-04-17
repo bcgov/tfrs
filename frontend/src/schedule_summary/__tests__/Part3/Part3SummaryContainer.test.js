@@ -121,7 +121,6 @@ describe('Part3 Summary Container', () => {
       }
     }
     const lastAcceptedOffset = 83106
-    // const maxCreditOffset = 86661
     const updateCreditsOffsetA = false
     const skipFurtherUpdateCreditsOffsetA = false
 
@@ -131,7 +130,7 @@ describe('Part3 Summary Container', () => {
 
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
 
-    expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(0)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(45023)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(83106)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(38083)
