@@ -608,12 +608,6 @@ class ComplianceReportDetailSerializer(
         lines['25'] = lines['23'] - lines['24']
         lines['27'] = lines['25'] + lines['26']
 
-        # If previously spent credits (26A) are greater than 
-        # the debit position in this compliance period 
-        # then there is no penalty amount
-        if lines['26A'] is not None and lines['26A'] > 0:
-            lines['27'] = 0
-
         # 26C represents credits that need to be returned to the fuel supplier.
         # Line 27 should end up being zero in this situation because
         # 26C is the difference between lines 26A and 25 when 26A > 25
