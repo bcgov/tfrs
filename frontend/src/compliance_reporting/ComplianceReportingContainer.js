@@ -115,14 +115,15 @@ class ComplianceReportingContainer extends Component {
       const { filtered } = this.props.savedState['compliance-reporting']
       filters = filtered
     }
+    if(this.props.loggedInUser.isGovernmentUser){
     this.props.getOrganizations()
+    }
     this.props.getCompliancePeriods()
     this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
   }
 
   render () {
     const currentEffectiveDate = `${this.currentYear + 1}-01-01`
-
     return ([
       <ComplianceReportingPage
         compliancePeriods={this.props.compliancePeriods.filter(compliancePeriod =>
@@ -137,11 +138,11 @@ class ComplianceReportingContainer extends Component {
         getComplianceReports={this.props.getComplianceReports}
         createComplianceReport={this.createComplianceReport}
         createExclusionReport={this.createExclusionReport}
-        key="compliance-reporting-list"
+        key='compliance-reporting-list'
         loggedInUser={this.props.loggedInUser}
         selectComplianceReport={this._selectComplianceReport}
         showModal={this._showModal}
-        title="Compliance Reporting"
+        title='Compliance Reporting'
         savedState={this.props.savedState}
         organizations={this.props.organizations}
       />,
@@ -156,8 +157,8 @@ class ComplianceReportingContainer extends Component {
             this.createComplianceReport(this.state.selectedComplianceYear)
           }
         }}
-        id="confirmCreate"
-        key="confirmCreate"
+        id='confirmCreate'
+        key='confirmCreate'
         show={this.state.showModal}
       >
         <p>

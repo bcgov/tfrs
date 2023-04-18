@@ -50,10 +50,8 @@ class ComplianceReportingTable extends Component {
 
   handleFiltersChange (filters) {
     this.setState({ filters })
-    console.log('filters', filters)
   }
   sortFunc (val1, val2, desc) {
-    console.log('desc', desc)
     if (desc) {
       if (val1 > val2) {
         return 1
@@ -75,47 +73,6 @@ class ComplianceReportingTable extends Component {
 
   handleSortsChange (sorts) {
     this.setState({ sorts })
-    // const [sortCol] = sorts
-    // console.log('sorts', sorts, sortCol, this.props.items)
-    // switch(sortCol.id) {
-    //   case 'current-status': {
-    //     this.props.items.sort((a,b)=>{
-    //       const status1 = ComplianceReportStatus(a)
-    //       const status2 = ComplianceReportStatus(b)
-    //       const val = this.sortFunc(status1, status2, sortCol.desc)
-    //       return val
-    //     })
-    //     break;
-    //   }
-    //   case 'compliance-period-type': {
-    //     this.props.items.sort((a,b)=> {
-    //       const val = this.sortFunc(a.type, b.type, sortCol.desc)
-    //       return val
-    //     })
-    //     break;
-    //   }
-    //   case 'compliance-period': {
-    //     this.props.items.sort((a,b)=> {
-    //       console.log(a, 'dezc')
-    //       const val = this.sortFunc(a.compliancePeriod.description, b.compliancePeriod.description, sortCol.desc)
-    //       return val
-    //     })
-    //     break;
-    //   }
-    //   case 'updateTimestamp': {
-    //     this.props.items.sort((a,b)=> {
-    //       console.log(a.sortDate, 'sort')
-    //       if(sortCol.desc) {
-    //         return moment.utc(a.sortDate).diff(moment.utc(b.sortDate))
-    //       }else {
-    //         return moment.utc(b.sortDate).diff(moment.utc(a.sortDate))
-    //       }
-            
-    //     })
-    //     break
-    //   }
-    //   default: ''
-    // }
   }
 
   render () {
@@ -146,17 +103,17 @@ class ComplianceReportingTable extends Component {
     }, {
       accessor: (item) => {
         // Temporarily left commented out for posterity and client feedback
-        // let report = item
-        // const { supplementalReports } = item
-        // if (supplementalReports.length > 0) {
-        //   [report] = supplementalReports
-        // }
-        // while (report.supplementalReports && report.supplementalReports.length > 0) {
-        //   [report] = report.supplementalReports
-        // }
-        // return ComplianceReportStatus(report)
+        let report = item
+        const { supplementalReports } = item
+        if (supplementalReports.length > 0) {
+          [report] = supplementalReports
+        }
+        while (report.supplementalReports && report.supplementalReports.length > 0) {
+          [report] = report.supplementalReports
+        }
+        return ComplianceReportStatus(report)
 
-        return ComplianceReportStatus(item)
+        // return ComplianceReportStatus(item)
       },
       className: 'col-status',
       Header: 'Current Status',
@@ -297,7 +254,6 @@ class ComplianceReportingTable extends Component {
                 let tab = 'intro'
                 let { status } = row.original
                 const { groupId, supplementalReports, type } = row.original
-                console.log('row', row.original)
                 if (supplementalReports.length > 0) {
                   let [deepestSupplementalReport] = supplementalReports
 

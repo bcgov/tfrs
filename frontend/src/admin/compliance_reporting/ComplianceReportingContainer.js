@@ -17,6 +17,7 @@ import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRati
 import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities'
 
 const ComplianceReportingContainer = props => {
+  console.log(props,'2020')
   useEffect(() => {
     props.loadCarbonIntensities()
     props.loadDefaultCarbonIntensities()

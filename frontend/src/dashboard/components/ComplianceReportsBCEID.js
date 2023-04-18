@@ -31,6 +31,7 @@ const ComplianceReportsBCEID = (props) => {
   }
 
   items.forEach((item) => {
+  
     let { status } = item
     const { supplementalReports, type } = item
     const reportType = (type === 'Compliance Report') ? 'complianceReports' : 'exclusionReports'
@@ -48,6 +49,7 @@ const ComplianceReportsBCEID = (props) => {
     if (status.fuelSupplierStatus === 'Draft') {
       awaitingReview[reportType].draft += 1
       awaitingReview[reportType].total += 1
+
     }
 
     if (status.fuelSupplierStatus === 'Submitted' &&
@@ -78,15 +80,9 @@ const ComplianceReportsBCEID = (props) => {
           <div>{/* Draft */}
             <button
               onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Compliance Report'
-                }, {
+                props.setFilter([ {
                   id: 'current-status',
-                  value: 'Draft'
+                  value: ['In Draft']
                 }], 'compliance-reporting')
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
