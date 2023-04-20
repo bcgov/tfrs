@@ -609,12 +609,13 @@ class ComplianceReportDetailSerializer(
 
         # if current_balance is positive it means the supplier
         # has a positive amount of credits for this compliance period
-        # and there is no penalty, otherwise use penalty
+        # and there is no penalty, otherwise use current_balance
+        # to calculate penalty
         current_balance = lines['25'] + lines['26']
-        if current_balance < 0:
-            lines['27'] = current_balance
-        else:
+        if current_balance > 0:
             lines['27'] = 0
+        else:
+            lines['27'] = current_balance
 
         # 26C represents credits that need to be returned to the fuel supplier.
         # Line 27 should end up being zero in this situation because
