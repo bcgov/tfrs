@@ -164,7 +164,7 @@ class ComplianceReportingEditContainer extends Component {
       const { id } = this.props.params
 
       if (nextProps.complianceReporting.item &&
-        !nextProps.complianceReporting.item.readOnly) {
+        !nextProps.complianceReporting.item?.readOnly) {
         const { schedules } = this.state
 
         if (schedules.summary && schedules.summary.dieselClassDeferred) {
@@ -208,13 +208,13 @@ class ComplianceReportingEditContainer extends Component {
         })
       }
 
-      if (nextProps.complianceReporting.item.hasSnapshot) {
+      if (nextProps.complianceReporting.item?.hasSnapshot) {
         this.props.getSnapshotRequest(id)
       }
 
       this.setState({
-        supplementalNoteRequired: (nextProps.complianceReporting.item.isSupplemental &&
-          nextProps.complianceReporting.item.actions.includes('SUBMIT'))
+        supplementalNoteRequired: (nextProps.complianceReporting.item?.isSupplemental &&
+          nextProps.complianceReporting.item?.actions.includes('SUBMIT'))
       })
     }
 
@@ -224,7 +224,7 @@ class ComplianceReportingEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved()
         toastr.complianceReporting('Supplemental Created')
-        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id))
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item?.id))
       }
     }
 
