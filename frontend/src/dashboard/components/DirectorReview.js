@@ -153,27 +153,19 @@ const DirectorReview = (props) => {
                       props.setFilter(
                         [
                           {
-                            id: 'compliance-period',
-                            value: ''
-                          },
-                          {
-                            id: 'displayname',
-                            value: 'Compliance Report'
-                          },
-                          {
                             id: 'current-status',
-                            value: 'Manager'
-                          }
+                            value:["For Director Review"]
+                          },
+                         
                         ],
                         'compliance-reporting'
                       )
 
-                      return navigate(COMPLIANCE_REPORTING.LIST)
+                      return navigate(COMPLIANCE_REPORTING.LIST,{state:{items:["For Director Review"]}})
                     }}
                     type="button"
                   >
-                  {fetchingDashboard ? <Loading/> : awaitingReview.complianceReports} compliance report(s)
-                  awaiting your review
+                  {fetchingDashboard ? <Loading/> : awaitingReview.complianceReports} compliance / exclusion report(s) awaiting your review
                   </button>
                 </div>
             )}
@@ -185,7 +177,7 @@ const DirectorReview = (props) => {
               ) && (
                 <div>
                   {/* Exclusion Reports awaiting review */}
-                  <button
+                  {/* <button
                     onClick={() => {
                       props.setFilter(
                         [
@@ -210,7 +202,7 @@ const DirectorReview = (props) => {
                     type="button"
                   >
                   {awaitingReview.exclusionReports} exclusion report(s) awaiting your review
-                  </button>
+                  </button> */}
                 </div>
             )}
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
@@ -8,6 +9,7 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import ComplianceReportingTable from './ComplianceReportingTable'
 
 const ComplianceReportingPage = (props) => {
+  let location=useLocation()
   const { isFetching, items, itemsCount } = props.complianceReports
   const organizations = props.organizations
   const isEmpty = items.length === 0
@@ -16,7 +18,6 @@ const ComplianceReportingPage = (props) => {
   const [supplierOptions, setSupplierOptions] = useState([])
   const [showSupplierOption, setShowSupplierOption] = useState(false)
   const [selectedYear, setSelectedYear] = useState('')
-  
   let [filtersObj, setFiltersObj] = useState(filters || [])
   const [selectedFilters, setSelectedFilters] = useState({
     selectedStatus: [],
@@ -32,8 +33,8 @@ const ComplianceReportingPage = (props) => {
       value: 'awaiting government review',
     },
     {
-      name: 'Supplemntal Requested',
-      value: 'supplemnetal requested',
+      name: 'Supplemental Requested',
+      value: 'Supplemental Requested',
     },
     
     {
@@ -72,6 +73,14 @@ const ComplianceReportingPage = (props) => {
       value: 'Rejected',
     },
   ])
+  useEffect(()=>{
+    
+    
+    setSelectedFilters({ ...selectedFilters, selectedStatus:location.state?.items})
+    window.history.replaceState([],items)
+    
+  },[])
+  
   useEffect(() => {
     setSupplierOptions(organizations.items)
   }, [organizations.items])
@@ -162,7 +171,7 @@ const ComplianceReportingPage = (props) => {
     setShowSupplierOption(!showSupplierOption)
   }
   
-
+  console.log(props, "line 174")
   return (
     <div className='page-compliance-reporting'>
       <h1>{props.title}</h1>
@@ -392,7 +401,7 @@ const ComplianceReportingPage = (props) => {
               <span
                 key={idx + Math.random()}
                 className={`status ${
-                  selectedFilters.selectedStatus.includes(type.value)
+                  selectedFilters&&selectedFilters?.selectedStatus?.includes(type.value)
                     ? 'status-active'
                     : ''
                 }`}
@@ -400,7 +409,7 @@ const ComplianceReportingPage = (props) => {
                   handleFiltersChange('current-status', type.value)
                 }
               >
-                {type.name} {selectedFilters.selectedStatus.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
+                {type.name} {selectedFilters&& selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
               </span>
             )
           })
@@ -409,7 +418,7 @@ const ComplianceReportingPage = (props) => {
               <span
                 key={idx + Math.random()}
                 className={`status ${
-                  selectedFilters.selectedStatus.includes(type.value)
+                 selectedFilters && selectedFilters?.selectedStatus?.includes(type.value)
                     ? 'status-active'
                     : ''
                 }`}
@@ -417,7 +426,7 @@ const ComplianceReportingPage = (props) => {
                   handleFiltersChange('current-status', type.value)
                 }
               >
-                {type.name} {selectedFilters.selectedStatus.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
+                {type.name} {selectedFilters && selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
               </span>
             )
           })

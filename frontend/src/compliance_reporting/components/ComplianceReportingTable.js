@@ -85,9 +85,9 @@ class ComplianceReportingTable extends Component {
       show: false
     }, {
       accessor: (item) => {
-        if (item.supplements !== null) {
-          return ''
-        }
+        // if (item.supplements !== null) {
+        //   return ''
+        // }
         return (item.compliancePeriod ? item.compliancePeriod.description : '')
       },
       className: 'col-compliance-year',
@@ -237,13 +237,13 @@ class ComplianceReportingTable extends Component {
     ]
     const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
-
+console.log(this.props.items,'242')
     return (
       <ReactTable
         stateKey="compliance-reporting"
         className="searchable complianceReportListTable"
         columns={cols}
-        data={this.props.items}
+        data={this.props?.items}
         loading={this.props.isFetching}
         // filterable={filterable}
         getTrProps={(state, row) => {
