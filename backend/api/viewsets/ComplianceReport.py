@@ -8,7 +8,7 @@ from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
+from api.models.Organization import Organization
 from api.models.ComplianceReport import ComplianceReport, \
     ComplianceReportStatus, ComplianceReportType
 from api.models.ComplianceReportSnapshot import ComplianceReportSnapshot
@@ -63,21 +63,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         This view should return a list of all the compliance reports
         for the currently authenticated user.
         """
-        user = self.request.user
-        qs = ComplianceReportService.get_organization_compliance_reports(
-            user.organization)
+        latest_supplemental  = self.get_latest_supplemental_reports()
+        qs = self.filter_draft(latest_supplemental)
+
         request = self.request
         if self.action == 'list' or self.action == 'paginated':
-            qs  = self.get_latest_supplemental_reports()
             if self.action == 'paginated':
                 sorts = request.data.get('sorts')
                 if sorts:
                     sortCondition = sorts[0].get('desc')
                     sortId = sorts[0].get('id')
-                    key_maps = {'compliance-period':'compliance_period__description',
-                                 'organization':'organization__name',
-                                   'updateTimestamp':'compliance_period__effective_date',
-                                    'submissionDate':'compliance_reports__update_timestamp'}
                     if sortId=='displayname':
                         if sortCondition:
                             qs = qs.annotate(display_name=Concat(F('type__the_type'), Value(' '), F('compliance_period__description'))).order_by('-display_name')
@@ -112,10 +107,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             elif id == 'organization':
                                 qs = qs.filter(
                                     organization__name__icontains=value)
-                            elif id == 'managerIds':
-                                qs = self.filter_manager_status(
-                                    qs, value['ids'])
-                                pass
                             elif id == 'display-name':
                                 qs = self.filter_displayname(qs, value)
                             elif id == 'status':
@@ -127,22 +118,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             elif id == 'current-status':
                                 qs = self.filter_current_status(
                                     qs, value)
-                                print('136:')
-                                # query_result.extend(qs)
-                                
-                                print('138:',qs.values())
                             elif id == 'updateTimestamp':
                                 qs = self.filter_timestamp(qs, value)
                             elif id == 'supplier':
                                 qs = qs.filter(organization_id=value)
         
         return qs
-
-    def filter_supplier(self, qs, value):
-        qs_supplier = qs.filter(
-            organization_id=value
-        )
-        return qs_supplier
 
     def filter_displayname(self, qs, value):
         query_result = []
@@ -246,7 +227,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 )
                 query_result.extend(qs_accepted)
 
-            if val == 'supplemental requested':
+            if val == 'Supplemental Requested':
                 qs_sup = qs.filter(
                     Q(status__manager_status__status='Requested Supplemental') |
                     Q(status__analyst_status__status='Requested Supplemental')
@@ -384,6 +365,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     def filter_current_status(self, qs, value):
         try:
             latest_supplementals = self.get_latest_supplemental_reports()
+            latest_supplementals = self.filter_draft(qs)
             if value:
                 qs = self.filter_compliance_status(latest_supplementals, value)
         except Exception as e:
@@ -397,6 +379,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             print(e)
         return supplemental_reports
 
+    def filter_draft(self, latest_supplemental):
+        gov_org = Organization.objects.get(type=1)
+        user = self.request.user
+        organization = user.organization
+        if  organization == gov_org:
+            latest_supplemental = latest_supplemental.filter(~Q(status__fuel_supplier_status__status='Draft'))
+        else:
+            latest_supplemental = latest_supplemental.filter(Q(organization=organization))
+        
+        return latest_supplemental
 
     def get_latest_supplemental_reports(self):
         latest_supplementals = ComplianceReport.objects.filter(id__in=RawSQL("""
@@ -414,10 +406,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 JOIN compliance_report_status ms ON ws.manager_status_id = ms.status 
                 JOIN compliance_report_status ds ON ws.director_status_id = ds.status 
             WHERE 
-                fs.status NOT IN ('Draft', 'Deleted') 
-                AND ast.status NOT IN ('Draft', 'Deleted') 
-                AND ms.status NOT IN ('Draft', 'Deleted') 
-                AND ds.status NOT IN ('Draft', 'Deleted')
+                fs.status NOT IN ( 'Deleted') 
+                AND ast.status NOT IN ( 'Deleted') 
+                AND ms.status NOT IN ( 'Deleted') 
+                AND ds.status NOT IN ( 'Deleted')
             ), 
             chained_reports AS (
             SELECT 
@@ -468,10 +460,10 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 WHERE 
                     c2.supplements_id = s.id 
                     AND (
-                    fs2.status NOT IN ('Draft', 'Deleted') 
-                    AND ast2.status NOT IN ('Draft', 'Deleted') 
-                    AND ms2.status NOT IN ('Draft', 'Deleted') 
-                    AND ds2.status NOT IN ('Draft', 'Deleted')
+                    fs2.status NOT IN ( 'Deleted') 
+                    AND ast2.status NOT IN ( 'Deleted') 
+                    AND ms2.status NOT IN ( 'Deleted') 
+                    AND ds2.status NOT IN ( 'Deleted')
                     )
                 ) = 0
             )
@@ -493,11 +485,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             id
         """, [])
         )
-        # print("545:",type(latest_supplementals))
-        # supplements = latest_supplementals.filter( ~Q(status__fuel_supplier_status__status__in=[
-        #             "Draft", "Deleted"
-        #         ]))
-        # print('549:',supplements.values())
         return latest_supplementals
 
     def get_simple_queryset(self):
@@ -614,29 +601,21 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
-        try:
-            queryset = self.get_queryset()
-            print(queryset, type(queryset), 'line 590')
-            page = self.paginate_queryset(queryset)
-            print("592=============")
-            sorts = request.data.get('sorts')
-            print("594=============")
-            if sorts:
-                print('596===========')
-                if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
-                    if request.data.get('sorts')[0].get('desc'):
-                        page = sorted(page, key=lambda x: [x.sort_date])
-                    else:
-                        page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
-        
-            if page is not None:
-                print('604===========')
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            print('607===========')
-            serializer = self.get_serializer(queryset, many=True)
-        except Exception as e:
-            print(e, "2nd ")
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        sorts = request.data.get('sorts')
+        if sorts:
+            if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
+                if request.data.get('sorts')[0].get('desc'):
+                    page = sorted(page, key=lambda x: [x.sort_date])
+                else:
+                    page = sorted(page, key=lambda x: [x.sort_date], reverse=True)
+    
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+
         return Response(serializer.data)
         
 
@@ -757,6 +736,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     @action(detail=False, methods=['get'])
     def dashboard(self, request):
         qs = self.get_simple_queryset()
+        serializer = self.get_serializer(
+            qs, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def supplemental(self, request):
+        latest_supplemental  = self.get_latest_supplemental_reports()
+        qs = self.filter_draft(latest_supplemental)
         serializer = self.get_serializer(
             qs, many=True, context={'request': request})
         return Response(serializer.data)

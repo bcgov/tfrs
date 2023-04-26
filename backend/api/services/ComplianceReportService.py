@@ -155,24 +155,12 @@ class ComplianceReportService(object):
         """
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
-
-        if organization == gov_org and value:
+        print("=============", gov_org)
+        if organization == gov_org:
             # If organization == Government
             #  don't show "Draft" transactions
             #  don't show "Deleted" transactions
             compliance_reports = ComplianceReport.objects.filter(
-                Q(organization__id=value) &
-                ~Q(status__fuel_supplier_status__status__in=[
-                    "Draft", "Deleted"
-                ])
-            )
-
-        elif organization == gov_org:
-            # If organization == Government
-            #  don't show "Draft" transactions
-            #  don't show "Deleted" transactions
-            compliance_reports = ComplianceReport.objects.filter(
-                # Q(organization__name=value) &
                 ~Q(status__fuel_supplier_status__status__in=[
                     "Draft", "Deleted"
                 ])

@@ -18,10 +18,11 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     this.doGetSnapshot = this.doGetSnapshot.bind(this)
 
     this.getDashboardHandler = this.getDashboardHandler.bind(this)
+    this.getSupplemetalHandler = this.getSupplemetalHandler.bind(this)
     this.doGetDashboard = this.doGetDashboard.bind(this)
-
     this.findPaginatedHandler = this.findPaginatedHandler.bind(this)
     this.doFindPaginated = this.doFindPaginated.bind(this)
+    this.supplemental = this.supplemental.bind(this)
   }
 
   getCustomIdentityActions () {
@@ -30,6 +31,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       'RECOMPUTE', 'RECOMPUTE_SUCCESS',
       'GET_SNAPSHOT', 'GET_SNAPSHOT_SUCCESS',
       'GET_DASHBOARD', 'GET_DASHBOARD_SUCCESS',
+      'GET_SUPPLEMENTAL', 'GET_SUPPLEMENTAL_SUCCESS',
       'FIND_PAGINATED', 'FIND_PAGINATED_SUCCESS'
     ]
   }
@@ -95,10 +97,21 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isGettingDashboard: true,
         items: null
       })],
+     
       [this.getDashboardSuccess, (state, action) => ({
         ...state,
         isGettingDashboard: false,
         items: action.payload
+      })],
+      [this.getSupplemental, (state, action) => ({
+        ...state,
+        isGettingSupplemental: false,
+        supplementalItems: action.payload
+      })],
+      [this.getSupplementalSuccess, (state, action) => ({
+        ...state,
+        isGettingSupplemental: false,
+        supplementalItems: action.payload
       })],
       [this.findPaginated, (state, action) => ({
         ...state,
@@ -188,8 +201,10 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   doGetDashboard () {
     return axios.get(`${this.baseUrl}/dashboard`)
   }
+ 
 
   * getDashboardHandler () {
+    
     try {
       const response = yield call(this.doGetDashboard)
       yield put(this.getDashboardSuccess(response.data))
@@ -197,7 +212,18 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       yield put(this.error(error.response.data))
     }
   }
-
+  supplemental () {
+    return axios.get(`${this.baseUrl}/supplemental`)
+  }
+  
+  * getSupplemetalHandler () {
+  try {
+    const response = yield call(this.supplemental)
+    yield put(this.getSupplementalSuccess(response.data))
+  } catch (error) {
+    yield put(this.error(error.response.data))
+  }
+}
   doFindPaginated (data) {
     const page = data.page
     const pageSize = data.pageSize
@@ -225,7 +251,10 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       takeLatest(this.recompute, this.recomputeHandler),
       takeLatest(this.getSnapshot, this.getSnapshotHandler),
       takeLatest(this.getDashboard, this.getDashboardHandler),
-      takeLatest(this.findPaginated, this.findPaginatedHandler)
+      takeLatest(this.getSupplemental,this.getSupplemetalHandler),
+      takeLatest(this.findPaginated, this.findPaginatedHandler),
+      
+
     ]
   }
 }

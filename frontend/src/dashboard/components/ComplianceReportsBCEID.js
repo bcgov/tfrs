@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
@@ -8,8 +8,8 @@ import PERMISSIONS_COMPLIANCE_REPORT from "../../constants/permissions/Complianc
 import { useNavigate } from "react-router";
 
 const ComplianceReportsBCEID = (props) => {
-  const { isFetching, items, isGettingDashboard } = props.complianceReports;
-  console.log(items, "3636");
+  const { isFetching, supplementalItems,isGettingDashboard } = props.complianceReports;
+  console.log(supplementalItems, "3636");
   const navigate = useNavigate();
 
   if (isFetching || isGettingDashboard) {
@@ -22,75 +22,19 @@ const ComplianceReportsBCEID = (props) => {
     supplemental: 0,
     total: 0
   };
-  const deepestSupplementalReports_id = new Set();
-  items.forEach((item) => {
-    let { status, id } = item;
-    const { supplementalReports, type } = item;
-
-    if (supplementalReports.length > 0) {
-      let [deepestSupplementalReport] = supplementalReports;
-
-      while (
-        deepestSupplementalReport.supplementalReports &&
-        deepestSupplementalReport.supplementalReports.length > 0
-      ) {
-        [deepestSupplementalReport] =
-          deepestSupplementalReport.supplementalReports;
-      }
-      console.log(deepestSupplementalReport, "line 50");
-      {
-        if (!deepestSupplementalReports_id.has(deepestSupplementalReport.id)) {
-          deepestSupplementalReports_id.add(deepestSupplementalReport.id)[
-            deepestSupplementalReport
-          ] = deepestSupplementalReport.supplementalReports;
-        } else {
-          return;
-        }
-      }
-      ({ status } = deepestSupplementalReport);
+  supplementalItems && supplementalItems.forEach((item) => {
+    let { status  } = item;
       if (status.fuelSupplierStatus === "Draft") {
         awaitingReview.draft += 1
         awaitingReview.total += 1
       }
-      if (
-        status.fuelSupplierStatus === "Submitted" &&
-        ["Accepted", "Rejected"].indexOf(status.directorStatus) < 0
-      ) {
-        if (
-          status.analystStatus === "Requested Supplemental" ||
-          status.managerStatus === "Requested Supplemental"
-        ) {
-          awaitingReview.supplemental += 1;
-        }
-        awaitingReview.total += 1;
-      }
-    } else {
-      if (!deepestSupplementalReports_id.has(id)) {
-        deepestSupplementalReports_id.add(id)
-        if (status.fuelSupplierStatus === "Draft") {
-          awaitingReview.draft += 1
-          awaitingReview.total += 1
-        }
-      }
-      if (!deepestSupplementalReports_id.has(id)) {
-        deepestSupplementalReports_id.add(id)
-        if (
-          status.fuelSupplierStatus === "Submitted" &&
-          ["Accepted", "Rejected"].indexOf(status.directorStatus) < 0
-        ) {
-          if (
-            status.analystStatus === "Requested Supplemental" ||
-            status.managerStatus === "Requested Supplemental"
-          ) {
-            awaitingReview.supplemental += 1
+      if (status.fuelSupplierStatus === "Submitted" &&
+        ["Accepted", "Rejected"].indexOf(status.directorStatus) < 0 && status.analystStatus === "Requested Supplemental" ||
+        status.managerStatus === "Requested Supplemental") {
+              awaitingReview.manager += 1
+              awaitingReview.total += 1
           }
-          awaitingReview.total += 1
-        }
-      }
-    }
-  });
-
-  
+      })
 
   const handeleFun = () => {
     props.setFilter(
@@ -108,9 +52,8 @@ const ComplianceReportsBCEID = (props) => {
       <h1>Compliance &amp; Exclusion Reports</h1>
       {props.loggedInUser.organization.name} has:
       <div>
-        <div className="value">{awaitingReview.total}---</div>
+        <div className="value">{awaitingReview.total}</div>
         <div className="content">
-          {/* <h4>Compliance & Exclusion Reports  in Progress</h4> */}
           <button
             onClick={() => {
               props.setFilter(
@@ -131,145 +74,9 @@ const ComplianceReportsBCEID = (props) => {
           >
             Compliance & Exclusion Reports in Progress
           </button>
-          {/* Draft */}
-          {/* <div>
-            <button
-              onClick={() => {
-                props.setFilter([ {
-                  id: 'current-status',
-                  value: ['In Draft']s
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.complianceReports.draft} in draft
-            </button>
-          </div> */}
-
-          {/* Requested Supplemental */}
-          {/* <div>
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Compliance Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Supplemental Requested'
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.complianceReports.supplemental} supplemental requested
-            </button>
-          </div> */}
-
-          {/* Awaiting Government Review */}
-          {/* <div>
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Compliance Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Submitted'
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.complianceReports.review} awaiting government review
-            </button>
-          </div> */}
         </div>
       </div>
-      {/* Exclusion Report 
-      <div>
-        <div className="value">
-          {awaitingReview.exclusionReports.total}
-        </div>
-        <div className="content">
-          <h2>exclusion reports in progress:</h2>
 
-          <div>* Draft 
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Exclusion Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Draft'
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.exclusionReports.draft} in draft
-            </button>
-          </div>
-
-          <div> Requested Supplemental 
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Exclusion Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Supplemental Requested'
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.exclusionReports.supplemental} supplemental requested
-            </button>
-          </div>
-
-          <div> Awaiting Government Review 
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliance-period',
-                  value: ''
-                }, {
-                  id: 'displayname',
-                  value: 'Exclusion Report'
-                }, {
-                  id: 'current-status',
-                  value: 'Submitted'
-                }], 'compliance-reporting')
-
-                return navigate(COMPLIANCE_REPORTING.LIST)
-              }}
-              type="button"
-            >
-              {awaitingReview.exclusionReports.review} awaiting government review
-            </button>
-          </div>
-        </div>
-      </div> */}
       <div>
         <div className="content">
           <h2>View all reports:</h2>
@@ -277,8 +84,7 @@ const ComplianceReportsBCEID = (props) => {
           <div>
             <button
               onClick={() => {
-                const currentYear = new Date().getFullYear();
-
+                const currentYear = new Date().getFullYear()
                 props.setFilter(
                   [
                     {
@@ -289,7 +95,7 @@ const ComplianceReportsBCEID = (props) => {
                   "compliance-reporting"
                 );
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -308,7 +114,7 @@ const ComplianceReportsBCEID = (props) => {
                   "compliance-reporting"
                 );
 
-                return navigate(COMPLIANCE_REPORTING.LIST);
+                return navigate(COMPLIANCE_REPORTING.LIST)
               }}
               type="button"
             >
@@ -351,4 +157,4 @@ ComplianceReportsBCEID.propTypes = {
   setFilter: PropTypes.func.isRequired,
 };
 
-export default ComplianceReportsBCEID;
+export default ComplianceReportsBCEID

@@ -10,18 +10,13 @@ import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditT
 import { useNavigate } from 'react-router'
 
 const DirectorReview = (props) => {
-  const {
-    isGettingDashboard: fetchingDashboard,
-    items: complianceReports
-  } = props.complianceReports
-
+  const {isGettingDashboard: fetchingDashboard, supplementalItems: supplementalReports } = props.complianceReports
   const navigate = useNavigate()
-
   const { isFinding: fetchingCreditTransfers, items: creditTransfers } =
     props.creditTransfers
 
   const awaitingReview = {
-    complianceReports: 0,
+    complianceAndExclusionReports: 0,
     creditTransfers: 0,
     exclusionReports: 0,
     part3Awards: 0,
@@ -33,41 +28,11 @@ const DirectorReview = (props) => {
     typeof props.loggedInUser.hasPermission === 'function' &&
     props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.VIEW)
   ) {
-    complianceReports &&
-      complianceReports.forEach((item) => {
+    supplementalReports &&
+    supplementalReports.forEach((item) => {
         let { status } = item
-        const { supplementalReports, type } = item
-
-        if (supplementalReports.length > 0) {
-          let [deepestSupplementalReport] = supplementalReports
-
-          while (
-            deepestSupplementalReport.supplementalReports &&
-            deepestSupplementalReport.supplementalReports.length > 0
-          ) {
-            [deepestSupplementalReport] =
-              deepestSupplementalReport.supplementalReports
-          }
-          ({ status } = deepestSupplementalReport)
-        }
-
-        if (
-          ['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >=
-            0 &&
-          status.directorStatus === 'Unreviewed'
-        ) {
-          if (type === 'Compliance Report') {
-            awaitingReview.complianceReports += 1
-            awaitingReview.total += 1
-          }
-
-          if (
-            type === 'Exclusion Report' &&
-            CONFIG.COMPLIANCE_REPORTING.ENABLED
-          ) {
-            awaitingReview.exclusionReports += 1
-            awaitingReview.total += 1
-          }
+        if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >=0 && status.directorStatus === 'Unreviewed') {
+            awaitingReview.complianceAndExclusionReports += 1
         }
       })
   }
@@ -146,7 +111,6 @@ const DirectorReview = (props) => {
                 PERMISSIONS_COMPLIANCE_REPORT.VIEW
               ) && (
                 <div>
-                  {/* Compliance Reports awaiting review */}
                   <button
                     className="btn-text"
                     onClick={() => {
@@ -165,44 +129,8 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                  {fetchingDashboard ? <Loading/> : awaitingReview.complianceReports} compliance / exclusion report(s) awaiting your review
+                  {fetchingDashboard ? <Loading/> : awaitingReview.complianceAndExclusionReports} compliance / exclusion report(s) awaiting your review
                   </button>
-                </div>
-            )}
-
-            {CONFIG.EXCLUSION_REPORTS.ENABLED &&
-              typeof props.loggedInUser.hasPermission === 'function' &&
-              props.loggedInUser.hasPermission(
-                PERMISSIONS_COMPLIANCE_REPORT.VIEW
-              ) && (
-                <div>
-                  {/* Exclusion Reports awaiting review */}
-                  {/* <button
-                    onClick={() => {
-                      props.setFilter(
-                        [
-                          {
-                            id: 'compliance-period',
-                            value: ''
-                          },
-                          {
-                            id: 'displayname',
-                            value: 'Exclusion Report'
-                          },
-                          {
-                            id: 'current-status',
-                            value: 'Manager'
-                          }
-                        ],
-                        'compliance-reporting'
-                      )
-
-                      return navigate(COMPLIANCE_REPORTING.LIST)
-                    }}
-                    type="button"
-                  >
-                  {awaitingReview.exclusionReports} exclusion report(s) awaiting your review
-                  </button> */}
                 </div>
             )}
 
