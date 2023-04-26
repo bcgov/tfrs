@@ -245,6 +245,5 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         workbook = SpreadSheetBuilder()
         workbook.add_users(fuel_supplier_users)
         workbook.save(response)
-        print(response.headers)
 
         return response
