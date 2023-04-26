@@ -9,6 +9,11 @@ class Migration(migrations.Migration):
         ('api', '0206_schedulesummary_credits_offset_c'),
     ]
 
+    # The "choices" attribute of the field below was changed so that the actual values (the first argument of each choice, or pair)
+    # match what is actually being saved in the database, which is the string value of an enum member of NotificationType.
+    # Previously, those actual values were the enum members themselves, and so when get_notification_type_display() was called
+    # on a NotificationSubscription model instance, we would not get the intended value.
+
     operations = [
         migrations.AlterField(
             model_name='notificationsubscription',
