@@ -237,7 +237,6 @@ class ComplianceReportingTable extends Component {
     ]
     const tableHeader = this.state.filters?.find(val => val.tableId)
     const filterable = true
-console.log(this.props.items,'242')
     return (
       <ReactTable
         stateKey="compliance-reporting"

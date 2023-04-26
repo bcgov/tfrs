@@ -9,7 +9,6 @@ import { useNavigate } from "react-router";
 
 const ComplianceReportsBCEID = (props) => {
   const { isFetching, supplementalItems,isGettingDashboard } = props.complianceReports;
-  console.log(supplementalItems, "3636");
   const navigate = useNavigate();
 
   if (isFetching || isGettingDashboard) {

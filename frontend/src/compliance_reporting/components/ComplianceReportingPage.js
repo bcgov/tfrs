@@ -171,7 +171,6 @@ const ComplianceReportingPage = (props) => {
     setShowSupplierOption(!showSupplierOption)
   }
   
-  console.log(props, "line 174")
   return (
     <div className='page-compliance-reporting'>
       <h1>{props.title}</h1>

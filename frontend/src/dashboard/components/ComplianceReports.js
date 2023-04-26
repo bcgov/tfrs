@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router'
 
 const ComplianceReports = (props) => {
   const { isFinding, supplementalItems, isGettingDashboard } = props.complianceReports
-  console.log(props.supplementalItems,'100')
   const navigate = useNavigate()
 
   if (isFinding || isGettingDashboard) {
