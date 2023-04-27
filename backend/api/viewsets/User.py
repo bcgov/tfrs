@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,6 +14,8 @@ from api.serializers.UserCreationRequestSerializer \
     import UserCreationRequestSerializer
 from api.serializers.UserHistory import UserHistorySerializer
 from auditable.views import AuditableMixin
+from django.http import HttpResponse
+from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
 class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
@@ -219,3 +222,28 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+    @action(detail=False, methods=['get'])
+    @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
+    def xls(self, request):
+        """
+        Exports Fuel Supplier Users as a spreadsheet
+        """
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.xls"'.format(
+                datetime.datetime.now().strftime(
+                    "fuel_supplier_users_%Y-%m-%d")
+            ))
+
+        fuel_supplier_users = []
+        all_users = User.objects.all().order_by('last_name')
+        for user in all_users:
+            if not user.is_government_user:
+                fuel_supplier_users.append(user)
+
+        workbook = SpreadSheetBuilder()
+        workbook.add_users(fuel_supplier_users)
+        workbook.save(response)
+
+        return response

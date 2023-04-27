@@ -41,7 +41,7 @@ class NotificationSubscription(Auditable):
         db_comment="The user subscribing to notifications on this channel"
     )
     notification_type = models.CharField(
-        choices=[(d, d.value) for d in NotificationType],
+        choices=[(str(d), d.value) for d in NotificationType],
         max_length=128,
         null=False,
         blank=False,
