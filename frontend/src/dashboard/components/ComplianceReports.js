@@ -21,24 +21,24 @@ const ComplianceReports = (props) => {
   }
 
   supplementalItems && supplementalItems.forEach((item) => {
-   let { status } = item
-    if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed' 
-        && status.directorStatus === 'Unreviewed'&& status.managerStatus === 'Unreviewed') {
-            awaitingReview.analyst += 1
-            awaitingReview.total += 1
+    const { status } = item
+    if (status.fuelSupplierStatus === 'Submitted' && status.analystStatus === 'Unreviewed' &&
+        status.directorStatus === 'Unreviewed' && status.managerStatus === 'Unreviewed') {
+      awaitingReview.analyst += 1
+      awaitingReview.total += 1
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
-    status.managerStatus === 'Unreviewed' && status.directorStatus === 'Unreviewed'
-    && status.fuelSupplierStatus == 'Submitted') {
-        awaitingReview.manager += 1
-        awaitingReview.total += 1
+    status.managerStatus === 'Unreviewed' && status.directorStatus === 'Unreviewed' &&
+    status.fuelSupplierStatus == 'Submitted') {
+      awaitingReview.manager += 1
+      awaitingReview.total += 1
     }
 
     if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 &&
     status.directorStatus === 'Unreviewed') {
-        awaitingReview.director += 1
-        awaitingReview.total += 1
+      awaitingReview.director += 1
+      awaitingReview.total += 1
     }
   })
 
@@ -57,11 +57,11 @@ const ComplianceReports = (props) => {
               onClick={() => {
                 props.setFilter([{
                   id: 'current-status',
-                  value: ['For Analyst Review','For Manager Review','For Director Review']
-                } 
-              ], 'compliance-reporting')
+                  value: ['For Analyst Review', 'For Manager Review', 'For Director Review']
+                }
+                ], 'compliance-reporting')
 
-                return navigate(COMPLIANCE_REPORTING.LIST,{state:{items:["For Analyst Review","For Manager Review","For Director Review" ]}})
+                return navigate(COMPLIANCE_REPORTING.LIST, { state: { items: ['For Analyst Review', 'For Manager Review', 'For Director Review'] } })
               }}
               type="button"
             >

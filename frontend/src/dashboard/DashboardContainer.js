@@ -252,7 +252,7 @@ DashboardContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   getDashboardRequest: PropTypes.func.isRequired,
-  testData:PropTypes.func.isRequired,
+  testData: PropTypes.func.isRequired,
   getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   getFuelCodes: PropTypes.func.isRequired,
@@ -279,7 +279,7 @@ const mapDispatchToProps = ({
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getDashboardRequest: complianceReporting.getDashboard,
-  supplementalItems:complianceReporting.getSupplemental,
+  supplementalItems: complianceReporting.getSupplemental,
   getCreditTransfersIfNeeded,
   getDocumentUploads,
   getFuelCodes,

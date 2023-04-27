@@ -10,7 +10,7 @@ import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditT
 import { useNavigate } from 'react-router'
 
 const DirectorReview = (props) => {
-  const {isGettingDashboard: fetchingDashboard, supplementalItems: supplementalReports } = props.complianceReports
+  const { isGettingDashboard: fetchingDashboard, supplementalItems: supplementalReports } = props.complianceReports
   const navigate = useNavigate()
   const { isFinding: fetchingCreditTransfers, items: creditTransfers } =
     props.creditTransfers
@@ -30,11 +30,11 @@ const DirectorReview = (props) => {
   ) {
     supplementalReports &&
     supplementalReports.forEach((item) => {
-        let { status } = item
-        if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >=0 && status.directorStatus === 'Unreviewed') {
-            awaitingReview.complianceAndExclusionReports += 1
-        }
-      })
+      const { status } = item
+      if (['Not Recommended', 'Recommended'].indexOf(status.managerStatus) >= 0 && status.directorStatus === 'Unreviewed') {
+        awaitingReview.complianceAndExclusionReports += 1
+      }
+    })
   }
 
   if (
@@ -118,14 +118,14 @@ const DirectorReview = (props) => {
                         [
                           {
                             id: 'current-status',
-                            value:["For Director Review"]
-                          },
-                         
+                            value: ['For Director Review']
+                          }
+
                         ],
                         'compliance-reporting'
                       )
 
-                      return navigate(COMPLIANCE_REPORTING.LIST,{state:{items:["For Director Review"]}})
+                      return navigate(COMPLIANCE_REPORTING.LIST, { state: { items: ['For Director Review'] } })
                     }}
                     type="button"
                   >

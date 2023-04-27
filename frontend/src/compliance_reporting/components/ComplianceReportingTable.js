@@ -36,7 +36,7 @@ class ComplianceReportingTable extends Component {
       this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
     }
     if (JSON.stringify(this.props.filters) !== JSON.stringify(prevState.filters)) {
-      this.setState({filters: this.props.filters})
+      this.setState({ filters: this.props.filters })
     }
   }
 
@@ -51,6 +51,7 @@ class ComplianceReportingTable extends Component {
   handleFiltersChange (filters) {
     this.setState({ filters })
   }
+
   sortFunc (val1, val2, desc) {
     if (desc) {
       if (val1 > val2) {
@@ -60,8 +61,8 @@ class ComplianceReportingTable extends Component {
         return -1
       }
       return 0
-    }else {
-      if (val2 > val1 ) {
+    } else {
+      if (val2 > val1) {
         return 1
       }
       if (val2 < val1) {
@@ -97,9 +98,9 @@ class ComplianceReportingTable extends Component {
     }, {
       accessor: item => item.type,
       className: 'col-type',
-      Header:'Type',
-      id:'compliance-period-type',
-      minWidth:50
+      Header: 'Type',
+      id: 'compliance-period-type',
+      minWidth: 50
     }, {
       accessor: (item) => {
         // Temporarily left commented out for posterity and client feedback

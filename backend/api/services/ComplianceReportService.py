@@ -155,7 +155,6 @@ class ComplianceReportService(object):
         """
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
-        print("=============", gov_org)
         if organization == gov_org:
             # If organization == Government
             #  don't show "Draft" transactions

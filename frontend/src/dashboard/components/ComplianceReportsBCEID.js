@@ -1,18 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Loading from "../../app/components/Loading";
-import COMPLIANCE_REPORTING from "../../constants/routes/ComplianceReporting";
-import PERMISSIONS_COMPLIANCE_REPORT from "../../constants/permissions/ComplianceReport";
-import { useNavigate } from "react-router";
+import Loading from '../../app/components/Loading'
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
+import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import { useNavigate } from 'react-router'
 
 const ComplianceReportsBCEID = (props) => {
-  const { isFetching, supplementalItems,isGettingDashboard } = props.complianceReports;
-  const navigate = useNavigate();
+  const { isFetching, supplementalItems, isGettingDashboard } = props.complianceReports
+  const navigate = useNavigate()
 
   if (isFetching || isGettingDashboard) {
-    return <Loading />;
+    return <Loading />
   }
 
   const awaitingReview = {
@@ -20,32 +20,32 @@ const ComplianceReportsBCEID = (props) => {
     review: 0,
     supplemental: 0,
     total: 0
-  };
+  }
   supplementalItems && supplementalItems.forEach((item) => {
-    let { status  } = item;
-      if (status.fuelSupplierStatus === "Draft") {
-        awaitingReview.draft += 1
-        awaitingReview.total += 1
-      }
-      if (status.fuelSupplierStatus === "Submitted" &&
-        ["Accepted", "Rejected"].indexOf(status.directorStatus) < 0 && status.analystStatus === "Requested Supplemental" ||
-        status.managerStatus === "Requested Supplemental") {
-              awaitingReview.manager += 1
-              awaitingReview.total += 1
-          }
-      })
+    const { status } = item
+    if (status.fuelSupplierStatus === 'Draft') {
+      awaitingReview.draft += 1
+      awaitingReview.total += 1
+    }
+    if (status.fuelSupplierStatus === 'Submitted' &&
+        ['Accepted', 'Rejected'].indexOf(status.directorStatus) < 0 && status.analystStatus === 'Requested Supplemental' ||
+        status.managerStatus === 'Requested Supplemental') {
+      awaitingReview.manager += 1
+      awaitingReview.total += 1
+    }
+  })
 
   const handeleFun = () => {
     props.setFilter(
       [
         {
-          id: "current-status",
-          value: ["In Draft", "Supplemental Requested"],
-        },
+          id: 'current-status',
+          value: ['In Draft', 'Supplemental Requested']
+        }
       ],
-      "compliance-reporting"
-    );
-  };
+      'compliance-reporting'
+    )
+  }
   return (
     <div className="dashboard-fieldset">
       <h1>Compliance &amp; Exclusion Reports</h1>
@@ -58,16 +58,16 @@ const ComplianceReportsBCEID = (props) => {
               props.setFilter(
                 [
                   {
-                    id: "current-status",
-                    value: ["In Draft", "Supplemental Requested"],
-                  },
+                    id: 'current-status',
+                    value: ['In Draft', 'Supplemental Requested']
+                  }
                 ],
-                "compliance-reporting"
-              );
+                'compliance-reporting'
+              )
 
               return navigate(COMPLIANCE_REPORTING.LIST, {
-                state: { items: ["In Draft", "Supplemental Requested"] },
-              });
+                state: { items: ['In Draft', 'Supplemental Requested'] }
+              })
             }}
             type="button"
           >
@@ -87,12 +87,12 @@ const ComplianceReportsBCEID = (props) => {
                 props.setFilter(
                   [
                     {
-                      id: "compliance-period",
-                      value: currentYear.toString(),
-                    },
+                      id: 'compliance-period',
+                      value: currentYear.toString()
+                    }
                   ],
-                  "compliance-reporting"
-                );
+                  'compliance-reporting'
+                )
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
               }}
@@ -100,18 +100,18 @@ const ComplianceReportsBCEID = (props) => {
             >
               Current compliance period
             </button>
-            {" | "}
+            {' | '}
             <button
               onClick={() => {
                 props.setFilter(
                   [
                     {
-                      id: "compliance-period",
-                      value: "",
-                    },
+                      id: 'compliance-period',
+                      value: ''
+                    }
                   ],
-                  "compliance-reporting"
-                );
+                  'compliance-reporting'
+                )
 
                 return navigate(COMPLIANCE_REPORTING.LIST)
               }}
@@ -126,7 +126,7 @@ const ComplianceReportsBCEID = (props) => {
         PERMISSIONS_COMPLIANCE_REPORT.MANAGE
       ) && (
         <div className="add-button">
-          <FontAwesomeIcon icon="play" />{" "}
+          <FontAwesomeIcon icon="play" />{' '}
           <button
             onClick={() => navigate(COMPLIANCE_REPORTING.LIST)}
             type="button"
@@ -136,24 +136,24 @@ const ComplianceReportsBCEID = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-ComplianceReportsBCEID.defaultProps = {};
+ComplianceReportsBCEID.defaultProps = {}
 
 ComplianceReportsBCEID.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
     isGettingDashboard: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape()),
+    items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
     organization: PropTypes.shape({
-      name: PropTypes.string,
-    }),
+      name: PropTypes.string
+    })
   }).isRequired,
-  setFilter: PropTypes.func.isRequired,
-};
+  setFilter: PropTypes.func.isRequired
+}
 
 export default ComplianceReportsBCEID

@@ -97,7 +97,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
         isGettingDashboard: true,
         items: null
       })],
-     
+
       [this.getDashboardSuccess, (state, action) => ({
         ...state,
         isGettingDashboard: false,
@@ -201,10 +201,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   doGetDashboard () {
     return axios.get(`${this.baseUrl}/dashboard`)
   }
- 
 
   * getDashboardHandler () {
-    
     try {
       const response = yield call(this.doGetDashboard)
       yield put(this.getDashboardSuccess(response.data))
@@ -212,18 +210,20 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       yield put(this.error(error.response.data))
     }
   }
+
   supplemental () {
     return axios.get(`${this.baseUrl}/supplemental`)
   }
-  
+
   * getSupplemetalHandler () {
-  try {
-    const response = yield call(this.supplemental)
-    yield put(this.getSupplementalSuccess(response.data))
-  } catch (error) {
-    yield put(this.error(error.response.data))
+    try {
+      const response = yield call(this.supplemental)
+      yield put(this.getSupplementalSuccess(response.data))
+    } catch (error) {
+      yield put(this.error(error.response.data))
+    }
   }
-}
+
   doFindPaginated (data) {
     const page = data.page
     const pageSize = data.pageSize
@@ -251,9 +251,8 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
       takeLatest(this.recompute, this.recomputeHandler),
       takeLatest(this.getSnapshot, this.getSnapshotHandler),
       takeLatest(this.getDashboard, this.getDashboardHandler),
-      takeLatest(this.getSupplemental,this.getSupplemetalHandler),
-      takeLatest(this.findPaginated, this.findPaginatedHandler),
-      
+      takeLatest(this.getSupplemental, this.getSupplemetalHandler),
+      takeLatest(this.findPaginated, this.findPaginatedHandler)
 
     ]
   }

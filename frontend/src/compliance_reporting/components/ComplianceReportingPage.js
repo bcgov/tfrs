@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
@@ -9,7 +9,7 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import ComplianceReportingTable from './ComplianceReportingTable'
 
 const ComplianceReportingPage = (props) => {
-  let location=useLocation()
+  const location = useLocation()
   const { isFetching, items, itemsCount } = props.complianceReports
   const organizations = props.organizations
   const isEmpty = items.length === 0
@@ -18,69 +18,66 @@ const ComplianceReportingPage = (props) => {
   const [supplierOptions, setSupplierOptions] = useState([])
   const [showSupplierOption, setShowSupplierOption] = useState(false)
   const [selectedYear, setSelectedYear] = useState('')
-  let [filtersObj, setFiltersObj] = useState(filters || [])
+  const [filtersObj, setFiltersObj] = useState(filters || [])
   const [selectedFilters, setSelectedFilters] = useState({
     selectedStatus: [],
-    selectedType: [],
+    selectedType: []
   })
   const [statusTypes, setStatustypes] = useState([
     {
       name: 'In Draft',
-      value: 'In Draft',
+      value: 'In Draft'
     },
     {
       name: 'Awaiting Government review',
-      value: 'awaiting government review',
+      value: 'awaiting government review'
     },
     {
       name: 'Supplemental Requested',
-      value: 'Supplemental Requested',
+      value: 'Supplemental Requested'
     },
-    
+
     {
       name: 'Accepted',
-      value: 'Accepted',
+      value: 'Accepted'
     },
     {
       name: 'Rejected',
-      value: 'Rejected',
-    },
+      value: 'Rejected'
+    }
   ])
   const [statusTypeGov, setStatustypeGov] = useState([
     {
       name: 'For Analyst Review',
-      value: 'For Analyst Review',
+      value: 'For Analyst Review'
     },
     {
       name: 'For Manager Review',
-      value: 'For Manager Review',
+      value: 'For Manager Review'
     },
     {
       name: 'For Director Review',
-      value: 'For Director Review',
+      value: 'For Director Review'
     },
     {
       name: 'Supplemental Requested',
-      value: 'Supplemental Requested',
+      value: 'Supplemental Requested'
     },
-    
+
     {
       name: 'Accepted',
-      value: 'Accepted',
+      value: 'Accepted'
     },
     {
       name: 'Rejected',
-      value: 'Rejected',
-    },
+      value: 'Rejected'
+    }
   ])
-  useEffect(()=>{
-    
-    
-    setSelectedFilters({ ...selectedFilters, selectedStatus:location.state?.items})
-    window.history.replaceState([],items)
-    
-  },[])
-  
+  useEffect(() => {
+    setSelectedFilters({ ...selectedFilters, selectedStatus: location.state?.items })
+    window.history.replaceState([], items)
+  }, [])
+
   useEffect(() => {
     setSupplierOptions(organizations.items)
   }, [organizations.items])
@@ -93,7 +90,7 @@ const ComplianceReportingPage = (props) => {
         setFiltersObj([])
         setSelectedFilters({
           selectedStatus: [],
-          selectedType: [],
+          selectedType: []
         })
         setSelectedYear('All')
         setSelectedSupplierValue('')
@@ -101,7 +98,7 @@ const ComplianceReportingPage = (props) => {
       }
       case 'display-name': {
         const checkboxes = document.getElementsByName(name)
-        let val = []
+        const val = []
         checkboxes.forEach((cb) => {
           if (cb.checked) {
             val.push(cb.value)
@@ -170,7 +167,7 @@ const ComplianceReportingPage = (props) => {
   const showSupplierOptions = () => {
     setShowSupplierOption(!showSupplierOption)
   }
-  
+
   return (
     <div className='page-compliance-reporting'>
       <h1>{props.title}</h1>
@@ -301,15 +298,15 @@ const ComplianceReportingPage = (props) => {
           <select
             name='compliance-period'
             value={selectedYear} // Set selected year as default value
-            onChange={(e) =>{
+            onChange={(e) => {
               setSelectedYear(parseInt(e.target.value))
               handleFiltersChange(e.target.name, e.target.value)
             }
           }
-          > 
+          >
             <option value={0}>All</option> {/* Update the value to be an empty string */}
             {/* Render options for years from 2019 to current year */}
-            {Array.from({length: new Date().getFullYear() - 2018}, (_, index) => {
+            {Array.from({ length: new Date().getFullYear() - 2018 }, (_, index) => {
               const year = 2019 + index
               return (
                 <option key={year} value={year}>
@@ -395,12 +392,13 @@ const ComplianceReportingPage = (props) => {
         </div>
         <div className='compliance-filters-rowTwo'>
           <span>Status </span>
-          {!props.loggedInUser.isGovernmentUser ? statusTypes.map((type, idx) => {
-            return (
+          {!props.loggedInUser.isGovernmentUser
+            ? statusTypes.map((type, idx) => {
+              return (
               <span
                 key={idx + Math.random()}
                 className={`status ${
-                  selectedFilters&&selectedFilters?.selectedStatus?.includes(type.value)
+                  selectedFilters && selectedFilters?.selectedStatus?.includes(type.value)
                     ? 'status-active'
                     : ''
                 }`}
@@ -408,12 +406,12 @@ const ComplianceReportingPage = (props) => {
                   handleFiltersChange('current-status', type.value)
                 }
               >
-                {type.name} {selectedFilters&& selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
+                {type.name} {selectedFilters && selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> }
               </span>
-            )
-          })
-          : statusTypeGov.map((type, idx) => {
-            return (
+              )
+            })
+            : statusTypeGov.map((type, idx) => {
+              return (
               <span
                 key={idx + Math.random()}
                 className={`status ${
@@ -425,10 +423,10 @@ const ComplianceReportingPage = (props) => {
                   handleFiltersChange('current-status', type.value)
                 }
               >
-                {type.name} {selectedFilters && selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> } 
+                {type.name} {selectedFilters && selectedFilters?.selectedStatus?.includes(type.value) ? <span> &#x2713;</span> : <span> &#x271B;</span> }
               </span>
-            )
-          })
+              )
+            })
         }
         </div>
       </div>
@@ -454,16 +452,16 @@ ComplianceReportingPage.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape),
-    itemsCount: PropTypes.number,
+    itemsCount: PropTypes.number
   }).isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func,
+    hasPermission: PropTypes.func
   }).isRequired,
   selectComplianceReport: PropTypes.func.isRequired,
   showModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  savedState: PropTypes.shape().isRequired,
+  savedState: PropTypes.shape().isRequired
 }
 
 export default ComplianceReportingPage
