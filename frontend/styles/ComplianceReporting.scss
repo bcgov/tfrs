@@ -65,6 +65,110 @@
   .unit-of-measure {
     border-top: 1px solid $border-grey;
   }
+  .compliance-filters-parent {
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+    padding: 20px;
+    .compliance-filters-rowOne {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .compliance-selectedYear {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p {
+          margin-bottom: 0;
+          font-size: 16px;
+        }
+
+        select {
+          width: 123px;
+          height: 38px;
+        }
+      }
+      .compliance-inputSelect {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p {
+          margin-bottom: 0;
+          font-size: 17px;
+        }
+
+        >div {
+          position: relative;
+
+          input {
+            width: 209px;
+            height: 38px;
+          }
+
+          >ul {
+            list-style-type: none;
+            background-color: #646464;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            padding: 0;
+            overflow: auto;
+            max-height: 200px;
+            border-radius: 0 0 5px 5px;
+
+            li {
+              padding: 10px;
+              cursor: pointer;
+              color: #fff;
+            }
+          }
+        }
+      }
+      .compliance-checkboxSelect {
+        display: flex;
+        align-items: center;
+
+        p {
+          margin-bottom: 0;
+          font-size: 16px;
+        }
+
+        input {
+          margin: 0 10px 0px 20px;
+        }
+      }
+      .clearFilter {
+        padding: 6px 29px;
+        background-color: #fff;
+        color: #036;
+        border: 2px solid #036;
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+    .compliance-filters-rowTwo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+
+      .status {
+        border: 1px solid #494949;
+        padding: 3px 35px;
+        background-color: #fff;
+        border-radius: 15px;
+        cursor: pointer;
+
+        &.status-active {
+          background-color: #568260;
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 
 #supplementalReasonInput {

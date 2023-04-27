@@ -112,7 +112,7 @@ class UserAuthentication(authentication.BaseAuthentication):
                 audience=KEYCLOAK_AUDIENCE,
                 options={"verify_exp": True},
             )
-        except (jwt.InvalidTokenError, jwt.ExpiredSignature, jwt.DecodeError) as exc:
+        except (jwt.InvalidTokenError, jwt.DecodeError) as exc:
             print(str(exc))
             token_validation_errors.append(exc)
             raise Exception(str(exc))

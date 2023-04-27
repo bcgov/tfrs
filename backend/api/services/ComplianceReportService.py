@@ -148,14 +148,13 @@ class ComplianceReportService(object):
         return differences
 
     @staticmethod
-    def get_organization_compliance_reports(organization):
+    def get_organization_compliance_reports(organization,value=None):
         """
         Fetch the compliance reports with various rules based on the user's
         organization
         """
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
-
         if organization == gov_org:
             # If organization == Government
             #  don't show "Draft" transactions

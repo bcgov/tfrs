@@ -141,6 +141,7 @@ const IDIRDashboardPage = obj => (
         <ComplianceReports
           complianceReports={obj.complianceReports}
           setFilter={obj.setFilter}
+          
         />
       }
 
