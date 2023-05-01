@@ -226,6 +226,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 # List of origin hostnames that are authorized to make cross-site HTTP requests
 CORS_ORIGIN_WHITELIST = ()
 
+# The list of extra HTTP headers to expose to the browser, in addition to the default safelisted headers
+CORS_EXPOSE_HEADERS = [
+    "Content-Disposition"
+]
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
