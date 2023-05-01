@@ -1,7 +1,7 @@
 const BASE_PATH = '/admin'
 
 const CREDIT_TRANSACTIONS_HISTORY = {
-  API: '/credit_trades_history',
+  API_PAGINATED: '/credit_trades_history/paginated',
   LIST: `${BASE_PATH}/credit_transactions_history`
 }
 
