@@ -238,7 +238,7 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 0, user.last_name)
             worksheet.write(row_index, 1, user.first_name)
             worksheet.write(row_index, 2, user.email)
-            worksheet.write(row_index, 3, user.username)
+            worksheet.write(row_index, 3, user.display_name)
             worksheet.write(row_index, 4, user.title)
             worksheet.write(row_index, 5, user.phone)
 

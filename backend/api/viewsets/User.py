@@ -233,7 +233,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "fuel_supplier_users_%Y-%m-%d")
+                    "BC-LCFS_bceidusers_%Y-%m-%d")
             ))
 
         fuel_supplier_users = []
