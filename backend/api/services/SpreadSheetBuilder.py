@@ -2,6 +2,7 @@ from collections import namedtuple
 
 import xlwt
 from api.models.NotificationChannel import NotificationChannel
+from api.models.UserLoginHistory import UserLoginHistory
 
 
 class SpreadSheetBuilder(object):
@@ -238,7 +239,17 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 0, user.last_name)
             worksheet.write(row_index, 1, user.first_name)
             worksheet.write(row_index, 2, user.email)
-            worksheet.write(row_index, 3, user.display_name)
+
+            keycloak_user_id = user.keycloak_user_id
+            if keycloak_user_id:
+                user_login_entry = (
+                    UserLoginHistory.objects.filter(keycloak_user_id=keycloak_user_id)
+                    .order_by("-create_timestamp")
+                    .first()
+                )
+                if user_login_entry:
+                    worksheet.write(row_index, 3, user_login_entry.external_username)
+
             worksheet.write(row_index, 4, user.title)
             worksheet.write(row_index, 5, user.phone)
 
