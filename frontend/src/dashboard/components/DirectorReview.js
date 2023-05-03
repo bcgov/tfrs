@@ -63,18 +63,20 @@ const DirectorReview = (props) => {
   return (
     <div className="dashboard-fieldset director">
       <h1>Director Review</h1>
-      There are:
+      
       <div>
+      There are:
         <>
-          <div className="value">{awaitingReview.total}</div>
+          {/* <div className="value">{awaitingReview.total}</div> */}
           <div className="content">
-            <h2> item(s) in progress for your action:</h2>
+            {/* <h2> item(s) in progress for your action:</h2> */}
             {typeof props.loggedInUser.hasPermission === 'function' &&
               props.loggedInUser.hasPermission(
                 PERMISSIONS_CREDIT_TRANSACTIONS.VIEW
               ) && (
                 <div>
                   {/* Credit transfers awaiting review */}
+                  <span>  {fetchingCreditTransfers ? <Loading/> : `${awaitingReview.creditTransfers} `}</span>
                   <button
                     onClick={() => {
                       props.setFilter(
@@ -98,9 +100,10 @@ const DirectorReview = (props) => {
                       return navigate(CREDIT_TRANSACTIONS.LIST)
                     }}
                     type="button"
+                    data-testid="creditTransferBtn"
                   >
-                  {fetchingCreditTransfers ? <Loading/> : `${awaitingReview.creditTransfers} `}
-                  credit transfer(s) for your review and statutory decision
+                
+                  Credit transfer(s) for your review and statutory decision
                   </button>
                 </div>
             )}
@@ -111,6 +114,7 @@ const DirectorReview = (props) => {
                 PERMISSIONS_COMPLIANCE_REPORT.VIEW
               ) && (
                 <div>
+                  <span>{fetchingDashboard ? <Loading/> : awaitingReview.complianceAndExclusionReports}</span>
                   <button
                     className="btn-text"
                     onClick={() => {
@@ -129,7 +133,7 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                  {fetchingDashboard ? <Loading/> : awaitingReview.complianceAndExclusionReports} compliance / exclusion report(s) awaiting your review
+                   Compliance / exclusion report(s) awaiting your review
                   </button>
                 </div>
             )}
@@ -139,6 +143,7 @@ const DirectorReview = (props) => {
                 PERMISSIONS_CREDIT_TRANSACTIONS.VIEW
               ) && (
                 <div>
+                <span> {awaitingReview.part3Awards}</span>
                   <button
                     onClick={() => {
                       props.setFilter(
@@ -163,7 +168,7 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                    {awaitingReview.part3Awards} Part 3 Award(s) awaiting your
+                    Part 3 Award(s) awaiting your
                     review
                   </button>
                 </div>

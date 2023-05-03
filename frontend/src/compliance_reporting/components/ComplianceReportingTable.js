@@ -22,7 +22,12 @@ class ComplianceReportingTable extends Component {
       page: 1,
       pageSize: 10,
       filters: props.filters,
-      sorts: []
+      sorts:[
+        {
+            "id": "updateTimestamp",
+            "desc": false
+        }
+    ]
     }
 
     this.handlePageChange = this.handlePageChange.bind(this)
@@ -77,6 +82,7 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
+    console.log(this.props)
     const cols = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -95,7 +101,16 @@ class ComplianceReportingTable extends Component {
       Header: 'Compliance Period',
       id: 'compliance-period',
       minWidth: 50
-    }, {
+    }, 
+    {
+      accessor: item => item.organization.name,
+      className: 'col-Supplier',
+      Header: 'Supplier',
+      id: 'Supplier',
+      minWidth: 50,
+      show: this.props.loggedInUser.isGovernmentUser
+    },
+    {
       accessor: item => item.type,
       className: 'col-type',
       Header: 'Type',

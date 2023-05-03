@@ -42,7 +42,7 @@ const FileSubmissions = (props) => {
           {awaitingReview.documentUploads.total}
         </div>
         <div className="content">
-          <h2>file submissions in progress:</h2>
+          <h2>File submissions in progress:</h2>
 
           <div>
             <button

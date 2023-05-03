@@ -12,10 +12,13 @@ const ComplianceReportingPage = (props) => {
   const location = useLocation()
   const { isFetching, items, itemsCount } = props.complianceReports
   const organizations = props.organizations
+  console.log(organizations,'1515')
   const isEmpty = items.length === 0
   const filters = props.savedState['compliance-reporting']?.filtered
   const [selectedSupplierValue, setSelectedSupplierValue] = useState('')
+ 
   const [supplierOptions, setSupplierOptions] = useState([])
+  console.log(supplierOptions,'1919')
   const [showSupplierOption, setShowSupplierOption] = useState(false)
   const [selectedYear, setSelectedYear] = useState('')
   const [filtersObj, setFiltersObj] = useState(filters || [])
@@ -79,7 +82,7 @@ const ComplianceReportingPage = (props) => {
   }, [])
 
   useEffect(() => {
-    setSupplierOptions(organizations.items)
+    setSupplierOptions(organizations.items.sort((a,b)=>a.name>b.name? 1 : b.name>a.name? -1 :0))
   }, [organizations.items])
 
   const handleFiltersChange = (name, value) => {
@@ -160,9 +163,17 @@ const ComplianceReportingPage = (props) => {
   }
   const supplierFilterFunction = (e) => {
     const filterdOptions = organizations.items.filter((item) =>
-      item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    item.name.toLowerCase().includes(e.target.value.toLowerCase())
     )
-    setSupplierOptions(filterdOptions)
+    if(e.target.value.length>0){
+      setSupplierOptions(filterdOptions)
+    }
+    else{
+      console.log(e.target.value,'162')
+      setFiltersObj([])
+    
+    }
+    //else{setSupplierOptions(filterdOptions)}
   }
   const showSupplierOptions = () => {
     setShowSupplierOption(!showSupplierOption)
@@ -307,7 +318,8 @@ const ComplianceReportingPage = (props) => {
             <option value={0}>All</option> {/* Update the value to be an empty string */}
             {/* Render options for years from 2019 to current year */}
             {Array.from({ length: new Date().getFullYear() - 2018 }, (_, index) => {
-              const year = 2019 + index
+              // const year = 2019 + index
+              const year = new Date().getFullYear() - index
               return (
                 <option key={year} value={year}>
                   {year}

@@ -59,7 +59,7 @@ const CreditTransactions = (props) => {
         </div>
 
         <div className="content">
-          <h2>credit transfers in progress:</h2>
+          <h2>Credit transfers in progress:</h2>
 
           <div>{/* n awaiting government analyst review */}
             <button
@@ -107,7 +107,7 @@ const CreditTransactions = (props) => {
           </div>
         </div>
       </div>
-
+      <br />
       <div>{/* n awaiting Director review for Part 3 Awards */}
         <div className="value">
           {awaitingReview.part3Awards.total}

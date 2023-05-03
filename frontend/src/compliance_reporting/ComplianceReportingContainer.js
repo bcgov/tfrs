@@ -119,7 +119,12 @@ class ComplianceReportingContainer extends Component {
     this.props.getOrganizations()
     }
     this.props.getCompliancePeriods()
-    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
+    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [
+      {
+          "id": "updateTimestamp",
+          "desc": true
+      }
+  ] })
   }
 
   render () {
