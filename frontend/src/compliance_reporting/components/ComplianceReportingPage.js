@@ -12,13 +12,11 @@ const ComplianceReportingPage = (props) => {
   const location = useLocation()
   const { isFetching, items, itemsCount } = props.complianceReports
   const organizations = props.organizations
-  console.log(organizations,'1515')
   const isEmpty = items.length === 0
   const filters = props.savedState['compliance-reporting']?.filtered
   const [selectedSupplierValue, setSelectedSupplierValue] = useState('')
  
   const [supplierOptions, setSupplierOptions] = useState([])
-  console.log(supplierOptions,'1919')
   const [showSupplierOption, setShowSupplierOption] = useState(false)
   const [selectedYear, setSelectedYear] = useState('')
   const [filtersObj, setFiltersObj] = useState(filters || [])
@@ -318,7 +316,6 @@ const ComplianceReportingPage = (props) => {
             <option value={0}>All</option> {/* Update the value to be an empty string */}
             {/* Render options for years from 2019 to current year */}
             {Array.from({ length: new Date().getFullYear() - 2018 }, (_, index) => {
-              // const year = 2019 + index
               const year = new Date().getFullYear() - index
               return (
                 <option key={year} value={year}>

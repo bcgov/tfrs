@@ -22,12 +22,7 @@ class ComplianceReportingTable extends Component {
       page: 1,
       pageSize: 10,
       filters: props.filters,
-      sorts:[
-        {
-            "id": "updateTimestamp",
-            "desc": false
-        }
-    ]
+      sorts:[]
     }
 
     this.handlePageChange = this.handlePageChange.bind(this)
@@ -37,6 +32,7 @@ class ComplianceReportingTable extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+   
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.sorts !== prevState.sorts) {
       this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
     }
@@ -82,7 +78,7 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
-    console.log(this.props)
+   this.props.items.reverse()
     const cols = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -136,15 +132,15 @@ class ComplianceReportingTable extends Component {
       id: 'current-status',
       minWidth: 75
     }, {
-      accessor: item => (item.sortDate ? item.sortDate : null),
+      accessor: item => (item.updateTimestamp ? item.updateTimestamp : null),
       className: 'col-date',
       Header: 'Last Status Update',
       id: 'updateTimestamp',
       minWidth: 95,
       Cell: row => (
         <span>
-          {row.original.sortDate
-            ? moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
+          {row.original.updateTimestamp
+            ? moment(row.original.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
             : '-'
           }
         </span>

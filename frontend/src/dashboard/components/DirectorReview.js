@@ -67,15 +67,12 @@ const DirectorReview = (props) => {
       <div>
       There are:
         <>
-          {/* <div className="value">{awaitingReview.total}</div> */}
           <div className="content">
-            {/* <h2> item(s) in progress for your action:</h2> */}
             {typeof props.loggedInUser.hasPermission === 'function' &&
               props.loggedInUser.hasPermission(
                 PERMISSIONS_CREDIT_TRANSACTIONS.VIEW
               ) && (
                 <div>
-                  {/* Credit transfers awaiting review */}
                   <span>  {fetchingCreditTransfers ? <Loading/> : `${awaitingReview.creditTransfers} `}</span>
                   <button
                     onClick={() => {

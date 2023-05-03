@@ -28,6 +28,8 @@ from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
 from django.db.models import Max
 from django.db.models.expressions import RawSQL
+
+
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
                               mixins.UpdateModelMixin,
@@ -63,7 +65,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         This view should return a list of all the compliance reports
         for the currently authenticated user.
         """
-        qs = []
         latest_supplemental  = self.get_latest_supplemental_reports()
         qs = self.filter_draft(latest_supplemental)
 
@@ -109,16 +110,14 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             qs = qs.order_by('-organization__name')
                         else:
                             qs = qs.order_by('organization__name')
-                    else:
-                        sortType = "-" if sortCondition else ""
-                        if sortType:
-                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('-reports_updatedtime')
+                    elif  sortId == 'updateTimestamp':
+                        if sortCondition:
+                            qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('-reports_updatedtime')
                         else:
-                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('reports_updatedtime')
+                            qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('reports_updatedtime')
                 
                 filters = request.data.get('filters')
                 if filters:
-                    result_list = []
                     for filter in filters:
                         id = filter.get('id')
                         value = filter.get('value')
@@ -139,7 +138,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                 qs = self.filter_timestamp(qs, value)
                             elif id == 'supplier':
                                 qs = qs.filter(organization_id=value)
-                
         return qs
 
     def filter_displayname(self, qs, value):
@@ -149,7 +147,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 query_result |= Q(type__the_type='Compliance Report')
             if val == 'Exclusion Report':
                 query_result |= Q(type__the_type='Exclusion Report')
-                
+
         return qs.filter(query_result)
 
     def filter_timestamp(self, qs, date):

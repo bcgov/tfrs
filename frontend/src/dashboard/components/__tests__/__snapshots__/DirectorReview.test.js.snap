@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DirectorReview Should render the component 1`] = `
+<div
+  className="dashboard-fieldset director"
+>
+  <h1>
+    Director Review
+  </h1>
+  <div>
+    There are:
+    <div
+      className="content"
+    />
+  </div>
+</div>
+`;
+
+exports[`DirectorReview Should render the component with complianceReports and creditTransfers 1`] = `
+<div
+  className="dashboard-fieldset director"
+>
+  <h1>
+    Director Review
+  </h1>
+  <div>
+    There are:
+    <div
+      className="content"
+    >
+      <div>
+        <span>
+            
+          0 
+        </span>
+        <button
+          data-testid="creditTransferBtn"
+          onClick={[Function]}
+          type="button"
+        >
+          Credit transfer(s) for your review and statutory decision
+        </button>
+      </div>
+      <div>
+        <span>
+          0
+        </span>
+        <button
+          className="btn-text"
+          onClick={[Function]}
+          type="button"
+        >
+          Compliance / exclusion report(s) awaiting your review
+        </button>
+      </div>
+      <div>
+        <span>
+           
+          0
+        </span>
+        <button
+          onClick={[Function]}
+          type="button"
+        >
+          Part 3 Award(s) awaiting your review
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
