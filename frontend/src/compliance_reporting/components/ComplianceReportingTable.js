@@ -22,7 +22,7 @@ class ComplianceReportingTable extends Component {
       page: 1,
       pageSize: 10,
       filters: props.filters,
-      sorts:[]
+      sorts: []
     }
 
     this.handlePageChange = this.handlePageChange.bind(this)
@@ -32,7 +32,6 @@ class ComplianceReportingTable extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-   
     if (this.state.page !== prevState.page || this.state.pageSize !== prevState.pageSize || this.state.filters !== prevState.filters || this.state.sorts !== prevState.sorts) {
       this.props.getComplianceReports({ page: this.state.page, pageSize: this.state.pageSize, filters: this.state.filters, sorts: this.state.sorts })
     }
@@ -78,7 +77,7 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
-   this.props.items.reverse()
+    this.props.items.reverse()
     const cols = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -97,7 +96,7 @@ class ComplianceReportingTable extends Component {
       Header: 'Compliance Period',
       id: 'compliance-period',
       minWidth: 50
-    }, 
+    },
     {
       accessor: item => item.organization.name,
       className: 'col-Supplier',

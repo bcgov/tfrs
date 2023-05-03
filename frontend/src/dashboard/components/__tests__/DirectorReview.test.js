@@ -7,67 +7,67 @@ import store from '../../../store/store'
 import DirectorReview from '../DirectorReview'
 
 jest.mock('../../../config', () => {
-    const originalConfig = jest.requireActual('../../../config');
-    return {
-        ...originalConfig,
-        COMPLIANCE_REPORTING:{
-            ENABLED: true
-        },
-        SECURE_DOCUMENT_UPLOAD:{
-            ENABLED: true
-        },
-        FUEL_CODES:{
-          ENABLED: true
-      },
-      DEBUG:{
-        ENABLED: true
+  const originalConfig = jest.requireActual('../../../config')
+  return {
+    ...originalConfig,
+    COMPLIANCE_REPORTING: {
+      ENABLED: true
+    },
+    SECURE_DOCUMENT_UPLOAD: {
+      ENABLED: true
+    },
+    FUEL_CODES: {
+      ENABLED: true
+    },
+    DEBUG: {
+      ENABLED: true
     }
-    };
+  }
 })
 
 describe('DirectorReview', () => {
-    const mockItems= [
-        {
-          id: 654,
-          isRescinded: false,
-          status: {
-            status: 'Recommended',
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Submitted',
-            managerStatus: 'Unreviewed'
-          },
-          type: 'Compliance Report',
-          supplementalReports: [{
-            status:{
-              managerStatus:'Recommended',
-              directorStatus:'Unreviewed'
-            }
-          }]
-        },
-        {
-          id: 655,
-          status: {
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Submitted',
-            managerStatus: 'Unreviewed'
-          },
-          type: 'Compliance Report',
-          supplementalReports: []
-        },
-        {
-          id: 656,
-          status: {
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Submitted',
-            managerStatus: 'Unreviewed'
-          },
-          type: 'Exclusion Report',
-          supplementalReports: []
+  const mockItems = [
+    {
+      id: 654,
+      isRescinded: false,
+      status: {
+        status: 'Recommended',
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Submitted',
+        managerStatus: 'Unreviewed'
+      },
+      type: 'Compliance Report',
+      supplementalReports: [{
+        status: {
+          managerStatus: 'Recommended',
+          directorStatus: 'Unreviewed'
         }
-      ];
+      }]
+    },
+    {
+      id: 655,
+      status: {
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Submitted',
+        managerStatus: 'Unreviewed'
+      },
+      type: 'Compliance Report',
+      supplementalReports: []
+    },
+    {
+      id: 656,
+      status: {
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Submitted',
+        managerStatus: 'Unreviewed'
+      },
+      type: 'Exclusion Report',
+      supplementalReports: []
+    }
+  ]
   test('Should render the component', () => {
     const props = {
       complianceReports: {
@@ -108,7 +108,7 @@ describe('DirectorReview', () => {
         items: mockItems
       },
       loggedInUser: {
-        hasPermission:jest.fn().mockImplementation(() => true)
+        hasPermission: jest.fn().mockImplementation(() => true)
       }
     }
     const component = renderer.create(
@@ -120,12 +120,5 @@ describe('DirectorReview', () => {
     )
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
-
-   /* const complianceBtnEl = screen.getByText('0 credit transfer(s) for your review and statutory decision')
-      
-      const complianceBtn = fireEvent.click(complianceBtnEl)
-      expect(complianceBtn).toBe(true)
-      expect(props.setFilter).toHaveBeenCalledTimes(2)*/
   })
-
 })

@@ -7,48 +7,48 @@ import store from '../../../store/store'
 import ComplianceReportsBCEID from '../ComplianceReportsBCEID'
 
 describe('ComplianceReportsBCEID', () => {
-    const mockItems= [
-        {
-          id: 654,
-          isRescinded: false,
-          status: {
-            status: 'Recommended',
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Draft',
-            managerStatus: 'Unreviewed'
-          },
-          type: 'Compliance Report',
-          supplementalReports: [{
-            status:{
-              managerStatus:'Recommended',
-              directorStatus:'Unreviewed'
-            }
-          }]
-        },
-        {
-          id: 655,
-          status: {
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Submitted',
-            managerStatus: 'Requested Supplemental'
-          },
-          type: 'Compliance Report',
-          supplementalReports: []
-        },
-        {
-          id: 656,
-          status: {
-            analystStatus: 'Unreviewed',
-            directorStatus: 'Unreviewed',
-            fuelSupplierStatus: 'Submitted',
-            managerStatus: 'Unreviewed'
-          },
-          type: 'Exclusion Report',
-          supplementalReports: []
+  const mockItems = [
+    {
+      id: 654,
+      isRescinded: false,
+      status: {
+        status: 'Recommended',
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Draft',
+        managerStatus: 'Unreviewed'
+      },
+      type: 'Compliance Report',
+      supplementalReports: [{
+        status: {
+          managerStatus: 'Recommended',
+          directorStatus: 'Unreviewed'
         }
-      ];
+      }]
+    },
+    {
+      id: 655,
+      status: {
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Submitted',
+        managerStatus: 'Requested Supplemental'
+      },
+      type: 'Compliance Report',
+      supplementalReports: []
+    },
+    {
+      id: 656,
+      status: {
+        analystStatus: 'Unreviewed',
+        directorStatus: 'Unreviewed',
+        fuelSupplierStatus: 'Submitted',
+        managerStatus: 'Unreviewed'
+      },
+      type: 'Exclusion Report',
+      supplementalReports: []
+    }
+  ]
   test('Should render the component', () => {
     const props = {
       complianceReports: {
@@ -58,10 +58,10 @@ describe('ComplianceReportsBCEID', () => {
       },
       setFilter: jest.fn(),
       loggedInUser: {
-        organization:{
-            name:'user'
+        organization: {
+          name: 'user'
         },
-        hasPermission:jest.fn().mockImplementation(() => true)
+        hasPermission: jest.fn().mockImplementation(() => true)
       }
     }
     const component = renderer.create(
@@ -84,10 +84,10 @@ describe('ComplianceReportsBCEID', () => {
       },
       setFilter: jest.fn(),
       loggedInUser: {
-        organization:{
-            name:'user'
+        organization: {
+          name: 'user'
         },
-        hasPermission:jest.fn().mockImplementation(() => true)
+        hasPermission: jest.fn().mockImplementation(() => true)
       }
     }
     const component = renderer.create(
@@ -99,7 +99,5 @@ describe('ComplianceReportsBCEID', () => {
     )
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
-
   })
-
 })

@@ -15,7 +15,7 @@ const ComplianceReportingPage = (props) => {
   const isEmpty = items.length === 0
   const filters = props.savedState['compliance-reporting']?.filtered
   const [selectedSupplierValue, setSelectedSupplierValue] = useState('')
- 
+
   const [supplierOptions, setSupplierOptions] = useState([])
   const [showSupplierOption, setShowSupplierOption] = useState(false)
   const [selectedYear, setSelectedYear] = useState('')
@@ -80,7 +80,7 @@ const ComplianceReportingPage = (props) => {
   }, [])
 
   useEffect(() => {
-    setSupplierOptions(organizations.items.sort((a,b)=>a.name>b.name? 1 : b.name>a.name? -1 :0))
+    setSupplierOptions(organizations.items.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
   }, [organizations.items])
 
   const handleFiltersChange = (name, value) => {
@@ -161,17 +161,13 @@ const ComplianceReportingPage = (props) => {
   }
   const supplierFilterFunction = (e) => {
     const filterdOptions = organizations.items.filter((item) =>
-    item.name.toLowerCase().includes(e.target.value.toLowerCase())
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     )
-    if(e.target.value.length>0){
+    if (e.target.value.length > 0) {
       setSupplierOptions(filterdOptions)
-    }
-    else{
-      console.log(e.target.value,'162')
+    } else {
       setFiltersObj([])
-    
     }
-    //else{setSupplierOptions(filterdOptions)}
   }
   const showSupplierOptions = () => {
     setShowSupplierOption(!showSupplierOption)

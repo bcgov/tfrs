@@ -63,7 +63,7 @@ const DirectorReview = (props) => {
   return (
     <div className="dashboard-fieldset director">
       <h1>Director Review</h1>
-      
+
       <div>
       There are:
         <>
@@ -99,7 +99,7 @@ const DirectorReview = (props) => {
                     type="button"
                     data-testid="creditTransferBtn"
                   >
-                
+
                   Credit transfer(s) for your review and statutory decision
                   </button>
                 </div>
