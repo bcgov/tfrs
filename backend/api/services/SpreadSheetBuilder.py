@@ -2,6 +2,7 @@ from collections import namedtuple
 
 import xlwt
 from api.models.NotificationChannel import NotificationChannel
+from api.models.User import User
 
 
 class SpreadSheetBuilder(object):
@@ -238,7 +239,13 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 0, user.last_name)
             worksheet.write(row_index, 1, user.first_name)
             worksheet.write(row_index, 2, user.email)
-            worksheet.write(row_index, 3, user.display_name)
+
+            try:
+                creation_request = user.creation_request
+                worksheet.write(row_index, 3, creation_request.external_username)
+            except User.creation_request.RelatedObjectDoesNotExist:
+                pass
+
             worksheet.write(row_index, 4, user.title)
             worksheet.write(row_index, 5, user.phone)
 
