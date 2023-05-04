@@ -221,6 +221,7 @@ ComplianceReportingContainer.propTypes = {
     ])
   }),
   createComplianceReport: PropTypes.func.isRequired,
+  getOrganizations: PropTypes.func.isRequired,
   createExclusionReport: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
