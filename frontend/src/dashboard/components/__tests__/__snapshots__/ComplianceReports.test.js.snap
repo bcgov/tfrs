@@ -22,7 +22,6 @@ exports[`ComplianceReports Should render the component 1`] = `
           onClick={[Function]}
           type="button"
         >
-<<<<<<< HEAD
           Compliance / Exclusion report(s) in progress:
         </button>
       </div>
@@ -78,9 +77,6 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
           type="button"
         >
           Compliance / Exclusion report(s) in progress:
-=======
-          compliance / Exclusion report(s) in progress:
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
         </button>
       </div>
     </div>

@@ -13,11 +13,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
       className="rt-thead -header"
       style={
         {
-<<<<<<< HEAD
           "minWidth": "320px",
-=======
-          "minWidth": "270px",
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
         }
       }
     >
@@ -65,7 +61,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-<<<<<<< HEAD
             Supplier
           </div>
           <div
@@ -90,8 +85,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             Type
           </div>
           <div
@@ -154,11 +147,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
       className="rt-tbody"
       style={
         {
-<<<<<<< HEAD
           "minWidth": "320px",
-=======
-          "minWidth": "270px",
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
         }
       }
     >
@@ -186,11 +175,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             2023
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             onClick={[Function]}
             role="gridcell"
             style={
@@ -201,7 +186,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-<<<<<<< HEAD
             South Coast Fuels Co.
           </div>
           <div
@@ -216,9 +200,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
-            Exclusion Report
+            Compliance Report
           </div>
           <div
             className="rt-td col-status"
@@ -232,7 +214,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-            Recommended Acceptance - Analyst
+            Submitted
           </div>
           <div
             className="rt-td col-date"
@@ -276,11 +258,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             2023
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             onClick={[Function]}
             role="gridcell"
             style={
@@ -291,7 +269,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-<<<<<<< HEAD
             South Coast Fuels Co.
           </div>
           <div
@@ -306,9 +283,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
-            Compliance Report
+            Exclusion Report
           </div>
           <div
             className="rt-td col-status"
@@ -322,7 +297,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-            Submitted
+            Recommended Acceptance - Analyst
           </div>
           <div
             className="rt-td col-date"
@@ -367,18 +342,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -394,8 +364,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -460,18 +428,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -487,8 +450,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -553,18 +514,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -580,8 +536,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -646,18 +600,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -673,8 +622,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -739,18 +686,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -766,8 +708,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -832,18 +772,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -859,8 +794,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -925,18 +858,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -952,8 +880,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1018,18 +944,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1045,8 +966,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1220,11 +1139,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
       className="rt-thead -header"
       style={
         {
-<<<<<<< HEAD
           "minWidth": "320px",
-=======
-          "minWidth": "270px",
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
         }
       }
     >
@@ -1272,7 +1187,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-<<<<<<< HEAD
             Supplier
           </div>
           <div
@@ -1297,8 +1211,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             Type
           </div>
           <div
@@ -1361,11 +1273,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
       className="rt-tbody"
       style={
         {
-<<<<<<< HEAD
           "minWidth": "320px",
-=======
-          "minWidth": "270px",
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
         }
       }
     >
@@ -1394,18 +1302,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1421,8 +1324,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1487,18 +1388,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1514,8 +1410,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1580,18 +1474,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1607,8 +1496,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1673,18 +1560,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1700,8 +1582,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1766,18 +1646,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1793,8 +1668,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1859,18 +1732,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1886,8 +1754,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -1952,18 +1818,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -1979,8 +1840,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -2045,18 +1904,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -2072,8 +1926,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -2138,18 +1990,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -2165,8 +2012,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
@@ -2231,18 +2076,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-<<<<<<< HEAD
             className="rt-td col-Supplier"
-=======
-            className="rt-td col-type"
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
             role="gridcell"
             style={
               {
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-<<<<<<< HEAD
               }
             }
           >
@@ -2258,8 +2098,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "50 0 auto",
                 "maxWidth": null,
                 "width": "50px",
-=======
->>>>>>> 03f07ee3 (fix: updated line 27 logic and added unit tests to cover cases)
               }
             }
           >
