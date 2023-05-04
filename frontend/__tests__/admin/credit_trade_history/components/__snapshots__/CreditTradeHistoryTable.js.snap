@@ -22,7 +22,7 @@ exports[`CreditTradeHistoryTable should display 1`] = `
         role="row"
       >
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
@@ -46,7 +46,7 @@ exports[`CreditTradeHistoryTable should display 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
