@@ -35,7 +35,7 @@ const FuelCodes = (props) => {
           {awaitingReview.fuelCodes.total}
         </div>
         <div className="content">
-          <h2>fuel codes in progress:</h2>
+          <h2>Fuel codes in progress:</h2>
 
           <div>
             <button

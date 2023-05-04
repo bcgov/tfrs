@@ -77,6 +77,7 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
+    this.props.items.reverse()
     const cols = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
@@ -95,7 +96,16 @@ class ComplianceReportingTable extends Component {
       Header: 'Compliance Period',
       id: 'compliance-period',
       minWidth: 50
-    }, {
+    },
+    {
+      accessor: item => item.organization.name,
+      className: 'col-Supplier',
+      Header: 'Supplier',
+      id: 'Supplier',
+      minWidth: 50,
+      show: this.props.loggedInUser.isGovernmentUser
+    },
+    {
       accessor: item => item.type,
       className: 'col-type',
       Header: 'Type',
@@ -121,15 +131,15 @@ class ComplianceReportingTable extends Component {
       id: 'current-status',
       minWidth: 75
     }, {
-      accessor: item => (item.sortDate ? item.sortDate : null),
+      accessor: item => (item.updateTimestamp ? item.updateTimestamp : null),
       className: 'col-date',
       Header: 'Last Status Update',
       id: 'updateTimestamp',
       minWidth: 95,
       Cell: row => (
         <span>
-          {row.original.sortDate
-            ? moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
+          {row.original.updateTimestamp
+            ? moment(row.original.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
             : '-'
           }
         </span>

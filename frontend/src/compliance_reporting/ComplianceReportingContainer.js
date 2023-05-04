@@ -115,11 +115,21 @@ class ComplianceReportingContainer extends Component {
       const { filtered } = this.props.savedState['compliance-reporting']
       filters = filtered
     }
-    if(this.props.loggedInUser.isGovernmentUser){
-    this.props.getOrganizations()
+    if (this.props.loggedInUser.isGovernmentUser) {
+      this.props.getOrganizations()
     }
     this.props.getCompliancePeriods()
-    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
+    this.props.getComplianceReports({
+      page: 1,
+      pageSize: 10,
+      filters,
+      sorts: [
+        {
+          id: 'updateTimestamp',
+          desc: true
+        }
+      ]
+    })
   }
 
   render () {
@@ -267,13 +277,12 @@ const mapStateToProps = state => ({
   }
 })
 
-const mapDispatchToProps ={
+const mapDispatchToProps = {
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
   getComplianceReports: complianceReporting.findPaginated,
   getOrganizations
-  }
-
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

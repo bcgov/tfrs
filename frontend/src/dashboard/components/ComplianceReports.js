@@ -65,7 +65,7 @@ const ComplianceReports = (props) => {
               }}
               type="button"
             >
-             compliance / Exclusion report(s) in progress:
+             Compliance / Exclusion report(s) in progress:
             </button>
           </div>
         </div>

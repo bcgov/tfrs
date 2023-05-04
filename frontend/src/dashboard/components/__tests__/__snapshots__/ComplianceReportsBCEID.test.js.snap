@@ -1,13 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ComplianceReports Should render the component 1`] = `
+exports[`ComplianceReportsBCEID Should render the component 1`] = `
 <div
   className="dashboard-fieldset"
 >
   <h1>
-    Compliance &  Exclusion Reports
+    Compliance & Exclusion Reports
   </h1>
-  There are:
+  user
+   has:
   <div>
     <div
       className="value"
@@ -17,14 +18,12 @@ exports[`ComplianceReports Should render the component 1`] = `
     <div
       className="content"
     >
-      <div>
-        <button
-          onClick={[Function]}
-          type="button"
-        >
-          Compliance / Exclusion report(s) in progress:
-        </button>
-      </div>
+      <button
+        onClick={[Function]}
+        type="button"
+      >
+        Compliance & Exclusion Reports in Progress
+      </button>
     </div>
   </div>
   <div>
@@ -50,35 +49,45 @@ exports[`ComplianceReports Should render the component 1`] = `
         </button>
       </div>
     </div>
+  </div>
+  <div
+    className="add-button"
+  >
+     
+    <button
+      onClick={[Function]}
+      type="button"
+    >
+      Start a new compliance report or exclusion report
+    </button>
   </div>
 </div>
 `;
 
-exports[`ComplianceReports Should render the component with complianceReports 1`] = `
+exports[`ComplianceReportsBCEID Should render the component with complianceReports and creditTransfers 1`] = `
 <div
   className="dashboard-fieldset"
 >
   <h1>
-    Compliance &  Exclusion Reports
+    Compliance & Exclusion Reports
   </h1>
-  There are:
+  user
+   has:
   <div>
     <div
       className="value"
     >
-      3
+      2
     </div>
     <div
       className="content"
     >
-      <div>
-        <button
-          onClick={[Function]}
-          type="button"
-        >
-          Compliance / Exclusion report(s) in progress:
-        </button>
-      </div>
+      <button
+        onClick={[Function]}
+        type="button"
+      >
+        Compliance & Exclusion Reports in Progress
+      </button>
     </div>
   </div>
   <div>
@@ -104,6 +113,17 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
         </button>
       </div>
     </div>
+  </div>
+  <div
+    className="add-button"
+  >
+     
+    <button
+      onClick={[Function]}
+      type="button"
+    >
+      Start a new compliance report or exclusion report
+    </button>
   </div>
 </div>
 `;

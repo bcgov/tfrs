@@ -28,6 +28,8 @@ from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
 from django.db.models import Max
 from django.db.models.expressions import RawSQL
+
+
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
                               mixins.UpdateModelMixin,
@@ -88,13 +90,32 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             qs =qs.order_by('-supplements__status__director_status__status', '-supplements__status__manager_status__status', '-supplements__status__analyst_status__status', '-supplements__status__fuel_supplier_status__status')
                         else:
                             qs = qs.order_by('supplements__status__director_status__status', 'supplements__status__manager_status__status', 'supplements__status__analyst_status__status', 'supplements__status__fuel_supplier_status__status')
-                    else:
-                        sortType = "-" if sortCondition else ""
-                        if sortType:
-                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('-reports_updatedtime')
+                    elif  sortId == 'compliance-period':
+                        if sortCondition:
+                            qs = qs.order_by('-compliance_period__description')
                         else:
-                            qs = qs.annotate(reports_updatedtime=Max('compliance_reports__update_timestamp')).order_by('reports_updatedtime')
-                        
+                            qs = qs.order_by('compliance_period__description')
+                    elif  sortId == 'compliance-period-type':
+                        if sortCondition:
+                            qs = qs.order_by('-type')
+                        else:
+                            qs = qs.order_by('type')
+                    elif  sortId == 'current-status':
+                        if sortCondition:
+                            qs = qs.order_by('-status')
+                        else:
+                            qs = qs.order_by('status')
+                    elif  sortId == 'Supplier':
+                        if sortCondition:
+                            qs = qs.order_by('-organization__name')
+                        else:
+                            qs = qs.order_by('organization__name')
+                    elif  sortId == 'updateTimestamp':
+                        if sortCondition:
+                            qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('-reports_updatedtime')
+                        else:
+                            qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('reports_updatedtime')
+                
                 filters = request.data.get('filters')
                 if filters:
                     for filter in filters:
@@ -102,39 +123,32 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                         value = filter.get('value')
                         if id and value:
                             if id == 'compliance-period':
-                                qs = qs.filter(
-                                    compliance_period__description__icontains=value)
+                                qs = qs.filter(compliance_period__description__icontains=value)
                             elif id == 'organization':
-                                qs = qs.filter(
-                                    organization__name__icontains=value)
+                                qs = qs.filter(organization__name__icontains=value)
                             elif id == 'display-name':
                                 qs = self.filter_displayname(qs, value)
                             elif id == 'status':
-                                qs = self.filter_compliance_status(
-                                    qs, value.lower())
+                                qs = self.filter_compliance_status(qs, value.lower())
                             elif id == 'supplemental-status':
-                                qs = self.filter_supplemental_status(
-                                    qs, value)
+                                qs = self.filter_supplemental_status(qs, value)
                             elif id == 'current-status':
-                                qs = self.filter_current_status(
-                                    qs, value)
+                                qs = self.filter_current_status(qs, value)
                             elif id == 'updateTimestamp':
                                 qs = self.filter_timestamp(qs, value)
                             elif id == 'supplier':
                                 qs = qs.filter(organization_id=value)
-        
         return qs
 
     def filter_displayname(self, qs, value):
-        query_result = []
+        query_result = Q()
         for val in value:
             if val == 'Compliance Report':
-                qs_com = qs.filter(Q(type__the_type='Compliance Report'))
-                query_result.extend(qs_com)
+                query_result |= Q(type__the_type='Compliance Report')
             if val == 'Exclusion Report':
-                qs_exc = qs.filter(Q(type__the_type='Exclusion Report'))
-                query_result.extend(qs_exc)
-        return query_result
+                query_result |= Q(type__the_type='Exclusion Report')
+
+        return qs.filter(query_result)
 
     def filter_timestamp(self, qs, date):
         date_query = None
