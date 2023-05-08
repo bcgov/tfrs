@@ -126,8 +126,6 @@ class DocumentViewSet(AuditableMixin,
                 sortType = "-" if sortCondition else ""
                 sortString = f"{sortType}{key_maps[sortId]}"
                 qs = qs.order_by(sortString)
-            else:
-                qs = qs.order_by('-submitted_date')
             if filters:
                 for filter in filters:
                     id = filter.get('id')
