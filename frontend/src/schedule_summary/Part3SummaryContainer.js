@@ -321,7 +321,6 @@ function Part3SupplementalData (
   // than the current debits scenario, then we need to give the difference
   // back to the supplier
   if (line25 <= 0 && (line26A > (line25 * -1))) {
-    // part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = line26A + line25
   }
 
@@ -391,15 +390,6 @@ function calculatePart3Payable (part3, period) {
   // then there is no oustanding balance or penalty payable
   if (balance <= 0 && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value + balance >= 0) {
     outstandingBalance = 0
-  }
-
-  // If there is still a negative balance after accounting for previously spent credits
-  // then there will be a payable penalty based on
-  // balance + previously spent credits + any credits now being used
-  if (balance <= 0 && balance + part3[SCHEDULE_SUMMARY.LINE_26_A][2].value < 0) {
-    outstandingBalance = balance +
-      part3[SCHEDULE_SUMMARY.LINE_26_A][2].value +
-      part3[SCHEDULE_SUMMARY.LINE_26_B][2].value
   }
 
   // Calculate amount payable penalty

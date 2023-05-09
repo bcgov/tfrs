@@ -1,7 +1,7 @@
 /*
  * Presentational component
  */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import axios from 'axios'
@@ -11,41 +11,28 @@ import { CREDIT_TRANSFER_STATUS } from '../../../constants/values'
 import * as Routes from '../../../constants/routes'
 import { CREDIT_TRANSACTIONS_HISTORY } from '../../../constants/routes/Admin'
 import { useNavigate } from 'react-router'
+import { calculatePages } from '../../../utils/functions'
 
 const CreditTradeHistoryTable = props => {
-  const [data, setData] = useState([])
-  const [pages, setPages] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState([])
+  const [itemsCount, setItemsCount] = useState(0)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [sorts, setSorts] = useState([{ id: 'createTimestamp', desc: true }])
 
   const navigate = useNavigate()
 
-  const fetch = (state, instance) => {
+  useEffect(() => {
     setLoading(true)
-
-    const offset = state.page * state.pageSize
-    const limit = state.pageSize
-
-    const sortBy = state.sorted[0].id
-    const sortDirection = state.sorted[0].desc ? '-' : ''
-
-    new Promise((resolve, reject) =>
-      axios.get(`${Routes.BASE_URL}${CREDIT_TRANSACTIONS_HISTORY.API}`, {
-        params: {
-          limit,
-          offset,
-          sort_by: sortBy,
-          sort_direction: sortDirection
-        }
-      }).then(response =>
-        resolve({
-          rows: response.data,
-          pages: Math.ceil(parseInt(response.headers['x-total-count'], 10) / state.pageSize)
-        }))).then((data) => {
-      setData(data.rows)
-      setPages(data.pages)
+    const url = `${Routes.BASE_URL}${CREDIT_TRANSACTIONS_HISTORY.API_PAGINATED}?page=${page}&size=${pageSize}`
+    const data = { sorts }
+    axios.post(url, data).then((response) => {
+      setItems(response.data.results)
+      setItemsCount(response.data.count)
       setLoading(false)
     })
-  }
+  }, [page, pageSize, sorts])
 
   const formatter = new Intl.DateTimeFormat('en-CA', {
     year: 'numeric',
@@ -57,17 +44,12 @@ const CreditTradeHistoryTable = props => {
   })
 
   const columns = [{
-    accessor: 'id',
-    className: 'col-id',
-    Header: 'ID',
-    resizable: false,
-    show: false
-  }, {
     accessor: item => `${item.user.firstName} ${item.user.lastName}`,
     className: 'col-user',
     Header: 'User',
     id: 'user',
-    minWidth: 50
+    minWidth: 50,
+    sortable: false
   }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
@@ -77,7 +59,8 @@ const CreditTradeHistoryTable = props => {
     className: 'col-action',
     Header: 'Action Taken',
     id: 'action',
-    minWidth: 50
+    minWidth: 50,
+    sortable: false
   }, {
     accessor: item => item.creditTrade.id,
     className: 'col-id',
@@ -109,7 +92,7 @@ const CreditTradeHistoryTable = props => {
     },
     className: 'col-timestamp',
     Header: 'Timestamp',
-    id: 'updateTimestamp',
+    id: 'createTimestamp',
     minWidth: 75
   }]
 
@@ -120,7 +103,28 @@ const CreditTradeHistoryTable = props => {
         id: 'updateTimestamp',
         desc: true
       }]}
+      manual
       filterable={false}
+      multisort={false}
+      pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+      columns={columns}
+      data={items}
+      loading={loading}
+      page={page - 1}
+      pages={calculatePages(itemsCount, pageSize)}
+      pageSize={pageSize}
+      sorted={sorts}
+      onPageChange={(pageIndex) => {
+        setPage(pageIndex + 1)
+      }}
+      onPageSizeChange={(pageSize) => {
+        setPage(1)
+        setPageSize(pageSize)
+      }}
+      onSortedChange={(newSorted) => {
+        setPage(1)
+        setSorts(newSorted)
+      }}
       getTrProps={(state, row) => {
         if (row && row.original) {
           return {
@@ -134,15 +138,6 @@ const CreditTradeHistoryTable = props => {
 
         return {}
       }}
-      manual
-      data={data}
-      pages={pages}
-      loading={loading}
-      onFetchData={fetch}
-      sortable
-      multisort={false}
-      pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
-      columns={columns}
     />
   )
 }

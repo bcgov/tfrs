@@ -139,4 +139,54 @@ describe('Part3 Summary Container', () => {
     expect(part3[SCHEDULE_SUMMARY.LINE_27][2].value).toBe('')
     expect(part3[SCHEDULE_SUMMARY.LINE_28][2].value).toBe('')
   })
+
+  test('supplemental report submission #2 that returns no credits', () => {
+    let part3 = new ScheduleSummaryPart3()
+
+    const summary = {
+      creditsOffset: 0,
+      creditsOffsetA: 68399,
+      creditsOffsetB: 0,
+      lines: {
+        23: '466239',
+        24: '535893',
+        25: '-69654'
+        // 26: 68399,
+        // '26A': 68399,
+        // '26B': 0
+        // '26C': 0
+        // 27: '0'
+        // 28: '0'
+      }
+    }
+
+    const complianceReport = {
+      isSupplemental: true,
+      supplementalNumber: 2,
+      totalPreviousCreditReductions: 68399, // total credits used in previous supplementals/inital report
+      supplementalNote: 'Resubmitting due to new Canola coprocessing pathways',
+      previousReportWasCredit: false,
+      status: {
+        fuelSupplierStatus: 'Submitted'
+      }
+    }
+    const lastAcceptedOffset = 68399
+    const updateCreditsOffsetA = false
+    const skipFurtherUpdateCreditsOffsetA = false
+
+    part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23']) // credits
+    part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24']) // debits
+    part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25']) // netBalance
+
+    part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
+
+    expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(68399)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(68399)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26_C][2].value).toBe(undefined)
+
+    part3 = calculatePart3Payable(part3, 2021)
+    expect(part3[SCHEDULE_SUMMARY.LINE_27][2].value).toBe(-1255)
+    expect(part3[SCHEDULE_SUMMARY.LINE_28][2].value).toBe(251000)
+  })
 })

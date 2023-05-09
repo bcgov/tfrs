@@ -204,7 +204,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "organizations_%Y-%m-%d")
+                    "BC-LCFS_organizations_%Y-%m-%d")
             ))
 
         fuel_suppliers = Organization.objects.extra(

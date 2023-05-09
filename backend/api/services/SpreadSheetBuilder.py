@@ -1,6 +1,8 @@
 from collections import namedtuple
 
 import xlwt
+from api.models.NotificationChannel import NotificationChannel
+from api.models.User import User
 
 
 class SpreadSheetBuilder(object):
@@ -205,6 +207,83 @@ class SpreadSheetBuilder(object):
         worksheet.col(1).width = 7500
         worksheet.col(2).width = 3500
         worksheet.col(4).width = 3500
+
+    def add_users(self, fuel_supplier_users):
+        """
+        Adds a spreadsheet for fuel supplier users
+        """
+        worksheet = self.workbook.add_sheet("Fuel Supplier Users")
+
+        columns = [
+            "Last Name",
+            "First Name",
+            "Email",
+            "Username",
+            "Title",
+            "Phone",
+            "Email Notifications",
+            "Status",
+            "Fuel Supplier",
+            "Role(s)",
+        ]
+
+        header_style = xlwt.easyxf("font: bold on")
+
+        # Build Column Headers
+        for col_index, value in enumerate(columns):
+            worksheet.write(0, col_index, value, header_style)
+
+        # Build the rows
+        row_index = 1
+        for user in fuel_supplier_users:
+            worksheet.write(row_index, 0, user.last_name)
+            worksheet.write(row_index, 1, user.first_name)
+            worksheet.write(row_index, 2, user.email)
+
+            try:
+                creation_request = user.creation_request
+                worksheet.write(row_index, 3, creation_request.external_username)
+            except User.creation_request.RelatedObjectDoesNotExist:
+                pass
+
+            worksheet.write(row_index, 4, user.title)
+            worksheet.write(row_index, 5, user.phone)
+
+            email_notification_subscriptions = []
+            subscriptions = user.notificationsubscription_set.filter(
+                channel__channel=NotificationChannel.AvailableChannels.EMAIL.name
+            ).filter(enabled=True)
+            for subscription in subscriptions:
+                email_notification_subscriptions.append(
+                    subscription.get_notification_type_display()
+                )
+            if email_notification_subscriptions:
+                worksheet.write(
+                    row_index, 6, ", ".join(email_notification_subscriptions)
+                )
+
+            status = "Active"
+            if not user.is_active:
+                status = "Inactive"
+            worksheet.write(row_index, 7, status)
+
+            if user.organization:
+                worksheet.write(row_index, 8, user.organization.name)
+
+            roles = []
+            user_roles = user.roles
+            for role in user_roles:
+                roles.append(role.description)
+            worksheet.write(row_index, 9, ", ".join(roles))
+
+            row_index = row_index + 1
+
+        # set the widths for the columns that we expect to be longer
+        worksheet.col(2).width = 7500
+        worksheet.col(5).width = 3500
+        worksheet.col(6).width = 20000
+        worksheet.col(8).width = 7500
+        worksheet.col(9).width = 20000
 
     def save(self, response):
         """
