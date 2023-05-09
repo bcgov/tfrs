@@ -116,7 +116,7 @@ const CreditTradeHistoryTable = props => {
   return (
     <ReactTable
       defaultPageSize={10}
-      defaultSorted={[{
+      sorted={[{
         id: 'updateTimestamp',
         desc: true
       }]}
