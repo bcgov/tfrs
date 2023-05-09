@@ -131,7 +131,9 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   validationStateSelector () {
     const sn = this.stateName
 
-    return state => (state.rootReducer[sn].validationState)
+    return state => {
+      return (state.rootReducer[sn].validationState)
+    }
   }
 
   recomputeStateSelector () {
@@ -142,8 +144,9 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
 
   findPaginatedStateSelector () {
     const sn = this.stateName
-
-    return state => (state.rootReducer[sn].findPaginatedState)
+    return state => {
+      return (state.rootReducer[sn].findPaginatedState)
+    }
   }
 
   doValidate (data = null) {
@@ -236,7 +239,6 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
     yield delay(1000)
 
     const data = yield (select(this.findPaginatedStateSelector()))
-
     try {
       const response = yield call(this.doFindPaginated, data)
       yield put(this.findPaginatedSuccess(response.data))

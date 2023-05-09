@@ -98,6 +98,11 @@ const CreditTradeHistoryTable = props => {
 
   return (
     <ReactTable
+      defaultPageSize={10}
+      sorted={[{
+        id: 'updateTimestamp',
+        desc: true
+      }]}
       manual
       filterable={false}
       multisort={false}

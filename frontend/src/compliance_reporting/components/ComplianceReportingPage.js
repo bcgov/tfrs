@@ -311,14 +311,15 @@ const ComplianceReportingPage = (props) => {
           >
             <option value={0}>All</option> {/* Update the value to be an empty string */}
             {/* Render options for years from 2019 to current year */}
-            {Array.from({ length: new Date().getFullYear() - 2018 }, (_, index) => {
-              const year = new Date().getFullYear() - index
-              return (
+            {
+              Array.from({ length: new Date().getFullYear() - 2017 }, (_, index) => {
+                const year = new Date().getFullYear() - index + 1
+                return (
                 <option key={year} value={year}>
                   {year}
                 </option>
-              )
-            })}
+                )
+              })}
           </select>
         </div>
 
