@@ -131,7 +131,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   validationStateSelector () {
     const sn = this.stateName
 
-    return state =>{ 
+    return state => {
       return (state.rootReducer[sn].validationState)
     }
   }
@@ -145,7 +145,7 @@ class ComplianceReportingRestInterface extends GenericRestTemplate {
   findPaginatedStateSelector () {
     const sn = this.stateName
     return state => {
-     return (state.rootReducer[sn].findPaginatedState)
+      return (state.rootReducer[sn].findPaginatedState)
     }
   }
 

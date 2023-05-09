@@ -314,12 +314,12 @@ const ComplianceReportingPage = (props) => {
             {
               Array.from({ length: new Date().getFullYear() - 2017 }, (_, index) => {
                 const year = new Date().getFullYear() - index + 1
-              return (
+                return (
                 <option key={year} value={year}>
                   {year}
                 </option>
-              )
-            })}
+                )
+              })}
           </select>
         </div>
 

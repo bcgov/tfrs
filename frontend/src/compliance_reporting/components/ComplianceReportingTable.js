@@ -41,10 +41,13 @@ class ComplianceReportingTable extends Component {
   }
 
   handlePageChange (page) {
-    this.setState({ page ,sorts: [{
-      id: 'updateTimestamp',
-      desc: true
-    }]})
+    this.setState({
+      page,
+      sorts: [{
+        id: 'updateTimestamp',
+        desc: true
+      }]
+    })
   }
 
   handlePageSizeChange (pageSize) {
@@ -320,7 +323,7 @@ class ComplianceReportingTable extends Component {
         }}
         sorts={this.state.sorts}
         onSortedChange={(sorts, column) => {
-          if(column.Header == 'Last Status Update'){
+          if (column.Header == 'Last Status Update') {
             this.handlePageChange(1)
             this.handleSortsChange(sorts)
           }
