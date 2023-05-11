@@ -20,101 +20,68 @@
     limitations under the License.
 """
 from django.db.models import Q
-from rest_framework import filters, mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.permissions.CreditTradeHistory import CreditTradeHistoryPermissions
-from api.serializers import CreditTradeHistorySerializer, \
-    CreditTradeHistoryReviewedSerializer
-from auditable.views import AuditableMixin
+from api.serializers import CreditTradeHistoryReviewedSerializer
+from api.paginations import BasicPagination
 
 
-class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
-                                viewsets.GenericViewSet):
-    """
-    This viewset automatically provides `list`
-    """
-    permission_classes = (CreditTradeHistoryPermissions,)
-    http_method_names = ['get']
+class CreditTradeHistoryViewSet(viewsets.GenericViewSet):
     queryset = CreditTradeHistory.objects.all()
-    filter_backends = (filters.OrderingFilter,)
-    ordering_fields = '__all__'
-    ordering = ('-create_timestamp', '-id',)
-    serializer_class = CreditTradeHistorySerializer
+    permission_classes = (CreditTradeHistoryPermissions,)
     serializer_classes = {
-        'list': CreditTradeHistoryReviewedSerializer
+        "default": CreditTradeHistoryReviewedSerializer,
     }
+    pagination_class = BasicPagination
 
     column_sort_mappings = {
-        'updateTimestamp': 'create_timestamp',
-        'creditTradeId': 'id',
-        'creditType': 'type__the_type',
-        'action': 'status__status',
-        'initiator': 'credit_trade__initiator__name',
-        'respondent': 'respondent__name'
+        "createTimestamp": "create_timestamp",
+        "creditTradeId": "credit_trade__id",
+        "initiator": "credit_trade__initiator__name",
+        "respondent": "credit_trade__respondent__name",
     }
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
 
-        return self.serializer_classes['default']
+        return self.serializer_classes["default"]
 
     def get_queryset(self):
         """
-        This view should return the credit trade history for all users
-        of the same organization as the logged-in user
+        Queryset should be restricted based on the user's roles.
+        A government user won't see draft, submitted, refused.
+        A regular user won't see recommended and not recommended.
+        Regular users will only see histories related to their organization
         """
         user = self.request.user
         return CreditTradeHistory.objects.filter(
             Q(create_user__organization_id=user.organization_id)
         )
 
-    def list(self, request, **kwargs):
-        """
-        Function to get the user's activity.
-        This should be restricted based on the user's roles.
-        A government user won't see draft, submitted, refused.
-        A regular user won't see recommended and not recommended.
-        Regular users will only see histories related to their organization
-        """
+    @action(detail=False, methods=["post"])
+    def paginated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
 
-        limit = None
-        offset = None
-        sort_by = 'create_timestamp'
-        sort_direction = '-'
+        sorts = request.data.get("sorts")
+        for sort in sorts:
+            id = sort.get("id")
+            desc = sort.get("desc")
+            sort_field = self.column_sort_mappings.get(id)
+            if sort_field:
+                if desc:
+                    queryset = queryset.order_by("-" + sort_field)
+                else:
+                    queryset = queryset.order_by(sort_field)
 
-        if 'limit' in request.GET:
-            limit = int(request.GET['limit'])
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-        if 'offset' in request.GET:
-            offset = int(request.GET['offset'])
-
-        if 'sort_by' in request.GET:
-            sort_by = self.column_sort_mappings[request.GET['sort_by']]
-
-        if 'sort_direction' in request.GET:
-            sort_direction = request.GET['sort_direction']
-
-        history = self.get_queryset()
-
-        history = history.order_by('{sort_direction}{sort_by}'
-                                   .format(sort_direction=sort_direction,
-                                           sort_by=sort_by))
-        total = history.count()
-
-        headers = {
-            'X-Total-Count': '{}'.format(total)
-        }
-
-        if limit is not None and offset is not None:
-            history = history[offset:offset + limit]
-
-        serializer = self.get_serializer(history,
-                                         read_only=True,
-                                         many=True)
-
-        return Response(headers=headers,
-                        data=serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

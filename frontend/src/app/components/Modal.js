@@ -24,6 +24,7 @@ class Modal extends React.Component {
       show: false
     }
     this.handleCloseModal = this._handleCloseModal.bind(this)
+    this.handleSubmitModal = this._handleSubmitModal.bind(this)
   }
 
   componentDidMount () {
@@ -47,6 +48,13 @@ class Modal extends React.Component {
     if (this.props.handleCancel) {
       this.props.handleCancel()
     }
+  }
+
+  _handleSubmitModal (event) {
+    this.setState({ show: false })
+    if (this.props.handleSubmit) {
+      this.props.handleSubmit(event)
+    } 
   }
 
   show () {
@@ -111,7 +119,7 @@ class Modal extends React.Component {
                     this.props.canBypassExtraConfirm
                   ) || this.props.disabled
                 }
-                onClick={this.props.handleSubmit}
+                onClick={this.handleSubmitModal}
               >
                 {this.props.confirmLabel}
               </button>

@@ -45,7 +45,15 @@ const OrganizationsTable = (props) => {
     className: 'col-status-display',
     Header: 'Status',
     id: 'status',
-    minWidth: 50
+    minWidth: 50,
+    filterMethod: (filter, row) => {
+      const filterValue = filter.value.toLowerCase()
+      const cellValue = row[filter.id].toLowerCase()
+      if (filterValue === cellValue) {
+        return true
+      }
+      return false
+    }
   }, {
     accessor: item => item.actionsTypeDisplay,
     className: 'col-actions-type-display',

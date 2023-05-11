@@ -503,19 +503,18 @@ class ComplianceReportingEditContainer extends Component {
       }
 
       const {
-        isSupplemental,
         totalPreviousCreditReductions
       } = report.item
 
-      if (isSupplemental && summary && !summary.creditsOffsetA) {
+      if (summary && !summary.creditsOffsetA) {
         summary.creditsOffsetA = totalPreviousCreditReductions
       }
 
-      if (isSupplemental && summary && !summary.creditsOffsetB) {
+      if (summary && !summary.creditsOffsetB) {
         summary.creditsOffsetB = 0
       }
 
-      if (isSupplemental && summary && !summary.creditsOffsetC) {
+      if (summary && !summary.creditsOffsetC) {
         summary.creditsOffsetC = 0
       }
 
