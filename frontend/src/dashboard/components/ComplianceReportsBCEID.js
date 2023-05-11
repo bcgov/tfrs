@@ -47,10 +47,11 @@ const ComplianceReportsBCEID = (props) => {
     )
   }
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset compliance-exclusion-reports">
       <h1>Compliance &amp; Exclusion Reports</h1>
       {props.loggedInUser.organization.name} has:
       <div>
+        <br/>
         <div className="value">{awaitingReview.total}</div>
         <div className="content">
           <button

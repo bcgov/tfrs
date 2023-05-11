@@ -13,9 +13,6 @@ const OrganizationDetails = props => {
   return (
     <div className="dashboard-fieldset organization-details">
       <h1>Organization Details</h1>
-      <span className="icon">
-        <FontAwesomeIcon icon="cog" />
-      </span>
 
       <div>
         {props.loggedInUser.organization.name}
@@ -33,11 +30,14 @@ const OrganizationDetails = props => {
         </dl>
         }
       </div>
+      <div className="organization-details-content">
+          <div className="cog-icon ">
+            <FontAwesomeIcon icon="cog" />
+          </div>
 
       {props.loggedInUser &&
       props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER) &&
       props.isGovernmentUser &&
-      <div>
         <div className="content">
           <button
             type="button"
@@ -46,35 +46,27 @@ const OrganizationDetails = props => {
             Edit Address
           </button>
         </div>
-      </div>
       }
 
-      <div>
         <div className="content">
           <Link id="navbar-administration" to={ORGANIZATIONS.ROLES}>
             Roles
           </Link>
         </div>
-      </div>
 
-      <div>
         <div className="content">
           <Link id="navbar-administration" to={ORGANIZATIONS.MINE}>
             Users
           </Link>
         </div>
-      </div>
 
       {props.loggedInUser &&
       props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
-        <div>
           <div className="content">
             <Link to={USERS.ADD}>New user</Link>
           </div>
-        </div>
       }
 
-      <div>
         <div className="content">
           <a
             href="https://www.bceid.ca/"

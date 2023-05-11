@@ -171,6 +171,17 @@
   }
 }
 
+.cog-icon{
+    color: #fcba19;
+    display: inline-block;
+    font-size: 3.6rem;
+    position: absolute;
+    text-align: center;
+    vertical-align: top;
+    width: 7rem;
+    top: 4rem;
+}
+
 #supplementalReasonInput {
   width: 100%;
   overflow: scroll;
@@ -386,6 +397,82 @@ table.supplementalTable {
   .panel-body {
     &:hover {
       background: $yellow !important;
+    }
+  }
+}
+
+.dashboard-fieldset {
+  .content {
+    h2 {
+      margin: 20px 0 5px 0;
+    }
+  }
+  &.user-settings {
+    .user-settings-content {
+      position: relative;
+      padding: 0 4rem 0 7rem;
+      .content {
+        margin: 0;
+        position: initial;
+      }
+      .value {
+        left: -12px;
+        top: calc(50% - 25px);
+      }
+      .icon {
+        right: 0;
+        top: calc(50% - 25px);
+      }
+    }
+  }
+  &.organization-details {
+    .organization-details-content {
+      position: relative;
+      padding-left: 7rem;
+      .content {
+        padding: 0;
+      }
+      .cog-icon {
+        position: absolute;
+        left: -12px;
+        top: calc(50% - 25px);
+      }
+    }
+  }
+  &.compliance-exclusion-reports,
+  &.credit-transactions {
+    .value {
+      top: 14px;
+    }
+  }
+  &.administration-reports,
+  &.administration-content{
+    .icon{
+      left: 0rem !important;
+    }
+  }
+  &.compliance-exclusion-value,
+  &.credit-transactions-reports {
+    .value {
+      top: -10px;
+    }
+  }
+  &.file-submissions,
+  &.file-submissions-value {
+    .value {
+      top: -10px;
+    }
+  }
+  &.fuel-codes,
+  &.fuel-codes-value {
+    .value {
+      top: -10px;
+    }
+  }
+  &.compliance-fieldset,
+  &.compliance-fieldset-value {
+    .value {
+      top: 15px;
     }
   }
 }
