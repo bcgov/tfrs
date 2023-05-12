@@ -49,15 +49,16 @@ const CreditTransactions = (props) => {
   })
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset compliance-exclusion-value">
       <h1>Credit Transactions</h1>
       There are:
 
       <div>
-        <div className="value">
-          {awaitingReview.creditTransfers.total}
+        <div className='credit-transactions-reports'>
+          <div className="value">
+            {awaitingReview.creditTransfers.total}
+          </div>
         </div>
-
         <div className="content">
           <h2>Credit transfers in progress:</h2>
 

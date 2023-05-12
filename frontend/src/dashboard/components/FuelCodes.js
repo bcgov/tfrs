@@ -26,13 +26,15 @@ const FuelCodes = (props) => {
   })
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset fuel-codes">
       <h1>Fuel Codes</h1>
       There are:
 
       <div>
-        <div className="value">
-          {awaitingReview.fuelCodes.total}
+        <div className='fuel-codes-value'>
+          <div className="value">
+            {awaitingReview.fuelCodes.total}
+          </div>
         </div>
         <div className="content">
           <h2>Fuel codes in progress:</h2>

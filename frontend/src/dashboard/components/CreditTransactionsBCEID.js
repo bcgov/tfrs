@@ -29,36 +29,40 @@ const CreditTransactions = (props) => {
   })
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset credit-transactions">
       <h1>Credit Transactions</h1>
+      <span key="credit-transactions-label">There are:</span>
 
       {props.loggedInUser.organization.actionsTypeDisplay !== 'None' && [
-        <span key="credit-transactions-label">There are:</span>,
-        <div key="credit-transactions">
-          <div className="value">
-            {inProgress.creditTransfers}
-          </div>
+        <div>
+          <br/>
+          <div key="credit-transactions">
+          
+            <div className="value">
+              {inProgress.creditTransfers}
+            </div>
 
-          <div className="content">
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliancePeriod',
-                  value: ''
-                }, {
-                  id: 'transactionType',
-                  value: 'Credit Transfer'
-                }, {
-                  id: 'status',
-                  value: 'Proposed,Signed,Draft'
-                }], 'credit-transfers')
+            <div className="content">
+              <button
+                onClick={() => {
+                  props.setFilter([{
+                    id: 'compliancePeriod',
+                    value: ''
+                  }, {
+                    id: 'transactionType',
+                    value: 'Credit Transfer'
+                  }, {
+                    id: 'status',
+                    value: 'Proposed,Signed,Draft'
+                  }], 'credit-transfers')
 
-                return navigate(CREDIT_TRANSACTIONS.LIST)
-              }}
-              type="button"
-            >
-              Credit transfer(s) in progress (including draft)
-            </button>
+                  return navigate(CREDIT_TRANSACTIONS.LIST)
+                }}
+                type="button"
+              >
+                Credit transfer(s) in progress (including draft)
+              </button>
+            </div>
           </div>
         </div>
       ]}

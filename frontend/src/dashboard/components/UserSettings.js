@@ -44,15 +44,12 @@ class UserSettings extends Component {
           `, ${this.props.loggedInUser.title}`}
         </div>
 
-        <div>
+        <div className='user-settings-content'>
           <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS_PROFILE}>
               User Profile
             </Link>
           </div>
-        </div>
-
-        <div>
           <div className="value">
             {this.state.unreadCount}
           </div>
@@ -64,17 +61,13 @@ class UserSettings extends Component {
           <span className="icon">
             <FontAwesomeIcon icon={['far', 'bell']} />
           </span>
-        </div>
 
-        <div>
           <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS}>
               Configure your notifications
             </Link>
           </div>
-        </div>
 
-        <div>
           <div className="content">
             <a
               href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
@@ -91,7 +84,7 @@ class UserSettings extends Component {
               <FontAwesomeIcon icon={['far', 'file-pdf']} />
             </a>
           </div>
-        </div>
+          </div>
       </div>
     )
   }

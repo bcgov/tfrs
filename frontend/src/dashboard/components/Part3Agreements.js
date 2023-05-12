@@ -52,6 +52,7 @@ const Part3Agreements = props => {
           >
             Submit/Upload a file securely
           </button>
+          <br/>
           {' for Part 3 Agreement applications or milestone evidence for Part 3 Awards'}
         </div>
       </div>
