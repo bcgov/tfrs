@@ -15,6 +15,7 @@ const Part3Agreements = props => {
         <div className="content">
           <Link to={SECURE_DOCUMENT_UPLOAD.LIST}>Part 3 Agreements</Link>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -34,6 +35,7 @@ const Part3Agreements = props => {
             <FontAwesomeIcon icon="external-link-alt" />
           </a>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -55,6 +57,7 @@ const Part3Agreements = props => {
           <br/>
           {' for Part 3 Agreement applications or milestone evidence for Part 3 Awards'}
         </div>
+        <p><br /></p>
       </div>
     </div>
   )

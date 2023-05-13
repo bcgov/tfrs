@@ -35,7 +35,7 @@ const CreditTransactions = (props) => {
 
       {props.loggedInUser.organization.actionsTypeDisplay !== 'None' && [
         <div>
-          <br/>
+          <p><br/></p>
           <div key="credit-transactions">
           
             <div className="value">
@@ -63,6 +63,7 @@ const CreditTransactions = (props) => {
                 Credit transfer(s) in progress (including draft)
               </button>
             </div>
+            <p><br/></p>
           </div>
         </div>
       ]}
@@ -103,6 +104,7 @@ const CreditTransactions = (props) => {
             </button>
           </div>
         </div>
+        <p><br/></p>
       </div>
 
       <div>
@@ -122,6 +124,7 @@ const CreditTransactions = (props) => {
             <FontAwesomeIcon icon={['far', 'file-pdf']} />
           </a>
         </div>
+        <p><br/></p>
       </div>
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&

@@ -35,7 +35,7 @@ const FileSubmissions = (props) => {
   return (
     <div className="dashboard-fieldset file-submissions">
       <h1>File Submissions</h1>
-      There are:
+      <p>There are:</p>
 
       <div>
         <div className='file-submissions-value'>
@@ -79,6 +79,7 @@ const FileSubmissions = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
     </div>
   )

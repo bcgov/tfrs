@@ -28,7 +28,7 @@ const FuelCodes = (props) => {
   return (
     <div className="dashboard-fieldset fuel-codes">
       <h1>Fuel Codes</h1>
-      There are:
+      <p>There are:</p>
 
       <div>
         <div className='fuel-codes-value'>
@@ -55,6 +55,7 @@ const FuelCodes = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -73,6 +74,7 @@ const FuelCodes = (props) => {
             See all fuel codes
           </button>
         </div>
+        <p><br /></p>
       </div>
     </div>
   )
