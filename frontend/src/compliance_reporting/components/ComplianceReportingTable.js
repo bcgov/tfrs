@@ -22,7 +22,10 @@ class ComplianceReportingTable extends Component {
       page: 1,
       pageSize: 10,
       filters: props.filters,
-      sorts: []
+      sorts: [{
+        id: 'updateTimestamp',
+        desc: true
+      }]
     }
 
     this.handlePageChange = this.handlePageChange.bind(this)
@@ -83,25 +86,23 @@ class ComplianceReportingTable extends Component {
   }
 
   render () {
-    this.props.items.reverse()
     const cols = [{
       accessor: item => (item.groupId),
       className: 'col-groupId',
       Header: 'Group ID',
       id: 'groupId',
       minWidth: 25,
-      show: false
+      show: false,
+      sortable: false
     }, {
       accessor: (item) => {
-        // if (item.supplements !== null) {
-        //   return ''
-        // }
         return (item.compliancePeriod ? item.compliancePeriod.description : '')
       },
       className: 'col-compliance-year',
       Header: 'Compliance Period',
       id: 'compliance-period',
-      minWidth: 50
+      minWidth: 50,
+      sortable: false
     },
     {
       accessor: item => item.organization.name,
@@ -109,17 +110,18 @@ class ComplianceReportingTable extends Component {
       Header: 'Supplier',
       id: 'Supplier',
       minWidth: 50,
-      show: this.props.loggedInUser.isGovernmentUser
+      show: this.props.loggedInUser.isGovernmentUser,
+      sortable: false
     },
     {
       accessor: item => item.type,
       className: 'col-type',
       Header: 'Type',
       id: 'compliance-period-type',
-      minWidth: 50
+      minWidth: 50,
+      sortable: false
     }, {
       accessor: (item) => {
-        // Temporarily left commented out for posterity and client feedback
         let report = item
         const { supplementalReports } = item
         if (supplementalReports.length > 0) {
@@ -129,13 +131,12 @@ class ComplianceReportingTable extends Component {
           [report] = report.supplementalReports
         }
         return ComplianceReportStatus(report)
-
-        // return ComplianceReportStatus(item)
       },
       className: 'col-status',
       Header: 'Current Status',
       id: 'current-status',
-      minWidth: 75
+      minWidth: 75,
+      sortable: false
     }, {
       accessor: item => (item.updateTimestamp ? item.updateTimestamp : null),
       className: 'col-date',
@@ -151,109 +152,7 @@ class ComplianceReportingTable extends Component {
         </span>
       )
     }]
-    const columns = [{
-      accessor: item => (item.groupId),
-      className: 'col-groupId',
-      Header: 'Group ID',
-      id: 'groupId',
-      minWidth: 25,
-      show: false
-    }, {
-      accessor: (item) => {
-        if (item.supplements !== null) {
-          return ''
-        }
-        return (item.compliancePeriod ? item.compliancePeriod.description : '')
-      },
-      className: 'col-compliance-year',
-      Header: 'Compliance Period',
-      id: 'compliance-period',
-      minWidth: 50
-    }, {
-      accessor: item => (item.organization ? item.organization.name : ''),
-      className: 'col-organization',
-      Header: 'Organization',
-      id: 'organization',
-      minWidth: 75,
-      show: this.props.loggedInUser.isGovernmentUser
-    }, {
-      accessor: item => (item.displayName),
-      className: 'col-displayname',
-      Header: 'Display Name',
-      id: 'displayname',
-      minWidth: 75
-    }, {
-      accessor: (item) => {
-        return ComplianceReportStatus(item)
-      },
-      className: 'col-status',
-      Header: 'Original Status',
-      id: 'status',
-      minWidth: 75
-    }, {
-      accessor: (item) => {
-        if (item.supplementalReports == null || item.supplementalReports.length === 0) {
-          return '-'
-        }
-        let deepestSupplemental = item.supplementalReports[0]
-        while (deepestSupplemental.supplementalReports && deepestSupplemental.supplementalReports.length > 0) {
-          deepestSupplemental = deepestSupplemental.supplementalReports[0]
-        }
-
-        return ComplianceReportStatus(deepestSupplemental)
-      },
-      className: 'col-supplemental-status',
-      Header: 'Supplemental Status',
-      id: 'supplemental-status',
-      minWidth: 75
-    }, {
-      accessor: (item) => {
-        let report = item
-        const { supplementalReports } = item
-        if (supplementalReports.length > 0) {
-          [report] = supplementalReports
-        }
-        while (report.supplementalReports && report.supplementalReports.length > 0) {
-          [report] = report.supplementalReports
-        }
-        return ComplianceReportStatus(report)
-      },
-      className: 'col-status',
-      Header: 'Current Status',
-      id: 'current-status',
-      minWidth: 75
-    }, {
-      accessor: item => (item.sortDate ? item.sortDate : null),
-      className: 'col-date',
-      Header: 'Last Updated On',
-      id: 'updateTimestamp',
-      minWidth: 95,
-      Cell: row => (
-        <span>
-          {row.original.sortDate
-            ? moment(row.original.sortDate).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
-            : '-'
-          }
-        </span>
-      )
-    },
-    {
-      accessor: item => item.updateTimestamp,
-      className: 'col-date',
-      Header: 'Submission Date',
-      id: 'submissionDate',
-      minWidth: 95,
-      Cell: row => (
-        <span>
-          {
-            row.original.updateTimestamp && moment(row.original.updateTimestamp).tz('America/Vancouver').format('YYYY-MM-DD h:mm a z')
-          }
-        </span>
-      )
-    }
-    ]
     const tableHeader = this.state.filters?.find(val => val.tableId)
-    const filterable = true
     return (
       <ReactTable
         stateKey="compliance-reporting"
@@ -261,7 +160,6 @@ class ComplianceReportingTable extends Component {
         columns={cols}
         data={this.props?.items}
         loading={this.props.isFetching}
-        // filterable={filterable}
         getTrProps={(state, row) => {
           const stripeClass = row && row.nestingPath[0] % 2 ? 'odd' : 'even' || 'even'
           if (row && row.original) {
@@ -323,7 +221,7 @@ class ComplianceReportingTable extends Component {
         }}
         sorts={this.state.sorts}
         onSortedChange={(sorts, column) => {
-          if (column.Header == 'Last Status Update') {
+          if (column.Header === 'Last Status Update') {
             this.handlePageChange(1)
             this.handleSortsChange(sorts)
           }

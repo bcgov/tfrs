@@ -24,7 +24,7 @@ const Administration = props => (
           </Link>
         </div>
       </div>
-    
+
       <div>
         <div className="content">
           <Link

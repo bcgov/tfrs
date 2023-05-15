@@ -158,7 +158,7 @@ describe('ComplianceReportingTable', () => {
             </Provider>
         </BrowserRouter>)
 
-    const tableHeader = screen.getByRole('columnheader', { name: 'Submission Date' })
+    const tableHeader = screen.getByRole('columnheader', { name: 'Last Status Update' })
     fireEvent.click(tableHeader)
     expect(props.getComplianceReports).toHaveBeenCalled()
   })

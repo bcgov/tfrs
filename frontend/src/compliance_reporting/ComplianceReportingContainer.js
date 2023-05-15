@@ -19,6 +19,7 @@ import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
 import toastr from '../utils/toastr'
 import { withRouter } from '../utils/withRouter'
 import { getOrganizations } from '../actions/organizationActions'
+import saveTableState from '../actions/stateSavingReactTableActions'
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -34,6 +35,7 @@ class ComplianceReportingContainer extends Component {
 
     this._selectComplianceReport = this._selectComplianceReport.bind(this)
     this._showModal = this._showModal.bind(this)
+    this._clearFilter = this._clearFilter.bind(this)
     this.createComplianceReport = this.createComplianceReport.bind(this)
     this.createExclusionReport = this.createExclusionReport.bind(this)
   }
@@ -83,6 +85,10 @@ class ComplianceReportingContainer extends Component {
     this.setState({
       showModal: bool
     })
+  }
+
+  _clearFilter () {
+    this.props.saveTableState('compliance-reporting', {})
   }
 
   createComplianceReport (compliancePeriodDescription) {
@@ -155,6 +161,7 @@ class ComplianceReportingContainer extends Component {
         title='Compliance Reporting'
         savedState={this.props.savedState}
         organizations={this.props.organizations}
+        clearStateFilter={this._clearFilter}
       />,
       <CallableModal
         close={() => {
@@ -245,6 +252,7 @@ ComplianceReportingContainer.propTypes = {
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   savedState: PropTypes.shape().isRequired,
+  saveTableState: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
   organizations: PropTypes.shape({
     isFetching: PropTypes.bool,
@@ -283,7 +291,8 @@ const mapDispatchToProps = {
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
   getComplianceReports: complianceReporting.findPaginated,
-  getOrganizations
+  getOrganizations,
+  saveTableState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

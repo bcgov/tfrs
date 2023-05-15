@@ -2,7 +2,7 @@
 
 exports[`ComplianceReportsBCEID Should render the component 1`] = `
 <div
-  className="dashboard-fieldset"
+  className="dashboard-fieldset compliance-exclusion-reports"
 >
   <h1>
     Compliance & Exclusion Reports
@@ -10,6 +10,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
   user
    has:
   <div>
+    <br />
     <div
       className="value"
     >
@@ -66,7 +67,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
 
 exports[`ComplianceReportsBCEID Should render the component with complianceReports and creditTransfers 1`] = `
 <div
-  className="dashboard-fieldset"
+  className="dashboard-fieldset compliance-exclusion-reports"
 >
   <h1>
     Compliance & Exclusion Reports
@@ -74,6 +75,7 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
   user
    has:
   <div>
+    <br />
     <div
       className="value"
     >

@@ -54,7 +54,7 @@ class Modal extends React.Component {
     this.setState({ show: false })
     if (this.props.handleSubmit) {
       this.props.handleSubmit(event)
-    } 
+    }
   }
 
   show () {

@@ -2,17 +2,22 @@
 
 exports[`ComplianceReports Should render the component 1`] = `
 <div
-  className="dashboard-fieldset"
+  className="dashboard-fieldset compliance-fieldset"
 >
   <h1>
     Compliance &  Exclusion Reports
   </h1>
   There are:
   <div>
+    <br />
     <div
-      className="value"
+      className="compliance-fieldset-value"
     >
-      0
+      <div
+        className="value"
+      >
+        0
+      </div>
     </div>
     <div
       className="content"
@@ -56,17 +61,22 @@ exports[`ComplianceReports Should render the component 1`] = `
 
 exports[`ComplianceReports Should render the component with complianceReports 1`] = `
 <div
-  className="dashboard-fieldset"
+  className="dashboard-fieldset compliance-fieldset"
 >
   <h1>
     Compliance &  Exclusion Reports
   </h1>
   There are:
   <div>
+    <br />
     <div
-      className="value"
+      className="compliance-fieldset-value"
     >
-      3
+      <div
+        className="value"
+      >
+        3
+      </div>
     </div>
     <div
       className="content"

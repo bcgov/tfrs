@@ -2,7 +2,6 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import renderer from 'react-test-renderer'
-import { screen, render, fireEvent } from '@testing-library/react'
 import store from '../../../store/store'
 import ComplianceReports from '../ComplianceReports'
 
@@ -80,6 +79,5 @@ describe('ComplianceReports', () => {
 
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
-   
   })
 })
