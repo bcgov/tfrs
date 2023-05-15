@@ -157,7 +157,6 @@ const ComplianceReportingPage = (props) => {
         break
       }
     }
-    console.log(filterObj)
     setFiltersObj(filterObj)
   }
   const supplierFilterFunction = (e) => {
@@ -168,10 +167,6 @@ const ComplianceReportingPage = (props) => {
       setSupplierOptions(filterdOptions)
     } else {
       const filterObj = JSON.parse(JSON.stringify(filtersObj))
-
-      // setSupplierOptions([])
-      // setSelectedSupplierValue('')
-      // handleFiltersChange('supplier', 0)
       const clearedSupplierList = filterObj.filter(item => item.id !== 'supplier')
       setFiltersObj(clearedSupplierList)
     }
