@@ -30,7 +30,7 @@ const ComplianceReports = (props) => {
 
     if (['Not Recommended', 'Recommended'].indexOf(status.analystStatus) >= 0 &&
     status.managerStatus === 'Unreviewed' && status.directorStatus === 'Unreviewed' &&
-    status.fuelSupplierStatus == 'Submitted') {
+    status.fuelSupplierStatus === 'Submitted') {
       awaitingReview.manager += 1
       awaitingReview.total += 1
     }
@@ -46,7 +46,6 @@ const ComplianceReports = (props) => {
     <div className="dashboard-fieldset compliance-fieldset">
       <h1>Compliance &  Exclusion Reports</h1>
       <p>There are:</p>
-      
       <div>
         <div className='compliance-fieldset-value'>
           <div className="value">
@@ -124,7 +123,8 @@ ComplianceReports.propTypes = {
     isFetching: PropTypes.bool,
     isFinding: PropTypes.bool,
     isGettingDashboard: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    supplementalItems: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   setFilter: PropTypes.func.isRequired
 }
