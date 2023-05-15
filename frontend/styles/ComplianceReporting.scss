@@ -403,11 +403,15 @@ table.supplementalTable {
 
 .dashboard-fieldset {
   .content {
-    h2 {
-      margin: 20px 0 5px 0;
+    h2,
+    ~ p {
+      margin: 0;
     }
   }
   &.user-settings {
+    .user-sub-head {
+      padding-left: 7rem;
+    }
     .user-settings-content {
       position: relative;
       padding: 0 4rem 0 7rem;
@@ -417,25 +421,29 @@ table.supplementalTable {
       }
       .value {
         left: -12px;
-        top: calc(50% - 25px);
+        top: 42px;
       }
       .icon {
         right: 0;
-        top: calc(50% - 25px);
+        top: 0;
       }
     }
   }
   &.organization-details {
+    padding-left: 3rem;
     .organization-details-content {
       position: relative;
-      padding-left: 7rem;
+      padding-right: 7rem;
       .content {
         padding: 0;
       }
       .cog-icon {
         position: absolute;
-        left: -12px;
-        top: calc(50% - 25px);
+        right: 0;
+        top: 0;
+        svg {
+          font-size: 7rem;
+        }
       }
     }
   }
@@ -444,11 +452,29 @@ table.supplementalTable {
     .value {
       top: 14px;
     }
+    > div {
+      > p {
+        margin: 0;
+      }
+    }
   }
   &.administration-reports,
   &.administration-content{
     .icon{
       left: 0rem !important;
+    }
+    &.administration {
+      .administration-content {
+        .icon {
+          right: 0;
+          left: initial !important;
+          top: 0;
+        }
+        .content {
+          margin-left: 0;
+          margin-right: 7rem;
+        }
+      }
     }
   }
   &.compliance-exclusion-value,
@@ -472,7 +498,7 @@ table.supplementalTable {
   &.compliance-fieldset,
   &.compliance-fieldset-value {
     .value {
-      top: 15px;
+      top: -10px;
     }
   }
 }

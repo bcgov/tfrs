@@ -37,12 +37,12 @@ class UserSettings extends Component {
       <div className="dashboard-fieldset user-settings">
         <h1>User Settings</h1>
 
-        <div>
+        <p className='user-sub-head'>
           {this.props.loggedInUser.displayName}
           {this.props.loggedInUser.title &&
           this.props.loggedInUser.title !== '' &&
           `, ${this.props.loggedInUser.title}`}
-        </div>
+        </p>
 
         <div className='user-settings-content'>
           <div className="content">
@@ -50,6 +50,7 @@ class UserSettings extends Component {
               User Profile
             </Link>
           </div>
+          <p><br /></p>
           <div className="value">
             {this.state.unreadCount}
           </div>
@@ -58,6 +59,7 @@ class UserSettings extends Component {
               Notifications
             </Link>
           </div>
+          <p><br /></p>
           <span className="icon">
             <FontAwesomeIcon icon={['far', 'bell']} />
           </span>
@@ -67,7 +69,7 @@ class UserSettings extends Component {
               Configure your notifications
             </Link>
           </div>
-
+          <p><br /></p>
           <div className="content">
             <a
               href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
@@ -84,6 +86,7 @@ class UserSettings extends Component {
               <FontAwesomeIcon icon={['far', 'file-pdf']} />
             </a>
           </div>
+          <p><br /></p>
           </div>
       </div>
     )

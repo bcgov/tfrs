@@ -64,6 +64,7 @@ const ComplianceReportsBCEID = (props) => {
             Compliance & Exclusion Reports in Progress
           </button>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -111,6 +112,7 @@ const ComplianceReportsBCEID = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
       {props.loggedInUser.hasPermission(
         PERMISSIONS_COMPLIANCE_REPORT.MANAGE

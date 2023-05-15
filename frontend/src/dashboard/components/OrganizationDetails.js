@@ -38,6 +38,7 @@ const OrganizationDetails = props => {
       {props.loggedInUser &&
       props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER) &&
       props.isGovernmentUser &&
+        <>
         <div className="content">
           <button
             type="button"
@@ -46,6 +47,8 @@ const OrganizationDetails = props => {
             Edit Address
           </button>
         </div>
+        <p><br /></p>
+        </>
       }
 
         <div className="content">
@@ -53,18 +56,23 @@ const OrganizationDetails = props => {
             Roles
           </Link>
         </div>
+        <p><br /></p>
 
         <div className="content">
           <Link id="navbar-administration" to={ORGANIZATIONS.MINE}>
             Users
           </Link>
         </div>
+        <p><br /></p>
 
       {props.loggedInUser &&
       props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
+        <>
           <div className="content">
             <Link to={USERS.ADD}>New user</Link>
           </div>
+          <p><br /></p>
+        </>  
       }
 
         <div className="content">
@@ -76,6 +84,7 @@ const OrganizationDetails = props => {
             Create new BCeID account
           </a>
         </div>
+        <p><br /></p>
       </div>
     </div>
   )

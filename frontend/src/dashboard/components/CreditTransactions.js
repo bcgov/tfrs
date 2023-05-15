@@ -51,7 +51,7 @@ const CreditTransactions = (props) => {
   return (
     <div className="dashboard-fieldset compliance-exclusion-value">
       <h1>Credit Transactions</h1>
-      There are:
+      <p>There are:</p>
 
       <div>
         <div className='credit-transactions-reports'>
@@ -107,8 +107,8 @@ const CreditTransactions = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
-      <br />
       <div>{/* n awaiting Director review for Part 3 Awards */}
         <div className="value">
           {awaitingReview.part3Awards.total}
@@ -139,6 +139,7 @@ const CreditTransactions = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -177,6 +178,7 @@ const CreditTransactions = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -187,6 +189,7 @@ const CreditTransactions = (props) => {
             Fuel Supplier Organizations
           </Link>
         </div>
+        <p><br /></p>
       </div>
     </div>
   )

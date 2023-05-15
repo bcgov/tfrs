@@ -23,6 +23,7 @@ const Administration = props => (
             Manage government users
           </Link>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -34,6 +35,7 @@ const Administration = props => (
             Add/Edit fuel suppliers
           </Link>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -42,6 +44,7 @@ const Administration = props => (
             User Activity
           </Link>
         </div>
+        <p><br /></p>
       </div>
 
       <div>
@@ -50,6 +53,7 @@ const Administration = props => (
             Historical Data Entry
           </Link>
         </div>
+        <p><br /></p>
       </div>
     </div>
   </div>
