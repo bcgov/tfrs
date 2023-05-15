@@ -28,24 +28,13 @@ const ComplianceReportsBCEID = (props) => {
       awaitingReview.total += 1
     }
     if (status.fuelSupplierStatus === 'Submitted' &&
-        ['Accepted', 'Rejected'].indexOf(status.directorStatus) < 0 && status.analystStatus === 'Requested Supplemental' ||
-        status.managerStatus === 'Requested Supplemental') {
+        ['Accepted', 'Rejected'].indexOf(status.directorStatus) < 0 && (status.analystStatus === 'Requested Supplemental' ||
+        status.managerStatus === 'Requested Supplemental')) {
       awaitingReview.manager += 1
       awaitingReview.total += 1
     }
   })
 
-  const handeleFun = () => {
-    props.setFilter(
-      [
-        {
-          id: 'current-status',
-          value: ['In Draft', 'Supplemental Requested']
-        }
-      ],
-      'compliance-reporting'
-    )
-  }
   return (
     <div className="dashboard-fieldset compliance-exclusion-reports">
       <h1>Compliance &amp; Exclusion Reports</h1>
@@ -146,7 +135,8 @@ ComplianceReportsBCEID.propTypes = {
   complianceReports: PropTypes.shape({
     isFetching: PropTypes.bool,
     isGettingDashboard: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    supplementalItems: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,

@@ -272,7 +272,8 @@ DashboardContainer.propTypes = {
   saveTableState: PropTypes.func.isRequired,
   tableState: PropTypes.shape().isRequired,
   unreadNotificationsCount: PropTypes.number,
-  navigate: PropTypes.func.isRequired
+  navigate: PropTypes.func.isRequired,
+  supplementalItems: PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = ({

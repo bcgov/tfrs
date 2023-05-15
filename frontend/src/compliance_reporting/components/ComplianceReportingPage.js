@@ -24,7 +24,7 @@ const ComplianceReportingPage = (props) => {
     selectedStatus: [],
     selectedType: []
   })
-  const [statusTypes, setStatustypes] = useState([
+  const statusTypes = [
     {
       name: 'In Draft',
       value: 'In Draft'
@@ -46,8 +46,8 @@ const ComplianceReportingPage = (props) => {
       name: 'Rejected',
       value: 'Rejected'
     }
-  ])
-  const [statusTypeGov, setStatustypeGov] = useState([
+  ]
+  const statusTypeGov = [
     {
       name: 'For Analyst Review',
       value: 'For Analyst Review'
@@ -64,7 +64,6 @@ const ComplianceReportingPage = (props) => {
       name: 'Supplemental Requested',
       value: 'Supplemental Requested'
     },
-
     {
       name: 'Accepted',
       value: 'Accepted'
@@ -73,10 +72,11 @@ const ComplianceReportingPage = (props) => {
       name: 'Rejected',
       value: 'Rejected'
     }
-  ])
+  ]
   useEffect(() => {
     setSelectedFilters({ ...selectedFilters, selectedStatus: location.state?.items })
     window.history.replaceState([], items)
+    props.clearStateFilter()
   }, [])
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const ComplianceReportingPage = (props) => {
         })
         value = val
         const idx = filterObj.findIndex((val) => val.id === name)
-        if (idx == -1) {
+        if (idx === -1) {
           filterObj = [...filterObj, { id: name, value }]
         } else {
           filterObj[idx] = { id: name, value }
@@ -120,7 +120,7 @@ const ComplianceReportingPage = (props) => {
       }
       case 'current-status': {
         const idx = filterObj.findIndex((val) => val.id === name)
-        if (idx == -1) {
+        if (idx === -1) {
           value = [value]
           filterObj = [...filterObj, { id: name, value }]
         } else {
@@ -145,7 +145,7 @@ const ComplianceReportingPage = (props) => {
       default: {
         if (!value) return
         const idx = filterObj.findIndex((val) => val.id === name)
-        if (idx == -1) {
+        if (idx === -1) {
           filterObj = [...filterObj, { id: name, value }]
         } else {
           filterObj[idx] = { id: name, value }
@@ -157,6 +157,7 @@ const ComplianceReportingPage = (props) => {
         break
       }
     }
+    console.log(filterObj)
     setFiltersObj(filterObj)
   }
   const supplierFilterFunction = (e) => {
@@ -166,11 +167,22 @@ const ComplianceReportingPage = (props) => {
     if (e.target.value.length > 0) {
       setSupplierOptions(filterdOptions)
     } else {
-      setFiltersObj([])
+      const filterObj = JSON.parse(JSON.stringify(filtersObj))
+
+      // setSupplierOptions([])
+      // setSelectedSupplierValue('')
+      // handleFiltersChange('supplier', 0)
+      const clearedSupplierList = filterObj.filter(item => item.id !== 'supplier')
+      setFiltersObj(clearedSupplierList)
     }
   }
   const showSupplierOptions = () => {
     setShowSupplierOption(!showSupplierOption)
+  }
+
+  const listItems = () => {
+    const list = [...items]
+    return list.reverse()
   }
 
   return (
@@ -438,7 +450,7 @@ const ComplianceReportingPage = (props) => {
       </div>
       <ComplianceReportingTable
         getComplianceReports={props.getComplianceReports}
-        items={items}
+        items={listItems()}
         itemsCount={itemsCount}
         isFetching={isFetching || organizations.isFetching}
         isEmpty={isEmpty}
@@ -460,14 +472,20 @@ ComplianceReportingPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape),
     itemsCount: PropTypes.number
   }).isRequired,
+  organizations: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFetching: PropTypes.bool
+  }),
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func
+    hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool
   }).isRequired,
   selectComplianceReport: PropTypes.func.isRequired,
   showModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  savedState: PropTypes.shape().isRequired
+  savedState: PropTypes.shape().isRequired,
+  clearStateFilter: PropTypes.func.isRequired
 }
 
 export default ComplianceReportingPage

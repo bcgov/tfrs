@@ -33,11 +33,11 @@ const CreditTransactions = (props) => {
       <h1>Credit Transactions</h1>
       <span key="credit-transactions-label">There are:</span>
 
-      {props.loggedInUser.organization.actionsTypeDisplay !== 'None' && [
+      {props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
         <div>
           <br/>
           <div key="credit-transactions">
-          
+
             <div className="value">
               {inProgress.creditTransfers}
             </div>
@@ -65,7 +65,7 @@ const CreditTransactions = (props) => {
             </div>
           </div>
         </div>
-      ]}
+      }
 
       <div>
         <div className="content">
