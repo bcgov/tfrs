@@ -148,14 +148,13 @@ class ComplianceReportService(object):
         return differences
 
     @staticmethod
-    def get_organization_compliance_reports(organization):
+    def get_organization_compliance_reports(organization,value=None):
         """
         Fetch the compliance reports with various rules based on the user's
         organization
         """
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
-
         if organization == gov_org:
             # If organization == Government
             #  don't show "Draft" transactions
@@ -280,6 +279,13 @@ class ComplianceReportService(object):
         if is_supplemental and Decimal(lines['25']) < 0 and \
                 (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
             required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
+
+         # Code 26C is used to identify credits that must be refunded to the supplier.
+         # This occurs when our debit position decreases and we have already spent credits. 
+         # In such cases, any excess credits must be returned to the supplier.
+        if is_supplemental and Decimal(lines['26C']) > 0:
+            print("*** DIRECTOR 26C Increase to Credits ***")
+            required_credit_transaction = Decimal(lines['26C'])
 
         if required_credit_transaction > Decimal(0):
             # do validation for Decimal(lines['25'])

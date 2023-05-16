@@ -13,7 +13,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
       className="rt-thead -header"
       style={
         {
-          "minWidth": "615px",
+          "minWidth": "320px",
         }
       }
     >
@@ -22,7 +22,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
         role="row"
       >
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
@@ -46,14 +46,14 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
             {
-              "flex": "75 0 auto",
+              "flex": "50 0 auto",
               "maxWidth": null,
-              "width": "75px",
+              "width": "50px",
             }
           }
           tabIndex="-1"
@@ -61,7 +61,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Organization
+            Supplier
           </div>
           <div
             className="rt-resizer"
@@ -70,14 +70,14 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
             {
-              "flex": "75 0 auto",
+              "flex": "50 0 auto",
               "maxWidth": null,
-              "width": "75px",
+              "width": "50px",
             }
           }
           tabIndex="-1"
@@ -85,7 +85,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Display Name
+            Type
           </div>
           <div
             className="rt-resizer"
@@ -94,55 +94,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Original Status
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Supplemental Status
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
@@ -181,242 +133,12 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Last Updated On
+            Last Status Update
           </div>
           <div
             className="rt-resizer"
             onMouseDown={[Function]}
             onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Submission Date
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      className="rt-thead -filters"
-      style={
-        {
-          "minWidth": "615px",
-        }
-      }
-    >
-      <div
-        className="rt-tr"
-        role="row"
-      >
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "50 0 auto",
-              "maxWidth": null,
-              "width": "50px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
           />
         </div>
       </div>
@@ -425,7 +147,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
       className="rt-tbody"
       style={
         {
-          "minWidth": "615px",
+          "minWidth": "320px",
         }
       }
     >
@@ -453,49 +175,35 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             2023
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             onClick={[Function]}
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
             South Coast Fuels Co.
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             onClick={[Function]}
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
-            Compliance Report for 2023
+            Exclusion Report
           </div>
           <div
             className="rt-td col-status"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            Submitted
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
             onClick={[Function]}
             role="gridcell"
             style={
@@ -507,36 +215,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             }
           >
             Recommended Acceptance - Analyst
-          </div>
-          <div
-            className="rt-td col-status"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            Submitted
-          </div>
-          <div
-            className="rt-td col-date"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
-              }
-            }
-          >
-            <span>
-              2022-04-01 11:24 am PDT
-            </span>
           </div>
           <div
             className="rt-td col-date"
@@ -577,63 +255,35 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-            
+            2023
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             onClick={[Function]}
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
             South Coast Fuels Co.
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             onClick={[Function]}
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
-            Compliance Report for 2023
-          </div>
-          <div
-            className="rt-td col-status"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            Submitted
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            -
+            Compliance Report
           </div>
           <div
             className="rt-td col-status"
@@ -665,22 +315,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               2022-04-01 11:24 am PDT
             </span>
           </div>
-          <div
-            className="rt-td col-date"
-            onClick={[Function]}
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
-              }
-            }
-          >
-            <span>
-              2022-04-01 11:24 am PDT
-            </span>
-          </div>
         </div>
       </div>
       <div
@@ -708,13 +342,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -723,43 +357,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -775,21 +379,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -839,13 +428,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -854,43 +443,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -906,21 +465,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -970,13 +514,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -985,43 +529,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1037,21 +551,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1101,13 +600,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1116,43 +615,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1168,21 +637,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1232,13 +686,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1247,43 +701,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1299,21 +723,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1363,13 +772,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1378,43 +787,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1430,21 +809,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1494,13 +858,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1509,43 +873,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1561,21 +895,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1625,13 +944,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1640,43 +959,13 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -1692,21 +981,6 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -1865,7 +1139,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
       className="rt-thead -header"
       style={
         {
-          "minWidth": "615px",
+          "minWidth": "320px",
         }
       }
     >
@@ -1874,7 +1148,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
         role="row"
       >
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
@@ -1898,14 +1172,14 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
             {
-              "flex": "75 0 auto",
+              "flex": "50 0 auto",
               "maxWidth": null,
-              "width": "75px",
+              "width": "50px",
             }
           }
           tabIndex="-1"
@@ -1913,7 +1187,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Organization
+            Supplier
           </div>
           <div
             className="rt-resizer"
@@ -1922,14 +1196,14 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
             {
-              "flex": "75 0 auto",
+              "flex": "50 0 auto",
               "maxWidth": null,
-              "width": "75px",
+              "width": "50px",
             }
           }
           tabIndex="-1"
@@ -1937,7 +1211,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Display Name
+            Type
           </div>
           <div
             className="rt-resizer"
@@ -1946,55 +1220,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           />
         </div>
         <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Original Status
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Supplemental Status
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
+          className="rt-th rt-resizable-header"
           onClick={[Function]}
           role="columnheader"
           style={
@@ -2033,242 +1259,12 @@ exports[`ComplianceReportingTable should render the component 1`] = `
           <div
             className="rt-resizable-header-content"
           >
-            Last Updated On
+            Last Status Update
           </div>
           <div
             className="rt-resizer"
             onMouseDown={[Function]}
             onTouchStart={[Function]}
-          />
-        </div>
-        <div
-          className="rt-th rt-resizable-header -cursor-pointer"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <div
-            className="rt-resizable-header-content"
-          >
-            Submission Date
-          </div>
-          <div
-            className="rt-resizer"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      className="rt-thead -filters"
-      style={
-        {
-          "minWidth": "615px",
-        }
-      }
-    >
-      <div
-        className="rt-tr"
-        role="row"
-      >
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "50 0 auto",
-              "maxWidth": null,
-              "width": "50px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "75 0 auto",
-              "maxWidth": null,
-              "width": "75px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="rt-th"
-          onClick={[Function]}
-          role="columnheader"
-          style={
-            {
-              "flex": "95 0 auto",
-              "maxWidth": null,
-              "width": "95px",
-            }
-          }
-          tabIndex="-1"
-        >
-          <input
-            onChange={[Function]}
-            style={
-              {
-                "width": "100%",
-              }
-            }
-            type="text"
-            value=""
           />
         </div>
       </div>
@@ -2277,7 +1273,7 @@ exports[`ComplianceReportingTable should render the component 1`] = `
       className="rt-tbody"
       style={
         {
-          "minWidth": "615px",
+          "minWidth": "320px",
         }
       }
     >
@@ -2306,13 +1302,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2321,43 +1317,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2373,21 +1339,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -2437,13 +1388,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2452,43 +1403,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2504,21 +1425,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -2568,13 +1474,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2583,43 +1489,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2635,21 +1511,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -2699,13 +1560,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2714,43 +1575,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2766,21 +1597,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -2830,13 +1646,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2845,43 +1661,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2897,21 +1683,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -2961,13 +1732,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -2976,43 +1747,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3028,21 +1769,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -3092,13 +1818,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3107,43 +1833,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3159,21 +1855,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -3223,13 +1904,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3238,43 +1919,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3290,21 +1941,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -3354,13 +1990,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3369,43 +2005,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3421,21 +2027,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >
@@ -3485,13 +2076,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-organization"
+            className="rt-td col-Supplier"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3500,43 +2091,13 @@ exports[`ComplianceReportingTable should render the component 1`] = `
             </span>
           </div>
           <div
-            className="rt-td col-displayname"
+            className="rt-td col-type"
             role="gridcell"
             style={
               {
-                "flex": "75 0 auto",
+                "flex": "50 0 auto",
                 "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-supplemental-status"
-            role="gridcell"
-            style={
-              {
-                "flex": "75 0 auto",
-                "maxWidth": null,
-                "width": "75px",
+                "width": "50px",
               }
             }
           >
@@ -3552,21 +2113,6 @@ exports[`ComplianceReportingTable should render the component 1`] = `
                 "flex": "75 0 auto",
                 "maxWidth": null,
                 "width": "75px",
-              }
-            }
-          >
-            <span>
-               
-            </span>
-          </div>
-          <div
-            className="rt-td col-date"
-            role="gridcell"
-            style={
-              {
-                "flex": "95 0 auto",
-                "maxWidth": null,
-                "width": "95px",
               }
             }
           >

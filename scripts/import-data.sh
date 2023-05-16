@@ -44,7 +44,7 @@ oc project $project_name
 echo
 
 echo "** Starting pg_dump"
-oc exec $pod_name -- bash -c 'pg_dump -U postgres -F t --no-privileges --no-owner -c -d postgres > /tmp/tfrs.tar'
+oc exec $pod_name -- bash -c 'pg_dump -U postgres -F t --no-privileges --no-owner -c -d tfrs > /tmp/tfrs.tar'
 echo
 
 echo "** Downloading .tar file"
@@ -56,8 +56,8 @@ docker cp tfrs.tar $local_container:/tmp/tfrs.tar
 echo
 
 echo "** Restoring local database"
-docker exec $local_container bash -c 'pg_restore -U tfrs -F t --no-privileges --no-owner -c -d postgres < /tmp/tfrs.tar' || true
-docker exec $local_container bash -c 'pg_restore -U tfrs -F t --no-privileges --no-owner -c -d postgres < /tmp/tfrs.tar'
+docker exec $local_container bash -c 'pg_restore -U tfrs --dbname=tfrs --no-owner --clean --if-exists --verbose /tmp/tfrs.tar' || true
+docker exec $local_container bash -c 'pg_restore -U tfrs --dbname=tfrs --no-owner --clean --if-exists --verbose /tmp/tfrs.tar'
 echo
 
 echo "** Cleaning up"

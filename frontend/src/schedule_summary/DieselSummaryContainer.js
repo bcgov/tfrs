@@ -1,5 +1,4 @@
 import React from 'react'
-import { _handleCellsChanged } from '../compliance_reporting/ScheduleSummaryContainer'
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
 import { cellFormatNumeric, cellFormatTotal, formatNumeric } from '../utils/functions'
 

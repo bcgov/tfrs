@@ -33,16 +33,18 @@ const FileSubmissions = (props) => {
   })
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset file-submissions">
       <h1>File Submissions</h1>
-      There are:
+      <p>There are:</p>
 
       <div>
-        <div className="value">
-          {awaitingReview.documentUploads.total}
+        <div className='file-submissions-value'>
+          <div className="value">
+            {awaitingReview.documentUploads.total}
+          </div>
         </div>
         <div className="content">
-          <h2>file submissions in progress:</h2>
+          <h2>File submissions in progress:</h2>
 
           <div>
             <button
@@ -77,6 +79,7 @@ const FileSubmissions = (props) => {
             </button>
           </div>
         </div>
+        <p><br /></p>
       </div>
     </div>
   )

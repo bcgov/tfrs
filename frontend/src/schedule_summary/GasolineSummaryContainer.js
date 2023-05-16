@@ -1,6 +1,5 @@
 import React from 'react'
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
-import { _handleCellsChanged } from '../compliance_reporting/ScheduleSummaryContainer'
 import { cellFormatNumeric, cellFormatTotal, formatNumeric } from '../utils/functions'
 
 function tableData (gasoline, summary) {

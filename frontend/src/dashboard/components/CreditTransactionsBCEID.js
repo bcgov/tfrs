@@ -29,39 +29,44 @@ const CreditTransactions = (props) => {
   })
 
   return (
-    <div className="dashboard-fieldset">
+    <div className="dashboard-fieldset credit-transactions">
       <h1>Credit Transactions</h1>
+      <span key="credit-transactions-label">There are:</span>
 
-      {props.loggedInUser.organization.actionsTypeDisplay !== 'None' && [
-        <span key="credit-transactions-label">There are:</span>,
-        <div key="credit-transactions">
-          <div className="value">
-            {inProgress.creditTransfers}
-          </div>
+      {props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
+        <div>
+          <p><br/></p>
+          <div key="credit-transactions">
 
-          <div className="content">
-            <button
-              onClick={() => {
-                props.setFilter([{
-                  id: 'compliancePeriod',
-                  value: ''
-                }, {
-                  id: 'transactionType',
-                  value: 'Credit Transfer'
-                }, {
-                  id: 'status',
-                  value: 'Proposed,Signed,Draft'
-                }], 'credit-transfers')
+            <div className="value">
+              {inProgress.creditTransfers}
+            </div>
 
-                return navigate(CREDIT_TRANSACTIONS.LIST)
-              }}
-              type="button"
-            >
-              Credit transfer(s) in progress (including draft)
-            </button>
+            <div className="content">
+              <button
+                onClick={() => {
+                  props.setFilter([{
+                    id: 'compliancePeriod',
+                    value: ''
+                  }, {
+                    id: 'transactionType',
+                    value: 'Credit Transfer'
+                  }, {
+                    id: 'status',
+                    value: 'Proposed,Signed,Draft'
+                  }], 'credit-transfers')
+
+                  return navigate(CREDIT_TRANSACTIONS.LIST)
+                }}
+                type="button"
+              >
+                Credit transfer(s) in progress (including draft)
+              </button>
+            </div>
+            <p><br/></p>
           </div>
         </div>
-      ]}
+      }
 
       <div>
         <div className="content">
@@ -99,6 +104,7 @@ const CreditTransactions = (props) => {
             </button>
           </div>
         </div>
+        <p><br/></p>
       </div>
 
       <div>
@@ -118,6 +124,7 @@ const CreditTransactions = (props) => {
             <FontAwesomeIcon icon={['far', 'file-pdf']} />
           </a>
         </div>
+        <p><br/></p>
       </div>
 
       {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&

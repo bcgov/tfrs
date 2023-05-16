@@ -18,6 +18,8 @@ import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
 import toastr from '../utils/toastr'
 import { withRouter } from '../utils/withRouter'
+import { getOrganizations } from '../actions/organizationActions'
+import saveTableState from '../actions/stateSavingReactTableActions'
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -33,6 +35,7 @@ class ComplianceReportingContainer extends Component {
 
     this._selectComplianceReport = this._selectComplianceReport.bind(this)
     this._showModal = this._showModal.bind(this)
+    this._clearFilter = this._clearFilter.bind(this)
     this.createComplianceReport = this.createComplianceReport.bind(this)
     this.createExclusionReport = this.createExclusionReport.bind(this)
   }
@@ -84,6 +87,10 @@ class ComplianceReportingContainer extends Component {
     })
   }
 
+  _clearFilter () {
+    this.props.saveTableState('compliance-reporting', {})
+  }
+
   createComplianceReport (compliancePeriodDescription) {
     const payload = {
       status: {
@@ -114,13 +121,25 @@ class ComplianceReportingContainer extends Component {
       const { filtered } = this.props.savedState['compliance-reporting']
       filters = filtered
     }
+    if (this.props.loggedInUser.isGovernmentUser) {
+      this.props.getOrganizations()
+    }
     this.props.getCompliancePeriods()
-    this.props.getComplianceReports({ page: 1, pageSize: 10, filters, sorts: [] })
+    this.props.getComplianceReports({
+      page: 1,
+      pageSize: 10,
+      filters,
+      sorts: [
+        {
+          id: 'updateTimestamp',
+          desc: true
+        }
+      ]
+    })
   }
 
   render () {
     const currentEffectiveDate = `${this.currentYear + 1}-01-01`
-
     return ([
       <ComplianceReportingPage
         compliancePeriods={this.props.compliancePeriods.filter(compliancePeriod =>
@@ -135,12 +154,14 @@ class ComplianceReportingContainer extends Component {
         getComplianceReports={this.props.getComplianceReports}
         createComplianceReport={this.createComplianceReport}
         createExclusionReport={this.createExclusionReport}
-        key="compliance-reporting-list"
+        key='compliance-reporting-list'
         loggedInUser={this.props.loggedInUser}
         selectComplianceReport={this._selectComplianceReport}
         showModal={this._showModal}
-        title="Compliance Reporting"
+        title='Compliance Reporting'
         savedState={this.props.savedState}
+        organizations={this.props.organizations}
+        clearStateFilter={this._clearFilter}
       />,
       <CallableModal
         close={() => {
@@ -153,8 +174,8 @@ class ComplianceReportingContainer extends Component {
             this.createComplianceReport(this.state.selectedComplianceYear)
           }
         }}
-        id="confirmCreate"
-        key="confirmCreate"
+        id='confirmCreate'
+        key='confirmCreate'
         show={this.state.showModal}
       >
         <p>
@@ -207,6 +228,7 @@ ComplianceReportingContainer.propTypes = {
     ])
   }),
   createComplianceReport: PropTypes.func.isRequired,
+  getOrganizations: PropTypes.func.isRequired,
   createExclusionReport: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
@@ -230,7 +252,15 @@ ComplianceReportingContainer.propTypes = {
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   savedState: PropTypes.shape().isRequired,
-  navigate: PropTypes.func.isRequired
+  saveTableState: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
+  organizations: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    item: PropTypes.shape({
+      compliancePeriod: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired
 }
 
 const mapStateToProps = state => ({
@@ -249,14 +279,20 @@ const mapStateToProps = state => ({
     success: state.rootReducer.exclusionReports.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  savedState: state.rootReducer.tableState.savedState
+  savedState: state.rootReducer.tableState.savedState,
+  organizations: {
+    items: state.rootReducer.organizations.items,
+    isFetching: state.rootReducer.organizations.isFetching
+  }
 })
 
 const mapDispatchToProps = {
   createComplianceReport: complianceReporting.create,
   createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
-  getComplianceReports: complianceReporting.findPaginated
+  getComplianceReports: complianceReporting.findPaginated,
+  getOrganizations,
+  saveTableState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ComplianceReportingContainer))

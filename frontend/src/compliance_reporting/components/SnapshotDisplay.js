@@ -784,6 +784,18 @@ class SnapshotDisplay extends Component {
       }], [{
         className: 'strong center',
         readOnly: true,
+        value: 'Line 26c'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Banked credits spent that will be returned due to debit decrease - Supplemental Report'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['26C'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
         value: 'Line 27'
       }, {
         className: 'left',

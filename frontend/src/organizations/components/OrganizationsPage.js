@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Loading from '../../app/components/Loading'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
+import USERS from '../../constants/routes/Users'
 import OrganizationsTable from './OrganizationsTable'
 import * as Routes from '../../constants/routes'
 import { download } from '../../utils/functions'
@@ -40,7 +41,24 @@ const OrganizationsPage = (props) => {
             })
           }}
         >
-          <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+          <FontAwesomeIcon icon="file-excel" /> <span>Download Supplier Information</span>
+        </button>
+        <button
+          id="download-xls"
+          className="btn btn-info"
+          type="button"
+          onClick={(e) => {
+            const element = e.target
+            const original = element.innerHTML
+
+            element.firstChild.textContent = ' Downloading...'
+
+            return download(Routes.BASE_URL + USERS.EXPORT).then(() => {
+              element.innerHTML = original
+            })
+          }}
+        >
+          <FontAwesomeIcon icon="file-excel" /> <span>Download User Information</span>
         </button>
       </div>
       {isFetching && <Loading />}

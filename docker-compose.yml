@@ -3,7 +3,7 @@ version: "3"
 services:
   db:
     platform: linux/amd64
-    image: postgres
+    image: postgres:14.2
     container_name: tfrs_db
     environment:
       POSTGRES_DB: tfrs

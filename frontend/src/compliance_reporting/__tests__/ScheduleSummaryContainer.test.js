@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer'
 import { BrowserRouter } from 'react-router-dom'
 import ScheduleSummaryContainer from '../ScheduleSummaryContainer'
 import store from '../../../src/store/store'
-import FontAwesome from '../../../src/app/FontAwesome'
+import FontAwesome from '../../../src/app/FontAwesome' // eslint-disable-line no-unused-vars
 
 describe('ScheduleSummaryContainer', () => {
   test('should render the component', () => {

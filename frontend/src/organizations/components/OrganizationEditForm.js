@@ -13,7 +13,7 @@ import NotFound from '../../app/components/NotFound'
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
   const orgStatuses = props.referenceData.organizationStatuses
-  if(!props.loggedInUser.isGovernmentUser && props.mode === 'edit'){
+  if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
     return <NotFound />
   } else {
     return (
@@ -297,6 +297,7 @@ const OrganizationEditForm = (props) => {
             id="save-organization"
             onClick={(e) => props.handleSubmit(e)}
             type="submit"
+            data-target='#confirmSubmit'
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
           </button>

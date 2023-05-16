@@ -284,9 +284,7 @@ class OrganizationEditContainer extends Component {
           <OrganizationEditForm
             fields={this.state.fields}
             handleInputChange={this._handleInputChange}
-            handleSubmit={() => {
-              $('#confirmSubmit').modal('show')
-            }}
+            handleSubmit={() => ''}
             key="organization-edit-form"
             loggedInUser={this.props.loggedInUser}
             mode={this.props.mode}

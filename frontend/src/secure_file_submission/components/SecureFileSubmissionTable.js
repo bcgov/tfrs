@@ -73,11 +73,10 @@ const SecureFileSubmissionTable = (props) => {
     minWidth: 100
   }, {
     accessor: (item) => {
-      if (item.creditTrades.length > 0){
+      if (item.creditTrades.length > 0) {
         return `${item.creditTrades[0].id}`
-      }
-      else{
-        return '-';
+      } else {
+        return '-'
       }
     },
     className: 'col-credit-transaction-id',

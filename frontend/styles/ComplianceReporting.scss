@@ -65,6 +65,121 @@
   .unit-of-measure {
     border-top: 1px solid $border-grey;
   }
+  .compliance-filters-parent {
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+    padding: 20px;
+    .compliance-filters-rowOne {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .compliance-selectedYear {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p {
+          margin-bottom: 0;
+          font-size: 16px;
+        }
+
+        select {
+          width: 123px;
+          height: 38px;
+        }
+      }
+      .compliance-inputSelect {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p {
+          margin-bottom: 0;
+          font-size: 17px;
+        }
+
+        >div {
+          position: relative;
+
+          input {
+            width: 209px;
+            height: 38px;
+          }
+
+          >ul {
+            list-style-type: none;
+            background-color: #646464;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            padding: 0;
+            overflow: auto;
+            max-height: 200px;
+            border-radius: 0 0 5px 5px;
+
+            li {
+              padding: 10px;
+              cursor: pointer;
+              color: #fff;
+            }
+          }
+        }
+      }
+      .compliance-checkboxSelect {
+        display: flex;
+        align-items: center;
+
+        p {
+          margin-bottom: 0;
+          font-size: 16px;
+        }
+
+        input {
+          margin: 0 10px 0px 20px;
+        }
+      }
+      .clearFilter {
+        padding: 6px 29px;
+        background-color: #fff;
+        color: #036;
+        border: 2px solid #036;
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+    .compliance-filters-rowTwo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+
+      .status {
+        border: 1px solid #494949;
+        padding: 3px 35px;
+        background-color: #fff;
+        border-radius: 15px;
+        cursor: pointer;
+
+        &.status-active {
+          background-color: #568260;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.cog-icon{
+    color: #fcba19;
+    display: inline-block;
+    font-size: 3.6rem;
+    position: absolute;
+    text-align: center;
+    vertical-align: top;
+    width: 7rem;
+    top: 4rem;
 }
 
 #supplementalReasonInput {
@@ -282,6 +397,108 @@ table.supplementalTable {
   .panel-body {
     &:hover {
       background: $yellow !important;
+    }
+  }
+}
+
+.dashboard-fieldset {
+  .content {
+    h2,
+    ~ p {
+      margin: 0;
+    }
+  }
+  &.user-settings {
+    .user-sub-head {
+      padding-left: 7rem;
+    }
+    .user-settings-content {
+      position: relative;
+      padding: 0 4rem 0 7rem;
+      .content {
+        margin: 0;
+        position: initial;
+      }
+      .value {
+        left: -12px;
+        top: 42px;
+      }
+      .icon {
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+  &.organization-details {
+    padding-left: 3rem;
+    .organization-details-content {
+      position: relative;
+      padding-right: 7rem;
+      .content {
+        padding: 0;
+      }
+      .cog-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        svg {
+          font-size: 7rem;
+        }
+      }
+    }
+  }
+  &.compliance-exclusion-reports,
+  &.credit-transactions {
+    .value {
+      top: 14px;
+    }
+    > div {
+      > p {
+        margin: 0;
+      }
+    }
+  }
+  &.administration-reports,
+  &.administration-content{
+    .icon{
+      left: 0rem !important;
+    }
+    &.administration {
+      .administration-content {
+        .icon {
+          right: 0;
+          left: initial !important;
+          top: 0;
+        }
+        .content {
+          margin-left: 0;
+          margin-right: 7rem;
+        }
+      }
+    }
+  }
+  &.compliance-exclusion-value,
+  &.credit-transactions-reports {
+    .value {
+      top: -10px;
+    }
+  }
+  &.file-submissions,
+  &.file-submissions-value {
+    .value {
+      top: -10px;
+    }
+  }
+  &.fuel-codes,
+  &.fuel-codes-value {
+    .value {
+      top: -10px;
+    }
+  }
+  &.compliance-fieldset,
+  &.compliance-fieldset-value {
+    .value {
+      top: -10px;
     }
   }
 }

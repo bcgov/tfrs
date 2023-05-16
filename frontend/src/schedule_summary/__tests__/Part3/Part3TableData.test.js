@@ -4,7 +4,7 @@ import { SCHEDULE_SUMMARY } from '../../../constants/schedules/scheduleColumns'
 import { tableData } from '../../Part3SummaryContainer'
 import ScheduleSummaryPart3 from '../../ScheduleSummaryPart3'
 import Tooltip from '../../../app/components/Tooltip'
-import FontAwesome from '../../../app/FontAwesome'
+import FontAwesome from '../../../app/FontAwesome' // eslint-disable-line no-unused-vars
 
 describe('Part3 Table Data', () => {
   test('tableData function with non-supplemental data', () => {

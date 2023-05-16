@@ -38,6 +38,7 @@ import autosaved from '../utils/autosave_support'
 import ChangelogContainer from './ChangelogContainer'
 import Tooltip from '../app/components/Tooltip'
 import { withRouter } from '../utils/withRouter'
+import { atLeastOneAttorneyAddressFieldExists } from '../utils/functions'
 
 class ComplianceReportingEditContainer extends Component {
   static cleanSummaryValues (summary) {
@@ -46,6 +47,7 @@ class ComplianceReportingEditContainer extends Component {
       creditsOffset: Number(summary.creditsOffset),
       creditsOffsetA: Number(summary.creditsOffsetA),
       creditsOffsetB: Number(summary.creditsOffsetB),
+      creditsOffsetC: Number(summary.creditsOffsetC),
       dieselClassDeferred: Number(summary.dieselClassDeferred),
       dieselClassObligation: Number(summary.dieselClassObligation),
       dieselClassPreviouslyRetained: Number(summary.dieselClassPreviouslyRetained),
@@ -162,7 +164,7 @@ class ComplianceReportingEditContainer extends Component {
       const { id } = this.props.params
 
       if (nextProps.complianceReporting.item &&
-        !nextProps.complianceReporting.item.readOnly) {
+        !nextProps.complianceReporting.item?.readOnly) {
         const { schedules } = this.state
 
         if (schedules.summary && schedules.summary.dieselClassDeferred) {
@@ -206,13 +208,13 @@ class ComplianceReportingEditContainer extends Component {
         })
       }
 
-      if (nextProps.complianceReporting.item.hasSnapshot) {
+      if (nextProps.complianceReporting.item?.hasSnapshot) {
         this.props.getSnapshotRequest(id)
       }
 
       this.setState({
-        supplementalNoteRequired: (nextProps.complianceReporting.item.isSupplemental &&
-          nextProps.complianceReporting.item.actions.includes('SUBMIT'))
+        supplementalNoteRequired: (nextProps.complianceReporting.item?.isSupplemental &&
+          nextProps.complianceReporting.item?.actions.includes('SUBMIT'))
       })
     }
 
@@ -222,7 +224,7 @@ class ComplianceReportingEditContainer extends Component {
       } else {
         this.props.invalidateAutosaved()
         toastr.complianceReporting('Supplemental Created')
-        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item.id))
+        this.props.navigate(COMPLIANCE_REPORTING.EDIT_REDIRECT.replace(':id', nextProps.complianceReporting.item?.id))
       }
     }
 
@@ -500,14 +502,20 @@ class ComplianceReportingEditContainer extends Component {
         summary.creditsOffset = 0
       }
 
-      const { isSupplemental } = report.item
+      const {
+        totalPreviousCreditReductions
+      } = report.item
 
-      // if (isSupplemental && summary && !summary.creditsOffsetA) {
-      //   summary.creditsOffsetA = totalPreviousCreditReductions;
-      // }
+      if (summary && !summary.creditsOffsetA) {
+        summary.creditsOffsetA = totalPreviousCreditReductions
+      }
 
-      if (isSupplemental && summary && !summary.creditsOffsetB) {
+      if (summary && !summary.creditsOffsetB) {
         summary.creditsOffsetB = 0
+      }
+
+      if (summary && !summary.creditsOffsetC) {
+        summary.creditsOffsetC = 0
       }
 
       this.props.recomputeTotals({
@@ -623,7 +631,7 @@ class ComplianceReportingEditContainer extends Component {
         }
       </p>,
       <p className="schedule-organization-address" key="organization-attorney-address">
-      {organizationAddress
+      {organizationAddress && atLeastOneAttorneyAddressFieldExists(organizationAddress)
         ? ['B.C. Attorney Office: ',
             organizationAddress.attorneyRepresentativename ? organizationAddress.attorneyRepresentativename + ', ' : '',
             AddressBuilder({
@@ -869,6 +877,7 @@ ComplianceReportingEditContainer.propTypes = {
       hasSnapshot: PropTypes.bool,
       id: PropTypes.number,
       isSupplemental: PropTypes.bool,
+      totalPreviousCreditReductions: PropTypes.number,
       maxCreditOffset: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string
