@@ -25,7 +25,7 @@ module.exports = settings => {
       'GIT_REF': oc.git.ref
     }
   }))
-  
+  /*
   objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/templates/frontend/frontend-bc-docker.yaml`, {
     'param':{
       'NAME': phases[phase].name,
@@ -80,7 +80,7 @@ objects = objects.concat(oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/
     'RELEASE_BRANCH': phases[phase].releaseBranch
   }
 }))
-
+*/
   oc.applyRecommendedLabels(
     objects,
     phases[phase].name,
