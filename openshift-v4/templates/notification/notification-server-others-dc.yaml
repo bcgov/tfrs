@@ -26,7 +26,8 @@ objects:
     creationTimestamp:
   spec:
     ports:
-    - protocol: TCP
+    - name: notification
+      protocol: TCP
       port: 8080
       targetPort: 3000
     selector:
@@ -47,6 +48,8 @@ objects:
       kind: Service
       name: ${NAME}-notification-server${SUFFIX}
       weight: 100
+    port:
+      targetPort: notification
     tls:
       termination: edge
     wildcardPolicy: None
