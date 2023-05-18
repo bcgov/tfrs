@@ -31,10 +31,10 @@ spilo:
 
   resources:
     limits:
-      cpu: 120m
+      cpu: 300m
       memory: 400Mi
     requests:
-      cpu: 60m
+      cpu: 150m
       memory: 200Mi  
 
   podDisruptionBudget:
