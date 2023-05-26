@@ -247,7 +247,6 @@ class ComplianceReport(Auditable):
         db_comment='An explanatory note required when submitting a supplemental report'
     )
 
-
     @property
     def generated_nickname(self):
         """ Used for display in the UI when no nickname is set"""
@@ -338,18 +337,7 @@ class ComplianceReport(Auditable):
         return self.supplements is not None
 
     def group_id(self, filter_drafts=False):
-        current = self
-
-        # filter deleted
-        q = ~Q(status__fuel_supplier_status__status__in=["Deleted"])
-
-        if filter_drafts:
-            q = Q(status__fuel_supplier_status__status__in=["Submitted"])
-
-        while len(current.supplemental_reports.filter(q).all()) != 0:
-            current = current.supplemental_reports.filter(q).first()
-
-        return current.id
+        return self.latest_report.id
 
     @property
     def original_report_id(self):
