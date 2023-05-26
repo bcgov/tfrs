@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^health$', views.health),
     url(r'^api_admin/', admin.site.urls),
-    path('__debug__/', include(debug_toolbar.urls)),
+    # path('__debug__/', include(debug_toolbar.urls)),
 ]

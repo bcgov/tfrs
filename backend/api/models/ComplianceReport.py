@@ -247,7 +247,7 @@ class ComplianceReport(Auditable):
         db_comment='An explanatory note required when submitting a supplemental report'
     )
 
-    def create(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if self.supplements:
             root = self.supplements.root_report or self.supplements
             self.root_report = root
