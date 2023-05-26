@@ -53,6 +53,7 @@ from api.serializers.Organization import OrganizationMinSerializer, \
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
+from django.core.cache import cache
 
 class ComplianceReportBaseSerializer:
     def get_last_accepted_offset(self, obj):
@@ -261,7 +262,10 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         return obj.generated_nickname
 
     def get_group_id(self, obj):
-        user = self.context['request'].user
+        user = cache.get("user")
+        if user is None:
+            user = self.context['request'].user
+            cache.set("user", user, 60 * 3)
         return obj.group_id(filter_drafts=user.is_government_user)
 
     def get_supplemental_reports(self, obj):
