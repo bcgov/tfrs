@@ -20,7 +20,7 @@ class ComplianceReportSnapshot(Auditable):
 
     compliance_report = models.OneToOneField(
         'ComplianceReport',
-        related_name=None,
+        related_name='compliance_report_snapshot',
         on_delete=models.DO_NOTHING
     )
 
