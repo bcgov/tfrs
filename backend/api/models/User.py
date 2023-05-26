@@ -20,7 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from django.core.cache import cache
 from django.db import models
 from django.db.models import F, Q
 from django.contrib.auth.models import AbstractUser
@@ -96,7 +96,11 @@ class User(AbstractUser, Auditable):
         """
         Roles applied to the User
         """
-        return Role.objects.filter(user_roles__user_id=self.id)
+        role = cache.get(f'role-user-{self.id}')
+        if role is None:
+            role = Role.objects.filter(user_roles__user_id=self.id)
+            cache.set(f'role-user-{self.id}', role, 60*5)
+        return role
 
     def get_compliance_report_history(self, filters):
         history = ComplianceReportHistory.objects.filter(
@@ -162,7 +166,11 @@ class User(AbstractUser, Auditable):
         """
         Does this user have a government role?
         """
-        if self.roles.filter(Q(is_government_role=True)):
+        is_gov_user = cache.get(f'role-user-{self.id}-gov-role-true')
+        if is_gov_user is None:
+            is_gov_user = self.roles.filter(Q(is_government_role=True))
+            cache.set(f'role-user-{self.id}-gov-role-true', is_gov_user, 60*5)
+        if is_gov_user:
             return True
 
         return False

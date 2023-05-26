@@ -48,7 +48,7 @@ class CreditTrade(Auditable):
     """
     status = models.ForeignKey(
         CreditTradeStatus,
-        related_name='credit_trades',
+        related_name='+',
         on_delete=models.PROTECT
     )
     initiator = models.ForeignKey(
@@ -66,8 +66,9 @@ class CreditTrade(Auditable):
     )
     type = models.ForeignKey(
         CreditTradeType,
-        related_name='credit_trades',
+        related_name='+',
         on_delete=models.PROTECT)
+    
     number_of_credits = models.IntegerField(
         validators=[validators.CreditTradeNumberOfCreditsValidator],
         db_comment="Number of credits to be transferred on approval"
@@ -82,7 +83,7 @@ class CreditTrade(Auditable):
     )
     zero_reason = models.ForeignKey(
         CreditTradeZeroReason,
-        related_name='credit_trades',
+        related_name='+',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
@@ -95,7 +96,7 @@ class CreditTrade(Auditable):
     )
     compliance_period = models.ForeignKey(
         CompliancePeriod,
-        related_name='credit_trades',
+        related_name='+',
         blank=True, null=True,
         on_delete=models.PROTECT
     )
@@ -106,6 +107,7 @@ class CreditTrade(Auditable):
     )
     documents = ManyToManyField(
         'Document',
+        related_name='credit_trade_documents',
         through='DocumentCreditTrade'
     )
 

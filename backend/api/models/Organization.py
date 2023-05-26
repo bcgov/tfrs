@@ -42,17 +42,17 @@ class Organization(Auditable):
     )
     status = models.ForeignKey(
         'OrganizationStatus',
-        related_name='organizations',
+        related_name='+',
         on_delete=models.PROTECT
     )
     actions_type = models.ForeignKey(
         'OrganizationActionsType',
-        related_name='organizations',
+        related_name='+',
         on_delete=models.PROTECT
     )
     type = models.ForeignKey(
         'OrganizationType',
-        related_name='organizations',
+        related_name='+',
         blank=True, null=True,
         on_delete=models.PROTECT
     )

@@ -74,10 +74,13 @@ INSTALLED_APPS = (
     'api.app.APIAppConfig',
     'corsheaders',
     'django_nose',
+    # 'debug_toolbar', # Uncomment this line to enable the debug toolbar
+    # 'nplusone.ext.django', # Uncomment this line to enable the n+1 query logging
 )
 
 MIDDLEWARE = [
-    'api.nocache.NoCacheMiddleware',
+    # 'api.nocache.NoCacheMiddleware',
+    "django.middleware.cache.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,9 +89,32 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    "django.middleware.cache.FetchFromCacheMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'nplusone.ext.django.NPlusOneMiddleware',
 ]
-
+DEBUG_TOOLBAR_PANELS = [
+    'ddt_request_history.panels.request_history.RequestHistoryPanel',  # Here it is
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingPanel',
+]
+DEBUG_TOOLBAR_CONFIG = {
+    'RESULTS_STORE_SIZE': 500,
+    'HISTORY_LENGTH': 100,
+}
+# KEYCLOAK_OIDC_PROFILE_MODEL = 'django_keycloak.OpenIdConnectProfile'
 # Auth User
 AUTH_USER_MODEL = 'api.User'
 
@@ -232,8 +258,9 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "temp_api_cache",
     },
     'keycloak': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -258,6 +285,9 @@ CACHES = {
 
 
 # Uncomment this stanza to see database calls in the log (quite verbose)
+# import logging
+# NPLUSONE_LOGGER = logging.getLogger('nplusone')
+# NPLUSONE_LOG_LEVEL = logging.WARN
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
@@ -277,7 +307,17 @@ CACHES = {
 #             'level': 'DEBUG',
 #             'handlers': ['console'],
 #         },
+#         'nplusone': {
+#             'handlers': ['console'],
+#             'level': 'WARN',
+#         }
 #     }
 # }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# In cases where we are running in a container, we need to set the internal IPs
+if DEBUG:
+    import socket
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
