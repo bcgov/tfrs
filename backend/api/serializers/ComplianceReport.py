@@ -262,10 +262,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         return obj.generated_nickname
 
     def get_group_id(self, obj):
-        user = cache.get("user")
-        if user is None:
-            user = self.context['request'].user
-            cache.set("user", user, 60 * 3)
+        user = self.context['request'].user
         return obj.group_id(filter_drafts=user.is_government_user)
 
     def get_supplemental_reports(self, obj):
