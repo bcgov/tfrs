@@ -80,7 +80,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = [
-    # 'api.nocache.NoCacheMiddleware',
+    'api.nocache.NoCacheMiddleware',
     "django.middleware.cache.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',

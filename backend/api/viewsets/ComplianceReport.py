@@ -28,7 +28,7 @@ from api.paginations import BasicPagination
 from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
 from django.db.models import Max
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import Subquery
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -408,23 +408,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return latest_supplemental
 
     def get_latest_supplemental_reports(self):
-        latest_supplementals = ComplianceReport.objects.filter(id__in=RawSQL("""
-            SELECT distinct cr.latest_report_id 
-            FROM 
-                compliance_report cr 
-                JOIN compliance_report_workflow_state ws ON cr.status_id = ws.id 
-                JOIN compliance_report_status fs ON ws.fuel_supplier_status_id = fs.status 
-                JOIN compliance_report_status ast ON ws.analyst_status_id = ast.status 
-                JOIN compliance_report_status ms ON ws.manager_status_id = ms.status 
-                JOIN compliance_report_status ds ON ws.director_status_id = ds.status 
-            WHERE 
-                fs.status NOT IN ( 'Deleted') 
-                AND ast.status NOT IN ( 'Deleted') 
-                AND ms.status NOT IN ( 'Deleted') 
-                AND ds.status NOT IN ( 'Deleted')
-            order by 
-            cr.latest_report_id
-        """, [])).select_related("compliance_period") \
+        latest_report_ids = ComplianceReport.objects.filter(
+            Q(status__fuel_supplier_status__status__in=['Deleted']) |
+            Q(status__analyst_status__status__in=['Deleted']) |
+            Q(status__manager_status__status__in=['Deleted']) |
+            Q(status__director_status__status__in=['Deleted'])
+        ).values_list('latest_report_id', flat=True).distinct().order_by('latest_report_id')
+
+        latest_supplementals = ComplianceReport.objects \
+            .filter(id__in=Subquery(latest_report_ids)) \
+            .select_related("compliance_period") \
             .select_related("status") \
             .select_related("latest_report") \
             .select_related("root_report") \

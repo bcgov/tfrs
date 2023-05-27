@@ -99,7 +99,7 @@ class User(AbstractUser, Auditable):
         role = cache.get(f'role-user-{self.id}')
         if role is None:
             role = Role.objects.filter(user_roles__user_id=self.id)
-            cache.set(f'role-user-{self.id}', role, 60*5)
+            cache.set(f'role-user-{self.id}', role, 10)
         return role
 
     def get_compliance_report_history(self, filters):
@@ -169,7 +169,7 @@ class User(AbstractUser, Auditable):
         is_gov_user = cache.get(f'role-user-{self.id}-gov-role-true')
         if is_gov_user is None:
             is_gov_user = self.roles.filter(Q(is_government_role=True))
-            cache.set(f'role-user-{self.id}-gov-role-true', is_gov_user, 60*5)
+            cache.set(f'role-user-{self.id}-gov-role-true', is_gov_user, 10)
         if is_gov_user:
             return True
 
