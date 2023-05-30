@@ -163,14 +163,16 @@ class ComplianceReportService(object):
                 ~Q(status__fuel_supplier_status__status__in=[
                     "Draft", "Deleted"
                 ])
-            )
+            ).select_related("status") \
+                .select_related("type")
         else:
             # If organization == Fuel Supplier
             # Show all compliance reports for which we are the organization
             compliance_reports = ComplianceReport.objects.filter(
                 Q(organization=organization) &
                 ~Q(status__fuel_supplier_status__status__in=["Deleted"])
-            )
+            ).select_related("status") \
+                .select_related("type")
 
         return compliance_reports
 

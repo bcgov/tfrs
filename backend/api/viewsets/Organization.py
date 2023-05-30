@@ -69,10 +69,11 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         There are two types of organizations: Government and Fuel Suppliers
         The function needs to separate the organizations based on type
         """
-        fuel_suppliers = Organization.objects.filter(
-            type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
-            .order_by('id')
+        # fuel_suppliers = Organization.objects.filter(
+        #     type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
+        #     .order_by('id')
 
+        fuel_suppliers = Organization.objects.select_related('type').filter(type__type='Part3FuelSupplier').order_by('id')
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)
 

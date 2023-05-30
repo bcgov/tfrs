@@ -142,6 +142,7 @@ class ComplianceReport(Auditable):
 
     type = models.ForeignKey(
         ComplianceReportType,
+        related_name='+',
         on_delete=models.PROTECT,
         null=False
     )
@@ -163,6 +164,7 @@ class ComplianceReport(Auditable):
 
     compliance_period = models.ForeignKey(
         CompliancePeriod,
+        related_name='+',
         on_delete=models.DO_NOTHING,
         null=False
     )
@@ -216,6 +218,25 @@ class ComplianceReport(Auditable):
         null=True
     )
 
+    root_report = models.ForeignKey(
+        'self',
+        null=True, 
+        blank=True,
+        on_delete=models.SET_NULL, 
+        related_name='root_reports')
+
+    latest_report = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='latest_reports')
+    
+    traversal = models.IntegerField(
+        default=0,
+        db_comment="Traversal position of this compliance report. "
+    )
+    
     nickname = models.CharField(
         max_length=255, blank=True, null=True,
         db_comment="An optional user-supplied nickname for this report"
@@ -226,49 +247,29 @@ class ComplianceReport(Auditable):
         db_comment='An explanatory note required when submitting a supplemental report'
     )
 
+    def save(self, *args, **kwargs):
+        if self.supplements:
+            root = self.supplements.root_report or self.supplements
+            self.root_report = root
+            previous_latest = ComplianceReport.objects.filter(root_report=root).order_by('-traversal').first()
+            if previous_latest.id != self.supplements_id :
+                if previous_latest.status.fuel_supplier_status_id == "Deleted":
+                    self.traversal = previous_latest.traversal + 1
+                self.latest_report = self.supplements
+                ComplianceReport.objects.filter(root_report=root).update(latest_report=self)
+        else:
+            self.root_report = None
+            self.latest_report = self
+        super().save(*args, **kwargs)
+
     @property
     def generated_nickname(self):
         """ Used for display in the UI when no nickname is set"""
 
         if self.supplements is not None:
-            # found out how many in this tree
-            supplement_count = 0
-
-            # wind back to root
-            ancestor = self
-            while ancestor.supplements is not None:
-                ancestor = ancestor.supplements
-
-            # now at the root, traverse to find all
-            visited = []
-            to_visit = collections.deque([ancestor.id])
-            position_in_traversal = 0
-            i = 0
-
-            while len(to_visit) > 0:
-                current_id = to_visit.popleft()
-
-                # break loops
-                if current_id in visited:
-                    continue
-                visited.append(current_id)
-
-                current = ComplianceReport.objects.get(id=current_id)
-
-                # don't count non-supplement reports (really should just be the root)
-                if current.supplements is not None and \
-                        not current.status.fuel_supplier_status_id == "Deleted":
-                    i += 1
-
-                if current_id == self.id:
-                    position_in_traversal = i
-
-                for descendant in current.supplemental_reports.order_by('create_timestamp').all():
-                    to_visit.append(descendant.id)
-
             return '{type} for {period} -- Supplemental Report #{position}' \
                 .format(type=self.type.the_type,
-                        position=position_in_traversal,
+                        position=self.traversal,
                         period=self.compliance_period.description)
         else:
             return '{type} for {period}'.format(period=self.compliance_period.description,
@@ -332,7 +333,8 @@ class ComplianceReport(Auditable):
                 if len(qs) > 0:
                     history.extend(list(qs.all()))
 
-        history = sorted(history, reverse=True, key=lambda h: h.create_timestamp)
+        history = sorted(history, reverse=True,
+                         key=lambda h: h.create_timestamp)
 
         return history
 
@@ -343,32 +345,18 @@ class ComplianceReport(Auditable):
     @property
     def has_snapshot(self):
         return ComplianceReportSnapshot.objects. \
-                   filter(compliance_report=self).count() > 0
+            filter(compliance_report=self).count() > 0
 
     @property
     def is_supplemental(self):
         return self.supplements is not None
 
     def group_id(self, filter_drafts=False):
-        current = self
-
-        # filter deleted
-        q = ~Q(status__fuel_supplier_status__status__in=["Deleted"])
-
-        if filter_drafts:
-            q = Q(status__fuel_supplier_status__status__in=["Submitted"])
-
-        while len(current.supplemental_reports.filter(q).all()) != 0:
-            current = current.supplemental_reports.filter(q).first()
-
-        return current.id
+        return self.latest_report.id
 
     @property
     def original_report_id(self):
-        current = self
-        while current.supplements is not None:
-            current = current.supplements
-        return current.id
+        return self.root_report.id
 
     @property
     def snapshot(self):
@@ -376,13 +364,11 @@ class ComplianceReport(Auditable):
 
     @property
     def sort_date(self):
-        latest = self.update_timestamp if self.update_timestamp else self.create_timestamp
-        to_check = self.supplemental_reports.all()
-
-        for c in to_check:
-            c_sort_date = c.sort_date
-            if c_sort_date > latest:
-                latest = c_sort_date
+        latest = ComplianceReport.objects \
+            .only('update_timestamp') \
+            .filter(latest_report_id=self.latest_report.id) \
+            .order_by('-update_timestamp') \
+            .first().update_timestamp
 
         return latest
 

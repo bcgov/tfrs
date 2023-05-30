@@ -27,7 +27,7 @@ from api.paginations import BasicPagination
 from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
 from django.db.models import Max
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import Subquery, RawSQL
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -378,7 +378,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     def filter_current_status(self, qs, value):
         try:
-            latest_supplementals = self.get_latest_supplemental_reports()
             latest_supplementals = self.filter_draft(qs)
             if value:
                 qs = self.filter_compliance_status(latest_supplementals, value)
@@ -405,13 +404,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return latest_supplemental
 
     def get_latest_supplemental_reports(self):
-        latest_supplementals = ComplianceReport.objects.filter(id__in=RawSQL("""
-            WITH RECURSIVE status_joined AS (
-            SELECT 
-                cr.id, 
-                cr.supplements_id, 
-                cr.create_timestamp, 
-                cr.status_id 
+        latest_supplementals = ComplianceReport.objects \
+            .filter(id__in=RawSQL("""
+            SELECT distinct cr.latest_report_id 
             FROM 
                 compliance_report cr 
                 JOIN compliance_report_workflow_state ws ON cr.status_id = ws.id 
@@ -424,81 +419,15 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 AND ast.status NOT IN ( 'Deleted') 
                 AND ms.status NOT IN ( 'Deleted') 
                 AND ds.status NOT IN ( 'Deleted')
-            ), 
-            chained_reports AS (
-            SELECT 
-                id, 
-                supplements_id, 
-                create_timestamp, 
-                id AS root_id 
-            FROM 
-                status_joined 
-            WHERE 
-                supplements_id IS NULL 
-            UNION ALL 
-            SELECT 
-                s.id, 
-                s.supplements_id, 
-                s.create_timestamp, 
-                lr.root_id 
-            FROM 
-                status_joined s 
-                JOIN chained_reports lr ON s.supplements_id = lr.id
-            ), 
-            last_reports AS (
-            SELECT 
-                root_id, 
-                MAX(create_timestamp) as max_timestamp 
-            FROM 
-                chained_reports 
-            GROUP BY 
-                root_id
-            ), 
-            original_reports AS (
-            SELECT 
-                s.* 
-            FROM 
-                status_joined s 
-            WHERE 
-                s.supplements_id IS NULL 
-                AND (
-                SELECT 
-                    COUNT(*) 
-                FROM 
-                    compliance_report c2 
-                    JOIN compliance_report_workflow_state ws2 ON c2.status_id = ws2.id 
-                    JOIN compliance_report_status fs2 ON ws2.fuel_supplier_status_id = fs2.status 
-                    JOIN compliance_report_status ast2 ON ws2.analyst_status_id = ast2.status 
-                    JOIN compliance_report_status ms2 ON ws2.manager_status_id = ms2.status 
-                    JOIN compliance_report_status ds2 ON ws2.director_status_id = ds2.status 
-                WHERE 
-                    c2.supplements_id = s.id 
-                    AND (
-                    fs2.status NOT IN ( 'Deleted') 
-                    AND ast2.status NOT IN ( 'Deleted') 
-                    AND ms2.status NOT IN ( 'Deleted') 
-                    AND ds2.status NOT IN ( 'Deleted')
-                    )
-                ) = 0
-            )
-            SELECT 
-            cr.id 
-            FROM 
-            compliance_report cr 
-            JOIN chained_reports ch ON cr.id = ch.id 
-            JOIN last_reports lr ON ch.root_id = lr.root_id 
-            AND ch.create_timestamp = lr.max_timestamp 
-            WHERE 
-            cr.supplements_id IS NOT NULL 
-            UNION ALL 
-            SELECT 
-            id 
-            FROM 
-            original_reports 
             order by 
-            id
-        """, [])
-        )
+            cr.latest_report_id
+        """, [])).select_related("compliance_period") \
+            .select_related("status") \
+            .select_related("latest_report") \
+            .select_related("root_report") \
+            .select_related("type") \
+            .select_related("organization") \
+            .prefetch_related("supplements")
         return latest_supplementals
 
     def get_simple_queryset(self):
