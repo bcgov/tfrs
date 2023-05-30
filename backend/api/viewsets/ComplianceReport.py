@@ -392,10 +392,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return supplemental_reports
 
     def filter_draft(self, latest_supplemental):
-        gov_org = cache.get("organization-type-1")
-        if gov_org is None:
-            gov_org = Organization.objects.get(type=1)
-            cache.set("organization-type-1", gov_org, 60 * 5)
+        gov_org = Organization.objects.get(type=1)
         user = self.request.user
         organization = user.organization
         if  organization == gov_org:
