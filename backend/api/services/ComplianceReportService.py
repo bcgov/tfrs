@@ -3,7 +3,6 @@ import re
 from collections import defaultdict, namedtuple
 from decimal import Decimal
 
-from django.core.cache import cache
 from django.db.models import Q
 from django.db.transaction import on_commit
 
@@ -155,10 +154,7 @@ class ComplianceReportService(object):
         organization
         """
         # Government Organization -- assume OrganizationType id 1 is gov
-        gov_org = cache.get("organization-type-1")
-        if gov_org is None:
-            gov_org = Organization.objects.get(type=1)
-            cache.set("organization-type-1", gov_org, 60*5)
+        gov_org = Organization.objects.get(type=1)
         if organization == gov_org:
             # If organization == Government
             #  don't show "Draft" transactions

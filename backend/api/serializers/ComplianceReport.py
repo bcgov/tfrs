@@ -53,7 +53,6 @@ from api.serializers.Organization import OrganizationMinSerializer, \
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
-from django.core.cache import cache
 
 class ComplianceReportBaseSerializer:
     def get_last_accepted_offset(self, obj):
@@ -278,10 +277,7 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         if obj.latest_report.id == obj.id:
             qs = qs.filter(~Q(id=obj.latest_report.id))
             
-        gov_org = cache.get("organization-type-1")
-        if gov_org is None:
-            gov_org = Organization.objects.get(type=1)
-            cache.set("organization-type-1", gov_org, 60 * 5)
+        gov_org = Organization.objects.get(type=1)
         organization = self.context['request'].user.organization
 
         if organization == gov_org:
@@ -344,10 +340,7 @@ class ComplianceReportDashboardListSerializer(serializers.ModelSerializer):
         if obj.latest_report.id == obj.id:
             qs = qs.filter(~Q(id=obj.latest_report.id))
         
-        gov_org = cache.get("organization-type-1")
-        if gov_org is None:
-            gov_org = Organization.objects.get(type=1)
-            cache.set("organization-type-1", gov_org, 60 * 5)
+        gov_org = Organization.objects.get(type=1)
         organization = self.context['request'].user.organization
 
         if organization == gov_org:

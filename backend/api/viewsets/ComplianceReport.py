@@ -1,7 +1,6 @@
 import datetime
 import json
 
-from django.core.cache import cache
 from django.db import transaction
 from django.db.models import Count
 from django.http import HttpResponse
@@ -28,7 +27,7 @@ from api.paginations import BasicPagination
 from django.db.models import Q, F, Value, DateField
 from django.db.models.functions import Concat, Cast
 from django.db.models import Max
-from django.db.models.expressions import Subquery
+from django.db.models.expressions import Subquery, RawSQL
 
 
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -394,10 +393,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return supplemental_reports
 
     def filter_draft(self, latest_supplemental):
-        gov_org = cache.get("organization-type-1")
-        if gov_org is None:
-            gov_org = Organization.objects.get(type=1)
-            cache.set("organization-type-1", gov_org, 60 * 5)
+        gov_org = Organization.objects.get(type=1)
         user = self.request.user
         organization = user.organization
         if  organization == gov_org:
@@ -408,16 +404,24 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return latest_supplemental
 
     def get_latest_supplemental_reports(self):
-        latest_report_ids = ComplianceReport.objects.filter(
-            Q(status__fuel_supplier_status__status__in=['Deleted']) |
-            Q(status__analyst_status__status__in=['Deleted']) |
-            Q(status__manager_status__status__in=['Deleted']) |
-            Q(status__director_status__status__in=['Deleted'])
-        ).values_list('latest_report_id', flat=True).distinct().order_by('latest_report_id')
-
         latest_supplementals = ComplianceReport.objects \
-            .filter(id__in=Subquery(latest_report_ids)) \
-            .select_related("compliance_period") \
+            .filter(id__in=RawSQL("""
+            SELECT distinct cr.latest_report_id 
+            FROM 
+                compliance_report cr 
+                JOIN compliance_report_workflow_state ws ON cr.status_id = ws.id 
+                JOIN compliance_report_status fs ON ws.fuel_supplier_status_id = fs.status 
+                JOIN compliance_report_status ast ON ws.analyst_status_id = ast.status 
+                JOIN compliance_report_status ms ON ws.manager_status_id = ms.status 
+                JOIN compliance_report_status ds ON ws.director_status_id = ds.status 
+            WHERE 
+                fs.status NOT IN ( 'Deleted') 
+                AND ast.status NOT IN ( 'Deleted') 
+                AND ms.status NOT IN ( 'Deleted') 
+                AND ds.status NOT IN ( 'Deleted')
+            order by 
+            cr.latest_report_id
+        """, [])).select_related("compliance_period") \
             .select_related("status") \
             .select_related("latest_report") \
             .select_related("root_report") \

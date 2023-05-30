@@ -81,7 +81,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = [
     'api.nocache.NoCacheMiddleware',
-    "django.middleware.cache.UpdateCacheMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,7 +90,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    "django.middleware.cache.FetchFromCacheMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware', # Uncomment this to enable debug toolbar 
     # 'nplusone.ext.django.NPlusOneMiddleware', # Uncomment this to enable N+1
@@ -260,8 +260,7 @@ CORS_EXPOSE_HEADERS = [
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "temp_api_cache",
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
     },
     'keycloak': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
