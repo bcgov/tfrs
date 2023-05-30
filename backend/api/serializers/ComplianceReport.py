@@ -53,7 +53,6 @@ from api.serializers.Organization import OrganizationMinSerializer, \
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
-from django.core.cache import cache
 
 class ComplianceReportBaseSerializer:
     def get_last_accepted_offset(self, obj):
