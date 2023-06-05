@@ -247,20 +247,6 @@ class ComplianceReport(Auditable):
         db_comment='An explanatory note required when submitting a supplemental report'
     )
 
-    def save(self, *args, **kwargs):
-        if self.supplements:
-            root = self.supplements.root_report or self.supplements
-            self.root_report = root
-            previous_latest = ComplianceReport.objects.filter(root_report=root).order_by('-traversal').first()
-            if previous_latest.id != self.supplements_id :
-                if previous_latest.status.fuel_supplier_status_id == "Deleted":
-                    self.traversal = previous_latest.traversal + 1
-                self.latest_report = self.supplements
-                ComplianceReport.objects.filter(root_report=root).update(latest_report=self)
-        else:
-            self.root_report = None
-            self.latest_report = self
-        super().save(*args, **kwargs)
 
     @property
     def generated_nickname(self):
