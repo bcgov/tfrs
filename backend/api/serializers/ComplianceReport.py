@@ -1248,15 +1248,12 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 if not previous_report.status.fuel_supplier_status_id == 'Deleted':
                     new_compliance_report.traversal = previous_report.traversal + 1
                 ComplianceReport.objects.filter(root_report_id=root_report.id).update(latest_report=new_compliance_report.supplements)
-                new_compliance_report.save()
             else:
                 new_compliance_report.traversal = previous_report.traversal
-                new_compliance_report.save()
         else:
             new_compliance_report.root_report = new_compliance_report
             new_compliance_report.latest_report = new_compliance_report
-            new_compliance_report.save()
-
+        new_compliance_report.save()
         return new_compliance_report
 
     def save(self, **kwargs):
