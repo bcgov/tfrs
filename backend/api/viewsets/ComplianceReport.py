@@ -1,13 +1,14 @@
 import datetime
-import json
 
+from django.core.cache import caches, cache
 from django.db import transaction
-from django.db.models import Count
 from django.http import HttpResponse
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from api.models.CachedPages import CachedPages
 from api.models.Organization import Organization
 from api.models.ComplianceReport import ComplianceReport, \
     ComplianceReportStatus, ComplianceReportType
@@ -24,12 +25,12 @@ from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
 from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
-from django.db.models import Q, F, Value, DateField
-from django.db.models.functions import Concat, Cast
+from django.db.models import Q, F, Value
+from django.db.models.functions import Concat, FirstValue
 from django.db.models import Max
-from django.db.models.expressions import Subquery, RawSQL
+from django.db.models.expressions import Window
 
-
+cached_page = caches['cached_pages']
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
                               mixins.UpdateModelMixin,
@@ -65,9 +66,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         This view should return a list of all the compliance reports
         for the currently authenticated user.
         """
-        latest_supplemental  = self.get_latest_supplemental_reports()
-        qs = self.filter_draft(latest_supplemental)
-
+        qs = self.get_latest_supplemental_reports()
         request = self.request
         if self.action == 'list' or self.action == 'paginated':
             if self.action == 'paginated':
@@ -404,24 +403,18 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return latest_supplemental
 
     def get_latest_supplemental_reports(self):
+        subquery = ComplianceReport.objects.filter(~Q(status__fuel_supplier_status__status='Deleted')
+                                                               & ~Q(status__analyst_status__status='Deleted')
+                                                               & ~Q(status__manager_status__status='Deleted')
+                                                               & ~Q(status__director_status__status='Deleted')) \
+                            .annotate(first_id=Window(expression=FirstValue('id'),
+                                                      partition_by=[F('latest_report_id')],
+                                                      order_by=[F('traversal').desc(), F('latest_report_id').desc()])) \
+                            .values('first_id') \
+                            .distinct()
+        subquery = self.filter_draft(subquery)
         latest_supplementals = ComplianceReport.objects \
-            .filter(id__in=RawSQL("""
-            SELECT distinct cr.latest_report_id 
-            FROM 
-                compliance_report cr 
-                JOIN compliance_report_workflow_state ws ON cr.status_id = ws.id 
-                JOIN compliance_report_status fs ON ws.fuel_supplier_status_id = fs.status 
-                JOIN compliance_report_status ast ON ws.analyst_status_id = ast.status 
-                JOIN compliance_report_status ms ON ws.manager_status_id = ms.status 
-                JOIN compliance_report_status ds ON ws.director_status_id = ds.status 
-            WHERE 
-                fs.status NOT IN ( 'Deleted') 
-                AND ast.status NOT IN ( 'Deleted') 
-                AND ms.status NOT IN ( 'Deleted') 
-                AND ds.status NOT IN ( 'Deleted')
-            order by 
-            cr.latest_report_id
-        """, [])).select_related("compliance_period") \
+            .filter(id__in=subquery).select_related("compliance_period") \
             .select_related("status") \
             .select_related("latest_report") \
             .select_related("root_report") \
@@ -452,6 +445,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         This is to explicitly call the destroy function in the serializer.
 
         """
+        self.clear_cache_keys_with_pattern('compliance_reports_')
         instance = self.get_object()
 
         serializer = self.get_serializer(
@@ -461,11 +455,13 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(None, status=status.HTTP_200_OK)
 
     def perform_create(self, serializer):
+        self.clear_cache_keys_with_pattern('compliance_reports_')
         _compliance_report = serializer.save(
             organization=self.request.user.organization
         )
 
     def perform_update(self, serializer):
+        self.clear_cache_keys_with_pattern('compliance_reports_')
         previous_state = self.get_object()
         previous_status = previous_state.status
         compliance_report = serializer.save()
@@ -503,7 +499,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         If it is, use the appropriate serializer. Otherwise,
         use the default.
         """
-
+        self.clear_cache_keys_with_pattern('compliance_reports_')
         instance = self.get_object()
 
         if request.method == 'PATCH':
@@ -533,6 +529,13 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'compliance_reports_list_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         qs = self.get_queryset()
 
         sorted_qs = sorted(list(qs.all()), key=lambda x: [
@@ -540,7 +543,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         serializer = self.get_serializer(
             sorted_qs, many=True, context={'request': request})
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
@@ -678,16 +683,37 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @action(detail=False, methods=['get'])
     def dashboard(self, request):
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'compliance_reports_dashboard_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         qs = self.get_simple_queryset()
         serializer = self.get_serializer(
             qs, many=True, context={'request': request})
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
     
     @action(detail=False, methods=['get'])
     def supplemental(self, request):
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'compliance_reports_supplemental_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         latest_supplemental  = self.get_latest_supplemental_reports()
         qs = self.filter_draft(latest_supplemental)
         serializer = self.get_serializer(
             qs, many=True, context={'request': request})
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
 
+    def clear_cache_keys_with_pattern(self, pattern):
+        with transaction.atomic():
+            CachedPages.objects.filter(cache_key__icontains=pattern).delete()
