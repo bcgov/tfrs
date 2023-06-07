@@ -546,7 +546,6 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             sorted_qs, many=True, context={'request': request})
         data = serializer.data
         cached_page.set(sanitized_cache_key, data, 60 * 15)
-        return Response(data)
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
