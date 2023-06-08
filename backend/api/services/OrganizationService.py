@@ -169,28 +169,42 @@ class OrganizationService(object):
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
 
-        total = 0
+        print('credits', credits)
+        print('debits', debits)
+
+        total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
-            total = credits.get('total')
+            total_in_compliance_period = credits.get('total')
 
         if debits and debits.get('total') is not None:
-            total -= debits.get('total')
-
+            total_in_compliance_period -= debits.get('total')
+        
+        print('total_in_compliance_period', total_in_compliance_period)
+        print('exclude_reserved', exclude_reserved)
+        
         if exclude_reserved:
             pending_deductions = OrganizationService.get_pending_transfers_value(organization)
         else:
             pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
         
-        current_balance = organization.organization_balance.get(
+        validated_credits = organization.organization_balance.get(
             'validated_credits', 0
         )
 
-        if current_balance < total:
-            total = current_balance
+        print('validated_credits', validated_credits)
+        print('pending_deductions', pending_deductions)
 
-        total -= pending_deductions
+        total_balance = validated_credits - pending_deductions
+        total_available_credits = min(total_in_compliance_period, total_balance)
 
-        if total < 0:
-            total = 0
+        # if current_balance < total:
+        #     total = current_balance
 
-        return total
+        # total -= pending_deductions
+
+        if total_available_credits < 0:
+            total_available_credits = 0
+
+        print('total_available_credits', total_available_credits)
+
+        return total_available_credits

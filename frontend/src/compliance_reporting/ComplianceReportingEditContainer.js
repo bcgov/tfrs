@@ -596,9 +596,29 @@ class ComplianceReportingEditContainer extends Component {
         {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
         {item.compliancePeriod.description}
       </h2>,
+      <h3 className="schedule-available-credit-balance" key="available-credit-balance-excluding-reserved">
+      Available Credit Balance excluding reserved:
+        {` ${numeral(item.maxCreditOffsetExcludeReserved).format(NumberFormat.INT)} `}
+        <Tooltip
+          className="info"
+          placement="bottom"
+          show
+          title="The Available Credit Balance is the amount of credits in your credit balance
+          that can be used to offset outstanding debits in the compliance period for which this
+          report relates. Available credits include: (1) validated credits that were generated
+          from the supply of Part 3 fuel in this compliance period or in previous compliance
+          periods; and (2) credits issued under Part 3 Agreements or acquired through Credit
+          Transfers on or before the March 31 deadline of the calendar year following the
+          compliance period for which this report relates. Credits that are In Reserve (i.e.
+            pending a credit transaction) are not considered available and are therefore not
+            included in the Available Credit Balance."
+        >
+          <FontAwesomeIcon icon="info-circle" />
+        </Tooltip>
+      </h3>,
       <h3 className="schedule-available-credit-balance" key="available-credit-balance">
       Available Credit Balance for this compliance period:
-        {` ${numeral(item.maxCreditOffsetExcludeReserved).format(NumberFormat.INT)} `}
+        {` ${numeral(item.maxCreditOffset).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
           placement="bottom"
