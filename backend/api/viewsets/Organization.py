@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.cache import caches
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 
@@ -29,6 +30,7 @@ from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 from auditable.views import AuditableMixin
 
 
+cached_page = caches['cached_pages']
 class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
                           mixins.CreateModelMixin, mixins.ListModelMixin,
                           mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
@@ -69,13 +71,18 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         There are two types of organizations: Government and Fuel Suppliers
         The function needs to separate the organizations based on type
         """
-        # fuel_suppliers = Organization.objects.filter(
-        #     type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
-        #     .order_by('id')
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'organizations_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
 
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         fuel_suppliers = Organization.objects.select_related('type').filter(type__type='Part3FuelSupplier').order_by('id')
         serializer = self.get_serializer(fuel_suppliers, many=True)
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
 
     @action(detail=False, methods=['get'])
     @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
@@ -106,6 +113,13 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         (Most should be returned, but as an example, government is not
         going to be included here.)
         """
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'organizations_fuel_suppliers_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
+
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
             .filter(type=OrganizationType.objects.get(
@@ -113,7 +127,9 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
 
     @action(detail=False, methods=['get'])
     def actions_types(self, request):
@@ -133,13 +149,21 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
             Reference data for UI
         """
+        query_params = request.GET.urlencode()
+        form_data = request.data
+        cache_key = f'organizations_statuses_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
+
+        data = cached_page.get(cache_key)
+        if data is not None:
+            return Response(data)
         statuses = OrganizationStatus.objects.all()
 
         serializer = self.get_serializer(statuses,
                                          read_only=True,
                                          many=True)
-
-        return Response(serializer.data)
+        data = serializer.data
+        cached_page.set(cache_key, data, 60 * 15)
+        return Response(data)
 
     @action(detail=False, methods=['get'])
     def types(self, request):

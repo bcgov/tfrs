@@ -123,12 +123,14 @@ class ComplianceReportingTable extends Component {
     }, {
       accessor: (item) => {
         let report = item
-        const { supplementalReports } = item
-        if (supplementalReports.length > 0) {
-          [report] = supplementalReports
-        }
-        while (report.supplementalReports && report.supplementalReports.length > 0) {
-          [report] = report.supplementalReports
+        if (this.props.loggedInUser.isGovernmentUser) {
+          const { supplementalReports } = item
+          if (supplementalReports.length > 0) {
+            [report] = supplementalReports
+          }
+          while (report.supplementalReports && report.supplementalReports.length > 0) {
+            [report] = report.supplementalReports
+          }
         }
         return ComplianceReportStatus(report)
       },

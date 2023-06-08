@@ -81,7 +81,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = [
     'api.nocache.NoCacheMiddleware',
-    # "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,13 +90,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # "django.middleware.cache.FetchFromCacheMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware', # Uncomment this to enable debug toolbar 
+    "django.middleware.cache.FetchFromCacheMiddleware",
+    'api.nocache.DisableCacheMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware', # Uncomment this to enable debug toolbar
     # 'nplusone.ext.django.NPlusOneMiddleware', # Uncomment this to enable N+1
 ]
 DEBUG_TOOLBAR_PANELS = [
-    'ddt_request_history.panels.request_history.RequestHistoryPanel', 
+    'ddt_request_history.panels.request_history.RequestHistoryPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',
@@ -280,7 +281,14 @@ CACHES = {
         'OPTIONS': {
             'MAX_ENTRIES': 100000
         }
-    }
+    },
+    'cached_pages': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cached_pages',
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    },
 }
 
 
