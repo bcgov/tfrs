@@ -409,7 +409,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                                                                & ~Q(status__director_status__status='Deleted')) \
                             .annotate(first_id=Window(expression=FirstValue('id'),
                                                       partition_by=[F('latest_report_id')],
-                                                      order_by=[F('traversal').desc(), F('latest_report_id').desc()])) \
+                                                      order_by=[F('traversal').desc(), F('id').desc()])) \
                             .values('first_id') \
                             .distinct()
         subquery = self.filter_draft(subquery)

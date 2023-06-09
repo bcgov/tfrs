@@ -1244,6 +1244,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
             root_report = previous_report.root_report or previous_report
             new_compliance_report.latest_report = new_compliance_report.supplements
+            new_compliance_report.root_report = root_report
             if previous_report.latest_report_id != new_compliance_report.supplements_id:
                 if not previous_report.status.fuel_supplier_status_id == 'Deleted':
                     new_compliance_report.traversal = previous_report.traversal + 1
