@@ -532,8 +532,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'compliance_reports_list_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         qs = self.get_queryset()
@@ -544,7 +545,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(
             sorted_qs, many=True, context={'request': request})
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
 
     @action(detail=False, methods=['post'])
@@ -686,15 +687,16 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'compliance_reports_dashboard_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         qs = self.get_simple_queryset()
         serializer = self.get_serializer(
             qs, many=True, context={'request': request})
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
     
     @action(detail=False, methods=['get'])
@@ -702,8 +704,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'compliance_reports_supplemental_{request.user.username}:{request.user.organization.name}:{query_params}_{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         latest_supplemental  = self.get_latest_supplemental_reports()
@@ -711,7 +714,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(
             qs, many=True, context={'request': request})
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
 
     def clear_cache_keys_with_pattern(self, pattern):
