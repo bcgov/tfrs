@@ -596,9 +596,9 @@ class ComplianceReportingEditContainer extends Component {
         {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
         {item.compliancePeriod.description}
       </h2>,
-      <h3 className="schedule-available-credit-balance" key="available-credit-balance">
-      Available Credit Balance for this compliance period:
-        {` ${numeral(item.maxCreditOffsetExcludeReserved).format(NumberFormat.INT)} `}
+      <h3 className="schedule-available-credit-balance" key="available-credit-balance-excluding-reserved">
+        Available Credit Balance for this compliance period:
+        {` ${numeral(Math.min(item.maxCreditOffsetExcludeReserved, item.maxCreditOffset)).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
           placement="bottom"

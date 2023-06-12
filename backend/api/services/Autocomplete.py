@@ -162,9 +162,10 @@ class Autocomplete:
             raise NoSuchFieldError('No completion for field {}'.format(name))
 
         cache_key = '{}:{}'.format(name, q)
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
         if cache_results:
-            result = cache.get(cache_key)
+            result = cache.get(sanitized_cache_key)
         else:
             result = None
 
@@ -174,6 +175,6 @@ class Autocomplete:
             else:
                 result = Autocomplete.completions[name].get_matches(q)
 
-            cache.set(cache_key, result)
+            cache.set(sanitized_cache_key, result)
 
         return result

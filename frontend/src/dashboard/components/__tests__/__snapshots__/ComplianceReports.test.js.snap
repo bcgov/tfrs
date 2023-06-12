@@ -7,9 +7,10 @@ exports[`ComplianceReports Should render the component 1`] = `
   <h1>
     Compliance &  Exclusion Reports
   </h1>
-  There are:
+  <p>
+    There are:
+  </p>
   <div>
-    <br />
     <div
       className="compliance-fieldset-value"
     >
@@ -31,6 +32,9 @@ exports[`ComplianceReports Should render the component 1`] = `
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div>
     <div
@@ -55,6 +59,9 @@ exports[`ComplianceReports Should render the component 1`] = `
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
 </div>
 `;
@@ -66,9 +73,10 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
   <h1>
     Compliance &  Exclusion Reports
   </h1>
-  There are:
+  <p>
+    There are:
+  </p>
   <div>
-    <br />
     <div
       className="compliance-fieldset-value"
     >
@@ -90,6 +98,9 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div>
     <div
@@ -114,6 +125,9 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
 </div>
 `;

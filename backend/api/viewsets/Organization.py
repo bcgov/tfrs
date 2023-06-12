@@ -74,14 +74,15 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'organizations_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         fuel_suppliers = Organization.objects.select_related('type').filter(type__type='Part3FuelSupplier').order_by('id')
         serializer = self.get_serializer(fuel_suppliers, many=True)
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
 
     @action(detail=False, methods=['get'])
@@ -116,8 +117,9 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'organizations_fuel_suppliers_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         fuel_suppliers = Organization.objects.extra(
@@ -128,7 +130,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         serializer = self.get_serializer(fuel_suppliers, many=True)
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
 
     @action(detail=False, methods=['get'])
@@ -152,8 +154,9 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         query_params = request.GET.urlencode()
         form_data = request.data
         cache_key = f'organizations_statuses_{request.user.id}:{request.user.organization.name}:{query_params}:{form_data}'
+        sanitized_cache_key = cache_key.replace(' ', '_')
 
-        data = cached_page.get(cache_key)
+        data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
         statuses = OrganizationStatus.objects.all()
@@ -162,7 +165,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
                                          read_only=True,
                                          many=True)
         data = serializer.data
-        cached_page.set(cache_key, data, 60 * 15)
+        cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
 
     @action(detail=False, methods=['get'])
