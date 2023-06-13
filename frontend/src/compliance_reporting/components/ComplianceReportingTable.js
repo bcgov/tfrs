@@ -123,7 +123,7 @@ class ComplianceReportingTable extends Component {
     }, {
       accessor: (item) => {
         let report = item
-        if (this.props.loggedInUser.isGovernmentUser) {
+        if (this.props.loggedInUser.isGovernmentUser && item.status.fuelSupplierStatus === 'Draft') {
           const { supplementalReports } = item
           if (supplementalReports.length > 0) {
             [report] = supplementalReports
