@@ -2332,14 +2332,10 @@ class Migration(migrations.Migration):
             name='status',
             field=models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='compliance_report', to='api.compliancereportworkflowstate'),
         ),
-        migrations.RemoveField(
+        migrations.AlterField(
             model_name='compliancereporthistory',
             name='status',
-        ),
-        migrations.AddField(
-            model_name='compliancereporthistory',
-            name='status',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='compliance_reports', to='api.compliancereportworkflowstate'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='history_records', to='api.compliancereportworkflowstate'),
         ),
         migrations.CreateModel(
             name='ExclusionAgreement',
