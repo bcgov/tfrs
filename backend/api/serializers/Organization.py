@@ -36,6 +36,7 @@ from api.models.User import User
 from api.models.UserRole import UserRole
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
 from .OrganizationStatus import OrganizationMinStatusSerializer
+from ..models.CachedPages import CachedPages
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -96,6 +97,7 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        CachedPages.objects.filter(cache_key__icontains='organizations').delete()
         obj = Organization.objects.create(
             name=validated_data['name'],
             type=validated_data['type'],
@@ -136,7 +138,7 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, obj, validated_data):
         request = self.context.get('request')
-
+        CachedPages.objects.filter(cache_key__icontains='organizations').delete()
         if request.user.has_perm('EDIT_FUEL_SUPPLIERS'):
             status = validated_data['status']
 

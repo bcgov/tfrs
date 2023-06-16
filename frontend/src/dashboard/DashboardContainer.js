@@ -252,7 +252,6 @@ DashboardContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   getDashboardRequest: PropTypes.func.isRequired,
-  testData: PropTypes.func.isRequired,
   getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   getFuelCodes: PropTypes.func.isRequired,

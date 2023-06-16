@@ -1,7 +1,7 @@
 'use strict';
 const options= require('@bcgov/pipeline-cli').Util.parseArguments()
 const changeId = options.pr //aka pull-request
-const version = '2.6.0'
+const version = '2.7.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
 
@@ -13,7 +13,7 @@ options.git.repository='tfrs'
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
-            releaseBranch: 'release-2.6.0'
+            releaseBranch: 'release-2.7.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`, dbServiceName: 'tfrs-spilo',
@@ -51,7 +51,7 @@ const phases = {
         celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
         scanCoordinatorCpuRequest: '50m', scanCoordinatorCpuLimit: '100m', scanCoordinatorMemoryRequest: '30Mi', scanCoordinatorMemoryLimit: '60Mi',
-        notificationServerCpuRequest: '25m', notificationServerCpuLimit: '50m', notificationServerMemoryRequest: '100Mi', notificationServerMemoryLimit: '200Mi',
+        notificationServerCpuRequest: '100m', notificationServerCpuLimit: '200m', notificationServerMemoryRequest: '120Mi', notificationServerMemoryLimit: '240Mi',
         patroniCpuRequest: '300m', patroniCpuLimit: '700m', patroniMemoryRequest: '250Mi', patroniMemoryLimit: '1Gi', patroniPvcSize: '3Gi', 
             patroniReplica: 2, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
         rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '400m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 
@@ -73,7 +73,7 @@ const phases = {
         celeryCpuRequest: '100m', celeryCpuLimit: '250mm', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
         scanCoordinatorCpuRequest: '50m', scanCoordinatorCpuLimit: '100m', scanCoordinatorMemoryRequest: '30Mi', scanCoordinatorMemoryLimit: '60Mi',
-        notificationServerCpuRequest: '25m', notificationServerCpuLimit: '50m', notificationServerMemoryRequest: '100Mi', notificationServerMemoryLimit: '200Mi',
+        notificationServerCpuRequest: '100m', notificationServerCpuLimit: '200m', notificationServerMemoryRequest: '120Mi', notificationServerMemoryLimit: '240Mi',
         patroniCpuRequest: '300m', patroniCpuLimit: '600m', patroniMemoryRequest: '500Mi', patroniMemoryLimit: '2Gi', patroniPvcSize: '10Gi', 
             patroniReplica: 3, storageClass: 'netapp-block-standard', ocpName: `${ocpName}`,
         rabbitmqCpuRequest: '250m', rabbitmqCpuLimit: '400m', rabbitmqMemoryRequest: '500Mi', rabbitmqMemoryLimit: '1Gi', rabbitmqPvcSize: '1Gi', 

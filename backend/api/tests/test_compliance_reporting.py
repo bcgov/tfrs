@@ -62,6 +62,9 @@ class TestComplianceReporting(BaseTestCase):
         report.update_timestamp = timezone.now()
 
         report.save()
+        report.root_report = report
+        report.latest_report = report
+        report.save()
         report.refresh_from_db()
         return report.id
 
@@ -374,7 +377,7 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response_data['scheduleB']['records'][0]['intensity'], '23.50')
 
-    def test_schedule_b_altnerative_method_no_intensity(self):
+    def test_schedule_b_alternative_method_no_intensity(self):
         payload = {
             'scheduleB': {
                 'records': [

@@ -26,6 +26,9 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
         Compliance & Exclusion Reports in Progress
       </button>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div>
     <div
@@ -50,6 +53,9 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div
     className="add-button"
@@ -91,6 +97,9 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
         Compliance & Exclusion Reports in Progress
       </button>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div>
     <div
@@ -115,6 +124,9 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
         </button>
       </div>
     </div>
+    <p>
+      <br />
+    </p>
   </div>
   <div
     className="add-button"

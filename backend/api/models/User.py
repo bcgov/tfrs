@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
 from django.db.models import F, Q
 from django.contrib.auth.models import AbstractUser
@@ -96,7 +95,8 @@ class User(AbstractUser, Auditable):
         """
         Roles applied to the User
         """
-        return Role.objects.filter(user_roles__user_id=self.id)
+        role = Role.objects.filter(user_roles__user_id=self.id)
+        return role
 
     def get_compliance_report_history(self, filters):
         history = ComplianceReportHistory.objects.filter(
@@ -162,7 +162,8 @@ class User(AbstractUser, Auditable):
         """
         Does this user have a government role?
         """
-        if self.roles.filter(Q(is_government_role=True)):
+        is_gov_user = self.roles.filter(Q(is_government_role=True))
+        if is_gov_user:
             return True
 
         return False

@@ -230,8 +230,8 @@ class ComplianceReportingEditContainer extends Component {
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
       if (!nextProps.complianceReporting.success) {
-        const errorMessage = nextProps.complianceReporting.errorMessage.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving'
-        reduxToastr.error(errorMessage)
+        const errorMessage = nextProps.complianceReporting.errorMessage?.length > 0 ? nextProps.complianceReporting.errorMessage.join('\r\n') : 'Error saving'
+       reduxToastr.error(errorMessage)
       } else {
         if (this.status.fuelSupplierStatus) {
           toastr.complianceReporting(this.status.fuelSupplierStatus)
@@ -596,9 +596,9 @@ class ComplianceReportingEditContainer extends Component {
         {typeof item.compliancePeriod === 'string' && item.compliancePeriod}
         {item.compliancePeriod.description}
       </h2>,
-      <h3 className="schedule-available-credit-balance" key="available-credit-balance">
-      Available Credit Balance for this compliance period:
-        {` ${numeral(item.maxCreditOffsetExcludeReserved).format(NumberFormat.INT)} `}
+      <h3 className="schedule-available-credit-balance" key="available-credit-balance-excluding-reserved">
+        Available Credit Balance for this compliance period:
+        {` ${numeral(Math.min(item.maxCreditOffsetExcludeReserved, item.maxCreditOffset)).format(NumberFormat.INT)} `}
         <Tooltip
           className="info"
           placement="bottom"

@@ -46,6 +46,7 @@ UNIT_TESTING_ENABLED = False
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
 
+# DEVELOPMENT = 'True'
 DEVELOPMENT = os.getenv('DEVELOPMENT', 'False') == 'True'
 
 # SECURITY WARNING: never set this on in production
@@ -74,10 +75,13 @@ INSTALLED_APPS = (
     'api.app.APIAppConfig',
     'corsheaders',
     'django_nose',
+    # 'debug_toolbar',
+    # 'nplusone.ext.django',
 )
 
 MIDDLEWARE = [
     'api.nocache.NoCacheMiddleware',
+    "django.middleware.cache.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,8 +90,32 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    "django.middleware.cache.FetchFromCacheMiddleware",
+    'api.nocache.DisableCacheMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware', # Uncomment this to enable debug toolbar
+    # 'nplusone.ext.django.NPlusOneMiddleware', # Uncomment this to enable N+1
 ]
+DEBUG_TOOLBAR_PANELS = [
+    'ddt_request_history.panels.request_history.RequestHistoryPanel',
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingPanel',
+]
+DEBUG_TOOLBAR_CONFIG = {
+    'RESULTS_STORE_SIZE': 500,
+    'HISTORY_LENGTH': 100,
+}
 
 # Auth User
 AUTH_USER_MODEL = 'api.User'
@@ -232,8 +260,8 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
     },
     'keycloak': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -253,11 +281,21 @@ CACHES = {
         'OPTIONS': {
             'MAX_ENTRIES': 100000
         }
-    }
+    },
+    'cached_pages': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cached_pages',
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    },
 }
 
 
 # Uncomment this stanza to see database calls in the log (quite verbose)
+# import logging
+# NPLUSONE_LOGGER = logging.getLogger('nplusone')
+# NPLUSONE_LOG_LEVEL = logging.WARN
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
@@ -277,7 +315,16 @@ CACHES = {
 #             'level': 'DEBUG',
 #             'handlers': ['console'],
 #         },
+#         'nplusone': {
+#             'handlers': ['console'],
+#             'level': 'WARN',
+#         }
 #     }
 # }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]

@@ -106,6 +106,7 @@ class CreditTrade(Auditable):
     )
     documents = ManyToManyField(
         'Document',
+        related_name='credit_trade_documents',
         through='DocumentCreditTrade'
     )
 

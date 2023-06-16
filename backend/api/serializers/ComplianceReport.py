@@ -22,7 +22,8 @@
 """
 from datetime import datetime
 from decimal import *
-from django.db.models import Q
+import json
+from django.db.models import Q, Subquery
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.fields import SerializerMethodField
@@ -52,7 +53,6 @@ from api.serializers.Organization import OrganizationMinSerializer, \
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
-
 
 class ComplianceReportBaseSerializer:
     def get_last_accepted_offset(self, obj):
@@ -209,8 +209,10 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
     )
 
     def should_show(self, field_name, value):
-        user = self.context['request'].user \
-            if 'request' in self.context else None
+        user = self.context['request'].user if 'request' in self.context else None
+
+        if user and user.is_government_user:
+            return True
 
         # Show director_status 'Accepted' to everyone
         if value.status in ['Accepted', 'Rejected'] and \
@@ -219,9 +221,6 @@ class ComplianceReportWorkflowStateSerializer(serializers.ModelSerializer):
 
         if value.status in ['Requested Supplemental'] and \
                 field_name in ['manager_status', 'analyst_status']:
-            return True
-
-        if user and user.is_government_user:
             return True
 
         return False
@@ -266,7 +265,18 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
         return obj.group_id(filter_drafts=user.is_government_user)
 
     def get_supplemental_reports(self, obj):
-        qs = obj.supplemental_reports.order_by('create_timestamp')
+        distinct_supplements_ids = ComplianceReport.objects.filter(
+            latest_report_id=obj.latest_report.id,
+            supplements_id__gt=obj.id
+        ).values('supplements_id').distinct()
+
+        qs = ComplianceReport.objects.filter(
+            Q(id__in=Subquery(distinct_supplements_ids)) | Q(id=obj.latest_report.id)
+        ).order_by('create_timestamp').select_related('type').select_related('status')
+
+        if obj.latest_report.id == obj.id:
+            qs = qs.filter(~Q(id=obj.latest_report.id))
+            
         gov_org = Organization.objects.get(type=1)
         organization = self.context['request'].user.organization
 
@@ -283,13 +293,24 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
             qs = qs.filter(
                 ~Q(status__fuel_supplier_status__status__in=["Deleted"])
             )
+        queryset_list = list(qs.all())
+        return [self.build_nested_data(queryset_list)] if len(queryset_list) > 0 else []
 
-        return ComplianceReportListSerializer(
-            qs.all(),
-            read_only=True,
-            context=self.context,
-            many=True).data
+    def build_nested_data(self, data):
+        if len(data) == 0:
+            return {}
+        obj = data[0]
+        json_tree = {
+            'id': obj.id,
+            'status': ComplianceReportWorkflowStateSerializer(obj.status).data,
+            'type': obj.type.the_type,
+            'supplemental_reports': []
+        }
+        if len(data) > 1:
+            json_tree['supplemental_reports'] = [self.build_nested_data(data[1:])]
 
+        return json_tree
+    
     class Meta:
         model = ComplianceReport
         fields = ('id', 'status', 'type', 'organization', 'compliance_period',
@@ -307,7 +328,18 @@ class ComplianceReportDashboardListSerializer(serializers.ModelSerializer):
     supplemental_reports = SerializerMethodField()
 
     def get_supplemental_reports(self, obj):
-        qs = obj.supplemental_reports.order_by('create_timestamp')
+        distinct_supplements_ids = ComplianceReport.objects.filter(
+            latest_report_id=obj.latest_report.id,
+            supplements_id__gt=obj.id
+        ).values('supplements_id').distinct()
+
+        qs = ComplianceReport.objects.filter(
+            Q(id__in=Subquery(distinct_supplements_ids)) | Q(id=obj.latest_report.id)
+        ).order_by('create_timestamp').select_related('type').select_related('status')
+
+        if obj.latest_report.id == obj.id:
+            qs = qs.filter(~Q(id=obj.latest_report.id))
+        
         gov_org = Organization.objects.get(type=1)
         organization = self.context['request'].user.organization
 
@@ -324,12 +356,23 @@ class ComplianceReportDashboardListSerializer(serializers.ModelSerializer):
             qs = qs.filter(
                 ~Q(status__fuel_supplier_status__status__in=["Deleted"])
             )
+        queryset_list = list(qs.all())
+        return [self.build_nested_data(queryset_list)] if len(queryset_list) > 0 else []
 
-        return ComplianceReportDashboardListSerializer(
-            qs.all(),
-            read_only=True,
-            context=self.context,
-            many=True).data
+    def build_nested_data(self, data):
+        if len(data) == 0:
+            return None
+        obj = data[0]
+        json_tree = {
+            'id': obj.id,
+            'status': ComplianceReportWorkflowStateSerializer(obj.status).data,
+            'type': obj.type.the_type,
+            'supplemental_reports': []
+        }
+        if len(data) > 1:
+            json_tree['supplemental_reports'] = [self.build_nested_data(data[1:])]
+
+        return json_tree
 
     class Meta:
         model = ComplianceReport
@@ -1199,6 +1242,19 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.transaction_type = original_record.transaction_type
                     record.save()
 
+            root_report = previous_report.root_report or previous_report
+            new_compliance_report.latest_report = new_compliance_report.supplements
+            new_compliance_report.root_report = root_report
+            if previous_report.latest_report_id != new_compliance_report.supplements_id:
+                if not previous_report.status.fuel_supplier_status_id == 'Deleted':
+                    new_compliance_report.traversal = previous_report.traversal + 1
+                ComplianceReport.objects.filter(root_report_id=root_report.id).update(latest_report=new_compliance_report.supplements)
+            else:
+                new_compliance_report.traversal = previous_report.traversal
+        else:
+            new_compliance_report.root_report = new_compliance_report
+            new_compliance_report.latest_report = new_compliance_report
+        new_compliance_report.save()
         return new_compliance_report
 
     def save(self, **kwargs):
