@@ -553,12 +553,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
         sorts = request.data.get('sorts')
-        if sorts:
-            if request.data.get('sorts')[0].get('id') == 'updateTimestamp':
-                if request.data.get('sorts')[0].get('desc'):
-                    page = sorted(page, key=lambda x: [x.update_timestamp])
-                else:
-                    page = sorted(page, key=lambda x: [x.update_timestamp], reverse=True)
+        if sorts and request.data.get('sorts')[0].get('id') == 'updateTimestamp':
+            if request.data.get('sorts')[0].get('desc'):
+                page = sorted(page, key=lambda x: [x.update_timestamp])
+            else:
+                page = sorted(page, key=lambda x: [x.update_timestamp], reverse=True)
     
         if page is not None:
             serializer = self.get_serializer(page, many=True)
