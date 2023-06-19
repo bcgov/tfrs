@@ -1,8 +1,8 @@
 name: Scheduled cleanup old workflow runs
 on:
   schedule:
-    - cron: '0 0 1 * *'
-# Run monthly, at 00:00 on the 1st day of month.
+    - cron: '0 0 * * 0'
+# At 00:00 on Sunday.
 
 jobs:
   del_runs:
@@ -15,5 +15,5 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: 30
-          keep_minimum_runs: 6
+          retain_days: 15
+          keep_minimum_runs: 10
