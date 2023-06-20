@@ -579,6 +579,8 @@ class ComplianceReportingEditContainer extends Component {
       period = item.compliancePeriod
     } else {
       period = item.compliancePeriod.description
+    console.log(period, "269")
+
     }
 
     let organizationAddress = null
