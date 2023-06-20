@@ -5,6 +5,7 @@ import Draggable from 'react-draggable'
 import { formatNumeric } from '../../utils/functions'
 
 const ScheduleBTotals = (props) => {
+  console.log(props, "0808")
   const formatNumber = (value) => {
     if (value === 0) {
       return '-'
@@ -16,7 +17,7 @@ const ScheduleBTotals = (props) => {
   const getNetTotal = () => {
     const { credit, debit } = props.totals
     const value = credit - debit
-
+    console.log(value, "1919")
     if (value === 0) {
       return '-'
     }
@@ -27,7 +28,7 @@ const ScheduleBTotals = (props) => {
 
     return formatNumeric(Math.round(value), 0)
   }
-
+console.log(props,'3131')
   return (
     <Draggable bounds="parent">
       <div
@@ -39,7 +40,9 @@ const ScheduleBTotals = (props) => {
             <h2>Totals</h2>
           </div>
         </div>
-
+        {
+          props.period.compliancePeriod.description < 2022 &&
+        <>
         <div className="row">
           <div className="col-md-6">
             <label htmlFor="total-credit">Total Credit</label>
@@ -53,10 +56,12 @@ const ScheduleBTotals = (props) => {
           </div>
           <div className={`col-md-6 value ${props.totals.debit > 0 ? 'debit' : ''}`}>{props.totals.debit > 0 ? `(${formatNumber(props.totals.debit)})` : '-'}</div>
         </div>
+      </> 
+}
 
         <div className="row net-total">
           <div className="col-md-6">
-            <label htmlFor="net-total">Net Credit or (Debit)</label>
+            <label htmlFor="net-total">Net  { props.period.compliancePeriod.description < 2022 ? ' Credit or (Debit) ' : 'Compliance Units'}</label>
           </div>
           <div className={`col-md-6 value ${props.totals.debit > props.totals.credit ? 'debit' : ''}`}>{getNetTotal()}</div>
         </div>
