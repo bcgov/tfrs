@@ -672,10 +672,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             workbook.add_exclusion_agreement(snapshot['exclusion_agreement'])
         if obj.type.the_type == 'Compliance Report':
             workbook.add_schedule_a(snapshot['schedule_a'])
-            workbook.add_schedule_b(snapshot['schedule_b'])
+            workbook.add_schedule_b(snapshot['schedule_b'],
+                                    int(snapshot['compliance_period']['description']))
             workbook.add_schedule_c(snapshot['schedule_c'])
             workbook.add_schedule_d(snapshot['schedule_d'])
-            workbook.add_schedule_summary(snapshot['summary'])
+            workbook.add_schedule_summary(snapshot['summary'],
+                                          int(snapshot['compliance_period']['description']))
 
         workbook.save(response)
 
