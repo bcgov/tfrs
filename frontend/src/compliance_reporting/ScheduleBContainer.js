@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import PropTypes, { string } from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Modal from '../app/components/Modal'
@@ -18,9 +18,9 @@ import { formatNumeric } from '../utils/functions'
 import ComplianceReportingService from './services/ComplianceReportingService'
 
 class ScheduleBContainer extends Component {
+  
   static addHeaders (props) {
     let creditDebitHeaders;
-    console.log(props.period, "1212")
    
     if(props.period < 2022) {
       creditDebitHeaders = [
@@ -40,7 +40,6 @@ class ScheduleBContainer extends Component {
           className: 'credit',
           readOnly: true,
           value: 'Compliance Units',
-          colSpan:2
         }];
     }
     return {
@@ -245,29 +244,6 @@ class ScheduleBContainer extends Component {
             </div>
           )
         }, 
-      //   // {
-      //   //   className: 'credit',
-      //   //   readOnly: true,
-      //   //   value: 'Compliance Units'
-      //   // },
-      //   this.props?.compliancePeriods?.items[0]?.description==='2024' ? {
-      //     className: 'credit',
-      //       readOnly: true,
-      //       value: 'Credit'
-      //   } : {
-      //     className: 'credit',
-      //   readOnly: true,
-      //   value: 'Compliance Units'
-      // },
-      //   // {
-      //   //   className: 'credit',
-      //   //   readOnly: true,
-      //   //   value: 'Credit'
-      //   // }, {
-      //   //   className: 'debit',
-      //   //   readOnly: true,
-      //   //   value: 'Debit'
-      //   // }
       ...creditDebitHeaders
       ]
       ],
@@ -312,14 +288,9 @@ class ScheduleBContainer extends Component {
   }
 
   static snapshotToGrid (records, _grid, year) {
-    console.log(records,_grid,year,'316')
     const grid = _grid
-    console.log(records, "314")
-    console.log(grid, "315")
     for (let i = 0; i < records.length; i += 1) {
-      console.log(records[i].credit,'321')
       const record = records[i]
-      console.log(record.credits,record.fuelClass,"284")
       const row = i + 2
       grid[row][SCHEDULE_B.FUEL_TYPE].value = record.fuelType
       grid[row][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass
@@ -332,48 +303,17 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.UNITS].value = record.unitOfMeasure
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.effectiveCarbonIntensity
       grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = record.ciLimit
-      grid[row][SCHEDULE_B.CREDIT].value = record.credits;
-      grid[row][SCHEDULE_B.DEBIT].value = record.debits;
-      console.log(record.credits,record.debits,'338')
-      // if(year<2022){
-      //   grid[row][SCHEDULE_B.CREDIT].value =88;
-      //   grid[row][SCHEDULE_B.DEBIT].value =  99;
-      // }else{
-      //   if(record.credit==null){
-      //     grid[row][SCHEDULE_B.DEBIT].value =  44;
-      //   }
-      //   else{
-      //     grid[row][SCHEDULE_B.CREDIT].value =  34;
-      //   }
-      // }
-    
-     
-      // console.log( grid[row][SCHEDULE_B.COMPLIANCE_UNITS],'335')
-      // if (year > 2022) {
-      //   if (record.credits !== null) {
-      //     grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = record.credits;
-      //     //grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = record.debits;
-      //   } 
-      //   else if (record.debits !== null) {
-      //     grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = record.debits;
-      //   }
-      //   grid[row][SCHEDULE_B.CREDIT].value = undefined;
-      //   grid[row][SCHEDULE_B.DEBIT].value = undefined;
-      // } else {
-      //   grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = undefined;
-      //   grid[row][SCHEDULE_B.CREDIT].value = record.credits;
-      //   grid[row][SCHEDULE_B.DEBIT].value = record.debits;
-      // }
-      // if(year > 2022){
-      //   grid[row][SCHEDULE_B.CREDIT]?.value = record.credits;
-      //   grid[row][SCHEDULE_B.DEBIT]?.value = record.debits;
-      // }else {
-      //  // grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = undefined;
-      //    grid[row][SCHEDULE_B.CREDIT]?.value = record.credits;
-      //   grid[row][SCHEDULE_B.DEBIT]?.value = record.debits;
-      // }
-      
-  
+      if(year<2022){
+        grid[row][SCHEDULE_B.CREDIT].value =record.credits;
+        grid[row][SCHEDULE_B.DEBIT].value =record.debits;
+      }else{
+        if(record.credit==null){
+          let creditRecord='+'.concat(record.credits)
+          let debitRecord= '-'.concat(record.debits)
+          grid[row][SCHEDULE_B.CREDIT].value =record.credits!=null ? creditRecord : debitRecord;
+        }
+        
+      }
       grid[row][SCHEDULE_B.EER].value = record.eer
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = record.energyContent
       grid[row][SCHEDULE_B.ENERGY_DENSITY].value = record.energyDensity
@@ -683,12 +623,10 @@ class ScheduleBContainer extends Component {
     const { grid } = this.state
 
     const { compliancePeriod } = this.props.complianceReport
-    console.log(this.props.complianceReport.compliancePeriod.description, "603")
-    console.log(this.props, "643")
     
     for (let x = 0; x < numberOfRows; x += 1) {
       let creditDebitData
-      if(this.props.complianceReport.period < 2022) {
+      if(parseInt(this.props.complianceReport.compliancePeriod.description) < 2022) {
         creditDebitData = [
           { // credit
             className: 'number',
@@ -824,30 +762,8 @@ class ScheduleBContainer extends Component {
           return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>
         }
       }, 
-      // ...creditDebitData
-      
-     
-      { // credit
-        className: 'number',
-        readOnly: true,
-        valueViewer: (props) => {
-          console.log(JSON.stringify(props, null, 2), "728")
-          const { value } = props
-          return <span>{ value && this.props.complianceReport.compliancePeriod.description > 2022 && <span>+</span>} {value ? formatNumeric(Math.round(value), 0) : ''}</span> 
-        }
-      },
-      { // debit
-        className: 'number',
-        readOnly: true,
-        valueViewer: (props) => {
-          console.log(JSON.stringify(props, null, 2), "736")
-          const { value } = props
-          return <span> { value &&  this.props.complianceReport.compliancePeriod.description > 2022 && <span>-</span>} {value ?  formatNumeric(Math.round(value), 0 ) : ''}</span>
-        }
-      }
-    
+      ...creditDebitData
     ])
-
       this.rowNumber += 1
     }
 
@@ -864,7 +780,6 @@ class ScheduleBContainer extends Component {
     }
 
     for (let x = 2; x < grid.length; x += 1) {
-      console.log(grid[x][SCHEDULE_B.CREDIT]?.value,'852')
       let credit = Number(grid[x][SCHEDULE_B.CREDIT]?.value)
       let debit = Number(grid[x][SCHEDULE_B.DEBIT]?.value)
 
@@ -1129,7 +1044,6 @@ class ScheduleBContainer extends Component {
   }
 
   render () {
-    console.log(this.props.compliancePeriods, "1010")
     const { grid } = this.state
     return ([
       <SchedulesPage
