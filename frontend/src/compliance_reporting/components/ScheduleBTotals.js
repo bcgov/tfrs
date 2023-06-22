@@ -5,7 +5,6 @@ import Draggable from 'react-draggable'
 import { formatNumeric } from '../../utils/functions'
 
 const ScheduleBTotals = (props) => {
-  console.log(props, "0808")
   const formatNumber = (value) => {
     if (value === 0) {
       return '-'
@@ -17,18 +16,21 @@ const ScheduleBTotals = (props) => {
   const getNetTotal = () => {
     const { credit, debit } = props.totals
     const value = credit - debit
-    console.log(value, "1919")
     if (value === 0) {
       return '-'
     }
 
     if (value < 0) {
-      return `(${formatNumeric(Math.round(value * -1), 0)})`
+      if(props.period.compliancePeriod.description<2022){
+        return `(${formatNumeric(Math.round(value * -1), 0)})`
+      }else{
+        return `${String(value)[0]} ${formatNumeric(Math.round(value * -1), 0)}`
+      }
+      
     }
 
     return formatNumeric(Math.round(value), 0)
   }
-console.log(props,'3131')
   return (
     <Draggable bounds="parent">
       <div
