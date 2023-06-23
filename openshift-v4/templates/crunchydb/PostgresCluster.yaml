@@ -1,0 +1,142 @@
+# this is a highly minimalist installation of CrunchyDB, capable of fitting inside a very small namespace.
+# testing shows it works comfortably for a small dataset under light load.
+# it is very likely that you will need to tune up some of these values to suit the needs of your application,
+# but this is a good starting place to get your DB up and functioning - from here, you increase each resource as you require.
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: hippo-ha
+spec:
+  # this block is useful only if you also have monitoring set up for your cluster.
+  # this example installation is intended to be as small as possible, so it has been removed.
+  # however, this block remains as an example if you would like to add monitoring to your cluster.
+  #
+  # monitoring:
+  #   pgmonitor:
+  #     # this stuff is for the "exporter" container in the "hippo-ha-pgha1" set of pods
+  #     exporter:
+  #       resources:
+  #         requests:
+  #           cpu: 50m
+  #           memory: 32Mi
+  #         limits:
+  #           cpu: 100m
+  #           memory: 64Mi
+  postgresVersion: 15
+  instances:
+    - name: pgha1
+      replicas: 3
+      # this is how you create a PDB - don't make a separate one yourself!
+      minAvailable: 1
+      # these resources are for the "database" container in the "hippo-ha-pgha1" set of pods
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 512Mi
+      sidecars:
+        # this stuff is for the "replication-cert-copy" container in the "hippo-ha-pgha1" set of pods
+        replicaCertCopy:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 32Mi
+      dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 256Mi
+        storageClassName: netapp-block-standard
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  postgres-operator.crunchydata.com/cluster: hippo-ha
+                  postgres-operator.crunchydata.com/instance-set: pgha1
+  backups:
+    pgbackrest:
+      global:
+        repo1-retention-full: "2"
+      repos:
+      - name: repo1
+        schedules:
+          # Full backup every day at 8:00am UTC
+          full: "0 8 * * *"
+          # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
+          incremental: "0 0,4,12,16,20 * * *"
+        volume:
+          volumeClaimSpec:
+            accessModes:
+            - "ReadWriteOnce"
+            resources:
+              requests:
+                storage: 512Mi
+            storageClassName: netapp-file-backup
+      # this stuff is for the "pgbackrest" container (the only non-init container) in the "hippo-ha-repo-host" pod
+      repoHost:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+      sidecars:
+        # this stuff is for the "pgbackrest" container in the "hippo-ha-pgha1" set of pods
+        pgbackrest:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+      # allows the triggering of manual backups
+      manual:
+        repoName: repo1
+        options:
+         - --type=full
+  patroni:
+    dynamicConfiguration:
+      postgresql:
+        # these will probably allow your database to start up, but you'll definitely want to tune them up a bit for anything but the most minimal DBs.
+        parameters:
+          shared_buffers: '16MB' # default is 128MB; a good tuned default for shared_buffers is 25% of the memory allocated to the pod
+          wal_buffers: '-1' # automatically set as 1/32 of shared_buffers or 64kB, whichever is larger
+          min_wal_size: '32MB'
+          max_wal_size: '64MB' # default is 1GB
+  proxy:
+    pgBouncer:
+      config:
+        global:
+          client_tls_sslmode: disable
+      replicas: 2
+      # these resources are for the "pgbouncer" container in the "hippo-ha-pgbouncer" set of pods
+      # there is a sidecar in these pods which are not mentioned here, but the requests/limits are teeny weeny by default so no worries there.
+      resources:
+        requests:
+          cpu: 50m
+          memory: 32Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  postgres-operator.crunchydata.com/cluster: hippo-ha
+                  postgres-operator.crunchydata.com/role: pgbouncer
