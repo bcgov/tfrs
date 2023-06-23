@@ -84,7 +84,7 @@ class ComplianceReportSpreadsheet(object):
             worksheet.write(row_index, 3, record['transfer_type'])
             worksheet.write(row_index, 4, Decimal(record['quantity']), quantity_format)
 
-    def add_schedule_b(self, schedule_b):
+    def add_schedule_b(self, schedule_b, compliance_period):
         worksheet = self.workbook.add_sheet("Schedule B")
         row_index = 0
 
@@ -93,6 +93,12 @@ class ComplianceReportSpreadsheet(object):
             "Quantity", "Units", "Carbon Intensity Limit", "Carbon Intensity of Fuel",
             "Energy Density", "EER", "Energy Content", "Credit", "Debit"
         ]
+        if compliance_period >= 2023:
+            columns = [
+                "Fuel Type", "Fuel Class", "Provision", "Fuel Code or Schedule D Provision",
+                "Quantity", "Units", "Carbon Intensity Limit", "Carbon Intensity of Fuel",
+                "Energy Density", "EER", "Energy Content", "Compliance Units"
+            ]
 
         header_style = xlwt.easyxf('font: bold on')
 
@@ -135,10 +141,18 @@ class ComplianceReportSpreadsheet(object):
             worksheet.write(row_index, 8, Decimal(record['energy_density']))
             worksheet.write(row_index, 9, Decimal(record['eer']))
             worksheet.write(row_index, 10, Decimal(record['energy_content']))
-            if record['credits'] is not None:
-                worksheet.write(row_index, 11, Decimal(record['credits']))
-            if record['debits'] is not None:
-                worksheet.write(row_index, 12, Decimal(record['debits']))
+            if compliance_period < 2023:
+                if record['credits'] is not None:
+                    worksheet.write(row_index, 11, Decimal(record['credits']))
+                if record['debits'] is not None:
+                    worksheet.write(row_index, 12, Decimal(record['debits']))
+            else:
+                compliance_units = None
+                if record['credits'] is not None:
+                    compliance_units = Decimal(record['credits'])
+                if compliance_units is None and record['debits'] is not None:
+                    compliance_units = Decimal(record['debits']) * -1
+                worksheet.write(row_index, 11, compliance_units)
 
     def add_schedule_c(self, schedule_c):
         worksheet = self.workbook.add_sheet("Schedule C")
@@ -243,7 +257,7 @@ class ComplianceReportSpreadsheet(object):
                 worksheet.write(row_index, 0, output['description'])
                 worksheet.write(row_index, 1, Decimal(output['intensity']), value_format)
 
-    def add_schedule_summary(self, summary):
+    def add_schedule_summary(self, summary, compliance_period):
         worksheet = self.workbook.add_sheet("Summary")
         row_index = 0
 
@@ -252,6 +266,8 @@ class ComplianceReportSpreadsheet(object):
         value_format = xlwt.easyxf(num_format_str='#,##0.00')
         currency_format = xlwt.easyxf(num_format_str='$#,##0.00')
         description_format = xlwt.easyxf('align: wrap on')
+        if summary is None:
+            return
 
         line_details = {
             '1': 'Volume of gasoline class non-renewable fuel supplied',
@@ -290,14 +306,20 @@ class ComplianceReportSpreadsheet(object):
             '27': 'Outstanding debit balance',
             '28': 'Part 3 non-compliance penalty payable'
         }
+        if compliance_period >= 2023:
+            line_details['23'] = 'Total Compliance Units credits from fuel supplied (from Schedule B)'
+            line_details['24'] = 'Total Compliance Units debits from fuel supplied (from Schedule B)'
+            line_details['25'] = 'Net Compliance Units Balance for compliance period'
+            line_details['27'] = 'Outstanding Compliance Units Balance'
+            debit_amt = Decimal(summary['lines'][str(24)]) * -1
+            net_debit_bal = Decimal(summary['lines'][str(27)]) * -1
+            summary['lines'][str(24)] = str(debit_amt)
+            summary['lines'][str(27)] = str(net_debit_bal)
 
         line_format = defaultdict(lambda: quantity_format)
         line_format['11'] = currency_format
         line_format['22'] = currency_format
         line_format['28'] = currency_format
-
-        if summary is None:
-            return
 
         columns = [
             "Part 2 Gasoline Class - 5% Renewable Requirement",
