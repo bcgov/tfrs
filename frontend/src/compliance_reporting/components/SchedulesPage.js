@@ -15,7 +15,6 @@ const SchedulesPage = props => (
       <h1>{props.title} </h1>
 
       {props.children}
-    {console.log(props, '1717')}
       {!props.readOnly &&
         <ValidationMessages
           key="validation-messages"
