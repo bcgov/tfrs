@@ -25,6 +25,7 @@ objects:
       ## Allow tfrs-spilo to accept communications from nagios
       ## Allow tfrs-spilo to accept communications from backup-container
       ## Allow tfrs-spilo to accept communications from metabase from cthub
+      ## Allow tfrs-spilo to accept communications from cron backup
       podSelector:
         matchLabels:
           app.kubernetes.io/instance: tfrs-spilo
@@ -82,6 +83,13 @@ objects:
             - podSelector:
                 matchLabels:
                   name: patroni-backup
+          ports:
+            - protocol: TCP
+              port: 5432
+        - from:
+            - podSelector:
+                matchLabels:
+                  cronjob: tfrs-db-backup
           ports:
             - protocol: TCP
               port: 5432

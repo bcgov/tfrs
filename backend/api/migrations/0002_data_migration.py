@@ -4917,8 +4917,6 @@ def remove_permissions_0198(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    replaces = [('api', '0207_alter_notificationsubscription_notification_type')]
-
     dependencies = [
         ('api', '0001_squashed_0207_alter_notificationsubscription_notification_type'),
     ]
