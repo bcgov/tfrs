@@ -11,7 +11,7 @@ from api.models.Organization import Organization
 from api.notifications.notification_types import NotificationType
 from api.async_tasks import async_send_notifications
 from tfrs.settings import MINIO
-
+from minio.deleteobjects import DeleteObject
 
 class DocumentService(object):
     """
@@ -56,7 +56,7 @@ class DocumentService(object):
             id__in=attachment_ids
         )
 
-        object_names = map(DocumentService.get_filename, attachments)
+        object_names = list(map(lambda x: DeleteObject(DocumentService.get_filename(x)), attachments))
         for error in minio.remove_objects(MINIO['BUCKET_NAME'], object_names):
             logging.error(error)
 
