@@ -11,9 +11,15 @@ const ScheduleDTabs = (props) => {
     addSheetEnabled,
     scheduleB,
     setActiveSheet,
-    sheets
+    sheets,
+    handleDeleteSheet
+    
   } = props
 
+  const handleDelete=(id)=>{
+    handleDeleteSheet(id)
+  }
+  
   const renderTabs = (active) => {
     const elements = []
 
@@ -59,6 +65,8 @@ const ScheduleDTabs = (props) => {
               data-toggle="modal"
               data-target="#confirmDelete"
               type="button"
+              onClick={()=>handleDelete(sheet.id)}
+            
             >
               <FontAwesomeIcon icon="minus-circle" />
             </button>
