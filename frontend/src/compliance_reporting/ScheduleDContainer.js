@@ -57,6 +57,7 @@ class ScheduleDContainer extends Component {
     this._handleSheetChanged = this._handleSheetChanged.bind(this)
     this._gridStateToPayload = this._gridStateToPayload.bind(this)
     this._setActiveSheet = this._setActiveSheet.bind(this)
+    this._handleDeleteSheet=this._handleDeleteSheet.bind(this)
     this._validate = this._validate.bind(this)
     this.loadInitialState = this.loadInitialState.bind(this)
   }
@@ -538,7 +539,14 @@ class ScheduleDContainer extends Component {
       activeSheet: id
     })
   }
+_handleDeleteSheet(id){
+  let filterData=this.state.sheets.filter(items=>items.id!=id)
 
+  this.setState({
+    sheets:filterData
+  })
+
+}
   _validate (_sheet, sheetIndex) {
     const sheet = _sheet
 
@@ -689,6 +697,7 @@ class ScheduleDContainer extends Component {
           scheduleB={this.scheduleB}
           sheets={sheets}
           setActiveSheet={this._setActiveSheet}
+          handleDeleteSheet={this._handleDeleteSheet}
         />
 
         {sheets.map(sheet => (
