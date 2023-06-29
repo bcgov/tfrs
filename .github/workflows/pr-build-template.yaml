@@ -9,11 +9,13 @@ on:
       pr-number:
         required: true
         type: string
-        # sample value: 545
+        default: 2411
+        # sample value: 2411
       release-branch:
         required: true
         type: string      
-        # sample value: release-1.18.0
+        default: main-release-jan-2024
+        # sample value: main-release-jan-2024
     secrets:
       tools-namespace:
         required: true    
