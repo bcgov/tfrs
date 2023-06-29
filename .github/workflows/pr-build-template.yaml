@@ -61,58 +61,58 @@ jobs:
           oc cancel-build bc/tfrs-backend${{ env.build-suffix }}
           oc start-build --wait=true tfrs-backend${{ env.build-suffix }}
 
-  build-frontend:
+  # build-frontend:
 
-    name: Build TFRS Frontend on Openshift
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+  #   name: Build TFRS Frontend on Openshift
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
 
-    steps:
+  #   steps:
 
-      - name: Check out repository
-        uses: actions/checkout@v3
-        with:
-          ref: refs/pull/${{ inputs.pr-number }}/head
+  #     - name: Check out repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: refs/pull/${{ inputs.pr-number }}/head
 
-      - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
-        with:
-          openshift_server_url: ${{ secrets.openshift-server }}
-          openshift_token: ${{ secrets.openshift-token }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ secrets.tools-namespace }}
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.2
+  #       with:
+  #         openshift_server_url: ${{ secrets.openshift-server }}
+  #         openshift_token: ${{ secrets.openshift-token }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ secrets.tools-namespace }}
 
-      - name: Build TFRS Frontend
-        run: |
-          cd openshift-v4/templates/frontend
-          oc process -f ./frontend-bc-docker.yaml NAME=tfrs SUFFIX=${{ env.build-suffix }} VERSION=${{ env.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} GIT_REF=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-frontend${{ env.build-suffix }}
-          oc start-build --wait=true tfrs-frontend${{ env.build-suffix }}
+  #     - name: Build TFRS Frontend
+  #       run: |
+  #         cd openshift-v4/templates/frontend
+  #         oc process -f ./frontend-bc-docker.yaml NAME=tfrs SUFFIX=${{ env.build-suffix }} VERSION=${{ env.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} GIT_REF=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
+  #         oc cancel-build bc/tfrs-frontend${{ env.build-suffix }}
+  #         oc start-build --wait=true tfrs-frontend${{ env.build-suffix }}
 
-  build-celery:
+  # build-celery:
 
-    name: Build TFRS Celery on Openshift
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+  #   name: Build TFRS Celery on Openshift
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
 
-    steps:
+  #   steps:
 
-      - name: Check out repository
-        uses: actions/checkout@v3
-        with:
-          ref: refs/pull/${{ inputs.pr-number }}/head
+  #     - name: Check out repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: refs/pull/${{ inputs.pr-number }}/head
 
-      - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
-        with:
-          openshift_server_url: ${{ secrets.openshift-server }}
-          openshift_token: ${{ secrets.openshift-token }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ secrets.tools-namespace }}
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.2
+  #       with:
+  #         openshift_server_url: ${{ secrets.openshift-server }}
+  #         openshift_token: ${{ secrets.openshift-token }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ secrets.tools-namespace }}
 
-      - name: Build TFRS Celery
-        run: |
-          cd openshift-v4/templates/celery
-          oc process -f ./celery-bc.yaml NAME=tfrs SUFFIX=${{ env.build-suffix }} VERSION=${{ env.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} RELEASE_BRANCH=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-frontend${{ env.build-suffix }}
-          oc start-build --wait=true tfrs-frontend${{ env.build-suffix }}
+  #     - name: Build TFRS Celery
+  #       run: |
+  #         cd openshift-v4/templates/celery
+  #         oc process -f ./celery-bc.yaml NAME=tfrs SUFFIX=${{ env.build-suffix }} VERSION=${{ env.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} RELEASE_BRANCH=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
+  #         oc cancel-build bc/tfrs-frontend${{ env.build-suffix }}
+  #         oc start-build --wait=true tfrs-frontend${{ env.build-suffix }}
