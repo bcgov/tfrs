@@ -4,7 +4,7 @@ name: PR Build Template
 
 on:
   workflow_dispatch:
-  workflow_call:
+  #workflow_call:
     inputs:
       pr-number:
         required: true
