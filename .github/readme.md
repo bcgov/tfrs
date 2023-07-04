@@ -44,4 +44,3 @@
 
 * cleanup-cron-workflow-runs.yaml (Scheduled cleanup old workflow runs): a cron job to cleanup the old workflows
 * cleanup-workflow-runs.yaml  (Cleanup old workflow runs): manually cleanup teh workflow runs
-
