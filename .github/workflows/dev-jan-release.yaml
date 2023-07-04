@@ -12,64 +12,57 @@ on:
     #   - backend/**
   # workflow_dispatch:
 
-# env:
-  ## The pull request number of the Tracking pull request to merge the release branch to main
-  ## Also remember to update the version in .pipeline/lib/config.js
-  # PR_NUMBER: 2411
-  # RELEASE_NAME: main-release-jan-2024
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
 
-  # unit-test:
+  unit-test:
 
-  #   name: Run Backend Unit Tests
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
+    name: Run Backend Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3.5.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
       
-  #     - name: Run coverage report for django tests 
-  #       uses: kuanfandevops/django-test-action@itvr-django-test
-  #       continue-on-error: true
-  #       with:
-  #         settings-dir-path: "backend/api"
-  #         requirements-file: "backend/requirements.txt"
-  #         managepy-dir: backend
+      - name: Run coverage report for django tests 
+        uses: kuanfandevops/django-test-action@itvr-django-test
+        continue-on-error: true
+        with:
+          settings-dir-path: "backend/api"
+          requirements-file: "backend/requirements.txt"
+          managepy-dir: backend
   
-  # lint:
+  lint:
 
-  #   name: Linting
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
+    name: Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3.5.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
 
-  #     - name: Frontend Linting 
-  #       continue-on-error: true
-  #       run: |
-  #         cd frontend
-  #         pwd
-  #         npm install
-  #         npm run lint        
+      - name: Frontend Linting 
+        continue-on-error: true
+        run: |
+          cd frontend
+          pwd
+          npm install
+          npm run lint        
 
-  #     - name: Backend linting
-  #       uses: github/super-linter/slim@v4
-  #       continue-on-error: true
-  #       env:
-  #         DEFAULT_BRANCH: ${{ env.RELEASE_NAME }}
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         FILTER_REGEX_INCLUDE: .*backend/.*.py
-  #         VALIDATE_PYTHON_PYLINT: true
-  #         LOG_LEVEL: WARN
-
+      - name: Backend linting
+        uses: github/super-linter/slim@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_INCLUDE: .*backend/.*.py
+          VALIDATE_PYTHON_PYLINT: true
+          LOG_LEVEL: WARN
 
   build:
     # needs: [unit-test, lint]
@@ -80,35 +73,6 @@ jobs:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
       openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
-
-  # build:
-
-  #   name: Build TFRS on Openshift
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-
-  #   steps:
-
-  #     ## it will checkout to /home/runner/work/itvr/itvr
-  #     - name: Check out repository
-  #       uses: actions/checkout@v3
-
-  #     ## Log in to Openshift with a token of service account
-  #     - name: Log in to Openshift
-  #       ##uses: redhat-actions/oc-login@v1   
-  #       uses: smlgbl/oc-login@main
-  #       with:
-  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-  #         insecure_skip_tls_verify: true
-  #         namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-
-  #     ## Run build on Openshift
-  #     - name: Run build
-  #       run: |
-  #         cd .pipeline
-  #         npm install
-  #         npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
 
   # deploy-on-dev:
 
@@ -137,8 +101,3 @@ jobs:
   #         cd .pipeline
   #         npm install
   #         npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=dev 
-
-
-
-
-
