@@ -1,0 +1,82 @@
+name: PR Build Template
+
+on:
+  workflow_call:
+    inputs:
+      pr-number: # sample value: 2044
+        required: true
+        type: string
+      build-suffix: # sample value: -build-2044
+        required: true
+        type: string   
+      build-image-tag-name: # sample value is build-release-2.1.0-2044  or build-main-release-jan-2024-2044
+        required: true
+        type: string      
+    secrets:
+      tools-namespace:
+        required: true    
+      openshift-server:
+         required: true 
+      openshift-token:   
+         required: true       
+        
+env:
+  GIT_URL: https://github.com/bcgov/tfrs.git 
+  
+jobs:
+
+  build-backend:
+
+    name: Build tfrs backend on Openshift
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ inputs.pr-number }}/head
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.2
+        with:
+          openshift_server_url: ${{ secrets.openshift-server }}
+          openshift_token: ${{ secrets.openshift-token }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.tools-namespace }}
+
+      - name: Build tfrs Backend
+        run: |
+          cd openshift-v4/templates/backend
+          oc process -f ./backend-bc.yaml NAME=tfrs SUFFIX=${{ inputs.build-suffix }} VERSION=${{ inputs.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} GIT_REF=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
+          oc cancel-build bc/tfrs-backend${{ inputs.build-suffix }}
+          oc start-build --wait=true tfrs-backend${{ inputs.build-suffix }}
+
+  build-frontend:
+
+    name: Build tfrs frontend on Openshift
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ inputs.pr-number }}/head
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.2
+        with:
+          openshift_server_url: ${{ secrets.openshift-server }}
+          openshift_token: ${{ secrets.openshift-token }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.tools-namespace }}
+
+      - name: Build tfrs Frontend
+        run: |
+          cd openshift/templates-v4/frontend
+          oc process -f ./frontend-bc-docker.yaml NAME=tfrs SUFFIX=${{ inputs.build-suffix }} VERSION=${{ inputs.build-image-tag-name }} GIT_URL=${{ env.GIT_URL }} GIT_REF=refs/pull/${{ inputs.pr-number }}/head | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
+          oc cancel-build bc/tfrs-frontend${{ inputs.build-suffix }}
+          oc start-build --wait=true tfrs-frontend${{ inputs.build-suffix }}
