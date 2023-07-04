@@ -1,14 +1,14 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS Jan 2024 Release
+name: TFRS Dev Jan 2024 Release
 
 on:
   push:
     branches: [ main-release-jan-2024 ]
-    paths:
-      - frontend/**
-      - backend/**
+    # paths:
+    #   - frontend/**
+    #   - backend/**
   workflow_dispatch:
 
 env:
@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.3
       
       - name: Run coverage report for django tests 
         uses: kuanfandevops/django-test-action@itvr-django-test
@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.3
 
       - name: Frontend Linting 
         continue-on-error: true

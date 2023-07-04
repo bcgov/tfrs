@@ -34,7 +34,7 @@ jobs:
     steps:
 
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.3
         with:
           ref: refs/pull/${{ inputs.pr-number }}/head
 
@@ -62,7 +62,7 @@ jobs:
     steps:
 
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.3
         with:
           ref: refs/pull/${{ inputs.pr-number }}/head
 
