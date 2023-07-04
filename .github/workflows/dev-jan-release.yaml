@@ -9,7 +9,7 @@ on:
     # paths:
     #   - frontend/**
     #   - backend/**
-  workflow_dispatch:
+  # workflow_dispatch:
 
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
@@ -74,9 +74,9 @@ jobs:
     # needs: [unit-test, lint]
     uses: ./.github/workflows/pr-build-template.yaml
     with:
-      pr-number: ${{ github.event.pull_request.number }}
-      build-suffix: -build-${{ github.event.pull_request.number }}
-      build-image-tag-name: build-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+      pr-number: ${{ env.PR_NUMBER }}
+      build-suffix: -build-${{ env.PR_NUMBER }}
+      build-image-tag-name: build-${{ env.RELEASE_NAME }}-${{ env.PR_NUMBER }}
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
