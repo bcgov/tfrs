@@ -75,9 +75,9 @@ jobs:
     # needs: [unit-test, lint]
     uses: ./.github/workflows/pr-build-template.yaml
     with:
-      pr-number: ${{ env.PR_NUMBER }}
-      build-suffix: -build-${{  env.PR_NUMBER }}
-      build-image-tag-name: build-${{  env.RELEASE_NAME  }}-${{  env.PR_NUMBER }}
+      pr-number: 2411
+      build-suffix: -build-2411
+      build-image-tag-name: build-${{ github.ref }}-2411
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
