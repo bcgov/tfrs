@@ -7,9 +7,9 @@ on:
   push:
     # branches: [ main-release-jan-2024 ]
     branches: [ temp-jan ]
-    # paths:
-    #   - frontend/**
-    #   - backend/**
+    paths:
+      - frontend/**
+      - backend/**
   # workflow_dispatch:
 
 env:
