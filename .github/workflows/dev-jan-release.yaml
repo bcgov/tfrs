@@ -12,11 +12,11 @@ on:
     #   - backend/**
   # workflow_dispatch:
 
-env:
+# env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 2411
-  RELEASE_NAME: main-release-jan-2024
+  # PR_NUMBER: 2411
+  # RELEASE_NAME: main-release-jan-2024
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -73,11 +73,9 @@ jobs:
 
   build:
     # needs: [unit-test, lint]
-    uses: ./.github/workflows/pr-build-template.yaml
+    uses: ./.github/workflows/branch-build-template.yaml
     with:
-      pr-number: 2411
-      build-suffix: -build-2411
-      build-image-tag-name: build-${{ github.ref }}-2411
+      branch-name: ${{ github.ref }}
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
