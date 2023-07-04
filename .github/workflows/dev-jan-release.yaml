@@ -75,7 +75,7 @@ jobs:
     # needs: [unit-test, lint]
     uses: ./.github/workflows/branch-build-template.yaml
     with:
-      branch-name: ${GITHUB_REF##*/}
+      branch-name: ${{ github.ref_name }}
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
