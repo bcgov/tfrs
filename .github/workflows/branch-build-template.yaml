@@ -76,7 +76,7 @@ jobs:
 
       - name: Build tfrs Frontend
         run: |
-          cd openshift/templates-v4/frontend
+          cd openshift-v4/templates/frontend
           oc process -f ./frontend-bc-docker.yaml NAME=tfrs \
           SUFFIX=-build-${{ inputs.branch-name}} \
           VERSION=-build-${{ inputs.branch-name }} \
