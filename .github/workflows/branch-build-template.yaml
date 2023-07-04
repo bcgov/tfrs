@@ -46,7 +46,7 @@ jobs:
           cd openshift-v4/templates/backend
           oc process -f ./backend-bc.yaml NAME=tfrs \
             SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=-build-${{ inputs.branch-name }} \
+            VERSION=build-${{ inputs.branch-name }} \
             GIT_URL=${{ env.GIT_URL }} \
             GIT_REF=${{ inputs.branch-name }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
@@ -79,7 +79,7 @@ jobs:
           cd openshift-v4/templates/frontend
           oc process -f ./frontend-bc-docker.yaml NAME=tfrs \
             SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=-build-${{ inputs.branch-name }} \
+            VERSION=build-${{ inputs.branch-name }} \
             GIT_URL=${{ env.GIT_URL }} \
             GIT_REF=${{ inputs.branch-name }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
