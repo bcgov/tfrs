@@ -6,7 +6,7 @@ name: TFRS Dev Jan 2024 Release
 
 on:
   push:
-    branches: [ main-release-jan-2024 ]
+    branches: [ jan-pipelin ]
     # paths:
     #   - frontend/**
     #   - backend/**
