@@ -40,7 +40,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put', 'patch']
-    queryset = CreditTrade.objects.select_related('status'
+    queryset = CreditTrade.objects.select_related('status',
                                                   'initiator',
                                                   'respondent',
                                                   'type',
@@ -137,6 +137,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return response
 
     def perform_create(self, serializer):
+        agreement_date = self.request.data.get('agreement_date')  # Get the agreementDate from request data
+        serializer.validated_data['date_of_written_agreement'] = agreement_date  # Assign agreementDate to date_of_written_agreement
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
         CreditTradeService.dispatch_notifications(None, credit_trade)

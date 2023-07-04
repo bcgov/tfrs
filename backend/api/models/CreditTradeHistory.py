@@ -66,6 +66,10 @@ class CreditTradeHistory(models.Model):
         on_delete=models.PROTECT,
         db_comment="Rationale for zero-valued transfer"
     )
+    date_of_written_agreement = models.DateField(
+        blank=True, null=True,
+        db_comment="Date on which the written agreement to transfer credits was reached between the suppliers"
+    )
     trade_effective_date = models.DateField(
         blank=True, null=True,
         db_comment="Date on when the transaction was approved."

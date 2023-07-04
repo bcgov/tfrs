@@ -105,7 +105,8 @@ class CreditTradeService(object):
             compliance_period_id=credit_trade.compliance_period_id,
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
-            user_role_id=role_id
+            user_role_id=role_id,
+            date_of_written_agreement= credit_trade.date_of_written_agreement
         )
 
         # Validate

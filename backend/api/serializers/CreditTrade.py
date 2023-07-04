@@ -58,6 +58,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
     Serializer used when creating a Credit Trade
     """
+    agreement_date = serializers.DateField(source='date_of_written_agreement', required=False)
+
     def validate(self, data):
         request = self.context['request']
 
@@ -230,7 +232,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'number_of_credits', 'fair_market_value_per_credit',
                   'total_value', 'zero_reason', 'trade_effective_date',
                   'update_timestamp', 'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment')
+                  'compliance_period', 'is_rescinded', 'comment', 'agreement_date')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
