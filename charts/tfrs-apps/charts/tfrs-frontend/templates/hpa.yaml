@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: tfrs-backend{{ .Values.suffix }}
+  name: tfrs-frontend{{ .Values.suffix }}
   labels:
-    {{- include "tfrs-backend.labels" . | nindent 4 }}
+    {{- include "tfrs-frontend.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
-    name: tfrs-backend{{ .Values.suffix }}
+    name: tfrs-frontend{{ .Values.suffix }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

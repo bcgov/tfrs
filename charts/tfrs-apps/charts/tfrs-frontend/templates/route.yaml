@@ -1,13 +1,14 @@
+{{- if .Values.route.createFrontendRoute }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: tfrs-backend{{ .Values.suffix }}
+  name: tfrs-frontend{{ .Values.suffix }}
   annotations:
     haproxy.router.openshift.io/timeout: 1200s
   labels:
-    {{- include "tfrs-backend.labels" . | nindent 4 }}
+    {{- include "tfrs-frontend.labels" . | nindent 4 }}
 spec:
-  host: tfrs-backend{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca
+  host: tfrs-frontend{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca
   port:
     targetPort: web
   tls:
@@ -15,6 +16,7 @@ spec:
     termination: edge
   to:
     kind: Service
-    name: tfrs-backend{{ .Values.suffix }}
+    name: tfrs-frontend{{ .Values.suffix }}
     weight: 100
   wildcardPolicy: None
+  {{- end }}

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tfrs-backend.serviceName" . }}
+  name: tfrs-backend{{ .Values.suffix }}
   labels:
     {{- include "tfrs-backend.labels" . | nindent 4 }}
 spec:
