@@ -103,6 +103,7 @@ class CreditTradeHistory(models.Model):
         on_delete=models.CASCADE,
         db_comment='creating user'
     )
+    category_d_selected = models.BooleanField(default=False)
 
     @property
     def user(self):
