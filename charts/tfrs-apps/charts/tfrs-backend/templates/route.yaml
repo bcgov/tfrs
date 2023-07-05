@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "tfrs-backend.routeName" . }}
+  annotations:
+    haproxy.router.openshift.io/timeout: 1200s
+  labels:
+    {{- include "tfrs-backend.labels" . | nindent 4 }}
+spec:
+  host: {{ include "tfrs-backend.fullname" . }}.apps.silver.devops.gov.bc.ca
+  port:
+    targetPort: web
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: {{ include "tfrs-backend.serviceName" . }}
+    weight: 100
+  wildcardPolicy: None

@@ -1,0 +1,96 @@
+name: Branch Deploy Template
+
+on:
+  workflow_call:
+    inputs:
+      branch-name: # sample value: release-2.9.0 or main-release-jan-2024
+        required: true
+        type: string
+      # suffix is in format of -dev, -test, -dev-jan, test-jan
+      suffix:
+        required: true
+        type: string   
+      # env-name is in format of dev, test     
+      env-name:
+        required: true
+        type: string   
+    secrets:
+      tools-namespace:
+        required: true
+      namespace:
+        required: true
+      openshift-server:
+         required: true 
+      openshift-token:   
+         required: true       
+  
+jobs:
+
+  deploy:
+
+    name: Deploy tfrs
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+ 
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch-name }}
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.2
+        with:
+          openshift_server_url: ${{ secrets.openshift-server }}
+          openshift_token: ${{ secrets.openshift-token }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.tools-namespace }}  
+      
+      - name: Tag Images from tools
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-frontend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-frontend:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-backend:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          
+      # - name: Deploy tfrs-frontend
+      #   shell: bash {0}
+      #   run: |
+      #     cd chart/tfrs-apps/charts/tfrs-frontend
+      #     helm status -n ${{ secrets.namespace }} tfrs-frontend${{ inputs.suffix }}
+      #     if [ $? -eq 0 ]; then
+      #       echo "tfrs-frontend${{ inputs.suffix }} release exists already"
+      #       helm upgrade \
+      #         --set namespace=${{ secrets.namespace }} \
+      #         --set frontendImageTagName=${{ inputs.image-tag-name }} \
+      #         --set suffix=${{ inputs.suffix }} \
+      #         --set envName=${{ inputs.env-name }} \
+      #         --set frontendRouteHostName=${{ inputs.frontend-route-host-name }} \
+      #         -n ${{ secrets.namespace }} -f ./values-${{ inputs.env-name }}.yaml tfrs-frontend${{ inputs.suffix }} .
+      #     else
+      #       echo "tfrs-frontend${{ inputs.suffix }} release does not exist"
+      #       helm install \
+      #         --set namespace=${{ secrets.namespace }} \
+      #         --set frontendImageTagName=${{ inputs.image-tag-name }} \
+      #         --set suffix=${{ inputs.suffix }} \
+      #         --set envName=${{ inputs.env-name }} \
+      #         --set frontendRouteHostName=${{ inputs.frontend-route-host-name }} \
+      #         -n ${{ secrets.namespace }} -f ./values-${{ inputs.env-name }}.yaml tfrs-frontend${{ inputs.suffix }} .
+      #     fi
+          
+      - name: Deploy tfrs-backend
+        shell: bash {0}
+        run: |
+          cd chart/tfrs-apps/charts/tfrs-backend
+          helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-backend${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
+          else
+            echo "tfrs-backend${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
+          fi
+          
