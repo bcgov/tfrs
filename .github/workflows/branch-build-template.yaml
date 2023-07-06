@@ -116,5 +116,4 @@ jobs:
             GIT_URL=${{ env.GIT_URL }} \
             RELEASE_BRANCH=${{ inputs.branch-name}} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-celery-build-${{ inputs.branch-name}}
           oc start-build --wait=true tfrs-celert-build-${{ inputs.branch-name}}
