@@ -107,33 +107,33 @@ jobs:
       #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
       #     fi
           
-      - name: Deploy tfrs-celery
-        shell: bash {0}
-        run: |
-          oc tag ${{ secrets.tools-namespace }}/tfrs-celery:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-celery:${{ inputs.env-name }}-${{ inputs.branch-name }}
-          cd charts/tfrs-apps/charts/tfrs-celery
-          helm status -n ${{ secrets.namespace }} tfrs-celery${{ inputs.suffix }}
-          if [ $? -eq 0 ]; then
-            echo "tfrs-celery${{ inputs.suffix }} release exists already"
-            helm upgrade \
-              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-              --set suffix=${{ inputs.suffix }} \
-              --set namespace=${{ secrets.namespace }} \
-              --set envName=${{ inputs.env-Name }} \
-              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
-          else
-            echo "tfrs-celery${{ inputs.suffix }} release does not exist"
-            helm install \
-              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-              --set suffix=${{ inputs.suffix }} \
-              --set namespace=${{ secrets.namespace }} \
-              --set envName=${{ inputs.env-Name }} \
-              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
-          fi
+      # - name: Deploy tfrs-celery
+      #   shell: bash {0}
+      #   run: |
+      #     oc tag ${{ secrets.tools-namespace }}/tfrs-celery:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-celery:${{ inputs.env-name }}-${{ inputs.branch-name }}
+      #     cd charts/tfrs-apps/charts/tfrs-celery
+      #     helm status -n ${{ secrets.namespace }} tfrs-celery${{ inputs.suffix }}
+      #     if [ $? -eq 0 ]; then
+      #       echo "tfrs-celery${{ inputs.suffix }} release exists already"
+      #       helm upgrade \
+      #         --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+      #         --set suffix=${{ inputs.suffix }} \
+      #         --set namespace=${{ secrets.namespace }} \
+      #         --set envName=${{ inputs.env-Name }} \
+      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+      #     else
+      #       echo "tfrs-celery${{ inputs.suffix }} release does not exist"
+      #       helm install \
+      #         --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+      #         --set suffix=${{ inputs.suffix }} \
+      #         --set namespace=${{ secrets.namespace }} \
+      #         --set envName=${{ inputs.env-Name }} \
+      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+      #     fi
 
       - name: Deploy tfrs-scan-coordinator
         shell: bash {0}
@@ -144,7 +144,7 @@ jobs:
           if [ $? -eq 0 ]; then
             echo "tfrs-scan-coordinator${{ inputs.suffix }} release exists already"
             helm upgrade \
-              --set scan-coordinatorImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set scanCoordinatorImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
@@ -153,7 +153,7 @@ jobs:
           else
             echo "tfrs-scan-coordinator${{ inputs.suffix }} release does not exist"
             helm install \
-              --set scan-coordinatorImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set scanCoordinatorImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
