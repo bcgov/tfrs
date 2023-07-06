@@ -65,30 +65,31 @@ jobs:
   #         VALIDATE_PYTHON_PYLINT: true
   #         LOG_LEVEL: WARN
 
-  build:
-    name: Build
-    #  needs: [unit-test, lint]
-    uses: ./.github/workflows/branch-build-template.yaml
-    with:
-      branch-name: ${{ github.ref_name }}
-    secrets:
-      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  # build:
+  #   name: Build
+  #   #  needs: [unit-test, lint]
+  #   uses: ./.github/workflows/branch-build-template.yaml
+  #   with:
+  #     branch-name: ${{ github.ref_name }}
+  #   secrets:
+  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
   # The suffix is -dev-jan, the deployment names are tfrs-backend-dev-jan, tfrs-frontend-dev-jan and etc..
   # The image tags are tfrs-backend:dev-main-release-jan-2024, tfrs-frontend:dev-main-release-jan-2024 and etc..
-  # deploy-on-dev: 
-  #   name: Deploy on Dev
-  #   needs: build
-  #   uses: ./.github/workflows/branch-deploy-template.yaml
-  #   with:
-  #     branch-name: ${{ github.ref_name }}
-  #     suffix: -dev-jan
-  #     env-name: dev
-  #     database-service-host-name: tfrs-spilo-jan
-  #   secrets:
-  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-  #     namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  deploy-on-dev: 
+    name: Deploy on Dev
+    needs: build
+    uses: ./.github/workflows/branch-deploy-template.yaml
+    with:
+      branch-name: ${{ github.ref_name }}
+      suffix: -dev-jan
+      env-name: dev
+      database-service-host-name: tfrs-spilo-jan
+      rabbitmq-vhost: tfrs-jan-vhost
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
