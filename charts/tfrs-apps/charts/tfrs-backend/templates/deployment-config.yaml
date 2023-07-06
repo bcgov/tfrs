@@ -1,0 +1,164 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  annotations:
+    description: Defines how to deploy the backend application
+  name: tfrs-backend{{ .Values.suffix }}
+  labels:
+    {{- include "tfrs-backend.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 600
+      mid:
+        failurePolicy: Abort
+        execNewPod:
+          command:
+            - /bin/sh
+            - '-c'
+            - python manage.py migrate;
+          containerName: tfrs-app
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - tfrs-app
+        from:
+          kind: ImageStreamTag
+          namespace: {{ .Values.namespace }}
+          name: tfrs-backend:{{ .Values.backendImageTagName }}
+    - type: ConfigChange
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    {{- include "tfrs-backend.selectorLabels" . | nindent 4 }}
+  template:
+    metadata:
+      name: tfrs-backend-test
+      creationTimestamp: null
+      labels:
+        {{- include "tfrs-backend.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - resources:
+{{ toYaml .Values.resources | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          terminationMessagePath: /dev/termination-log
+          name: tfrs-app
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 90
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          env:
+            - name: EMAIL_FROM_ADDRESS
+              value: donotreply@gov.bc.ca
+            - name: EMAIL_SENDING_ENABLED
+              value: '{{ .Values.env.emailSendingEnabled }}'
+            - name: MINIO_BUCKET_NAME
+              value: tfrs
+            - name: SMTP_SERVER_HOST
+              value: apps.smtp.gov.bc.ca
+            - name: DJANGO_DEBUG
+              value: '{{ .Values.env.djangoDebug }}'
+            - name: SMTP_SERVER_PORT
+              value: '2500'
+            - name: DATABASE_SERVICE_NAME
+              value: {{ .Values.databaseServiceHostName }}
+            - name: DATABASE_ENGINE
+              value: postgresql
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-name
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-password
+            - name: POSTGRESQL_SERVICE_HOST
+              value: {{ .Values.databaseServiceHostName }}.{{ .Values.namespace }}.svc.cluster.local
+            - name: POSTGRESQL_SERVICE_PORT
+              value: '5432'
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: username
+            - name: RABBITMQ_VHOST
+              value: tfrs{{ .Values.suffix }}-vhost
+            - name: RABBITMQ_HOST
+              value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: password
+            - name: RABBITMQ_PORT
+              value: '5672'
+            - name: MINIO_ENDPOINT
+              value: tfrs-minio-{{ .Values.envName }}.apps.silver.devops.gov.bc.ca:443
+            - name: MINIO_USE_SSL
+              value: 'true'
+            - name: DOCUMENTS_API_ENABLED
+              value: '{{ .Values.env.documentsApiEnabled }}'
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_ACCESS_KEY
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_SECRET_KEY
+            - name: FUEL_CODES_API_ENABLED
+              value: '{{ .Values.env.fuelCodesApiEnabled}}'
+            - name: CREDIT_CALCULATION_API_ENABLED
+              value: '{{ .Values.env.creditCalculationApiEnabled}}'
+            - name: COMPLIANCE_REPORTING_API_ENABLED
+              value: '{{ .Values.env.complianceReportingApiEnabled}}'
+            - name: EXCLUSION_REPORTS_API_ENABLED
+              value: '{{ .Values.env.exclusionReportsApiEnabled}}'
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-secret-key
+                  key: DJANGO_SECRET_KEY
+            - name: APP_CONFIG
+              value: /opt/app-root/src/gunicorn.cfg.py
+            - name: KEYCLOAK_AUDIENCE
+              value: tfrs-on-gold-4308
+            - name: WELL_KNOWN_ENDPOINT
+              value: https://{{ .Values.envName }}.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
