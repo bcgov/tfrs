@@ -7,10 +7,10 @@ name: Tmp Pipeline Test
 on:
   push:
     branches: [ jan-pipeline-2 ]
-    paths:
-      - frontend/**
-      - backend/**
-      - security-scan/**
+    # paths:
+    #   - frontend/**
+    #   - backend/**
+    #   - security-scan/**
     workflow_dispatch:
 
 concurrency:
