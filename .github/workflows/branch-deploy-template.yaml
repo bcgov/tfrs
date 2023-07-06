@@ -64,7 +64,7 @@ jobs:
           if [ $? -eq 0 ]; then
             echo "tfrs-frontend${{ inputs.suffix }} release exists already"
             helm upgrade \
-              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} 
+              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
@@ -72,7 +72,7 @@ jobs:
           else
             echo "tfrs-frontend${{ inputs.suffix }} release does not exist"
             helm install \
-              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} 
+              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
@@ -88,7 +88,7 @@ jobs:
           if [ $? -eq 0 ]; then
             echo "tfrs-backend${{ inputs.suffix }} release exists already"
             helm upgrade \
-              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} 
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
@@ -97,7 +97,7 @@ jobs:
           else
             echo "tfrs-backend${{ inputs.suffix }} release does not exist"
             helm install \
-              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} 
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
