@@ -59,7 +59,7 @@ jobs:
       - name: Deploy tfrs-frontend
         shell: bash {0}
         run: |
-          cd chart/tfrs-apps/charts/tfrs-frontend
+          cd charts/tfrs-apps/charts/tfrs-frontend
           helm status -n ${{ secrets.namespace }} tfrs-frontend${{ inputs.suffix }}
           if [ $? -eq 0 ]; then
             echo "tfrs-frontend${{ inputs.suffix }} release exists already"
@@ -83,7 +83,7 @@ jobs:
       - name: Deploy tfrs-backend
         shell: bash {0}
         run: |
-          cd chart/tfrs-apps/charts/tfrs-backend
+          cd charts/tfrs-apps/charts/tfrs-backend
           helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
           if [ $? -eq 0 ]; then
             echo "tfrs-backend${{ inputs.suffix }} release exists already"

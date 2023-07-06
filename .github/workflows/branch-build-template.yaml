@@ -1,5 +1,5 @@
 
-name: PR Build Template
+name: Branch Build Template
 
 on:
   workflow_call:
