@@ -2,11 +2,11 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS Dev Jan 2024 Release
+name: Tmp Pipeline Test
 
 on:
   push:
-    branches: [ main-release-jan-2024 ]
+    branches: [ jan-pipeline-2 ]
     paths:
       - frontend/**
       - backend/**
