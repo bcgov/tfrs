@@ -13,10 +13,10 @@ const ScheduleDTabs = (props) => {
     setActiveSheet,
     sheets,
     handleDeleteSheet
-    
+
   } = props
 
-  const handleDelete=(id)=>{
+  const handleDelete = (id) => {
     handleDeleteSheet(id)
   }
   
@@ -65,7 +65,7 @@ const ScheduleDTabs = (props) => {
               data-toggle="modal"
               data-target="#confirmDelete"
               type="button"
-              onClick={()=>handleDelete(sheet.id)}
+              onClick={() => handleDelete(sheet.id)}
             
             >
               <FontAwesomeIcon icon="minus-circle" />

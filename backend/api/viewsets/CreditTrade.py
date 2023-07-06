@@ -40,7 +40,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put', 'patch']
-    queryset = CreditTrade.objects.select_related('status'
+    queryset = CreditTrade.objects.select_related('status',
                                                   'initiator',
                                                   'respondent',
                                                   'type',

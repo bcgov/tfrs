@@ -40,6 +40,7 @@ class CreditTransferAddContainer extends Component {
       this.state = {
         fields: {
           comment: '',
+          dateOfWrittenAgreement: '',
           compliancePeriod: { id: 0 },
           numberOfCredits: '',
           respondent: {},
@@ -58,7 +59,8 @@ class CreditTransferAddContainer extends Component {
         creditsFrom: {},
         creditsTo: {},
         fields: {
-          comment: null,
+          comment: '',
+          dateOfWrittenAgreement: '',
           fairMarketValuePerCredit: '',
           initiator: {},
           note: '',
@@ -132,6 +134,7 @@ class CreditTransferAddContainer extends Component {
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
       comment: this.state.fields.comment,
+      dateOfWrittenAgreement: this.state.fields.dateOfWrittenAgreement,
       numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,

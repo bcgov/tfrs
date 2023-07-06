@@ -230,7 +230,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'number_of_credits', 'fair_market_value_per_credit',
                   'total_value', 'zero_reason', 'trade_effective_date',
                   'update_timestamp', 'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment')
+                  'compliance_period', 'is_rescinded', 'comment', 'date_of_written_agreement')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {

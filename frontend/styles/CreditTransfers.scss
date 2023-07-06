@@ -2,6 +2,7 @@
 @import './mixins.scss';
 
 .credit-transfer {
+
   h3 {
     font-size: 1.4rem;
   }
@@ -581,6 +582,30 @@
 
     .greyed-out {
       color: #CCCCCC;
+    }
+  }
+
+}
+.action-context-menu-available{
+  color: rgb(0, 52, 102);
+}
+.agreementDate{
+  border: 1px solid #d0d0d1;
+  border-radius: 5px;
+  padding: 20px;
+  >div{
+    display: flex;
+    align-items: center;
+    column-gap: 100px;
+    label{
+      color: #484848;
+      font-weight: normal;
+    }
+    input{
+      margin: 0;
+      width: 284px !important;
+      height: 52px;
+      padding: 10px;
     }
   }
 }

@@ -22,6 +22,7 @@ class CreditTransferFormDetails extends Component {
   render () {
     return (
       <div className="credit-transfer-details">
+        <p className="action-context-menu-available">Credit Transfer Details (required)</p>
         <div className="main-form">
           <span>
             {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to `}
@@ -95,8 +96,7 @@ class CreditTransferFormDetails extends Component {
             />
           </div>
           <span>per credit for a total value of </span>
-          <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</span>
-          <span> effective on Director&apos;s approval</span>
+          <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)} CAD.</span>
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
             <span>

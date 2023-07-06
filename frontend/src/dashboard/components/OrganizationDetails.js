@@ -72,7 +72,7 @@ const OrganizationDetails = props => {
             <Link to={USERS.ADD}>New user</Link>
           </div>
           <p><br /></p>
-        </>  
+        </>
       }
 
         <div className="content">

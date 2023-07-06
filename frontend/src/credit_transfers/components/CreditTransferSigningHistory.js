@@ -186,12 +186,22 @@ class CreditTransferSigningHistory extends Component {
           }
 
           return (
-            <p key={history.createTimestamp}>{action} <span> on </span>
-              {moment(history.createTimestamp).format('LL')}
-              <span> by </span>
-              <strong> {history.user.firstName} {history.user.lastName}</strong> of
-              <strong> {history.user.organization.name} </strong>
+            <>
+            <p>
+              <li>
+                <span>Date of written agreement reached between the two suppliers: </span>
+                <strong>{moment(history.createTimestamp).format('LL')}</strong>
+                <span> (proposal falls under <strong>Category B</strong> if approved by <strong>{moment(history.createTimestamp).format('LL')}</strong>)</span>
+              </li>
             </p>
+              <p key={history.createTimestamp}><li>{action} <span> on </span>
+                {moment(history.createTimestamp).format('LL')}
+                <span> by </span>
+                <strong> {history.user.firstName} {history.user.lastName}</strong> of
+                <strong> {history.user.organization.name} </strong>
+                </li>
+              </p>
+            </>
           )
         })}
       </div>
