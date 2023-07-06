@@ -113,8 +113,8 @@ const CreditTransferForm = (props) => {
         <input
           className="form-control form-date"
           type="date"
-          value={props.fields.agreementDate}
-          name='agreementDate'
+          value={props.fields.dateOfWrittenAgreement}
+          name='dateOfWrittenAgreement'
           onChange={props.handleInputChange}
           required
         />
@@ -137,13 +137,6 @@ const CreditTransferForm = (props) => {
           toggleCheck={props.toggleCheck}
         />
       )}
-
-      {/* <CreditTransferCommentForm
-        isCommentingOnUnsavedCreditTransfer={props.id === 0}
-        isCreatingPrivilegedComment={false}
-        handleCommentChanged={props.handleCommentChanged}
-        embedded
-      /> */}
 
       {props.comments.length > 0 && (
         <h3 className="comments-header">Comments</h3>

@@ -95,6 +95,16 @@ const CreditTransferDetails = props => (
           status={props.status}
           type={props.tradeType}
         />
+        <CreditTransferVisualRepresentation
+          creditsFrom={props.creditsFrom}
+          creditsTo={props.creditsTo}
+          loggedInUser={props.loggedInUser}
+          numberOfCredits={props.numberOfCredits}
+          status={props.status}
+          totalValue={props.totalValue}
+          tradeType={props.tradeType}
+          zeroDollarReason={props.zeroDollarReason}
+        />
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
@@ -116,16 +126,6 @@ const CreditTransferDetails = props => (
         {Object.keys(props.errors).length > 0 &&
           <Errors errors={props.errors} />
         }
-        <CreditTransferVisualRepresentation
-          creditsFrom={props.creditsFrom}
-          creditsTo={props.creditsTo}
-          loggedInUser={props.loggedInUser}
-          numberOfCredits={props.numberOfCredits}
-          status={props.status}
-          totalValue={props.totalValue}
-          tradeType={props.tradeType}
-          zeroDollarReason={props.zeroDollarReason}
-        />
         <form onSubmit={e => e.preventDefault()}>
           {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
             props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&

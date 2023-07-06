@@ -97,7 +97,6 @@ class CreditTransferFormDetails extends Component {
           </div>
           <span>per credit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)} CAD.</span>
-          {/* <span> effective on Director&apos;s approval</span> */}
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
             <span>
