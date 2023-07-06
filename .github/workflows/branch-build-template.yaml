@@ -50,8 +50,8 @@ jobs:
   #           GIT_URL=${{ env.GIT_URL }} \
   #           GIT_REF=${{ inputs.branch-name }} \
   #           | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-  #         oc cancel-build bc/tfrs-backend-build-${{ inputs.branch-name}}
-  #         oc start-build --wait=true tfrs-backend-build-${{ inputs.branch-name}}
+  #         oc cancel-build bc/tfrs-backend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
+  #         oc start-build --wait=true tfrs-backend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
 
   # build-frontend:
 
@@ -83,8 +83,8 @@ jobs:
   #           GIT_URL=${{ env.GIT_URL }} \
   #           GIT_REF=${{ inputs.branch-name }} \
   #           | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-  #         oc cancel-build bc/tfrs-frontend-build-${{ inputs.branch-name}}
-  #         oc start-build --wait=true tfrs-frontend-build-${{ inputs.branch-name}}
+  #         oc cancel-build bc/tfrs-frontend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
+  #         oc start-build --wait=true tfrs-frontend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
 
   build-celery:
 
@@ -116,4 +116,5 @@ jobs:
             GIT_URL=${{ env.GIT_URL }} \
             RELEASE_BRANCH=${{ inputs.branch-name}} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc start-build --wait=true tfrs-celert-build-${{ inputs.branch-name}}
+          oc cancel-build bc/tfrs-frontend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-celert-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
