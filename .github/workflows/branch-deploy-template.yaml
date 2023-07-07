@@ -55,85 +55,85 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.tools-namespace }}  
       
-      # - name: Deploy tfrs-frontend
-      #   shell: bash {0}
-      #   run: |
-      #     oc tag ${{ secrets.tools-namespace }}/tfrs-frontend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-frontend:${{ inputs.env-name }}-${{ inputs.branch-name }}
-      #     cd charts/tfrs-apps/charts/tfrs-frontend
-      #     helm status -n ${{ secrets.namespace }} tfrs-frontend${{ inputs.suffix }}
-      #     if [ $? -eq 0 ]; then
-      #       echo "tfrs-frontend${{ inputs.suffix }} release exists already"
-      #       helm upgrade \
-      #         --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
-      #     else
-      #       echo "tfrs-frontend${{ inputs.suffix }} release does not exist"
-      #       helm install \
-      #         --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
-      #     fi
+      - name: Deploy tfrs-frontend
+        shell: bash {0}
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-frontend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-frontend:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          cd charts/tfrs-apps/charts/tfrs-frontend
+          helm status -n ${{ secrets.namespace }} tfrs-frontend${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-frontend${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
+          else
+            echo "tfrs-frontend${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
+          fi
           
-      # - name: Deploy tfrs-backend
-      #   shell: bash {0}
-      #   run: |
-      #     oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-backend:${{ inputs.env-name }}-${{ inputs.branch-name }}
-      #     cd charts/tfrs-apps/charts/tfrs-backend
-      #     helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
-      #     if [ $? -eq 0 ]; then
-      #       echo "tfrs-backend${{ inputs.suffix }} release exists already"
-      #       helm upgrade \
-      #         --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
-      #     else
-      #       echo "tfrs-backend${{ inputs.suffix }} release does not exist"
-      #       helm install \
-      #         --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
-      #     fi
+      - name: Deploy tfrs-backend
+        shell: bash {0}
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-backend:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          cd charts/tfrs-apps/charts/tfrs-backend
+          helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-backend${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
+          else
+            echo "tfrs-backend${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set backendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
+          fi
           
-      # - name: Deploy tfrs-celery
-      #   shell: bash {0}
-      #   run: |
-      #     oc tag ${{ secrets.tools-namespace }}/tfrs-celery:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-celery:${{ inputs.env-name }}-${{ inputs.branch-name }}
-      #     cd charts/tfrs-apps/charts/tfrs-celery
-      #     helm status -n ${{ secrets.namespace }} tfrs-celery${{ inputs.suffix }}
-      #     if [ $? -eq 0 ]; then
-      #       echo "tfrs-celery${{ inputs.suffix }} release exists already"
-      #       helm upgrade \
-      #         --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
-      #     else
-      #       echo "tfrs-celery${{ inputs.suffix }} release does not exist"
-      #       helm install \
-      #         --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
-      #         --set suffix=${{ inputs.suffix }} \
-      #         --set namespace=${{ secrets.namespace }} \
-      #         --set envName=${{ inputs.env-Name }} \
-      #         --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-      #         --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
-      #         -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
-      #     fi
+      - name: Deploy tfrs-celery
+        shell: bash {0}
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-celery:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-celery:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          cd charts/tfrs-apps/charts/tfrs-celery
+          helm status -n ${{ secrets.namespace }} tfrs-celery${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-celery${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+          else
+            echo "tfrs-celery${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+          fi
 
       - name: Deploy tfrs-scan-handler
         shell: bash {0}
