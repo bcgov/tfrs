@@ -120,6 +120,8 @@ const CreditTransferDetails = props => (
               tradeEffectiveDate={props.tradeEffectiveDate}
               tradeType={props.tradeType}
               zeroDollarReason={props.zeroDollarReason}
+              categoryDSelected={props.categoryDSelected}
+              toggleCategoryDSelection={props.toggleCategoryDSelection}
             />
           </div>
         </div>
@@ -366,7 +368,9 @@ CreditTransferDetails.propTypes = {
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape),
-  selectIdForModal: PropTypes.func.isRequired
+  selectIdForModal: PropTypes.func.isRequired,
+  categoryDSelected: PropTypes.bool,
+  toggleCategoryDSelection: PropTypes.func.isRequired
 }
 
 export default CreditTransferDetails

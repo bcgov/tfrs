@@ -56,6 +56,10 @@ export const CREDIT_TRANSFER_STATUS = {
   rescinded: {
     id: 11,
     description: 'Rescinded'
+  },
+  updated: {
+    id: 12,
+    description: 'Updated'
   }
 }
 

@@ -108,7 +108,8 @@ class CreditTradeService(object):
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
             user_role_id=role_id,
-            date_of_written_agreement= credit_trade.date_of_written_agreement
+            date_of_written_agreement=credit_trade.date_of_written_agreement,
+            category_d_selected=credit_trade.category_d_selected
         )
 
         # Validate

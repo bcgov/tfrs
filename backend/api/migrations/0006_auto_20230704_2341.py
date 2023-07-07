@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0005_cachedpages'),
+        ('api', '0006_auto_20230701_1739'),
     ]
 
     operations = [
@@ -26,5 +26,15 @@ class Migration(migrations.Migration):
             model_name='credittrade',
             name='trade_category',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='credit_trades', to='api.credittradecategory'),
+        ),
+        migrations.AddField(
+            model_name='credittrade',
+            name='category_d_selected',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name='credittradehistory',
+            name='category_d_selected',
+            field=models.BooleanField(default=False),
         ),
     ]

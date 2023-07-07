@@ -68,6 +68,7 @@ class CreditTransferViewContainer extends Component {
     this._saveComment = this._saveComment.bind(this)
     this._selectIdForModal = this._selectIdForModal.bind(this)
     this._toggleCheck = this._toggleCheck.bind(this)
+    this._toggleCategoryDSelection = this._toggleCategoryDSelection.bind(this)
   }
 
   componentDidMount () {
@@ -598,6 +599,28 @@ class CreditTransferViewContainer extends Component {
     })
   }
 
+  _toggleCategoryDSelection (value) {
+    // Change the category d flag only
+    const { item } = this.props
+
+    // Update the category_d_selected field only
+    const data = {
+      categoryDSelected: value
+    }
+
+    const { id } = this.props.item
+
+    this.props.partialUpdateCreditTransfer(id, data).then(() => {
+      this.props.invalidateCreditTransfer()
+      this.props.getUpdatedLoggedInUser()
+      this.props.navigate(CREDIT_TRANSACTIONS.DETAILS.replace(':id', id))
+
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.updated.id, item, 'Category D updated.')
+    }, () => {
+      // Failed to update
+    })
+  }
+
   render () {
     const { isFetching, item, loggedInUser } = this.props
     let availableActions = []
@@ -661,6 +684,8 @@ class CreditTransferViewContainer extends Component {
       }
       selectIdForModal={this._selectIdForModal}
       signingAuthorityAssertions={this.props.signingAuthorityAssertions}
+      categoryDSelected={this.props.item.categoryDSelected}
+      toggleCategoryDSelection={this._toggleCategoryDSelection}
     />)
 
     content.push(this._modalDeleteComment())
@@ -743,7 +768,25 @@ CreditTransferViewContainer.propTypes = {
     compliancePeriod: PropTypes.string,
     note: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
-    comments: PropTypes.string
+    comments: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      createTimestamp: PropTypes.string,
+      updateTimestamp: PropTypes.string,
+      comment: PropTypes.string,
+      privilegedAccess: PropTypes.bool,
+      createUser: PropTypes.shape({
+        id: PropTypes.number,
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+        displayName: PropTypes.string,
+        organization: PropTypes.shape({
+          id: PropTypes.number,
+          name: PropTypes.string,
+          type: PropTypes.number
+        })
+      })
+    })),
+    categoryDSelected: PropTypes.bool
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,

@@ -230,7 +230,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'number_of_credits', 'fair_market_value_per_credit',
                   'total_value', 'zero_reason', 'trade_effective_date',
                   'update_timestamp', 'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment', 'date_of_written_agreement')
+                  'compliance_period', 'is_rescinded', 'comment', 
+                  'date_of_written_agreement', 'category_d_selected')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
@@ -323,8 +324,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         super(CreditTradeUpdateSerializer, self).__init__(*args, **kwargs)
         data = kwargs.get('data')
 
-        if 'status' not in data:
-            data['status'] = self.instance.status.id
+        # leave for posterity
+        # if 'status' not in data:
+        #     data['status'] = self.instance.status.id
 
     def validate(self, data):
         """
@@ -359,10 +361,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'fair_market_value_per_credit':
                     self.instance.fair_market_value_per_credit,
                 'initiator': self.instance.initiator,
-                'is_rescinded': bool(data.get('is_rescinded')),
+                'is_rescinded': bool(data.get('is_rescinded'), self.instance.is_rescinded),
                 'number_of_credits': self.instance.number_of_credits,
                 'respondent': self.instance.respondent,
-                'status': data.get('status'),
+                'status': data.get('status', self.instance.status.id),
                 'type': self.instance.type,
                 'update_user': request.user,
                 'zero_reason': self.instance.zero_reason
@@ -559,7 +561,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'trade_effective_date',
                   'update_timestamp',
                   'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment')
+                  'compliance_period', 'is_rescinded', 'comment',
+                  'category_d_selected')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
@@ -659,7 +662,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
-                  'signatures', 'history')
+                  'signatures', 'history', 'category_d_selected')
 
     def get_actions(self, obj):
         """
