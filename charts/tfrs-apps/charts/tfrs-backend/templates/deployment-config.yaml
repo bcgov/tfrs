@@ -107,7 +107,7 @@ spec:
                   name: tfrs-rabbitmq-app
                   key: username
             - name: RABBITMQ_VHOST
-              value: tfrs{{ .Values.suffix }}-vhost
+              value: {{ .Values.rabbitmqVHost }}
             - name: RABBITMQ_HOST
               value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
             - name: RABBITMQ_PASSWORD
