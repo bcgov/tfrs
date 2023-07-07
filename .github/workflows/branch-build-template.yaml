@@ -94,6 +94,7 @@ jobs:
   build-celery:
 
     name: Build TFRS Celery on Openshift
+    needs: [build-frontend, build-backend]
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -127,6 +128,7 @@ jobs:
   build-scan-coordinator:
 
     name: Build TFRS Scan Coordinator on Openshift
+    needs: [build-frontend, build-backend]
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -160,6 +162,7 @@ jobs:
   build-scan-handler:
 
     name: Build TFRS Scan Handler on Openshift
+    needs: [build-scan-coordinator, build-celery]
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
