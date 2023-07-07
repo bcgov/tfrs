@@ -48,7 +48,7 @@ spec:
                   name: tfrs-rabbitmq-app
                   key: password
             - name: RABBITMQ_HOST
-              value: tfrs-rabbitmq.{{ .Values.envName }}.svc.cluster.local
+              value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
             - name: RABBITMQ_PORT
               value: '5672'
             - name: DATABASE_SERVICE_NAME

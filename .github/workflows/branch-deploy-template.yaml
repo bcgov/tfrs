@@ -148,6 +148,7 @@ jobs:
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
               --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-scan-handler${{ inputs.suffix }} .
           else
@@ -157,6 +158,7 @@ jobs:
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
               --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-scan-handler${{ inputs.suffix }} .
           fi
