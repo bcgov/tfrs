@@ -14,10 +14,14 @@ on:
       env-name:
         required: true
         type: string   
-      # database-service-host-name sample tfrs-spilo, tfrs-spilo-jan, tfrs-spilo-dev-1988
+      # database-service-host-name, sample tfrs-spilo, tfrs-spilo-jan, tfrs-spilo-dev-1988
       database-service-host-name:
         required: true
-        type: string   
+        type: string
+      # this virtual host name, sample  tfrs-jan-vhost
+      rabbitmq-vhost:
+        required: true
+        type: string           
     secrets:
       tools-namespace:
         required: true
@@ -51,14 +55,10 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.tools-namespace }}  
       
-      - name: Tag Images from tools
-        run: |
-          oc tag ${{ secrets.tools-namespace }}/tfrs-frontend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-frontend:${{ inputs.env-name }}-${{ inputs.branch-name }}
-          oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-backend:${{ inputs.env-name }}-${{ inputs.branch-name }}
-          
       - name: Deploy tfrs-frontend
         shell: bash {0}
         run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-frontend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-frontend:${{ inputs.env-name }}-${{ inputs.branch-name }}
           cd charts/tfrs-apps/charts/tfrs-frontend
           helm status -n ${{ secrets.namespace }} tfrs-frontend${{ inputs.suffix }}
           if [ $? -eq 0 ]; then
@@ -79,10 +79,10 @@ jobs:
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
           fi
           
-
       - name: Deploy tfrs-backend
         shell: bash {0}
         run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-backend:${{ inputs.env-name }}-${{ inputs.branch-name }}
           cd charts/tfrs-apps/charts/tfrs-backend
           helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
           if [ $? -eq 0 ]; then
@@ -93,6 +93,7 @@ jobs:
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
           else
             echo "tfrs-backend${{ inputs.suffix }} release does not exist"
@@ -102,6 +103,62 @@ jobs:
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-backend${{ inputs.suffix }} .
           fi
           
+      - name: Deploy tfrs-celery
+        shell: bash {0}
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-celery:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-celery:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          cd charts/tfrs-apps/charts/tfrs-celery
+          helm status -n ${{ secrets.namespace }} tfrs-celery${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-celery${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+          else
+            echo "tfrs-celery${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-celery${{ inputs.suffix }} .
+          fi
+
+      - name: Deploy tfrs-scan-handler
+        shell: bash {0}
+        run: |
+          oc tag ${{ secrets.tools-namespace }}/tfrs-scan-handler:build-${{ inputs.branch-name }} ${{ secrets.namespace }}/tfrs-scan-handler:${{ inputs.env-name }}-${{ inputs.branch-name }}
+          cd charts/tfrs-apps/charts/tfrs-scan-handler
+          helm status -n ${{ secrets.namespace }} tfrs-scan-handler${{ inputs.suffix }}
+          if [ $? -eq 0 ]; then
+            echo "tfrs-scan-handler${{ inputs.suffix }} release exists already"
+            helm upgrade \
+              --set scanHandlerImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-scan-handler${{ inputs.suffix }} .
+          else
+            echo "tfrs-scan-handler${{ inputs.suffix }} release does not exist"
+            helm install \
+              --set scanHandlerImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+              --set suffix=${{ inputs.suffix }} \
+              --set namespace=${{ secrets.namespace }} \
+              --set envName=${{ inputs.env-Name }} \
+              --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
+              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-scan-handler${{ inputs.suffix }} .
+          fi
