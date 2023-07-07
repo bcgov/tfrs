@@ -49,7 +49,7 @@ jobs:
       - name: Setup Database
         shell: bash {0}
         run: |
-          cd chart/tfrs-spilo
+          cd charts/tfrs-spilo
           helm dependency build
           helm status -n ${{ secrets.dev-namespace }} tfrs-spilo${{ inputs.dev-suffix }}
           if [ $? -eq 0 ]; then
