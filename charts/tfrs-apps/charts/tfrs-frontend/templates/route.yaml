@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "tfrs-frontend.labels" . | nindent 4 }}
 spec:
-  host: tfrs-{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca
+  host: tfrs{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca
   port:
     targetPort: web
   tls:
