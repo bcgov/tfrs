@@ -8,7 +8,7 @@ class ScheduleDeltas extends Component {
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
-  static buildSummaryGrid (deltas) {
+  static buildSummaryGrid (deltas, period) {
     const findMatchingDelta = (field) => {
       const found = deltas.find(d => d.field === field)
       if (found) {
@@ -825,12 +825,14 @@ class ScheduleDeltas extends Component {
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }]
     ]
-
+    if (Number(period) >= 2023) {
+      return grid[:26] + grid[27:]
+    }
     return grid
   }
 
   render () {
-    const { deltas } = this.props
+    const { deltas, period } = this.props
 
     if (!deltas) {
       return null
@@ -864,7 +866,7 @@ class ScheduleDeltas extends Component {
           <hr />
           <ReactDataSheet
             className="spreadsheet summary snapshot_summary"
-            data={ScheduleDeltas.buildSummaryGrid(summaryDeltas)}
+            data={ScheduleDeltas.buildSummaryGrid(summaryDeltas, period)}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -875,7 +877,8 @@ class ScheduleDeltas extends Component {
 }
 
 ScheduleDeltas.defaultProps = {
-  deltas: []
+  deltas: [],
+  period: '0'
 }
 
 ScheduleDeltas.propTypes = {
@@ -883,7 +886,8 @@ ScheduleDeltas.propTypes = {
     action: PropTypes.string,
     oldValue: PropTypes.any,
     newValue: PropTypes.any
-  }))
+  })),
+  period: PropTypes.string
 }
 
 export default ScheduleDeltas
