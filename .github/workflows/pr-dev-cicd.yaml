@@ -1,0 +1,61 @@
+# Please refer to ./readme.md for how to build single pull request
+
+# Update this workflow name per pull request
+name: PR Dev CICD
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, edited, reopened]
+    branches:
+          - 'main-release-jan-2024'
+  
+jobs:
+
+  # call-unit-test:
+  #   uses: ./.github/workflows/unit-test-template.yaml
+  #   with:
+  #     pr-number: ${{ github.event.pull_request.number }}
+
+  # call-pr-build-template:
+  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+  #   # needs: call-unit-test
+  #   uses: ./.github/workflows/pr-build-template.yaml
+  #   with:
+  #     pr-number: ${{ github.event.pull_request.number }}
+  #     build-suffix: -build-${{ github.event.pull_request.number }}
+  #     build-image-tag-name: build-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+  #   secrets:
+  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+
+  call-pr-dev-database-template:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    uses: ./.github/workflows/pr-dev-database-template.yaml
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      dev-suffix: -jan-${{ github.event.pull_request.number }}
+    secrets:
+      dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
+      tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+
+  # call-pr-deploy-template:
+  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+  #   needs: [call-pr-build-template, call-pr-dev-database-template]
+  #   uses: ./.github/workflows/pr-deploy-template.yaml
+  #   with:
+  #     pr-number: ${{ github.event.pull_request.number }}
+  #     suffix: -dev-${{ github.event.pull_request.number }}
+  #     build-image-tag-name: build-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+  #     image-tag-name: dev-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+  #     env-name: dev
+  #     frontend-route-host-name: tfrs-dev-${{ github.event.pull_request.number }}.apps.silver.devops.gov.bc.ca
+  #   secrets:
+  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  #     namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  
