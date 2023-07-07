@@ -2,7 +2,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: tfrs-frontend{{ .Values.suffix }}
+  name: tfrs{{ .Values.suffix }}
   annotations:
     haproxy.router.openshift.io/timeout: 1200s
   labels:
