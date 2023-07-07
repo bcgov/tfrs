@@ -14,6 +14,7 @@ import getCreditCalculation from '../actions/creditCalculation'
 import ScheduleSummaryDiesel from '../schedule_summary/ScheduleSummaryDiesel'
 import ScheduleSummaryGasoline from '../schedule_summary/ScheduleSummaryGasoline'
 import ScheduleSummaryPart3 from '../schedule_summary/ScheduleSummaryPart3'
+import ScheduleSummaryLCFS from '../schedule_summary/ScheduleSummaryLCFS'
 import ScheduleSummaryPenalty from '../schedule_summary/ScheduleSummaryPenalty'
 import { SCHEDULE_PENALTY, SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
 import CallableModal from '../app/components/CallableModal'
@@ -22,6 +23,7 @@ import * as Lang from '../constants/langEnUs'
 import * as DieselSummaryContainer from '../schedule_summary/DieselSummaryContainer'
 import * as GasolineSummaryConatiner from '../schedule_summary/GasolineSummaryContainer'
 import * as Part3SummaryContainer from '../schedule_summary/Part3SummaryContainer'
+import * as LCFSSummaryContainer from '../schedule_summary/LCFSSummaryContainer'
 import * as PenaltySummaryContainer from '../schedule_summary/PenaltySummaryContainer'
 
 class ScheduleSummaryContainer extends Component {
@@ -31,7 +33,7 @@ class ScheduleSummaryContainer extends Component {
     this.state = {
       diesel: new ScheduleSummaryDiesel(props.readOnly),
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
-      part3: new ScheduleSummaryPart3(props.period),
+      part3: Number(props.period) < 2023 ? new ScheduleSummaryPart3(props.period) : new ScheduleSummaryLCFS(props.period),
       penalty: new ScheduleSummaryPenalty(),
       showModal: false,
       totals: {
@@ -72,7 +74,7 @@ class ScheduleSummaryContainer extends Component {
       const { summary } = nextProps.snapshot
       GasolineSummaryConatiner.tableData(gasoline, summary)
       DieselSummaryContainer.tableData(diesel, summary)
-      Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport)
+      Number(this.props.period) < 2023 ? Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport) : LCFSSummaryContainer.tableData(part3, summary, this.props.complianceReport)
       PenaltySummaryContainer.tableData(penalty, summary)
       this.setState({
         diesel,
@@ -468,7 +470,7 @@ class ScheduleSummaryContainer extends Component {
 
       <div className="row">
         <div className="col-lg-6">
-          <h1>Part 3 - Low Carbon Fuel Requirement Summary</h1>
+          <h1>{Number(this.props.period) < 2023 ? 'Part 3 - ': ''}Low Carbon Fuel Requirement Summary</h1>
 
           <ReactDataSheet
             className="spreadsheet"
