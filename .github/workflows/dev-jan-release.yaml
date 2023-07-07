@@ -2,7 +2,7 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: Tmp Pipeline Test
+name: TFRS Dev Jan Release
 
 on:
   push:
