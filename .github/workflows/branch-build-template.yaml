@@ -152,9 +152,9 @@ jobs:
   #         oc cancel-build bc/tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
   #         oc start-build --wait=true tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}          
 
-  build-scan-coordinator:
+  build-scan-handler:
 
-    name: Build TFRS Scan Coordinator on Openshift
+    name: Build TFRS Scan handler on Openshift
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -173,14 +173,14 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.tools-namespace }}
 
-      - name: Build TFRS scan-coordinator
+      - name: Build TFRS scan-handler
         run: |
-          cd openshift-v4/templates/scan-coordinator
-          oc process -f ./scan-coordinator-bc.yaml NAME=tfrs \
+          cd openshift-v4/templates/scan-handler
+          oc process -f ./scan-handler-bc.yaml NAME=tfrs \
             SUFFIX=-build-${{ inputs.branch-name}} \
             VERSION=build-${{ inputs.branch-name }} \
             GIT_URL=${{ env.GIT_URL }} \
             GIT_REF=${{ inputs.branch-name }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}                    
+          oc cancel-build bc/tfrs-scan-handler-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-scan-handler-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}                    
