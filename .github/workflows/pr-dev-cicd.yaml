@@ -12,36 +12,32 @@ on:
   
 jobs:
 
-  # call-unit-test:
-  #   uses: ./.github/workflows/unit-test-template.yaml
-  #   with:
-  #     pr-number: ${{ github.event.pull_request.number }}
-
-  # call-pr-build-template:
+  # setup-database:
   #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-  #   # needs: call-unit-test
-  #   uses: ./.github/workflows/pr-build-template.yaml
+  #   uses: ./.github/workflows/pr-dev-database-template.yaml
   #   with:
   #     pr-number: ${{ github.event.pull_request.number }}
-  #     build-suffix: -build-${{ github.event.pull_request.number }}
-  #     build-image-tag-name: build-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+  #     dev-suffix: -jan-${{ github.event.pull_request.number }}
   #   secrets:
-  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  #     dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+  #     tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
+  #     tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
   #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
   #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
-  call-pr-dev-database-template:
+  # when build pull reuqest, the suffix sample is -pr-number -1234
+  #       the  checkout-ref is in the format of refs/pull/1234/head
+  build:
     if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-    uses: ./.github/workflows/pr-dev-database-template.yaml
+    name: Build Pull Request
+    uses: ./.github/workflows/branch-build-template.yaml
     with:
-      pr-number: ${{ github.event.pull_request.number }}
-      dev-suffix: -jan-${{ github.event.pull_request.number }}
+      suffix: -${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.ref_name }}/head
     secrets:
-      dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-      tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
-      tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}      
 
   # call-pr-deploy-template:
   #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )

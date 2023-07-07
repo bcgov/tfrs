@@ -4,7 +4,12 @@ name: Branch Build Template
 on:
   workflow_call:
     inputs:
-      branch-name: # sample value: main-release-jan-2024
+      # supports both pr build and branch build
+      suffix:
+        required: true
+        type: string
+      # checkout ref name: such as main-release-jan-2024 or refs/pull/2023/head
+      checkout-ref:
         required: true
         type: string
     secrets:
@@ -31,7 +36,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3.5.3
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.2
@@ -45,13 +50,13 @@ jobs:
         run: |
           cd openshift-v4/templates/backend
           oc process -f ./backend-bc.yaml NAME=tfrs \
-            SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=build-${{ inputs.branch-name }} \
+            SUFFIX=-build${{ inputs.suffix}} \
+            VERSION=build${{ inputs.suffix }} \
             GIT_URL=${{ env.GIT_URL }} \
-            GIT_REF=${{ inputs.branch-name }} \
+            GIT_REF=${{ inputs.checkout-ref }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-backend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-backend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
+          oc cancel-build bc/tfrs-backend-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-backend-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }}
 
   build-frontend:
 
@@ -64,7 +69,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3.5.3
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.2
@@ -78,13 +83,13 @@ jobs:
         run: |
           cd openshift-v4/templates/frontend
           oc process -f ./frontend-bc-docker.yaml NAME=tfrs \
-            SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=build-${{ inputs.branch-name }} \
+            SUFFIX=-build${{ inputs.suffix}} \
+            VERSION=build${{ inputs.suffix }} \
             GIT_URL=${{ env.GIT_URL }} \
-            GIT_REF=${{ inputs.branch-name }} \
+            GIT_REF=${{ inputs.checkout-ref }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-frontend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-frontend-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
+          oc cancel-build bc/tfrs-frontend-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-frontend-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }}
 
   build-celery:
 
@@ -97,7 +102,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3.5.3
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.2
@@ -111,13 +116,13 @@ jobs:
         run: |
           cd openshift-v4/templates/celery
           oc process -f ./celery-bc.yaml NAME=tfrs \
-            SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=build-${{ inputs.branch-name }} \
+            SUFFIX=-build${{ inputs.suffix}} \
+            VERSION=build${{ inputs.suffix }} \
             GIT_URL=${{ env.GIT_URL }} \
-            RELEASE_BRANCH=${{ inputs.branch-name}} \
+            RELEASE_BRANCH=${{ inputs.checkout-ref}} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-celery-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-celery-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}
+          oc cancel-build bc/tfrs-celery-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-celery-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }}
 
   build-scan-coordinator:
 
@@ -130,7 +135,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3.5.3
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.2
@@ -144,13 +149,13 @@ jobs:
         run: |
           cd openshift-v4/templates/scan-coordinator
           oc process -f ./scan-coordinator-bc.yaml NAME=tfrs \
-            SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=build-${{ inputs.branch-name }} \
+            SUFFIX=-build${{ inputs.suffix}} \
+            VERSION=build${{ inputs.suffix }} \
             GIT_URL=${{ env.GIT_URL }} \
-            GIT_REF=${{ inputs.branch-name }} \
+            GIT_REF=${{ inputs.checkout-ref }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-scan-coordinator-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}          
+          oc cancel-build bc/tfrs-scan-coordinator-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-scan-coordinator-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }}          
 
   build-scan-handler:
 
@@ -163,7 +168,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3.5.3
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.2
@@ -177,9 +182,9 @@ jobs:
         run: |
           cd openshift-v4/templates/scan-handler
           oc process -f ./scan-handler-bc.yaml NAME=tfrs \
-            SUFFIX=-build-${{ inputs.branch-name}} \
-            VERSION=build-${{ inputs.branch-name }} \
-            RELEASE_BRANCH=${{ inputs.branch-name }} \
+            SUFFIX=-build${{ inputs.suffix}} \
+            VERSION=build${{ inputs.suffix }} \
+            RELEASE_BRANCH=${{ inputs.checkout-ref }} \
             | oc apply --wait=true -f - -n ${{ secrets.tools-namespace }}
-          oc cancel-build bc/tfrs-scan-handler-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }} || true
-          oc start-build --wait=true tfrs-scan-handler-build-${{ inputs.branch-name}} -n ${{ secrets.tools-namespace }}                    
+          oc cancel-build bc/tfrs-scan-handler-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }} || true
+          oc start-build --wait=true tfrs-scan-handler-build${{ inputs.suffix}} -n ${{ secrets.tools-namespace }}                    
