@@ -80,7 +80,7 @@ jobs:
   # The image tags are tfrs-backend:dev-main-release-jan-2024, tfrs-frontend:dev-main-release-jan-2024 and etc..
   deploy-on-dev: 
     name: Deploy on Dev
-    needs: build
+    # needs: build
     uses: ./.github/workflows/branch-deploy-template.yaml
     with:
       branch-name: ${{ github.ref_name }}
