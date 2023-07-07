@@ -5,7 +5,7 @@ name: PR Dev CICD
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, edited, reopened]
+    types: [opened, edited, synchronize, reopened]
     branches:
           - 'pr-build-jan'
           # - 'main-release-jan-2024'
