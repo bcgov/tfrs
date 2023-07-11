@@ -605,10 +605,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
         if int(obj.compliance_period.description) > 2022 and snapshot is not None:
             lines = snapshot.snapshot.get('summary').get('lines')
-            try:
-                if lines['29A'] is not None:
-                    pass
-            except KeyError as exc:
+            if lines.get('29A') is None:
                 compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
                     obj.organization,
                     obj.update_timestamp
