@@ -473,7 +473,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    ancestor_snapshot = qs.first().snapshot
+                    ancestor_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                     ancestor_computed = False
                 else:
                     # no snapshot. make one.
@@ -489,7 +489,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    current_snapshot = qs.first().snapshot
+                    current_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                 else:
                     # no snapshot
                     ser = ComplianceReportDetailSerializer(
@@ -517,6 +517,28 @@ class ComplianceReportDetailSerializer(
             current = current.supplements
 
         return deltas
+
+    def build_compliance_units(self, snapshot, obj):
+        lines = snapshot['summary']['lines']
+        if lines.get('29A') is None:
+            compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
+                obj.organization,
+                obj.update_timestamp
+            )
+            change_assessment_balance = compliance_unit_balance + int(lines['25'])
+            lines['29A'] = compliance_unit_balance
+            if change_assessment_balance < 0:
+                lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
+                lines['29B'] = change_assessment_balance
+                lines['29C'] = 0
+            else:
+                lines['28'] = 0
+                lines['29B'] = lines['25']
+                lines['29C'] = change_assessment_balance
+            snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
+            snapshot['summary']['lines'] = lines
+
+        return snapshot
 
     def get_max_credit_offset(self, obj):
         max_credit_offset = OrganizationService.get_max_credit_offset(
@@ -671,7 +693,19 @@ class ComplianceReportDetailSerializer(
         if int(obj.compliance_period.description) <= 2022:
             lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
         else:
-            lines['28'] = (lines['27'] * Decimal('-600.00')).max(Decimal(0))
+            max_credit_offset = self.get_max_credit_offset(obj)
+            max_credit_offset_exclude_reserved = self.get_max_credit_offset_exclude_reserved(obj)
+            compliance_unit_balance =  min(max_credit_offset, max_credit_offset_exclude_reserved)
+            change_assessment_balance = compliance_unit_balance + lines['25']
+            lines['29A'] = compliance_unit_balance
+            if change_assessment_balance < 0:
+                lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
+                lines['29B'] = change_assessment_balance
+                lines['29C'] = 0
+            else:
+                lines['28'] = 0
+                lines['29B'] = lines['25']
+                lines['29C'] = change_assessment_balance
 
         total_payable = lines['11'] + lines['22'] + lines['28']
 

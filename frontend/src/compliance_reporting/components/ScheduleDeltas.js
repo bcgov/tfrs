@@ -8,7 +8,7 @@ class ScheduleDeltas extends Component {
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
-  static buildSummaryGrid (deltas) {
+  static buildSummaryGrid (deltas, period) {
     const findMatchingDelta = (field) => {
       const found = deltas.find(d => d.field === field)
       if (found) {
@@ -825,12 +825,138 @@ class ScheduleDeltas extends Component {
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }]
     ]
-
+    if (Number(period) >= 2023) {
+      return [...grid.slice(0, 26), [{ // p3
+        className: 'header',
+        colSpan: 5,
+        value: 'Low Carbon Fuel Requirement Summary'
+      }], [{
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Line'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Information'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'New Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Old Value'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Delta'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 25'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net compliance unit balance for compliance period'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('25').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('25').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('25')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_A
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Available compliance unit balance on March 31, ' + period
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29A').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29A').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('29A')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_B
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Compliance unit balance change from assessment'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29B').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29B').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('29B')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 28'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Non-compliance penalty payable (CAD)'
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('28').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('28').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('28')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_C
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Available compliance unit balance after assessment on March 31, ' + period
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29C').newValue,
+        valueViewer: ScheduleDeltas.decimalViewer(0)
+      }, {
+        readOnly: true,
+        value: findMatchingDelta('29C').oldValue,
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }, {
+        readOnly: true,
+        value: difference(findMatchingDelta('29C')),
+        valueViewer: ScheduleDeltas.decimalViewer(2)
+      }], ...grid.slice(37,)]
+    }
     return grid
   }
 
   render () {
-    const { deltas } = this.props
+    const { deltas, period } = this.props
 
     if (!deltas) {
       return null
@@ -864,7 +990,7 @@ class ScheduleDeltas extends Component {
           <hr />
           <ReactDataSheet
             className="spreadsheet summary snapshot_summary"
-            data={ScheduleDeltas.buildSummaryGrid(summaryDeltas)}
+            data={ScheduleDeltas.buildSummaryGrid(summaryDeltas, period)}
             valueRenderer={cell => cell.value}
           />
         </div>
@@ -875,7 +1001,8 @@ class ScheduleDeltas extends Component {
 }
 
 ScheduleDeltas.defaultProps = {
-  deltas: []
+  deltas: [],
+  period: '0'
 }
 
 ScheduleDeltas.propTypes = {
@@ -883,7 +1010,8 @@ ScheduleDeltas.propTypes = {
     action: PropTypes.string,
     oldValue: PropTypes.any,
     newValue: PropTypes.any
-  }))
+  })),
+  period: PropTypes.string
 }
 
 export default ScheduleDeltas
