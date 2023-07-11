@@ -396,9 +396,6 @@ class SnapshotDisplay extends Component {
   }
 
   static buildLCFSSummaryGrid (snapshot) {
-    let complianceUnitBalance = Number(Math.min(snapshot.maxCreditOffsetExcludeReserved, snapshot.maxCreditOffset))
-    let netComplianceBalance = Number(snapshot.summary.lines['25'])
-    let changeAssessmentBalance = complianceUnitBalance + netComplianceBalance
     let period = Number(snapshot.compliancePeriod.description)
     const grid = [
       [{ // p2 gasoline
@@ -735,7 +732,7 @@ class SnapshotDisplay extends Component {
         value: `Available compliance unit balance on March 31, ${period + 1}`
       }, {
         readOnly: true,
-        value: complianceUnitBalance,
+        value: snapshot.summary.lines['29A'],
         valueViewer: SnapshotDisplay.decimalViewer(0)
       }], [{
         className: 'strong center',
@@ -747,10 +744,10 @@ class SnapshotDisplay extends Component {
         value: 'Compliance unit balance change from assessment'
       }, {
         readOnly: true,
-        value: changeAssessmentBalance,
+        value: snapshot.summary.lines['29B'],
         valueViewer: SnapshotDisplay.decimalViewer(0)
       }], 
-      (Number(snapshot.summary.lines['28']) > 0 ? ([{
+      [{
         className: 'strong center',
         readOnly: true,
         value: 'Line 28'
@@ -772,21 +769,9 @@ class SnapshotDisplay extends Component {
         value: `Available compliance unit balance after assessment on March 31, ${period + 1}`
       }, {
         readOnly: true,
-        value: '0',
+        value: snapshot.summary.lines['29C'],
         valueViewer: SnapshotDisplay.decimalViewer(0)
-      }]) : ([{
-        className: 'strong center',
-        readOnly: true,
-        value: '' // Line 29_C
-      }, {
-        className: 'left',
-        readOnly: true,
-        value: `Available compliance unit balance after assessment on March 31, ${period + 1}`
-      }, {
-        readOnly: true,
-        value: changeAssessmentBalance,
-        valueViewer: SnapshotDisplay.decimalViewer(0)
-      }])), 
+      }], 
       [{ // penalty
         className: 'header',
         colSpan: 3,
@@ -850,7 +835,11 @@ class SnapshotDisplay extends Component {
         valueViewer: SnapshotDisplay.decimalViewer(2)
       }]
     ]
-
+    if (snapshot.summary.lines['28'] <= 0) {
+      grid[31][0].className = 'hidden'
+      grid[31][1].className = 'hidden'
+      grid[31][2].className = 'hidden'
+    }
     return grid
   }
 

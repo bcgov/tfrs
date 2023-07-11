@@ -1,4 +1,5 @@
 import datetime
+from decimal import *
 
 from django.core.cache import caches, cache
 from django.db import transaction
@@ -23,6 +24,7 @@ from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
+from api.services.OrganizationService import OrganizationService
 from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
 from django.db.models import Q, F, Value
@@ -601,7 +603,28 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         # failure to find an object will trigger an exception that is
         # translated into a 404
         snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
-
+        if int(obj.compliance_period.description) > 2022 and snapshot is not None:
+            lines = snapshot.snapshot.get('summary').get('lines')
+            try:
+                if lines['29A'] is not None:
+                    pass
+            except KeyError as exc:
+                compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
+                    obj.organization,
+                    obj.update_timestamp
+                )
+                change_assessment_balance = compliance_unit_balance + int(lines['25'])
+                lines['29A'] = compliance_unit_balance
+                if change_assessment_balance < 0:
+                    lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
+                    lines['29B'] = change_assessment_balance
+                    lines['29C'] = 0
+                else:
+                    lines['28'] = 0
+                    lines['29B'] = lines['25']
+                    lines['29C'] = change_assessment_balance
+                snapshot.snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
+                snapshot.snapshot['summary']['lines'] = lines
         return Response(snapshot.snapshot)
 
     @action(detail=True, methods=['patch'])
