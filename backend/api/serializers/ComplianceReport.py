@@ -520,10 +520,7 @@ class ComplianceReportDetailSerializer(
 
     def build_compliance_units(self, snapshot, obj):
         lines = snapshot['summary']['lines']
-        try:
-            if lines['29A'] is not None:
-                pass
-        except KeyError as exc:
+        if lines.get('29A') is None:
             compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
                 obj.organization,
                 obj.update_timestamp
@@ -540,8 +537,8 @@ class ComplianceReportDetailSerializer(
                 lines['29C'] = change_assessment_balance
             snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
             snapshot['summary']['lines'] = lines
-        finally:
-            return snapshot
+
+        return snapshot
 
     def get_max_credit_offset(self, obj):
         max_credit_offset = OrganizationService.get_max_credit_offset(
