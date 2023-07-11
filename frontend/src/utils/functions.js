@@ -196,6 +196,34 @@ const cellFormatNumeric = cellValue => ({
   }
 })
 
+const cellFormatNegativeNumber = cellValue => ({
+  className: 'numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
+const cellFormatCurrencyTotal = cellValue => ({
+  className: 'numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    return <span>${Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
 const cellFormatTotal = cellValue => ({
   className: 'numeric',
   readOnly: true,
@@ -244,5 +272,6 @@ const atLeastOneAttorneyAddressFieldExists = (address) => {
 
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists,
+  cellFormatCurrencyTotal, cellFormatNegativeNumber
 }

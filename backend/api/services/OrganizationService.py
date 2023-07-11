@@ -191,3 +191,75 @@ class OrganizationService(object):
             total_available_credits = 0
 
         return total_available_credits
+
+
+    @staticmethod
+    def get_max_credit_offset_for_interval(organization, compliance_date):
+        effective_date_deadline = compliance_date.date()
+        effective_year = effective_date_deadline.year
+        if effective_date_deadline < datetime.date(effective_year, 4, 1):
+            effective_year -= 1
+        compliance_period_effective_date = datetime.date(
+            int(effective_year), 1, 1
+        )
+
+        credits = CreditTrade.objects.filter(
+            (Q(status__status="Approved") &
+             Q(type__the_type="Sell") &
+             Q(respondent_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(status__status="Approved") &
+             Q(type__the_type="Buy") &
+             Q(initiator_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Part 3 Award") &
+             Q(status__status="Approved") &
+             Q(respondent_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Credit Validation") &
+             Q(status__status="Approved") &
+             Q(respondent_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(compliance_period__effective_date__lte=compliance_period_effective_date))
+        ).aggregate(total=Sum('number_of_credits'))
+
+        debits = CreditTrade.objects.filter(
+            (Q(status__status="Approved") &
+             Q(type__the_type="Sell") &
+             Q(initiator_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(status__status="Approved") &
+             Q(type__the_type="Buy") &
+             Q(respondent_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(trade_effective_date__lte=effective_date_deadline)) |
+            (Q(type__the_type="Credit Reduction") &
+             Q(status__status="Approved") &
+             Q(respondent_id=organization.id) &
+             Q(is_rescinded=False) &
+             Q(compliance_period__effective_date__lte=compliance_period_effective_date))
+        ).aggregate(total=Sum('number_of_credits'))
+
+        total_in_compliance_period = 0
+        if credits and credits.get('total') is not None:
+            total_in_compliance_period = credits.get('total')
+
+        if debits and debits.get('total') is not None:
+            total_in_compliance_period -= debits.get('total')
+        pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
+
+        validated_credits = organization.organization_balance.get(
+            'validated_credits', 0
+        )
+
+        total_balance = validated_credits - pending_deductions
+        total_available_credits = min(total_in_compliance_period, total_balance)
+
+        if total_available_credits < 0:
+            total_available_credits = 0
+
+        return total_available_credits

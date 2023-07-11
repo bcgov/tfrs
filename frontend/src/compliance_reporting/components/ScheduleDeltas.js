@@ -880,15 +880,15 @@ class ScheduleDeltas extends Component {
         value: 'Available compliance unit balance on March 31, ' + period
       }, {
         readOnly: true,
-        value: findMatchingDelta('26').newValue,
+        value: findMatchingDelta('29A').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
       }, {
         readOnly: true,
-        value: findMatchingDelta('26').oldValue,
+        value: findMatchingDelta('29A').oldValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }, {
         readOnly: true,
-        value: difference(findMatchingDelta('26')),
+        value: difference(findMatchingDelta('29A')),
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }], [{
         className: 'strong center',
@@ -900,15 +900,15 @@ class ScheduleDeltas extends Component {
         value: 'Compliance unit balance change from assessment'
       }, {
         readOnly: true,
-        value: findMatchingDelta('26A').newValue,
+        value: findMatchingDelta('29B').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
       }, {
         readOnly: true,
-        value: findMatchingDelta('26A').oldValue,
+        value: findMatchingDelta('29B').oldValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }, {
         readOnly: true,
-        value: difference(findMatchingDelta('26A')),
+        value: difference(findMatchingDelta('29B')),
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }], [{
         className: 'strong center',
@@ -940,15 +940,15 @@ class ScheduleDeltas extends Component {
         value: 'Available compliance unit balance after assessment on March 31, ' + period
       }, {
         readOnly: true,
-        value: findMatchingDelta('26C').newValue,
+        value: findMatchingDelta('29C').newValue,
         valueViewer: ScheduleDeltas.decimalViewer(0)
       }, {
         readOnly: true,
-        value: findMatchingDelta('26C').oldValue,
+        value: findMatchingDelta('29C').oldValue,
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }, {
         readOnly: true,
-        value: difference(findMatchingDelta('26C')),
+        value: difference(findMatchingDelta('29C')),
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }], ...grid.slice(37,)]
     }
