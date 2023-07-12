@@ -361,7 +361,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'fair_market_value_per_credit':
                     self.instance.fair_market_value_per_credit,
                 'initiator': self.instance.initiator,
-                'is_rescinded': bool(data.get('is_rescinded'), self.instance.is_rescinded),
+                'is_rescinded': bool(data.get('is_rescinded', self.instance.is_rescinded)),
                 'number_of_credits': self.instance.number_of_credits,
                 'respondent': self.instance.respondent,
                 'status': data.get('status', self.instance.status.id),
