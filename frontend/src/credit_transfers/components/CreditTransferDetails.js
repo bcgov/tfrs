@@ -122,6 +122,7 @@ const CreditTransferDetails = props => (
               zeroDollarReason={props.zeroDollarReason}
               categoryDSelected={props.categoryDSelected}
               toggleCategoryDSelection={props.toggleCategoryDSelection}
+              loggedInUser={props.loggedInUser}
             />
           </div>
         </div>
@@ -154,6 +155,7 @@ const CreditTransferDetails = props => (
             categoryDSelected={props.categoryDSelected}
             history={props.history}
             signatures={props.signatures}
+            loggedInUser={props.loggedInUser}
           />
           }
           {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
