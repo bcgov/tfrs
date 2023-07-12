@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import numeral from 'numeral'
+import { Checkbox } from 'react-bootstrap'
 
 import * as NumberFormat from '../../constants/numeralFormats'
 import {
@@ -158,6 +159,17 @@ class CreditTransferTextRepresentation extends Component {
             </span>
           </div>
         )}
+        <div className="checkbox" style={{ display: 'flex', alignItems: 'center' }}>
+          <Checkbox
+            type="checkbox"
+            id="categoryDcheckbox"
+            label="Category D Selected"
+            checked={this.props.categoryDSelected}
+            onChange={(event) => this.props.toggleCategoryDSelection(event.target.checked)}
+            style={{ paddingTop: 4 }}
+          />
+          <span className='value'>Category D,</span><span> approve as Category D if zero dollar value or significantly less than fair market value</span>
+        </div>
       </div>
     )
   }
@@ -330,7 +342,9 @@ CreditTransferTextRepresentation.propTypes = {
   zeroDollarReason: PropTypes.shape({
     id: PropTypes.number,
     reason: PropTypes.string
-  })
+  }),
+  categoryDSelected: PropTypes.bool,
+  toggleCategoryDSelection: PropTypes.func.isRequired
 }
 
 export default CreditTransferTextRepresentation

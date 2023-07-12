@@ -1,5 +1,6 @@
 import datetime
 from collections import defaultdict, namedtuple
+from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -8,6 +9,7 @@ from django.db import transaction
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.CreditTradeCategory import CreditTradeCategory
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.CreditTrade import CreditTrade
@@ -106,7 +108,8 @@ class CreditTradeService(object):
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
             user_role_id=role_id,
-            date_of_written_agreement= credit_trade.date_of_written_agreement
+            date_of_written_agreement=credit_trade.date_of_written_agreement,
+            category_d_selected=credit_trade.category_d_selected
         )
 
         # Validate
@@ -121,7 +124,19 @@ class CreditTradeService(object):
         history.save()
 
     @staticmethod
-    def approve(credit_trade, update_user=None):
+    def calculate_transfer_category(agreement_date, category_d_selected):
+        if category_d_selected:
+            return CreditTradeCategory.objects.get(category="D")
+        difference_in_months = relativedelta(datetime.datetime.now(), agreement_date).months
+        if difference_in_months <= 6:
+            return CreditTradeCategory.objects.get(category="A")
+        elif 6 < difference_in_months <= 12:
+            return CreditTradeCategory.objects.get(category="B")
+        else:
+            return CreditTradeCategory.objects.get(category="C")
+
+    @staticmethod
+    def approve(credit_trade, update_user=None, category_d_selected=False):
         """
         Transfers the credits between the organizations
         Sets the Credit Transfer to Approved
@@ -129,6 +144,11 @@ class CreditTradeService(object):
         status_approved = CreditTradeStatus.objects.get(status="Approved")
 
         effective_date = datetime.date.today()
+
+        # Calculate and assign trade category
+        credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
+            credit_trade.trade_effective_date, category_d_selected)
+
         CreditTradeService.transfer_credits(
             credit_trade.credits_from,
             credit_trade.credits_to,
