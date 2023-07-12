@@ -149,8 +149,8 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderCategoryHistory () {
-    const { history, dateOfWrittenAgreement, categoryDSelected, tradeEffectiveDate } = this.props
-    if (history.length > 0) {
+    const { history, dateOfWrittenAgreement, categoryDSelected, tradeEffectiveDate, loggedInUser } = this.props
+    if (history.length > 0 && loggedInUser.isGovernmentUser) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
         .calculateTransferCategoryAndNextChange(agreementDate, categoryDSelected)
@@ -236,13 +236,6 @@ class CreditTransferSigningHistory extends Component {
 
           return (
             <>
-            {/* <p>
-              <li>
-                <span>Date of written agreement reached between the two suppliers: </span>
-                <strong>{moment(history.createTimestamp).format('LL')}</strong>
-                <span> (proposal falls under <strong>Category B</strong> if approved by <strong>{moment(history.createTimestamp).format('LL')}</strong>)</span>
-              </li>
-            </p> */}
               <p key={history.createTimestamp}><li>{action} <span> on </span>
                 {moment(history.createTimestamp).format('LL')}
                 <span> by </span>
@@ -297,7 +290,10 @@ CreditTransferSigningHistory.propTypes = {
   })),
   tradeEffectiveDate: PropTypes.string,
   dateOfWrittenAgreement: PropTypes.string,
-  categoryDSelected: PropTypes.bool
+  categoryDSelected: PropTypes.bool,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  })
 }
 
 export default CreditTransferSigningHistory
