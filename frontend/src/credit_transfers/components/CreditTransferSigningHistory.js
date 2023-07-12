@@ -149,7 +149,7 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderCategoryHistory () {
-    const { history, dateOfWrittenAgreement, categoryDSelected } = this.props
+    const { history, dateOfWrittenAgreement, categoryDSelected, tradeEffectiveDate } = this.props
     if (history.length > 0) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
@@ -158,6 +158,7 @@ class CreditTransferSigningHistory extends Component {
       if (nextChangeInMonths !== null) {
         nextChangeDate = moment(agreementDate).add(nextChangeInMonths, 'months').format('LL')
       }
+      const endDate = tradeEffectiveDate || nextChangeDate
       return (
         <>
           <p>
@@ -165,7 +166,7 @@ class CreditTransferSigningHistory extends Component {
               <span>Date of written agreement reached between the two suppliers: </span>
               <strong>{moment(agreementDate).format('LL')}</strong>
               <span> (proposal falls under <strong>Category {category}</strong>{categoryDSelected ? ')' : ''}</span>
-              {nextChangeDate && (<span> if approved by: <strong>{nextChangeDate}</strong>)</span>)}
+              {!tradeEffectiveDate && nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
             </li>
           </p>
         </>
@@ -261,7 +262,8 @@ CreditTransferSigningHistory.defaultProps = {
   history: [],
   signatures: [],
   tradeEffectiveDate: null,
-  dateOfWrittenAgreement: null
+  dateOfWrittenAgreement: null,
+  categoryDSelected: false
 }
 
 CreditTransferSigningHistory.propTypes = {
