@@ -150,6 +150,8 @@ const CreditTransferDetails = props => (
           (props.history.length > 0 || props.signatures.length > 0) &&
           <CreditTransferSigningHistory
             tradeEffectiveDate={props.tradeEffectiveDate}
+            dateOfWrittenAgreement={props.dateOfWrittenAgreement}
+            categoryDSelected={props.categoryDSelected}
             history={props.history}
             signatures={props.signatures}
           />
@@ -244,6 +246,7 @@ CreditTransferDetails.defaultProps = {
   },
   totalValue: '0',
   tradeEffectiveDate: '',
+  dateOfWrittenAgreement: '',
   tradeType: {
     theType: 'sell'
   },
@@ -336,6 +339,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.number
   ]),
   tradeEffectiveDate: PropTypes.string,
+  dateOfWrittenAgreement: PropTypes.string,
   tradeType: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,

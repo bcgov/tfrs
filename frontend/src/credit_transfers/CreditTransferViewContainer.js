@@ -686,6 +686,7 @@ class CreditTransferViewContainer extends Component {
       signingAuthorityAssertions={this.props.signingAuthorityAssertions}
       categoryDSelected={this.props.item.categoryDSelected}
       toggleCategoryDSelection={this._toggleCategoryDSelection}
+      dateOfWrittenAgreement={item.dateOfWrittenAgreement}
     />)
 
     content.push(this._modalDeleteComment())
@@ -768,6 +769,7 @@ CreditTransferViewContainer.propTypes = {
     compliancePeriod: PropTypes.string,
     note: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
+    dateOfWrittenAgreement: PropTypes.string,
     comments: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       createTimestamp: PropTypes.string,
