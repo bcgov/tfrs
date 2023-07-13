@@ -21,10 +21,7 @@ import CreditTransferCommentForm from './CreditTransferCommentForm'
 import CreditTransferComment from './CreditTransferComment'
 
 const CreditTransferForm = (props) => {
-  const [date, setDate] = useState('')
-  const handleDateChange = (event) => {
-    setDate(event.target.value)
-  }
+  const today = new Date().toISOString().split('T')[0]
   return (
   <div className="credit-transfer">
     <div className="credit_balance">
@@ -103,23 +100,46 @@ const CreditTransferForm = (props) => {
         <Errors errors={props.validationErrors} />
       )}
       <p className="action-context-menu-available">Agreement Date (required)</p>
-    <div className="agreementDate">
-    <h3>
-        Date on which the written agreement to transfer credits was reached
-        between the suppliers:
-      </h3>
-      <div>
-        <label>Agreement Date:</label>
-        <input
-          className="form-control form-date"
-          type="date"
-          value={props.fields.dateOfWrittenAgreement}
-          name='dateOfWrittenAgreement'
-          onChange={props.handleInputChange}
-          required
-        />
+      <div className="agreementDate">
+        <h3>
+          Date on which the written agreement to transfer credits was reached
+          between the suppliers:
+        </h3>
+        <div>
+          <label>Agreement Date:</label>
+          <input
+            className="form-control form-date"
+            type="date"
+            value={props.fields.dateOfWrittenAgreement}
+            name='dateOfWrittenAgreement'
+            onChange={props.handleInputChange}
+            required
+          />
+        </div>
       </div>
-    </div>
+
+      <p className="action-context-menu-available">Effective Date (optional)</p>
+      <div className="agreementDate">
+        <h3>
+          The transfer will take effect on the date the Director records the transfer.
+        </h3>
+        <h3>
+          Or, you can enter an effective date that will be used if later than the date
+          the Director records the transfer.
+        </h3>
+        <div>
+          <label>Effective Date:</label>
+          <input
+            className="form-control form-date"
+            type="date"
+            value={props.fields.tradeEffectiveDate}
+            min={today}
+            name='tradeEffectiveDate'
+            onChange={props.handleInputChange}
+            required
+          />
+        </div>
+      </div>
 
       <CreditTransferCommentForm
         isCommentingOnUnsavedCreditTransfer={props.id === 0}
@@ -214,7 +234,9 @@ CreditTransferForm.propTypes = {
       reason: PropTypes.string,
       id: PropTypes.number
     }),
-    note: PropTypes.string.isRequired
+    note: PropTypes.string.isRequired,
+    dateOfWrittenAgreement: PropTypes.string,
+    tradeEffectiveDate: PropTypes.string
   }).isRequired,
   creditsTo: PropTypes.shape({
     name: PropTypes.string,
