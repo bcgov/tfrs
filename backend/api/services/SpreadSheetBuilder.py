@@ -97,8 +97,8 @@ class SpreadSheetBuilder(object):
 
         columns = [
             "Transaction ID", "Compliance Period", "Type", "Credits From",
-            "Credits To", "Quantity of Credits", "Value per Credit", "Status",
-            "Effective Date", "Comments"
+            "Credits To", "Quantity of Credits", "Value per Credit", "Category",
+            "Status", "Effective Date", "Comments"
         ]
 
         header_style = xlwt.easyxf('font: bold on')
@@ -140,17 +140,20 @@ class SpreadSheetBuilder(object):
                                 credit_trade.fair_market_value_per_credit,
                                 value_format)
 
+            if credit_trade.trade_category:
+                worksheet.write(row_index, 7, credit_trade.trade_category.category)
+
             if credit_trade.is_rescinded:
-                worksheet.write(row_index, 7, "Rescinded")
+                worksheet.write(row_index, 8, "Rescinded")
             elif (not user.is_government_user) and (credit_trade.status.friendly_name == "Reviewed"):
-                worksheet.write(row_index, 7, "Signed")
+                worksheet.write(row_index, 8, "Signed")
             else:
-                worksheet.write(row_index, 7, credit_trade.status.friendly_name)
+                worksheet.write(row_index, 8, credit_trade.status.friendly_name)
             
             if credit_trade.trade_effective_date:
-                worksheet.write(row_index, 8, credit_trade.trade_effective_date, date_format)
+                worksheet.write(row_index, 9, credit_trade.trade_effective_date, date_format)
             elif credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"] and credit_trade.update_timestamp:
-                worksheet.write(row_index, 8, credit_trade.update_timestamp.date(), date_format)
+                worksheet.write(row_index, 9, credit_trade.update_timestamp.date(), date_format)
 
             comments = credit_trade.unprivileged_comments
 
@@ -163,7 +166,7 @@ class SpreadSheetBuilder(object):
                 ) for comment in comments
             )
 
-            worksheet.write(row_index, 9, comment, comment_format)
+            worksheet.write(row_index, 10, comment, comment_format)
 
         # set the widths for the columns that we expect to be longer
         worksheet.col(2).width = 3500
