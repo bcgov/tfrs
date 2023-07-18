@@ -1,14 +1,17 @@
 
+# This template supports both pr build and branch build
 name: Branch Build Template
 
 on:
   workflow_call:
     inputs:
-      # supports both pr build and branch build
+      # when build branch, the sample value is -main-release-jan-2024
+      # when build pull request, the sample value is 
       suffix:
         required: true
         type: string
-      # checkout ref name: such as main-release-jan-2024 or refs/pull/2023/head
+      # when build branch, the sample value is main-release-jan-2024
+      # when build pull request, the sample value is refs/pull/2023/head
       checkout-ref:
         required: true
         type: string

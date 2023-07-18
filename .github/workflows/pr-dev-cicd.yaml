@@ -32,8 +32,8 @@ jobs:
     name: Build Pull Request
     uses: ./.github/workflows/branch-build-template.yaml
     with:
-      suffix: -${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
-      checkout-ref: refs/pull/${{ github.ref_name }}/head
+      suffix: -${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
