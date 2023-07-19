@@ -13,6 +13,9 @@ on:
     #   - security-scan/**
     workflow_dispatch:
 
+env:
+  RELEASE_NUMBER: 3.0.0
+  
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
