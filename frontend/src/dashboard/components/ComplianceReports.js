@@ -44,7 +44,7 @@ const ComplianceReports = (props) => {
 
   return (
     <div className="dashboard-fieldset compliance-fieldset">
-      <h1>Compliance &  Exclusion Reports</h1>
+      <h1>Compliance Reporting</h1>
       <p>There are:</p>
       <div>
         <div className='compliance-fieldset-value'>
@@ -66,7 +66,7 @@ const ComplianceReports = (props) => {
               }}
               type="button"
             >
-             Compliance / Exclusion report(s) in progress:
+              Report(s) in progress:
             </button>
           </div>
         </div>

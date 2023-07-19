@@ -47,7 +47,7 @@ class UserSettings extends Component {
         <div className='user-settings-content'>
           <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS_PROFILE}>
-              User Profile
+              User profile
             </Link>
           </div>
           <p><br /></p>

@@ -1,10 +1,10 @@
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { numericColumn, numericInput, numericCurrency } from '../compliance_reporting/components/Columns'
+import { numericInput, numericCurrency } from '../compliance_reporting/components/Columns'
 import Tooltip from '../app/components/Tooltip'
 
 class ScheduleSummaryLCFS {
-  constructor(period) {
+  constructor (period) {
     period = Number(period)
     return [
       [{ // line 25

@@ -45,7 +45,7 @@ exports[`OrganizationEditForm Should render the component 1`] = `
               />
               <span>
                  
-                Part 3 Fuel Supplier
+                Fuel Supplier
               </span>
             </div>
           </label>
