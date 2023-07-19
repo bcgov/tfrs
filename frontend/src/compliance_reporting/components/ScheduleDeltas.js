@@ -950,7 +950,7 @@ class ScheduleDeltas extends Component {
         readOnly: true,
         value: difference(findMatchingDelta('29C')),
         valueViewer: ScheduleDeltas.decimalViewer(2)
-      }], ...grid.slice(37,)]
+      }], ...grid.slice(37)]
     }
     return grid
   }

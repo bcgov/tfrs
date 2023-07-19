@@ -12,6 +12,7 @@ import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
 import AddressBuilder from '../../app/components/AddressBuilder'
+import TOOLTIPS from '../../constants/tooltips'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ const OrganizationDetails = props => {
         <div className="credit_balance">
           {props.organization.organizationBalance &&
           <h3>
-            Credit Balance: {
+            Compliance Units: {
               numeral(props.organization.organizationBalance.validatedCredits)
                 .format(NumberFormat.INT)
             }
@@ -46,11 +47,7 @@ const OrganizationDetails = props => {
               }){' '}
               <Tooltip
                 className="info"
-                title="Reserved credits are the portion of credits in your credit balance that are
-                currently pending the completion of a credit transaction. For example, selling
-                credits to another organization (i.e. Credit Transfer) or being used to offset
-                outstanding debits in a compliance period. Reserved credits cannot be transferred
-                or otherwise used until the pending credit transaction has been completed."
+                title={TOOLTIPS.IN_RESERVE}
               >
                 <FontAwesomeIcon icon="info-circle" />
               </Tooltip>
@@ -120,15 +117,14 @@ const OrganizationDetails = props => {
             <dd><strong>{props.organization.statusDisplay} — </strong>
             {props.organization.statusDisplay === 'Inactive' &&
               <span className="status-description">
-                An inactive organization is not actively supplying fuel in British Columbia
-                and cannot purchase low carbon fuel credits.
+                Inactive — An inactive organization is not actively supplying fuel in
+                British Columbia and cannot purchase compliance units.
               </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
               <span className="status-description">
-                An active organization is one that is actively &quot;supplying&quot; fuel in
-                British Columbia as defined under the
-                  {' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act '}.
+                Active — An active organization is one that is actively &quot;supplying&quot; fuel
+                in British Columbia as defined under the Act.
               </span>
             }
             </dd>

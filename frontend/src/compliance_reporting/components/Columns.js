@@ -35,10 +35,10 @@ const numericCurrency = {
 
     const formattedValue = Number(value).toLocaleString('en-CA', {
       style: 'currency',
-      currency: 'CAD',
-    });
+      currency: 'CAD'
+    })
 
-    return <span>{formattedValue}</span> 
+    return <span>{formattedValue}</span>
   }
 }
 

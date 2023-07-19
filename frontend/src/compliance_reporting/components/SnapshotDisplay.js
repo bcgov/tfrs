@@ -396,7 +396,7 @@ class SnapshotDisplay extends Component {
   }
 
   static buildLCFSSummaryGrid (snapshot) {
-    let period = Number(snapshot.compliancePeriod.description)
+    const period = Number(snapshot.compliancePeriod.description)
     const grid = [
       [{ // p2 gasoline
         className: 'header',
@@ -746,7 +746,7 @@ class SnapshotDisplay extends Component {
         readOnly: true,
         value: snapshot.summary.lines['29B'],
         valueViewer: SnapshotDisplay.decimalViewer(0)
-      }], 
+      }],
       [{
         className: 'strong center',
         readOnly: true,
@@ -771,7 +771,7 @@ class SnapshotDisplay extends Component {
         readOnly: true,
         value: snapshot.summary.lines['29C'],
         valueViewer: SnapshotDisplay.decimalViewer(0)
-      }], 
+      }],
       [{ // penalty
         className: 'header',
         colSpan: 3,
@@ -1426,9 +1426,9 @@ class SnapshotDisplay extends Component {
             <hr />
             <ReactDataSheet
               className="spreadsheet summary snapshot_summary"
-              data={(Number(snapshot.compliancePeriod.description) < 2023) ? 
-                SnapshotDisplay.buildSummaryGrid(snapshot) : 
-                SnapshotDisplay.buildLCFSSummaryGrid(snapshot)}
+              data={(Number(snapshot.compliancePeriod.description) < 2023)
+                ? SnapshotDisplay.buildSummaryGrid(snapshot)
+                : SnapshotDisplay.buildLCFSSummaryGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>

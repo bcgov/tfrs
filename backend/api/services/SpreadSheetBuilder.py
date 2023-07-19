@@ -185,11 +185,11 @@ class SpreadSheetBuilder(object):
         """
         Adds a spreadsheet for fuel suppliers
         """
-        worksheet = self.workbook.add_sheet("Fuel Suppliers")
+        worksheet = self.workbook.add_sheet("Organizations")
         row_index = 0
 
         columns = [
-            "ID", "Organization Name", "Credit Balance", "Status", "Actions"
+            "ID", "Organization Name", "Compliance Units", "Status", "Actions"
         ]
 
         header_style = xlwt.easyxf('font: bold on')

@@ -25,6 +25,7 @@ import CreditTransferComment from './CreditTransferComment'
 import CreditTransferCommentButtons from './CreditTransferCommentButtons'
 import CreditTransferSigningHistory from './CreditTransferSigningHistory'
 import CreditTransferDocumentList from './CreditTransferDocumentList'
+import TOOLTIPS from '../../constants/tooltips'
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -35,7 +36,7 @@ const CreditTransferDetails = props => (
           {props.loggedInUser.roles &&
             !props.loggedInUser.isGovernmentUser &&
             <h3>
-              Credit Balance: {
+              Compliance Units: {
                 numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
                   .format(NumberFormat.INT)
               }
@@ -47,11 +48,7 @@ const CreditTransferDetails = props => (
                 <Tooltip
                   className="info"
                   show
-                  title="Reserved credits are the portion of credits in your credit balance that are
-                  currently pending the completion of a credit transaction. For example, selling
-                  credits to another organization (i.e. Credit Transfer) or being used to offset
-                  outstanding debits in a compliance period. Reserved credits cannot be transferred
-                  or otherwise used until the pending credit transaction has been completed."
+                  title={TOOLTIPS.IN_RESERVE}
                 >
                   <FontAwesomeIcon icon="info-circle" />
                 </Tooltip>
