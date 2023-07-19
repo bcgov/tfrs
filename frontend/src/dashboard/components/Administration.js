@@ -32,7 +32,7 @@ const Administration = props => (
             id="collapse-navbar-organization"
             to={ORGANIZATIONS.LIST}
           >
-            Add/Edit fuel suppliers
+            Add/edit organizations
           </Link>
         </div>
         <p><br /></p>
@@ -41,7 +41,7 @@ const Administration = props => (
       <div>
         <div className="content">
           <Link id="navbar-administration" to={CREDIT_TRANSACTIONS_HISTORY.LIST}>
-            User Activity
+            User activity
           </Link>
         </div>
         <p><br /></p>

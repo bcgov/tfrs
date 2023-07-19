@@ -99,7 +99,7 @@ class Navbar extends Component {
             // }}
             to={ORGANIZATIONS.LIST}
           >
-            Fuel Suppliers
+            Organizations
           </NavLink>
           }
           <NavLink
@@ -107,7 +107,7 @@ class Navbar extends Component {
             id="navbar-credit-transactions"
             to={CREDIT_TRANSACTIONS.LIST}
           >
-            Credit Transactions
+            Compliance Units
           </NavLink>
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
@@ -136,7 +136,7 @@ class Navbar extends Component {
             // }}
             to={COMPLIANCE_REPORTING.LIST}
           >
-            Compliance &amp; Exclusion Reports
+            Compliance Reporting
           </NavLink>
           }
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
@@ -158,7 +158,7 @@ class Navbar extends Component {
             id="navbar-fuel-codes"
             to={FUEL_CODES.LIST}
           >
-            Fuel Codes
+            Administration
           </NavLink>
           }
           {!this.props.loggedInUser.isGovernmentUser &&
@@ -295,7 +295,7 @@ class Navbar extends Component {
               // }}
               to={ORGANIZATIONS.LIST}
             >
-              Fuel Suppliers
+              Organizations
             </NavLink>
           </li>
           }
@@ -305,7 +305,7 @@ class Navbar extends Component {
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
-              Credit Transactions
+              Compliance Units
             </NavLink>
           </li>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
@@ -331,7 +331,7 @@ class Navbar extends Component {
               id="collapse-navbar-compliance-reporting"
               to={COMPLIANCE_REPORTING.LIST}
             >
-              Compliance &amp; Exclusion Reports
+              Compliance Reporting
             </NavLink>
           </li>
           }
@@ -357,7 +357,7 @@ class Navbar extends Component {
               id="navbar-fuel-codes"
               to={FUEL_CODES.LIST}
             >
-              Fuel Codes
+              Administration
             </NavLink>
           </li>
           }
@@ -486,7 +486,7 @@ class Navbar extends Component {
                   {this.props.loggedInUser.roles &&
                   !this.props.loggedInUser.isGovernmentUser &&
                   <span id="organization-balance">
-                      Credit Balance: {
+                      Compliance Units: {
                       numeral(organization.organizationBalance.validatedCredits)
                         .format(NumberFormat.INT)
                     } ({

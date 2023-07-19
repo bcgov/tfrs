@@ -92,7 +92,7 @@ class CreditTransferVisualRepresentation extends Component {
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
-                  Credit Balance:
+                  Compliance Units:
                   {this.props.creditsFrom.organizationBalance &&
                     ` ${numeral(
                       this.props.creditsFrom.organizationBalance
@@ -144,7 +144,7 @@ class CreditTransferVisualRepresentation extends Component {
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
-                  Credit Balance:
+                  Compliance Units:
                   {this.props.creditsTo.organizationBalance &&
                     ` ${numeral(
                       this.props.creditsTo.organizationBalance.validatedCredits

@@ -55,7 +55,7 @@ const AdminTabs = props => (
         className={`${(props.active === 'fuel-codes') ? 'active' : ''}`}
       >
         <Link to={FUEL_CODES.LIST}>
-          Fuel Codes
+          Administration
         </Link>
       </li>
     }

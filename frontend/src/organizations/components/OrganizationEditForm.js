@@ -76,7 +76,7 @@ const OrganizationEditForm = (props) => {
                         defaultChecked
                         onChange={props.handleInputChange}
                       />
-                      <span> {t.description}</span>
+                      <span> {t.description === 'Part 3 Fuel Supplier' ? 'Fuel Supplier' : t.description}</span>
                     </div>
                   ))}
               </label>

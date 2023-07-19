@@ -21,12 +21,11 @@ const ScheduleBTotals = (props) => {
     }
 
     if (value < 0) {
-      if(props.period.compliancePeriod.description<2022){
+      if (props.period.compliancePeriod.description < 2022) {
         return `(${formatNumeric(Math.round(value * -1), 0)})`
-      }else{
+      } else {
         return `${String(value)[0]} ${formatNumeric(Math.round(value * -1), 0)}`
       }
-      
     }
 
     return formatNumeric(Math.round(value), 0)
@@ -58,7 +57,7 @@ const ScheduleBTotals = (props) => {
           </div>
           <div className={`col-md-6 value ${props.totals.debit > 0 ? 'debit' : ''}`}>{props.totals.debit > 0 ? `(${formatNumber(props.totals.debit)})` : '-'}</div>
         </div>
-      </> 
+      </>
 }
 
         <div className="row net-total">
@@ -76,7 +75,12 @@ ScheduleBTotals.propTypes = {
   totals: PropTypes.shape({
     credit: PropTypes.number,
     debit: PropTypes.number
-  }).isRequired
+  }).isRequired,
+  period: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string
+    })
+  })
 }
 
 export default ScheduleBTotals
