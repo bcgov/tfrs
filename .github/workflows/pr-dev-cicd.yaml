@@ -9,7 +9,10 @@ on:
     branches:
           - 'pr-build-jan'
           # - 'main-release-jan-2024'
-  
+
+env:
+  RELEASE_NUMBER: 3.0.0
+
 jobs:
 
   # setup-database:
