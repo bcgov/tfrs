@@ -214,7 +214,7 @@ exports[`ComplianceReportingTable Passing Items to render the table 1`] = `
               }
             }
           >
-            Recommended Acceptance - Analyst
+            Submitted
           </div>
           <div
             className="rt-td col-date"

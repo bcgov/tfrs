@@ -29,7 +29,7 @@ const OrganizationsTable = (props) => {
     accessor: item => item.organizationBalance.validatedCredits,
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     className: 'col-credit-balance',
-    Header: 'Credit Balance',
+    Header: 'Compliance Units',
     id: 'creditBalance',
     minWidth: 100
   }, {
