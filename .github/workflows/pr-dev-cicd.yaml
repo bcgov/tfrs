@@ -10,9 +10,6 @@ on:
           - 'pr-build-jan'
           # - 'main-release-jan-2024'
 
-env:
-  RELEASE_NUMBER: 3.0.0
-
 jobs:
 
   # setup-database:
@@ -35,7 +32,7 @@ jobs:
     name: Build Pull Request
     uses: ./.github/workflows/branch-build-template.yaml
     with:
-      suffix: -${{ env.RELEASE_NUMBER }}-${{ github.event.pull_request.number }}
+      suffix: -3.0.0-${{ github.event.pull_request.number }}
       checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
