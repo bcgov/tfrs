@@ -51,7 +51,7 @@ const FuelCodes = (props) => {
               }}
               type="button"
             >
-              {awaitingReview.fuelCodes.total} awaiting Director review and statutory decision
+              {awaitingReview.fuelCodes.total} awaiting Director review
             </button>
           </div>
         </div>

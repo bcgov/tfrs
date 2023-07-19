@@ -2,38 +2,17 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import ORGANIZATIONS from '../../constants/routes/Organizations'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 
-const Part3Agreements = props => {
+const FileSubmission = props => {
   const navigate = useNavigate()
   return (
     <div className="dashboard-fieldset part-3-agreements">
-      <h1>Part 3 Agreements</h1>
+      <h1>File Submission</h1>
 
       <div>
         <div className="content">
-          <Link to={SECURE_DOCUMENT_UPLOAD.LIST}>Part 3 Agreements</Link>
-        </div>
-        <p><br /></p>
-      </div>
-
-      <div>
-        <div className="content">
-          <a
-            href={ORGANIZATIONS.PART_3}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Part 3 Agreement application information
-          </a>
-          <a
-            href={ORGANIZATIONS.PART_3}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <FontAwesomeIcon icon="external-link-alt" />
-          </a>
+          <Link to={SECURE_DOCUMENT_UPLOAD.LIST}>File Submission</Link>
         </div>
         <p><br /></p>
       </div>
@@ -52,10 +31,10 @@ const Part3Agreements = props => {
             }}
             type="button"
           >
-            Submit/Upload a file securely
+            Submit/Upload files
           </button>
           <br/>
-          {' for Part 3 Agreement applications or milestone evidence for Part 3 Awards'}
+          {' related to initiative agreements, compliance reporting, credit transfers, initiative plans.'}
         </div>
         <p><br /></p>
       </div>
@@ -63,10 +42,10 @@ const Part3Agreements = props => {
   )
 }
 
-Part3Agreements.defaultProps = {
+FileSubmission.defaultProps = {
 }
 
-Part3Agreements.propTypes = {
+FileSubmission.propTypes = {
 }
 
-export default Part3Agreements
+export default FileSubmission

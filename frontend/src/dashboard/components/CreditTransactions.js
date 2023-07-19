@@ -1,9 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Loading from '../../app/components/Loading'
-import ORGANIZATIONS from '../../constants/routes/Organizations'
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 
 const CreditTransactions = (props) => {
@@ -50,7 +49,7 @@ const CreditTransactions = (props) => {
 
   return (
     <div className="dashboard-fieldset compliance-exclusion-value">
-      <h1>Credit Transactions</h1>
+      <h1>Compliance Units</h1>
       <p>There are:</p>
 
       <div>
@@ -103,7 +102,7 @@ const CreditTransactions = (props) => {
               type="button"
             >
               {`${awaitingReview.creditTransfers.director} `}
-              awaiting Director review and statutory decision
+              awaiting Director review
             </button>
           </div>
         </div>
@@ -115,7 +114,7 @@ const CreditTransactions = (props) => {
         </div>
 
         <div className="content">
-          <h2>Part 3 Awards in progress:</h2>
+          <h2>Initiative Agreement Submission(s) in progress:</h2>
 
           <div>
             <button
@@ -144,7 +143,7 @@ const CreditTransactions = (props) => {
 
       <div>
         <div className="content">
-          <h2>View all credit transactions:</h2>
+          <h2>View all compliance unit transactions:</h2>
 
           <div>
             <button
@@ -177,17 +176,6 @@ const CreditTransactions = (props) => {
               All/historical
             </button>
           </div>
-        </div>
-        <p><br /></p>
-      </div>
-
-      <div>
-        <div className="content">
-          <Link
-            to={ORGANIZATIONS.LIST}
-          >
-            Fuel Supplier Organizations
-          </Link>
         </div>
         <p><br /></p>
       </div>

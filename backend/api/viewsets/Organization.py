@@ -67,7 +67,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
     @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def list(self, request, *args, **kwargs):
         """
-        Returns a list of Fuel Suppliers
+        Returns a list of Organizations
         There are two types of organizations: Government and Fuel Suppliers
         The function needs to separate the organizations based on type
         """
@@ -226,7 +226,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
     @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def xls(self, request):
         """
-        Exports the Fuel Suppliers as a spreadsheet
+        Exports the Organizations as a spreadsheet
         """
         response = HttpResponse(content_type='application/ms-excel')
         response['Content-Disposition'] = (

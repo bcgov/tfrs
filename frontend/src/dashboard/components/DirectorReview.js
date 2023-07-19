@@ -100,7 +100,7 @@ const DirectorReview = (props) => {
                     data-testid="creditTransferBtn"
                   >
 
-                  Credit transfer(s) for your review and statutory decision
+                    Credit transfer(s) awaiting review
                   </button>
                 </div>
             )}
@@ -130,7 +130,7 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                   Compliance / exclusion report(s) awaiting your review
+                   Compliance report(s) awaiting review
                   </button>
                 </div>
             )}
@@ -165,8 +165,7 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                    Part 3 Award(s) awaiting your
-                    review
+                    Initiative Agreement submission(s) awaiting review
                   </button>
                 </div>
             )}

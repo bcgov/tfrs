@@ -10,7 +10,7 @@ const CreditTradingValue = props => (
       rel="noopener noreferrer"
       target="_blank"
     >
-      RLCF-017: Low Carbon Fuel Credit Market Report
+      RLCF-017: Credit Market Report
     </a>
     <a
       href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
