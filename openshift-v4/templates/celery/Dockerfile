@@ -10,5 +10,8 @@ COPY ./security-scan/scan-handler/celery.conf /etc/supervisor/conf.d
 RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
 RUN chmod -R g+w /run || :
+WORKDIR /app/tfrs
+COPY . .
+RUN pwd && ls -l
 RUN chmod -R g+w /app
 CMD ["supervisord"]
