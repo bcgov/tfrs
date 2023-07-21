@@ -22,7 +22,6 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 (Q(trade_effective_date__gte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
         ).aggregate(total_credits=Sum('number_of_credits'))
-        print(pending_trades, "26----")
         if pending_trades['total_credits'] is not None:
             pending_transfers_value = pending_trades['total_credits']
 
@@ -58,7 +57,6 @@ class OrganizationService(object):
                     "Deleted"
                 ])
             ).filter(id=group_id).first()
-            print(compliance_report, '62----')
             if compliance_report and compliance_report.summary:
                 if compliance_report.supplements_id and \
                         compliance_report.supplements_id > 0:
@@ -112,7 +110,6 @@ class OrganizationService(object):
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
             #     deductions -= report.summary.credits_offset
-        print(deductions, "116----")
         if deductions < 0:
             deductions = 0
 
@@ -120,16 +117,12 @@ class OrganizationService(object):
 
     @staticmethod
     def get_max_credit_offset(organization, compliance_year, exclude_reserved=False):
-        print(organization, "124----")
-        print(compliance_year, "125----")
         effective_date_deadline = datetime.date(
             int(compliance_year) + 1, 3, 31
         )
         compliance_period_effective_date = datetime.date(
             int(compliance_year), 1, 1
         )
-        print(effective_date_deadline, "130------")
-        print(compliance_period_effective_date, "131------")
         credits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -154,7 +147,6 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
-        print(credits, "156----")
         debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -172,7 +164,6 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
-        print(debits, "174----")
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
             total_in_compliance_period = credits.get('total')
@@ -187,11 +178,8 @@ class OrganizationService(object):
         validated_credits = organization.organization_balance.get(
             'validated_credits', 0
         )
-        print(validated_credits, "189---")
         total_balance = validated_credits - pending_deductions
-        print(total_balance, "total_balance---")
         total_available_credits = min(total_in_compliance_period, total_balance)
-        print(total_available_credits, "total_available_credits-----")
         if total_available_credits < 0:
             total_available_credits = 0
 
