@@ -119,6 +119,8 @@ jobs:
       - name: Build TFRS Celery
         run: |
           cd openshift-v4/templates/celery
+          pwd
+          ls -l
           oc process -f ./celery-bc-docker.yaml NAME=tfrs \
             SUFFIX=-build${{ inputs.suffix}} \
             VERSION=build${{ inputs.suffix }} \
