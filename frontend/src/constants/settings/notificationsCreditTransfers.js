@@ -45,7 +45,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 7,
   code: 'CREDIT_TRANSFER_APPROVED',
-  description: 'Director Approval',
+  description: 'Recorded',
   key: 'approved',
   permission: 'APPROVE_CREDIT_TRANSFER',
   recipients: ['fuel_supplier', 'government'],
@@ -53,7 +53,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 9,
   code: 'CREDIT_TRANSFER_DECLINED',
-  description: 'Director Declined to Approve',
+  description: 'Declined to record',
   key: 'declined',
   permission: 'DECLINE_CREDIT_TRANSFER',
   recipients: ['fuel_supplier', 'government'],
