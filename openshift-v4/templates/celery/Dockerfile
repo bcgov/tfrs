@@ -5,7 +5,7 @@ RUN apt-get update \
 RUN pwd && ls -l
 RUN pip install --upgrade pip \
     && pip install -r backend/requirements.txt
-RUN cp security-scan/scan-handler/celery.conf/celery.conf /etc/supervisor/conf.d
+RUN cp ./celery.conf /etc/supervisor/conf.d
 RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
 RUN chmod -R g+w /run || :
