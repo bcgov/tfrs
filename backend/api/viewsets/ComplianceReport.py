@@ -551,6 +551,29 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         return Response(data)
 
+    def compliance_to_new_act(self, obj, snapshot):
+        if int(obj.compliance_period.description) > 2022 and snapshot is not None:
+            lines = snapshot.get('summary').get('lines')
+            if lines.get('29A') is None:
+                compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
+                    obj.organization,
+                    obj.update_timestamp
+                )
+                change_assessment_balance = compliance_unit_balance + int(lines['25'])
+                lines['29A'] = compliance_unit_balance
+                if change_assessment_balance < 0:
+                    lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
+                    lines['29B'] = change_assessment_balance
+                    lines['29C'] = 0
+                else:
+                    lines['28'] = 0
+                    lines['29B'] = lines['25']
+                    lines['29C'] = change_assessment_balance
+                snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines[
+                    '28']
+                snapshot['summary']['lines'] = lines
+        return snapshot
+
     @action(detail=False, methods=['post'])
     def paginated(self, request):
         queryset = self.get_queryset()
@@ -603,26 +626,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         # failure to find an object will trigger an exception that is
         # translated into a 404
         snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
-        if int(obj.compliance_period.description) > 2022 and snapshot is not None:
-            lines = snapshot.snapshot.get('summary').get('lines')
-            if lines.get('29A') is None:
-                compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
-                    obj.organization,
-                    obj.update_timestamp
-                )
-                change_assessment_balance = compliance_unit_balance + int(lines['25'])
-                lines['29A'] = compliance_unit_balance
-                if change_assessment_balance < 0:
-                    lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
-                    lines['29B'] = change_assessment_balance
-                    lines['29C'] = 0
-                else:
-                    lines['28'] = 0
-                    lines['29B'] = lines['25']
-                    lines['29C'] = change_assessment_balance
-                snapshot.snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
-                snapshot.snapshot['summary']['lines'] = lines
-        return Response(snapshot.snapshot)
+        snapshot = self.compliance_to_new_act(obj, snapshot.snapshot)
+        return Response(snapshot)
 
     @action(detail=True, methods=['patch'])
     def compute_totals(self, request, pk=None):
@@ -692,6 +697,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         if obj.type.the_type == 'Exclusion Report':
             workbook.add_exclusion_agreement(snapshot['exclusion_agreement'])
         if obj.type.the_type == 'Compliance Report':
+            snapshot = self.compliance_to_new_act(obj, snapshot)
             workbook.add_schedule_a(snapshot['schedule_a'])
             workbook.add_schedule_b(snapshot['schedule_b'],
                                     int(snapshot['compliance_period']['description']))
