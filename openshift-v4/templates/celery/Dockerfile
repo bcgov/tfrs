@@ -3,9 +3,10 @@ RUN apt-get update \
     && apt-get install -y git \
     && apt-get install -y supervisor
 RUN pwd && ls -l
+RUN cp backend/requirements.txt /tmp/
 RUN pip install --upgrade pip \
-    && pip install -r backend/requirements.txt
-RUN cp ./celery.conf /etc/supervisor/conf.d
+    && pip install -r /tmp/requirements.txt
+RUN cp security-scan/scan-handler/celery.conf /etc/supervisor/conf.d
 RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
 RUN chmod -R g+w /run || :
