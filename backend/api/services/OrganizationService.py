@@ -23,7 +23,6 @@ class OrganizationService(object):
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False))
         ).aggregate(total_credits=Sum('number_of_credits'))
-
         if pending_trades['total_credits'] is not None:
             pending_transfers_value = pending_trades['total_credits']
 
@@ -59,7 +58,6 @@ class OrganizationService(object):
                     "Deleted"
                 ])
             ).filter(id=group_id).first()
-
             if compliance_report and compliance_report.summary:
                 if compliance_report.supplements_id and \
                         compliance_report.supplements_id > 0:
@@ -113,7 +111,6 @@ class OrganizationService(object):
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
             #     deductions -= report.summary.credits_offset
-
         if deductions < 0:
             deductions = 0
 
@@ -127,7 +124,6 @@ class OrganizationService(object):
         compliance_period_effective_date = datetime.date(
             int(compliance_year), 1, 1
         )
-
         credits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -150,7 +146,6 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
-
         debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -168,7 +163,6 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
-
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
             total_in_compliance_period = credits.get('total')
@@ -183,10 +177,8 @@ class OrganizationService(object):
         validated_credits = organization.organization_balance.get(
             'validated_credits', 0
         )
-
         total_balance = validated_credits - pending_deductions
         total_available_credits = min(total_in_compliance_period, total_balance)
-
         if total_available_credits < 0:
             total_available_credits = 0
 
