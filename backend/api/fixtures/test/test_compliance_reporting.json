@@ -45,7 +45,7 @@
       "update_timestamp": "2019-01-01",
       "root_report": 1,
       "latest_report": 1,
-      "traversal": 0
+      "traversal": 1
     },
     "model": "api.compliancereport",
     "pk": 1
@@ -66,7 +66,7 @@
       "update_timestamp": "2019-01-01",
       "root_report": 2,
       "latest_report": 2,
-      "traversal": 0
+      "traversal": 1
     },
     "model": "api.compliancereport",
     "pk": 2
@@ -87,7 +87,7 @@
       "update_timestamp": "2019-01-01",
       "root_report": 3,
       "latest_report": 3,
-      "traversal": 0
+      "traversal": 1
     },
     "model": "api.compliancereport",
     "pk": 3
