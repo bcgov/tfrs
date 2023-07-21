@@ -21,3 +21,4 @@ After the release is deployed on Prod
 * version
 
 
+try handler build
