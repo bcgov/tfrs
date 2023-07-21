@@ -49,7 +49,6 @@ objects:
       triggers: []
       runPolicy: Serial
       source:
-        contextDir: openshift-v4/templates/celery
         git:
           uri: ${GIT_URL}
           ref: ${GIT_REF}
