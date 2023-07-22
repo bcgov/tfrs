@@ -30,7 +30,7 @@ const CreditTransactions = (props) => {
 
   return (
     <div className="dashboard-fieldset credit-transactions">
-      <h1>Credit Transactions</h1>
+      <h1>Compliance Units</h1>
       <span key="credit-transactions-label">There are:</span>
 
       {props.loggedInUser.organization.actionsTypeDisplay !== 'None' &&
@@ -70,7 +70,7 @@ const CreditTransactions = (props) => {
 
       <div>
         <div className="content">
-          <h2>View all credit transactions:</h2>
+          <h2>View all compliance unit transactions:</h2>
 
           <div>
             <button
@@ -114,7 +114,7 @@ const CreditTransactions = (props) => {
             rel="noopener noreferrer"
             target="_blank"
           >
-            RLCF-013: Recognized Part 3 Fuel Suppliers
+            RLCF-013: Credit Transfers
           </a>
           <a
             href={ORGANIZATIONS.BULLETIN}
@@ -137,7 +137,7 @@ const CreditTransactions = (props) => {
           onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
           type="button"
         >
-          Start a new credit transfer proposal
+          Start a new credit transfer
         </button>
       </div>
       }

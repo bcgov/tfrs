@@ -470,7 +470,7 @@ class ScheduleSummaryContainer extends Component {
 
       <div className="row">
         <div className="col-lg-6">
-          <h1>{Number(this.props.period) < 2023 ? 'Part 3 - ': ''}Low Carbon Fuel Requirement Summary</h1>
+          <h1>{Number(this.props.period) < 2023 ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
 
           <ReactDataSheet
             className="spreadsheet"

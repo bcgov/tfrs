@@ -30,7 +30,7 @@ const SCHEDULE_B = {
   ENERGY_CONTENT: 11,
   CREDIT: 12,
   DEBIT: 13,
-  COMPLIANCE_UNITS:14
+  COMPLIANCE_UNITS: 14
 }
 
 const SCHEDULE_B_ERROR_KEYS = {
@@ -41,7 +41,7 @@ const SCHEDULE_B_ERROR_KEYS = {
   scheduleD_sheetIndex: 4,
   quantity: 5,
   intensity: 8,
-  COMPLIANCE_UNITS:9
+  COMPLIANCE_UNITS: 9
 }
 
 const SCHEDULE_C = {

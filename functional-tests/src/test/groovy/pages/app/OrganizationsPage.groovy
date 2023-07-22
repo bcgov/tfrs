@@ -1,7 +1,7 @@
 package pages
 
 class OrganizationsPage extends BaseAppPage {
-  static at = { isReactReady() && pageTitle.text() == 'Fuel Suppliers' }
+  static at = { isReactReady() && pageTitle.text() == 'Organizations' }
   static url = '/organizations'
   static content = {
     pageTitle { $('#main .page_organizations h1') }
