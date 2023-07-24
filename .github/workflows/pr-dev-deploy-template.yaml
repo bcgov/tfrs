@@ -85,7 +85,7 @@ jobs:
         run: |
           oc tag ${{ secrets.tools-namespace }}/tfrs-backend:build${{ inputs.suffix }} ${{ secrets.namespace }}/tfrs-backend:dev${{ inputs.suffix }}
           cd charts/tfrs-apps/charts/tfrs-backend
-          helm status -n ${{ secrets.namespace }} tfrs-backend${{ inputs.suffix }}
+          helm status -n ${{ secrets.namespace }} tfrs-backend-dev${{ inputs.suffix }}
           if [ $? -eq 0 ]; then
             echo "tfrs-backend-dev${{ inputs.suffix }} release exists already"
             helm upgrade \
