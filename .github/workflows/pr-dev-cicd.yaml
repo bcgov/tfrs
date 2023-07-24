@@ -27,21 +27,21 @@ jobs:
 
   # when build pull reuqest, the suffix sample is -3.0.0-1234
   #       the  checkout-ref is in the format of refs/pull/1234/head
-  # build:
-  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-  #   name: Build Pull Request
-  #   uses: ./.github/workflows/branch-build-template.yaml
-  #   with:
-  #     suffix: -jan-${{ github.event.pull_request.number }}
-  #     checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
-  #   secrets:
-  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}      
+  build:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    name: Build Pull Request
+    uses: ./.github/workflows/branch-build-template.yaml
+    with:
+      suffix: -jan-${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}      
 
   deploy:
     if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-    needs: setup-database
+    needs: [setup-database, build]
     uses: ./.github/workflows/pr-dev-deploy-template.yaml
     with:
       suffix: -jan-${{ github.event.pull_request.number }}

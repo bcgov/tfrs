@@ -29,13 +29,10 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ env.TOOLS_NAMESPACE }}  
 
-          # helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-backend-dev-${{ github.event.pull_request.number }} || true
-          # helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-task-queue-dev-${{ github.event.pull_request.number }} || true
-          # helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-frontend-dev-${{ github.event.pull_request.number }} || true
-
       - name: Undeploy on Dev
         shell: bash {0}
         run: |
+          oc -n ${{ env.DEV_NAMESPACE }} exec tfrs-rabbitmq-0 -- rabbitmqctl delete_vhost tfrs-dev-jan-${{ github.event.pull_request.number }}-vhost
           helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-spilo-jan-${{ github.event.pull_request.number }} || true
           helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-backend-dev-jan-${{ github.event.pull_request.number }} || true
           helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-frontend-dev-jan-${{ github.event.pull_request.number }} || true
