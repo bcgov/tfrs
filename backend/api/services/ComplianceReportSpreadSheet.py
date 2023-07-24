@@ -307,14 +307,11 @@ class ComplianceReportSpreadsheet(object):
             '28': 'Part 3 non-compliance penalty payable'
         }
         if compliance_period >= 2023:
-            line_details['23'] = 'Total Compliance Units credits from fuel supplied (from Schedule B)'
-            line_details['24'] = 'Total Compliance Units debits from fuel supplied (from Schedule B)'
-            line_details['25'] = 'Net Compliance Units Balance for compliance period'
-            line_details['27'] = 'Outstanding Compliance Units Balance'
-            debit_amt = Decimal(summary['lines'][str(24)]) * -1
-            net_debit_bal = Decimal(summary['lines'][str(27)]) * -1
-            summary['lines'][str(24)] = str(debit_amt)
-            summary['lines'][str(27)] = str(net_debit_bal)
+            line_details['25'] = 'Net compliance unit balance for compliance period'
+            line_details['29A'] = 'Available compliance unit balance on March 31, ' + str(compliance_period)
+            line_details['29B'] = 'Compliance unit balance change from assessment'
+            line_details['29C'] = 'Available compliance unit balance after assessment on March 31, ' + str(compliance_period)
+            line_details['28'] = 'Non-compliance penalty payable'
 
         line_format = defaultdict(lambda: quantity_format)
         line_format['11'] = currency_format
@@ -353,7 +350,7 @@ class ComplianceReportSpreadsheet(object):
 
         row_index += 1
         columns = [
-            "Part 3 - Low Carbon Fuel Requirement Summary",
+            "Part 3 - Low Carbon Fuel Requirement Summary" if compliance_period < 2023 else "Low Carbon Fuel Requirement",
             "Line",
             "Value"
         ]
@@ -361,11 +358,21 @@ class ComplianceReportSpreadsheet(object):
         for col_index, value in enumerate(columns):
             worksheet.write(row_index, col_index, value, header_style)
 
-        for line in range(23, 28+1):
-            row_index += 1
-            worksheet.write(row_index, 0, line_details[str(line)], description_format)
-            worksheet.write(row_index, 1, 'Line {}'.format(line))
-            worksheet.write(row_index, 2, Decimal(summary['lines'][str(line)]), line_format[str(line)])
+        if compliance_period >= 2023:
+            compliance_lines = ['25','29A','29B','28','29C']
+            for line in compliance_lines:
+                if line != '28' or (line == '28' and summary['lines'][line] > 0):
+                    row_index += 1
+                    worksheet.write(row_index, 0, line_details[line], description_format)
+                    if line.isdigit():
+                        worksheet.write(row_index, 1, f'Line {line}')
+                    worksheet.write(row_index, 2, Decimal(summary['lines'][line]), line_format[str(line)])
+        else:
+            for line in range(23, 28+1):
+                row_index += 1
+                worksheet.write(row_index, 0, line_details[str(line)], description_format)
+                worksheet.write(row_index, 1, 'Line {}'.format(line))
+                worksheet.write(row_index, 2, Decimal(summary['lines'][str(line)]), line_format[str(line)])
 
         row_index += 1
         columns = [
