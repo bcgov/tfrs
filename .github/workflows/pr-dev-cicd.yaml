@@ -46,9 +46,7 @@ jobs:
     with:
       suffix: -jan-${{ github.event.pull_request.number }}
       checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
-      # frontend-route-host-name: tfrs-dev-${{ github.event.pull_request.number }}.apps.silver.devops.gov.bc.ca
       database-service-host-name: tfrs-spilo-jan-${{ github.event.pull_request.number }}
-      # rabbitmq-vhost: tfrs-jan-vhost      
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
