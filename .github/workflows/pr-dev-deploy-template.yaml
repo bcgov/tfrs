@@ -5,7 +5,7 @@ name: PR Dev Deploy Template
 on:
   workflow_call:
     inputs:
-      # suffix is in format of -dev-jan-1923
+      # suffix is in format of -jan-1923
       suffix:
         required: true
         type: string       
@@ -57,7 +57,7 @@ jobs:
       - name: Create vhost on Rabbitmq Dev
         shell: bash {0}
         run: |
-          oc -n ${{ secrets.namespace }} exec tfrs-rabbitmq-0 -- rabbitmqctl set_permissions --vhost kuan-vhost tfrs ".*" ".*" ".*"
+          oc -n ${{ secrets.namespace }} exec tfrs-rabbitmq-0 -- rabbitmqctl set_permissions --vhost tfrs-dev${{ inputs.suffix }}-vhost tfrs ".*" ".*" ".*"
       
       - name: Deploy tfrs-frontend
         shell: bash {0}
