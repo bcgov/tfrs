@@ -12,12 +12,12 @@ def insert_categories(apps, schema_editor):
     ]
 
     for category, description in categories:
-        CreditTradeCategory.objects.create(category=category, description=description)
+        CreditTradeCategory.objects.get_or_create(category=category, description=description)
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0006_auto_20230704_2341'),
+        ('api', '0007_alter_compliancereport_traversal'),
     ]
 
     operations = [

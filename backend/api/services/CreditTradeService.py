@@ -143,11 +143,14 @@ class CreditTradeService(object):
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
 
-        effective_date = datetime.date.today()
+        # Set the effective_date to credit_trade's trade_effective_date if it's set, 
+        # otherwise use today's date
+        effective_date = credit_trade.trade_effective_date \
+            if credit_trade.trade_effective_date else datetime.date.today()
 
         # Calculate and assign trade category
         credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
-            credit_trade.trade_effective_date, category_d_selected)
+            effective_date, category_d_selected)
 
         CreditTradeService.transfer_credits(
             credit_trade.credits_from,
