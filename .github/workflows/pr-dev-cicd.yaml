@@ -12,18 +12,18 @@ on:
 
 jobs:
 
-  # setup-database:
-  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-  #   uses: ./.github/workflows/pr-dev-database-template.yaml
-  #   with:
-  #     pr-number: ${{ github.event.pull_request.number }}
-  #     dev-suffix: -jan-${{ github.event.pull_request.number }}
-  #   secrets:
-  #     dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  #     tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
-  #     tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
-  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  setup-database:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    uses: ./.github/workflows/pr-dev-database-template.yaml
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      dev-suffix: -jan-${{ github.event.pull_request.number }}
+    secrets:
+      dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
+      tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
   # when build pull reuqest, the suffix sample is -3.0.0-1234
   #       the  checkout-ref is in the format of refs/pull/1234/head
@@ -41,7 +41,7 @@ jobs:
 
   deploy:
     if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-    # needs: build
+    needs: setup-database
     uses: ./.github/workflows/pr-dev-deploy-template.yaml
     with:
       suffix: -jan-${{ github.event.pull_request.number }}
