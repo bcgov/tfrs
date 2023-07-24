@@ -37,3 +37,9 @@ jobs:
         shell: bash {0}
         run: |
           helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-spilo-jan-${{ github.event.pull_request.number }} || true
+          helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-backend-dev-jan-${{ github.event.pull_request.number }} || true
+          helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-frontend-dev-jan-${{ github.event.pull_request.number }} || true
+          helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-celery-dev-jan-${{ github.event.pull_request.number }} || true
+          helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-scan-handler-dev-jan-${{ github.event.pull_request.number }} || true
+          helm -n ${{ env.DEV_NAMESPACE }} uninstall tfrs-scan-coordinator-dev-jan-${{ github.event.pull_request.number }} || true
+
