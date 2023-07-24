@@ -42,7 +42,7 @@ jobs:
   deploy:
     if: endsWith( github.event.pull_request.title, 'build-on-dev' )
     needs: build
-    uses: ./.github/workflows/branch-deploy-template.yaml
+    uses: ./.github/workflows/pr-dev-deploy-template.yaml
     with:
       suffix: -jan-${{ github.event.pull_request.number }}
       checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
