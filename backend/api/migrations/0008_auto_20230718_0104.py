@@ -17,7 +17,7 @@ def insert_categories(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0006_auto_20230704_2341'),
+        ('api', '0007_alter_compliancereport_traversal'),
     ]
 
     operations = [

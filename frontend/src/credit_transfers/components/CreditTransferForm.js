@@ -1,7 +1,7 @@
 /*
  * Presentational component
  */
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import numeral from 'numeral'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -21,7 +21,11 @@ import CreditTransferCommentForm from './CreditTransferCommentForm'
 import CreditTransferComment from './CreditTransferComment'
 
 const CreditTransferForm = (props) => {
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date()
+  const minDateValue = today.toISOString().split('T')[0]
+  const maxDate = new Date()
+  maxDate.setMonth(today.getMonth() + 3)
+  const maxDateValue = maxDate.toISOString().split('T')[0]
   return (
   <div className="credit-transfer">
     <div className="credit_balance">
@@ -133,7 +137,8 @@ const CreditTransferForm = (props) => {
             className="form-control form-date"
             type="date"
             value={props.fields.tradeEffectiveDate}
-            min={today}
+            min={minDateValue}
+            max={maxDateValue}
             name='tradeEffectiveDate'
             onChange={props.handleInputChange}
             required
