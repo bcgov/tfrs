@@ -213,6 +213,7 @@ const ComplianceReportingPage = (props) => {
               <ul className='dropdown-menu'>
                 {props.compliancePeriods.map((compliancePeriod) => (
                   <li key={compliancePeriod.description}>
+                  {compliancePeriod.description <= 2023 && (
                     <button
                       onClick={() => {
                         const found = items.findIndex(
@@ -238,6 +239,7 @@ const ComplianceReportingPage = (props) => {
                     >
                       {compliancePeriod.description}
                     </button>
+                  )}
                   </li>
                 ))}
               </ul>
@@ -269,6 +271,7 @@ const ComplianceReportingPage = (props) => {
                 <ul className='dropdown-menu'>
                   {props.compliancePeriods.map((compliancePeriod) => (
                     <li key={compliancePeriod.description}>
+                    {compliancePeriod.description <= 2023 && (
                       <button
                         onClick={() => {
                           const found = items.findIndex(
@@ -295,6 +298,7 @@ const ComplianceReportingPage = (props) => {
                       >
                         {compliancePeriod.description}
                       </button>
+                    )}
                     </li>
                   ))}
                 </ul>
