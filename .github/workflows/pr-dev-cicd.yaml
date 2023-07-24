@@ -12,18 +12,18 @@ on:
 
 jobs:
 
-  setup-database:
-    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-    uses: ./.github/workflows/pr-dev-database-template.yaml
-    with:
-      pr-number: ${{ github.event.pull_request.number }}
-      dev-suffix: -jan-${{ github.event.pull_request.number }}
-    secrets:
-      dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-      tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
-      tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
-      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  # setup-database:
+  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+  #   uses: ./.github/workflows/pr-dev-database-template.yaml
+  #   with:
+  #     pr-number: ${{ github.event.pull_request.number }}
+  #     dev-suffix: -jan-${{ github.event.pull_request.number }}
+  #   secrets:
+  #     dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+  #     tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
+  #     tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
+  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
   # when build pull reuqest, the suffix sample is -3.0.0-1234
   #       the  checkout-ref is in the format of refs/pull/1234/head
@@ -32,27 +32,24 @@ jobs:
     name: Build Pull Request
     uses: ./.github/workflows/branch-build-template.yaml
     with:
-      suffix: -3.0.0-${{ github.event.pull_request.number }}
+      suffix: -jan-${{ github.event.pull_request.number }}
       checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
       openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}      
 
-  # call-pr-deploy-template:
-  #   if: endsWith( github.event.pull_request.title, 'build-on-dev' )
-  #   needs: [call-pr-build-template, call-pr-dev-database-template]
-  #   uses: ./.github/workflows/pr-deploy-template.yaml
-  #   with:
-  #     pr-number: ${{ github.event.pull_request.number }}
-  #     suffix: -dev-${{ github.event.pull_request.number }}
-  #     build-image-tag-name: build-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
-  #     image-tag-name: dev-${{ github.event.pull_request.base.ref }}-${{ github.event.pull_request.number }}
-  #     env-name: dev
-  #     frontend-route-host-name: tfrs-dev-${{ github.event.pull_request.number }}.apps.silver.devops.gov.bc.ca
-  #   secrets:
-  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-  #     namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  deploy:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    needs: build
+    uses: ./.github/workflows/branch-deploy-template.yaml
+    with:
+      suffix: -jan-${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
+      # frontend-route-host-name: tfrs-dev-${{ github.event.pull_request.number }}.apps.silver.devops.gov.bc.ca
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
   
