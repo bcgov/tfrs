@@ -53,6 +53,11 @@ jobs:
           openshift_token: ${{ secrets.openshift-token }}
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.tools-namespace }}  
+
+      - name: Create vhost on Rabbitmq Dev
+        shell: bash {0}
+        run: |
+          oc -n ${{ secrets.namespace }} exec tfrs-rabbitmq-0 -- rabbitmqctl set_permissions --vhost kuan-vhost tfrs ".*" ".*" ".*"
       
       - name: Deploy tfrs-frontend
         shell: bash {0}
@@ -64,7 +69,7 @@ jobs:
             echo "tfrs-frontend-dev${{ inputs.suffix }} release exists already"
             helm upgrade \
               --set frontendImageTagName=dev${{ inputs.suffix }} \
-              --set suffix=dev${{ inputs.suffix }} \
+              --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-frontend-dev${{ inputs.suffix }} .
@@ -72,7 +77,7 @@ jobs:
             echo "tfrs-frontend-dev${{ inputs.suffix }} release does not exist"
             helm install \
               --set frontendImageTagName=dev${{ inputs.suffix }} \
-              --set suffix=dev${{ inputs.suffix }} \
+              --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-frontend-dev${{ inputs.suffix }} .
