@@ -177,7 +177,7 @@ jobs:
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              --set rabbitmqVHost=tfrs-dev${{ inputs.suffix }}-vhost \
               -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-scan-coordinator-dev${{ inputs.suffix }} .
           else
             echo "tfrs-scan-coordinator${{ inputs.suffix }} release does not exist"
@@ -186,6 +186,6 @@ jobs:
               --set suffix=${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=${{ inputs.env-Name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              --set rabbitmqVHost=tfrs-dev${{ inputs.suffix }}-vhost \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-scan-coordinator-dev${{ inputs.suffix }} .
           fi                  
