@@ -1,4 +1,4 @@
-name: TFRS Dev PR Teardown
+name: TFRS Dev Jan PR Teardown
 
 on:
   pull_request:
