@@ -94,7 +94,7 @@ jobs:
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              --set rabbitmqVHost=tfrs-dev${{ inputs.suffix }}-vhost \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-backend-dev${{ inputs.suffix }} .
           else
             echo "tfrs-backend-dev${{ inputs.suffix }} release does not exist"
@@ -122,7 +122,7 @@ jobs:
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
-              --set rabbitmqVHost=${{ inputs.rabbitmq-vhost }} \
+              --set rabbitmqVHost=tfrs-dev${{ inputs.suffix }}-vhost \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-celery-dev${{ inputs.suffix }} .
           else
             echo "tfrs-celery-dev${{ inputs.suffix }} release does not exist"
