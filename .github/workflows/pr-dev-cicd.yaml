@@ -1,7 +1,7 @@
 # Please refer to ./readme.md for how to build single pull request
 
 # Update this workflow name per pull request
-name: PR Dev CICD
+name: TFRS Dev PR CICD
 on:
   workflow_dispatch:
   pull_request:
