@@ -22,4 +22,3 @@ After the release is deployed on Prod
 
 dd
 
-xxx
