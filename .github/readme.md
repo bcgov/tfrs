@@ -40,7 +40,5 @@
 * tfrs-release.yaml (TFRS release-2.10.0): the pipeline builds the release and deploys on Test and Prod, it needs to be manually triggered
 * create-release.yaml (Create Release after merging to master): tag and create the release after merging release branch to master. The description of the tracking pull request becomes release notes
 
-## Other Pipelines
 
-* cleanup-cron-workflow-runs.yaml (Scheduled cleanup old workflow runs): a cron job to cleanup the old workflows
-* cleanup-workflow-runs.yaml  (Cleanup old workflow runs): manually cleanup teh workflow runs
+
