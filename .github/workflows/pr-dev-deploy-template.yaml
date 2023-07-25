@@ -130,7 +130,7 @@ jobs:
               --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.suffix }} \
               --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
-              --set envName=${{ inputs.env-Name }} \
+              --set envName=dev \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
               --set rabbitmqVHost=tfrs-dev${{ inputs.suffix }}-vhost \
               -n ${{ secrets.namespace }} -f ./values-dev-jan.yaml tfrs-celery-dev${{ inputs.suffix }} .
