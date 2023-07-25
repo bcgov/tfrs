@@ -6,12 +6,12 @@ on:
   workflow_call:
     inputs:
       # when build branch, the sample value is -main-release-jan-2024
-      # when build pull request, the sample value is 
+      # when build pull request, the sample value is -jan-2024
       suffix:
         required: true
         type: string
       # when build branch, the sample value is main-release-jan-2024
-      # when build pull request, the sample value is refs/pull/2023/head
+      # when build pull request, the sample value is refs/pull/2024/head
       checkout-ref:
         required: true
         type: string
