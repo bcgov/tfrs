@@ -145,7 +145,7 @@ jobs:
           if [ $? -eq 0 ]; then
             echo "tfrs-scan-handler-dev${{ inputs.suffix }} release exists already"
             helm upgrade \
-              --set scanHandlerImageTagName=dev-${{ inputs.suffix }} \
+              --set scanHandlerImageTagName=dev${{ inputs.suffix }} \
               --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
@@ -155,7 +155,7 @@ jobs:
           else
             echo "tfrs-scan-handler-dev${{ inputs.suffix }} release does not exist"
             helm install \
-              --set scanHandlerImageTagName=dev-${{ inputs.suffix }} \
+              --set scanHandlerImageTagName=dev${{ inputs.suffix }} \
               --set suffix=dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
