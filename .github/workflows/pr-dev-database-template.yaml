@@ -59,7 +59,7 @@ jobs:
             helm install -n ${{ secrets.dev-namespace }} -f ./values-dev.yaml --wait tfrs-spilo${{ inputs.dev-suffix }} .
             oc -n ${{ secrets.dev-namespace }} wait --for=condition=Ready pod/tfrs-spilo${{ inputs.dev-suffix }}-0
             oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "create user \"${{ secrets.tfrs-dev-username }}\" WITH PASSWORD '${{ secrets.tfrs-dev-password }}'" || true
-            oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "create database tfrs owner ${{ secrets.tfrs-dev-username }} ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'" || true
+            oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "create database tfrs owner \"${{ secrets.tfrs-dev-username }}\" ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'" || true
             oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "ALTER SYSTEM SET log_filename='postgresql-%H.log'" || true
             oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "ALTER SYSTEM SET log_connections='off'" || true
             oc -n ${{ secrets.dev-namespace }} exec tfrs-spilo${{ inputs.dev-suffix }}-0 -- psql -c "ALTER SYSTEM SET log_disconnections='off'" || true
