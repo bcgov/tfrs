@@ -100,7 +100,7 @@ jobs:
             echo "tfrs-backend-dev${{ inputs.suffix }} release does not exist"
             helm install \
               --set backendImageTagName=dev${{ inputs.suffix }} \
-              --set suffix=dev${{ inputs.suffix }} \
+              --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
@@ -127,7 +127,7 @@ jobs:
           else
             echo "tfrs-celery-dev${{ inputs.suffix }} release does not exist"
             helm install \
-              --set celeryImageTagName=${{ inputs.env-name }}-${{ inputs.suffix }} \
+              --set celeryImageTagName=dev${{ inputs.suffix }} \
               --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
@@ -156,7 +156,7 @@ jobs:
             echo "tfrs-scan-handler-dev${{ inputs.suffix }} release does not exist"
             helm install \
               --set scanHandlerImageTagName=dev${{ inputs.suffix }} \
-              --set suffix=dev${{ inputs.suffix }} \
+              --set suffix=-dev${{ inputs.suffix }} \
               --set namespace=${{ secrets.namespace }} \
               --set envName=dev \
               --set databaseServiceHostName=${{ inputs.database-service-host-name }} \
