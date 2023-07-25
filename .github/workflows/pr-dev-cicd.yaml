@@ -1,0 +1,54 @@
+# Please refer to ./readme.md for how to build single pull request
+
+# Update this workflow name per pull request
+name: TFRS Dev Jan PR CICD
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - 'main-release-jan-2024'
+
+jobs:
+
+  setup-database:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    uses: ./.github/workflows/pr-dev-database-template.yaml
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      dev-suffix: -jan-${{ github.event.pull_request.number }}
+    secrets:
+      dev-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      tfrs-dev-username: ${{ secrets.TFRS_DEV_USERNAME }}
+      tfrs-dev-password: ${{ secrets.TFRS_DEV_PASSWORD }}
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+
+  # when build pull reuqest, the suffix sample is -jan-1234
+  #       the  checkout-ref is in the format of refs/pull/1234/head
+  build:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    name: Build Pull Request
+    uses: ./.github/workflows/build-template.yaml
+    with:
+      suffix: -jan-${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}      
+
+  deploy:
+    if: endsWith( github.event.pull_request.title, 'build-on-dev' )
+    needs: [setup-database, build]
+    uses: ./.github/workflows/pr-dev-deploy-template.yaml
+    with:
+      suffix: -jan-${{ github.event.pull_request.number }}
+      checkout-ref: refs/pull/${{ github.event.pull_request.number }}/head
+      database-service-host-name: tfrs-spilo-jan-${{ github.event.pull_request.number }}
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  
