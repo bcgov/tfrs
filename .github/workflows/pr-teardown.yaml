@@ -4,8 +4,7 @@ on:
   pull_request:
     types: closed
     branches:
-      - 'pr-build-jan'
-      # - 'main-release-jan-2024'
+      - 'main-release-jan-2024'
 
 env:
   TOOLS_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools

@@ -7,8 +7,7 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
     branches:
-          - 'pr-build-jan'
-          # - 'main-release-jan-2024'
+      - 'main-release-jan-2024'
 
 jobs:
 
