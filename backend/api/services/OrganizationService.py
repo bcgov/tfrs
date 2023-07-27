@@ -163,6 +163,7 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
+
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
             total_in_compliance_period = credits.get('total')
