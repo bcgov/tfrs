@@ -1,0 +1,130 @@
+---
+kind: "Template"
+apiVersion: "template.openshift.io/v1"
+metadata:
+  name: "{$JOB_NAME}-cronjob-template"
+  annotations:
+    description: "Scheduled Task to perform a Database Backup"
+    tags: "cronjob,backup"
+parameters:
+  - name: "JOB_NAME"
+    displayName: "Job Name"
+    description: "Name of the Scheduled Job to Create."
+    value: "backup-postgres"
+    required: true
+  - name: "JOB_PERSISTENT_STORAGE_NAME"
+    displayName: "Backup Persistent Storage Name"
+    description: "Pre-Created PVC to use for backup target"
+    value: "bk-devex-von-tools-a9vlgd1jpsg1"
+    required: true
+  - name: "SCHEDULE"
+    displayName: "Cron Schedule"
+    description: "Cron Schedule to Execute the Job (using local cluster system TZ)"
+    # Currently targeting 1:00 AM Daily
+    value: "0 1 * * *"
+    required: true
+  - name: "SOURCE_IMAGE_NAME"
+    displayName: "Source Image Name"
+    description: "The name of the image to use for this resource."
+    required: true
+    value: "backup-container"
+  - name: "IMAGE_REGISTRY"
+    description: "The base OpenShift docker registry"
+    displayName: "Docker Image Registry"
+    required: true
+    # Set value to "docker-registry.default.svc:5000" if using OCP3
+    value: "docker.io"
+  - name: "IMAGE_NAMESPACE"
+    displayName: "Image Namespace"
+    description: "The namespace of the OpenShift project containing the imagestream for the application."
+    required: true
+    value: "bcgovimages"
+  - name: "TAG_NAME"
+    displayName: "Environment TAG name"
+    description: "The TAG name for this environment, e.g., dev, test, prod"
+    required: true
+    value: "dev"
+  - name: "BACKUP_DIR"
+    displayName: "The root backup directory"
+    description: "The name of the root backup directory"
+    required: true
+    value: "/backups/"   
+  - name: "MINIO_CLAIM_NAME"
+    displayName: "The Minio PVC name"
+    description: "The Minio PVC name"
+    required: true
+  - name: "JOB_SERVICE_ACCOUNT"
+    displayName: "Service Account Name"
+    description: "Name of the Service Account To Exeucte the Job As."
+    value: "default"
+    required: true
+  - name: "SUCCESS_JOBS_HISTORY_LIMIT"
+    displayName: "Successful Job History Limit"
+    description: "The number of successful jobs that will be retained"
+    value: "5"
+    required: true
+  - name: "FAILED_JOBS_HISTORY_LIMIT"
+    displayName: "Failed Job History Limit"
+    description: "The number of failed jobs that will be retained"
+    value: "2"
+    required: true
+  - name: "JOB_BACKOFF_LIMIT"
+    displayName: "Job Backoff Limit"
+    description: "The number of attempts to try for a successful job outcome"
+    value: "0"
+    required: false
+objects:
+- kind: "CronJob"
+  apiVersion: "batch/v1"
+  metadata:
+    name: "${JOB_NAME}"
+    labels:
+      template: "${JOB_NAME}-cronjob"
+      cronjob: "${JOB_NAME}"
+  spec:
+    schedule: "${SCHEDULE}"
+    concurrencyPolicy: "Forbid"
+    successfulJobsHistoryLimit: "${{SUCCESS_JOBS_HISTORY_LIMIT}}"
+    failedJobsHistoryLimit: "${{FAILED_JOBS_HISTORY_LIMIT}}"
+    jobTemplate:
+      metadata:
+        labels:
+          template: "${JOB_NAME}-job"
+          cronjob: "${JOB_NAME}"
+      spec:
+        backoffLimit: ${{JOB_BACKOFF_LIMIT}}
+        template:
+          metadata:
+            labels:
+              template: "${JOB_NAME}-job"
+              cronjob: "${JOB_NAME}"
+          spec:
+            containers:
+              - name: "${JOB_NAME}-cronjob"
+                image: "${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${SOURCE_IMAGE_NAME}:${TAG_NAME}"
+                # image: backup
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "mkdir -p /backups/minio-backups-by-cron; rsync -avu --delete /minio-data/ /backups/minio-backups-by-cron"
+                volumeMounts:
+                  - mountPath: "${BACKUP_DIR}"
+                    name: "backup"
+                  - mountPath: "/minio-data"
+                    name: "minio-data"                    
+                env:
+                  - name: BACKUP_DIR
+                    value: "${BACKUP_DIR}/minio-backups-by-cron/"
+            volumes:
+              - name: backup
+                persistentVolumeClaim:
+                  claimName: "${JOB_PERSISTENT_STORAGE_NAME}"
+              - name: minio-data
+                persistentVolumeClaim:
+                  claimName: ${MINIO_CLAIM_NAME}          
+            restartPolicy: "Never"
+            terminationGracePeriodSeconds: 30
+            activeDeadlineSeconds: 1600
+            dnsPolicy: "ClusterFirst"
+            serviceAccountName: "${JOB_SERVICE_ACCOUNT}"
+            serviceAccount: "${JOB_SERVICE_ACCOUNT}"
