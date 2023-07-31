@@ -7,6 +7,7 @@ export const STATUS_APPROVED = 6
 export const STATUS_COMPLETED = 7
 export const STATUS_CANCELLED = 8
 export const STATUS_REJECTED = 9
+export const COMPLIANCE_YEAR = 2023
 
 export const CREDIT_TRANSFER_STATUS = {
   new: {
