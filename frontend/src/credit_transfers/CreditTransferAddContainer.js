@@ -41,6 +41,7 @@ class CreditTransferAddContainer extends Component {
         fields: {
           comment: '',
           dateOfWrittenAgreement: '',
+          tradeEffectiveDate: null,
           compliancePeriod: { id: 0 },
           numberOfCredits: '',
           respondent: {},
@@ -61,6 +62,7 @@ class CreditTransferAddContainer extends Component {
         fields: {
           comment: '',
           dateOfWrittenAgreement: '',
+          tradeEffectiveDate: null,
           fairMarketValuePerCredit: '',
           initiator: {},
           note: '',
@@ -138,7 +140,7 @@ class CreditTransferAddContainer extends Component {
       numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
-      tradeEffectiveDate: null,
+      tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
       type: this.state.fields.tradeType.id,
       zeroReason: (this.state.fields.zeroDollarReason != null &&
         this.state.fields.zeroDollarReason.id) || null

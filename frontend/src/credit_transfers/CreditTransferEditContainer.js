@@ -139,7 +139,6 @@ class CreditTransferEditContainer extends Component {
       numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
-      tradeEffectiveDate: null,
       type: this.state.fields.tradeType.id,
       zeroReason: (this.state.fields.zeroDollarReason != null &&
         this.state.fields.zeroDollarReason.id) || null

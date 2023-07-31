@@ -255,6 +255,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
@@ -586,6 +589,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
