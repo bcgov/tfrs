@@ -66,11 +66,11 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
 
         # call transfer_credits
         CreditTradeService.transfer_credits(
-            from_org=fs1user.organization,
-            to_org=fs2user.organization,
+            _from=fs1user.organization,
+            _to=fs2user.organization,
             num_of_credits=num_of_credits,
             effective_date=datetime.date.today(),
-            credit_trade_id=credit_trade
+            credit_trade_id=credit_trade.id
         )
 
         # check if balances have been updated correctly
@@ -147,6 +147,7 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
         self.assertEqual(
             created_response['tradeEffectiveDate'],
             future_date)
+
     def test_transfer_credits_with_pending_trades(self):
         """Test the process_future_effective_dates function with pending trades"""
 
@@ -174,11 +175,11 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
             respondent=fs2user.organization,
             number_of_credits=num_of_credits,
             type=self.credit_trade_types['buy'],
-            effective_date=future_date
+            trade_effective_date=future_date
         )
 
         # call process_future_effective_dates
-        CreditTradeService.process_future_effective_dates()
+        CreditTradeService.process_future_effective_dates(fs1user.organization)
 
         # check if balances have not been updated
         initiator_bal_after = OrganizationBalance.objects.get(
@@ -195,7 +196,7 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
         # fast forward time to future date
         with mock.patch('django.utils.timezone.now', mock.Mock(return_value=future_date)):
             # call process_future_effective_dates again
-            CreditTradeService.process_future_effective_dates()
+            CreditTradeService.process_future_effective_dates(fs1user.organization)
 
             # check if balances have been updated correctly
             initiator_bal_after = OrganizationBalance.objects.get(

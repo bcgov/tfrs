@@ -184,20 +184,18 @@ class CreditTradeService(object):
         # Get all approved transactions where effective_date < now and 
         # that are not already in the organization_balance table
         future_transactions = CreditTrade.objects.filter(
-            Q(organization=organization) &
+            Q(initiator=organization) &
             Q(trade_effective_date__lte=timezone.now()) &
             Q(status=status_approved) &
-            ~Q(credit_trade__in=OrganizationBalance.objects.values('credit_trade'))
+            ~Q(id__in=OrganizationBalance.objects.exclude(credit_trade_id__isnull=True).values('credit_trade_id'))
         )
 
         # Update balance for each future transaction
         for transaction in future_transactions:
             # Get the organization who will receive the credits
-            to_organization = transaction.to_organization
-
+            to_organization = transaction.respondent
             # Get the number of credits to transfer
             num_of_credits = transaction.number_of_credits
-
             # Call the transfer_credits method
             CreditTradeService.transfer_credits(organization, to_organization, transaction.id, 
                                                 num_of_credits, transaction.trade_effective_date)
