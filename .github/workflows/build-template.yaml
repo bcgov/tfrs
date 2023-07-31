@@ -1,6 +1,6 @@
 
 # This template supports both pr build and branch build
-name: Branch Build Template
+name: Build Template
 
 on:
   workflow_call:
