@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDataSheet from 'react-datasheet'
+import { COMPLIANCE_YEAR } from '../../constants/values'
 
 class ScheduleDeltas extends Component {
   static decimalViewer (digits = 2) {
@@ -825,7 +826,7 @@ class ScheduleDeltas extends Component {
         valueViewer: ScheduleDeltas.decimalViewer(2)
       }]
     ]
-    if (Number(period) >= 2023) {
+    if (Number(period) >= COMPLIANCE_YEAR) {
       return [...grid.slice(0, 26), [{ // p3
         className: 'header',
         colSpan: 5,

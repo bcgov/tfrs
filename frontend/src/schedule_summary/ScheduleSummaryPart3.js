@@ -2,7 +2,7 @@ import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { numericColumn, numericInput, totalViewer } from '../compliance_reporting/components/Columns'
 import Tooltip from '../app/components/Tooltip'
-
+import { COMPLIANCE_YEAR } from '../constants/values'
 class ScheduleSummaryPart3 {
   constructor (period) {
     period = Number(period)
@@ -256,7 +256,7 @@ class ScheduleSummaryPart3 {
               className="info"
               show
               title={
-                period < 2023
+                period < COMPLIANCE_YEAR
                   ? 'This line displays the penalty payable based on the ' +
                   'information provided and is calculated using the $200 per outstanding ' +
                   'debit non-compliance penalty.'

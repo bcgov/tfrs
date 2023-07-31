@@ -51,6 +51,7 @@ function lineData (
   alreadyUpdated,
   period
 ) {
+  debugger
   const { isSupplemental } = complianceReport
   part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
   if (!isSupplemental) {
@@ -113,6 +114,7 @@ function Part3NonSupplimentalTableData (part3) {
 }
 
 function Part3NonSupplimentalLineData (part3) {
+  debugger
   const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1
   if (line25value && line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
