@@ -25,15 +25,16 @@ import * as GasolineSummaryConatiner from '../schedule_summary/GasolineSummaryCo
 import * as Part3SummaryContainer from '../schedule_summary/Part3SummaryContainer'
 import * as LCFSSummaryContainer from '../schedule_summary/LCFSSummaryContainer'
 import * as PenaltySummaryContainer from '../schedule_summary/PenaltySummaryContainer'
+import { COMPLIANCE_YEAR } from '../constants/values'
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
     super(props)
-
+    console.log(props.period, "3232")
     this.state = {
       diesel: new ScheduleSummaryDiesel(props.readOnly),
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
-      part3: Number(props.period) < 2023 ? new ScheduleSummaryPart3(props.period) : new ScheduleSummaryLCFS(props.period),
+      part3: Number(props.period) < COMPLIANCE_YEAR ? new ScheduleSummaryPart3(props.period) : new ScheduleSummaryLCFS(props.period),
       penalty: new ScheduleSummaryPenalty(),
       showModal: false,
       totals: {
@@ -66,15 +67,17 @@ class ScheduleSummaryContainer extends Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
+    console.log(this.state, "7070")
+    console.log(this.props.period, "7171")
     const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
-
+    debugger
     // If snapshot exists then we are not in edit mode and can just return the tabledata
     if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot
       GasolineSummaryConatiner.tableData(gasoline, summary)
       DieselSummaryContainer.tableData(diesel, summary)
-      Number(this.props.period) < 2023 ? Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport) : LCFSSummaryContainer.tableData(part3, summary, this.props.complianceReport)
+      Number(this.props.period) < COMPLIANCE_YEAR ? Part3SummaryContainer.tableData(part3, summary, this.props.complianceReport) : LCFSSummaryContainer.tableData(part3, summary, this.props.complianceReport)
       PenaltySummaryContainer.tableData(penalty, summary)
       this.setState({
         diesel,
@@ -470,7 +473,7 @@ class ScheduleSummaryContainer extends Component {
 
       <div className="row">
         <div className="col-lg-6">
-          <h1>{Number(this.props.period) < 2023 ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
+          <h1>{Number(this.props.period) < COMPLIANCE_YEAR ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
 
           <ReactDataSheet
             className="spreadsheet"
