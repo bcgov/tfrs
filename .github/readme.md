@@ -27,6 +27,7 @@ After the release is deployed on Prod:
 
 * dev-release.yaml (TFRS Dev release-2.9.0): the pipeline is automatically triggered when there is a commit to the release branch
 * tfrs-release.yaml (TFRS release-2.9.0): the pipelin builds the release and deploy on Test and Prod, it needs to be manually triggered
+* create-release.yaml (Create Release after merging to main): tag and create the release after merging release branch to main. The description of the tracking pull request becomes release notes
 
 ## Other Pipelines
 
