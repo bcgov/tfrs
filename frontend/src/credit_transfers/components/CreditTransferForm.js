@@ -118,7 +118,6 @@ const CreditTransferForm = (props) => {
             name='dateOfWrittenAgreement'
             onChange={props.handleInputChange}
             required
-            onKeyPress={(event) => { event.preventDefault() }}
           />
         </div>
       </div>
@@ -142,8 +141,6 @@ const CreditTransferForm = (props) => {
             max={maxDateValue}
             name='tradeEffectiveDate'
             onChange={props.handleInputChange}
-            required
-            onKeyPress={(event) => { event.preventDefault() }}
           />
         </div>
       </div>
