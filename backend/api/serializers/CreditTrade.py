@@ -374,10 +374,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             if 'comment' in orig_data:
                 data['comment'] = orig_data['comment']
 
+        credit_trade_status = data.get('status')
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
-            credit_trade_status = data.get('status')
-
             if not data.get('is_rescinded') is True:
                 available_statuses = CreditTradeService.get_allowed_statuses(
                     self.instance, request)
