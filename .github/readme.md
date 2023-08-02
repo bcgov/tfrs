@@ -2,7 +2,7 @@
 # TFRS Post Release Work
 After the release is deployed on Prod:
 * Merge the tracking pull request to master
-* Create the release tag from master amd make it as the lasted release 
+* Create the release tag from master amd make it as the lasted release (this is done automatically by pipeline create-release.yaml)
 * Create the new release branch from master
 * Update tfrs-release.yaml
   * name
@@ -19,7 +19,7 @@ After the release is deployed on Prod:
   * branches
   * PR_NUMBER
   * RELEASE_NAME
-* Commit all teh above changes and create the tracking pull request to merge the new release branch to master
+* Commit all the above changes and create the tracking pull request to merge the new release branch to master. Need to update the PR_NUMBER after the tracking pull request is created. 
 
 # TFRS Pipelines
 
