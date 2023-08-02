@@ -28,7 +28,6 @@ import { COMPLIANCE_YEAR } from '../constants/values'
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
     super(props)
-    console.log(props.period, "3232")
     this.state = {
       diesel: new ScheduleSummaryDiesel(props.readOnly),
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
@@ -65,8 +64,6 @@ class ScheduleSummaryContainer extends Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    console.log(this.state, "7070")
-    console.log(this.props.period, "7171")
     const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
     // If snapshot exists then we are not in edit mode and can just return the tabledata
