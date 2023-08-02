@@ -367,7 +367,6 @@ class ExclusionAgreementContainer extends Component {
 
   _validate (_row, _rowIndex, nextProps) {
     console.error('validate')
-    console.log(this)
 
     let row = _row
     const rowIndex = _rowIndex

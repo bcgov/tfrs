@@ -431,7 +431,6 @@ class ScheduleBContainer extends Component {
 
   recomputeDerivedState (props, state) {
     const { grid } = state
-    console.log(grid,'433')
     for (let i = 2; i < grid.length; i += 1) {
       const row = i
       const context = {
@@ -459,9 +458,7 @@ class ScheduleBContainer extends Component {
         provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value,
         scheduleD_sheetIndex: scheduleDSheetIndex
       }
-      console.log(context,'==', values , '606==prop')
       const response = ComplianceReportingService.computeCredits(context, values)
-      console.log(grid[row][SCHEDULE_B.FUEL_TYPE], "fuel type 464")
       grid[row][SCHEDULE_B.FUEL_TYPE] = {
         ...grid[row][SCHEDULE_B.FUEL_TYPE],
         value: response.parameters.fuelType ? response.parameters.fuelType : ''
@@ -636,7 +633,6 @@ class ScheduleBContainer extends Component {
             className: 'number',
             readOnly: true,
             valueViewer: (props) => {
-              console.log(props, "641")
               const { value } = props
               return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>
             }
@@ -645,7 +641,6 @@ class ScheduleBContainer extends Component {
             className: 'number',
             readOnly: true,
             valueViewer: (props) => {
-              console.log(props, "649")
               const { value } = props
               return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>
             }
@@ -656,7 +651,6 @@ class ScheduleBContainer extends Component {
           className: 'number',
           readOnly: true,
           valueViewer: (props) => {
-            console.log(props, "660")
             const { value, col } = props
             // Check if the column is credit or debit (12 for credit, 13 for debit)
             const complianceUnits = col === 12 ? (value || 0) : col === 13 ? -(value || 0) : 0
