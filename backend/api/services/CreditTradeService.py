@@ -1,6 +1,7 @@
 import datetime
 from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -123,17 +124,21 @@ class CreditTradeService(object):
 
         history.save()
 
+
     @staticmethod
-    def calculate_transfer_category(agreement_date, category_d_selected):
+    def calculate_transfer_category(agreement_date, approval_date, category_d_selected):
         if category_d_selected:
             return CreditTradeCategory.objects.get(category="D")
-        difference_in_months = relativedelta(datetime.datetime.now(), agreement_date).months
+        now = timezone.now()
+        approval_date = now if approval_date < now else approval_date
+        difference_in_months = relativedelta(approval_date, agreement_date).months
         if difference_in_months <= 6:
             return CreditTradeCategory.objects.get(category="A")
         elif 6 < difference_in_months <= 12:
             return CreditTradeCategory.objects.get(category="B")
         else:
             return CreditTradeCategory.objects.get(category="C")
+
 
     @staticmethod
     def approve(credit_trade, update_user=None, category_d_selected=False):
@@ -143,22 +148,25 @@ class CreditTradeService(object):
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
 
-        # Set the effective_date to credit_trade's trade_effective_date if it's set, 
-        # otherwise use today's date
-        effective_date = credit_trade.trade_effective_date \
-            if credit_trade.trade_effective_date else datetime.date.today()
-
         # Calculate and assign trade category
         credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
-            effective_date, category_d_selected)
+            credit_trade.date_of_written_agreement, credit_trade.create_timestamp, category_d_selected)
 
-        CreditTradeService.transfer_credits(
-            credit_trade.credits_from,
-            credit_trade.credits_to,
-            credit_trade.id,
-            credit_trade.number_of_credits,
-            effective_date
-        )
+        # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
+        # otherwise use trade_effective_date
+        today = timezone.localdate()
+        effective_date = credit_trade.trade_effective_date \
+            if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
+
+        # Only transfer credits if the effective_date is today or in the past
+        if effective_date <= today:
+            CreditTradeService.transfer_credits(
+                credit_trade.credits_from,
+                credit_trade.credits_to,
+                credit_trade.id,
+                credit_trade.number_of_credits,
+                effective_date
+            )
 
         if update_user:
             credit_trade.update_user = update_user
@@ -168,9 +176,36 @@ class CreditTradeService(object):
         credit_trade.save()
 
         return credit_trade
+    
 
     @staticmethod
-    @transaction.non_atomic_requests()
+    def process_future_effective_dates(organization):
+        """
+        Process CreditTransactions that have future effective dates
+        """
+        status_approved = CreditTradeStatus.objects.get(status="Approved")
+
+        # Get all approved transactions where effective_date < now and 
+        # that are not already in the organization_balance table
+        future_transactions = CreditTrade.objects.filter(
+            Q(initiator=organization) &
+            Q(trade_effective_date__lte=timezone.now()) &
+            Q(status=status_approved) &
+            ~Q(id__in=OrganizationBalance.objects.exclude(credit_trade_id__isnull=True).values('credit_trade_id'))
+        )
+
+        # Update balance for each future transaction
+        for transaction in future_transactions:
+            # Get the organization who will receive the credits
+            to_organization = transaction.respondent
+            # Get the number of credits to transfer
+            num_of_credits = transaction.number_of_credits
+            # Call the transfer_credits method
+            CreditTradeService.transfer_credits(organization, to_organization, transaction.id, 
+                                                num_of_credits, transaction.trade_effective_date)
+
+    @staticmethod
+    @transaction.atomic()
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
         """

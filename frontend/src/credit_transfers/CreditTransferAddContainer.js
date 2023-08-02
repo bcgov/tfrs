@@ -41,6 +41,7 @@ class CreditTransferAddContainer extends Component {
         fields: {
           comment: '',
           dateOfWrittenAgreement: '',
+          tradeEffectiveDate: '',
           compliancePeriod: { id: 0 },
           numberOfCredits: '',
           respondent: {},
@@ -61,6 +62,7 @@ class CreditTransferAddContainer extends Component {
         fields: {
           comment: '',
           dateOfWrittenAgreement: '',
+          tradeEffectiveDate: '',
           fairMarketValuePerCredit: '',
           initiator: {},
           note: '',
@@ -128,6 +130,12 @@ class CreditTransferAddContainer extends Component {
   }
 
   _creditTransferSubmit (status) {
+    // swap empty string for null on optional tradeEffectiveDate field
+    const formData = { ...this.state.fields }
+    if (formData.tradeEffectiveDate === '') {
+      formData.tradeEffectiveDate = null
+    }
+
     // API data structure
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
@@ -135,10 +143,10 @@ class CreditTransferAddContainer extends Component {
       note: this.state.fields.note,
       comment: this.state.fields.comment,
       dateOfWrittenAgreement: this.state.fields.dateOfWrittenAgreement,
+      tradeEffectiveDate: formData.tradeEffectiveDate,
       numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
-      tradeEffectiveDate: null,
       type: this.state.fields.tradeType.id,
       zeroReason: (this.state.fields.zeroDollarReason != null &&
         this.state.fields.zeroDollarReason.id) || null

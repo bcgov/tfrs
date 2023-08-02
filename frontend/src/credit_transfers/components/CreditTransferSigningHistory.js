@@ -126,39 +126,43 @@ class CreditTransferSigningHistory extends Component {
     return (<strong>Proposed</strong>)
   }
 
-  // Helper function to calculate difference in months
   static monthsBetween (date1, date2) {
-    const d1 = date1.getFullYear() * 12 + date1.getMonth()
-    const d2 = date2.getFullYear() * 12 + date2.getMonth()
-    return d2 - d1
+    let months = (date2.getFullYear() - date1.getFullYear()) * 12
+    months -= date1.getMonth()
+    months += date2.getMonth()
+    if (date2.getDate() < date1.getDate()) {
+      months--
+    }
+    return months
   }
 
-  static calculateTransferCategoryAndNextChange (agreementDate, categoryDSelected) {
+  static calculateTransferCategoryAndNextChange (agreementDate, submissionDate, categoryDSelected) {
     if (categoryDSelected) {
       return { category: 'D', nextChangeInMonths: null }
     }
     const now = new Date()
-    const differenceInMonths = CreditTransferSigningHistory.monthsBetween(new Date(agreementDate), now)
-    if (differenceInMonths <= 6) {
-      return { category: 'A', nextChangeInMonths: 7 - differenceInMonths }
-    } else if (differenceInMonths > 6 && differenceInMonths <= 12) {
-      return { category: 'B', nextChangeInMonths: 13 - differenceInMonths }
+    submissionDate = submissionDate < now ? submissionDate : now
+    const differenceInMonths = CreditTransferSigningHistory.monthsBetween(new Date(agreementDate), new Date(submissionDate))
+    if (differenceInMonths < 6) {
+      return { category: 'A', nextChangeInMonths: 6 }
+    } else if (differenceInMonths < 12) {
+      return { category: 'B', nextChangeInMonths: 12 }
     } else {
       return { category: 'C', nextChangeInMonths: null }
     }
   }
 
   _renderCategoryHistory () {
-    const { history, dateOfWrittenAgreement, categoryDSelected, tradeEffectiveDate, loggedInUser } = this.props
+    const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
     if (history.length > 0 && loggedInUser.isGovernmentUser) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
-        .calculateTransferCategoryAndNextChange(agreementDate, categoryDSelected)
+        .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected)
       let nextChangeDate = null
       if (nextChangeInMonths !== null) {
         nextChangeDate = moment(agreementDate).add(nextChangeInMonths, 'months').format('LL')
       }
-      const endDate = tradeEffectiveDate || nextChangeDate
+      const endDate = nextChangeDate
       return (
         <>
           <p>
@@ -166,7 +170,7 @@ class CreditTransferSigningHistory extends Component {
               <span>Date of written agreement reached between the two suppliers: </span>
               <strong>{moment(agreementDate).format('LL')}</strong>
               <span> (proposal falls under <strong>Category {category}</strong>{categoryDSelected ? ')' : ''}</span>
-              {!tradeEffectiveDate && nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
+              {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
             </li>
           </p>
         </>

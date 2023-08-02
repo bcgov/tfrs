@@ -30,9 +30,8 @@ class CreditTransferTextRepresentation extends Component {
     this.totalValue = numeral(this.props.totalValue).format(
       NumberFormat.CURRENCY
     )
-    this.tradeEffectiveDate = this.props.tradeEffectiveDate
-      ? moment(this.props.tradeEffectiveDate).format('LL')
-      : "on Director's approval"
+
+    this.tradeEffectiveDate = this.formatTradeEffectiveDate()
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
       this.tradeStatus = 'Drafted'
@@ -40,6 +39,25 @@ class CreditTransferTextRepresentation extends Component {
       this.tradeStatus = Object.values(CREDIT_TRANSFER_STATUS).find(
         (element) => element.id === this.props.status.id
       ).description
+    }
+  }
+
+  formatTradeEffectiveDate = () => {
+    const now = moment()
+    const tradeEffectiveDate = this.props.tradeEffectiveDate
+    const status = this.props.status
+
+    // Transaction is approved
+    if (status.id === CREDIT_TRANSFER_STATUS.approved.id) {
+      return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span></span>)
+    }
+
+    // Check if tradeEffectiveDate exists and is in the future
+    if (tradeEffectiveDate && moment(tradeEffectiveDate).isAfter(now)) {
+      return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span> or on the
+        date the Director records the transfer, whichever is later.</span>)
+    } else {
+      return (<span> effective on the date the Director records the transfer.</span>)
     }
   }
 
@@ -91,7 +109,7 @@ class CreditTransferTextRepresentation extends Component {
         {this.props.numberOfCredits > 1 && 's'} for
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus} </span>
-        effective <span className='value'> {this.tradeEffectiveDate}</span>.
+        {this.tradeEffectiveDate}
       </div>
     )
   }
@@ -105,12 +123,9 @@ class CreditTransferTextRepresentation extends Component {
         <span className='value'> {this.creditsTo} </span> for the completion of
         a Part 3 Agreement milestone(s) has been
         <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
@@ -124,12 +139,9 @@ class CreditTransferTextRepresentation extends Component {
         credit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsFrom} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
@@ -186,12 +198,9 @@ class CreditTransferTextRepresentation extends Component {
         credit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
@@ -249,11 +258,7 @@ class CreditTransferTextRepresentation extends Component {
     ) {
       return <span>. The proposal was declined.</span>
     }
-    return (
-      <span>
-        , effective <span className='value'> {this.tradeEffectiveDate}</span>.
-      </span>
-    )
+    return (this.tradeEffectiveDate)
   }
 
   render () {

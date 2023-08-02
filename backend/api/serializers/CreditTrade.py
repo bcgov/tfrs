@@ -20,7 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Q, Sum, Count
 
 from rest_framework import serializers
@@ -155,6 +155,19 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 {'zeroDollarReason': "Zero dollar reason supplied but this "
                                      "trade has a non-zero value-per-credit"})
 
+        trade_effective_date = data.get('trade_effective_date')
+        if trade_effective_date:
+            today = datetime.now().date()
+            three_months_from_now = today + timedelta(days=90)
+            if trade_effective_date > three_months_from_now:
+                raise serializers.ValidationError({
+                    'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                })
+            if trade_effective_date < today:
+                raise serializers.ValidationError({
+                    'trade_effective_date': "Trade effective date can't be before today."
+                })
+            
         # If the initiator is 'selling', make sure that the organization
         # has enough credits
         sell_type = CreditTradeType.objects.get(the_type="Sell")
@@ -255,6 +268,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
@@ -496,6 +512,19 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Cannot add a comment in this state")
 
+        trade_effective_date = data.get('trade_effective_date')
+        if trade_effective_date:
+            today = datetime.now().date()
+            three_months_from_now = today + timedelta(days=90)
+            if trade_effective_date > three_months_from_now:
+                raise serializers.ValidationError({
+                    'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                })
+            if trade_effective_date < today:
+                raise serializers.ValidationError({
+                    'trade_effective_date': "Trade effective date can't be before today."
+                })
+            
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
             CreditTradeStatus.objects.filter(
@@ -585,6 +614,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
