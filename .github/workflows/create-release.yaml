@@ -1,9 +1,9 @@
-name: Create Release after merging to main
+name: Create Release after merging to master
 on:
   pull_request:
     types: [closed]
     branches:
-      - 'main'     
+      - 'master'     
 
 jobs:
   create-release:
