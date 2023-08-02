@@ -3,6 +3,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Tooltip from '../app/components/Tooltip'
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
 import { cellFormatNumeric, cellFormatTotal, cellFormatCurrencyTotal, cellFormatNegativeNumber } from '../utils/functions'
+import { COMPLIANCE_YEAR } from '../constants/values'
 
 function tableData (
   part3,
@@ -41,7 +42,7 @@ function tableData (
   }
 
   // Compliance Unit Act
-  if (period >= 2023) {
+  if (period >= COMPLIANCE_YEAR) {
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNegativeNumber(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_29_A][2] = cellFormatNegativeNumber(summary.lines['29A']) // Available compliance Unit on March 31, YYYY
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = cellFormatNegativeNumber(summary.lines['29B']) // Compliance unit balance change from assessment
