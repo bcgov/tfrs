@@ -2,13 +2,15 @@ import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Tooltip from '../app/components/Tooltip'
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
-import { cellFormatNumeric, cellFormatTotal } from '../utils/functions'
+import { cellFormatNumeric, cellFormatTotal, cellFormatCurrencyTotal, cellFormatNegativeNumber } from '../utils/functions'
+import { COMPLIANCE_YEAR } from '../constants/values'
 
 function tableData (
   part3,
   summary,
-  { isSupplemental, supplementalNumber }
+  { isSupplemental, supplementalNumber, compliancePeriod }
 ) {
+  let period = Number(compliancePeriod.description)
   part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
   part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
   part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
@@ -37,6 +39,38 @@ function tableData (
     part3[
       SCHEDULE_SUMMARY.LINE_26_C
     ][0].value = `Banked credits spent that will be returned due to debit decrease - Supplemental Report #${supplementalNumber}`
+  }
+
+  // Compliance Unit Act
+  if (period >= COMPLIANCE_YEAR) {
+    part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNegativeNumber(summary.lines['25'])
+    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = cellFormatNegativeNumber(summary.lines['29A']) // Available compliance Unit on March 31, YYYY
+    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = cellFormatNegativeNumber(summary.lines['29B']) // Compliance unit balance change from assessment
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(summary.lines['28']) // Non compliance penalty payable
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = cellFormatNegativeNumber(summary.lines['29C']) // Available compliance unit balance after assessment
+
+    if (summary.lines['28'] <= 0) {
+      // if there is no compliane penalty to pay then hide line 28
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+        className: 'hidden',
+        value: ''
+      }
+    }
+    for (let i = 0; i < 10; i++) {
+      if (i != 3) {
+        // Hide lines from 23 to 28 excluding line 25 and including header
+        part3[i][0].className = 'hidden'
+        part3[i][1].className = 'hidden'
+        part3[i][2] = {
+          className: 'hidden',
+          value: ''
+        }
+        part3[i][3].className = 'hidden'
+      }
+    }
+
   }
   return part3
 }
