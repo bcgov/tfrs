@@ -16,11 +16,12 @@ import SchedulesPage from './components/SchedulesPage'
 import { SCHEDULE_B, SCHEDULE_B_ERROR_KEYS } from '../constants/schedules/scheduleColumns'
 import { formatNumeric } from '../utils/functions'
 import ComplianceReportingService from './services/ComplianceReportingService'
+import { COMPLIANCE_YEAR } from '../constants/values'
 
 class ScheduleBContainer extends Component {
   static addHeaders (props) {
     let creditDebitHeaders
-    if (props.period < 2022) {
+    if (props.period < COMPLIANCE_YEAR) {
       creditDebitHeaders = [
         {
           className: 'credit',
@@ -57,7 +58,7 @@ class ScheduleBContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {'CREDIT/DEBIT CALCULATION '}
+              {props.period < COMPLIANCE_YEAR ? 'CREDIT/DEBIT CALCULATION ': 'COMPLIANCE UNITS CALCULATION '}
               <Tooltip
                 className="info left"
                 show
@@ -301,7 +302,7 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.UNITS].value = record.unitOfMeasure
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = record.effectiveCarbonIntensity
       grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = record.ciLimit
-      if (year < 2022) {
+      if (year < COMPLIANCE_YEAR) {
         grid[row][SCHEDULE_B.CREDIT].value = record.credits
         grid[row][SCHEDULE_B.DEBIT].value = record.debits
       } else {
@@ -430,7 +431,6 @@ class ScheduleBContainer extends Component {
 
   recomputeDerivedState (props, state) {
     const { grid } = state
-
     for (let i = 2; i < grid.length; i += 1) {
       const row = i
       const context = {
@@ -458,9 +458,7 @@ class ScheduleBContainer extends Component {
         provisionOfTheAct: grid[row][SCHEDULE_B.PROVISION_OF_THE_ACT].value,
         scheduleD_sheetIndex: scheduleDSheetIndex
       }
-
       const response = ComplianceReportingService.computeCredits(context, values)
-
       grid[row][SCHEDULE_B.FUEL_TYPE] = {
         ...grid[row][SCHEDULE_B.FUEL_TYPE],
         value: response.parameters.fuelType ? response.parameters.fuelType : ''
@@ -593,12 +591,19 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true
       }
+      console.log(grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL], "597")
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue =
         response.outputs.customIntensityValue
 
-      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent
+        grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent
+      if (context.compliancePeriod < COMPLIANCE_YEAR )  {
       grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits
       grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits
+    }
+    else {
+       const complinaceUnits = response.outputs.credits - response.outputs.debits
+       grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = complinaceUnits 
+    }
 
       if (!this.props.validating) {
         grid[row] = this._validate(grid[row], row - 2)
@@ -618,12 +623,11 @@ class ScheduleBContainer extends Component {
 
   _addRow (numberOfRows = 1) {
     const { grid } = this.state
-
     const { compliancePeriod } = this.props.complianceReport
 
     for (let x = 0; x < numberOfRows; x += 1) {
       let creditDebitData
-      if (parseInt(this.props.complianceReport.compliancePeriod.description) < 2022) {
+      if (parseInt(this.props.complianceReport.compliancePeriod.description) < COMPLIANCE_YEAR) {
         creditDebitData = [
           { // credit
             className: 'number',
@@ -939,7 +943,13 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null
       grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null
       grid[row][SCHEDULE_B.CREDIT].value = null
-      grid[row][SCHEDULE_B.DEBIT].value = null
+      if(grid[row][SCHEDULE_B.DEBIT]){
+        grid[row][SCHEDULE_B.DEBIT].value = null
+      }
+      if(grid[row][SCHEDULE_B.COMPLIANCE_UNITS]){   
+        grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = null
+      }
+      // grid[row][SCHEDULE_B.DEBIT].value = null
       grid[row][SCHEDULE_B.EER].value = null
       grid[row][SCHEDULE_B.ENERGY_CONTENT].value = null
       grid[row][SCHEDULE_B.ENERGY_DENSITY].value = null
