@@ -1,7 +1,7 @@
 [
   {
     "model": "api.credittrade",
-    "pk": 3,
+    "pk": 1,
     "fields": {
       "create_timestamp": null,
       "create_user": null,
@@ -14,6 +14,7 @@
       "number_of_credits": 1000,
       "fair_market_value_per_credit": "20.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -32,6 +33,7 @@
       "number_of_credits": 100,
       "fair_market_value_per_credit": "120.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -50,6 +52,7 @@
       "number_of_credits": 100,
       "fair_market_value_per_credit": "120.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -68,6 +71,7 @@
       "number_of_credits": 100,
       "fair_market_value_per_credit": "120.50",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -86,6 +90,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "120.50",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -104,6 +109,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "120.50",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -122,6 +128,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "120.50",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-08-07"
     }
   },
@@ -140,6 +147,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "10.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -158,6 +166,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "10.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -176,6 +185,7 @@
       "number_of_credits": 11,
       "fair_market_value_per_credit": "1.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -194,6 +204,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "1.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -212,6 +223,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "2.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -230,6 +242,7 @@
       "number_of_credits": 100,
       "fair_market_value_per_credit": "1.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -248,6 +261,7 @@
       "number_of_credits": 11,
       "fair_market_value_per_credit": "1.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -266,6 +280,7 @@
       "number_of_credits": 11,
       "fair_market_value_per_credit": "2.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -284,6 +299,7 @@
       "number_of_credits": 11,
       "fair_market_value_per_credit": "11.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -302,6 +318,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "120.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": "2017-09-09"
     }
   },
@@ -320,6 +337,7 @@
       "number_of_credits": 1,
       "fair_market_value_per_credit": "1.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -338,6 +356,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "10.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -356,6 +375,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "0.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -374,6 +394,7 @@
       "number_of_credits": 0,
       "fair_market_value_per_credit": "0.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -392,6 +413,7 @@
       "number_of_credits": 5,
       "fair_market_value_per_credit": "10.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -410,6 +432,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "100.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -428,6 +451,7 @@
       "number_of_credits": 0,
       "fair_market_value_per_credit": "0.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -446,6 +470,7 @@
       "number_of_credits": 0,
       "fair_market_value_per_credit": "0.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -464,6 +489,7 @@
       "number_of_credits": 75000,
       "fair_market_value_per_credit": "125.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -482,6 +508,7 @@
       "number_of_credits": 480000,
       "fair_market_value_per_credit": "180.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -500,6 +527,7 @@
       "number_of_credits": 500000,
       "fair_market_value_per_credit": "190.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -518,6 +546,7 @@
       "number_of_credits": 20000,
       "fair_market_value_per_credit": "-50.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -536,6 +565,7 @@
       "number_of_credits": 1000,
       "fair_market_value_per_credit": "110.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -554,6 +584,7 @@
       "number_of_credits": 100,
       "fair_market_value_per_credit": "179.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -572,6 +603,7 @@
       "number_of_credits": 6000,
       "fair_market_value_per_credit": "185.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -590,6 +622,7 @@
       "number_of_credits": 1500,
       "fair_market_value_per_credit": "165.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -608,6 +641,7 @@
       "number_of_credits": 5,
       "fair_market_value_per_credit": "14.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -626,6 +660,7 @@
       "number_of_credits": 5532825,
       "fair_market_value_per_credit": "124.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -644,6 +679,7 @@
       "number_of_credits": 200000,
       "fair_market_value_per_credit": "150.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   },
@@ -662,6 +698,7 @@
       "number_of_credits": 10,
       "fair_market_value_per_credit": "150.00",
       "zero_reason": null,
+      "date_of_written_agreement": "2017-08-07",
       "trade_effective_date": null
     }
   }

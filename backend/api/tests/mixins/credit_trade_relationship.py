@@ -194,6 +194,7 @@ class CreditTradeFlowHooksMixin(object):
             'initiator': initiating_org.id,
             'numberOfCredits': 1,
             'respondent': responding_org.id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime('%Y-%m-%d'),
             'type': self.credit_trade_types['sell'].id,
             'zeroReason': None

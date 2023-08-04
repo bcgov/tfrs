@@ -112,6 +112,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': 3,
             'status': self.statuses['recorded'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -141,6 +142,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': 3,
             'status': self.statuses['recorded'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -169,6 +171,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': 3,
             'status': self.statuses['recorded'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -199,6 +202,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000000000,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -234,6 +240,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=initial_balance,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -248,6 +257,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -286,6 +298,9 @@ class TestCreditTradeOperations(BaseTestCase):
                 number_of_credits=1000,
                 fair_market_value_per_credit=0,
                 zero_reason=self.zero_reason['other'],
+                date_of_written_agreement=datetime.datetime.today().strftime(
+                    '%Y-%m-%d'
+                ),
                 trade_effective_date=datetime.datetime.today().strftime(
                     '%Y-%m-%d'
                 )
@@ -302,6 +317,9 @@ class TestCreditTradeOperations(BaseTestCase):
                 number_of_credits=500,
                 fair_market_value_per_credit=0,
                 zero_reason=self.zero_reason['other'],
+                date_of_written_agreement=datetime.datetime.today().strftime(
+                    '%Y-%m-%d'
+                ),
                 trade_effective_date=datetime.datetime.today().strftime(
                     '%Y-%m-%d'
                 )
@@ -318,6 +336,9 @@ class TestCreditTradeOperations(BaseTestCase):
                 number_of_credits=300,
                 fair_market_value_per_credit=0,
                 zero_reason=self.zero_reason['other'],
+                date_of_written_agreement=datetime.datetime.today().strftime(
+                    '%Y-%m-%d'
+                ),
                 trade_effective_date=datetime.datetime.today().strftime(
                     '%Y-%m-%d'
                 )
@@ -346,6 +367,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -359,6 +383,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=500,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -372,6 +399,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=400,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -399,6 +429,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -435,6 +468,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -449,6 +485,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -463,6 +502,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -494,6 +536,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -508,6 +553,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -523,6 +571,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -538,6 +589,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -552,6 +606,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -579,6 +636,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'numberOfCredits': 200000,
             'respondent': 3,
             'status': self.statuses['draft'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -611,6 +669,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=200000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
         )
 
@@ -701,6 +762,9 @@ class TestCreditTradeOperations(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': self.users['fs_user_2'].organization_id,
             'status': self.statuses['submitted'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -807,6 +871,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'number_of_credits': credit_trade['numberOfCredits'],
             'respondent': credit_trade['respondent']['id'],
             'status': self.statuses['recommended'].id,
+            'date_of_written_agreement': credit_trade['dateOfWrittenAgreement'],
             'trade_effective_date': credit_trade['tradeEffectiveDate'],
             'type': credit_trade['type']['id']
         }
@@ -906,6 +971,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -950,6 +1018,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -993,6 +1064,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -1032,6 +1106,9 @@ class TestCreditTradeOperations(BaseTestCase):
             number_of_credits=1,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )

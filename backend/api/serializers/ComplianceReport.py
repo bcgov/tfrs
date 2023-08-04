@@ -552,7 +552,6 @@ class ComplianceReportDetailSerializer(
         net_diesel_class_transferred = Decimal(0)
 
         lines = {}
-        created_on = obj.create_timestamp.year
 
         if obj.summary is not None:
             lines['6'] = obj.summary.gasoline_class_retained \
