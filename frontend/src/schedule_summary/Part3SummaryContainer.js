@@ -93,7 +93,7 @@ function lineData (
     // is supplemental
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport, alreadyUpdated)
   }
-  part3 = calculatePart3Payable(part3, period)
+  part3 = (period >= COMPLIANCE_YEAR) ? calculatePart3PayableLCFS(part3, complianceReport) : calculatePart3Payable(part3, period)
   return part3
 }
 
@@ -398,6 +398,50 @@ function populateSchedules (props, state, setState) {
     ...state,
     part3
   })
+}
+
+function calculatePart3PayableLCFS(part3, complianceReport) {
+  // Available compliance unit balance on March 31, YYYY - Line 29A
+  const outstandingBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
+  part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
+    ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
+    value: outstandingBalance
+  }
+  // Net compliance unit balance for compliance period - Line 25
+  let balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  // Compliance unit balance change from assessment - Line 29B
+  let balanceFromAssessment = balance + outstandingBalance
+  if (balanceFromAssessment < 0) {
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_28_A][2],
+      value: (balanceFromAssessment * -600)
+    }
+    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
+      value: balanceFromAssessment
+    }
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
+      value: '0'
+    }
+  } else {
+    // if there is no compliane penalty to pay then hide line 28
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+      className: 'hidden',
+      value: ''
+    }
+    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
+      value: balance
+    }
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
+      value: balanceFromAssessment
+    }
+  }
+  return part3
 }
 
 function calculatePart3Payable (part3, period) {
