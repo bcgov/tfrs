@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { numericColumn, numericInput, totalViewer, numericCurrency } from '../compliance_reporting/components/Columns'
+import { numericColumn, numericInput, totalViewer, numericCurrency, numericColumnSigned } from '../compliance_reporting/components/Columns'
 import Tooltip from '../app/components/Tooltip'
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns'
 import { COMPLIANCE_YEAR } from '../constants/values'
@@ -274,7 +274,7 @@ class ScheduleSummaryPart3 {
         value: '$CAD'
       }] // line 28
     ]
-    if (period >= 2023) {
+    if (period >= COMPLIANCE_YEAR) {
       part3 = [...part3,
       [{ // line 29a
         className: 'text',
@@ -284,7 +284,7 @@ class ScheduleSummaryPart3 {
         className: 'line',
         readOnly: true
       }, {
-        ...numericInput,
+        ...numericColumnSigned,
         attributes: {
           addCommas: true,
           additionalTooltip: '',
@@ -304,7 +304,7 @@ class ScheduleSummaryPart3 {
         className: 'line',
         readOnly: true
       }, {
-        ...numericInput,
+        ...numericColumnSigned,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
@@ -356,7 +356,7 @@ class ScheduleSummaryPart3 {
         className: 'line',
         readOnly: true
       }, {
-        ...numericInput,
+        ...numericColumnSigned,
         attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
@@ -388,7 +388,7 @@ class ScheduleSummaryPart3 {
           </div>
         )
       }, {
-        ...numericInput,
+        ...numericColumnSigned,
         attributes: {
           addCommas: true,
           additionalTooltip: '',
