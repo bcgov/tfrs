@@ -367,7 +367,17 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'readOnly': "Cannot update a transaction that's already "
                             "been `{}`.".format(self.instance.status.status)
             })
-
+            
+        credit_trade_status = data.get('status')
+        if isinstance(credit_trade_status, int):
+            try:
+                credit_trade_status = CreditTradeStatus.objects.get(id=credit_trade_status)
+                data['status'] = credit_trade_status
+            except CreditTradeStatus.DoesNotExist:
+                raise serializers.ValidationError({
+                    'status': 'Status with id {} does not exist.'.format(credit_trade_status)
+                })
+            
         # if the user is the respondent, they really shouldn't be modifying
         # other fields. So reset those to be sure that they weren't changed
         if self.instance.respondent == request.user.organization:
@@ -380,7 +390,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'is_rescinded': bool(data.get('is_rescinded', self.instance.is_rescinded)),
                 'number_of_credits': self.instance.number_of_credits,
                 'respondent': self.instance.respondent,
-                'status': data.get('status', self.instance.status.id),
+                'status': data.get('status', self.instance.status),
                 'type': self.instance.type,
                 'update_user': request.user,
                 'zero_reason': self.instance.zero_reason
@@ -390,7 +400,6 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             if 'comment' in orig_data:
                 data['comment'] = orig_data['comment']
 
-        credit_trade_status = data.get('status')
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
             if not data.get('is_rescinded') is True:

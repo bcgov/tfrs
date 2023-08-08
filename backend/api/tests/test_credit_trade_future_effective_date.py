@@ -61,6 +61,7 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
             initiator=fs1user.organization,
             respondent=fs2user.organization,
             number_of_credits=num_of_credits,
+            date_of_written_agreement=datetime.date.today().strftime('%Y-%m-%d'),
             type=self.credit_trade_types['buy']
         )
 
@@ -120,6 +121,7 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
             'numberOfCredits': num_of_credits,
             'respondent': fs2user.organization.id,
             'status': self.statuses['submitted'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': future_date,
             'type': self.credit_trade_types['buy'].id,
             'is_rescinded': False,
@@ -175,6 +177,7 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
             respondent=fs2user.organization,
             number_of_credits=num_of_credits,
             type=self.credit_trade_types['buy'],
+            date_of_written_agreement=datetime.date.today().strftime('%Y-%m-%d'),
             trade_effective_date=future_date
         )
 

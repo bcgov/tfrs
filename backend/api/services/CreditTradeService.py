@@ -1,4 +1,6 @@
-import datetime
+import pytz
+from datetime import datetime, date, time
+from dateutil.parser import parse
 from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -129,9 +131,37 @@ class CreditTradeService(object):
     def calculate_transfer_category(agreement_date, approval_date, category_d_selected):
         if category_d_selected:
             return CreditTradeCategory.objects.get(category="D")
-        now = timezone.now()
-        approval_date = now if approval_date < now else approval_date
-        difference_in_months = relativedelta(approval_date, agreement_date).months
+
+        now = datetime.now(pytz.UTC)
+
+        # Ensure agreement_date is datetime and timezone aware
+        if agreement_date:
+            if isinstance(agreement_date, str):
+                agreement_date = parse(agreement_date)
+            elif isinstance(agreement_date, date):  # if it's a date, convert to datetime
+                agreement_date = datetime.combine(agreement_date, time())
+            
+            if agreement_date.tzinfo is None or agreement_date.tzinfo.utcoffset(agreement_date) is None:
+                agreement_date = pytz.UTC.localize(agreement_date)
+            else:
+                agreement_date = agreement_date.astimezone(pytz.UTC)
+
+        # Ensure approval_date is datetime and timezone aware
+        if approval_date:
+            if isinstance(approval_date, str):
+                approval_date = parse(approval_date)
+            elif isinstance(approval_date, date):  # if it's a date, convert to datetime
+                approval_date = datetime.combine(approval_date, time())
+            
+            if approval_date.tzinfo is None or approval_date.tzinfo.utcoffset(approval_date) is None:
+                approval_date = pytz.UTC.localize(approval_date)
+            else:
+                approval_date = approval_date.astimezone(pytz.UTC)
+        else:
+            approval_date = now
+
+        difference_in_months = relativedelta(approval_date, agreement_date).months if agreement_date and approval_date else 0
+
         if difference_in_months <= 6:
             return CreditTradeCategory.objects.get(category="A")
         elif 6 < difference_in_months <= 12:

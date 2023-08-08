@@ -64,6 +64,9 @@ class TestUserHistory(BaseTestCase):
             number_of_credits=10,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -76,6 +79,7 @@ class TestUserHistory(BaseTestCase):
             'numberOfCredits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent.id,
             'status': self.statuses['accepted'].id,
+            'dateOfWrittenAgreement': credit_trade.date_of_written_agreement,
             'tradeEffectiveDate': credit_trade.trade_effective_date,
             'type': credit_trade.type.id
         }
@@ -95,6 +99,7 @@ class TestUserHistory(BaseTestCase):
             'numberOfCredits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent.id,
             'status': self.statuses['recommended'].id,
+            'dateOfWrittenAgreement': credit_trade.date_of_written_agreement,
             'tradeEffectiveDate': credit_trade.trade_effective_date,
             'type': credit_trade.type.id
         }
@@ -115,6 +120,7 @@ class TestUserHistory(BaseTestCase):
             'numberOfCredits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent.id,
             'status': credit_trade.status.id,
+            'dateOfWrittenAgreement': credit_trade.date_of_written_agreement,
             'tradeEffectiveDate': credit_trade.trade_effective_date,
             'type': credit_trade.type.id
         }
@@ -135,6 +141,9 @@ class TestUserHistory(BaseTestCase):
             number_of_credits=10,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -147,6 +156,7 @@ class TestUserHistory(BaseTestCase):
             'numberOfCredits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent.id,
             'status': self.statuses['refused'].id,
+            'dateOfWrittenAgreement': credit_trade.date_of_written_agreement,
             'tradeEffectiveDate': credit_trade.trade_effective_date,
             'type': credit_trade.type.id
         }
