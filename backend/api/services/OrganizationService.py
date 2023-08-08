@@ -1,5 +1,5 @@
 import datetime
-from django.db.models import Q, Sum, Count
+from django.db.models import Q, Sum, Count, Case, When, F
 
 from api.models.ComplianceReport import ComplianceReport
 from api.models.CreditTrade import CreditTrade
@@ -150,7 +150,13 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+            (Q(type__the_type="Administrative Adjustment") &
+                Q(status__status="Approved") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(number_of_credits__gte=0) &
+                Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
         debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
@@ -167,8 +173,26 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
-        ).aggregate(total=Sum('number_of_credits'))
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+            (Q(type__the_type="Administrative Adjustment") &
+                Q(status__status="Approved") &
+                Q(respondent_id=organization.id) &
+                Q(is_rescinded=False) &
+                Q(number_of_credits__lt=0) &
+                Q(trade_effective_date__lte=effective_date_deadline))
+        ).aggregate(
+            total=Sum(
+                Case(
+                    When(
+                        Q(type__the_type="Administrative Adjustment") &
+                        Q(number_of_credits__lt=0),
+                        then=F('number_of_credits') * -1
+                    ),
+                    default=F('number_of_credits')
+                )
+            )
+        )
+
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
             total_in_compliance_period = credits.get('total')
@@ -203,44 +227,67 @@ class OrganizationService(object):
 
         credits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
-             Q(type__the_type="Sell") &
-             Q(respondent_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(type__the_type="Sell") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(trade_effective_date__lte=effective_date_deadline)) |
             (Q(status__status="Approved") &
-             Q(type__the_type="Buy") &
-             Q(initiator_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(type__the_type="Buy") &
+              Q(initiator_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(trade_effective_date__lte=effective_date_deadline)) |
             (Q(type__the_type="Part 3 Award") &
-             Q(status__status="Approved") &
-             Q(respondent_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(status__status="Approved") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(trade_effective_date__lte=effective_date_deadline)) |
             (Q(type__the_type="Credit Validation") &
-             Q(status__status="Approved") &
-             Q(respondent_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(compliance_period__effective_date__lte=compliance_period_effective_date))
+              Q(status__status="Approved") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+            (Q(type__the_type="Administrative Adjustment") &
+              Q(status__status="Approved") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(number_of_credits__gte=0) &
+              Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
 
         debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
-             Q(type__the_type="Sell") &
-             Q(initiator_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(type__the_type="Sell") &
+              Q(initiator_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(trade_effective_date__lte=effective_date_deadline)) |
             (Q(status__status="Approved") &
-             Q(type__the_type="Buy") &
-             Q(respondent_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(type__the_type="Buy") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(trade_effective_date__lte=effective_date_deadline)) |
             (Q(type__the_type="Credit Reduction") &
-             Q(status__status="Approved") &
-             Q(respondent_id=organization.id) &
-             Q(is_rescinded=False) &
-             Q(compliance_period__effective_date__lte=compliance_period_effective_date))
-        ).aggregate(total=Sum('number_of_credits'))
+              Q(status__status="Approved") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+            (Q(type__the_type="Administrative Adjustment") &
+              Q(status__status="Approved") &
+              Q(respondent_id=organization.id) &
+              Q(is_rescinded=False) &
+              Q(number_of_credits__lt=0) &
+              Q(trade_effective_date__lte=effective_date_deadline))
+        ).aggregate(
+            total=Sum(
+                Case(
+                    When(
+                        Q(type__the_type="Administrative Adjustment") &
+                        Q(number_of_credits__lt=0),
+                        then=F('number_of_credits') * -1
+                    ),
+                    default=F('number_of_credits')
+                )
+            )
+        )
 
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:

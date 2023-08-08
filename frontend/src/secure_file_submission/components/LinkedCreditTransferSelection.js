@@ -31,13 +31,16 @@ const LinkedCreditTransferSelection = (props) => {
     minWidth: 110
   }, {
     accessor: item => ([
-      CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
+      CREDIT_TRANSFER_TYPES.part3Award.id,
+      CREDIT_TRANSFER_TYPES.adminAdjustment.id,
+      CREDIT_TRANSFER_TYPES.validation.id
     ].includes(item.type.id)
       ? ''
       : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+          row.original.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
+          row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
         )
@@ -73,6 +76,7 @@ const LinkedCreditTransferSelection = (props) => {
   }, {
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return -1 // this is to fix sorting (value can't be negative)
