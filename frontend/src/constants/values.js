@@ -79,6 +79,9 @@ export const CREDIT_TRANSFER_TYPES = {
   },
   part3Award: {
     id: 5
+  },
+  adminAdjustment: {
+    id: 6
   }
 }
 

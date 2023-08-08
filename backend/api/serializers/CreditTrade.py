@@ -135,7 +135,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     the_type__in=[
                         "Credit Validation",
                         "Credit Reduction",
-                        "Part 3 Award"
+                        "Part 3 Award",
+                        "Administrative Adjustment"
                     ]
                 ).only('id')
             )
