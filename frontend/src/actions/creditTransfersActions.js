@@ -26,6 +26,8 @@ export const getCreditTransferType = (typeId) => {
       return 'Reduction'
     case CREDIT_TRANSFER_TYPES.part3Award.id:
       return 'Part 3 Award'
+    case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
+      return 'Administrative Adjustment'
     default:
       return 'Credit Transfer'
   }
@@ -60,6 +62,11 @@ export const prepareCreditTransfer = (fields) => {
     case CREDIT_TRANSFER_TYPES.retirement.id.toString():
       data.initiator = DEFAULT_ORGANIZATION.id
       data.respondent = fields.creditsFrom.id
+
+      break
+    case CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString():
+      data.initiator = DEFAULT_ORGANIZATION
+      data.respondent = fields.creditsTo.id
 
       break
     default:

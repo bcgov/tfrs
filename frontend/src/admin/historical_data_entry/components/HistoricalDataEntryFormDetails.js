@@ -40,6 +40,7 @@ const HistoricalDataEntryFormDetails = props => (
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.adminAdjustment.id} onClick={props.handleInputChange}>Admin Adjustment</button>
               </div>
             </label>
           </div>
@@ -47,6 +48,7 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="credits-from">Credits From:
               {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString()]
                 .includes(props.fields.transferType) &&
                 <select
@@ -68,6 +70,7 @@ const HistoricalDataEntryFormDetails = props => (
                 </select>
               }
               {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString()]
                 .includes(props.fields.transferType) &&
                 <div id="credits-from" className="form-control">N/A</div>
@@ -141,6 +144,7 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="value-per-credit">Dollar per Credit:
               {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString(),
                 CREDIT_TRANSFER_TYPES.retirement.id.toString()
               ].includes(props.fields.transferType) &&
@@ -158,6 +162,7 @@ const HistoricalDataEntryFormDetails = props => (
                 />
               }
               {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString(),
                 CREDIT_TRANSFER_TYPES.retirement.id.toString()
               ].includes(props.fields.transferType) &&
@@ -169,6 +174,7 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="dollar-per-credit">For a total of:
               {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString(),
                 CREDIT_TRANSFER_TYPES.retirement.id.toString()
               ].includes(props.fields.transferType) &&
@@ -180,6 +186,7 @@ const HistoricalDataEntryFormDetails = props => (
                 </div>
               }
               {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString(),
                 CREDIT_TRANSFER_TYPES.retirement.id.toString()
               ].includes(props.fields.transferType) &&

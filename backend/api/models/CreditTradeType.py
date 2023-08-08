@@ -81,5 +81,8 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
 
         if self.the_type == "Credit Validation":
             return "Validation"
+        
+        if self.the_type == "Administrative Adjustment":
+            return "Admin Adjustment"
 
         return self.the_type
