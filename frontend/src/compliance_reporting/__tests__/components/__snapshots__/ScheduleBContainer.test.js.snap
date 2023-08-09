@@ -88,7 +88,7 @@ exports[`ScheduleBContainer should match snapshot 1`] = `
                   className="value-viewer"
                 >
                   <div>
-                    CREDIT/DEBIT CALCULATION 
+                    COMPLIANCE UNITS CALCULATION 
                     <div
                       className="overlay-trigger"
                       onBlur={[Function]}

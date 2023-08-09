@@ -10,7 +10,7 @@ function tableData (
   summary,
   { isSupplemental, supplementalNumber, compliancePeriod }
 ) {
-  let period = Number(compliancePeriod.description)
+  const period = Number(compliancePeriod.description)
   part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
   part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
   part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
@@ -59,9 +59,15 @@ function tableData (
       }
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-      if (i != SCHEDULE_SUMMARY.LINE_25) {
+      if (i !== SCHEDULE_SUMMARY.LINE_25) {
         // Hide lines from 23 to 28 excluding line 25
-        part3[i][2].className = 'hidden'
+        part3[i][0].className = 'hidden'
+        part3[i][1].className = 'hidden'
+        part3[i][2] = {
+          className: 'hidden',
+          value: ''
+        }
+        part3[i][3].className = 'hidden'
       }
     }
   }
@@ -394,7 +400,7 @@ function populateSchedules (props, state, setState) {
   })
 }
 
-function calculatePart3PayableLCFS(part3, complianceReport) {
+function calculatePart3PayableLCFS (part3, complianceReport) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
   const outstandingBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
@@ -402,9 +408,9 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
     value: outstandingBalance
   }
   // Net compliance unit balance for compliance period - Line 25
-  let balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  const balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
   // Compliance unit balance change from assessment - Line 29B
-  let balanceFromAssessment = balance + outstandingBalance
+  const balanceFromAssessment = balance + outstandingBalance
   if (balanceFromAssessment <= 0) {
     part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
     part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
