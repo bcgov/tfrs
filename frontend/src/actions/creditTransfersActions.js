@@ -65,7 +65,7 @@ export const prepareCreditTransfer = (fields) => {
 
       break
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString():
-      data.initiator = DEFAULT_ORGANIZATION
+      data.initiator = DEFAULT_ORGANIZATION.id
       data.respondent = fields.creditsTo.id
 
       break
