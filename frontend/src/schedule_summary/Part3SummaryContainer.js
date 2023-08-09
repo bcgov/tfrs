@@ -10,7 +10,7 @@ function tableData (
   summary,
   { isSupplemental, supplementalNumber, compliancePeriod }
 ) {
-  let period = Number(compliancePeriod.description)
+  const period = Number(compliancePeriod.description)
   part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
   part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
   part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
@@ -58,19 +58,25 @@ function tableData (
         value: ''
       }
     } else {
-      let adjustedBalance = Number(summary.lines['29A']) + Number(summary.lines['25'])
+      const adjustedBalance = Number(summary.lines['29A']) + Number(summary.lines['25'])
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-      if (i != SCHEDULE_SUMMARY.LINE_25) {
+      if (i !== SCHEDULE_SUMMARY.LINE_25) {
         // Hide lines from 23 to 28 excluding line 25
         part3[i][2].className = 'hidden'
       }
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-      if (i != SCHEDULE_SUMMARY.LINE_25) {
+      if (i !== SCHEDULE_SUMMARY.LINE_25) {
         // Hide lines from 23 to 28 excluding line 25
-        part3[i][2].className = 'hidden'
+        part3[i][0].className = 'hidden'
+        part3[i][1].className = 'hidden'
+        part3[i][2] = {
+          className: 'hidden',
+          value: ''
+        }
+        part3[i][3].className = 'hidden'
       }
     }
   }
@@ -403,7 +409,7 @@ function populateSchedules (props, state, setState) {
   })
 }
 
-function calculatePart3PayableLCFS(part3, complianceReport) {
+function calculatePart3PayableLCFS (part3, complianceReport) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
   const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
@@ -424,7 +430,7 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
       value: netBalance
     }
-  } else if (netBalance < 0 && adjustedBalance < 0)   {
+  } else if (netBalance < 0 && adjustedBalance < 0) {
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
       value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
