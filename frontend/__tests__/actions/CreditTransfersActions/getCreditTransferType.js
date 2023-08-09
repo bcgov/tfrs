@@ -22,9 +22,8 @@ test('getCreditTransferType should return a display value for Part 3 Award', () 
 test('getCreditTransferType should return a display value for Administrative Adjustment', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.adminAdjustment.id)
 
-  expect('Part 3 Award').toEqual(data)
+  expect('Administrative Adjustment').toEqual(data)
 })
-
 
 test('getCreditTransferType should return a display value for Sell', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.sell.id)
