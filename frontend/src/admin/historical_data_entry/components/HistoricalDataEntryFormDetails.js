@@ -132,11 +132,11 @@ const HistoricalDataEntryFormDetails = props => (
               <InputWithTooltip
                 handleInputChange={props.handleInputChange}
                 id="number-of-credits"
-                min="0"
                 name="numberOfCredits"
                 required
                 step="1"
                 value={props.fields.numberOfCredits}
+                allowNegative={props.fields.transferType === CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString()}
               />
             </label>
           </div>
