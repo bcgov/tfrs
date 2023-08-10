@@ -128,7 +128,7 @@ class CreditTradeService(object):
 
 
     @staticmethod
-    def calculate_transfer_category(agreement_date, approval_date, category_d_selected):
+    def calculate_transfer_category(agreement_date, proposal_date, category_d_selected):
         if category_d_selected:
             return CreditTradeCategory.objects.get(category="D")
 
@@ -146,21 +146,22 @@ class CreditTradeService(object):
             else:
                 agreement_date = agreement_date.astimezone(pytz.UTC)
 
-        # Ensure approval_date is datetime and timezone aware
-        if approval_date:
-            if isinstance(approval_date, str):
-                approval_date = parse(approval_date)
-            elif isinstance(approval_date, date):  # if it's a date, convert to datetime
-                approval_date = datetime.combine(approval_date, time())
+        # Ensure proposal_date is datetime and timezone aware
+        if proposal_date:
+            if isinstance(proposal_date, str):
+                proposal_date = parse(proposal_date)
+            elif isinstance(proposal_date, date):  # if it's a date, convert to datetime
+                proposal_date = datetime.combine(proposal_date, time())
             
-            if approval_date.tzinfo is None or approval_date.tzinfo.utcoffset(approval_date) is None:
-                approval_date = pytz.UTC.localize(approval_date)
+            if proposal_date.tzinfo is None or proposal_date.tzinfo.utcoffset(proposal_date) is None:
+                proposal_date = pytz.UTC.localize(proposal_date)
             else:
-                approval_date = approval_date.astimezone(pytz.UTC)
+                proposal_date = proposal_date.astimezone(pytz.UTC)
         else:
-            approval_date = now
+            proposal_date = now
 
-        difference_in_months = relativedelta(approval_date, agreement_date).months if agreement_date and approval_date else 0
+        delta = relativedelta(proposal_date, agreement_date)
+        difference_in_months = delta.years * 12 + delta.months
 
         if difference_in_months <= 6:
             return CreditTradeCategory.objects.get(category="A")

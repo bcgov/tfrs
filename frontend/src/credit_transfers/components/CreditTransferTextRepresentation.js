@@ -57,7 +57,7 @@ class CreditTransferTextRepresentation extends Component {
       return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span> or on the
         date the Director records the transfer, whichever is later.</span>)
     } else {
-      return (<span> effective on the date the Director records the transfer.</span>)
+      return (<span>, effective on the date the Director records the transfer.</span>)
     }
   }
 

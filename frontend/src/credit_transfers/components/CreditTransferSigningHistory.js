@@ -154,6 +154,7 @@ class CreditTransferSigningHistory extends Component {
 
   _renderCategoryHistory () {
     const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
+    const lastHistoryItem = history[history.length - 1]
     if (history.length > 0 && loggedInUser.isGovernmentUser) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
@@ -163,14 +164,22 @@ class CreditTransferSigningHistory extends Component {
         nextChangeDate = moment(agreementDate).add(nextChangeInMonths, 'months').format('LL')
       }
       const endDate = nextChangeDate
+      const categoryCorD = categoryDSelected || category === 'C'
       return (
         <>
           <p>
             <li>
               <span>Date of written agreement reached between the two suppliers: </span>
               <strong>{moment(agreementDate).format('LL')}</strong>
-              <span> (proposal falls under <strong>Category {category}</strong>{categoryDSelected ? ')' : ''}</span>
-              {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
+              {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+                <span> (<strong>Category {category}</strong>)</span>
+              }
+              {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id && (
+                <>
+                  <span> (proposal falls under <strong>Category {category}</strong>{categoryCorD ? ')' : ''}</span>
+                  {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
+                </>
+              )}
             </li>
           </p>
         </>
