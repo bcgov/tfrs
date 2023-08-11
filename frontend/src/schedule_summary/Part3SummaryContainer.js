@@ -58,20 +58,8 @@ function tableData (
         value: ''
       }
     }
-    for (let i = 0; i < 10; i++) {
-      if (i != 3) {
-        // Hide lines from 23 to 28 excluding line 25 and including header
-        part3[i][0].className = 'hidden'
-        part3[i][1].className = 'hidden'
-        part3[i][2] = {
-          className: 'hidden',
-          value: ''
-        }
-        part3[i][3].className = 'hidden'
-      }
-    }
-
   }
+
   return part3
 }
 
@@ -411,11 +399,10 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
   let balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
   // Compliance unit balance change from assessment - Line 29B
   let balanceFromAssessment = balance + outstandingBalance
-  if (balanceFromAssessment < 0) {
-    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_28_A][2],
-      value: (balanceFromAssessment * -600)
-    }
+  if (balanceFromAssessment <= 0) {
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(balanceFromAssessment * -600)
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
       value: balanceFromAssessment
@@ -430,7 +417,7 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
     part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
     part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
       className: 'hidden',
-      value: ''
+      value: '0'
     }
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
@@ -441,6 +428,7 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
       value: balanceFromAssessment
     }
   }
+  part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
   return part3
 }
 
@@ -610,6 +598,7 @@ function _calculatePart3 (props, state, setState) {
 
 export {
   calculatePart3Payable,
+  calculatePart3PayableLCFS,
   _calculatePart3,
   tableData,
   lineData,
