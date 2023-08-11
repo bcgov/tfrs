@@ -106,7 +106,7 @@ class OrganizationService(object):
                 elif compliance_report.status.director_status_id not in \
                         ["Rejected"]:
                     if compliance_report.summary.credits_offset is not None:
-                        deductions += compliance_report.summary.credits_offset
+                        deductions += abs(compliance_report.summary.credits_offset)
 
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
