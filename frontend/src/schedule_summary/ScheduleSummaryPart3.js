@@ -8,7 +8,7 @@ import { COMPLIANCE_YEAR } from '../constants/values'
 class ScheduleSummaryPart3 {
   constructor (period) {
     period = Number(period)
-    let part3 = [
+    var part3 = [
       [{
         className: 'summary-label header',
         readOnly: true,
@@ -401,12 +401,23 @@ class ScheduleSummaryPart3 {
         readOnly: true
       }] // line 25
 
-      for (let i = 0; i < 10; i++) {
-        // Hide lines from 23 to 28 excluding line 25 and including header
+      // Hide header
+      part3[0][0].className = 'hidden'
+      part3[0][1].className = 'hidden'
+      part3[0][2] = {
+        className: 'hidden',
+        value: ''
+      }
+      part3[0][3].className = 'hidden'
+      for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
         if (i != 3) {
+          // Hide lines from 23 to 28 excluding line 25
           part3[i][0].className = 'hidden'
           part3[i][1].className = 'hidden'
-          part3[i][2].className = 'hidden'
+          part3[i][2] = {
+            className: 'hidden',
+            value: ''
+          }
           part3[i][3].className = 'hidden'
         }
       }

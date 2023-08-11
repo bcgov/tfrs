@@ -211,7 +211,7 @@ const cellFormatNegativeNumber = cellValue => ({
   }
 })
 const cellFormatCurrencyTotal = cellValue => ({
-  className: 'numeric',
+  className: 'total numeric',
   readOnly: true,
   value: cellValue,
   valueViewer: (data) => {
