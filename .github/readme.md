@@ -1,6 +1,17 @@
 
-# TFRS Post Release Work
-After the release is deployed on Prod:
+# Production release
+
+## Pre-production release
+
+* Update the description of the tracking pull request
+* Verify the changes made during the previous post production release
+
+## Production release
+
+* Manually trigger the pipeline tfrs-release.yaml
+
+## Post production release
+
 * Merge the tracking pull request to master
 * Create the release tag from master amd make it as the lasted release (this is done automatically by pipeline create-release.yaml)
 * Create the new release branch from master
