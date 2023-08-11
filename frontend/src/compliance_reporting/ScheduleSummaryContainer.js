@@ -66,6 +66,7 @@ class ScheduleSummaryContainer extends Component {
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
+    const year  = this.props.complianceReport.compliancePeriod.description
     // If snapshot exists then we are not in edit mode and can just return the tabledata
     if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot
@@ -191,7 +192,8 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     }
-    else if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0 ) {
+    else if (year >= COMPLIANCE_YEAR) {
+    if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0 ) {
       this.props.updateScheduleState({
         summary: {
           ...summary,
@@ -199,6 +201,7 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     }
+  }
 
     this.setState({
       diesel,
