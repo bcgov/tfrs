@@ -191,6 +191,14 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     }
+    else if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0 ) {
+      this.props.updateScheduleState({
+        summary: {
+          ...summary,
+          creditsOffset: part3[SCHEDULE_SUMMARY.LINE_29_B][2].value
+        }
+      })
+    }
 
     this.setState({
       diesel,
