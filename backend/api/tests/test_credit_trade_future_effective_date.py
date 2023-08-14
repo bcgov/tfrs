@@ -218,3 +218,42 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
                 respondent_bal_after.validated_credits, 
                 respondent_bal.validated_credits + num_of_credits
             )
+
+    def test_date_of_written_agreement_future_create_fails(self):
+        """Test a scenario with a future date of written agreement"""
+        
+        fs1user = self.users['fs_user_1']
+        fs2user = self.users['fs_user_2']
+
+        num_of_credits = 50
+
+        # Future effective date
+        future_date = (datetime.datetime.today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d')
+
+        # submit
+        payload = {
+            'fairMarketValuePerCredit': 1000,
+            'initiator': fs1user.organization.id,
+            'numberOfCredits': num_of_credits,
+            'respondent': fs2user.organization.id,
+            'status': self.statuses['submitted'].id,
+            'dateOfWrittenAgreement': future_date,
+            'tradeEffectiveDate': future_date,
+            'type': self.credit_trade_types['buy'].id,
+            'is_rescinded': False,
+            'zeroReason': None
+        }
+
+        response = self.clients[fs1user.username].post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Load the response content as JSON
+        response_content = json.loads(response.content.decode('utf-8'))
+
+        # Check that the expected message is in the 'dateOfWrittenAgreement' field
+        self.assertEqual(response_content['dateOfWrittenAgreement'], ["Date of written agreement can't be in the future."])

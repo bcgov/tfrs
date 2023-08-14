@@ -115,6 +115,7 @@ const CreditTransferForm = (props) => {
             className="form-control form-date"
             type="date"
             value={props.fields.dateOfWrittenAgreement}
+            max={minDateValue}
             name='dateOfWrittenAgreement'
             onChange={props.handleInputChange}
             required
