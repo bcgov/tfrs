@@ -174,7 +174,10 @@ class CreditTransferSigningHistory extends Component {
               {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
                 <span> (<strong>Category {category}</strong>)</span>
               }
-              {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id && (
+              {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+                lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
+                lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+              (
                 <>
                   <span> (proposal falls under <strong>Category {category}</strong>{categoryCorD ? ')' : ''}</span>
                   {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}

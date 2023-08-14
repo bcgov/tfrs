@@ -176,6 +176,7 @@ class CreditTransferTextRepresentation extends Component {
         {this.props.loggedInUser.isGovernmentUser &&
           status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
           status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
           <div className="checkbox" style={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox
               type="checkbox"
