@@ -174,7 +174,6 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Then, marks the Credit Trade as Completed
         """
         credit_trade = self.get_object()
-        credit_trade.trade_effective_date = datetime.date.today()
         previous_state = credit_trade
 
         if credit_trade.compliance_period_id is None:
