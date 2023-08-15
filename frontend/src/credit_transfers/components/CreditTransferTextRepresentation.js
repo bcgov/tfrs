@@ -57,7 +57,7 @@ class CreditTransferTextRepresentation extends Component {
       return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span> or on the
         date the Director records the transfer, whichever is later.</span>)
     } else {
-      return (<span> effective on the date the Director records the transfer.</span>)
+      return (<span>, effective on the date the Director records the transfer.</span>)
     }
   }
 
@@ -148,6 +148,7 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _renderSell () {
+    const status = this.props.status
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
@@ -173,6 +174,9 @@ class CreditTransferTextRepresentation extends Component {
           </div>
         )}
         {this.props.loggedInUser.isGovernmentUser &&
+          status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
           <div className="checkbox" style={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox
               type="checkbox"
