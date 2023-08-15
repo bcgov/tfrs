@@ -155,6 +155,14 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 {'zeroDollarReason': "Zero dollar reason supplied but this "
                                      "trade has a non-zero value-per-credit"})
 
+        date_of_written_agreement = data.get('date_of_written_agreement')
+        if date_of_written_agreement:
+            today = datetime.now().date()
+            if date_of_written_agreement > today:
+                raise serializers.ValidationError({
+                    'date_of_written_agreement': "Date of written agreement can't be in the future."
+                })
+
         trade_effective_date = data.get('trade_effective_date')
         if trade_effective_date:
             today = datetime.now().date()
@@ -520,6 +528,14 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     available_comment_actions(request, previous_state):
                 raise serializers.ValidationError(
                     "Cannot add a comment in this state")
+
+        date_of_written_agreement = data.get('date_of_written_agreement')
+        if date_of_written_agreement:
+            today = datetime.now().date()
+            if date_of_written_agreement > today:
+                raise serializers.ValidationError({
+                    'date_of_written_agreement': "Date of written agreement can't be in the future."
+                })
 
         trade_effective_date = data.get('trade_effective_date')
         if trade_effective_date:
