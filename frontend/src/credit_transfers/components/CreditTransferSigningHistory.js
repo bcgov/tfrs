@@ -36,14 +36,14 @@ class CreditTransferSigningHistory extends Component {
     // show "the Director" at all times
     // use effective date as well
     return (
-      <p key={history.createTimestamp}>
+      <li key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
         <span>
           on {moment(this.props.tradeEffectiveDate).format('LL')} by the
           <strong> Director </strong> under the
         </span>
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
-      </p>
+      </li>
     )
   }
 
@@ -169,7 +169,7 @@ class CreditTransferSigningHistory extends Component {
         <>
           <p>
             <li>
-              <span>Date of written agreement reached between the two suppliers: </span>
+              <span>Date of written agreement reached between the two organizations: </span>
               <strong>{moment(agreementDate).format('LL')}</strong>
               {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
                 <span> (<strong>Category {category}</strong>)</span>
