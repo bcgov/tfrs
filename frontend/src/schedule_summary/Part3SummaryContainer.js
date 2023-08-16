@@ -60,7 +60,7 @@ function tableData (
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
       if (i !== SCHEDULE_SUMMARY.LINE_25) {
-        // Hide lines from 23 to 28 excluding line 25
+        // Hide lines from 23 to 28 excluding line 25 and including header
         part3[i][0].className = 'hidden'
         part3[i][1].className = 'hidden'
         part3[i][2] = {
