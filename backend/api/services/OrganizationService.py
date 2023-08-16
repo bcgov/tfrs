@@ -10,20 +10,17 @@ class OrganizationService(object):
     def get_pending_transfers_value(organization):
         pending_transfers_value = 0
         pending_trades = CreditTrade.objects.filter(
-            (Q(status__status__in=[
-                "Submitted", "Accepted", "Recommended", "Not Recommended"
-            ]) &
+            (Q(status__status__in=["Submitted", "Accepted", "Recommended", "Not Recommended"]) &
                 Q(type__the_type="Sell") &
                 Q(initiator_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(trade_effective_date__lte=datetime.datetime.now())) |
-            (Q(status__status__in=[
-                "Accepted", "Recommended", "Not Recommended"
-            ]) &
+                (Q(trade_effective_date__lte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True))) 
+                |
+                (Q(status__status__in=["Accepted", "Recommended", "Not Recommended"]) &
                 Q(type__the_type="Buy") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(trade_effective_date__lte=datetime.datetime.now()))
+                (Q(trade_effective_date__lte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
         ).aggregate(total_credits=Sum('number_of_credits'))
 
         if pending_trades['total_credits'] is not None:
