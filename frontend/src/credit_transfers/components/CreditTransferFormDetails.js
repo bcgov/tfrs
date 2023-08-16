@@ -27,21 +27,7 @@ class CreditTransferFormDetails extends Component {
           <span>
             {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to `}
           </span>
-          {this.props.loggedInUser.organization.actionsTypeDisplay === 'Buy And Sell' &&
-            <div className="form-group">
-              <select
-                className="form-control"
-                id="proposal-type"
-                name="tradeType"
-                value={this.props.fields.tradeType.id}
-                onChange={this.props.handleInputChange}
-              >
-                <option value="" />
-                <option value="1">Sell</option>
-                <option value="2">Buy</option>
-              </select>
-            </div>
-          }
+          <span> sell </span>
           {this.props.loggedInUser.organization.actionsTypeDisplay !== 'Buy And Sell' &&
             <span> sell </span>
           }
