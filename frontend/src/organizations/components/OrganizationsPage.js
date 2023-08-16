@@ -41,7 +41,7 @@ const OrganizationsPage = (props) => {
             })
           }}
         >
-          <FontAwesomeIcon icon="file-excel" /> <span>Download Supplier Information</span>
+          <FontAwesomeIcon icon="file-excel" /> <span>Download Organization Information</span>
         </button>
         <button
           id="download-xls"
