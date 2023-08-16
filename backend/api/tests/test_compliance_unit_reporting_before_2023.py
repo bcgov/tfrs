@@ -373,7 +373,7 @@ class TestComplianceUnitReporting(BaseTestCase):
     """
     def test_supplemental_report_submission_2_ex2_increasing_debit_obligation(self):
         rid = self._create_draft_compliance_report()
-        # patch compliance report info
+        # patch compliance report information
         payload = compliance_unit_initial_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
         payload['scheduleB']['records'][0]['quantity'] = 117933318 # credits of fuel supplied (from Schedule B)
