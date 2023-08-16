@@ -40,10 +40,18 @@ const OrganizationsTable = (props) => {
     id: 'inreserve',
     minWidth: 100
   }, {
-    accessor: item => Object.values(ORGANIZATION_STATUSES)
-      .find(element => element.id === item.status).description,
+    accessor: item => {
+      const orgStatus = Object.values(ORGANIZATION_STATUSES)
+        .find(element => element.id === item.status)
+      if (orgStatus.description === 'Active') {
+        return 'Yes'
+      } else if (orgStatus.description === 'Inactive') {
+        return 'No'
+      }
+      return orgStatus.description // default to the actual description if not Active/Inactive
+    },
     className: 'col-status-display',
-    Header: 'Status',
+    Header: 'Registered',
     id: 'status',
     minWidth: 50,
     filterMethod: (filter, row) => {

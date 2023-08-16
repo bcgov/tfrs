@@ -182,7 +182,7 @@ class SpreadSheetBuilder(object):
         row_index = 0
 
         columns = [
-            "ID", "Organization Name", "Compliance Units", "Status", "Actions"
+            "ID", "Organization Name", "Compliance Units", "Registered", "Actions"
         ]
 
         header_style = xlwt.easyxf('font: bold on')
@@ -200,7 +200,10 @@ class SpreadSheetBuilder(object):
             worksheet.write(
                 row_index, 2,
                 fuel_supplier.organization_balance['validated_credits'])
-            worksheet.write(row_index, 3, fuel_supplier.status.status)
+
+            # Adjust the value for the 'Registered' column based on the status
+            registered_status = 'Yes' if fuel_supplier.status.status.lower() == 'active' else 'No'
+            worksheet.write(row_index, 3, registered_status)
             worksheet.write(row_index, 4, fuel_supplier.actions_type.the_type)
 
         # set the widths for the columns that we expect to be longer
