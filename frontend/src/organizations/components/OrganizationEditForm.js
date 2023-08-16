@@ -14,6 +14,16 @@ const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
 
   const orgStatuses = props.referenceData.organizationStatuses
+
+  const getStatusDisplay = (description) => {
+    if (description === 'Active') {
+      return 'Yes'
+    } else if (description === 'Inactive') {
+      return 'No'
+    }
+    return description // fallback
+  }
+
   if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
     return <NotFound />
   } else {
@@ -92,7 +102,41 @@ const OrganizationEditForm = (props) => {
                           <span> {t.description}</span>
                         </div>
                       ))}
-                  </div>
+                    </div>
+                </label>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="form-group">
+                <label htmlFor="org_status" className="col-sm-4">
+                  <div className="col-sm-6"> Registered for credit transfers: </div>
+                  <div className="col-sm-6">
+                    <div key={orgStatuses[0].id}>
+                      <label htmlFor='org-status-active'>
+                      <input
+                        type="radio"
+                        id='org-status-active'
+                        name="org_status"
+                        value={orgStatuses[0].id}
+                        onChange={props.handleInputChange}
+                        checked={orgStatuses[0].id === props.fields.org_status}
+                      />
+                        <span> {getStatusDisplay(orgStatuses[0].description)} </span></label>{' '}
+                    </div>
+                    <div key={orgStatuses[1].id}>
+
+                      <label htmlFor='org-status-inactive'>
+                        <input
+                        type="radio"
+                        id='org-status-inactive'
+                        name="org_status"
+                        value={orgStatuses[1].id}
+                        onChange={props.handleInputChange}
+                        checked={orgStatuses[1].id === props.fields.org_status}
+                      />
+                      <span> {getStatusDisplay(orgStatuses[1].description)}</span></label>{' '}
+                    </div>
+                    </div>
                 </label>
               </div>
             </div>
