@@ -8,7 +8,7 @@ import { COMPLIANCE_YEAR } from '../constants/values'
 class ScheduleSummaryPart3 {
   constructor (period) {
     period = Number(period)
-    var part3 = [
+    let part3 = [
       [{
         className: 'summary-label header',
         readOnly: true,
@@ -276,53 +276,53 @@ class ScheduleSummaryPart3 {
     ]
     if (period >= COMPLIANCE_YEAR) {
       part3 = [...part3,
-      [{ // line 29a
-        className: 'text',
-        readOnly: true,
-        value: `Available compliance unit balance on March 31, ${period + 1}`
-      }, {
-        className: 'line',
-        readOnly: true
-      }, {
-        ...numericColumnSigned,
-        attributes: {
-          addCommas: true,
-          additionalTooltip: '',
-          dataNumberToFixed: 0,
-          maxLength: '20',
-          placement: 'right',
-          step: '1'
-        },
-        className: 'tooltip-large number',
-        readOnly: true
-      }], // line 29a
-      [{ // line 29b
-        className: 'text',
-        readOnly: true,
-        value: 'Compliance unit balance change from assessment'
-      }, {
-        className: 'line',
-        readOnly: true
-      }, {
-        ...numericColumnSigned,
-        attributes: {
-          addCommas: true,
-          dataNumberToFixed: 0,
-          maxLength: '20',
-          placement: 'right',
-          step: '1'
-        },
-        className: 'tooltip-large number',
-        readOnly: true
-      }], // line 29b
-      [{ // line 28
-        className: 'text total',
-        readOnly: true,
-        value: 'Non-compliance penalty payable (CAD)'
-      }, {
-        className: 'line total',
-        readOnly: true,
-        value: (
+        [{ // line 29a
+          className: 'text',
+          readOnly: true,
+          value: `Available compliance unit balance on March 31, ${period + 1}`
+        }, {
+          className: 'line',
+          readOnly: true
+        }, {
+          ...numericColumnSigned,
+          attributes: {
+            addCommas: true,
+            additionalTooltip: '',
+            dataNumberToFixed: 0,
+            maxLength: '20',
+            placement: 'right',
+            step: '1'
+          },
+          className: 'tooltip-large number',
+          readOnly: true
+        }], // line 29a
+        [{ // line 29b
+          className: 'text',
+          readOnly: true,
+          value: 'Compliance unit balance change from assessment'
+        }, {
+          className: 'line',
+          readOnly: true
+        }, {
+          ...numericColumnSigned,
+          attributes: {
+            addCommas: true,
+            dataNumberToFixed: 0,
+            maxLength: '20',
+            placement: 'right',
+            step: '1'
+          },
+          className: 'tooltip-large number',
+          readOnly: true
+        }], // line 29b
+        [{ // line 28
+          className: 'text total',
+          readOnly: true,
+          value: 'Non-compliance penalty payable (CAD)'
+        }, {
+          className: 'line total',
+          readOnly: true,
+          value: (
           <div>
             {'Line 28 '}
             <Tooltip
@@ -336,37 +336,38 @@ class ScheduleSummaryPart3 {
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>
           </div>
-        )
-      }, {
-        ...numericCurrency,
-        ttributes: {
-          addCommas: true,
-          dataNumberToFixed: 0,
-          maxLength: '20',
-          placement: 'right',
-          step: '1'
+          )
         },
-        className: 'total numeric'
-      }], // line 28
-      [{ // line 29c
-        className: 'text',
-        readOnly: true,
-        value: `Available compliance unit balance after assessment on March 31, ${period + 1}`
-      }, {
-        className: 'line',
-        readOnly: true
-      }, {
-        ...numericColumnSigned,
-        attributes: {
-          addCommas: true,
-          dataNumberToFixed: 0,
-          maxLength: '20',
-          placement: 'right',
-          step: '1'
-        },
-        className: 'tooltip-large number',
-        readOnly: true
-      }] // line 29c
+        {
+          ...numericCurrency,
+          ttributes: {
+            addCommas: true,
+            dataNumberToFixed: 0,
+            maxLength: '20',
+            placement: 'right',
+            step: '1'
+          },
+          className: 'total numeric'
+        }], // line 28
+        [{ // line 29c
+          className: 'text',
+          readOnly: true,
+          value: `Available compliance unit balance after assessment on March 31, ${period + 1}`
+        }, {
+          className: 'line',
+          readOnly: true
+        }, {
+          ...numericColumnSigned,
+          attributes: {
+            addCommas: true,
+            dataNumberToFixed: 0,
+            maxLength: '20',
+            placement: 'right',
+            step: '1'
+          },
+          className: 'tooltip-large number',
+          readOnly: true
+        }] // line 29c
       ]
       part3[SCHEDULE_SUMMARY.LINE_25] = [{ // line 25
         className: 'text',
@@ -410,7 +411,7 @@ class ScheduleSummaryPart3 {
       }
       part3[0][3].className = 'hidden'
       for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-        if (i != SCHEDULE_SUMMARY.LINE_25) {
+        if (i !== SCHEDULE_SUMMARY.LINE_25) {
           // Hide lines from 23 to 28 excluding line 25
           part3[i][0].className = 'hidden'
           part3[i][1].className = 'hidden'

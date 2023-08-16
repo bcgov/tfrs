@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # Production release
 
@@ -15,12 +14,6 @@
 
 * Merge the tracking pull request to master
 * Create the release tag from master amd make it as the lasted release (this is done automatically by pipeline create-release.yaml)
-=======
-# TFRS Post Release Work
-After the release is deployed on Prod:
-* Merge the tracking pull request to master
-* Create the release tag from master amd make it as the lasted release 
->>>>>>> bbaaa7fa (update readme)
 * Create the new release branch from master
 * Update tfrs-release.yaml
   * name
@@ -37,22 +30,15 @@ After the release is deployed on Prod:
   * branches
   * PR_NUMBER
   * RELEASE_NAME
-<<<<<<< HEAD
 * Commit all the above changes and create the tracking pull request to merge the new release branch to master. Need to update the PR_NUMBER after the tracking pull request is created. 
-=======
-* Commit all teh above changes and create the tracking pull request to merge the new release branch to master
->>>>>>> bbaaa7fa (update readme)
 
 # TFRS Pipelines
 
 ## Primary Pipelines
-<<<<<<< HEAD
 
 * dev-release.yaml (TFRS Dev release-2.10.0): the pipeline is automatically triggered when there is a commit to the release branch
 * tfrs-release.yaml (TFRS release-2.10.0): the pipeline builds the release and deploys on Test and Prod, it needs to be manually triggered
 * create-release.yaml (Create Release after merging to master): tag and create the release after merging release branch to master. The description of the tracking pull request becomes release notes
-=======
->>>>>>> bbaaa7fa (update readme)
 
 * dev-jan-release.yaml (TFRS Dev Jan Release): the pipeline build Jan 2024 release and deploy on dev for every commit
 * dev-release.yaml (TFRS Dev release-2.9.0): the pipeline is automatically triggered when there is a commit to the release branch
