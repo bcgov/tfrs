@@ -113,18 +113,16 @@ const OrganizationDetails = props => {
         </div>
         <div className="status">
           <dl className="dl-horizontal">
-            <dt style={{ width: '300px' }}><strong>Status:</strong></dt>
-            <dd><strong>{props.organization.statusDisplay} — </strong>
+            <dt style={{ width: '300px' }}><strong>Registered for credit transfers:</strong></dt>
+            <dd>
             {props.organization.statusDisplay === 'Inactive' &&
               <span className="status-description">
-                Inactive — An inactive organization is not actively supplying fuel in
-                British Columbia and cannot purchase compliance units.
+                <strong>No &mdash;</strong> An organization must register to transfer credits.
               </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
               <span className="status-description">
-                Active — An active organization is one that is actively &quot;supplying&quot; fuel
-                in British Columbia as defined under the Act.
+                <strong>Yes &mdash;</strong> A registered organization is able to transfer credits.
               </span>
             }
             </dd>
