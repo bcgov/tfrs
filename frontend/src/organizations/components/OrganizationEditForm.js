@@ -13,6 +13,16 @@ import NotFound from '../../app/components/NotFound'
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
   const orgStatuses = props.referenceData.organizationStatuses
+
+  const getStatusDisplay = (description) => {
+    if (description === 'Active') {
+      return 'Yes'
+    } else if (description === 'Inactive') {
+      return 'No'
+    }
+    return description // fallback
+  }
+
   if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
     return <NotFound />
   } else {
@@ -27,7 +37,7 @@ const OrganizationEditForm = (props) => {
             ) && (
               <div className="form-group">
                 <label htmlFor="org_status" className="col-sm-4">
-                  <div className="col-sm-4"> Supplier Status: </div>
+                  <div className="col-sm-6"> Registered for credit transfers: </div>
                   <div className="col-sm-6">
                     <div key={orgStatuses[0].id}>
                       <label htmlFor='org-status-active'>
@@ -39,7 +49,7 @@ const OrganizationEditForm = (props) => {
                         onChange={props.handleInputChange}
                         checked={orgStatuses[0].id === props.fields.org_status}
                       />
-                        <span> {orgStatuses[0].description} </span></label>{' '}
+                        <span> {getStatusDisplay(orgStatuses[0].description)} </span></label>{' '}
                     </div>
                     <div key={orgStatuses[1].id}>
 
@@ -52,7 +62,7 @@ const OrganizationEditForm = (props) => {
                         onChange={props.handleInputChange}
                         checked={orgStatuses[1].id === props.fields.org_status}
                       />
-                      <span> {orgStatuses[1].description}</span></label>{' '}
+                      <span> {getStatusDisplay(orgStatuses[1].description)}</span></label>{' '}
                     </div>
                   </div>
                 </label>
