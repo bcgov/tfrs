@@ -155,26 +155,30 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 {'zeroDollarReason': "Zero dollar reason supplied but this "
                                      "trade has a non-zero value-per-credit"})
 
-        date_of_written_agreement = data.get('date_of_written_agreement')
-        if date_of_written_agreement:
-            today = datetime.now().date()
-            if date_of_written_agreement > today:
-                raise serializers.ValidationError({
-                    'date_of_written_agreement': "Date of written agreement can't be in the future."
-                })
+        # validation on agreement and effective dates only applies 
+        # on supplier created credit trades so if the request.user 
+        # is government, we skip validation for these fields
+        if not request.user.is_government_user:
+            date_of_written_agreement = data.get('date_of_written_agreement')
+            if date_of_written_agreement:
+                today = datetime.now().date()
+                if date_of_written_agreement > today:
+                    raise serializers.ValidationError({
+                        'date_of_written_agreement': "Date of written agreement can't be in the future."
+                    })
 
-        trade_effective_date = data.get('trade_effective_date')
-        if trade_effective_date:
-            today = datetime.now().date()
-            three_months_from_now = today + timedelta(days=90)
-            if trade_effective_date > three_months_from_now:
-                raise serializers.ValidationError({
-                    'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
-                })
-            if trade_effective_date < today:
-                raise serializers.ValidationError({
-                    'trade_effective_date': "Trade effective date can't be before today."
-                })
+            trade_effective_date = data.get('trade_effective_date')
+            if trade_effective_date:
+                today = datetime.now().date()
+                three_months_from_now = today + timedelta(days=90)
+                if trade_effective_date > three_months_from_now:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                    })
+                if trade_effective_date < today:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be before today."
+                    })
             
         # If the initiator is 'selling', make sure that the organization
         # has enough credits
@@ -529,26 +533,30 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Cannot add a comment in this state")
 
-        date_of_written_agreement = data.get('date_of_written_agreement')
-        if date_of_written_agreement:
-            today = datetime.now().date()
-            if date_of_written_agreement > today:
-                raise serializers.ValidationError({
-                    'date_of_written_agreement': "Date of written agreement can't be in the future."
-                })
+        # validation on agreement and effective dates only applies
+        # on supplier created credit trades so if the request.user
+        # is government, we skip validation for these fields
+        if not request.user.is_government_user:
+            date_of_written_agreement = data.get('date_of_written_agreement')
+            if date_of_written_agreement:
+                today = datetime.now().date()
+                if date_of_written_agreement > today:
+                    raise serializers.ValidationError({
+                        'date_of_written_agreement': "Date of written agreement can't be in the future."
+                    })
 
-        trade_effective_date = data.get('trade_effective_date')
-        if trade_effective_date:
-            today = datetime.now().date()
-            three_months_from_now = today + timedelta(days=90)
-            if trade_effective_date > three_months_from_now:
-                raise serializers.ValidationError({
-                    'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
-                })
-            if trade_effective_date < today:
-                raise serializers.ValidationError({
-                    'trade_effective_date': "Trade effective date can't be before today."
-                })
+            trade_effective_date = data.get('trade_effective_date')
+            if trade_effective_date:
+                today = datetime.now().date()
+                three_months_from_now = today + timedelta(days=90)
+                if trade_effective_date > three_months_from_now:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                    })
+                if trade_effective_date < today:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be before today."
+                    })
             
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
