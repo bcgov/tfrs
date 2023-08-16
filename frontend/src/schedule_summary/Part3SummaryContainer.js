@@ -58,12 +58,6 @@ function tableData (
         value: ''
       }
     }
-    for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-      if (i != SCHEDULE_SUMMARY.LINE_25) {
-        // Hide lines from 23 to 28 excluding line 25
-        part3[i][2].className = 'hidden'
-      }
-    }
   }
 
   return part3
