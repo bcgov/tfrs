@@ -57,7 +57,12 @@ const OrganizationsTable = (props) => {
     filterMethod: (filter, row) => {
       const filterValue = filter.value.toLowerCase()
       const cellValue = row[filter.id].toLowerCase()
-      if (filterValue === cellValue) {
+      // Flexible conditions for "yes"
+      if (cellValue === 'yes' && (filterValue === 'y' || filterValue === 'ye' || filterValue === 'yes')) {
+        return true
+      }
+      // Flexible conditions for "no"
+      if (cellValue === 'no' && (filterValue === 'n' || filterValue === 'no')) {
         return true
       }
       return false
