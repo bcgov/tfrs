@@ -108,7 +108,7 @@ const CreditTransactionsPage = (props) => {
           (props.loggedInUser.organization.statusDisplay === 'Active' ||
           (props.loggedInUser.organization.organizationBalance &&
           (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
-          !props.loggedInUser.isGovernmentUser &&
+          !props.loggedInUser.isGovernmentUser && props.loggedInUser.organization.statusDisplay === 'Active' &&
             <button
               id="credit-transfer-new-transfer"
               className="btn btn-primary"
