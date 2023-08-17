@@ -14,13 +14,13 @@ class OrganizationService(object):
                 Q(type__the_type="Sell") &
                 Q(initiator_id=organization.id) &
                 Q(is_rescinded=False) &
-                (Q(trade_effective_date__lte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True))) 
+                (Q(trade_effective_date__gte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
                 |
                 (Q(status__status__in=["Accepted", "Recommended", "Not Recommended"]) &
                 Q(type__the_type="Buy") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                (Q(trade_effective_date__lte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
+                (Q(trade_effective_date__gte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
         ).aggregate(total_credits=Sum('number_of_credits'))
 
         if pending_trades['total_credits'] is not None:
