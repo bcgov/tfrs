@@ -172,7 +172,7 @@ class CreditTradeService(object):
 
 
     @staticmethod
-    def approve(credit_trade, update_user=None, category_d_selected=False):
+    def approve(credit_trade, update_user=None):
         """
         Transfers the credits between the organizations
         Sets the Credit Transfer to Approved
@@ -181,7 +181,7 @@ class CreditTradeService(object):
 
         # Calculate and assign trade category
         credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
-            credit_trade.date_of_written_agreement, credit_trade.create_timestamp, category_d_selected)
+            credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
 
         # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
         # otherwise use trade_effective_date
