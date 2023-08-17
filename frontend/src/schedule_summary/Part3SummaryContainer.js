@@ -58,6 +58,12 @@ function tableData (
         value: ''
       }
     }
+    for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
+      if (i != SCHEDULE_SUMMARY.LINE_25) {
+        // Hide lines from 23 to 28 excluding line 25
+        part3[i][2].className = 'hidden'
+      }
+    }
   }
 
   return part3
@@ -390,44 +396,42 @@ function populateSchedules (props, state, setState) {
 
 function calculatePart3PayableLCFS(part3, complianceReport) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
-  const outstandingBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
+  const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-    value: outstandingBalance
+    value: availableBalance
+  }
+  part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
+  part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
+  part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+    className: 'hidden',
+    value: '0'
   }
   // Net compliance unit balance for compliance period - Line 25
-  let balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  // Compliance unit balance change from assessment - Line 29B
-  let balanceFromAssessment = balance + outstandingBalance
-  if (balanceFromAssessment <= 0) {
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(balanceFromAssessment * -600)
+  const netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  const adjustedBalance = availableBalance + netBalance
+  if ((netBalance < 0 && adjustedBalance > 0) || (netBalance > 0)) {
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: balanceFromAssessment
+      value: netBalance
     }
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: '0'
-    }
-  } else {
-    // if there is no compliane penalty to pay then hide line 28
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
-      className: 'hidden',
-      value: '0'
-    }
+  } else if (netBalance < 0 && adjustedBalance < 0)   {
+    adjustedBalance = availableBalance + netBalance
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: balance
+      value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
     }
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: balanceFromAssessment
+    if (adjustedBalance < 0) {
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(balanceFromAssessment * -600)
     }
   }
+  part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
+    ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
+    value: Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
+  }
+
   part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
   return part3
 }
