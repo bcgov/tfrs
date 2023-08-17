@@ -71,8 +71,9 @@ class CreditTransferFormDetails extends Component {
               <option key="0" value="" default>Select a Fuel Supplier</option>
               {this.props.fuelSuppliers &&
               this.props.fuelSuppliers.map(organization => (
-                this.props.fields.initiator.id !== organization.id && (
-                  <option key={organization.id} value={organization.id}>
+                this.props.fields.initiator.id !== organization.id &&
+                  organization.status.description === 'Active' && (
+                    <option key={organization.id} value={organization.id}>
                     {organization.name}
                   </option>
                 )
