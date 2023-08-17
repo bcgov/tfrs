@@ -555,20 +555,22 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         if int(obj.compliance_period.description) > 2022 and snapshot is not None:
             lines = snapshot.get('summary').get('lines')
             if lines.get('29A') is None:
-                compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
+                available_compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
                     obj.organization,
                     obj.update_timestamp
                 )
-                change_assessment_balance = compliance_unit_balance + int(lines['25'])
-                lines['29A'] = compliance_unit_balance
-                if change_assessment_balance < 0:
-                    lines['28'] = (change_assessment_balance * Decimal('-600.00')).max(Decimal(0))
-                    lines['29B'] = change_assessment_balance
-                    lines['29C'] = 0
-                else:
-                    lines['28'] = 0
-                    lines['29B'] = lines['25']
-                    lines['29C'] = change_assessment_balance
+                net_compliance_unit_balance = int(lines['25'])
+                adjusted_balance = available_compliance_unit_balance + net_compliance_unit_balance
+                lines['29A'] = available_compliance_unit_balance
+                lines['28'] = 0
+                if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
+                    lines['29B'] = net_compliance_unit_balance
+                elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
+                    lines['29B'] = net_compliance_unit_balance if (
+                                adjusted_balance >= 0) else -available_compliance_unit_balance
+                    lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (
+                                adjusted_balance < 0) else 0
+                lines['29C'] = lines['29A'] + lines['29B']
                 snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines[
                     '28']
                 snapshot['summary']['lines'] = lines
