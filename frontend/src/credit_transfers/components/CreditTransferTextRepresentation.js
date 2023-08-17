@@ -42,19 +42,34 @@ class CreditTransferTextRepresentation extends Component {
     }
   }
 
+  getTradeEffectiveDate () {
+    if (this.props.tradeEffectiveDate) {
+      return this.props.tradeEffectiveDate
+    }
+    // Directly find the 'Approved' history
+    const approvedHistory = this.props.history.find((history) => history.status.status === 'Approved')
+    return approvedHistory ? approvedHistory.createTimestamp : null
+  }
+
   formatTradeEffectiveDate = () => {
     const now = moment()
-    const tradeEffectiveDate = this.props.tradeEffectiveDate
+    const tradeEffectiveDate = this.getTradeEffectiveDate()
+    // If no effective date is available, handle this case
+    if (!tradeEffectiveDate) {
+      return <span>.</span>
+    }
+
+    const formattedDate = moment(tradeEffectiveDate).format('LL')
     const status = this.props.status
 
     // Transaction is approved
     if (status.id === CREDIT_TRANSFER_STATUS.approved.id) {
-      return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span></span>)
+      return (<span> effective <span className='value'>{formattedDate}</span></span>)
     }
 
     // Check if tradeEffectiveDate exists and is in the future
-    if (tradeEffectiveDate && moment(tradeEffectiveDate).isAfter(now)) {
-      return (<span> effective <span className='value'>{moment(tradeEffectiveDate).format('LL')}</span> or on the
+    if (moment(tradeEffectiveDate).isAfter(now)) {
+      return (<span> effective <span className='value'>{formattedDate}</span> or on the
         date the Director records the transfer, whichever is later.</span>)
     } else {
       return (<span>, effective on the date the Director records the transfer.</span>)

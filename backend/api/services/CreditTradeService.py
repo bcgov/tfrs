@@ -368,9 +368,15 @@ class CreditTradeService(object):
         """
         Gets the compliance period the effective date falls under
         """
+        # Use the effective_date today if credit_trade's trade_effective_date is null
+        # otherwise use trade_effective_date
+        today = timezone.localdate()
+        trade_effective_date = credit_trade.trade_effective_date \
+            if credit_trade.trade_effective_date else today
+        
         compliance_period = CompliancePeriod.objects.filter(
-            effective_date__lte=credit_trade.trade_effective_date,
-            expiration_date__gte=credit_trade.trade_effective_date
+            effective_date__lte=trade_effective_date,
+            expiration_date__gte=trade_effective_date
         ).first()
 
         if compliance_period is None:
