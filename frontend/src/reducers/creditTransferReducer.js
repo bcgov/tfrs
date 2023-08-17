@@ -72,7 +72,7 @@ const creditTransfer = (state = {
         message: action.message,
         item: {
           ...state.item,
-          categoryDSelected: action.data.categoryDSelected
+          categoryDSelected: action.data ? action.data.categoryDSelected : state.item.categoryDSelected
         }
       }
     default:

@@ -155,7 +155,8 @@ class CreditTransferSigningHistory extends Component {
   _renderCategoryHistory () {
     const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
     const lastHistoryItem = history[history.length - 1]
-    if (history.length > 0 && loggedInUser.isGovernmentUser) {
+    const createdByGov = history[0].creditTrade?.initiator?.id === 1
+    if (history.length > 0 && loggedInUser.isGovernmentUser && !createdByGov) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
         .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected)
@@ -289,6 +290,11 @@ CreditTransferSigningHistory.propTypes = {
       firstName: PropTypes.string,
       id: PropTypes.number,
       lastName: PropTypes.string
+    }),
+    creditTrade: PropTypes.shape({
+      initiator: PropTypes.shape({
+        id: PropTypes.number
+      })
     })
   })),
   signatures: PropTypes.arrayOf(PropTypes.shape({
