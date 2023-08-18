@@ -57,6 +57,9 @@ function tableData (
         className: 'hidden',
         value: ''
       }
+    } else {
+      let adjustedBalance = summary.lines['29A'] + summary.lines['25']
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
       if (i != SCHEDULE_SUMMARY.LINE_25) {
@@ -410,21 +413,21 @@ function calculatePart3PayableLCFS(part3, complianceReport) {
   // Net compliance unit balance for compliance period - Line 25
   const netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
   const adjustedBalance = availableBalance + netBalance
-  if ((netBalance < 0 && adjustedBalance > 0) || (netBalance > 0)) {
+  if ((netBalance < 0 && adjustedBalance >= 0) || (netBalance >= 0)) {
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
       value: netBalance
     }
   } else if (netBalance < 0 && adjustedBalance < 0)   {
-    adjustedBalance = availableBalance + netBalance
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
       value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
     }
     if (adjustedBalance < 0) {
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
       part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(balanceFromAssessment * -600)
+      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
     }
   }
   part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
