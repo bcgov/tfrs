@@ -11,6 +11,7 @@ import InputWithTooltip from '../../app/components/InputWithTooltip'
 
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
+    console.log(this.props, "1414")
     return (
       (this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
       this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
@@ -18,19 +19,15 @@ class CreditTransferFormDetails extends Component {
       parseFloat(this.props.fields.fairMarketValuePerCredit) === 0
     )
   }
-
+  
   render () {
     return (
       <div className="credit-transfer-details">
         <p className="action-context-menu-available">Credit Transfer Details (required)</p>
         <div className="main-form">
           <span>
-            {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to `}
+            {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to sell `}
           </span>
-          <span> sell </span>
-          {this.props.loggedInUser.organization.actionsTypeDisplay !== 'Buy And Sell' &&
-            <span> sell </span>
-          }
           <div className="form-group number-of-credits">
             <InputWithTooltip
               handleInputChange={this.props.handleInputChange}
