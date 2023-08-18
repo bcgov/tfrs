@@ -58,7 +58,7 @@ function tableData (
         value: ''
       }
     } else {
-      let adjustedBalance = summary.lines['29A'] + summary.lines['25']
+      let adjustedBalance = Number(summary.lines['29A']) + Number(summary.lines['25'])
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
     }
     for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
