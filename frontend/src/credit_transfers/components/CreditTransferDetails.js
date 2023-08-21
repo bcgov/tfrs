@@ -182,6 +182,7 @@ const CreditTransferDetails = props => (
                 BTN_RECOMMEND: [
                   CREDIT_TRANSFER_TYPES.validation.id,
                   CREDIT_TRANSFER_TYPES.retirement.id,
+                  CREDIT_TRANSFER_TYPES.adminAdjustment.id,
                   CREDIT_TRANSFER_TYPES.part3Award.id].includes(props.tradeType.id) &&
                   props.comments.length === 0,
                 BTN_SIGN_1_2: props.fields.terms.filter(term =>

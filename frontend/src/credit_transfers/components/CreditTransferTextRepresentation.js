@@ -114,6 +114,24 @@ class CreditTransferTextRepresentation extends Component {
     )
   }
 
+  _renderAdministrativeAdjustment () {
+    return (
+      <div className='text-representation'>
+        An <span className='value'>administrative adjustment</span> of
+        <span className='value'> {this.numberOfCredits} </span>
+        credit{Math.abs(this.props.numberOfCredits) > 1 && 's'} has been
+        <span className='value lowercase'> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
+          <span>
+            , effective
+            <span className='value'> {this.tradeEffectiveDate}</span>
+          </span>
+        )}
+        .
+      </div>
+    )
+  }
+
   _renderRetirement () {
     return (
       <div className='text-representation'>
@@ -247,6 +265,9 @@ class CreditTransferTextRepresentation extends Component {
 
       case CREDIT_TRANSFER_TYPES.part3Award.id:
         return this._renderPart3Award()
+
+      case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
+        return this._renderAdministrativeAdjustment()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
         return this._renderRetirement()
