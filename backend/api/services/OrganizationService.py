@@ -31,6 +31,7 @@ class OrganizationService(object):
     @staticmethod
     def get_pending_deductions(
             organization,
+            obj=None, ignore_current_report_deductions=False,
             ignore_pending_supplemental=True
     ):
         deductions = 0
@@ -105,8 +106,13 @@ class OrganizationService(object):
                         deductions += (current_offset - previous_offset)
                 elif compliance_report.status.director_status_id not in \
                         ["Rejected"]:
-                    if compliance_report.summary.credits_offset is not None:
-                        deductions += abs(compliance_report.summary.credits_offset)
+                    if obj is not None and obj.id == compliance_report.id \
+                            and ignore_current_report_deductions\
+                            and obj.status.director_status_id not in ["Accepted"]\
+                            and obj.status.fuel_supplier_status_id not in ["Draft", "Deleted"]:
+                        continue
+                    elif compliance_report.summary.credits_offset is not None:
+                            deductions += abs(compliance_report.summary.credits_offset)
 
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
@@ -117,7 +123,7 @@ class OrganizationService(object):
         return deductions
 
     @staticmethod
-    def get_max_credit_offset(organization, compliance_year, exclude_reserved=False):
+    def get_max_credit_offset(organization, compliance_year, obj=None, ignore_current_report_deductions=False, exclude_reserved=False):
         effective_date_deadline = datetime.date(
             int(compliance_year) + 1, 3, 31
         )
@@ -173,7 +179,7 @@ class OrganizationService(object):
         if exclude_reserved:
             pending_deductions = OrganizationService.get_pending_transfers_value(organization)
         else:
-            pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
+            pending_deductions = OrganizationService.get_pending_deductions(organization, obj, ignore_current_report_deductions, ignore_pending_supplemental=False)
         
         validated_credits = organization.organization_balance.get(
             'validated_credits', 0
