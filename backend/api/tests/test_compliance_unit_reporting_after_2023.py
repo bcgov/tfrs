@@ -147,13 +147,13 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_positive_net_balance(self):
+        self._add_part3_awards_to_org(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_positive_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
         payload['scheduleB']['records'][0]['quantity'] = 117933  # credits of fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
-        self._add_part3_awards_to_org(800)
         # Submit the compliance report
         payload = {'status': {'fuelSupplierStatus': 'Submitted'}}
         self._patch_fs_user_for_compliance_report(payload, rid)
@@ -174,24 +174,22 @@ class TestComplianceUnitReporting(BaseTestCase):
     | Net compliance unit balance for compliance period                     | Line 25       | Z           | -200            |
     | Available compliance unit balance on March 31, YYYY                   |               | A           | 700             |
     | Compliance unit balance change from assessment                        |               | X           | -200            |
-    |                                      If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                 |               
+    |                                      If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                 |
     | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 500             |
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_negative_net_balance_no_penalty(self):
+        self._add_part3_awards_to_org(700)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
         payload['scheduleB']['records'][0]['quantity'] = 342238  # debits of fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -200  # credits of fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
-        self._add_part3_awards_to_org(700)
         # Submit the compliance report
         payload = {
             'status': {'fuelSupplierStatus': 'Submitted'},
-            'summary': {
-                'creditsOffset': 200,
-            }
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -211,24 +209,25 @@ class TestComplianceUnitReporting(BaseTestCase):
     | Net compliance unit balance for compliance period                     | Line 25       | Z           | -400            |
     | Available compliance unit balance on March 31, YYYY                   |               | A           | 300             |
     | Compliance unit balance change from assessment                        |               | X           | -300            |
-    |                                      If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A| 60,000          |               
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                 |
+    | Non-compliance penalty payable (100 units * $600 CAD per unit)        | Line 28       |             | 60,000          |
+    |                                                                           ^---- (abs(Z) - A) * $600 |                 |
     | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 0               |
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_negative_net_balance_with_penalty(self):
+        self._add_part3_awards_to_org(300)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
         payload['scheduleB']['records'][0]['quantity'] = 684477  # debits of fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -300
         self._patch_fs_user_for_compliance_report(payload, rid)
-        self._add_part3_awards_to_org(300)
+
         # Submit the compliance report
         payload = {
             'status': {'fuelSupplierStatus': 'Submitted'},
-            'summary': {
-                'creditsOffset': 300,
-            }
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -239,647 +238,51 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(response.data.get('summary').get('lines').get('29B'), -300)
         self.assertEqual(response.data.get('summary').get('lines').get('28'), 60000)
         self.assertEqual(response.data.get('summary').get('lines').get('29C'), 0)
-    #
-    # """
-    # | Scenario 2: Supplemental Report Submission #1 that increases debit obligation                                                                                                                                     |
-    # |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                              | Line    |              | Units                               | Example Values - Initial Submission | Example Values - Supplemental #1 |
-    # |---------------------------------------------------------------------------|---------|--------------|-------------------------------------|-------------------------------------|----------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                        | Line 23 | X            | Credits                             | 100,000                             | 100,000                          |
-    # | Total debits from fuel supplied (from Schedule B)                         | Line 24 | Y            | (Debits)                            | 145,000                             | 150,000                          |
-    # | Net credit or debit balance for compliance period                         | Line 25 | Z            | Credits (Debits)                    | -45,000                             | -50,000                          |
-    # | Total banked credits used to offset outstanding debits (if applicable)    | Line 26 | A+B          | Credits                             | 45,000                              | 50,000                           |
-    # | Banked credits used to offset outstanding debits - Previous Reports       | Line 26a| A            | Credits                             | n/a                                 | 45,000                           |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #1 | Line 26b| B (editable) | Credits                             | n/a                                 | 5,000                            |
-    # | Outstanding debit balance                                                 | Line 27 | Z - (A+B)    | (Debits)                            | 0                                   | 0                                |
-    # | Part 3 non-compliance penalty payable                                     | Line 28 |              | $CAD                                |                                     |                                  |
-    # |---------------------------------------------------------------------------|---------|--------------|-------------------------------------|-------------------------------------|----------------------------------|
-    # | Report Status (for compliance units conversion)                           |         |              |                                     | Accepted                            | Accepted                         |
-    # | Corresponding Compliance Unit conversion / transaction                    |         |              |                                     | -45,000                             | -5,000                           |
-    # """
-    # def test_supplemental_report_submission_increasing_debit_obligation(self):
+
+    """
+    | Scenario 4: Supplemental Report Submission #1, increasing, positive net balance, previous report was assessed             |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | 100                 | 250                | 150                   | 
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 800                 | 900                | 100                   |
+    | Compliance unit balance change from assessment                        |               | X           | 100                 | 150                |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 900                 | 1,050              | 150                   |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    # def test_supplemental_report_1_increasing_positive_net_balance_previous_report_assessed(self):
+    #     self._add_part3_awards_to_org(800)
     #     rid = self._create_draft_compliance_report()
     #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
+    #     payload = compliance_unit_positive_offset_payload
     #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 248122823  # debits of fuel supplied (from Schedule B)
+    #     payload['scheduleB']['records'][0]['quantity'] = 117933  # credits of fuel supplied (from Schedule B)
     #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(50000)
     #     # Submit the compliance report
     #     payload = {
     #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 45000,
-    #         }
     #     }
     #     self._patch_fs_user_for_compliance_report(payload, rid)
+    #     # Debug
+    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     # Debug
     #     # Successful director acceptance
     #     self._acceptance_from_director(rid)
     #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
+    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check (50,000 - 45,000) [50,000 from org balance)
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 5000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -45000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 45000.0)
+    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), 100)
+    #     self.assertEqual(response.data.get('summary').get('lines').get('29A'), 800)
+    #     self.assertEqual(response.data.get('summary').get('lines').get('29B'), 100)
+    #     self.assertEqual(response.data.get('summary').get('lines').get('28'), 0)
+    #     self.assertEqual(response.data.get('summary').get('lines').get('29C'), 900)
     #     # Create supplemental report #1
     #     sid = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 45000
-    #     payload['summary']['creditsOffsetB'] = 5000
+    #     payload = compliance_unit_positive_supplemental_payload
+    #     payload['scheduleB']['records'][0]['quantity'] = 176900  # credits of fuel supplied (from Schedule B)
     #     self._patch_fs_user_for_compliance_report(payload, sid)
     #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check (5000 - 5000) [5000 from org balance)
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 0)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 45000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26B'], 5000.0)
     #
-    # """
-    # | Scenario 3: Supplemental Report Submission #2 that increases debit obligation - Example 1                                            |
-    # |--------------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                              | Line     |               | Units                         | Initial Submission - Accepted          | Example 1 - Supplemental #1 - Accepted | Example 1 - Supplemental #2 - Accepted |
-    # |---------------------------------------------------------------------------|----------|---------------|-------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                        | Line 23  | X             | Credits                       | 100,000                                | 100,000                                | 100,000                                |
-    # | Total debits from fuel supplied (from Schedule B)                         | Line 24  | Y             | (Debits)                      | 145,000                                | 148,000                                | 150,000                                |
-    # | Net credit or debit balance for compliance period                         | Line 25  | Z             | Credits (Debits)              | -45,000                                | -48,000                                | -50,000                                |
-    # | Total banked credits used to offset outstanding debits (if applicable)    | Line 26  | A+B+C+D       | Credits                       | 45,000                                 | 48,000                                 | 50,000                                 |
-    # | Banked credits used to offset outstanding debits - Previous Reports       | Line 26a | A+B+C         | Credits                       | n/a                                    | 45,000                                 | 48,000                                 |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2 | Line 26b | D (editable)  | Credits                       | n/a                                    | 3,000                                  | 2,000                                  |
-    # | Outstanding debit balance                                                 | Line 27  | Z - (A+B+C+D) | (Debits)                      | 0                                      | 0                                      | 0                                      |
-    # | Part 3 non-compliance penalty payable                                     | Line 28  |               | $CAD                          | $-                                     | $-                                     | $-                                     |
-    # | Report Status (for compliance units conversion)                           |          |               |                               | Accepted                               | Accepted                               | Accepted                               |
-    # | Corresponding Compliance Unit conversion / transaction                    |          |               |                               | -45,000                                | -3,000                                 | -2,000                                 |
-    # """
-    # def test_supplemental_report_submission_2_ex1_increasing_debit_obligation(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 248122823  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(50000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 45000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # Successful director acceptance
-    #     self._acceptance_from_director(rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check (50,000 - 45,000) [50,000 from org balance]
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 5000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -45000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 45000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 253256398  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 48000
-    #     payload['summary']['creditsOffsetA'] = 45000
-    #     payload['summary']['creditsOffsetB'] = 3000
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -48000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 48000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 45000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26B'], 3000.0)
-    #     # compliance unit balance check (5000 - 3000) [5000 from org balance]
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 2000)
-    #     # Create supplemental report #2
-    #     sid2 = self._create_supplemental_report(sid1)
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 48000
-    #     payload['summary']['creditsOffsetB'] = 2000
-    #     self._patch_fs_user_for_compliance_report(payload, sid2)
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid2))
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid2)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid2))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 48000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26B'], 2000.0)
-    #     # compliance unit balance check (2000 - 2000) [2000 from org balance]
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 0)
-    #
-    # """
-    # | Scenario 3: Supplemental Report Submission #2 that increases debit obligation - Example 2                                            |
-    # |--------------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                              | Line     |               | Units                         | Initial Submission - Accepted  | Example 2 - Supplemental #1 - Submitted | Example 2 - Supplemental #2 - Accepted |
-    # |---------------------------------------------------------------------------|----------|---------------|-------------------------------|--------------------------------|-----------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                        | Line 23  | X             | Credits                       | 100,000                        | 100,000                                 | 100,000
-    # | Total debits from fuel supplied (from Schedule B)                         | Line 24  | Y             | (Debits)                      | 144,000                        | 148,000                                 | 150,000
-    # | Net credit or debit balance for compliance period                         | Line 25  | Z             | Credits (Debits)              | -44,000                        | -48,000                                 | -50,000
-    # | Total banked credits used to offset outstanding debits (if applicable)    | Line 26  | A+B+C+D       | Credits                       | 44,000                         | 46,000                                  | 46,000
-    # | Banked credits used to offset outstanding debits - Previous Reports       | Line 26a | A+B+C         | Credits                       | n/a                            | 44,000                                  | 44,000
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2 | Line 26b | D (editable)  | Credits                       | n/a                            | 2,000                                   | 2,000
-    # | Outstanding debit balance                                                 | Line 27  | Z - (A+B+C+D) | (Debits)                      | 0                              | 2,000                                   | 4,000
-    # | Part 3 non-compliance penalty payable                                     | Line 28  |               | $CAD                          | $-                             | $400,000                                | $800,000
-    # |---------------------------------------------------------------------------|----------|---------------|-------------------------------|--------------------------------|-----------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                           |          |               |                               | Accepted                       | Submitted (not Accepted)                | Accepted
-    # |---------------------------------------------------------------------------|----------|---------------|-------------------------------|--------------------------------|-----------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                    |          |               |                               | -44,000                        |                                         | -2,000
-    # """
-    # def test_supplemental_report_submission_2_ex2_increasing_debit_obligation(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report information
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318 # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 246411631 # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(50000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 44000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # Successful director acceptance
-    #     self._acceptance_from_director(rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -44000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 44000.0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 6000)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 253256398  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 46000
-    #     payload['summary']['creditsOffsetA'] = 44000
-    #     payload['summary']['creditsOffsetB'] = 2000
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -48000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 46000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 44000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26B'], 2000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], -2000.0)
-    #     self.assertEqual(response.data['summary']['lines']['28'], 400000.0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 6000)
-    #     # Create supplemental report #2
-    #     sid2 = self._create_supplemental_report(sid1)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 46000
-    #     payload['summary']['creditsOffsetA'] = 44000
-    #     payload['summary']['creditsOffsetB'] = 2000
-    #     self._patch_fs_user_for_compliance_report(payload, sid2)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid2)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid2))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 46000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 44000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26B'], 2000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], -4000.0)
-    #     self.assertEqual(response.data['summary']['lines']['28'], 800000.0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 4000)
-    #
-    # """
-    # | Scenario 4: Supplemental Report Submission #1 that decreases debit obligation and still in a net debit position overall (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     |              | Units           | Initial Submission - Accepted | Example 1 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | Credits         | 100,000                       | 100,000                                |
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | (Debits)        | 160,000                       | 150,000                                |
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | Credits (Debits)| -60,000                       | -50,000                                |
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A-R          | Credits         | 60,000                        | 50,000                                 |
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A            | Credits         | n/a                           | 60,000                                 |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #1           | Line 26b | Not editable | Credits         | n/a                           | n/a                                    |
-    # | Outstanding debit balance                                                           | Line 27  |              | (Debits)        | 0                             | 0                                      |
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              | $CAD            |                               |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            |                 |                               | 10,000                                 |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              |                 | Accepted                      | Accepted                               |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              |                 | -60,000                       | +10,000                                |
-    # """
-    # def test_supplemental_report_submission_1_ex1_decreasing_debit_obligation_under_net_debit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 273790701  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 60000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # Successful director acceptance
-    #     self._acceptance_from_director(rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 40000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -60000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 60000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 60000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 60000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 50000)
-    #
-    # """
-    # | Scenario 4: Supplemental Report Submission #1 that decreases debit obligation and still in a net debit position overall (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     |              | Units           | Example 2 - Initial Submission - Accepted | Example 2 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | Credits         | 100,000                                   | 100,000
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | (Debits)        | 160,000                                   | 150,000
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | Credits (Debits)| -60,000                                   | -50,000
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A-R          | Credits         | 60,000                                    | 50,000
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A            | Credits         | n/a                                       | 60,000
-    # | Banked credits used to offset outstanding debits - Supplemental Report #1           | Line 26b | Not editable | Credits         | n/a                                       |
-    # | Outstanding debit balance                                                           | Line 27  |              | (Debits)        | 0                                         | 0
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              | $CAD            |                                           |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            |                 |                                           |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              |                 | Submitted (not Accepted)                  | Accepted
-    # |-------------------------------------------------------------------------------------|----------|--------------|-----------------|-------------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              |                 |                                           | -50,000
-    # """
-    # def test_supplemental_report_submission_1_ex2_decreasing_debit_obligation_under_net_debit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 273790701  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 60000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 40000)
-    #     # exclude the reserved amount as in this case report is not submitted.
-    #     self.assertEqual(response.data.get('max_credit_offset_exclude_reserved'), 100000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -60000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 60000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 60000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 60000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 50000)
-    #
-    # """
-    # | Scenario 5: Supplemental Report Submission #2 that decreases debit obligation and still in a net debit position overall (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     | Units        | Example 1 - Initial Submission - Accepted | Example 1 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | Credits                                   | 100,000                                |
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | (Debits)                                  | 170,000                                |
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | Credits (Debits)                          | -70,000                                |
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A+B+C-R      | Credits                                   | 70,000                                 |
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A+B+C        | Credits                                   | n/a                                    |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2           | Line 26b | Not editable | Credits                                   | n/a                                    |
-    # | Outstanding debit balance                                                           | Line 27  |              | (Debits)                                  | 0                                      |
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              | $CAD                                      |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            |                                           |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              | Accepted                                  | Accepted                               |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              |                                           | -70,000                                |
-    # """
-    # def test_supplemental_report_submission_2_ex1_decreasing_debit_obligation_under_net_debit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 290902619  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 70000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # Successful director acceptance
-    #     self._acceptance_from_director(rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 30000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -70000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 70000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 70000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 70000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 50000)
-    #
-    # """
-    # | Scenario 5: Supplemental Report Submission #2 that decreases debit obligation and still in a net debit position overall (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     | Units        | Example 2 - Initial Submission - Accepted | Example 2 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | 100,000                                   | 100,000                                |
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | 150,000                                   | 170,000                                |
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | -50,000                                   | -70,000                                |
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A+B+C-R      | 50,000                                    | 70,000                                 |
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A+B+C        | 70,000                                    | n/a                                    |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2           | Line 26b | Not editable | 0                                         | n/a                                    |
-    # | Outstanding debit balance                                                           | Line 27  |              | 0                                         | 0                                      |
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              |                                           |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            | 20,000                                    |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              | Submitted (not Accepted)                  | Accepted                               |
-    # |-------------------------------------------------------------------------------------|----------|--------------|-------------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              | +20,000                                   |                                        |
-    # """
-    # def test_supplemental_report_submission_2_ex2_decreasing_debit_obligation_under_net_debit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 290902619  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 70000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 30000)
-    #     # exclude the reserved amount as in this case report is not submitted.
-    #     self.assertEqual(response.data.get('max_credit_offset_exclude_reserved'), 100000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -70000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 70000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 117933318  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 256678782  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 50000
-    #     payload['summary']['creditsOffsetA'] = 70000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], -50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 50000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 70000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 50000)
-    #
-    # """
-    # | Scenario 6: Supplemental Report Submission #2 that decreases debit obligation and is now in a net credit position (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     |              | Units            | Example 1 - Initial Submission - Accepted | Example 1 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | Credits          | 80,000                                    | 105,000                                |
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | (Debits)         | 100,000                                   | 100,000                                |
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | Credits (Debits) | -20,000                                   | 5,000                                  |
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A+B+C-R      | Credits          | 20,000                                    | 0                                      |
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A+B+C        | Credits          | n/a                                       | 20,000                                 |
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2           | Line 26b | Not editable | Credits          | n/a                                       | 0                                      |
-    # | Outstanding debit balance                                                           | Line 27  |              | (Debits)         |                                           |                                        |
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              | $CAD             |                                           |                                        |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            |                  |                                           | 25,000                                 |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              |                  | Accepted                                  | Accepted                               |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              |                  | -20,000                                   | +25,000                                |
-    # """
-    # def test_supplemental_report_submission_2_ex1_decreasing_debit_obligation_now_in_net_credit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 94346654  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 171119188  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 20000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # Successful director acceptance
-    #     self._acceptance_from_director(rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 80000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -20000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 20000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 123829984  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 171119188  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 0
-    #     payload['summary']['creditsOffsetA'] = 20000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], 5000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 20000.0)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 105000)
-    #
-    # """
-    # | Scenario 6: Supplemental Report Submission #2 that decreases debit obligation and is now in a net credit position (Line 25) |
-    # |-----------------------------------------------------------------------------------------------------------------------------|
-    # | Part 3 - Low Carbon Fuel Requirement Summary                                        | Line     |              | Units            | Example 2 - Initial Submission - Accepted | Example 2 - Supplemental #1 - Accepted |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Total credits from fuel supplied (from Schedule B)                                  | Line 23  | X            | Credits          | 80,000                                    | 105,000
-    # | Total debits from fuel supplied (from Schedule B)                                   | Line 24  | Y            | (Debits)         | 100,000                                   | 100,000
-    # | Net credit or debit balance for compliance period                                   | Line 25  | Z            | Credits (Debits) | -20,000                                   | 5,000
-    # | Total banked credits used to offset outstanding debits (if applicable)              | Line 26  | A+B+C-R      | Credits          | 20,000                                    | 0
-    # | Banked credits used to offset outstanding debits - Previous Reports                 | Line 26a | A+B+C        | Credits          | n/a                                       | 20,000
-    # | Banked credits used to offset outstanding debits - Supplemental Report #2           | Line 26b | Not editable | Credits          | n/a                                       | 0
-    # | Outstanding debit balance                                                           | Line 27  |              | (Debits)         |                                           |
-    # | Part 3 non-compliance penalty payable                                               | Line 28  |              | $CAD             |                                           |
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Banked credits to be returned as a result of supplemental reporting (if applicable) |          | R            |                  |                                           | 5,000
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Report Status (for compliance units conversion)                                     |          |              |                  | Submitted (not Accepted)                  | Accepted
-    # |-------------------------------------------------------------------------------------|----------|--------------|------------------|-------------------------------------------|----------------------------------------|
-    # | Corresponding Compliance Unit conversion / transaction                              |          |              |                  |                                           | +5,000
-    # """
-    # def test_supplemental_report_submission_2_ex2_decreasing_debit_obligation_now_in_net_credit_position(self):
-    #     rid = self._create_draft_compliance_report()
-    #     # patch compliance report info
-    #     payload = compliance_unit_initial_payload
-    #     payload['status']['fuelSupplierStatus'] = 'Draft'
-    #     payload['scheduleB']['records'][0]['quantity'] = 94346654  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 171119188  # debits of fuel supplied (from Schedule B)
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     self._add_part3_awards_to_org(100000)
-    #     # Submit the compliance report
-    #     payload = {
-    #         'status': {'fuelSupplierStatus': 'Submitted'},
-    #         'summary': {
-    #             'creditsOffset': 20000,
-    #         }
-    #     }
-    #     self._patch_fs_user_for_compliance_report(payload, rid)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 80000)
-    #     # exclude the reserved amount as in this case report is not submitted.
-    #     self.assertEqual(response.data.get('max_credit_offset_exclude_reserved'), 100000)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('25'), -20000.0)
-    #     self.assertEqual(response.data.get('summary').get('lines').get('26'), 20000.0)
-    #     # Create supplemental report #1
-    #     sid1 = self._create_supplemental_report(rid)
-    #     payload = compliance_unit_supplemental_payload
-    #     payload['scheduleB']['records'][0]['quantity'] = 123829984  # credits of fuel supplied (from Schedule B)
-    #     payload['scheduleB']['records'][1]['quantity'] = 171119188  # debits of fuel supplied (from Schedule B)
-    #     payload['summary']['creditsOffset'] = 0
-    #     payload['summary']['creditsOffsetA'] = 20000
-    #     payload['summary']['creditsOffsetB'] = 0
-    #     self._patch_fs_user_for_compliance_report(payload, sid1)
-    #     # Successful director acceptance for supplemental report #1
-    #     self._acceptance_from_director(sid1)
-    #     # retrieve the compliance report and validate the Summary report fields
-    #     response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid1))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['summary']['lines']['25'], 5000.0)
-    #     self.assertEqual(response.data['summary']['lines']['26'], 0)
-    #     self.assertEqual(response.data['summary']['lines']['26A'], 20000)
-    #     self.assertEqual(response.data['summary']['lines']['27'], 0)
-    #     # compliance unit balance check
-    #     self.assertEqual(
-    #         min(response.data.get('max_credit_offset'), response.data.get('max_credit_offset_exclude_reserved')), 105000)
