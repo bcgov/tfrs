@@ -449,9 +449,15 @@ function calculatePart3PayableLCFS (part3, complianceReport) {
       ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
       value: 0
     }
+    let totalPreviousComplianceUnits = 0
+    for (const delta of complianceReport.deltas) {
+      if (delta.snapshot.data.summary.lines['25']) {
+        totalPreviousComplianceUnits += Number(delta.snapshot.data.summary.lines['25'])
+      }
+    }
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: netCreditBalanceChange
+      value: (Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) - totalPreviousComplianceUnits)
     } // reduce previous deductions if any
     part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
