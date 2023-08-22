@@ -296,6 +296,7 @@ class ScheduleSummaryPart3 {
         ...numericColumnSigned,
         attributes: {
           addCommas: true,
+          additionalTooltip: '',
           dataNumberToFixed: 0,
           maxLength: '20',
           placement: 'right',
@@ -328,7 +329,7 @@ class ScheduleSummaryPart3 {
         )
       }, {
         ...numericCurrency,
-        ttributes: {
+        attributes: {
           addCommas: true,
           dataNumberToFixed: 0,
           maxLength: '20',
@@ -428,7 +429,7 @@ class ScheduleSummaryPart3 {
       }
       part3[0][3].className = 'hidden'
       for (let i = SCHEDULE_SUMMARY.LINE_23; i < SCHEDULE_SUMMARY.LINE_28 + 1; i++) {
-        if (i != SCHEDULE_SUMMARY.LINE_25) {
+        if (i !== SCHEDULE_SUMMARY.LINE_25) {
           // Hide lines from 23 to 28 excluding line 25
           part3[i][0].className = 'hidden'
           part3[i][1].className = 'hidden'
