@@ -521,22 +521,59 @@ class ComplianceReportDetailSerializer(
     def build_compliance_units(self, snapshot, obj):
         lines = snapshot['summary']['lines']
         if lines.get('29A') is None:
+            previous_transactions = []
+            previous_snapshots = []
+            current = obj
+            is_supplemental = False
+
+            if current.supplements:
+                is_supplemental = True
+
             available_compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
                 obj.organization,
                 obj.update_timestamp
             )
             net_compliance_unit_balance = int(lines['25'])
+            desired_net_credit_balance_change = Decimal(0.0)
+            if is_supplemental:
+                while current.supplements is not None:
+                    current = current.supplements
+                    if current.credit_transaction is not None:
+                        previous_transactions.append(current.credit_transaction)
+                    if current.compliance_report_snapshot is not None:
+                        previous_snapshots.append(current.compliance_report_snapshot.snapshot)
+
+                total_previous_reduction = Decimal(0.0)
+                total_previous_validation = Decimal(0.0)
+
+                for transaction in previous_transactions:
+                    if transaction.type.the_type in ['Credit Validation']:
+                        total_previous_validation += transaction.number_of_credits
+                    if transaction.type.the_type in ['Credit Reduction']:
+                        total_previous_reduction += transaction.number_of_credits
+                desired_net_credit_balance_change = Decimal(lines['25'])
+                net_compliance_unit_balance = desired_net_credit_balance_change - \
+                                              (total_previous_validation - total_previous_reduction)
+
             adjusted_balance = available_compliance_unit_balance + net_compliance_unit_balance
-            lines['29A'] = available_compliance_unit_balance
-            lines['28'] = 0
-            if (net_compliance_unit_balance < 0 < adjusted_balance) or (net_compliance_unit_balance > 0):
-                lines['29B'] = net_compliance_unit_balance
-            elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
-                lines['29B'] = net_compliance_unit_balance if (
-                        adjusted_balance > 0) else -available_compliance_unit_balance
-                lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (
-                        adjusted_balance < 0) else 0
-            lines['29C'] = lines['29A'] + lines['29B']
+            if available_compliance_unit_balance <= 0 and net_compliance_unit_balance < 0:
+                lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
+                lines['29A'] = 0
+                total_previous_compliance_units = Decimal(0.0)
+                for snapshots in previous_snapshots:
+                    if snapshots.get("summary").get("lines") is not None:
+                        total_previous_compliance_units += Decimal(snapshots.get("summary").get("lines").get("25"))
+                lines['29B'] = Decimal(lines['25']) - total_previous_compliance_units
+                lines['29C'] = 0
+            else:
+                lines['29A'] = available_compliance_unit_balance
+                lines['28'] = 0
+                if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
+                    lines['29B'] = net_compliance_unit_balance
+                elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
+                    lines['29B'] = net_compliance_unit_balance if (adjusted_balance > 0) else -available_compliance_unit_balance
+                    lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
+                lines['29C'] = lines['29A'] + lines['29B']
             snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
             snapshot['summary']['lines'] = lines
 
@@ -697,19 +734,60 @@ class ComplianceReportDetailSerializer(
         if int(obj.compliance_period.description) <= 2022:
             lines['28'] = int((lines['27'] * Decimal('-200.00')).max(Decimal(0)))
         else:
+            previous_transactions = []
+            previous_snapshots = []
+            current = obj
+            is_supplemental = False
+
+            if current.supplements:
+                is_supplemental = True
+
             max_credit_offset = self.get_max_credit_offset(obj, ignore_current_report_deductions=True)
             max_credit_offset_exclude_reserved = self.get_max_credit_offset_exclude_reserved(obj)
             available_compliance_unit_balance =  min(max_credit_offset, max_credit_offset_exclude_reserved)
             net_compliance_unit_balance = lines['25']
+            desired_net_credit_balance_change = Decimal(0.0)
+            if is_supplemental:
+                while current.supplements is not None:
+                    current = current.supplements
+                    if current.credit_transaction is not None:
+                        previous_transactions.append(current.credit_transaction)
+                    if current.compliance_report_snapshot is not None:
+                        previous_snapshots.append(current.compliance_report_snapshot.snapshot)
+
+
+                total_previous_reduction = Decimal(0.0)
+                total_previous_validation = Decimal(0.0)
+
+                for transaction in previous_transactions:
+                    if transaction.type.the_type in ['Credit Validation']:
+                        total_previous_validation += transaction.number_of_credits
+                    if transaction.type.the_type in ['Credit Reduction']:
+                        total_previous_reduction += transaction.number_of_credits
+
+                desired_net_credit_balance_change = Decimal(lines['25'])
+                net_compliance_unit_balance = desired_net_credit_balance_change - \
+                                              (total_previous_validation - total_previous_reduction)
+
             adjusted_balance = available_compliance_unit_balance + net_compliance_unit_balance
-            lines['29A'] = available_compliance_unit_balance
-            lines['28'] = 0
-            if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
-                lines['29B'] = net_compliance_unit_balance
-            elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
-                lines['29B'] = net_compliance_unit_balance if (adjusted_balance > 0) else -available_compliance_unit_balance
+            if available_compliance_unit_balance <= 0 and net_compliance_unit_balance < 0:
                 lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
-            lines['29C'] = lines['29A'] + lines['29B']
+                lines['29A'] = 0
+                total_previous_compliance_units = Decimal(0.0)
+                for snapshots in previous_snapshots:
+                    if snapshots.get("summary").get("lines") is not None:
+                        total_previous_compliance_units += Decimal(snapshots.get("summary").get("lines").get("25"))
+                lines['29B'] = Decimal(lines['25']) - total_previous_compliance_units
+                lines['29C'] = 0
+            else:
+                lines['29A'] = available_compliance_unit_balance
+                lines['28'] = 0
+                if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
+                    lines['29B'] = net_compliance_unit_balance
+                elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
+                    lines['29B'] = net_compliance_unit_balance if (adjusted_balance > 0) else -available_compliance_unit_balance
+                    lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
+                lines['29C'] = lines['29A'] + lines['29B']
 
         total_payable = lines['11'] + lines['22'] + lines['28']
 

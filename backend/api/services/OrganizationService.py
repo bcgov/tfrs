@@ -108,7 +108,6 @@ class OrganizationService(object):
                         ["Rejected"]:
                     if obj is not None and obj.id == compliance_report.id \
                             and ignore_current_report_deductions\
-                            and obj.status.director_status_id not in ["Accepted"]\
                             and obj.status.fuel_supplier_status_id not in ["Draft", "Deleted"]:
                         continue
                     elif compliance_report.summary.credits_offset is not None:
