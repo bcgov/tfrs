@@ -414,17 +414,17 @@ function calculatePart3PayableLCFS (part3, complianceReport) {
   let netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
   const netCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
   if (complianceReport.isSupplemental) {
-    let total_previous_reduction = 0
-    let total_previous_validation = 0
+    let totalPreviousReduction = 0
+    let totalPreviousValidation = 0
     for (const transaction of complianceReport.creditTransactions) {
       if (transaction.type === "Credit Validation") {
-        total_previous_validation += Number(transaction.credits)
+        totalPreviousValidation += Number(transaction.credits)
       }
       if (transaction.type === "Credit Reduction") {
-        total_previous_reduction += Number(transaction.credits)
+        totalPreviousReduction += Number(transaction.credits)
       }
     }
-    netBalance = netCreditBalanceChange - (total_previous_validation - total_previous_reduction)
+    netBalance = netCreditBalanceChange - (totalPreviousValidation - totalPreviousReduction)
   }
 
   const adjustedBalance = availableBalance + netBalance
@@ -437,9 +437,15 @@ function calculatePart3PayableLCFS (part3, complianceReport) {
       ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
       value: 0
     }
+    let totalPreviousComplianceUnits = 0
+    for (const delta of complianceReport.deltas) {
+      if (delta.snapshot.data.summary.lines['25']) {
+        totalPreviousComplianceUnits += Number(delta.snapshot.data.summary.lines['25'])
+      }
+    }
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: netCreditBalanceChange
+      value: (Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) - totalPreviousComplianceUnits) 
     } // reduce previous deductions if any
     part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
