@@ -262,7 +262,19 @@ class ComplianceReportService(object):
             raise InvalidStateException()
 
         lines = snapshot['summary']['lines']
-        if int(snapshot['compliance_period']['description']) < 2023:
+        if int(snapshot['compliance_period']['description']) >= 2023:
+            # If a compliance report is in a deficit position(i.e., a negative net compliance unit balance for the
+            # compliance period or negative value in Line 25 in the summary section) that is greater than
+            # the organization’s available credit balance, then the available compliance unit balance needs to be
+            # zeroed out when the director assesses (accepts) the compliance report.
+            if Decimal(lines['25']) < Decimal(0) \
+            and (Decimal(lines['29A']) + Decimal(lines['25'])) < 0:
+                required_credit_transaction = Decimal(lines['29A']) * Decimal(-1.0)
+            else:
+                desired_net_credit_balance_change = Decimal(lines['25'])
+                required_credit_transaction = desired_net_credit_balance_change - \
+                                              (total_previous_validation - total_previous_reduction)
+        else:
             desired_net_credit_balance_change = Decimal(0.0)
 
             if Decimal(lines['25']) > Decimal(0):
@@ -288,8 +300,6 @@ class ComplianceReportService(object):
             if is_supplemental and Decimal(lines['26C']) > 0:
                 print("*** DIRECTOR 26C Increase to Credits ***")
                 required_credit_transaction = Decimal(lines['26C'])
-        else:
-            required_credit_transaction = Decimal(lines['25'])
             
         if required_credit_transaction > Decimal(0):
             # do validation for Decimal(lines['25'])

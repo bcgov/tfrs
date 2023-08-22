@@ -304,8 +304,8 @@ class ScheduleSummaryPart3 {
         },
         className: 'tooltip-large number',
         readOnly: true
-      }] // line 25
-      part3[SCHEDULE_SUMMARY.LINE_28] = [{ // line 28
+      }], // line 29b
+      [{ // line 28
         className: 'text total',
         readOnly: true,
         value: 'Non-compliance penalty payable (CAD)'
