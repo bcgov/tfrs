@@ -27,6 +27,9 @@ class ScheduleDeltas extends Component {
       if (delta.oldValue == null) {
         return delta.newValue
       }
+      if (Number(period) >= COMPLIANCE_YEAR) {
+        return delta.newValue - delta.oldValue
+      }
       return delta.oldValue - delta.newValue
     }
 
