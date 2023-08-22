@@ -31,6 +31,32 @@ class CreditTransferVisualRepresentation extends Component {
     )
   }
 
+  _renderAdministrativeAdjustment () {
+    return (
+      <div className='row visual-representation container'>
+        <div className='col-xs-10 col-sm-8 col-md-4'>
+          <div className='respondent-container'>
+            {this.props.creditsTo && this.props.creditsTo.name}
+          </div>
+        </div>
+        <div className='col-xs-12 col-md-2 arrow'>
+          <div>
+            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
+            credit{Math.abs(this.props.numberOfCredits) > 1 && 's'}
+          </div>
+          {this.props.numberOfCredits >= 0 &&
+            <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />
+          }
+          {this.props.numberOfCredits < 0 &&
+            <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />
+          }
+          {' '}
+          <div>{getCreditTransferType(this.props.tradeType.id)}</div>
+        </div>
+      </div>
+    )
+  }
+
   _renderRetirement () {
     return (
       <div className='row visual-representation container'>
@@ -169,6 +195,9 @@ class CreditTransferVisualRepresentation extends Component {
       case CREDIT_TRANSFER_TYPES.part3Award.id:
       case CREDIT_TRANSFER_TYPES.validation.id:
         return this._renderPart3Award()
+
+      case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
+        return this._renderAdministrativeAdjustment()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
         return this._renderRetirement()

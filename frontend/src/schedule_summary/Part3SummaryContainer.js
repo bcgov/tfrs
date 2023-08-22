@@ -10,7 +10,7 @@ function tableData (
   summary,
   { isSupplemental, supplementalNumber, compliancePeriod }
 ) {
-  let period = Number(compliancePeriod.description)
+  const period = Number(compliancePeriod.description)
   part3[SCHEDULE_SUMMARY.LINE_23][2] = cellFormatNumeric(summary.lines['23'])
   part3[SCHEDULE_SUMMARY.LINE_24][2] = cellFormatNumeric(summary.lines['24'])
   part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
@@ -397,7 +397,7 @@ function populateSchedules (props, state, setState) {
   })
 }
 
-function calculatePart3PayableLCFS(part3, complianceReport) {
+function calculatePart3PayableLCFS (part3, complianceReport) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
   const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
