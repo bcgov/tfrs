@@ -411,28 +411,64 @@ function calculatePart3PayableLCFS (part3, complianceReport) {
     value: '0'
   }
   // Net compliance unit balance for compliance period - Line 25
-  const netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  let netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  const netCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  if (complianceReport.isSupplemental) {
+    let total_previous_reduction = 0
+    let total_previous_validation = 0
+    for (const transaction of complianceReport.creditTransactions) {
+      if (transaction.type === "Credit Validation") {
+        total_previous_validation += Number(transaction.credits)
+      }
+      if (transaction.type === "Credit Reduction") {
+        total_previous_reduction += Number(transaction.credits)
+      }
+    }
+    netBalance = netCreditBalanceChange - (total_previous_validation - total_previous_reduction)
+  }
+
   const adjustedBalance = availableBalance + netBalance
-  if ((netBalance < 0 && adjustedBalance >= 0) || (netBalance >= 0)) {
+  if (availableBalance <= 0 && netBalance < 0) {
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
+    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
+    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
+      value: 0
+    }
     part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: netBalance
+      value: netCreditBalanceChange
+    } // reduce previous deductions if any
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
+      value: 0
     }
-  } else if (netBalance < 0 && adjustedBalance < 0)   {
-    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
+  } else {
+    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
+      value: availableBalance
     }
-    if (adjustedBalance < 0) {
+    if ((netBalance < 0 && adjustedBalance >= 0) || (netBalance >= 0)) {
+      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
+        value: netBalance
+      }
+    } else if ((netBalance < 0) && (adjustedBalance < 0)) {
+      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
+        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
+        value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
+      }
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
       part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
       part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
     }
-  }
-  part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-    ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-    value: Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
+      value: Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
+    }
   }
 
   part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
