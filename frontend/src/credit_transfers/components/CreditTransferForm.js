@@ -122,8 +122,8 @@ const CreditTransferForm = (props) => {
           />
         </div>
       </div>
-      {/* temporarily hidden until jan 2024 release */}
-      <p className="action-context-menu-available">Effective Date (optional)</p>
+      {/* hidden due to new interpretation of legislation August 2023 */}
+      {/* <p className="action-context-menu-available">Effective Date (optional)</p>
       <div className="agreementDate">
         <h3>
           The transfer will take effect on the date the Director records the transfer.
@@ -144,7 +144,7 @@ const CreditTransferForm = (props) => {
             onChange={props.handleInputChange}
           />
         </div>
-      </div>
+      </div> */}
 
       <CreditTransferCommentForm
         isCommentingOnUnsavedCreditTransfer={props.id === 0}

@@ -17,7 +17,8 @@ const HistoricalDataEntryFormDetails = props => (
     <div className="main-form">
       <div className="row">
         <div className="col-sm-6">
-          <div className="form-group">
+          {/* hidden due to new interpretation of legislation August 2023 */}
+          {/* <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
               <input
                 className="form-control"
@@ -31,7 +32,7 @@ const HistoricalDataEntryFormDetails = props => (
                 value={props.fields.tradeEffectiveDate}
               />
             </label>
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label htmlFor="transfer-type">Transaction Type:
