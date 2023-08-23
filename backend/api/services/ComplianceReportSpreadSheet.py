@@ -308,10 +308,10 @@ class ComplianceReportSpreadsheet(object):
         }
         if compliance_period >= 2023:
             line_details['25'] = 'Net compliance unit balance for compliance period'
-            line_details['29A'] = 'Available compliance unit balance on March 31, ' + str(compliance_period)
+            line_details['29A'] = 'Available compliance unit balance on March 31, ' + str(int(compliance_period) + 1)
             line_details['29B'] = 'Compliance unit balance change from assessment'
-            line_details['29C'] = 'Available compliance unit balance after assessment on March 31, ' + str(compliance_period)
-            line_details['28'] = 'Non-compliance penalty payable'
+            line_details['29C'] = 'Available compliance unit balance after assessment on March 31, ' + str(int(compliance_period) + 1)
+            line_details['28'] = 'Non-compliance penalty payable (' + str(int(Decimal(summary['lines']['28'])/600)) + ' units * $600 CAD per unit)'
 
         line_format = defaultdict(lambda: quantity_format)
         line_format['11'] = currency_format
