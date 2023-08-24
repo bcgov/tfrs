@@ -68,7 +68,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         return report.id
 
     def _add_or_remove_credits(self, num_of_credits, validation=True):
-        # Create a recommended credit trade request i.e., either reduction or validation
+        # Create a recommended credit trade request i.e., either reduction or validation using historical data entry.
         payload = {
             "compliancePeriod": CompliancePeriod.objects.get_by_natural_key(COMPLIANCE_YEAR).id,
             "initiator": self.users['gov_director'].organization.id,
