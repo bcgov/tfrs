@@ -12,18 +12,20 @@ import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/va
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote'
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons'
 
+const date = new Date()
+const today = date.toISOString().split('T')[0]
+
 const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
     <div className="main-form">
       <div className="row">
         <div className="col-sm-6">
-          {/* hidden due to new interpretation of legislation August 2023 */}
-          {/* <div className="form-group">
+          <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
               <input
                 className="form-control"
                 id="effective-date"
-                max="9999-12-31"
+                max={today}
                 name="tradeEffectiveDate"
                 onChange={props.handleInputChange}
                 placeholder="Effective Date (YYYY-MM-DD)"
@@ -32,7 +34,7 @@ const HistoricalDataEntryFormDetails = props => (
                 value={props.fields.tradeEffectiveDate}
               />
             </label>
-          </div> */}
+          </div>
 
           <div className="form-group">
             <label htmlFor="transfer-type">Transaction Type:
