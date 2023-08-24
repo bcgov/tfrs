@@ -29,6 +29,7 @@ from api.models.ComplianceReport import ComplianceReport, ComplianceReportStatus
 from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 from .payloads.compliance_unit_payloads import *
+from ..services.OrganizationService import OrganizationService
 
 logger = logging.getLogger('supplemental_reporting')
 logger.setLevel(logging.INFO)
@@ -66,16 +67,16 @@ class TestComplianceUnitReporting(BaseTestCase):
         report.refresh_from_db()
         return report.id
 
-    def _add_part3_awards_to_org(self, add_credits):
-        # Create a recommended credit trade request
+    def _add_or_remove_credits(self, num_of_credits, validation=True):
+        # Create a recommended credit trade request i.e., either reduction or validation
         payload = {
             "compliancePeriod": CompliancePeriod.objects.get_by_natural_key(COMPLIANCE_YEAR).id,
             "initiator": self.users['gov_director'].organization.id,
-            "numberOfCredits": add_credits,
+            "numberOfCredits": num_of_credits,
             "respondent": self.users['fs_user_1'].organization.id,
             "status": self.statuses['recommended'].id,
             "tradeEffectiveDate": "2021-01-01",
-            "type": self.credit_trade_types['part3award'].id,
+            "type": self.credit_trade_types['creditValidation'].id if validation else self.credit_trade_types['creditReduction'].id,
             "is_rescinded": False,
             "zeroReason": None,
             "comment": "testing"
@@ -143,17 +144,17 @@ class TestComplianceUnitReporting(BaseTestCase):
     | Net compliance unit balance for compliance period                     | Line 25       | Z           | 100             |
     | Available compliance unit balance on March 31, YYYY                   |               | A           | 800             |
     | Compliance unit balance change from assessment                        |               | X           | 100             |
-    |                                      If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                 |               
+    |                                      If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                 |
     | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 900             |
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_positive_net_balance(self):
-        self._add_part3_awards_to_org(800)
+        self._add_or_remove_credits(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_positive_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
         payload = {'status': {'fuelSupplierStatus': 'Submitted'}}
@@ -180,13 +181,13 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_negative_net_balance_no_penalty(self):
-        self._add_part3_awards_to_org(700)
+        self._add_or_remove_credits(700)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits of fuel supplied (from Schedule B)
-        payload['summary']['creditsOffset'] = -200  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -200  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
         payload = {
@@ -217,12 +218,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|-----------------|
     """
     def test_initial_report_negative_net_balance_with_penalty(self):
-        self._add_part3_awards_to_org(300)
+        self._add_or_remove_credits(300)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -300
         self._patch_fs_user_for_compliance_report(payload, rid)
 
@@ -253,12 +254,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_1_increasing_positive_net_balance_previous_report_assessed(self):
-        self._add_part3_awards_to_org(800)
+        self._add_or_remove_credits(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_positive_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
         payload = {
@@ -278,7 +279,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_positive_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 294833  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 294833  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, sid)
         # Successful director acceptance
         self._acceptance_from_director(rid)
@@ -304,22 +305,18 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_4_decreasing_positive_net_balance_previous_report_assessed(self):
-        self._add_part3_awards_to_org(800)
+        self._add_or_remove_credits(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_positive_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
         payload = {
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -333,7 +330,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_positive_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 58967  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 58967  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -342,6 +339,58 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-50))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(850))
+
+    """
+    | Scenario 6: Supplemental Report Submission #1, decreasing, positive net balance, with penalty, previous report was assessed                    |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | 100                 | 50                 | -50                   |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 0                   | 25                 | 25                    |
+    | Compliance unit balance change from assessment                        |               | X           | 100                 | -25                | -125                  |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Non-compliance penalty payable (25 units * $600 CAD per unit)         | Line 28       |             |                     | $15,000            | $15,000               |
+    |                                                                           ^---- (abs(Z) - A) * $600 |                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 100                 | 0                  | -100                  |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | * Scenario 6 could occur if the organization sold 75 compliance units after the initial report was assessed and then had to submit a supplemental when they only had 25 compliance units remaining
+    """
+    def test_supplemental_report_1_decreasing_positive_net_balance_penalty_previous_report_assessed(self):
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_positive_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 117933  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Successful director acceptance
+        self._acceptance_from_director(rid)
+        # retrieve the compliance report and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(100))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(100))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(100))
+        # remove 75 units from Org balance to create the scenario of it selling them
+        self._add_or_remove_credits(75, False)
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_positive_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 58967  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(50))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(25))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-25))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(15000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
 
     """
     | Scenario 7: Supplemental Report Submission #1, increasing, negative net balance, no penalty, previous report was assessed |
@@ -356,12 +405,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_1_increasing_negative_net_balance_no_penalty_previous_report_assessed(self):
-        self._add_part3_awards_to_org(800)
+        self._add_or_remove_credits(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -200
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
@@ -369,10 +418,6 @@ class TestComplianceUnitReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -386,7 +431,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_negative_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 171119  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 171119  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -100
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
@@ -412,12 +457,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_1_increasing_negative_net_balance_penalty_previous_report_assessed(self):
-        self._add_part3_awards_to_org(100)
+        self._add_or_remove_credits(100)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -400
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
@@ -425,10 +470,6 @@ class TestComplianceUnitReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -442,7 +483,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_negative_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 598917  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 598917  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -350
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
@@ -466,12 +507,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_1_decreasing_negative_net_balance_no_penalty_previous_report_assessed(self):
-        self._add_part3_awards_to_org(800)
+        self._add_or_remove_credits(800)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -200
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
@@ -479,10 +520,6 @@ class TestComplianceUnitReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -496,7 +533,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_negative_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -300
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
@@ -506,6 +543,61 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-100))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(500))
+
+    """
+    | Scenario 10: Supplemental Report Submission #1, decreasing, negative net balance, with penalty, previous report was assessed                   |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | -200                | -300               | -100                  |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 800                 | 0                  | -800                  |
+    | Compliance unit balance change from assessment                        |               | X           | -200                | -100               |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Non-compliance penalty payable (250 units * $600 CAD per unit)        | Line 28       |             |                     | $60,000            | $60,000               |
+    |                                                                           ^---- (abs(Z) - A) * $600 |                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 600                 | 0                  | -600                  |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_decreasing_negative_net_balance_penalty_previous_report_assessed(self):
+        self._add_or_remove_credits(800)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -200
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Successful director acceptance
+        self._acceptance_from_director(rid)
+        # retrieve the compliance report and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(800))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(600))
+        # * Scenario 10 could occur if the organization sold all 600 compliance units after the initial report was
+        # assessed and then had to submit a supplemental when they had 0 compliance units in their available balance
+        self._add_or_remove_credits(600, False)
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_negative_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -300
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-300))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-100))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(60000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
 
     """
     | Scenario 11: Supplemental Report Submission #1, increasing, negative net balance to positive net balance, no penalty, previous report was assessed                     |
@@ -520,12 +612,12 @@ class TestComplianceUnitReporting(BaseTestCase):
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
     """
     def test_supplemental_report_1_increasing_negative_net_balance_to_positive_no_penalty_previous_report_assessed(self):
-        self._add_part3_awards_to_org(500)
+        self._add_or_remove_credits(500)
         rid = self._create_draft_compliance_report()
         # patch compliance report info
         payload = compliance_unit_negative_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -300
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
@@ -533,10 +625,6 @@ class TestComplianceUnitReporting(BaseTestCase):
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -550,7 +638,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_positive_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 235867  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 235867  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -579,17 +667,13 @@ class TestComplianceUnitReporting(BaseTestCase):
         # patch compliance report info
         payload = compliance_unit_positive_offset_payload
         payload['status']['fuelSupplierStatus'] = 'Draft'
-        payload['scheduleB']['records'][0]['quantity'] = 235867  # credits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 235867  # credits from fuel supplied (from Schedule B)
         self._patch_fs_user_for_compliance_report(payload, rid)
         # Submit the compliance report
         payload = {
             'status': {'fuelSupplierStatus': 'Submitted'},
         }
         self._patch_fs_user_for_compliance_report(payload, rid)
-        # Debug
-        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Debug
         # Successful director acceptance
         self._acceptance_from_director(rid)
         # retrieve the compliance report and validate the Summary report fields
@@ -603,7 +687,7 @@ class TestComplianceUnitReporting(BaseTestCase):
         # Create supplemental report #1
         sid = self._create_supplemental_report(rid)
         payload = compliance_unit_negative_supplemental_payload
-        payload['scheduleB']['records'][0]['quantity'] = 171119  # debits of fuel supplied (from Schedule B)
+        payload['scheduleB']['records'][0]['quantity'] = 171119  # debits from fuel supplied (from Schedule B)
         payload['summary']['creditsOffset'] = -100
         self._patch_fs_user_for_compliance_report(payload, sid)
         response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
@@ -612,4 +696,248 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(200))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(60000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+
+    """
+    | Scenario 13: Supplemental Report Submission #1, increasing, positive net balance, previous report was not assessed                                                     |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | 300                 | 400                | 100                   |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 1000                | 1000               | 0                     |
+    | Compliance unit balance change from assessment                        |               | X           | 300                 | 400                |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 1300                | 1400               | 100                   |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_increasing_positive_net_balance_previous_report_not_assessed(self):
+        self._add_or_remove_credits(1000)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_positive_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 353800  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # retrieve the compliance report which is not accessed and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(300))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(300))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(1300))
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_positive_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 471733  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(1400))
+
+    """
+    | Scenario 14: Supplemental Report Submission #1, increasing, negative net balance, no penalty, previous report was not assessed                                         |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | -200                | -300               | -100                  |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 1000                | 1000               | 0                     |
+    | Compliance unit balance change from assessment                        |               | X           | -200                | -300               |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 800                 | 700                | -100                  |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_increasing_negative_net_balance_no_penalty_previous_report_not_assessed(self):
+        self._add_or_remove_credits(1000)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 342238  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -200
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # retrieve the compliance report which is not accessed and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(800))
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_negative_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 513358  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -300
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-300))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-300))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(700))
+
+    """
+    | Scenario 15: Supplemental Report Submission #1, decreasing, negative net balance, with penalty, previous report was not assessed                                       |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | -400                | -600               | -200                  |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 200                 | 200                | 0                     |
+    | Compliance unit balance change from assessment                        |               | X           | -200                | -200               |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Non-compliance penalty payable (400 units * $600 CAD per unit)        | Line 28       |             | $120,000            | $240,000           | $120,000              |
+    |                                                                           ^---- (abs(Z) - A) * $600 |                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 0                   | 0                  | 0                     |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_decreasing_negative_net_balance_penalty_previous_report_not_assessed(self):
+        self._add_or_remove_credits(200)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -400
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # retrieve the compliance report which is not accessed and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(120000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_negative_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 1026715  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -600
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-600))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(240000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+
+    """
+    | Scenario 16: Supplemental Report Submission #1, no change to net balance, positive net balance, previous report was not assessed                                       |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | 400                 | 400                | 0                     |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 1000                | 1000               | 0                     |
+    | Compliance unit balance change from assessment                        |               | X           | 400                 | 400                |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 1400                | 0                  | 0                     |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_no_change_positive_net_balance_previous_report_not_assessed(self):
+        self._add_or_remove_credits(1000)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_positive_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 471733  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # retrieve the compliance report which is not accessed and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(1400))
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_positive_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 471733  # credits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(1000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(0))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(1400))
+
+    """
+    | Scenario 17: Supplemental Report Submission #1, no change to net balance, negative net balance, penalty, previous report was not assessed                              |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Low Carbon Fuel Requirement Summary                                   |               |Calculations | Example Old Values  | Example New Values | Example Change Values |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    | Net compliance unit balance for compliance period                     | Line 25       | Z           | -400                | -400               | 0                     |
+    | Available compliance unit balance on March 31, YYYY                   |               | A           | 200                 | 100                | -100                  |
+    | Compliance unit balance change from assessment                        |               | X           | -200                | -100               |                       |
+    |                               ^----  If Z>0, then Z; If Z<0 & A+Z>0, then Z; If Z<0 & A+Z<0, then -A|                     |                    |                       |
+    | Non-compliance penalty payable (400 units * $600 CAD per unit)        | Line 28       |             | $120,000            | $180,000           | $60,000               |
+    |                                                                           ^---- (abs(Z) - A) * $600 |                     |                    |                       |
+    | Available compliance unit balance after assessment on March 31, YYYY  |               | A+X         | 0                   | 0                  | 0                     |
+    |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
+    """
+    def test_supplemental_report_1_no_change_negative_net_balance_penalty_previous_report_not_assessed(self):
+        self._add_or_remove_credits(200)
+        rid = self._create_draft_compliance_report()
+        # patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -400
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        # retrieve the compliance report which is not accessed and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-200))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(120000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+        # * Scenario 17 could occur if the organization submitted a supplemental report for a previous compliance period
+        # after they submitted the initial report for this period; processing the supplemental report from the previous
+        # period could lead to a decrease in the available credit balance for this compliance period
+        self._add_or_remove_credits(100, False)
+        # Create supplemental report #1
+        sid = self._create_supplemental_report(rid)
+        payload = compliance_unit_negative_supplemental_payload
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = -400
+        self._patch_fs_user_for_compliance_report(payload, sid)
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=sid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-400))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(100))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-100))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(180000))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
