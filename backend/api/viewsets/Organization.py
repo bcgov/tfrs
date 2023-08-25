@@ -103,7 +103,10 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         organization = self.get_object()
 
         # Process future effective dates
-        CreditTradeService.process_future_effective_dates(organization)
+        # This future effective_date feature has been disabled so this
+        # service method call has been commented out but left here if
+        # this feature is needed in the future
+        # CreditTradeService.process_future_effective_dates(organization)
 
         balance = OrganizationBalance.objects.get(
             organization=organization,

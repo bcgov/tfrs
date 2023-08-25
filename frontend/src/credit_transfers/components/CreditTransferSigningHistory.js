@@ -39,7 +39,7 @@ class CreditTransferSigningHistory extends Component {
       <li key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
         <span>
-          on {moment(this.props.tradeEffectiveDate).format('LL')} by the
+          on {moment(history.createTimestamp).format('LL')} by the
           <strong> Director </strong> under the
         </span>
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
@@ -154,6 +154,13 @@ class CreditTransferSigningHistory extends Component {
 
   _renderCategoryHistory () {
     const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
+    // if there is no agreement date, it means this credit transfer
+    // was created before we had this field as not optional
+    // We won't show categorization if there is no agreement date.
+    if (!dateOfWrittenAgreement) {
+      return (<></>)
+    }
+
     const lastHistoryItem = history[history.length - 1]
     const createdByGov = history[0].creditTrade?.initiator?.id === 1
     if (history.length > 0 && loggedInUser.isGovernmentUser && !createdByGov) {
@@ -167,26 +174,24 @@ class CreditTransferSigningHistory extends Component {
       const endDate = nextChangeDate
       const categoryCorD = categoryDSelected || category === 'C'
       return (
-        <>
-          <p>
-            <li>
-              <span>Date of written agreement reached between the two organizations: </span>
-              <strong>{moment(agreementDate).format('LL')}</strong>
-              {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-                <span> (<strong>Category {category}</strong>)</span>
-              }
-              {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
-                lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
-                lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
-              (
-                <>
-                  <span> (proposal falls under <strong>Category {category}</strong>{categoryCorD ? ')' : ''}</span>
-                  {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
-                </>
-              )}
-            </li>
-          </p>
-        </>
+        <p>
+          <li>
+            <span>Date of written agreement reached between the two organizations: </span>
+            <strong>{moment(agreementDate).format('LL')}</strong>
+            {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+              <span> (<strong>Category {category}</strong>)</span>
+            }
+            {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+              lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
+              lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+            (
+              <>
+                <span> (proposal falls under <strong>Category {category}</strong>{categoryCorD ? ')' : ''}</span>
+                {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
+              </>
+            )}
+          </li>
+        </p>
       )
     }
   }
@@ -252,15 +257,13 @@ class CreditTransferSigningHistory extends Component {
           }
 
           return (
-            <>
-              <p key={history.createTimestamp}><li>{action} <span> on </span>
-                {moment(history.createTimestamp).format('LL')}
-                <span> by </span>
-                <strong> {history.user.firstName} {history.user.lastName}</strong> of
-                <strong> {history.user.organization.name} </strong>
-                </li>
-              </p>
-            </>
+            <p key={history.createTimestamp + index}><li>{action} <span> on </span>
+              {moment(history.createTimestamp).format('LL')}
+              <span> by </span>
+              <strong> {history.user.firstName} {history.user.lastName}</strong> of
+              <strong> {history.user.organization.name} </strong>
+              </li>
+            </p>
           )
         })}
       </div>

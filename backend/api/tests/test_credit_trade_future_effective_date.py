@@ -150,74 +150,76 @@ class TestCreditTradeFutureEffectiveDate(BaseTestCase):
             created_response['tradeEffectiveDate'],
             future_date)
 
-    def test_transfer_credits_with_pending_trades(self):
-        """Test the process_future_effective_dates function with pending trades"""
+    # This feature has been disabled but left in the project for potential
+    # future use. This test is left here for posterity.
+    # def test_transfer_credits_with_pending_trades(self):
+    #     """Test the process_future_effective_dates function with pending trades"""
 
-        fs1user = self.users['fs_user_1']
-        fs2user = self.users['fs_user_2']
+    #     fs1user = self.users['fs_user_1']
+    #     fs2user = self.users['fs_user_2']
 
-        # get fuel supplier balance for fs 1 and 2
+    #     # get fuel supplier balance for fs 1 and 2
 
-        initiator_bal = OrganizationBalance.objects.get(
-            organization_id=fs1user.organization.id,
-            expiration_date=None)
+    #     initiator_bal = OrganizationBalance.objects.get(
+    #         organization_id=fs1user.organization.id,
+    #         expiration_date=None)
 
-        respondent_bal = OrganizationBalance.objects.get(
-            organization_id=fs2user.organization.id,
-            expiration_date=None)
+    #     respondent_bal = OrganizationBalance.objects.get(
+    #         organization_id=fs2user.organization.id,
+    #         expiration_date=None)
 
-        num_of_credits = 50
+    #     num_of_credits = 50
 
-        future_date = datetime.date.today() + datetime.timedelta(days=10)
+    #     future_date = datetime.date.today() + datetime.timedelta(days=10)
 
-        # create a future dated trade
-        future_trade = CreditTrade.objects.create(
-            status=self.statuses['approved'],
-            initiator=fs1user.organization,
-            respondent=fs2user.organization,
-            number_of_credits=num_of_credits,
-            type=self.credit_trade_types['buy'],
-            date_of_written_agreement=datetime.date.today().strftime('%Y-%m-%d'),
-            trade_effective_date=future_date
-        )
+    #     # create a future dated trade
+    #     future_trade = CreditTrade.objects.create(
+    #         status=self.statuses['approved'],
+    #         initiator=fs1user.organization,
+    #         respondent=fs2user.organization,
+    #         number_of_credits=num_of_credits,
+    #         type=self.credit_trade_types['buy'],
+    #         date_of_written_agreement=datetime.date.today().strftime('%Y-%m-%d'),
+    #         trade_effective_date=future_date
+    #     )
 
-        # call process_future_effective_dates
-        CreditTradeService.process_future_effective_dates(fs1user.organization)
+    #     # call process_future_effective_dates
+    #     CreditTradeService.process_future_effective_dates(fs1user.organization)
 
-        # check if balances have not been updated
-        initiator_bal_after = OrganizationBalance.objects.get(
-            organization_id=fs1user.organization.id,
-            expiration_date=None)
+    #     # check if balances have not been updated
+    #     initiator_bal_after = OrganizationBalance.objects.get(
+    #         organization_id=fs1user.organization.id,
+    #         expiration_date=None)
 
-        respondent_bal_after = OrganizationBalance.objects.get(
-            organization_id=fs2user.organization.id,
-            expiration_date=None)
+    #     respondent_bal_after = OrganizationBalance.objects.get(
+    #         organization_id=fs2user.organization.id,
+    #         expiration_date=None)
 
-        self.assertEqual(initiator_bal_after.validated_credits, initiator_bal.validated_credits)
-        self.assertEqual(respondent_bal_after.validated_credits, respondent_bal.validated_credits)
+    #     self.assertEqual(initiator_bal_after.validated_credits, initiator_bal.validated_credits)
+    #     self.assertEqual(respondent_bal_after.validated_credits, respondent_bal.validated_credits)
 
-        # fast forward time to future date
-        with mock.patch('django.utils.timezone.now', mock.Mock(return_value=future_date)):
-            # call process_future_effective_dates again
-            CreditTradeService.process_future_effective_dates(fs1user.organization)
+    #     # fast forward time to future date
+    #     with mock.patch('django.utils.timezone.now', mock.Mock(return_value=future_date)):
+    #         # call process_future_effective_dates again
+    #         CreditTradeService.process_future_effective_dates(fs1user.organization)
 
-            # check if balances have been updated correctly
-            initiator_bal_after = OrganizationBalance.objects.get(
-                organization_id=fs1user.organization.id,
-                expiration_date=None)
+    #         # check if balances have been updated correctly
+    #         initiator_bal_after = OrganizationBalance.objects.get(
+    #             organization_id=fs1user.organization.id,
+    #             expiration_date=None)
 
-            respondent_bal_after = OrganizationBalance.objects.get(
-                organization_id=fs2user.organization.id,
-                expiration_date=None)
+    #         respondent_bal_after = OrganizationBalance.objects.get(
+    #             organization_id=fs2user.organization.id,
+    #             expiration_date=None)
 
-            self.assertEqual(
-                initiator_bal_after.validated_credits, 
-                initiator_bal.validated_credits - num_of_credits
-            )
-            self.assertEqual(
-                respondent_bal_after.validated_credits, 
-                respondent_bal.validated_credits + num_of_credits
-            )
+    #         self.assertEqual(
+    #             initiator_bal_after.validated_credits, 
+    #             initiator_bal.validated_credits - num_of_credits
+    #         )
+    #         self.assertEqual(
+    #             respondent_bal_after.validated_credits, 
+    #             respondent_bal.validated_credits + num_of_credits
+    #         )
 
     def test_date_of_written_agreement_future_create_fails(self):
         """Test a scenario with a future date of written agreement"""
