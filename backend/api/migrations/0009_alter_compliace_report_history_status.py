@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
             migrations.AddField(
                 model_name='compliancereporthistory',
                 name='status',
-                field=models.ForeignKey(on_delete=models.deletion.PROTECT, related_name='compliance_report', to='api.compliancereportworkflowstate'),
+                field=models.ForeignKey(on_delete=models.deletion.PROTECT, related_name='history_records', to='api.compliancereportworkflowstate'),
             ),
         ]
