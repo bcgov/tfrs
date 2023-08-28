@@ -164,6 +164,7 @@ class CreditTransferTextRepresentation extends Component {
 
   _renderSell () {
     const status = this.props.status
+    console.log(this.props, "167")
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
@@ -192,6 +193,7 @@ class CreditTransferTextRepresentation extends Component {
           status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
           status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
           status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.declinedForApproval.id &&
           <div className="checkbox" style={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox
               type="checkbox"
