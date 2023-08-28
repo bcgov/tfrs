@@ -164,7 +164,6 @@ class CreditTransferTextRepresentation extends Component {
 
   _renderSell () {
     const status = this.props.status
-    console.log(this.props, "167")
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
