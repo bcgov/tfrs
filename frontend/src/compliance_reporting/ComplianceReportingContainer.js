@@ -36,6 +36,7 @@ class ComplianceReportingContainer extends Component {
     this._selectComplianceReport = this._selectComplianceReport.bind(this)
     this._showModal = this._showModal.bind(this)
     this._clearFilter = this._clearFilter.bind(this)
+    this._setFilter = this._setFilter.bind(this)
     this.createComplianceReport = this.createComplianceReport.bind(this)
     this.createExclusionReport = this.createExclusionReport.bind(this)
   }
@@ -89,6 +90,14 @@ class ComplianceReportingContainer extends Component {
 
   _clearFilter () {
     this.props.saveTableState('compliance-reporting', {})
+  }
+
+  _setFilter (filtered) {
+    this.props.saveTableState('compliance-reporting', {
+      ...this.props.savedState['compliance-reporting'],
+      filtered,
+      page: 0
+    })
   }
 
   createComplianceReport (compliancePeriodDescription) {
@@ -162,6 +171,7 @@ class ComplianceReportingContainer extends Component {
         savedState={this.props.savedState}
         organizations={this.props.organizations}
         clearStateFilter={this._clearFilter}
+        setStateFilter={this._setFilter}
       />,
       <CallableModal
         close={() => {
