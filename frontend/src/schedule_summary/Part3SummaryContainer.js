@@ -428,12 +428,14 @@ function calculatePart3PayableLCFS (part3, complianceReport) {
   if (complianceReport.isSupplemental) {
     let totalPreviousReduction = 0
     let totalPreviousValidation = 0
-    for (const transaction of complianceReport.creditTransactions) {
-      if (transaction.type === 'Credit Validation') {
-        totalPreviousValidation += Number(transaction.credits)
-      }
-      if (transaction.type === 'Credit Reduction') {
-        totalPreviousReduction += Number(transaction.credits)
+    if (Object.prototype.hasOwnProperty.call(complianceReport, 'creditTransactions')) {
+      for (const transaction of complianceReport.creditTransactions) {
+        if (transaction.type === 'Credit Validation') {
+          totalPreviousValidation += Number(transaction.credits)
+        }
+        if (transaction.type === 'Credit Reduction') {
+          totalPreviousReduction += Number(transaction.credits)
+        }
       }
     }
     netBalance = netCreditBalanceChange - (totalPreviousValidation - totalPreviousReduction)
