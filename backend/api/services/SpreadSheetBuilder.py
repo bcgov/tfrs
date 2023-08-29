@@ -149,11 +149,18 @@ class SpreadSheetBuilder(object):
                 worksheet.write(row_index, 8, "Signed")
             else:
                 worksheet.write(row_index, 8, credit_trade.status.friendly_name)
-            
+
+            # If the trade has an effective date, write it to the worksheet.
             if credit_trade.trade_effective_date:
                 worksheet.write(row_index, 9, credit_trade.trade_effective_date, date_format)
+            # If the trade doesn't have an effective date but meets certain other criteria, write the update timestamp.
             elif credit_trade.update_timestamp:
-                worksheet.write(row_index, 9, credit_trade.update_timestamp.date(), date_format)
+                # Conditions for using the update timestamp.
+                approved_status = credit_trade.status.status == "Approved"
+                valid_trade_type = credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"]
+                
+                if approved_status or valid_trade_type:
+                    worksheet.write(row_index, 9, credit_trade.update_timestamp.date(), date_format)
 
             comments = credit_trade.unprivileged_comments
 
