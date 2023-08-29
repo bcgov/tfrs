@@ -152,7 +152,7 @@ class SpreadSheetBuilder(object):
             
             if credit_trade.trade_effective_date:
                 worksheet.write(row_index, 9, credit_trade.trade_effective_date, date_format)
-            elif credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"] and credit_trade.update_timestamp:
+            elif credit_trade.update_timestamp:
                 worksheet.write(row_index, 9, credit_trade.update_timestamp.date(), date_format)
 
             comments = credit_trade.unprivileged_comments
