@@ -64,7 +64,7 @@ class CreditTransferSigningHistory extends Component {
     // don't show the name and just put in "the {role}" instead
 
     return (
-      <p key={history.createTimestamp}>
+      <li key={history.createTimestamp}>
         <strong className="text-danger">Declined </strong>
         {CreditTransferSigningHistory.recordedFound(this.props.history) &&
           <span>
@@ -80,7 +80,7 @@ class CreditTransferSigningHistory extends Component {
           </span>
         }
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
-      </p>
+      </li>
     )
   }
 
