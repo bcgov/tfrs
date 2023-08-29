@@ -36,8 +36,8 @@
 
 ## Primary Pipelines
 
-* dev-release.yaml (TFRS Dev release-2.9.0): the pipeline is automatically triggered when there is a commit to the release branch
-* tfrs-release.yaml (TFRS release-2.9.0): the pipelin builds the release and deploy on Test and Prod, it needs to be manually triggered
+* dev-release.yaml (TFRS Dev release-2.10.0): the pipeline is automatically triggered when there is a commit to the release branch
+* tfrs-release.yaml (TFRS release-2.10.0): the pipeline builds the release and deploys on Test and Prod, it needs to be manually triggered
 * create-release.yaml (Create Release after merging to master): tag and create the release after merging release branch to master. The description of the tracking pull request becomes release notes
 
 ## Other Pipelines
