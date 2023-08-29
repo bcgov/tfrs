@@ -49,6 +49,7 @@ class TestCreditTradeHistory(BaseTestCase):
             'numberOfCredits': 100,
             'respondent': fs2user.organization.id,
             'status': self.statuses['recorded'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'),
             'type': self.credit_trade_types['buy'].id,
@@ -82,6 +83,7 @@ class TestCreditTradeHistory(BaseTestCase):
             'numberOfCredits': 100,
             'respondent': fs2user.organization.id,
             'status': self.statuses['submitted'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'),
             'type': self.credit_trade_types['sell'].id,
@@ -141,6 +143,7 @@ class TestCreditTradeHistory(BaseTestCase):
             'numberOfCredits': 10,
             'respondent': self.users['fs_user_2'].organization.id,
             'status': self.statuses['submitted'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'),
             'type': self.credit_trade_types['sell'].id,

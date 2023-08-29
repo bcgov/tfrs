@@ -26,6 +26,7 @@ from api.serializers import UserMinSerializer
 from api.permissions.OrganizationPermissions import OrganizationPermissions
 
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
+from api.services.CreditTradeService import CreditTradeService
 
 from auditable.views import AuditableMixin
 
@@ -100,9 +101,17 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         Get the organization balance
         """
         organization = self.get_object()
+
+        # Process future effective dates
+        # This future effective_date feature has been disabled so this
+        # service method call has been commented out but left here if
+        # this feature is needed in the future
+        # CreditTradeService.process_future_effective_dates(organization)
+
         balance = OrganizationBalance.objects.get(
             organization=organization,
             expiration_date=None)
+
         serializer = self.get_serializer(balance)
 
         return Response(serializer.data)

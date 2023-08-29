@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
@@ -9,21 +8,32 @@ import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/Complianc
 import ComplianceReportingTable from './ComplianceReportingTable'
 
 const ComplianceReportingPage = (props) => {
-  const location = useLocation()
   const { isFetching, items, itemsCount } = props.complianceReports
   const organizations = props.organizations
   const isEmpty = items.length === 0
-  const filters = props.savedState['compliance-reporting']?.filtered
-  const [selectedSupplierValue, setSelectedSupplierValue] = useState('')
+
+  const filters = props.savedState['compliance-reporting']?.filtered || []
+  const [filtersObj, setFiltersObj] = useState(filters || [])
+
+  const getFilterValue = (id, defaultValue = null) => {
+    const filter = filtersObj.find(f => f.id === id)
+    return filter ? filter.value : defaultValue
+  }
+
+  const getOrganizationName = (id) => {
+    const org = organizations.items?.find(f => f.id === id)
+    return org ? org.name : ''
+  }
 
   const [supplierOptions, setSupplierOptions] = useState([])
   const [showSupplierOption, setShowSupplierOption] = useState(false)
-  const [selectedYear, setSelectedYear] = useState('')
-  const [filtersObj, setFiltersObj] = useState(filters || [])
+  const [selectedSupplierValue, setSelectedSupplierValue] = useState(getOrganizationName(getFilterValue('supplier', '')))
+  const [selectedYear, setSelectedYear] = useState(getFilterValue('compliance-period', ''))
   const [selectedFilters, setSelectedFilters] = useState({
-    selectedStatus: [],
-    selectedType: []
+    selectedStatus: getFilterValue('current-status', []),
+    selectedType: getFilterValue('display-name', [])
   })
+
   const statusTypes = [
     {
       name: 'In Draft',
@@ -73,11 +83,6 @@ const ComplianceReportingPage = (props) => {
       value: 'Rejected'
     }
   ]
-  useEffect(() => {
-    setSelectedFilters({ ...selectedFilters, selectedStatus: location.state?.items })
-    window.history.replaceState([], items)
-    props.clearStateFilter()
-  }, [])
 
   useEffect(() => {
     setSupplierOptions(organizations.items.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
@@ -95,6 +100,7 @@ const ComplianceReportingPage = (props) => {
         })
         setSelectedYear('All')
         setSelectedSupplierValue('')
+        props.clearStateFilter()
         return
       }
       case 'display-name': {
@@ -158,7 +164,9 @@ const ComplianceReportingPage = (props) => {
       }
     }
     setFiltersObj(filterObj)
+    props.setStateFilter(filterObj)
   }
+
   const supplierFilterFunction = (e) => {
     const filterdOptions = organizations.items.filter((item) =>
       item.name.toLowerCase().includes(e.target.value.toLowerCase())
@@ -171,6 +179,7 @@ const ComplianceReportingPage = (props) => {
       setFiltersObj(clearedSupplierList)
     }
   }
+
   const showSupplierOptions = () => {
     setShowSupplierOption(!showSupplierOption)
   }
@@ -213,6 +222,7 @@ const ComplianceReportingPage = (props) => {
               <ul className='dropdown-menu'>
                 {props.compliancePeriods.map((compliancePeriod) => (
                   <li key={compliancePeriod.description}>
+                  {compliancePeriod.description <= 2023 && (
                     <button
                       onClick={() => {
                         const found = items.findIndex(
@@ -238,6 +248,7 @@ const ComplianceReportingPage = (props) => {
                     >
                       {compliancePeriod.description}
                     </button>
+                  )}
                   </li>
                 ))}
               </ul>
@@ -269,6 +280,7 @@ const ComplianceReportingPage = (props) => {
                 <ul className='dropdown-menu'>
                   {props.compliancePeriods.map((compliancePeriod) => (
                     <li key={compliancePeriod.description}>
+                    {compliancePeriod.description <= 2023 && (
                       <button
                         onClick={() => {
                           const found = items.findIndex(
@@ -295,6 +307,7 @@ const ComplianceReportingPage = (props) => {
                       >
                         {compliancePeriod.description}
                       </button>
+                    )}
                     </li>
                   ))}
                 </ul>
@@ -480,7 +493,8 @@ ComplianceReportingPage.propTypes = {
   showModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   savedState: PropTypes.shape().isRequired,
-  clearStateFilter: PropTypes.func.isRequired
+  clearStateFilter: PropTypes.func.isRequired,
+  setStateFilter: PropTypes.func.isRequired
 }
 
 export default ComplianceReportingPage

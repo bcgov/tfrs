@@ -51,6 +51,9 @@ class TestCreditTradeRescind(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -64,6 +67,7 @@ class TestCreditTradeRescind(BaseTestCase):
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': credit_trade.status_id,
+            'date_of_written_agreement': credit_trade.date_of_written_agreement,
             'trade_effective_date': credit_trade.trade_effective_date,
             'type': credit_trade.type_id
         }
@@ -96,6 +100,9 @@ class TestCreditTradeRescind(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -143,6 +150,9 @@ class TestCreditTradeRescind(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )
@@ -190,6 +200,9 @@ class TestCreditTradeRescind(BaseTestCase):
             number_of_credits=1000,
             fair_market_value_per_credit=1,
             zero_reason=None,
+            date_of_written_agreement=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             trade_effective_date=datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             )

@@ -2,6 +2,7 @@
 @import './mixins.scss';
 
 .credit-transfer {
+
   h3 {
     font-size: 1.4rem;
   }
@@ -489,26 +490,10 @@
   }
 
   .initiator-container, .respondent-container {
-    border: 4px solid $dark-yellow;
+    border: 4px solid $green;
     border-radius: 20px;
     background-color: $white;
     font-size: larger;
-    &::before {
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      font-size: 3em;
-      content: "\f06c\00a0";
-      color: $dark-yellow;
-    }
-  }
-
-  .initiator-container {
-    border-color: $green;
-
-    &::before {
-      content: "\f1bb\00a0";
-      color: $green;
-    }
   }
 }
 
@@ -581,6 +566,31 @@
 
     .greyed-out {
       color: #CCCCCC;
+    }
+  }
+
+}
+.action-context-menu-available{
+  margin-top: 10px;
+  color: rgb(0, 52, 102);
+}
+.agreementDate{
+  border: 1px solid #d0d0d1;
+  border-radius: 5px;
+  padding: 20px;
+  >div{
+    display: flex;
+    align-items: center;
+    column-gap: 100px;
+    label{
+      color: #484848;
+      font-weight: normal;
+    }
+    input{
+      margin: 0;
+      width: 284px !important;
+      height: 52px;
+      padding: 10px;
     }
   }
 }

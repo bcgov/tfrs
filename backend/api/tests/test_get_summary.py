@@ -1,13 +1,14 @@
 from unittest import TestCase
 from decimal import Decimal
 from datetime import datetime
-from api.serializers.ComplianceReport import ComplianceReportDetailSerializer
+from api.serializers.ComplianceReport import ComplianceReportDetailSerializer, CompliancePeriodSerializer
 from unittest.mock import MagicMock, Mock
 
 
 class TestComplianceReportDetailSerializer(TestCase):
     def setUp(self):
         self.serializer = ComplianceReportDetailSerializer()
+        self.serializer.compliance_period = CompliancePeriodSerializer()
         self.serializer.summary = None
 
         self.serializer.schedule_a = MagicMock(
@@ -30,11 +31,11 @@ class TestComplianceReportDetailSerializer(TestCase):
         )
 
     def test_get_summary_for_year_lt_2023(self):
-        self.serializer.create_timestamp = Mock(year=2022)
+        self.serializer.compliance_period.description = '2022'
         result = self.serializer.get_summary(self.serializer)['total_payable']
         self.assertEqual(result, Decimal('2000.00'))
 
     def test_get_summary_for_year_gt_2022(self):
-        self.serializer.create_timestamp = Mock(year=2023)
+        self.serializer.compliance_period.description = '2023'
         result = self.serializer.get_summary(self.serializer)['total_payable']
         self.assertEqual(result, Decimal('6000.00'))

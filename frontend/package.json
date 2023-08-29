@@ -1,6 +1,6 @@
 {
   "name": "tfrs",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
@@ -26,8 +26,8 @@
     "http-proxy": "^1.18.1",
     "isomorphic-fetch": "^3.0.0",
     "jest-environment-jsdom": "^29.4.3",
-    "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^1.12.3",
+    "jsonwebtoken": "^9.0.0",
+    "jwks-rsa": "^2.0.0",
     "keycloak-js": "^19.0.3",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.6.1",

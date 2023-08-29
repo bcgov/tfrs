@@ -12,6 +12,9 @@ import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/va
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote'
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons'
 
+const date = new Date()
+const today = date.toISOString().split('T')[0]
+
 const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
     <div className="main-form">
@@ -22,7 +25,7 @@ const HistoricalDataEntryFormDetails = props => (
               <input
                 className="form-control"
                 id="effective-date"
-                max="9999-12-31"
+                max={today}
                 name="tradeEffectiveDate"
                 onChange={props.handleInputChange}
                 placeholder="Effective Date (YYYY-MM-DD)"

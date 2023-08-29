@@ -70,6 +70,7 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
             'numberOfCredits': 1,
             'respondent': respondent_org.id,
             'status': state_change.next_state_id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime('%Y-%m-%d'),
             'tradeEffectiveDate': datetime.datetime.today().strftime('%Y-%m-%d'),
             'type': self.credit_trade_types['sell'].id,
             'is_rescinded': state_change.next_state_rescinded_flag,
@@ -93,6 +94,7 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
                 [self.user_map[TestCreditTradeStatuses.UserRelationship.INITIATOR]].organization.id,
                 respondent_id=self.users
                 [self.user_map[TestCreditTradeStatuses.UserRelationship.RESPONDENT]].organization.id,
+                date_of_written_agreement=datetime.datetime.today(),
                 trade_effective_date=datetime.datetime.today(),
                 type_id=self.credit_trade_types['sell'].id,
                 status_id=state_change.initial_state_id,

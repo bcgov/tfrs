@@ -95,6 +95,16 @@ const CreditTransferDetails = props => (
           status={props.status}
           type={props.tradeType}
         />
+        <CreditTransferVisualRepresentation
+          creditsFrom={props.creditsFrom}
+          creditsTo={props.creditsTo}
+          loggedInUser={props.loggedInUser}
+          numberOfCredits={props.numberOfCredits}
+          status={props.status}
+          totalValue={props.totalValue}
+          tradeType={props.tradeType}
+          zeroDollarReason={props.zeroDollarReason}
+        />
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
@@ -110,22 +120,15 @@ const CreditTransferDetails = props => (
               tradeEffectiveDate={props.tradeEffectiveDate}
               tradeType={props.tradeType}
               zeroDollarReason={props.zeroDollarReason}
+              categoryDSelected={props.categoryDSelected}
+              toggleCategoryDSelection={props.toggleCategoryDSelection}
+              loggedInUser={props.loggedInUser}
             />
           </div>
         </div>
         {Object.keys(props.errors).length > 0 &&
           <Errors errors={props.errors} />
         }
-        <CreditTransferVisualRepresentation
-          creditsFrom={props.creditsFrom}
-          creditsTo={props.creditsTo}
-          loggedInUser={props.loggedInUser}
-          numberOfCredits={props.numberOfCredits}
-          status={props.status}
-          totalValue={props.totalValue}
-          tradeType={props.tradeType}
-          zeroDollarReason={props.zeroDollarReason}
-        />
         <form onSubmit={e => e.preventDefault()}>
           {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
             props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
@@ -148,8 +151,11 @@ const CreditTransferDetails = props => (
           (props.history.length > 0 || props.signatures.length > 0) &&
           <CreditTransferSigningHistory
             tradeEffectiveDate={props.tradeEffectiveDate}
+            dateOfWrittenAgreement={props.dateOfWrittenAgreement}
+            categoryDSelected={props.categoryDSelected}
             history={props.history}
             signatures={props.signatures}
+            loggedInUser={props.loggedInUser}
           />
           }
           {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
@@ -242,6 +248,7 @@ CreditTransferDetails.defaultProps = {
   },
   totalValue: '0',
   tradeEffectiveDate: '',
+  dateOfWrittenAgreement: '',
   tradeType: {
     theType: 'sell'
   },
@@ -334,6 +341,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.number
   ]),
   tradeEffectiveDate: PropTypes.string,
+  dateOfWrittenAgreement: PropTypes.string,
   tradeType: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -366,7 +374,9 @@ CreditTransferDetails.propTypes = {
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape),
-  selectIdForModal: PropTypes.func.isRequired
+  selectIdForModal: PropTypes.func.isRequired,
+  categoryDSelected: PropTypes.bool,
+  toggleCategoryDSelection: PropTypes.func.isRequired
 }
 
 export default CreditTransferDetails

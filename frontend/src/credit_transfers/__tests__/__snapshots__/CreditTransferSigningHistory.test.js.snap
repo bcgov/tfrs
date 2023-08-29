@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreditTransferSigningHistory renders the component correctly 1`] = `
+<div
+  className="credit-transfer-signing-history"
+>
+  <h3
+    className="signing-authority-header"
+  >
+    Transaction History
+  </h3>
+  <p>
+    <li>
+      <span>
+        Date of written agreement reached between the two suppliers: 
+      </span>
+      <strong>
+        July 11, 2023
+      </strong>
+      <span>
+         (proposal falls under 
+        <strong>
+          Category 
+          A
+        </strong>
+        
+      </span>
+      <span>
+         if approved by: 
+        <strong>
+          February 11, 2024
+        </strong>
+        )
+      </span>
+    </li>
+  </p>
+  <p>
+    <li>
+      <strong>
+         
+      </strong>
+       
+      <span>
+         on 
+      </span>
+      July 11, 2023
+      <span>
+         by 
+      </span>
+      <strong>
+         
+        John
+         
+        Doe
+      </strong>
+       of
+      <strong>
+         
+        Organization Name
+         
+      </strong>
+    </li>
+  </p>
+</div>
+`;
+
+exports[`CreditTransferSigningHistory should render the component with dateOfWrittenAgreement as null 1`] = `
+<div
+  className="credit-transfer-signing-history"
+>
+  <h3
+    className="signing-authority-header"
+  >
+    Transaction History
+  </h3>
+  <p>
+    <li>
+      <span>
+        Date of written agreement reached between the two suppliers: 
+      </span>
+      <strong>
+        July 11, 2023
+      </strong>
+      <span>
+         (proposal falls under 
+        <strong>
+          Category 
+          A
+        </strong>
+        
+      </span>
+      <span>
+         if approved by: 
+        <strong>
+          February 11, 2024
+        </strong>
+        )
+      </span>
+    </li>
+  </p>
+  <p>
+    <li>
+      <strong>
+         
+      </strong>
+       
+      <span>
+         on 
+      </span>
+      July 11, 2023
+      <span>
+         by 
+      </span>
+      <strong>
+         
+        John
+         
+        Doe
+      </strong>
+       of
+      <strong>
+         
+        Organization Name
+         
+      </strong>
+    </li>
+  </p>
+</div>
+`;

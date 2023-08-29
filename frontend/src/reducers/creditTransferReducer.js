@@ -63,6 +63,18 @@ const creditTransfer = (state = {
         errors: {},
         message: ''
       }
+    case ActionTypes.SUCCESS:
+      return {
+        ...state,
+        didInvalidate: true,
+        isFetching: false,
+        success: true,
+        message: action.message,
+        item: {
+          ...state.item,
+          categoryDSelected: action.data ? action.data.categoryDSelected : state.item.categoryDSelected
+        }
+      }
     default:
       return state
   }

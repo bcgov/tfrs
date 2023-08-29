@@ -11,9 +11,16 @@ const ScheduleDTabs = (props) => {
     addSheetEnabled,
     scheduleB,
     setActiveSheet,
-    sheets
+    sheets,
+    handleDeleteSheet,
+    reportStatus
+    
   } = props
 
+  const handleDelete = (id) => {
+    handleDeleteSheet(id)
+  }
+  
   const renderTabs = (active) => {
     const elements = []
 
@@ -52,13 +59,15 @@ const ScheduleDTabs = (props) => {
         >
           <div>
             <button type="button" onClick={() => setActiveSheet(sheet.id)}>{label}</button>
-            {(active === sheet.id) &&
+            {(active === sheet.id) && (reportStatus.fuelSupplierStatus === 'Draft' ) &&
             !inUsed &&
             <button
               className="delete"
               data-toggle="modal"
               data-target="#confirmDelete"
               type="button"
+              onClick={() => handleDelete(sheet.id)}
+            
             >
               <FontAwesomeIcon icon="minus-circle" />
             </button>
@@ -112,7 +121,8 @@ ScheduleDTabs.propTypes = {
   addSheetEnabled: PropTypes.bool,
   scheduleB: PropTypes.shape(),
   setActiveSheet: PropTypes.func.isRequired,
-  sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired
+  sheets: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  complianceReport: PropTypes.object.isRequired
 }
 
 export default ScheduleDTabs

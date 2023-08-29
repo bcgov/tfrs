@@ -36,6 +36,7 @@ from .CreditTradeHistory import CreditTradeHistory
 from .CreditTradeStatus import CreditTradeStatus
 from .CreditTradeType import CreditTradeType
 from .CreditTradeZeroReason import CreditTradeZeroReason
+from .CreditTradeCategory import CreditTradeCategory
 from .Organization import Organization
 from .SigningAuthorityConfirmation import SigningAuthorityConfirmation
 from .SigningAuthorityAssertion import SigningAuthorityAssertion
@@ -88,6 +89,10 @@ class CreditTrade(Auditable):
         on_delete=models.PROTECT,
         db_comment="Rationale for zero-valued transfer"
     )
+    date_of_written_agreement = models.DateField(
+        blank=True, null=True,
+        db_comment="Date on which the written agreement to transfer credits was reached between the suppliers"
+    )
     trade_effective_date = models.DateField(
         blank=True, null=True,
         db_comment="Date on which this transfer will become effective if "
@@ -109,7 +114,16 @@ class CreditTrade(Auditable):
         related_name='credit_trade_documents',
         through='DocumentCreditTrade'
     )
-
+    trade_category = models.ForeignKey(
+        CreditTradeCategory,
+        related_name='credit_trades',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        db_comment="Category based on the date of agreement and approval"
+    )
+    category_d_selected = models.BooleanField(default=False)
+    
     @property
     def credits_from(self):
         """

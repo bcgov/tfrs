@@ -233,7 +233,7 @@ class ComplianceReport(Auditable):
         related_name='latest_reports')
     
     traversal = models.IntegerField(
-        default=0,
+        default=1,
         db_comment="Traversal position of this compliance report. "
     )
     

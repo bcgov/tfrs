@@ -73,7 +73,6 @@ class UserAuthentication(authentication.BaseAuthentication):
                 print("Testing User does not exist")
                 raise User.DoesNotExist(str(exc))
 
-        print("auth", auth)
         try:
             scheme, token = auth.split()
         except ValueError:

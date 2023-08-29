@@ -36,14 +36,14 @@ class CreditTransferSigningHistory extends Component {
     // show "the Director" at all times
     // use effective date as well
     return (
-      <p key={history.createTimestamp}>
+      <li key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
         <span>
-          on {moment(this.props.tradeEffectiveDate).format('LL')} by the
+          on {moment(history.createTimestamp).format('LL')} by the
           <strong> Director </strong> under the
         </span>
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
-      </p>
+      </li>
     )
   }
 
@@ -64,7 +64,7 @@ class CreditTransferSigningHistory extends Component {
     // don't show the name and just put in "the {role}" instead
 
     return (
-      <p key={history.createTimestamp}>
+      <li key={history.createTimestamp}>
         <strong className="text-danger">Declined </strong>
         {CreditTransferSigningHistory.recordedFound(this.props.history) &&
           <span>
@@ -80,7 +80,7 @@ class CreditTransferSigningHistory extends Component {
           </span>
         }
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
-      </p>
+      </li>
     )
   }
 
@@ -126,10 +126,81 @@ class CreditTransferSigningHistory extends Component {
     return (<strong>Proposed</strong>)
   }
 
+  static monthsBetween (date1, date2) {
+    let months = (date2.getFullYear() - date1.getFullYear()) * 12
+    months -= date1.getMonth()
+    months += date2.getMonth()
+    if (date2.getDate() < date1.getDate()) {
+      months--
+    }
+    return months
+  }
+
+  static calculateTransferCategoryAndNextChange (agreementDate, submissionDate, categoryDSelected) {
+    if (categoryDSelected) {
+      return { category: 'D', nextChangeInMonths: null }
+    }
+    const now = new Date()
+    submissionDate = submissionDate < now ? submissionDate : now
+    const differenceInMonths = CreditTransferSigningHistory.monthsBetween(new Date(agreementDate), new Date(submissionDate))
+    if (differenceInMonths < 6) {
+      return { category: 'A', nextChangeInMonths: 6 }
+    } else if (differenceInMonths < 12) {
+      return { category: 'B', nextChangeInMonths: 12 }
+    } else {
+      return { category: 'C', nextChangeInMonths: null }
+    }
+  }
+
+  _renderCategoryHistory () {
+    const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
+    // if there is no agreement date, it means this credit transfer
+    // was created before we had this field as not optional
+    // We won't show categorization if there is no agreement date.
+    if (!dateOfWrittenAgreement) {
+      return (<></>)
+    }
+
+    const lastHistoryItem = history[history.length - 1]
+    const createdByGov = history[0].creditTrade?.initiator?.id === 1
+    if (history.length > 0 && loggedInUser.isGovernmentUser && !createdByGov) {
+      const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
+      const { category, nextChangeInMonths } = CreditTransferSigningHistory
+        .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected)
+      let nextChangeDate = null
+      if (nextChangeInMonths !== null) {
+        nextChangeDate = moment(agreementDate).add(nextChangeInMonths, 'months').format('LL')
+      }
+      const endDate = nextChangeDate
+      const categoryCorD = categoryDSelected || category === 'C'
+      return (
+        <p>
+          <li>
+            <span>Date of written agreement reached between the two organizations: </span>
+            <strong>{moment(agreementDate).format('LL')}</strong>
+            {lastHistoryItem.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+              <span> (<strong>Category {category}</strong>)</span>
+            }
+            {lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+              lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.rescinded.id &&
+              lastHistoryItem.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+            (
+              <>
+                <span> (proposal falls under <strong>Category {category}</strong>{categoryCorD ? ')' : ''}</span>
+                {nextChangeDate && (<span> if approved by: <strong>{endDate}</strong>)</span>)}
+              </>
+            )}
+          </li>
+        </p>
+      )
+    }
+  }
+
   render () {
     return (
       <div className="credit-transfer-signing-history">
         <h3 className="signing-authority-header" key="header">Transaction History</h3>
+        {this._renderCategoryHistory()}
         {this.props.history.length > 0 &&
         this.props.history.map((history, index, arr) => {
           let action
@@ -186,11 +257,12 @@ class CreditTransferSigningHistory extends Component {
           }
 
           return (
-            <p key={history.createTimestamp}>{action} <span> on </span>
+            <p key={history.createTimestamp + index}><li>{action} <span> on </span>
               {moment(history.createTimestamp).format('LL')}
               <span> by </span>
               <strong> {history.user.firstName} {history.user.lastName}</strong> of
               <strong> {history.user.organization.name} </strong>
+              </li>
             </p>
           )
         })}
@@ -202,11 +274,14 @@ class CreditTransferSigningHistory extends Component {
 CreditTransferSigningHistory.defaultProps = {
   history: [],
   signatures: [],
-  tradeEffectiveDate: null
+  tradeEffectiveDate: null,
+  dateOfWrittenAgreement: null,
+  categoryDSelected: false
 }
 
 CreditTransferSigningHistory.propTypes = {
   history: PropTypes.arrayOf(PropTypes.shape({
+    createTimestamp: PropTypes.string,
     creditTradeUpdateTime: PropTypes.string,
     isRescinded: PropTypes.bool,
     status: PropTypes.shape({
@@ -218,6 +293,11 @@ CreditTransferSigningHistory.propTypes = {
       firstName: PropTypes.string,
       id: PropTypes.number,
       lastName: PropTypes.string
+    }),
+    creditTrade: PropTypes.shape({
+      initiator: PropTypes.shape({
+        id: PropTypes.number
+      })
     })
   })),
   signatures: PropTypes.arrayOf(PropTypes.shape({
@@ -233,7 +313,12 @@ CreditTransferSigningHistory.propTypes = {
       })
     })
   })),
-  tradeEffectiveDate: PropTypes.string
+  tradeEffectiveDate: PropTypes.string,
+  dateOfWrittenAgreement: PropTypes.string,
+  categoryDSelected: PropTypes.bool,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  })
 }
 
 export default CreditTransferSigningHistory

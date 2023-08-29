@@ -20,7 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Q, Sum, Count
 
 from rest_framework import serializers
@@ -155,6 +155,31 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 {'zeroDollarReason': "Zero dollar reason supplied but this "
                                      "trade has a non-zero value-per-credit"})
 
+        # validation on agreement and effective dates only applies 
+        # on supplier created credit trades so if the request.user 
+        # is government, we skip validation for these fields
+        if not request.user.is_government_user:
+            date_of_written_agreement = data.get('date_of_written_agreement')
+            if date_of_written_agreement:
+                today = datetime.now().date()
+                if date_of_written_agreement > today:
+                    raise serializers.ValidationError({
+                        'date_of_written_agreement': "Date of written agreement can't be in the future."
+                    })
+
+            trade_effective_date = data.get('trade_effective_date')
+            if trade_effective_date:
+                today = datetime.now().date()
+                three_months_from_now = today + timedelta(days=90)
+                if trade_effective_date > three_months_from_now:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                    })
+                if trade_effective_date < today:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be before today."
+                    })
+            
         # If the initiator is 'selling', make sure that the organization
         # has enough credits
         sell_type = CreditTradeType.objects.get(the_type="Sell")
@@ -230,7 +255,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'number_of_credits', 'fair_market_value_per_credit',
                   'total_value', 'zero_reason', 'trade_effective_date',
                   'update_timestamp', 'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment')
+                  'compliance_period', 'is_rescinded', 'comment', 
+                  'date_of_written_agreement', 'category_d_selected')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
@@ -254,6 +280,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
@@ -323,8 +352,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         super(CreditTradeUpdateSerializer, self).__init__(*args, **kwargs)
         data = kwargs.get('data')
 
-        if 'status' not in data:
-            data['status'] = self.instance.status.id
+        # leave for posterity
+        # if 'status' not in data:
+        #     data['status'] = self.instance.status.id
 
     def validate(self, data):
         """
@@ -349,7 +379,17 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'readOnly': "Cannot update a transaction that's already "
                             "been `{}`.".format(self.instance.status.status)
             })
-
+            
+        credit_trade_status = data.get('status')
+        if isinstance(credit_trade_status, int):
+            try:
+                credit_trade_status = CreditTradeStatus.objects.get(id=credit_trade_status)
+                data['status'] = credit_trade_status
+            except CreditTradeStatus.DoesNotExist:
+                raise serializers.ValidationError({
+                    'status': 'Status with id {} does not exist.'.format(credit_trade_status)
+                })
+            
         # if the user is the respondent, they really shouldn't be modifying
         # other fields. So reset those to be sure that they weren't changed
         if self.instance.respondent == request.user.organization:
@@ -359,10 +399,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'fair_market_value_per_credit':
                     self.instance.fair_market_value_per_credit,
                 'initiator': self.instance.initiator,
-                'is_rescinded': bool(data.get('is_rescinded')),
+                'is_rescinded': bool(data.get('is_rescinded', self.instance.is_rescinded)),
                 'number_of_credits': self.instance.number_of_credits,
                 'respondent': self.instance.respondent,
-                'status': data.get('status'),
+                'status': data.get('status', self.instance.status),
                 'type': self.instance.type,
                 'update_user': request.user,
                 'zero_reason': self.instance.zero_reason
@@ -374,8 +414,6 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
-            credit_trade_status = data.get('status')
-
             if not data.get('is_rescinded') is True:
                 available_statuses = CreditTradeService.get_allowed_statuses(
                     self.instance, request)
@@ -495,6 +533,31 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Cannot add a comment in this state")
 
+        # validation on agreement and effective dates only applies
+        # on supplier created credit trades so if the request.user
+        # is government, we skip validation for these fields
+        if not request.user.is_government_user:
+            date_of_written_agreement = data.get('date_of_written_agreement')
+            if date_of_written_agreement:
+                today = datetime.now().date()
+                if date_of_written_agreement > today:
+                    raise serializers.ValidationError({
+                        'date_of_written_agreement': "Date of written agreement can't be in the future."
+                    })
+
+            trade_effective_date = data.get('trade_effective_date')
+            if trade_effective_date:
+                today = datetime.now().date()
+                three_months_from_now = today + timedelta(days=90)
+                if trade_effective_date > three_months_from_now:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be more than 3 months in the future."
+                    })
+                if trade_effective_date < today:
+                    raise serializers.ValidationError({
+                        'trade_effective_date': "Trade effective date can't be before today."
+                    })
+            
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
             CreditTradeStatus.objects.filter(
@@ -559,7 +622,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'trade_effective_date',
                   'update_timestamp',
                   'create_user', 'update_user',
-                  'compliance_period', 'is_rescinded', 'comment')
+                  'compliance_period', 'is_rescinded', 'comment',
+                  'date_of_written_agreement', 'category_d_selected')
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
@@ -583,6 +647,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                     'does_not_exist': "Please specify the company involved in "
                                       "the transaction."
                 }
+            },
+            'trade_effective_date': {
+                'required': False
             }
         }
 
@@ -659,7 +726,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
-                  'signatures', 'history')
+                  'signatures', 'history', 'date_of_written_agreement',
+                  'category_d_selected')
 
     def get_actions(self, obj):
         """

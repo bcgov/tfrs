@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import numeral from 'numeral'
+import { Checkbox } from 'react-bootstrap'
+// import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
 
 import * as NumberFormat from '../../constants/numeralFormats'
 import {
@@ -28,9 +30,8 @@ class CreditTransferTextRepresentation extends Component {
     this.totalValue = numeral(this.props.totalValue).format(
       NumberFormat.CURRENCY
     )
-    this.tradeEffectiveDate = this.props.tradeEffectiveDate
-      ? moment(this.props.tradeEffectiveDate).format('LL')
-      : "on Director's approval"
+
+    this.tradeEffectiveDate = this.formatTradeEffectiveDate()
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
       this.tradeStatus = 'Drafted'
@@ -38,6 +39,40 @@ class CreditTransferTextRepresentation extends Component {
       this.tradeStatus = Object.values(CREDIT_TRANSFER_STATUS).find(
         (element) => element.id === this.props.status.id
       ).description
+    }
+  }
+
+  getTradeEffectiveDate () {
+    if (this.props.tradeEffectiveDate) {
+      return this.props.tradeEffectiveDate
+    }
+    // Directly find the 'Approved' history
+    const approvedHistory = this.props.history.find((history) => history.status.status === 'Approved')
+    return approvedHistory ? approvedHistory.createTimestamp : null
+  }
+
+  formatTradeEffectiveDate = () => {
+    const now = moment()
+    const tradeEffectiveDate = this.getTradeEffectiveDate()
+    // If no effective date is available, handle this case
+    if (!tradeEffectiveDate) {
+      return <span>.</span>
+    }
+
+    const formattedDate = moment(tradeEffectiveDate).format('LL')
+    const status = this.props.status
+
+    // Transaction is approved
+    if (status.id === CREDIT_TRANSFER_STATUS.approved.id) {
+      return (<span> effective <span className='value'>{formattedDate}</span></span>)
+    }
+
+    // Check if tradeEffectiveDate exists and is in the future
+    if (moment(tradeEffectiveDate).isAfter(now)) {
+      return (<span> effective <span className='value'>{formattedDate}</span> or on the
+        date the Director records the transfer, whichever is later.</span>)
+    } else {
+      return (<span>, effective on the date the Director records the transfer.</span>)
     }
   }
 
@@ -89,7 +124,7 @@ class CreditTransferTextRepresentation extends Component {
         {this.props.numberOfCredits > 1 && 's'} for
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus} </span>
-        effective <span className='value'> {this.tradeEffectiveDate}</span>.
+        {this.tradeEffectiveDate}
       </div>
     )
   }
@@ -103,12 +138,9 @@ class CreditTransferTextRepresentation extends Component {
         <span className='value'> {this.creditsTo} </span> for the completion of
         a Part 3 Agreement milestone(s) has been
         <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
@@ -122,18 +154,16 @@ class CreditTransferTextRepresentation extends Component {
         credit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsFrom} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
   }
 
   _renderSell () {
+    const status = this.props.status
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
@@ -158,6 +188,24 @@ class CreditTransferTextRepresentation extends Component {
             </span>
           </div>
         )}
+        {this.props.loggedInUser.isGovernmentUser &&
+          status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+          status.id !== CREDIT_TRANSFER_STATUS.declinedForApproval.id &&
+          this.props.isRescinded !== true &&
+          <div className="checkbox" style={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox
+              type="checkbox"
+              id="categoryDcheckbox"
+              label="Category D Selected"
+              checked={this.props.categoryDSelected}
+              // disabled={!this.props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.APPROVE)}
+              onChange={(event) => this.props.toggleCategoryDSelection(event.target.checked)}
+              style={{ paddingTop: 4 }}
+            />
+            <span className='value'>Category D,</span>&nbsp;<span>approve as Category D if zero dollar value or significantly less than fair market value.</span>
+          </div>
+        }
       </div>
     )
   }
@@ -170,12 +218,9 @@ class CreditTransferTextRepresentation extends Component {
         credit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-          <span>
-            , effective
-            <span className='value'> {this.tradeEffectiveDate}</span>
-          </span>
-        )}
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
@@ -233,11 +278,7 @@ class CreditTransferTextRepresentation extends Component {
     ) {
       return <span>. The proposal was declined.</span>
     }
-    return (
-      <span>
-        , effective <span className='value'> {this.tradeEffectiveDate}</span>.
-      </span>
-    )
+    return (this.tradeEffectiveDate)
   }
 
   render () {
@@ -330,6 +371,12 @@ CreditTransferTextRepresentation.propTypes = {
   zeroDollarReason: PropTypes.shape({
     id: PropTypes.number,
     reason: PropTypes.string
+  }),
+  categoryDSelected: PropTypes.bool,
+  toggleCategoryDSelection: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool,
+    hasPermission: PropTypes.func
   })
 }
 

@@ -20,21 +20,27 @@ import CreditTransferTerms from './CreditTransferTerms'
 import CreditTransferCommentForm from './CreditTransferCommentForm'
 import CreditTransferComment from './CreditTransferComment'
 
-const CreditTransferForm = props => (
+const CreditTransferForm = (props) => {
+  const today = new Date()
+  const minDateValue = today.toISOString().split('T')[0]
+  const maxDate = new Date()
+  maxDate.setMonth(today.getMonth() + 3)
+  const maxDateValue = maxDate.toISOString().split('T')[0]
+  return (
   <div className="credit-transfer">
     <div className="credit_balance">
-      {props.loggedInUser.roles &&
-        !props.loggedInUser.isGovernmentUser &&
+      {props.loggedInUser.roles && !props.loggedInUser.isGovernmentUser && (
         <h3>
-          Credit Balance: {
-            numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
-              .format(NumberFormat.INT)
-          }
+          Credit Balance:{' '}
+          {numeral(
+            props.loggedInUser.organization.organizationBalance.validatedCredits
+          ).format(NumberFormat.INT)}
           <div className="reserved">
-            (In Reserve: {
-              numeral(props.loggedInUser.organization.organizationBalance.deductions)
-                .format(NumberFormat.INT)
-            }){' '}
+            (In Reserve:{' '}
+            {numeral(
+              props.loggedInUser.organization.organizationBalance.deductions
+            ).format(NumberFormat.INT)}
+            ){' '}
             <Tooltip
               className="info"
               show
@@ -48,27 +54,41 @@ const CreditTransferForm = props => (
             </Tooltip>
           </div>
         </h3>
-      }
+      )}
     </div>
     <h1>{props.title}</h1>
     <h3>
       <p>
-        Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel Requirements Regulation,
-        a transfer of validated credits is not effective unless the transfer is approved by the
-        Director.
+        Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel
+        Requirements Regulation, a transfer of validated credits is not
+        effective unless the transfer is approved by the Director.
       </p>
       <p>
-        All credit transfer proposals must include a “fair market value” of any consideration,
-        under section 11.11 (2) (c) (iv) of the Regulation. Transfers deemed to underestimate
-        &quot;fair market value&quot; or those using a &quot;zero dollar&quot; value must include
-        a written explanation justifying the use of the identified credit value.
+        All credit transfer proposals must include a “fair market value” of any
+        consideration, under section 11.11 (2) (c) (iv) of the Regulation.
+        Transfers deemed to underestimate &quot;fair market value&quot; or those
+        using a &quot;zero dollar&quot; value must include a written explanation
+        justifying the use of the identified credit value.
       </p>
     </h3>
-    <CreditTransferProgress status={CREDIT_TRANSFER_STATUS.draft} type={props.fields.tradeType} />
+    <CreditTransferProgress
+      status={CREDIT_TRANSFER_STATUS.draft}
+      type={props.fields.tradeType}
+    />
+    <CreditTransferVisualRepresentation
+      creditsFrom={props.creditsFrom}
+      creditsTo={props.creditsTo}
+      loggedInUser={props.loggedInUser}
+      numberOfCredits={props.fields.numberOfCredits}
+      totalValue={props.totalValue}
+      tradeType={props.fields.tradeType}
+      zeroDollarReason={props.zeroDollarReason}
+    />
     <form
       className="form-inline"
       onSubmit={(event, status) =>
-        props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+        props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)
+      }
     >
       <CreditTransferFormDetails
         fields={props.fields}
@@ -78,32 +98,53 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
       />
 
-      {Object.keys(props.errors).length > 0 &&
-        <Errors errors={props.errors} />
-      }
+      {Object.keys(props.errors).length > 0 && <Errors errors={props.errors} />}
 
-      {Object.keys(props.validationErrors).length > 0 &&
+      {Object.keys(props.validationErrors).length > 0 && (
         <Errors errors={props.validationErrors} />
-      }
-
-      <CreditTransferVisualRepresentation
-        creditsFrom={props.creditsFrom}
-        creditsTo={props.creditsTo}
-        loggedInUser={props.loggedInUser}
-        numberOfCredits={props.fields.numberOfCredits}
-        totalValue={props.totalValue}
-        tradeType={props.fields.tradeType}
-        zeroDollarReason={props.zeroDollarReason}
-      />
-
-      {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
-        <CreditTransferTerms
-          addToFields={props.addToFields}
-          fields={props.fields}
-          signingAuthorityAssertions={props.signingAuthorityAssertions}
-          toggleCheck={props.toggleCheck}
-        />
-      }
+      )}
+      <p className="action-context-menu-available">Agreement Date (required)</p>
+      <div className="agreementDate">
+        <h3>
+          Date on which the written agreement to transfer credits was reached
+          between the suppliers:
+        </h3>
+        <div>
+          <label>Agreement Date:</label>
+          <input
+            className="form-control form-date"
+            type="date"
+            value={props.fields.dateOfWrittenAgreement}
+            max={minDateValue}
+            name='dateOfWrittenAgreement'
+            onChange={props.handleInputChange}
+            required
+          />
+        </div>
+      </div>
+      {/* hidden due to new interpretation of legislation August 2023 */}
+      {/* <p className="action-context-menu-available">Effective Date (optional)</p>
+      <div className="agreementDate">
+        <h3>
+          The transfer will take effect on the date the Director records the transfer.
+        </h3>
+        <h3>
+          Or, you can enter an effective date that will be used if later than the date
+          the Director records the transfer.
+        </h3>
+        <div>
+          <label>Effective Date:</label>
+          <input
+            className="form-control form-date"
+            type="date"
+            value={props.fields.tradeEffectiveDate}
+            min={minDateValue}
+            max={maxDateValue}
+            name='tradeEffectiveDate'
+            onChange={props.handleInputChange}
+          />
+        </div>
+      </div> */}
 
       <CreditTransferCommentForm
         isCommentingOnUnsavedCreditTransfer={props.id === 0}
@@ -111,36 +152,50 @@ const CreditTransferForm = props => (
         handleCommentChanged={props.handleCommentChanged}
         embedded
       />
-      {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
-      {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
-      {props.comments.map(c => (
+      {props.loggedInUser.hasPermission(
+        PERMISSIONS_CREDIT_TRANSACTIONS.SIGN
+      ) && (
+        <CreditTransferTerms
+          addToFields={props.addToFields}
+          fields={props.fields}
+          signingAuthorityAssertions={props.signingAuthorityAssertions}
+          toggleCheck={props.toggleCheck}
+        />
+      )}
+
+      {props.comments.length > 0 && (
+        <h3 className="comments-header">Comments</h3>
+      )}
+      {props.comments.length > 0 && (
+        <span>Save your transfer to modify existing comments</span>
+      )}
+      {props.comments.map((c) => (
         <CreditTransferComment comment={c} key={c.id} isReadOnly />
-      ))
-      }
+      ))}
 
       <CreditTransferFormButtons
         actions={props.buttonActions}
         changeStatus={props.changeStatus}
-        disabled={
-          {
-            BTN_SIGN_1_2: !props.fields.terms ||
-            props.fields.terms.filter(term =>
-              term.value === true).length < props.signingAuthorityAssertions.items.length
-          }
-        }
-        permissions={
-          {
-            BTN_SIGN_1_2:
-            props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN),
-            BTN_SIGN_2_2:
-            props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
-          }
-        }
+        disabled={{
+          BTN_SIGN_1_2:
+            !props.fields.terms ||
+            props.fields.terms.filter((term) => term.value === true).length <
+              props.signingAuthorityAssertions.items.length
+        }}
+        permissions={{
+          BTN_SIGN_1_2: props.loggedInUser.hasPermission(
+            PERMISSIONS_CREDIT_TRANSACTIONS.SIGN
+          ),
+          BTN_SIGN_2_2: props.loggedInUser.hasPermission(
+            PERMISSIONS_CREDIT_TRANSACTIONS.SIGN
+          )
+        }}
         id={props.id}
       />
     </form>
   </div>
-)
+  )
+}
 
 CreditTransferForm.defaultProps = {
   handleCommentChanged: null,
@@ -158,10 +213,12 @@ CreditTransferForm.propTypes = {
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired,
-  comments: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    comment: PropTypes.string
-  })),
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      comment: PropTypes.string
+    })
+  ),
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
@@ -182,7 +239,9 @@ CreditTransferForm.propTypes = {
       reason: PropTypes.string,
       id: PropTypes.number
     }),
-    note: PropTypes.string.isRequired
+    note: PropTypes.string.isRequired,
+    dateOfWrittenAgreement: PropTypes.string,
+    tradeEffectiveDate: PropTypes.string
   }).isRequired,
   creditsTo: PropTypes.shape({
     name: PropTypes.string,
@@ -210,9 +269,11 @@ CreditTransferForm.propTypes = {
         validatedCredits: PropTypes.number
       })
     }),
-    roles: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number
-    }))
+    roles: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number
+      })
+    )
   }).isRequired,
   signingAuthorityAssertions: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape())

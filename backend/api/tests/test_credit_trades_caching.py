@@ -47,6 +47,9 @@ class TestCreditTradesCaching(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': self.users['fs_user_2'].organization.id,
             'status': self.statuses['recorded'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -95,6 +98,9 @@ class TestCreditTradesCaching(BaseTestCase):
                    'numberOfCredits': 1,
                    'respondent': self.users['fs_user_2'].organization.id,
                    'status': self.statuses['submitted'].id,
+                  'dateOfWrittenAgreement': datetime.datetime.today().strftime(
+                       '%Y-%m-%d'
+                   ),
                    'tradeEffectiveDate': datetime.datetime.today().strftime(
                        '%Y-%m-%d'
                    ),
@@ -115,6 +121,9 @@ class TestCreditTradesCaching(BaseTestCase):
             'numberOfCredits': 1,
             'respondent': self.users['fs_user_2'].organization.id,
             'status': self.statuses['accepted'].id,
+            'dateOfWrittenAgreement': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),

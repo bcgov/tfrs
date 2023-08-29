@@ -1,0 +1,22 @@
+name: Create Release after merging to master
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'master'     
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.event.pull_request.head.ref }}
+          tag_name: ${{ github.event.pull_request.head.ref }}
+          body: |
+            ${{ github.event.pull_request.body }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false

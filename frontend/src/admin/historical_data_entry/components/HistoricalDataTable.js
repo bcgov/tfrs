@@ -125,7 +125,10 @@ const HistoricalDataTable = (props) => {
             data-target="#confirmDelete"
             onClick={() => props.selectIdForModal(row.value)}
           >
-            <FontAwesomeIcon icon="minus-circle" />
+            <FontAwesomeIcon
+              icon="minus-circle"
+              style={{ pointerEvents: 'none' }}
+            />
           </button>
         </div>
       )

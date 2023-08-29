@@ -40,7 +40,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put', 'patch']
-    queryset = CreditTrade.objects.select_related('status'
+    queryset = CreditTrade.objects.select_related('status',
                                                   'initiator',
                                                   'respondent',
                                                   'type',
@@ -144,13 +144,14 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         previous_state = self.get_object()
         credit_trade = serializer.save()
-        CreditTradeService.create_history(credit_trade, False)
-
-        status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
-
-        if serializer.data['status'] != status_cancelled.id:
-            CreditTradeService.dispatch_notifications(
-                previous_state, credit_trade)
+        # we only want to create history and send notifications
+        # when a status change occurs
+        if previous_state.status != credit_trade.status:
+            CreditTradeService.create_history(credit_trade, False)
+            status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
+            if serializer.data['status'] != status_cancelled.id:
+                CreditTradeService.dispatch_notifications(
+                    previous_state, credit_trade)
 
     @action(detail=True, methods=['put'])
     def delete(self, request, pk=None):
@@ -172,24 +173,27 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Transfers the Credits
         Then, marks the Credit Trade as Completed
         """
-        credit_trade = self.get_object()
-        credit_trade.trade_effective_date = datetime.date.today()
-        previous_state = credit_trade
+        try:
+            credit_trade = self.get_object()
+            previous_state = credit_trade
 
-        if credit_trade.compliance_period_id is None:
-            credit_trade.compliance_period_id = \
-                CreditTradeService.get_compliance_period_id(credit_trade)
+            if credit_trade.compliance_period_id is None:
+                credit_trade.compliance_period_id = \
+                    CreditTradeService.get_compliance_period_id(credit_trade)
 
-        serializer = self.get_serializer(credit_trade, data=request.data)
-        serializer.is_valid(raise_exception=True)
+            serializer = self.get_serializer(credit_trade, data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-        completed_credit_trade = CreditTradeService.approve(
-            credit_trade, request.user
-        )
-        serializer = self.get_serializer(completed_credit_trade)
+            completed_credit_trade = CreditTradeService.approve(
+                credit_trade, request.user
+            )
+            serializer = self.get_serializer(completed_credit_trade)
 
-        CreditTradeService.dispatch_notifications(previous_state,
-                                                  completed_credit_trade)
+            CreditTradeService.dispatch_notifications(previous_state,
+                                                      completed_credit_trade)
+        except Exception as e:
+            print(e)
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
