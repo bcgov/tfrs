@@ -541,16 +541,18 @@ class ScheduleDContainer extends Component {
   }
 
   _handleDeleteSheet (id) {
-    const filterData = this.state.sheets.filter(items => items.id != id)
+    const filterData = this.state.sheets.filter(items => items.id !== id)
 
-  this.setState({
-    sheets:filterData
-  })
- if(filterData.length > 0)
-  this._gridStateToPayload({
-    sheets:filterData
-  })
-}
+    this.setState({
+      sheets: filterData
+    })
+    if (filterData.length > 0) {
+      this._gridStateToPayload({
+        sheets: filterData
+      })
+    }
+  }
+
   _validate (_sheet, sheetIndex) {
     const sheet = _sheet
 
@@ -702,7 +704,7 @@ class ScheduleDContainer extends Component {
           sheets={sheets}
           setActiveSheet={this._setActiveSheet}
           handleDeleteSheet={this._handleDeleteSheet}
-          reportStatus={this.props.complianceReport.status} 
+          reportStatus={this.props.complianceReport.status}
         />
 
         {sheets.map(sheet => (
@@ -753,7 +755,8 @@ ScheduleDContainer.defaultProps = {
 ScheduleDContainer.propTypes = {
   complianceReport: PropTypes.shape({
     compliancePeriod: PropTypes.shape(),
-    scheduleD: PropTypes.shape()
+    scheduleD: PropTypes.shape(),
+    status: PropTypes.shape()
   }),
   match: PropTypes.shape({}),
   readOnly: PropTypes.bool.isRequired,

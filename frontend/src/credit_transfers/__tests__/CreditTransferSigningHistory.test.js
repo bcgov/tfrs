@@ -25,7 +25,10 @@ describe('CreditTransferSigningHistory', () => {
     const props = {
       history: historyMock,
       dateOfWrittenAgreement: moment().format('LL'),
-      categoryDSelected: false
+      categoryDSelected: false,
+      loggedInUser: {
+        isGovernmentUser: true
+      }
     }
 
     const component = renderer.create(
@@ -73,30 +76,31 @@ describe('CreditTransferSigningHistory', () => {
     expect(tree).toMatchSnapshot()
   })
 
+  const sumbmissionDate = new Date()
   let agreementDate = new Date()
 
   test('returns category A if differenceInMonths <= 6', () => {
-    agreementDate.setMonth(agreementDate.getMonth() - 5) // Five months ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
-    expect(result).toEqual({ category: 'A', nextChangeInMonths: 2 })
+    agreementDate.setMonth(agreementDate.getMonth() - 2) // 2 months ago
+    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, sumbmissionDate, false)
+    expect(result).toEqual({ category: 'A', nextChangeInMonths: 6 })
   })
 
   test('returns category B if differenceInMonths > 6 and differenceInMonths <= 12', () => {
     agreementDate = new Date()
-    agreementDate.setMonth(agreementDate.getMonth() - 7) // Seven months ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
-    expect(result).toEqual({ category: 'B', nextChangeInMonths: 6 })
+    agreementDate.setMonth(agreementDate.getMonth() - 8) // 8 months ago
+    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, sumbmissionDate, false)
+    expect(result).toEqual({ category: 'B', nextChangeInMonths: 12 })
   })
 
   test('returns category C if differenceInMonths > 12', () => {
     agreementDate = new Date()
     agreementDate.setFullYear(agreementDate.getFullYear() - 2) // Two years ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
+    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, sumbmissionDate, false)
     expect(result).toEqual({ category: 'C', nextChangeInMonths: null })
   })
 
   test('returns category D if categoryDSelected is true', () => {
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, true)
+    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, sumbmissionDate, true)
     expect(result).toEqual({ category: 'D', nextChangeInMonths: null })
   })
 })
