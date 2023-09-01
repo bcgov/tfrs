@@ -317,7 +317,7 @@ class CreditTransferAddContainer extends Component {
         isCommenting={this.state.isCommenting}
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
-        title="New Part 3 Award"
+        title="New Initiative Agreement Issuance"
         validationErrors={this.state.validationErrors}
       />,
       <Modal

@@ -7,7 +7,7 @@ import Dropzone from 'react-dropzone'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import CONFIG from '../../config'
-import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions'
+import { getFileSize, getIcon, getScanStatusIcon, transformDocumentTypeDescription, validateFiles } from '../../utils/functions'
 
 class SecureFileSubmissionFormDetails extends Component {
   constructor (props) {
@@ -154,7 +154,7 @@ class SecureFileSubmissionFormDetails extends Component {
               <div className="row" key="title">
                 <div className="form-group col-md-12">
                   <label htmlFor="title">
-                    {this.props.documentType && this.props.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
+                    {this.props.documentType && this.props.documentType.theType === 'Evidence' ? 'Initiative Agreement' : 'Title'}:
                     <input
                       className="form-control"
                       id="title"
@@ -220,7 +220,7 @@ class SecureFileSubmissionFormDetails extends Component {
                             key={t.id}
                             value={t.id}
                           >
-                            {t.description}
+                            {transformDocumentTypeDescription(t.description)}
                           </option>
                         )))
                       ))}
