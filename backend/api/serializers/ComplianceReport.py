@@ -1358,14 +1358,15 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.save()
 
             root_report = previous_report.root_report or previous_report
-            new_compliance_report.latest_report = new_compliance_report.supplements
+            new_compliance_report.latest_report = new_compliance_report
             new_compliance_report.root_report = root_report
-            if previous_report.latest_report_id != new_compliance_report.supplements_id:
-                if not previous_report.status.fuel_supplier_status_id == 'Deleted':
-                    new_compliance_report.traversal = previous_report.traversal + 1
-                ComplianceReport.objects.filter(root_report_id=root_report.id).update(latest_report=new_compliance_report.supplements)
+            if new_compliance_report.supplements is not None \
+                    and not previous_report.status.fuel_supplier_status_id == 'Deleted':
+                new_compliance_report.traversal = previous_report.traversal + 1
             else:
                 new_compliance_report.traversal = previous_report.traversal
+            ComplianceReport.objects.filter(root_report_id=root_report.id)\
+                .update(latest_report=new_compliance_report)
         else:
             new_compliance_report.root_report = new_compliance_report
             new_compliance_report.latest_report = new_compliance_report
@@ -1829,6 +1830,8 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
 
         compliance_report.status.fuel_supplier_status = \
             ComplianceReportStatus.objects.get(status="Deleted")
+        ComplianceReport.objects.filter(root_report_id=compliance_report.root_report.id)\
+            .update(latest_report=compliance_report.supplements)
         compliance_report.status.save()
 
     class Meta:
