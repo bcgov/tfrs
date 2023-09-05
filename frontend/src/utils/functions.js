@@ -270,8 +270,18 @@ const atLeastOneAttorneyAddressFieldExists = (address) => {
   return false
 }
 
+const transformDocumentTypeDescription = (desc) => {
+  if (desc === 'P3A Milestone Evidence') {
+    return 'Initiative Agreement: Evidence of Completion'
+  }
+  if (desc === 'P3A Application') {
+    return 'Initiative Agreement: Application'
+  }
+  return desc
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
   formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists,
-  cellFormatCurrencyTotal, cellFormatNegativeNumber
+  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription
 }

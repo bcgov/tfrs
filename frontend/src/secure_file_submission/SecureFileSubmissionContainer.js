@@ -74,7 +74,7 @@ class SecureFileSubmissionContainer extends Component {
         handlePageSizeChange={this.handlePageSizeChange}
         handleFiltersChange={this.handleFiltersChange}
         handleSortChange={this.handleSortChange}
-        title="Secure File Submissions"
+        title="File Submissions"
       />
     )
   }

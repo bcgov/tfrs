@@ -58,7 +58,7 @@ class ScheduleBContainer extends Component {
           readOnly: true,
           value: (
             <div>
-              {props.period < COMPLIANCE_YEAR ? 'CREDIT/DEBIT CALCULATION ': 'COMPLIANCE UNITS CALCULATION '}
+              {props.period < COMPLIANCE_YEAR ? 'CREDIT/DEBIT CALCULATION ' : 'COMPLIANCE UNITS CALCULATION '}
               <Tooltip
                 className="info left"
                 show
@@ -591,19 +591,18 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true
       }
-      console.log(grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL], "597")
+      console.log(grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL], '597')
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue =
         response.outputs.customIntensityValue
 
-        grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent
-      if (context.compliancePeriod < COMPLIANCE_YEAR )  {
-      grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits
-      grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits
-    }
-    else {
-       const complinaceUnits = response.outputs.credits - response.outputs.debits
-       grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = complinaceUnits 
-    }
+      grid[row][SCHEDULE_B.ENERGY_CONTENT].value = response.outputs.energyContent
+      if (context.compliancePeriod < COMPLIANCE_YEAR) {
+        grid[row][SCHEDULE_B.CREDIT].value = response.outputs.credits
+        grid[row][SCHEDULE_B.DEBIT].value = response.outputs.debits
+      } else {
+        const complinaceUnits = response.outputs.credits - response.outputs.debits
+        grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = complinaceUnits
+      }
 
       if (!this.props.validating) {
         grid[row] = this._validate(grid[row], row - 2)
@@ -943,10 +942,10 @@ class ScheduleBContainer extends Component {
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = null
       grid[row][SCHEDULE_B.CARBON_INTENSITY_LIMIT].value = null
       grid[row][SCHEDULE_B.CREDIT].value = null
-      if(grid[row][SCHEDULE_B.DEBIT]){
+      if (grid[row][SCHEDULE_B.DEBIT]) {
         grid[row][SCHEDULE_B.DEBIT].value = null
       }
-      if(grid[row][SCHEDULE_B.COMPLIANCE_UNITS]){   
+      if (grid[row][SCHEDULE_B.COMPLIANCE_UNITS]) {
         grid[row][SCHEDULE_B.COMPLIANCE_UNITS].value = null
       }
       // grid[row][SCHEDULE_B.DEBIT].value = null
