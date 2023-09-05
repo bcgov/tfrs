@@ -181,7 +181,7 @@ class SpreadSheetBuilder(object):
         worksheet.col(9).width = 3500
         worksheet.col(10).width = 10000
 
-    def add_fuel_suppliers(self, fuel_suppliers):
+    def add_fuel_suppliers(self, fuel_suppliers, include_actions=False):
         """
         Adds a spreadsheet for fuel suppliers
         """
@@ -189,9 +189,10 @@ class SpreadSheetBuilder(object):
         row_index = 0
 
         columns = [
-            "ID", "Organization Name", "Compliance Units", "Registered", "Actions"
+            "ID", "Organization Name", "Compliance Units", "Registered"
         ]
-
+        if include_actions:
+            columns.append("Actions")
         header_style = xlwt.easyxf('font: bold on')
 
         # Build Column Headers
@@ -211,12 +212,14 @@ class SpreadSheetBuilder(object):
             # Adjust the value for the 'Registered' column based on the status
             registered_status = 'Yes' if fuel_supplier.status.status.lower() == 'active' else 'No'
             worksheet.write(row_index, 3, registered_status)
-            worksheet.write(row_index, 4, fuel_supplier.actions_type.the_type)
+            if include_actions:
+                worksheet.write(row_index, 4, fuel_supplier.actions_type.the_type)
 
         # set the widths for the columns that we expect to be longer
         worksheet.col(1).width = 7500
         worksheet.col(2).width = 3500
-        worksheet.col(4).width = 3500
+        if include_actions:
+            worksheet.col(4).width = 3500
 
     def add_users(self, fuel_supplier_users):
         """
