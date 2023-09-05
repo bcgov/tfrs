@@ -55,12 +55,17 @@ class Tooltip extends Component {
         onMouseOver={this._hover}
         onFocus={this._hover}
       >
+      <div className="tooltip-content"> 
         {Array.isArray(this.props.title) &&
-          this.props.title.map(title => (<div key={title}><ReactMarkdown>{title}</ReactMarkdown></div>))
-        }
-        {!Array.isArray(this.props.title) &&
+          this.props.title.map(title => (
+            <div key={title}>
+              <ReactMarkdown>{title}</ReactMarkdown>
+            </div>
+          ))}
+        {!Array.isArray(this.props.title) && (
           <ReactMarkdown>{this.props.title}</ReactMarkdown>
-        }
+        )}
+      </div>
       </ReactTooltip>
     )
   }
