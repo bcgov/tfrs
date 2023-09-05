@@ -67,29 +67,8 @@ const OrganizationsTable = (props) => {
       }
       return false
     }
-  }, {
-    accessor: item => item.actionsTypeDisplay,
-    className: 'col-actions-type-display',
-    Header: 'Actions',
-    id: 'actions',
-    minWidth: 75
-  }, {
-    accessor: item => item.organizationBalance.creditTradeId,
-    Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value)
-
-      return <Link to={viewUrl}>{row.value}</Link>
-    },
-    className: 'col-last-transaction',
-    Header: 'Last Transaction',
-    id: 'lastTransaction',
-    minWidth: 75
-  }, {
-    className: 'col-actions',
-    filterable: false,
-    id: 'actions',
-    width: 50
-  }]
+  }
+]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
