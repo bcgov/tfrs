@@ -32,7 +32,7 @@ export const BTN_REFUSE = 'Refuse'
 export const BTN_REJECT = 'Reject'
 export const BTN_CANCEL = 'Cancel'
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance'
-export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval'
+export const BTN_RECOMMEND_FOR_DECISION = 'Recommend issuance'
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection'
 export const BTN_REQUEST_SUPPLEMENTAL = 'Request Supplemental'
 export const BTN_RESCIND = 'Rescind'
@@ -60,11 +60,10 @@ export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant 
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
                                                    'recommendations or decisions'
 export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment field will be ' +
-                                       'visible to both parties of the transaction and ' +
+                                       'visible to both the organization and ' +
                                        'government.'
 export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +
-                                                  'will be visible only to government users and ' +
-                                                  'not shared with fuel suppliers'
+                                                  'will only be visible to government.'
 export const TEXT_ADD_COMMENT_HEADING = 'Add Comment Form'
 export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment'
 export const TEXT_ADD_INITIAL_COMMENT = 'Add Comment'

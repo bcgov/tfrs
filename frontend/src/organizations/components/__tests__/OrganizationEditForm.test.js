@@ -92,7 +92,7 @@ describe('OrganizationEditForm', () => {
         <OrganizationEditForm {...props} />
       </BrowserRouter>
     )
-    const statusEl = screen.getByLabelText('Active')
+    const statusEl = screen.getByLabelText('Yes')
     expect(statusEl).toBeInTheDocument()
   })
   test('Supplier Status should not be in the DOM', () => {
@@ -103,7 +103,7 @@ describe('OrganizationEditForm', () => {
         <OrganizationEditForm {...props} />
       </BrowserRouter>
     )
-    const statusEl1 = screen.queryByLabelText('Active')
+    const statusEl1 = screen.queryByLabelText('Yes')
     expect(statusEl1).not.toBeInTheDocument()
   })
 
