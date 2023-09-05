@@ -268,7 +268,7 @@ class AMQPNotificationService:
     @transaction.atomic
     def send_notification(
             message: str,
-            interested_organization: Organization,
+            interested_organization: Organization = None,
             interested_roles: List[Role] = [],
             related_credit_trade: CreditTrade = None,
             related_document: Document = None,
