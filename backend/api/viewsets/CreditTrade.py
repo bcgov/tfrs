@@ -275,7 +275,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                     type="Part3FuelSupplier")) \
                 .order_by('lower_name')
 
-            workbook.add_fuel_suppliers(fuel_suppliers)
+            workbook.add_fuel_suppliers(fuel_suppliers, include_actions=True)
 
         workbook.save(response)
 

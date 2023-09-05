@@ -251,7 +251,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
             .order_by('lower_name')
 
         workbook = SpreadSheetBuilder()
-        workbook.add_fuel_suppliers(fuel_suppliers)
+        workbook.add_fuel_suppliers(fuel_suppliers, include_actions=False)
         workbook.save(response)
 
         return response
