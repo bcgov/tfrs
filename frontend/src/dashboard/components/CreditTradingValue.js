@@ -5,22 +5,21 @@ import ORGANIZATIONS from '../../constants/routes/Organizations'
 
 const CreditTradingValue = props => (
   <div className="dashboard-card">
-    <a
-      href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      RLCF-017: Low Carbon Fuel Credit Market Report
-    </a>
-    <a
-      href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <FontAwesomeIcon icon={['far', 'file-pdf']} />
-    </a>
+    <h2>Low Carbon Fuel Standard</h2>
+    <span>Visit our website at:</span>
+    <div>
+      <a
+        href="https://gov.bc.ca/lowcarbonfuels"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        https://gov.bc.ca/lowcarbonfuels
+      </a>
+    </div>
   </div>
 )
+
+
 
 CreditTradingValue.defaultProps = {
 }
