@@ -94,16 +94,15 @@ class ComplianceReportSummaryService(object):
             # For later compliance periods, gather maximum available credit offsets
             max_credit_offset = max(0, OrganizationService.get_max_credit_offset(
                 obj.organization,
-                obj.compliance_period.description,
-                obj,
-                ignore_current_report_deductions=True
+                obj.compliance_period.description
             ))
             max_credit_offset_exclude_reserved = max(0, OrganizationService.get_max_credit_offset(
                 obj.organization, 
                 obj.compliance_period.description,
                 exclude_reserved=True
             ))
-
+            if obj.summary is not None and obj.summary.credits_offset > 0:
+                max_credit_offset += obj.summary.credits_offset
             available_compliance_unit_balance = min(max_credit_offset, max_credit_offset_exclude_reserved)
             net_compliance_unit_balance = lines['25']
 

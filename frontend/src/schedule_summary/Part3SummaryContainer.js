@@ -102,7 +102,14 @@ function lineData (
     // is supplemental
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport, alreadyUpdated)
   }
-  part3 = (period >= COMPLIANCE_YEAR) ? calculatePart3PayableLCFS(part3, complianceReport) : calculatePart3Payable(part3, period)
+  if (period >= COMPLIANCE_YEAR) {
+    part3 = calculatePart3PayableLCFS(part3, complianceReport)
+    if (Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value) < 0) {
+      part3 = handleCreditsOffset(part3, complianceReport, period)
+    }
+  } else {
+    part3 = calculatePart3Payable(part3, period)
+  }
   return part3
 }
 
@@ -656,6 +663,34 @@ function _calculatePart3 (props, state, setState) {
     part3
   })
 
+  return part3
+}
+
+function handleCreditsOffset(part3, complianceReport, period) {
+  let { isSupplemental } = complianceReport
+  if (!isSupplemental) {
+    const creditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value).replace(/,/g, ''))
+    part3[SCHEDULE_SUMMARY.LINE_26][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_26][2],
+      value: Math.abs(creditOffsetA)
+    }
+  }
+  else {
+    const previousCreditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
+    part3[SCHEDULE_SUMMARY.LINE_26][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_26][2],
+      value: previousCreditOffsetA + Math.abs(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
+    }
+    part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
+      ...part3[SCHEDULE_SUMMARY.LINE_26_B][2],
+      value: Math.abs(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value)
+    }
+  }
+  part3 = calculatePart3Payable(part3, period)
+  part3[SCHEDULE_SUMMARY.LINE_28][2] = {
+    ...part3[SCHEDULE_SUMMARY.LINE_28][2],
+    value: part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
+  }
   return part3
 }
 
