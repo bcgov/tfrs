@@ -1,4 +1,4 @@
-from django.db import migrations, transaction
+from django.db import migrations, transaction, models
 import collections
 
 def update_report_fields(apps, schema_editor):
@@ -49,5 +49,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='compliancereport',
+            name='traversal',
+            field=models.IntegerField(default=0),
+        ),
         migrations.RunPython(update_report_fields, reverse_code=migrations.RunPython.noop),
     ]
