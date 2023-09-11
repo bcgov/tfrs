@@ -580,12 +580,10 @@ class ComplianceReportDetailSerializer(
 
         return snapshot
 
-    def get_max_credit_offset(self, obj, ignore_current_report_deductions=False):
+    def get_max_credit_offset(self, obj):
         max_credit_offset = OrganizationService.get_max_credit_offset(
             obj.organization,
-            obj.compliance_period.description,
-            obj,
-            ignore_current_report_deductions
+            obj.compliance_period.description
         )
 
         if max_credit_offset < 0:
