@@ -146,7 +146,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         credit_trade = serializer.save()
         # we only want to create history and send notifications
         # when a status change occurs
-        if previous_state.status != credit_trade.status:
+        if previous_state.status != credit_trade.status or credit_trade.is_rescinded:
             CreditTradeService.create_history(credit_trade, False)
             status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
             if serializer.data['status'] != status_cancelled.id:
