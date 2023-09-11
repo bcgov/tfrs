@@ -192,11 +192,11 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     } else if (year >= COMPLIANCE_YEAR) {
-      if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0) {
+      if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0) {
         this.props.updateScheduleState({
           summary: {
             ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_29_B][2].value
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
           }
         })
       }
