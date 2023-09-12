@@ -24,6 +24,7 @@ import * as GasolineSummaryConatiner from '../schedule_summary/GasolineSummaryCo
 import * as Part3SummaryContainer from '../schedule_summary/Part3SummaryContainer'
 import * as PenaltySummaryContainer from '../schedule_summary/PenaltySummaryContainer'
 import { COMPLIANCE_YEAR } from '../constants/values'
+import SummaryLCFSDeltas from './components/SummaryLCFSDeltas'
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
@@ -481,15 +482,8 @@ class ScheduleSummaryContainer extends Component {
       <div className="row">
         <div className="col-lg-6">
           <h1>{Number(this.props.period) < COMPLIANCE_YEAR ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
-
-          <ReactDataSheet
-            className="spreadsheet"
-            data={this.state.part3}
-            onCellsChanged={(changes, addition = null) => {
-              this._handleCellsChanged('part3', changes, addition)
-            }}
-            valueRenderer={cell => cell.value}
-          />
+          <SummaryLCFSDeltas part3={this.state.part3} complianceData={this.props} 
+            handleCellsChanged={this._handleCellsChanged} />
         </div>
 
         <div className="col-lg-6">
