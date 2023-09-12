@@ -40,10 +40,7 @@ class SummaryLCFSDeltas extends Component {
             if (delta == null) {
                 return part3Val
             }
-            if (Number(period) >= COMPLIANCE_YEAR) {
-                return part3Val - delta
-            }
-            return delta - part3Val
+            return part3Val - delta
         }
         const grid = [
             [{
@@ -222,7 +219,7 @@ class SummaryLCFSDeltas extends Component {
         const { deltas } = this.props.complianceData.complianceReport
         const { period } = this.props.complianceData
 
-        if (deltas === undefined || deltas.length === 0) {
+        if (Number(period) < COMPLIANCE_YEAR || deltas === undefined || deltas.length === 0) {
             return (<ReactDataSheet
                 className="spreadsheet"
                 data={part3}
