@@ -24,7 +24,7 @@ class SummaryLCFSDeltas extends Component {
     static buildSummaryGrid(deltas, part3, period) {
         let adjustedBalance = 0
         if (part3) {
-            adjustedBalance = Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+            adjustedBalance = Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value) / 600
         }
 
         const findMatchingDelta = (field) => {
