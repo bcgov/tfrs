@@ -221,7 +221,7 @@ const cellFormatCurrencyTotal = cellValue => ({
       return ''
     }
 
-    return <span>${Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+    return <span>${Number(value).toFixed(0).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
   }
 })
 const cellFormatTotal = cellValue => ({

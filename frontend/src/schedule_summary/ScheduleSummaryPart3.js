@@ -383,10 +383,25 @@ class ScheduleSummaryPart3 {
         [{ // line 28a
           className: 'text',
           readOnly: true,
-          value: ''
+          value: 'Non-compliance penalty payable (CAD)'
         }, {
           className: 'line',
-          readOnly: true
+          readOnly: true,
+          value: (
+            <div>
+              {'Line 28 '}
+              <Tooltip
+                className="info"
+                show
+                title={
+                  'This line displays the penalty payable based on the information provided' +
+                  ' and is calculated using the $600 per outstanding debit non-compliance penalty.'
+                }
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </Tooltip>
+            </div>
+          )
         }, {
           ...numericColumnSigned,
           attributes: {
