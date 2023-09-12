@@ -221,7 +221,7 @@ class SummaryLCFSDeltas extends Component {
         const { period } = this.props.complianceData
 
         let deltaData, deltaIsAbscent = true
-        if (!(Number(period) < COMPLIANCE_YEAR || deltas === undefined || deltas.length === 0)) {
+        if (Number(period) >= COMPLIANCE_YEAR && deltas !== undefined && deltas.length > 0) {
             const summaryLines = deltas[0].snapshot.data.summary.lines
             deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period))
             deltaIsAbscent = false
