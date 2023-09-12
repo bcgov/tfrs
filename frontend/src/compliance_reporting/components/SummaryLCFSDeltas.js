@@ -206,6 +206,7 @@ class SummaryLCFSDeltas extends Component {
                 readOnly: true
             }] // line 29c
         ]
+        // if no penalty then hide the line 28
         if ((grid[4][2].value === null || grid[4][2].value === 0) && (grid[4][3].value === null || grid[4][3].value === 0)) {
             for (let i = 0; i < 5; i++) {
                 grid[4][i].className = 'hidden'
