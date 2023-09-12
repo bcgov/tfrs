@@ -219,20 +219,17 @@ class SummaryLCFSDeltas extends Component {
         const { deltas } = this.props.complianceData.complianceReport
         const { period } = this.props.complianceData
 
+        let deltaData, deltaIsAbscent = true
         if (Number(period) < COMPLIANCE_YEAR || deltas === undefined || deltas.length === 0) {
-            return (<ReactDataSheet
-                className="spreadsheet"
-                data={part3}
-                onCellsChanged={(changes, addition = null) => {
-                    handleCellsChanged('part3', changes, addition)
-                }}
-                valueRenderer={cell => cell.value}
-            />)
+            deltaIsAbscent = true
+        } else {
+            const summaryLines = deltas[0].snapshot.data.summary.lines
+            deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period))
+            deltaIsAbscent = false
         }
-        const summaryLines = deltas[0].snapshot.data.summary.lines
         return (<ReactDataSheet
             className="spreadsheet"
-            data={SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period))}
+            data={deltaIsAbscent ? part3 : deltaData}
             onCellsChanged={(changes, addition = null) => {
                 handleCellsChanged('part3', changes, addition)
             }}
