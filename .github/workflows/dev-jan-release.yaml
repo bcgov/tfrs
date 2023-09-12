@@ -89,7 +89,7 @@ jobs:
       branch-name: ${{ github.ref_name }}
       suffix: -dev-jan
       env-name: dev
-      database-service-host-name: tfrs-spilo-jan
+      database-service-host-name: tfrs-crunchy-dev-pgbouncer
       rabbitmq-vhost: tfrs-jan-vhost
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
