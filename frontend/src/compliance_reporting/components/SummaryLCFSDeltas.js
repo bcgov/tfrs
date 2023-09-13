@@ -21,7 +21,7 @@ class SummaryLCFSDeltas extends Component {
         }
     }
 
-    static buildSummaryGrid(deltas, part3, period) {
+    static buildSummaryGrid(deltas, part3, period, status) {
         let adjustedBalance = 0
         if (part3) {
             adjustedBalance = Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value) / 600
@@ -172,12 +172,12 @@ class SummaryLCFSDeltas extends Component {
                 className: 'tooltip-large number',
                 readOnly: true
             }, {
-                value: Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value),
+                value: (status === 'Draft') ? 0 : Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value),
                 valueViewer: SummaryLCFSDeltas.currencyViewer(),
                 className: 'tooltip-large number',
                 readOnly: true
             }, {
-                value: difference(findMatchingDelta('28'), Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value)),
+                value: difference(findMatchingDelta('28'), (status === 'Draft') ? 0 : Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value)),
                 valueViewer: SummaryLCFSDeltas.currencyViewer(),
                 className: 'tooltip-large number',
                 readOnly: true
@@ -219,11 +219,11 @@ class SummaryLCFSDeltas extends Component {
         const { part3, handleCellsChanged } = this.props
         const { deltas } = this.props.complianceData.complianceReport
         const { period } = this.props.complianceData
-
+        const status = this.props.complianceData.complianceReport.status.fuelSupplierStatus
         let deltaData, deltaIsAbscent = true
         if (Number(period) >= COMPLIANCE_YEAR && deltas !== undefined && deltas.length > 0) {
             const summaryLines = deltas[0].snapshot.data.summary.lines
-            deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period))
+            deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period), status)
             deltaIsAbscent = false
         }
         return (<ReactDataSheet
