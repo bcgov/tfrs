@@ -25,14 +25,14 @@ class SecureFileSubmissionFormDetails extends Component {
     if (this.props.documentType && this.props.documentType.theType === 'Application') {
       return {
         titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
+        commentPlaceholder: 'Optional: provide any additional information with respect to your Initiative Agreement application'
       }
     }
 
     if (this.props.documentType && this.props.documentType.theType === 'Evidence') {
       return {
-        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
+        titlePlaceholder: 'e.g., P3A-23COM1',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your evidence of completion submission.'
       }
     }
 
@@ -135,13 +135,13 @@ class SecureFileSubmissionFormDetails extends Component {
               {this.props.documentType && this.props.documentType.theType === 'Evidence' &&
                 <div className="row">
                   <div className="form-group col-md-12">
-                    <label htmlFor="milestone">Milestone:
+                    <label htmlFor="milestone">Designated action:
                       <input
                         className="form-control"
                         id="milestone"
                         name="milestone"
                         onChange={this.props.handleInputChange}
-                        placeholder="e.g. Milestone B.2 - Construction, Milestone B.4 & B.5, etc."
+                        placeholder="e.g., Designated Action #2"
                         required="required"
                         type="text"
                         value={this.props.fields.milestone}
@@ -186,15 +186,14 @@ class SecureFileSubmissionFormDetails extends Component {
               </div>
               <div className="row">
                 <div className="form-group col-md-12">
-                  <p className='instructions'>Use the Attachment Type category &quot;Other&quot; to submit documents and attachments associated with existing:</p>
+                  <p className='instructions'>Use the Attachment Type category &quot;Other&quot; to submit files related to:</p>
                   <ul>
                     <li>Compliance Reports</li>
                     <li>Exclusion Reports</li>
-                    <li>Carbon Intensity Applications</li>
-                    <li>Initiative Plans</li>
-                    <li>Credit Transaction Proposal</li>
+                    <li>Credit transfers</li>
+                    <li>Carbon Intensity applications</li>
                   </ul>
-                  <p className='instructions'>Use the Comment field to identify what records this file submission apply to. For example, &quot;This submission pertains to our 2021 Compliance Report&quot;.</p>
+                  <p className='instructions'>Use the Comment field to identify the records this file submission relates to. For example, &quot;This submission provides supporting information for our 2023 Compliance Report&quot;.</p>
                 </div>
               </div>
             </div>
@@ -318,7 +317,7 @@ class SecureFileSubmissionFormDetails extends Component {
 
             <div className="row">
               <div className="form-group col-md-12 main-form">
-                <div>Invalid Files/File Types (These files will not be uploaded):
+                <div>Invalid File Types (These files will not be submitted):
                   <div className="file-submission-attachments">
                     <div className="row">
                       <div className="col-xs-6 header">Filename</div>

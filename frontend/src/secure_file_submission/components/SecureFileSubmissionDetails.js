@@ -16,12 +16,13 @@ import SecureFileSubmissionCommentButtons from './SecureFileSubmissionCommentBut
 import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm'
 import SecureFileSubmissionFileAttachments from './SecureFileSubmissionFileAttachments'
 import { useNavigate } from 'react-router'
+import { transformDocumentTypeDescription } from '../../utils/functions'
 
 const SecureFileSubmissionDetails = props => {
   const navigate = useNavigate()
   return (
     <div className="page-credit-transaction-request-details">
-      <h1>{props.item.type.description} Submission</h1>
+      <h1>{transformDocumentTypeDescription(props.item.type.description)} Submission</h1>
 
       <div className="credit-transaction-request-details">
 
@@ -57,7 +58,7 @@ const SecureFileSubmissionDetails = props => {
             {props.item.milestone &&
             <div className="row">
               <div className="form-group col-md-12">
-                <label htmlFor="milestone-id">Milestone:
+                <label htmlFor="milestone-id">Designated action:
                   <div className="value">{props.item.milestone}</div>
                 </label>
               </div>
@@ -66,7 +67,7 @@ const SecureFileSubmissionDetails = props => {
 
             <div className="row">
               <div className="form-group col-md-12">
-                <label htmlFor="title">{props.item.type.theType === 'Evidence' ? 'Part 3 Agreement Name' : 'Title'}:
+                <label htmlFor="title">{props.item.type.theType === 'Evidence' ? 'Initiative Agreement' : 'Title'}:
                   <div className="value">
                     {props.item.title}
                   </div>
@@ -76,7 +77,7 @@ const SecureFileSubmissionDetails = props => {
 
             <div className="row">
               <div className="form-group col-md-12">
-                <label className="label-credit-transactions" htmlFor="credit-transactions">Linked Credit Transactions:
+                <label className="label-credit-transactions" htmlFor="credit-transactions">Linked Transaction(s):
                   {(props.item.creditTrades && props.item.creditTrades.length > 0)
                     ? (
                       <LinkedCreditTransactions
@@ -108,7 +109,7 @@ const SecureFileSubmissionDetails = props => {
               <div className="form-group col-md-12">
                 <label htmlFor="document-type">Attachment Type:
                   <div className="value">
-                    {props.item.type.description}
+                    {transformDocumentTypeDescription(props.item.type.description)}
                   </div>
                 </label>
               </div>
