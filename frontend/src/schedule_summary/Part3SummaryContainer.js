@@ -568,10 +568,20 @@ function _calculatePart3 (props, state, setState) {
   const { summary } = props.scheduleState
   const { maxCreditOffset, isSupplemental } = props.complianceReport
 
-  let totalCredits = 0
-  let totalDebits = 0
+  let totalCredits = 0;
+  let totalDebits = 0;
   if (props.recomputedTotals.scheduleB) {
-    ({ totalCredits, totalDebits } = props.recomputedTotals.scheduleB)
+    const { records } = props.recomputedTotals.scheduleB;
+
+    records.forEach(record => {
+      if (record.credits !== null) {
+        totalCredits += record.credits;
+      }
+
+      if (record.debits !== null) {
+        totalDebits += record.debits;
+      }
+    });
   }
 
   if (summary.creditsOffset) {
