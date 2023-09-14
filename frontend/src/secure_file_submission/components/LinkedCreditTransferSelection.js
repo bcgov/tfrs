@@ -48,7 +48,7 @@ const LinkedCreditTransferSelection = (props) => {
 
       return row.value
     },
-    Header: 'Credits From',
+    Header: 'Compliance Units From',
     id: 'creditsFrom',
     minWidth: 200
   }, {
@@ -62,7 +62,7 @@ const LinkedCreditTransferSelection = (props) => {
 
       return row.value
     },
-    Header: 'Credits To',
+    Header: 'Compliance Units To',
     id: 'creditsTo',
     minWidth: 200
   }, {
@@ -70,7 +70,7 @@ const LinkedCreditTransferSelection = (props) => {
     className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Quantity of Credits',
+    Header: 'Number of Units',
     id: 'numberOfCredits',
     minWidth: 100
   }, {
@@ -89,7 +89,7 @@ const LinkedCreditTransferSelection = (props) => {
     ),
     className: 'col-price',
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Credit',
+    Header: 'Value Per Unit',
     id: 'fairMarketValuePerCredit',
     minWidth: 100
   }, {
