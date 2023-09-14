@@ -571,8 +571,19 @@ function _calculatePart3 (props, state, setState) {
   let totalCredits = 0
   let totalDebits = 0
   if (props.recomputedTotals.scheduleB) {
-    ({ totalCredits, totalDebits } = props.recomputedTotals.scheduleB)
+    const { records } = props.recomputedTotals.scheduleB;
+
+    records.forEach(record => {
+      if (record.credits !== null) {
+        totalCredits += record.credits;
+      }
+
+      if (record.debits !== null) {
+        totalDebits += record.debits;
+      }
+    });
   }
+
 
   if (summary.creditsOffset) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
