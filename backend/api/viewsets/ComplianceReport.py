@@ -501,34 +501,37 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         If it is, use the appropriate serializer. Otherwise,
         use the default.
         """
-        self.clear_cache_keys_with_pattern('compliance_reports_')
-        instance = self.get_object()
+        try:
+            print('updating compliance report')
+            self.clear_cache_keys_with_pattern('compliance_reports_')
+            instance = self.get_object()
 
-        if request.method == 'PATCH':
-            partial = kwargs.pop('partial', True)
-        else:
-            partial = kwargs.pop('partial', False)
+            if request.method == 'PATCH':
+                partial = kwargs.pop('partial', True)
+            else:
+                partial = kwargs.pop('partial', False)
 
-        if instance.type.the_type != 'Exclusion Report':
-            serializer = self.get_serializer(
-                instance,
-                data=request.data,
-                partial=partial
-            )
-        else:
-            serializer = ExclusionReportUpdateSerializer(
-                instance,
-                data=request.data,
-                context={'request': request},
-                partial=partial
-            )
+            if instance.type.the_type != 'Exclusion Report':
+                serializer = self.get_serializer(
+                    instance,
+                    data=request.data,
+                    partial=partial
+                )
+            else:
+                serializer = ExclusionReportUpdateSerializer(
+                    instance,
+                    data=request.data,
+                    context={'request': request},
+                    partial=partial
+                )
 
-        user = request.user
-        request.data.update({'update_user': user.id})
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
+            user = request.user
+            request.data.update({'update_user': user.id})
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
 
     def list(self, request, *args, **kwargs):
         query_params = request.GET.urlencode()
