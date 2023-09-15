@@ -1223,6 +1223,7 @@ class ComplianceReportUpdateSerializer(
     )
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
+    deltas = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
     max_credit_offset_exclude_reserved = SerializerMethodField()
@@ -1234,6 +1235,7 @@ class ComplianceReportUpdateSerializer(
 
     strip_summary = False
     disregard_status = False
+    skip_deltas = False
 
     def get_display_name(self, obj):
         if obj.nickname is not None and obj.nickname != '':
@@ -1303,6 +1305,69 @@ class ComplianceReportUpdateSerializer(
             return serializer.data
         else:
             return None
+        
+    def get_deltas(self, obj):
+
+        deltas = []
+
+        if self.skip_deltas:
+            return deltas
+
+        current = obj
+
+        while current:
+            if current.supplements:
+                ancestor = current.supplements
+
+                qs = ComplianceReportSnapshot.objects.filter(
+                    compliance_report=ancestor
+                )
+
+                if qs.exists():
+                    ancestor_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    ancestor_computed = False
+                else:
+                    # no snapshot. make one.
+                    ser = ComplianceReportDetailSerializer(
+                        ancestor, context=self.context
+                    )
+                    ser.skip_deltas = True
+                    ancestor_snapshot = ser.data
+                    ancestor_computed = True
+
+                qs = ComplianceReportSnapshot.objects.filter(
+                    compliance_report=current
+                )
+
+                if qs.exists():
+                    current_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                else:
+                    # no snapshot
+                    ser = ComplianceReportDetailSerializer(
+                        current, context=self.context
+                    )
+                    ser.skip_deltas = True
+                    current_snapshot = ser.data
+
+                deltas += [{
+                    'levels_up': 1,
+                    'ancestor_id': ancestor.id,
+                    'ancestor_display_name': ancestor.nickname
+                    if (ancestor.nickname is not None and
+                        ancestor.nickname != '')
+                    else ancestor.generated_nickname,
+                    'delta': ComplianceReportService.compute_delta(
+                        current_snapshot, ancestor_snapshot
+                    ),
+                    'snapshot': {
+                        'data': ancestor_snapshot,
+                        'computed': ancestor_computed
+                    }
+                }]
+
+            current = current.supplements
+
+        return deltas
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
@@ -1321,19 +1386,20 @@ class ComplianceReportUpdateSerializer(
             instance.compliance_period.description
         )
 
-        if summary_data and instance.supplements_id is None and \
-                summary_data.get('credits_offset', 0) and \
-                summary_data.get('credits_offset', 0) > max_credit_offset:
-            raise (serializers.ValidationError(
-                'Insufficient available credit balance. Please adjust Line 26.'
-            ))
+        if int(instance.compliance_period.description) <= 2022:
+            if summary_data and instance.supplements_id is None and \
+                    summary_data.get('credits_offset', 0) and \
+                    summary_data.get('credits_offset', 0) > max_credit_offset:
+                raise (serializers.ValidationError(
+                    'Insufficient available credit balance. Please adjust Line 26.'
+                ))
 
-        if summary_data and instance.supplements_id and \
-                summary_data.get('credits_offset_b', 0) and \
-                summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
-            raise (serializers.ValidationError(
-                'Insufficient available credit balance. Please adjust Line 26b.'
-            ))
+            if summary_data and instance.supplements_id and \
+                    summary_data.get('credits_offset_b', 0) and \
+                    summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
+                raise (serializers.ValidationError(
+                    'Insufficient available credit balance. Please adjust Line 26b.'
+                ))
 
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
@@ -1610,7 +1676,7 @@ class ComplianceReportUpdateSerializer(
         fields = (
             'status', 'type', 'compliance_period', 'organization',
             'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-            'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+            'summary', 'read_only', 'has_snapshot', 'actions', 'actor', 'deltas',
             'display_name', 'supplemental_note', 'is_supplemental',
             'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
             'supplemental_number', 'last_accepted_offset', 'history',
