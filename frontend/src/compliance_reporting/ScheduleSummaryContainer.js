@@ -482,7 +482,7 @@ class ScheduleSummaryContainer extends Component {
       <div className="row">
         <div className="col-lg-6">
           <h1>{Number(this.props.period) < COMPLIANCE_YEAR ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
-          <SummaryLCFSDeltas part3={this.state.part3} complianceData={this.props} 
+          <SummaryLCFSDeltas part3={this.state.part3} complianceData={this.props}
             handleCellsChanged={this._handleCellsChanged} />
         </div>
 

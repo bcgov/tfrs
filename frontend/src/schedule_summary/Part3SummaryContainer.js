@@ -571,19 +571,18 @@ function _calculatePart3 (props, state, setState) {
   let totalCredits = 0
   let totalDebits = 0
   if (props.recomputedTotals.scheduleB) {
-    const { records } = props.recomputedTotals.scheduleB;
+    const { records } = props.recomputedTotals.scheduleB
 
     records.forEach(record => {
       if (record.credits !== null) {
-        totalCredits += record.credits;
+        totalCredits += record.credits
       }
 
       if (record.debits !== null) {
-        totalDebits += record.debits;
+        totalDebits += record.debits
       }
-    });
+    })
   }
-
 
   if (summary.creditsOffset) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
@@ -677,16 +676,15 @@ function _calculatePart3 (props, state, setState) {
   return part3
 }
 
-function handleCreditsOffset(part3, complianceReport, period) {
-  let { isSupplemental } = complianceReport
+function handleCreditsOffset (part3, complianceReport, period) {
+  const { isSupplemental } = complianceReport
   if (!isSupplemental) {
     const creditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value).replace(/,/g, ''))
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2],
       value: Math.abs(creditOffsetA)
     }
-  }
-  else {
+  } else {
     const previousCreditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
     part3[SCHEDULE_SUMMARY.LINE_26][2] = {
       ...part3[SCHEDULE_SUMMARY.LINE_26][2],
