@@ -474,7 +474,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    ancestor_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    ancestor_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                     ancestor_computed = False
                 else:
                     # no snapshot. make one.
@@ -490,7 +490,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    current_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    current_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                 else:
                     # no snapshot
                     ser = ComplianceReportDetailSerializer(
@@ -518,8 +518,9 @@ class ComplianceReportDetailSerializer(
             current = current.supplements
 
         return deltas
-
-    def build_compliance_units(self, snapshot, obj):
+    
+    @staticmethod
+    def build_compliance_units(snapshot, obj):
         lines = snapshot['summary']['lines']
         if lines.get('29A') is None:
             previous_transactions = []
@@ -1324,7 +1325,7 @@ class ComplianceReportUpdateSerializer(
                 )
 
                 if qs.exists():
-                    ancestor_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    ancestor_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                     ancestor_computed = False
                 else:
                     # no snapshot. make one.
@@ -1340,7 +1341,7 @@ class ComplianceReportUpdateSerializer(
                 )
 
                 if qs.exists():
-                    current_snapshot = self.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    current_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                 else:
                     # no snapshot
                     ser = ComplianceReportDetailSerializer(

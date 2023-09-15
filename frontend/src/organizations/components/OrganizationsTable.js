@@ -8,7 +8,6 @@ import 'react-table/react-table.css'
 import numeral from 'numeral'
 
 import * as NumberFormat from '../../constants/numeralFormats'
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
 import ORGANIZATION_STATUSES from '../../constants/organizationStatuses'
 import ReactTable from '../../app/components/StateSavingReactTable'
@@ -68,7 +67,7 @@ const OrganizationsTable = (props) => {
       return false
     }
   }
-]
+  ]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
