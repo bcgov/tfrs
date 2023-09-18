@@ -22,12 +22,16 @@ class SummaryLCFSDeltas extends Component {
     }
   }
 
-  static buildSummaryGrid (deltas, part3, period) {
+  static buildSummaryGrid (deltas, part3, period, recomputedTotals, complianceData) {
     let adjustedBalance = 0
-    if (part3) {
-      adjustedBalance = Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value) / 600
-    }
-
+    if (recomputedTotals) {
+      const field25Delta = recomputedTotals.deltas[0]?.delta.find(item => item.field === "25");
+      if (field25Delta) {
+        const field25Value = Number(field25Delta.newValue);
+        adjustedBalance = complianceData.recomputedTotals.maxCreditOffsetExcludeReserved - Math.abs(field25Value)
+      }
+    }     
+    
     const findMatchingDelta = (field) => {
       if (deltas[field]) {
         return deltas[field]
@@ -217,13 +221,14 @@ class SummaryLCFSDeltas extends Component {
   }
 
   render () {
-    const { part3, handleCellsChanged } = this.props
+    const { part3, handleCellsChanged, complianceData } = this.props
     const { deltas } = this.props.complianceData.complianceReport
+    const { recomputedTotals } = this.props.complianceData
     const { period } = this.props.complianceData
     let deltaData; let deltaIsAbscent = true
     if (Number(period) >= COMPLIANCE_YEAR && deltas !== undefined && deltas.length > 0) {
       const summaryLines = deltas[0].snapshot.data.summary.lines
-      deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period))
+      deltaData = SummaryLCFSDeltas.buildSummaryGrid(summaryLines, part3, Number(period), recomputedTotals, complianceData)
       deltaIsAbscent = false
     }
     return (<ReactDataSheet
