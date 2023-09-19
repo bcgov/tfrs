@@ -192,12 +192,21 @@ class ScheduleSummaryContainer extends Component {
           creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
         }
       })
-    } else if (year >= COMPLIANCE_YEAR) {
+    } 
+    if (year >= COMPLIANCE_YEAR) {
       if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0) {
         this.props.updateScheduleState({
           summary: {
             ...summary,
             creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
+          }
+        })
+      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > 0 && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
+        this.props.updateScheduleState({
+          summary: {
+            ...summary,
+            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
+            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
           }
         })
       }
