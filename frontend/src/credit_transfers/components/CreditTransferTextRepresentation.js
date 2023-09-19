@@ -203,7 +203,7 @@ class CreditTransferTextRepresentation extends Component {
               onChange={(event) => this.props.toggleCategoryDSelection(event.target.checked)}
               style={{ paddingTop: 4 }}
             />
-            <span>Select the checkbox to set the transfer as <span className='value'>Category D,</span>&nbsp; if the price is significantly less than fair market value. This will override the default category determined by the agreement and approval dates indicated below.</span>
+            <span>Select the checkbox to set the transfer as <span className='value'>Category D</span>&nbsp;if the price is significantly less than fair market value. This will override the default category determined by the agreement and approval dates indicated below.</span>
           </div>
         }
       </div>
