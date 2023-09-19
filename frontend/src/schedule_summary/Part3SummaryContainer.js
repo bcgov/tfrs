@@ -418,7 +418,7 @@ function populateSchedules (props, state, setState) {
 
 function calculatePart3PayableLCFS (part3, complianceReport) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
-  const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
+  const availableBalance = Number(Math.max(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
     value: availableBalance
