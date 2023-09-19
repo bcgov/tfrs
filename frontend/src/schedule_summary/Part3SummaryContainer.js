@@ -96,19 +96,21 @@ function lineData (
 ) {
   const { isSupplemental } = complianceReport
   part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
+  part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
+  part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
+  part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+    className: 'hidden',
+    value: '0'
+  }
   if (!isSupplemental) {
-    part3 = Part3NonSupplimentalLineData(part3)
+    part3 = Part3NonSupplimentalLineData(part3, complianceReport, period)
   } else {
     // is supplemental
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport, alreadyUpdated)
   }
+  part3 = calculatePart3Payable(part3, period)
   if (period >= COMPLIANCE_YEAR) {
-    part3 = calculatePart3PayableLCFS(part3, complianceReport)
-    if (Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value) < 0) {
-      part3 = handleCreditsOffset(part3, complianceReport, period)
-    }
-  } else {
-    part3 = calculatePart3Payable(part3, period)
+    part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
   }
   return part3
 }
@@ -162,8 +164,11 @@ function Part3NonSupplimentalTableData (part3) {
   return part3
 }
 
-function Part3NonSupplimentalLineData (part3) {
+function Part3NonSupplimentalLineData (part3, complianceReport, period) {
   const line25value = part3[SCHEDULE_SUMMARY.LINE_25][2].value * -1
+  if (period >= COMPLIANCE_YEAR) {
+    NonSupplimentalComplianceUnitData(complianceReport, part3, line25value)
+  }
   if (line25value && line25value < part3[SCHEDULE_SUMMARY.LINE_26][2].value) {
     part3[SCHEDULE_SUMMARY.LINE_26][2].value = 0
   }
@@ -215,6 +220,24 @@ function Part3NonSupplimentalLineData (part3) {
   return part3
 }
 
+function NonSupplimentalComplianceUnitData(complianceReport, part3, line25value) {
+  // Available compliance unit balance on March 31, YYYY - Line 29A
+  const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
+  part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = availableBalance
+  const creditsOffset = availableBalance + part3[SCHEDULE_SUMMARY.LINE_25][2].value
+  if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = (creditsOffset < 0) ? availableBalance : line25value // get the credits from available balance and fill it up 
+    if (creditsOffset < 0) {
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(creditsOffset)} units * $600 CAD per unit)`
+      part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(creditsOffset * -600)
+    }
+  }
+  part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = (creditsOffset < 0) ? (availableBalance * -1) : part3[SCHEDULE_SUMMARY.LINE_25][2].value
+  part3[SCHEDULE_SUMMARY.LINE_29_C][2].value = Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
+}
+
 function Part3SupplementalData (
   part3,
   summary,
@@ -231,6 +254,7 @@ function Part3SupplementalData (
     history,
     status
   } = complianceReport
+  const period = Number(complianceReport.compliancePeriod.description)
 
   part3[SCHEDULE_SUMMARY.LINE_26_B][2].value = summary.creditsOffsetB
 
@@ -381,6 +405,10 @@ function Part3SupplementalData (
     part3[SCHEDULE_SUMMARY.LINE_26_C][2].value = 0
   }
 
+  if (period >= COMPLIANCE_YEAR) {
+    SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, part3)
+  }
+
   // console.log('LINE_23', part3[SCHEDULE_SUMMARY.LINE_23][2].value)
   // console.log('LINE_24', part3[SCHEDULE_SUMMARY.LINE_24][2].value)
   // console.log('LINE_25', part3[SCHEDULE_SUMMARY.LINE_25][2].value)
@@ -392,6 +420,67 @@ function Part3SupplementalData (
   // console.log('LINE_28', part3[SCHEDULE_SUMMARY.LINE_28][2].value)
 
   return part3
+}
+
+function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, part3) {
+  let availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
+  availableBalance += complianceReport.totalPreviousCreditReductions
+  // handle the scenario wherein previous balance changed w.r.t initial report
+  if (availableBalance !== complianceReport.maxCreditOffsetExcludeReserved && lastAcceptedOffset === null) {
+    availableBalance = complianceReport.maxCreditOffsetExcludeReserved
+  }
+  let totalPreviousValidations = 0
+  let totalPreviousReductions = 0
+  let totalPreviousComplianceUnits = 0
+
+  if (complianceReport.deltas[0].delta && complianceReport.deltas[0].delta.length > 0 && lastAcceptedOffset !== null) {
+    let delta = complianceReport.deltas[0].delta
+    let snapshot = complianceReport.deltas[0].snapshot
+    // identify total reductions and validations
+    delta.filter(e => e.field.includes('credit_transactions')).map(e => {
+      if (e.newValue.type === 'Credit Validation') {
+        totalPreviousValidations += e.newValue.credits
+      }
+      if (e.newValue.type === 'Credit Reduction') {
+        totalPreviousReductions += e.newValue.credits
+      }
+    })
+    totalPreviousComplianceUnits = Number(snapshot.data.summary.lines['25'])
+  }
+
+  let desiredNetCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  let netComplianceUnitBalance = desiredNetCreditBalanceChange - (totalPreviousValidations - totalPreviousReductions)
+  let adjustedBalance = availableBalance + netComplianceUnitBalance
+
+  if (availableBalance <= 0 && netComplianceUnitBalance < 0) {
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
+    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
+
+    part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = 0
+    part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = desiredNetCreditBalanceChange - totalPreviousComplianceUnits
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2].value = 0
+  } else {
+    part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = availableBalance
+    if (netComplianceUnitBalance < 0 && adjustedBalance < 0) {
+      part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = availableBalance * -1
+      if (adjustedBalance < 0) {
+        part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
+        part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
+        part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
+        part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
+      }
+    } else {
+      part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = netComplianceUnitBalance
+    }
+    part3[SCHEDULE_SUMMARY.LINE_29_C][2].value = part3[SCHEDULE_SUMMARY.LINE_29_A][2].value + part3[SCHEDULE_SUMMARY.LINE_29_B][2].value
+  }
+  if (netComplianceUnitBalance < 0) {
+    // If any units to be put into reserve
+    part3[SCHEDULE_SUMMARY.LINE_26_A][2].value = (Math.abs(netComplianceUnitBalance) > availableBalance) ? availableBalance : Math.abs(netComplianceUnitBalance)
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = Number(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value)
+  }
 }
 
 function populateSchedules (props, state, setState) {
@@ -414,92 +503,6 @@ function populateSchedules (props, state, setState) {
     ...state,
     part3
   })
-}
-
-function calculatePart3PayableLCFS (part3, complianceReport) {
-  // Available compliance unit balance on March 31, YYYY - Line 29A
-  const availableBalance = Number(Math.max(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
-  part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-    ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-    value: availableBalance
-  }
-  part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
-    className: 'hidden',
-    value: '0'
-  }
-  // Net compliance unit balance for compliance period - Line 25
-  let netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  const netCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  if (complianceReport.isSupplemental) {
-    let totalPreviousReduction = 0
-    let totalPreviousValidation = 0
-    if (Object.prototype.hasOwnProperty.call(complianceReport, 'creditTransactions')) {
-      for (const transaction of complianceReport.creditTransactions) {
-        if (transaction.type === 'Credit Validation') {
-          totalPreviousValidation += Number(transaction.credits)
-        }
-        if (transaction.type === 'Credit Reduction') {
-          totalPreviousReduction += Number(transaction.credits)
-        }
-      }
-    }
-    netBalance = netCreditBalanceChange - (totalPreviousValidation - totalPreviousReduction)
-  }
-
-  const adjustedBalance = availableBalance + netBalance
-  if (availableBalance <= 0 && netBalance < 0) {
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
-    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
-    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-      value: 0
-    }
-    let totalPreviousComplianceUnits = 0
-    for (const delta of complianceReport.deltas) {
-      if (delta.snapshot.data.summary.lines['25']) {
-        totalPreviousComplianceUnits += Number(delta.snapshot.data.summary.lines['25'])
-      }
-    }
-    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: (Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) - totalPreviousComplianceUnits)
-    } // reduce previous deductions if any
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: 0
-    }
-  } else {
-    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-      value: availableBalance
-    }
-    if ((netBalance < 0 && adjustedBalance >= 0) || (netBalance >= 0)) {
-      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-        value: netBalance
-      }
-    } else if ((netBalance < 0) && (adjustedBalance < 0)) {
-      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-        value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
-      }
-      part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
-      part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
-      part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
-    }
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
-    }
-  }
-
-  part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
-  return part3
 }
 
 function calculatePart3Payable (part3, period) {
@@ -676,36 +679,8 @@ function _calculatePart3 (props, state, setState) {
   return part3
 }
 
-function handleCreditsOffset (part3, complianceReport, period) {
-  const { isSupplemental } = complianceReport
-  if (!isSupplemental) {
-    const creditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value).replace(/,/g, ''))
-    part3[SCHEDULE_SUMMARY.LINE_26][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_26][2],
-      value: Math.abs(creditOffsetA)
-    }
-  } else {
-    const previousCreditOffsetA = Number(String(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
-    part3[SCHEDULE_SUMMARY.LINE_26][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_26][2],
-      value: previousCreditOffsetA + Math.abs(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
-    }
-    part3[SCHEDULE_SUMMARY.LINE_26_B][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_26_B][2],
-      value: Math.abs(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value)
-    }
-  }
-  part3 = calculatePart3Payable(part3, period)
-  part3[SCHEDULE_SUMMARY.LINE_28][2] = {
-    ...part3[SCHEDULE_SUMMARY.LINE_28][2],
-    value: part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
-  }
-  return part3
-}
-
 export {
   calculatePart3Payable,
-  calculatePart3PayableLCFS,
   _calculatePart3,
   tableData,
   lineData,

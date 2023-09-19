@@ -591,7 +591,7 @@ class ScheduleBContainer extends Component {
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].value = response.outputs.carbonIntensityFuel
         grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].readOnly = true
       }
-      console.log(grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL], '597')
+
       grid[row][SCHEDULE_B.CARBON_INTENSITY_FUEL].customIntensityValue =
         response.outputs.customIntensityValue
 

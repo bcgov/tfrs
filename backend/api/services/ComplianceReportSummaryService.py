@@ -101,7 +101,7 @@ class ComplianceReportSummaryService(object):
                 obj.compliance_period.description,
                 exclude_reserved=True
             ))
-            if obj.summary is not None and obj.summary.credits_offset > 0:
+            if obj.summary is not None and obj.summary.credits_offset is not None and obj.summary.credits_offset > 0:
                 max_credit_offset += obj.summary.credits_offset
             available_compliance_unit_balance = min(max_credit_offset, max_credit_offset_exclude_reserved)
             net_compliance_unit_balance = lines['25']
