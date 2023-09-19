@@ -505,92 +505,6 @@ function populateSchedules (props, state, setState) {
   })
 }
 
-function calculatePart3PayableLCFS (part3, complianceReport) {
-  // Available compliance unit balance on March 31, YYYY - Line 29A
-  const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
-  part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-    ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-    value: availableBalance
-  }
-  part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
-    className: 'hidden',
-    value: '0'
-  }
-  // Net compliance unit balance for compliance period - Line 25
-  let netBalance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  const netCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  if (complianceReport.isSupplemental) {
-    let totalPreviousReduction = 0
-    let totalPreviousValidation = 0
-    if (Object.prototype.hasOwnProperty.call(complianceReport, 'creditTransactions')) {
-      for (const transaction of complianceReport.creditTransactions) {
-        if (transaction.type === 'Credit Validation') {
-          totalPreviousValidation += Number(transaction.credits)
-        }
-        if (transaction.type === 'Credit Reduction') {
-          totalPreviousReduction += Number(transaction.credits)
-        }
-      }
-    }
-    netBalance = netCreditBalanceChange - (totalPreviousValidation - totalPreviousReduction)
-  }
-
-  const adjustedBalance = availableBalance + netBalance
-  if (availableBalance <= 0 && netBalance < 0) {
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
-    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
-    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-      value: 0
-    }
-    let totalPreviousComplianceUnits = 0
-    for (const delta of complianceReport.deltas) {
-      if (delta.snapshot.data.summary.lines['25']) {
-        totalPreviousComplianceUnits += Number(delta.snapshot.data.summary.lines['25'])
-      }
-    }
-    part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-      value: (Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value) - totalPreviousComplianceUnits)
-    } // reduce previous deductions if any
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: 0
-    }
-  } else {
-    part3[SCHEDULE_SUMMARY.LINE_29_A][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_A][2],
-      value: availableBalance
-    }
-    if ((netBalance < 0 && adjustedBalance >= 0) || (netBalance >= 0)) {
-      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-        value: netBalance
-      }
-    } else if ((netBalance < 0) && (adjustedBalance < 0)) {
-      part3[SCHEDULE_SUMMARY.LINE_29_B][2] = {
-        ...part3[SCHEDULE_SUMMARY.LINE_29_B][2],
-        value: (adjustedBalance > 0) ? netBalance : (-1 * availableBalance)
-      }
-      part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
-      part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(adjustedBalance)} units * $600 CAD per unit)`
-      part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'line total'
-      part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
-    }
-    part3[SCHEDULE_SUMMARY.LINE_29_C][2] = {
-      ...part3[SCHEDULE_SUMMARY.LINE_29_C][2],
-      value: Number(part3[SCHEDULE_SUMMARY.LINE_29_A][2].value) + Number(part3[SCHEDULE_SUMMARY.LINE_29_B][2].value)
-    }
-  }
-
-  part3[SCHEDULE_SUMMARY.LINE_28][2].value = part3[SCHEDULE_SUMMARY.LINE_28_A][2].value
-  return part3
-}
-
 function calculatePart3Payable (part3, period) {
   let credits = Number(part3[SCHEDULE_SUMMARY.LINE_26][2].value)
   const balance = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
@@ -767,7 +681,6 @@ function _calculatePart3 (props, state, setState) {
 
 export {
   calculatePart3Payable,
-  calculatePart3PayableLCFS,
   _calculatePart3,
   tableData,
   lineData,
