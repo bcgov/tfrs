@@ -126,16 +126,16 @@ const OrganizationDetails = props => {
         </div>
         <div className="status">
           <dl className="dl-horizontal">
-            <dt style={{ width: '300px' }}><strong>Registered for credit transfers:</strong></dt>
+            <dt style={{ width: '300px' }}><strong>Registered for transfers:</strong></dt>
             <dd>
             {props.organization.statusDisplay === 'Inactive' &&
               <span className="status-description">
-                <strong>No &mdash;</strong> An organization must register to transfer credits.
+                <strong>No &mdash;</strong> An organization must be registered to transfer compliance units.
               </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
               <span className="status-description">
-                <strong>Yes &mdash;</strong> A registered organization is able to transfer credits.
+                <strong>Yes &mdash;</strong> A registered organization is able to transfer compliance units.
               </span>
             }
             </dd>
