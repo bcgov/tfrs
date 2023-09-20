@@ -431,21 +431,22 @@ function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, pa
   }
   let totalPreviousValidations = 0
   let totalPreviousReductions = 0
-  let totalPreviousComplianceUnits = 0
-
-  if (complianceReport.deltas[0].delta && complianceReport.deltas[0].delta.length > 0 && lastAcceptedOffset !== null) {
-    let delta = complianceReport.deltas[0].delta
-    let snapshot = complianceReport.deltas[0].snapshot
-    // identify total reductions and validations
-    delta.filter(e => e.field.includes('credit_transactions')).map(e => {
-      if (e.newValue.type === 'Credit Validation') {
-        totalPreviousValidations += e.newValue.credits
-      }
-      if (e.newValue.type === 'Credit Reduction') {
-        totalPreviousReductions += e.newValue.credits
-      }
-    })
-    totalPreviousComplianceUnits = Number(snapshot.data.summary.lines['25'])
+  const totalPreviousComplianceUnits  = Number(complianceReport.deltas[0].snapshot.data.summary.lines['25'])
+  for (let i = 0; i < complianceReport.deltas.length; i++) {
+    let deltas = complianceReport.deltas[i]
+    if (deltas.delta && deltas.delta.length > 0 && lastAcceptedOffset !== null) {
+      let delta = deltas.delta
+      let snapshot = deltas.snapshot
+      // identify total reductions and validations
+      delta.filter(e => e.field.includes('credit_transactions')).map(e => {
+        if (e.newValue.type === 'Credit Validation') {
+          totalPreviousValidations += e.newValue.credits
+        }
+        if (e.newValue.type === 'Credit Reduction') {
+          totalPreviousReductions += e.newValue.credits
+        }
+      })
+    }
   }
 
   let desiredNetCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
@@ -459,7 +460,7 @@ function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, pa
     part3[SCHEDULE_SUMMARY.LINE_28_A][2] = cellFormatCurrencyTotal(adjustedBalance * -600)
 
     part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = 0
-    part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = desiredNetCreditBalanceChange - totalPreviousComplianceUnits
+    part3[SCHEDULE_SUMMARY.LINE_29_B][2].value = (availableBalance <= 0) ? 0 : desiredNetCreditBalanceChange - totalPreviousComplianceUnits
     part3[SCHEDULE_SUMMARY.LINE_29_C][2].value = 0
   } else {
     part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = availableBalance
