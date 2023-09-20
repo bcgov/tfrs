@@ -100,7 +100,7 @@ const DirectorReview = (props) => {
                     data-testid="creditTransferBtn"
                   >
 
-                    Credit transfer(s) awaiting review
+                    Transfer(s) awaiting review
                   </button>
                 </div>
             )}

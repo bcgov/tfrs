@@ -34,7 +34,7 @@ const FileSubmission = props => {
             Submit/Upload files
           </button>
           <br/>
-          {' related to initiative agreements, compliance reporting, credit transfers, initiative plans.'}
+          {' related to initiative agreements, compliance reporting, transfers, initiative plans.'}
         </div>
         <p><br /></p>
       </div>
