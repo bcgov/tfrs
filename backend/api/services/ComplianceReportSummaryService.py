@@ -244,7 +244,7 @@ class ComplianceReportSummaryService(object):
             lines['29A'] = 0
             if previous_snapshots:
                 total_previous_compliance_units = sum(Decimal(snap.get("summary", {}).get("lines", {}).get("25", 0)) for snap in previous_snapshots)
-            lines['29B'] = credit_difference - total_previous_compliance_units
+            lines['29B'] = 0 if (available_compliance_unit_balance <= 0) else credit_difference - total_previous_compliance_units
             lines['29C'] = 0
         else:
             lines['29A'] = available_compliance_unit_balance
