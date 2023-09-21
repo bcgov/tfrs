@@ -8,13 +8,15 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    env:
+      releasename: ${{ github.event.pull_request.head.ref }}    
     steps:
       - uses: actions/checkout@v3
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ github.event.pull_request.head.ref }}
-          tag_name: ${{ github.event.pull_request.head.ref }}
+          name: ${releasename/release-/v}
+          tag_name: ${releasename/release-/v}
           body: |
             ${{ github.event.pull_request.body }}
           token: ${{ secrets.GITHUB_TOKEN }}
