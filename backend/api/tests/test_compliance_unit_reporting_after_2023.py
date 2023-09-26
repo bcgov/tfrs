@@ -241,6 +241,33 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(response.data.get('summary').get('lines').get('28'), 60000)
         self.assertEqual(response.data.get('summary').get('lines').get('29C'), 0)
 
+    def test_initial_report_zero_starting_value(self):
+        self._add_or_remove_credits(0)  # Starting with zero credits
+        rid = self._create_draft_compliance_report()
+        
+        # patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 684477  # debits from fuel supplied (from Schedule B)
+        payload['summary']['creditsOffset'] = 0
+        self._patch_fs_user_for_compliance_report(payload, rid)
+
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+        
+        # retrieve the compliance report and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.data.get('summary').get('lines').get('25'), -400)
+        self.assertEqual(response.data.get('summary').get('lines').get('29A'), 0)
+        self.assertEqual(response.data.get('summary').get('lines').get('29B'), 0)
+        self.assertEqual(response.data.get('summary').get('lines').get('28'), 240000)
+        self.assertEqual(response.data.get('summary').get('lines').get('29C'), 0)
+
     """
     | Scenario 4: Supplemental Report Submission #1, increasing, positive net balance, previous report was assessed             |
     |-----------------------------------------------------------------------|---------------|-------------|---------------------|--------------------|-----------------------|
