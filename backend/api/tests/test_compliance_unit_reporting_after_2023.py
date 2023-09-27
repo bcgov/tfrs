@@ -968,3 +968,49 @@ class TestComplianceUnitReporting(BaseTestCase):
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-100))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(180000))
         self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+
+    """Testing that even in penalty situation, organization balances never go below zero"""
+    def test_organization_balance_never_below_zero(self):
+        self._add_or_remove_credits(100000)
+
+        organization = Organization.objects.get_by_natural_key("Test Org 1")
+        initial_balance = organization.organization_balance
+
+        self.assertEqual(initial_balance['validated_credits'], Decimal(100000))
+        
+        # Create inital draft report
+        rid = self._create_draft_compliance_report()
+
+        # Patch compliance report info
+        payload = compliance_unit_negative_offset_payload
+        payload['status']['fuelSupplierStatus'] = 'Draft'
+        payload['scheduleB']['records'][0]['quantity'] = 342238999  # debits from fuel supplied (from Schedule B)
+        self._patch_fs_user_for_compliance_report(payload, rid)
+
+        # Submit the compliance report
+        payload = {
+            'status': {'fuelSupplierStatus': 'Submitted'},
+        }
+        self._patch_fs_user_for_compliance_report(payload, rid)
+
+        # Successful director acceptance
+        self._acceptance_from_director(rid)
+
+        # retrieve the compliance report and validate the Summary report fields
+        response = self.clients['fs_user_1'].get('/api/compliance_reports/{id}/snapshot'.format(id=rid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('25')), Decimal(-200000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29A')), Decimal(100000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29B')), Decimal(-100000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('28')), Decimal(60000000))
+        self.assertEqual(Decimal(response.data.get('summary').get('lines').get('29C')), Decimal(0))
+        
+        # Ensure that the organization balance is zero and not negative
+        updated_balance = organization.organization_balance
+        self.assertEqual(updated_balance['validated_credits'], 0)
+
+        lastest_transaction = CreditTrade.objects.last()
+        # Optionally: Ensure that the credit transaction was made for the amount of available balance
+        # Replace with the actual way you get the transaction amount.
+        self.assertEqual(lastest_transaction.number_of_credits, initial_balance['validated_credits'])
+
