@@ -255,6 +255,7 @@ class ComplianceReportService(object):
             raise InvalidStateException()
 
         snapshot = compliance_report.snapshot
+        COMPLIANCE_PERIOD_ABOVE_2023 = int(snapshot['compliance_period']['description']) >= 2023
 
         if 'summary' not in snapshot:
             raise InvalidStateException()
@@ -262,7 +263,7 @@ class ComplianceReportService(object):
             raise InvalidStateException()
 
         lines = snapshot['summary']['lines']
-        if int(snapshot['compliance_period']['description']) >= 2023:
+        if COMPLIANCE_PERIOD_ABOVE_2023:
             # If a compliance report is in a deficit position(i.e., a negative net compliance unit balance for the
             # compliance period or negative value in Line 25 in the summary section) that is greater than
             # the organization’s available credit balance, then the available compliance unit balance needs to be
@@ -321,7 +322,19 @@ class ComplianceReportService(object):
             CreditTradeService.pvr_notification(None, credit_transaction)
         else:
             if required_credit_transaction < Decimal(0):
-                # do_reduction for Decimal(lines['26'])
+                if COMPLIANCE_PERIOD_ABOVE_2023:
+                    # Fetch the organization's balance from organization_balance property
+                    org_balance = Decimal(compliance_report.organization.organization_balance['validated_credits'])
+                    
+                    # Deduct the pending deductions, if any, from the organization balance.
+                    if 'deductions' in compliance_report.organization.organization_balance:
+                        org_balance -= Decimal(compliance_report.organization.organization_balance['deductions'])
+                    
+                    # If required_credit_transaction is more negative than the organization balance,
+                    # set it to be equal to the organization balance.
+                    if org_balance + required_credit_transaction < Decimal(0):
+                        required_credit_transaction = -org_balance
+
                 credit_transaction = CreditTrade(
                     initiator=Organization.objects.get(id=1),
                     respondent=compliance_report.organization,
