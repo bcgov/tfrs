@@ -38,7 +38,20 @@ class ScheduleBContainer extends Component {
       creditDebitHeaders = [{
         className: 'credit',
         readOnly: true,
-        value: 'Compliance Units'
+        value: (
+          <div>
+            {'Compliance Units '}
+            <Tooltip
+              className="info"
+              show
+              title={`The number of compliance units to be issued is determined in accordance 
+              with the formula set out in the former Act; that is, section 6 (4) of the 
+              Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act.`}
+            >
+              <FontAwesomeIcon icon="info-circle" />
+            </Tooltip>
+          </div>
+        )
       }]
     }
     return {
@@ -56,26 +69,7 @@ class ScheduleBContainer extends Component {
         }, {
           colSpan: 2,
           readOnly: true,
-          value: (
-            <div>
-              {props.period < COMPLIANCE_YEAR ? 'CREDIT/DEBIT CALCULATION ' : 'COMPLIANCE UNITS CALCULATION '}
-              <Tooltip
-                className="info left"
-                show
-                title={`This value will be calculated based on the information provided using the formula specified in section 6 (4) of the Act.
-- Credit or Debit = (CI class x EER fuel – CI fuel) x EC fuel / 1,000,000.
-- where,
-> - Credit or Debit = The number of credits generated or debits incurred. This value will be displayed in the appropriate column (Credit or Debit).
-> - CI class = The prescribed carbon intensity limit for the compliance period for the class of fuel of which the fuel is a part.
-> - EER fuel = The prescribed energy effectiveness ratio for that fuel in that class of fuel.
-> - CI fuel = The carbon intensity of the fuel.
-> - EC fuel = The energy content of the fuel calculated in accordance with section 11.02 (3) of the Regulation.
-\nCredits and debits are displayed as whole values; fractional values are accounted for when determining the total credits generated and/or the total debits incurred from all fuel supplied within a compliance period. Conventional rounding is used only after the total credits and total debits are calculated.`}
-              >
-                <FontAwesomeIcon icon="info-circle" />
-              </Tooltip>
-            </div>
-          )
+          value: ''
         }],
         [{
           className: 'row-number',
