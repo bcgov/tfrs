@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 
 import ComplianceReportingStatusHistory from './ComplianceReportingStatusHistory'
 import { formatNumeric } from '../../utils/functions'
+import { COMPLIANCE_YEAR } from '../../constants/values'
 
 const ScheduleAssessmentPage = (props) => {
-  const { status, isSupplemental } = props.complianceReport
+  const { status, isSupplemental, compliancePeriod } = props.complianceReport
 
   let originalCredits = 0
   let supplementalCredits = 0
@@ -146,7 +147,7 @@ const ScheduleAssessmentPage = (props) => {
         for the {` ${props.snapshot.compliancePeriod.description} `} compliance period.
       </p>
 
-      {originalCredits > 0 && (
+      {originalCredits > 0 && Number(compliancePeriod.description) < COMPLIANCE_YEAR && (
         <p>
           A
           <strong>
@@ -162,7 +163,7 @@ const ScheduleAssessmentPage = (props) => {
         </p>
       )}
 
-      {originalCredits < 0 && (
+      {originalCredits < 0 && Number(compliancePeriod.description) < COMPLIANCE_YEAR && (
         <p>
           <strong> {props.snapshot.organization.name} </strong> applied
           {` ${formatNumeric(Number(originalCredits) * -1, 0)} `}
@@ -173,7 +174,7 @@ const ScheduleAssessmentPage = (props) => {
         </p>
       )}
 
-      {credits < 0 && isSupplemental && (
+      {credits < 0 && isSupplemental && Number(compliancePeriod.description) < COMPLIANCE_YEAR && (
         <p>
           A <strong>reduction of {formatNumeric(Number(credits) * -1, 0)} credit(s)</strong> to
           either offset a net debit balance or to correct a discrepancy in previous
@@ -181,7 +182,7 @@ const ScheduleAssessmentPage = (props) => {
           {` ${props.complianceReport.compliancePeriod.description} compliance period.`}
         </p>
       )}
-      {credits > 0 && isSupplemental && (
+      {credits > 0 && isSupplemental && Number(compliancePeriod.description) < COMPLIANCE_YEAR && (
         <p>
           A
           <strong>
@@ -198,6 +199,7 @@ const ScheduleAssessmentPage = (props) => {
       )}
 
       {props.snapshot.summary && Number(props.snapshot.summary.lines[27]) < 0 &&
+      Number(compliancePeriod.description) < COMPLIANCE_YEAR &&
       <p>
         There were
         <strong>
