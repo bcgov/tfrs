@@ -29,6 +29,7 @@ from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 from api.services.CreditTradeService import CreditTradeService
 
 from auditable.views import AuditableMixin
+from api.services.OrganizationService import OrganizationService
 
 
 cached_page = caches['cached_pages']
@@ -102,19 +103,24 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
         organization = self.get_object()
 
-        # Process future effective dates
-        # This future effective_date feature has been disabled so this
-        # service method call has been commented out but left here if
-        # this feature is needed in the future
-        # CreditTradeService.process_future_effective_dates(organization)
+        # get the latest balance for the organization
 
         balance = OrganizationBalance.objects.get(
             organization=organization,
             expiration_date=None)
 
         serializer = self.get_serializer(balance)
-
-        return Response(serializer.data)
+        # access the credit trade data like effective date and compliance period
+        effective_date_year = datetime.datetime.now().year
+        max_credit_offset = OrganizationService.get_max_credit_offset(organization, effective_date_year)
+        max_credit_offset_exclude_reserved = OrganizationService.get_max_credit_offset(
+            organization, 
+            effective_date_year,
+            exclude_reserved=True)
+        data = serializer.data
+        if data is not None:
+            data['availableBalance'] = min(max_credit_offset, max_credit_offset_exclude_reserved)
+        return Response(data)
 
     @action(detail=False, methods=['get'])
     def fuel_suppliers(self, request):

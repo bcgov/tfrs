@@ -247,9 +247,7 @@ class ScheduleSummaryContainer extends Component {
         }
 
         grid = Part3SummaryContainer.calculatePart3Payable(grid, this.props.period)
-        if (Number(this.props.period) >= COMPLIANCE_YEAR) {
-          grid = Part3SummaryContainer.calculatePart3PayableLCFS(grid, this.props.complianceReport)
-        }
+
         penalty[SCHEDULE_PENALTY.LINE_28][2] = {
           ...penalty[SCHEDULE_PENALTY.LINE_28][2],
           value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
@@ -276,9 +274,7 @@ class ScheduleSummaryContainer extends Component {
 
         grid[SCHEDULE_SUMMARY.LINE_26][2].value = creditOffsetA + numericValue
         grid = Part3SummaryContainer.calculatePart3Payable(grid, this.props.period)
-        if (Number(this.props.period) >= COMPLIANCE_YEAR) {
-          grid = Part3SummaryContainer.calculatePart3PayableLCFS(grid, this.props.complianceReport)
-        }
+
         penalty[SCHEDULE_PENALTY.LINE_28][2] = {
           ...penalty[SCHEDULE_PENALTY.LINE_28][2],
           value: grid[SCHEDULE_SUMMARY.LINE_28][2].value
