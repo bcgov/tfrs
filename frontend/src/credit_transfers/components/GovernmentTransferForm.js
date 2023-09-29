@@ -102,7 +102,7 @@ const GovernmentTransferForm = props => {
                 disabled={props.fields.comment.length === 0}
                 type="button"
               >
-                {Lang.BTN_RECOMMEND_FOR_DECISION}
+                {Lang.BTN_RECOMMEND_FOR_DECISION_1_2}
               </button>
             </Tooltip>
             }

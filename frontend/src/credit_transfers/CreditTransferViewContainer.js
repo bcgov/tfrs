@@ -331,8 +331,8 @@ class CreditTransferViewContainer extends Component {
         id="confirmAccept"
         key="confirmAccept"
       >
-        Are you sure you want to sign and send this Credit Transfer
-        Proposal to the Government of British Columbia?
+        Are you sure you want to sign and submit this transfer
+        to the Government of British Columbia for review?
       </Modal>
     )
   }
@@ -343,10 +343,12 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => this._approveCreditTransfer(item.id)}
         id="confirmApprove"
         key="confirmApprove"
+        confirmLabel="Record transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to approve this
+        Are you sure you want to record this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -360,6 +362,8 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
+        confirmLabel="Refuse transfer"
+        cancelLabel="Cancel"
       >
         <div className="alert alert-warning">
           <p>
@@ -388,9 +392,9 @@ class CreditTransferViewContainer extends Component {
           </p>
         </div>
 
-        Are you sure you want to decline to approve this
+        Are you sure you want to refuse this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -432,16 +436,18 @@ class CreditTransferViewContainer extends Component {
           this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended)
         }}
         canBypassExtraConfirm={false}
-        extraConfirmText="You must provide an explanatory comment if you are not recommending
-          to approve this Credit Transfer Proposal"
+        extraConfirmText="An explanatory comment is required when recommending
+          that the Director refuse a transfer."
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="error"
         id="confirmNotRecommend"
         key="confirmNotRecommend"
+        confirmLabel="Recommend refusing transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to not recommend approval of this
+        Are you sure you want to recommend that the Director refuse this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -489,7 +495,7 @@ class CreditTransferViewContainer extends Component {
 
         Are you sure you want to decline to approve this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -503,10 +509,12 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
+        confirmLabel="Recommend recording transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to recommend approval of this
+        Are you sure you want to recommend that the Director records the
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -520,8 +528,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRefuse"
         key="confirmRefuse"
+        confirmLabel="Decline transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to refuse this transfer?
+        Are you sure you want to decline this transfer?
       </Modal>
     )
   }
@@ -534,9 +544,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRescind"
         key="confirmRescind"
+        confirmLabel="Rescind transfer"
+        cancelLabel="Cancel"
       >
         Are you sure you want to rescind this transfer?
-        This will cancel the Credit Transfer Proposal.
       </Modal>
     )
   }

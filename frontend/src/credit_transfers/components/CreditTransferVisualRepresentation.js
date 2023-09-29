@@ -22,7 +22,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            credit{this.props.numberOfCredits > 1 && 's'}
+            compliance unit{this.props.numberOfCredits > 1 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
@@ -42,7 +42,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            credit{Math.abs(this.props.numberOfCredits) > 1 && 's'}
+            compliance unit{Math.abs(this.props.numberOfCredits) > 1 && 's'}
           </div>
           {this.props.numberOfCredits >= 0 &&
             <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />
@@ -68,7 +68,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            credit{this.props.numberOfCredits > 2 && 's'}
+            compliance unit{this.props.numberOfCredits > 2 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
@@ -101,8 +101,10 @@ class CreditTransferVisualRepresentation extends Component {
   }
 
   _renderCreditTransfer () {
-    const creditsFromStatus = this.props.creditsFrom.statusDisplay
-    const creditsToStatus = this.props.creditsTo.statusDisplay
+    const creditsFromStatus =
+      this.props.creditsFrom.statusDisplay === 'Active' ? 'Registered' : 'Not registered'
+    const creditsToStatus =
+      this.props.creditsTo.statusDisplay === 'Active' ? 'Registered' : 'Not registered'
 
     return (
       <div className='row visual-representation container'>
@@ -144,7 +146,7 @@ class CreditTransferVisualRepresentation extends Component {
           {Number(this.props.numberOfCredits) > 0 && (
             <div>
               {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-              credit{this.props.numberOfCredits > 1 && 's'}
+              compliance unit{this.props.numberOfCredits > 1 && 's'}
             </div>
           )}
           <FontAwesomeIcon

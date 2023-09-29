@@ -29,7 +29,7 @@ export const getCreditTransferType = (typeId) => {
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
       return 'Administrative Adjustment'
     default:
-      return 'Credit Transfer'
+      return 'Transfer'
   }
 }
 
