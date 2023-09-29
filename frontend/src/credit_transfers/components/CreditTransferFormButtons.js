@@ -72,7 +72,7 @@ const CreditTransferFormButtons = props => {
             : (props.permissions.BTN_SIGN_1_2
                 ? 'Signing Authority Declaration needs to be accepted'
                 : 'You must be assigned the Signing Authority role in order to sign and send ' +
-            'a Credit Transfer Proposal to another fuel supplier')}
+            'a Transfer Proposal to another fuel supplier')}
         >
           <button
             id="credit-transfer-sign"
@@ -99,7 +99,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE}
+            <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE_2}
           </button>
         </Tooltip>
         }
@@ -113,7 +113,7 @@ const CreditTransferFormButtons = props => {
                 : (props.permissions.BTN_SIGN_2_2
                     ? 'Signing Authority Declaration needs to be accepted'
                     : 'You must be assigned the Signing Authority role in order to sign and send ' +
-            'a Credit Transfer Proposal to the Low Carbon Fuels Branch'))}
+            'a Transfer Proposal to the Low Carbon Fuels Branch'))}
         >
           <button
             id="credit-transfer-accept"
@@ -149,7 +149,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
+            {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION_1_2}
           </button>
         </Tooltip>
         }
@@ -166,7 +166,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_RECOMMEND_FOR_DECISION}
+            {Lang.BTN_RECOMMEND_FOR_DECISION_1_2}
           </button>
         </Tooltip>
         }
