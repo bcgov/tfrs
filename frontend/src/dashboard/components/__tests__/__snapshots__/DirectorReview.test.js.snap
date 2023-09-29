@@ -38,7 +38,7 @@ exports[`DirectorReview Should render the component with complianceReports and c
           onClick={[Function]}
           type="button"
         >
-          Credit transfer(s) awaiting review
+          Transfer(s) awaiting review
         </button>
       </div>
       <div>
