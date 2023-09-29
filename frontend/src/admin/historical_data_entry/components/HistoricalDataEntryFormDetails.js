@@ -39,7 +39,7 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="transfer-type">Transaction Type:
               <div className="btn-group" role="group" id="transaction-type">
-                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Credit Transfer</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Transfer</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
@@ -49,7 +49,7 @@ const HistoricalDataEntryFormDetails = props => (
           </div>
 
           <div className="form-group">
-            <label htmlFor="credits-from">Credits From:
+            <label htmlFor="credits-from">Compliance Units From:
               {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
                 CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString(),
                 CREDIT_TRANSFER_TYPES.validation.id.toString()]

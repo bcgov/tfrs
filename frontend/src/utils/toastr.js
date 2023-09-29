@@ -48,7 +48,7 @@ const toastr = {
 
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
         [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
-      text = 'Credit Transfer Proposal'
+      text = 'Transfer'
     }
 
     if (message !== '') { // message is only used to override
@@ -58,7 +58,7 @@ const toastr = {
 
     switch (statusId) {
       case CREDIT_TRANSFER_STATUS.accepted.id:
-        reduxToastr.success('Success!', `${text} signed.`)
+        reduxToastr.success('Success!', `${text} signed and submitted.`)
         break
       case CREDIT_TRANSFER_STATUS.approved.id:
         reduxToastr.success('Success!', `${text} approved.`)
@@ -80,13 +80,13 @@ const toastr = {
         reduxToastr.success('Success!', `${text} not recommended.`)
         break
       case CREDIT_TRANSFER_STATUS.proposed.id:
-        reduxToastr.success('Success!', `${text} sent.`)
+        reduxToastr.success('Success!', `${text} signed and sent.`)
         break
       case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
         reduxToastr.success('Success!', `${text} recommended.`)
         break
       case CREDIT_TRANSFER_STATUS.refused.id:
-        reduxToastr.success('Success!', `${text} refused.`)
+        reduxToastr.success('Success!', `${text} declined.`)
         break
       case CREDIT_TRANSFER_STATUS.rescinded.id:
         reduxToastr.success('Success!', `${text} rescinded.`)

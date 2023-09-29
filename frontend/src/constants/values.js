@@ -20,11 +20,11 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   proposed: {
     id: 2,
-    description: 'Proposed'
+    description: 'Sent'
   },
   accepted: {
     id: 3,
-    description: 'Signed'
+    description: 'Submitted'
   },
   recommendedForDecision: {
     id: 4,
@@ -40,7 +40,7 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   approved: {
     id: 7,
-    description: 'Approved'
+    description: 'Recorded'
   },
   deleted: {
     id: 8,
@@ -48,11 +48,11 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   declinedForApproval: {
     id: 9,
-    description: 'Declined'
+    description: 'Refused'
   },
   refused: {
     id: 10,
-    description: 'Refused'
+    description: 'Declined'
   },
   rescinded: {
     id: 11,
@@ -103,13 +103,13 @@ export const ZERO_DOLLAR_REASON = {
   affiliate: {
     id: 1,
     description: 'Affiliate',
-    formButtonDescription: 'Transfer to Affiliated Organization',
+    formButtonDescription: 'Transfer to affiliated organization',
     textRepresentationDescription: ' it is a transfer between affiliated organizations.'
   },
   other: {
     id: 2,
     description: 'Other',
-    formButtonDescription: 'Other Reason',
+    formButtonDescription: 'Other (specify in comments)',
     textRepresentationDescription: ' reason specified in comments.'
   }
 }

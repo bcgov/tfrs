@@ -216,7 +216,7 @@ CreditTransferProgress.defaultProps = {
   },
   type: {
     id: CREDIT_TRANSFER_TYPES.sell.id,
-    theType: 'Credit Transfer'
+    theType: 'Transfer'
   }
 }
 
