@@ -220,13 +220,13 @@ function Part3NonSupplimentalLineData (part3, complianceReport, period) {
   return part3
 }
 
-function NonSupplimentalComplianceUnitData(complianceReport, part3, line25value) {
+function NonSupplimentalComplianceUnitData (complianceReport, part3, line25value) {
   // Available compliance unit balance on March 31, YYYY - Line 29A
   const availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   part3[SCHEDULE_SUMMARY.LINE_29_A][2].value = availableBalance
   const creditsOffset = availableBalance + part3[SCHEDULE_SUMMARY.LINE_25][2].value
   if (part3[SCHEDULE_SUMMARY.LINE_25][2].value < 0) {
-    part3[SCHEDULE_SUMMARY.LINE_26][2].value = (creditsOffset < 0) ? availableBalance : line25value // get the credits from available balance and fill it up 
+    part3[SCHEDULE_SUMMARY.LINE_26][2].value = (creditsOffset < 0) ? availableBalance : line25value // get the credits from available balance and fill it up
     if (creditsOffset < 0) {
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'
       part3[SCHEDULE_SUMMARY.LINE_28_A][0].value = `Non-compliance penalty payable (${Math.abs(creditsOffset)} units * $600 CAD per unit)`
@@ -422,7 +422,7 @@ function Part3SupplementalData (
   return part3
 }
 
-function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, part3) {
+function SupplementalComplianceUnitData (complianceReport, lastAcceptedOffset, part3) {
   let availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   availableBalance += complianceReport.totalPreviousCreditReductions
   // handle the scenario wherein previous balance changed w.r.t initial report
@@ -431,14 +431,13 @@ function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, pa
   }
   let totalPreviousValidations = 0
   let totalPreviousReductions = 0
-  const totalPreviousComplianceUnits  = Number(complianceReport.deltas[0].snapshot.data.summary.lines['25'])
+  const totalPreviousComplianceUnits = Number(complianceReport.deltas[0].snapshot.data.summary.lines['25'])
   for (let i = 0; i < complianceReport.deltas.length; i++) {
-    let deltas = complianceReport.deltas[i]
+    const deltas = complianceReport.deltas[i]
     if (deltas.delta && deltas.delta.length > 0 && lastAcceptedOffset !== null) {
-      let delta = deltas.delta
-      let snapshot = deltas.snapshot
+      const delta = deltas.delta
       // identify total reductions and validations
-      delta.filter(e => e.field.includes('credit_transactions')).map(e => {
+      delta.filter(e => e.field.includes('credit_transactions')).forEach(e => {
         if (e.newValue.type === 'Credit Validation') {
           totalPreviousValidations += e.newValue.credits
         }
@@ -449,9 +448,9 @@ function SupplementalComplianceUnitData(complianceReport, lastAcceptedOffset, pa
     }
   }
 
-  let desiredNetCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
-  let netComplianceUnitBalance = desiredNetCreditBalanceChange - (totalPreviousValidations - totalPreviousReductions)
-  let adjustedBalance = availableBalance + netComplianceUnitBalance
+  const desiredNetCreditBalanceChange = Number(part3[SCHEDULE_SUMMARY.LINE_25][2].value)
+  const netComplianceUnitBalance = desiredNetCreditBalanceChange - (totalPreviousValidations - totalPreviousReductions)
+  const adjustedBalance = availableBalance + netComplianceUnitBalance
 
   if (availableBalance <= 0 && netComplianceUnitBalance < 0) {
     part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'text total'

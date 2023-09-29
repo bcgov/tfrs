@@ -28,11 +28,11 @@ test('getCreditTransferType should return a display value for Administrative Adj
 test('getCreditTransferType should return a display value for Sell', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.sell.id)
 
-  expect('Credit Transfer').toEqual(data)
+  expect('Transfer').toEqual(data)
 })
 
 test('getCreditTransferType should return a display value for Buy', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.buy.id)
 
-  expect('Credit Transfer').toEqual(data)
+  expect('Transfer').toEqual(data)
 })
