@@ -42,7 +42,7 @@ class CreditTransferSigningHistory extends Component {
           on {moment(history.createTimestamp).format('LL')} by the
           <strong> Director </strong> under the
         </span>
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+        <em> Low Carbon Fuels Act</em>
       </li>
     )
   }
@@ -79,7 +79,7 @@ class CreditTransferSigningHistory extends Component {
             <strong>{roleDisplay && `, ${roleDisplay}`} </strong> under the
           </span>
         }
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+        <em> Low Carbon Fuels Act</em>
       </li>
     )
   }

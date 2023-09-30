@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import CONFIG from '../config'
+import { CREDIT_TRANSFER_TYPES } from '../constants/values'
+import { getCreditTransferType } from '../actions/creditTransfersActions'
 
 const arrayMove = (arr, currentIndex, targetIndex) => {
   arr.splice(targetIndex, 0, arr.splice(currentIndex, 1)[0])
@@ -280,8 +282,15 @@ const transformDocumentTypeDescription = (desc) => {
   return desc
 }
 
+const transformCreditTransferTypeDesc = (typeId) => {
+  if (typeId === CREDIT_TRANSFER_TYPES.part3Award.id) {
+    return 'Initiative Agreement'
+  }
+  return getCreditTransferType(typeId)
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
   formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists,
-  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription
+  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription, transformCreditTransferTypeDesc
 }

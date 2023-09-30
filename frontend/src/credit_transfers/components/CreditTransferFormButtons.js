@@ -203,7 +203,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_DECLINE_FOR_APPROVAL}
+            {Lang.BTN_DECLINE_ISSUANCE}
           </button>
         </Tooltip>
         }
@@ -220,7 +220,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_APPROVE}
+            {Lang.BTN_APPROVE_ISSUANCE}
           </button>
         </Tooltip>
         }
