@@ -61,7 +61,7 @@ const ComplianceReportsBCEID = (props) => {
             }}
             type="button"
           >
-            Report(s) in Progress
+            Report(s) in progress
           </button>
         </div>
         <p><br /></p>
