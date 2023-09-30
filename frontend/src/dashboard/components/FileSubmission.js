@@ -12,7 +12,7 @@ const FileSubmission = props => {
 
       <div>
         <div className="content">
-          <Link to={SECURE_DOCUMENT_UPLOAD.LIST}>File Submission</Link>
+          <Link to={SECURE_DOCUMENT_UPLOAD.LIST}>File submission</Link>
         </div>
         <p><br /></p>
       </div>
@@ -31,7 +31,7 @@ const FileSubmission = props => {
             }}
             type="button"
           >
-            Submit/Upload files
+            Submit/upload files
           </button>
           <br/>
           {' related to initiative agreements, compliance reporting, transfers, initiative plans.'}
