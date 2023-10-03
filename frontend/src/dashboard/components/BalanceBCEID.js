@@ -16,7 +16,7 @@ const BalanceBCEID = props => (
       <div className="value" key="value">
         {numeral(props.loggedInUser.organization.organizationBalance.validatedCredits).format(NumberFormat.INT)}
       </div>,
-      <h2 key="validated-credits">Compliance units</h2>,
+      <h2 key="validated-credits">compliance units</h2>,
       <div className="value smaller-text" key="deductions">
         ({numeral(props.loggedInUser.organization.organizationBalance.deductions).format(NumberFormat.INT)} in reserve)
         <Tooltip
