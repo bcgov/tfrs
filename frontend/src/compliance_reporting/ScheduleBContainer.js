@@ -21,7 +21,7 @@ import { COMPLIANCE_YEAR } from '../constants/values'
 class ScheduleBContainer extends Component {
   static addHeaders (props) {
     let creditDebitHeaders
-    if (props.period < COMPLIANCE_YEAR) {
+    if (parseInt(props.period) < COMPLIANCE_YEAR) {
       creditDebitHeaders = [
         {
           className: 'credit',
@@ -69,7 +69,28 @@ class ScheduleBContainer extends Component {
         }, {
           colSpan: 2,
           readOnly: true,
-          value: ''
+          value: parseInt(props.period) < COMPLIANCE_YEAR
+            ? (
+            <div>
+              {'CREDIT/DEBIT CALCULATION '}
+              <Tooltip
+                className="info left"
+                show
+                title={`This value will be calculated based on the information provided using the formula specified in section 6 (4) of the Act.
+                        - Credit or Debit = (CI class x EER fuel – CI fuel) x EC fuel / 1,000,000.
+                        - where,
+                        > - Credit or Debit = The number of credits generated or debits incurred. This value will be displayed in the appropriate column (Credit or Debit).
+                        > - CI class = The prescribed carbon intensity limit for the compliance period for the class of fuel of which the fuel is a part.
+                        > - EER fuel = The prescribed energy effectiveness ratio for that fuel in that class of fuel.
+                        > - CI fuel = The carbon intensity of the fuel.
+                        > - EC fuel = The energy content of the fuel calculated in accordance with section 11.02 (3) of the Regulation.
+                        \nCredits and debits are displayed as whole values; fractional values are accounted for when determining the total credits generated and/or the total debits incurred from all fuel supplied within a compliance period. Conventional rounding is used only after the total credits and total debits are calculated.`}
+              >
+                <FontAwesomeIcon icon="info-circle" />
+              </Tooltip>
+            </div>
+              )
+            : ('')
         }],
         [{
           className: 'row-number',
