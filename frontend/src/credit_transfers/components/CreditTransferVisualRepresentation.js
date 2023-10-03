@@ -9,6 +9,7 @@ import {
   CREDIT_TRANSFER_TYPES
 } from '../../constants/values'
 import { getCreditTransferType } from '../../actions/creditTransfersActions'
+import { transformCreditTransferTypeDesc } from '../../utils/functions'
 
 class CreditTransferVisualRepresentation extends Component {
   _renderPart3Award () {
@@ -25,7 +26,7 @@ class CreditTransferVisualRepresentation extends Component {
             compliance unit{this.props.numberOfCredits > 1 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
-          <div>{getCreditTransferType(this.props.tradeType.id)}</div>
+          <div>{transformCreditTransferTypeDesc(this.props.tradeType.id)}</div>
         </div>
       </div>
     )

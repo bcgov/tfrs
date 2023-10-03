@@ -12,7 +12,6 @@ import CreditTransferTerms from './CreditTransferTerms'
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation'
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation'
 
-import { getCreditTransferType } from '../../actions/creditTransfersActions'
 import Errors from '../../app/components/Errors'
 import Loading from '../../app/components/Loading'
 import Tooltip from '../../app/components/Tooltip'
@@ -26,6 +25,7 @@ import CreditTransferCommentButtons from './CreditTransferCommentButtons'
 import CreditTransferSigningHistory from './CreditTransferSigningHistory'
 import CreditTransferDocumentList from './CreditTransferDocumentList'
 import TOOLTIPS from '../../constants/tooltips'
+import { transformCreditTransferTypeDesc } from '../../utils/functions'
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -58,7 +58,7 @@ const CreditTransferDetails = props => (
         </div>
         <h1>
           {props.tradeType.id &&
-            getCreditTransferType(props.tradeType.id)
+            transformCreditTransferTypeDesc(props.tradeType.id)
           } — ID: {props.id}
         </h1>
         {[

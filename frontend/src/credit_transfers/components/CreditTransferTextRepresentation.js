@@ -132,11 +132,11 @@ class CreditTransferTextRepresentation extends Component {
   _renderPart3Award () {
     return (
       <div className='text-representation'>
-        An <span className='value'>award</span> of
+        An issuance of
         <span className='value'> {this.numberOfCredits} </span>
-        compliance unit{this.props.numberOfCredits > 1 && 's'} earned by
+        compliance unit{this.props.numberOfCredits > 1 && 's'} to
         <span className='value'> {this.creditsTo} </span> for the completion of
-        a Initiative Agreement milestone(s) has been
+        a designated action in an Initiative Agreement has been 
         <span className='value lowercase'> {this.tradeStatus}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           this.tradeEffectiveDate

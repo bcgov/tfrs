@@ -349,7 +349,7 @@ class CreditTransferViewContainer extends Component {
         Are you sure you want to record this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' transfer'
-          : ' Part 3 Award'}?
+          : ' the issuance of credits for this Initiative Agreement'}?
       </Modal>
     )
   }
@@ -461,8 +461,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmPullBack"
         key="confirmPullBack"
+        cancelLabel="Cancel"
+        confirmLabel="Retract recommendation"
       >
-        Are you sure you want to retract your recommendation of this Part 3 Award? <br />
+        Are you sure you want to retract your recommendation? <br />
         This will return the transaction to a draft state where
         it will no longer be visible to the Director.
       </Modal>
@@ -477,26 +479,22 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
+        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? 'Decline' : Lang.BTN_DECLINE_ISSUANCE}
+        cancelLabel='Cancel'
       >
         <div className="alert alert-warning">
           <p>
-            Under section 8.01 (6) of the Act, if the director is satisfied by evidence
-            provided under subsection (4)(d) that the Part 3 fuel supplier has completed
-            the action, or a stage of the action, that, under the agreement, entitles
-            the Part 3 fuel supplier to a credit, the director must issue the credit.
-          </p>
-          <p>
-            This decision is appealable, and you are strongly encouraged to add a comment
-            that provides an explanation as to why you are not satisfied by the evidence
-            provided that the supplier has completed the designated action. This declined
-            transaction will be visible to the Part 3 fuel supplier.
+          You are strongly encouraged to add a comment that provides an explanation 
+          as to why you are not satisfied by the evidence provided that the organization
+           has completed the designated action. This declined transaction will be visible
+            to the organization that is a party to the Initiative Agreement.
           </p>
         </div>
 
-        Are you sure you want to decline to approve this
+        Are you sure you want to decline
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' transfer'
-          : ' Part 3 Award'}?
+          : ' the issuance of credits for this Initiative Agreement'}?
       </Modal>
     )
   }
@@ -560,8 +558,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmReturn"
         key="confirmReturn"
+        confirmLabel="Return to analyst"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to return this Part 3 Award transaction to the Government Analyst?
+        Are you sure you want to return this Initiative Agreement transaction to the Government Analyst?
       </Modal>
     )
   }

@@ -45,6 +45,7 @@ const toastr = {
   },
   creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit transaction'
+    let newActText = 'Issuance'
 
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
         [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
@@ -61,7 +62,7 @@ const toastr = {
         reduxToastr.success('Success!', `${text} signed and submitted.`)
         break
       case CREDIT_TRANSFER_STATUS.approved.id:
-        reduxToastr.success('Success!', `${text} approved.`)
+        reduxToastr.success('Success!', `${newActText} approved.`)
         break
       case CREDIT_TRANSFER_STATUS.deleted.id:
         reduxToastr.success('Success!', 'Draft deleted.')
@@ -74,7 +75,7 @@ const toastr = {
         }
         break
       case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
-        reduxToastr.success('Success!', `${text} declined.`)
+        reduxToastr.success('Success!', `${newActText} declined.`)
         break
       case CREDIT_TRANSFER_STATUS.notRecommended.id:
         reduxToastr.success('Success!', `${text} not recommended.`)
