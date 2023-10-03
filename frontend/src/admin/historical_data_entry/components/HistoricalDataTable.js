@@ -39,7 +39,7 @@ const HistoricalDataTable = (props) => {
     className: 'col-transfer-type'
   }, {
     id: 'creditsFrom',
-    Header: 'Credits From',
+    Header: 'Compliance Units From',
     accessor: item => item.creditsFrom.name,
     minWidth: 200,
     Cell: (row) => {
