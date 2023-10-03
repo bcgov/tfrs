@@ -192,7 +192,7 @@ class ScheduleSummaryContainer extends Component {
           creditsOffsetC: part3[SCHEDULE_SUMMARY.LINE_26_C][2].value
         }
       })
-    } 
+    }
     if (year >= COMPLIANCE_YEAR) {
       if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0) {
         this.props.updateScheduleState({

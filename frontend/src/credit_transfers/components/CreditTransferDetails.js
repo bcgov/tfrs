@@ -68,9 +68,7 @@ const CreditTransferDetails = props => (
         <h3>
           {props.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
           <p>
-            Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel Requirements
-            Regulation, a transfer of validated credits is not effective unless the transfer
-            is approved by the Director.
+            A transfer is not effective until it is recorded by the Director.
           </p>
           }
           {[
@@ -78,11 +76,8 @@ const CreditTransferDetails = props => (
             CREDIT_TRANSFER_STATUS.proposed.id
           ].indexOf(props.status.id) >= 0 &&
           <p>
-            All credit transfer proposals must include a “fair market value” of any
-            consideration, under section 11.11 (2) (c) (iv) of the Regulation. Transfers
-            deemed to underestimate &quot;fair market value&quot; or those using a
-            &quot;zero dollar&quot; value must include a written explanation justifying
-            the use of the identified credit value.
+            Transfers must indicate whether they are for consideration, and if so,
+            the fair market value of the consideration in Canadian dollars per credit.
           </p>
           }
         </h3>

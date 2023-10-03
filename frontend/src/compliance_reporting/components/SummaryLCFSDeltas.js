@@ -26,8 +26,8 @@ class SummaryLCFSDeltas extends Component {
     let adjustedBalance = 0
     if (part3) {
       adjustedBalance = Number(part3[SCHEDULE_SUMMARY.LINE_28_A][2].value) / 600
-    }   
-    
+    }
+
     const findMatchingDelta = (field) => {
       if (deltas[field]) {
         return deltas[field]

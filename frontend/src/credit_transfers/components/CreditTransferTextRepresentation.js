@@ -91,7 +91,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsTo}</span> {this._buyAction()}
-        <span className='value'> {this.numberOfCredits} </span> credit
+        <span className='value'> {this.numberOfCredits} </span> compliance unit
         {this.props.numberOfCredits > 1 && 's'} from
         <span className='value'> {this.creditsFrom} </span>
         for <span className='value'> {this.fairMarketValuePerCredit} </span> per
@@ -120,7 +120,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         A credit transfer of
-        <span className='value'> {this.numberOfCredits} </span> credit
+        <span className='value'> {this.numberOfCredits} </span> compliance unit
         {this.props.numberOfCredits > 1 && 's'} for
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus} </span>
@@ -151,7 +151,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className='text-representation'>
         An <span className='value'>administrative adjustment</span> of
         <span className='value'> {this.numberOfCredits} </span>
-        credit{Math.abs(this.props.numberOfCredits) > 1 && 's'} has been
+        compliance unit{Math.abs(this.props.numberOfCredits) > 1 && 's'} has been
         <span className='value lowercase'> {this.tradeStatus}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
           <span>
@@ -169,7 +169,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className='text-representation'>
         A <span className='value'>reduction</span> of
         <span className='value'> {this.numberOfCredits} </span>
-        credit{this.props.numberOfCredits > 1 && 's'} earned by
+        compliance unit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsFrom} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
@@ -185,17 +185,17 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
-        <span className='value'> {this.numberOfCredits} </span> credit
+        <span className='value'> {this.numberOfCredits} </span> compliance unit
         {this.props.numberOfCredits > 1 && 's'} to
         <span className='value'> {this.creditsTo} </span>
         for <span className='value'> {this.fairMarketValuePerCredit} </span> per
-        credit for a total value of{' '}
+        compliance unit for a total value of{' '}
         <span className='value'> {this.totalValue}</span>
         {this._statusText(this.props.creditsTo)}
         {this.props.zeroDollarReason != null && (
           <div className='zero-reason'>
             <span>
-              The fair market value per credit is zero because:
+              The fair market value per compliance unit is zero because:
               <span className='value'>
                 {
                   Object.values(ZERO_DOLLAR_REASON).find(
@@ -233,7 +233,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className='text-representation'>
         A <span className='value'>validation</span> of
         <span className='value'> {this.numberOfCredits} </span>
-        credit{this.props.numberOfCredits > 1 && 's'} earned by
+        compliance unit{this.props.numberOfCredits > 1 && 's'} earned by
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
