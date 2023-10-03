@@ -23,7 +23,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
         onClick={[Function]}
         type="button"
       >
-        Report(s) in Progress
+        Report(s) in progress
       </button>
     </div>
     <p>
@@ -94,7 +94,7 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
         onClick={[Function]}
         type="button"
       >
-        Report(s) in Progress
+        Report(s) in progress
       </button>
     </div>
     <p>
