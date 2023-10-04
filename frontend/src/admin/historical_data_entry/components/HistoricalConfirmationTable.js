@@ -101,7 +101,7 @@ const HistoricalConfirmationTable = props => {
       <p><b>{item.creditsTo.name}</b> compliance unit balance will change as follows:</p>
       <ReactDataSheet
         className="spreadsheet"
-        data={buildGrid(item, organizationBalance)}
+        data={buildGrid(item)}
         valueRenderer={cell => cell.value}
       />
     </>
