@@ -33,20 +33,16 @@ const HistoricalConfirmationTable = props => {
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
-  function buildGrid(item, organizationBalance) {
+  function buildGrid(item) {
     const credits = item.numberOfCredits
-    let balanceChange = 0
+    let nonComplianceBalance = 0
     const offset = availableBalance + credits
     if (credits < 0 && offset < 0) {
-      balanceChange = availableBalance
-    } else if (credits > 0 && offset < 0) {
-      balanceChange = availableBalance * -1
-    } else if (availableBalance <= 0) {
-      balanceChange = 0
-    } else {
-      balanceChange = credits
+      nonComplianceBalance = offset * -600
     }
-    const balanceAfterTransaction = balanceChange + availableBalance
+    
+    const balanceChange = (offset < 0) ? (availableBalance * -1) : credits
+    const balanceAfterTransaction = availableBalance + balanceChange
     const grid = [
       [{
         className: 'text',
@@ -84,8 +80,21 @@ const HistoricalConfirmationTable = props => {
         readOnly: true,
         valueViewer: decimalViewer(0),
         value: balanceAfterTransaction, // balance after transaction
+      }], [{
+        className: 'text',
+        readOnly: true,
+        value: `Non-compliance penalty payable, if applicable (${offset} * $600 CAD per unit)`
+      }, {
+        className: 'number',
+        readOnly: true,
+        valueViewer: decimalViewer(0),
+        value: nonComplianceBalance, // balance after transaction
       }]
     ]
+    if (nonComplianceBalance <= 0) {
+      grid[4][0].className = 'hidden'
+      grid[4][1].className = 'hidden'
+    }
     return grid
   }
 
