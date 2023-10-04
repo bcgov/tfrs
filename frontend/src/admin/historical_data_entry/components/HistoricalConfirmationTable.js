@@ -35,14 +35,12 @@ const HistoricalConfirmationTable = props => {
 
   function buildGrid(item) {
     const credits = item.numberOfCredits
-    let nonComplianceBalance = 0
     const offset = availableBalance + credits
-    if (credits < 0 && offset < 0) {
-      nonComplianceBalance = offset * -600
-    }
-    
+
+    const nonComplianceBalance = (credits < 0 && offset < 0) ? offset * -600 : 0
     const balanceChange = (offset < 0) ? (availableBalance * -1) : credits
     const balanceAfterTransaction = availableBalance + balanceChange
+    
     const grid = [
       [{
         className: 'text',
