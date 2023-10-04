@@ -62,3 +62,6 @@ resources:
   limits:
     cpu: 320m
     memory: 800Mi
+
+clustering:
+  forceBoot: true
