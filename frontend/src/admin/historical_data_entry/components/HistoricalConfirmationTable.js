@@ -37,10 +37,10 @@ const HistoricalConfirmationTable = props => {
     const credits = item.numberOfCredits
     const offset = availableBalance + credits
 
-    const nonComplianceBalance = (credits < 0 && offset < 0) ? offset * -600 : 0
+    const nonCompliancePenalty = (credits < 0 && offset < 0) ? offset * -600 : 0
     const balanceChange = (offset < 0) ? (availableBalance * -1) : credits
     const balanceAfterTransaction = availableBalance + balanceChange
-    
+
     const grid = [
       [{
         className: 'text',
@@ -81,15 +81,15 @@ const HistoricalConfirmationTable = props => {
       }], [{
         className: 'text',
         readOnly: true,
-        value: `Non-compliance penalty payable, if applicable (${offset} * $600 CAD per unit)`
+        value: `Non-compliance penalty payable, if applicable (${offset * -1} * $600 CAD per unit)`
       }, {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: nonComplianceBalance, // balance after transaction
+        value: nonCompliancePenalty, // balance after transaction
       }]
     ]
-    if (nonComplianceBalance <= 0) {
+    if (nonCompliancePenalty <= 0) {
       grid[4][0].className = 'hidden'
       grid[4][1].className = 'hidden'
     }
