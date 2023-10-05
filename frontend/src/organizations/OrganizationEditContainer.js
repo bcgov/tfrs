@@ -47,9 +47,11 @@ class OrganizationEditContainer extends Component {
         att_city: '',
         att_province: this.att_province,
         att_country: this.att_country,
-        att_postalCode: ''
+        att_postalCode: '',
+        edrms_record: ''
       },
-      formIsValid: false
+      formIsValid: false,
+      edrmsRecordError: ''
     }
 
     this.submitted = false
@@ -100,7 +102,9 @@ class OrganizationEditContainer extends Component {
           ...org.organizationAddress
         }
       }
-
+      const edrmsRecord = org.edrmsRecord || ''
+      const isEdrmsRecordValid = this._validateEdrmsRecord(edrmsRecord)
+      console.log(org, "104")
       this.setState({
         fields: {
           org_name: props.organization.details.name,
@@ -119,7 +123,8 @@ class OrganizationEditContainer extends Component {
           att_city: addr.attorneyCity,
           att_province: this.att_province,
           att_country: this.att_country,
-          att_postalCode: addr.attorneyPostalCode
+          att_postalCode: addr.attorneyPostalCode,
+          edrms_record: isEdrmsRecordValid ? edrmsRecord : ''
         }
       })
     }
@@ -138,8 +143,15 @@ class OrganizationEditContainer extends Component {
       </Modal>
     )
   }
+  _validateEdrmsRecord(value) {
+    if (!/^[a-zA-Z0-9]*$/.test(value)) {
+      return 'Only letters and numbers are allowed.'
+    }
+    return ''
+  }
 
   _handleInputChange (event) {
+    console.log(event.target, "143:")
     const { value, name } = event.target
     const fieldState = { ...this.state.fields }
     const numericFields = ['org_type', 'org_actionsType', 'org_status']
@@ -149,10 +161,30 @@ class OrganizationEditContainer extends Component {
     } else {
       fieldState[name] = value
     }
-
+    // if (name === 'supplierType') {
+    //   fieldState[name] = value
+    // }
+    if (name === 'edrms_record') {
+      const isValidEdrmsRecord = /^[a-zA-Z0-9]*$/.test(value);
+      if (isValidEdrmsRecord) {
+        fieldState[name] = value; // Set the state for valid input
+        this.setState({
+          edrmsRecordError: '', // Clear the error message when input is valid
+        });
+      } else {
+        this.setState({
+          edrmsRecordError: 'Only letters and numbers characters are allowed.',
+        });
+      }
+    } else {
+      this.setState({
+        fields: fieldState,
+      })
+    }
     this.setState({
-      fields: fieldState
+      fields: fieldState,
     })
+    console.log(fieldState, "161")
   }
 
   _formIsValid () {
@@ -213,7 +245,8 @@ class OrganizationEditContainer extends Component {
         attorney_province: this.state.fields.att_province,
         attorney_country: this.state.fields.att_country,
         attorney_postalCode: this.state.fields.att_postalCode
-      }
+      },
+      edrms_record: this.state.fields.edrms_record
     }
 
     let viewUrl = ORGANIZATION.MINE
@@ -235,8 +268,9 @@ class OrganizationEditContainer extends Component {
 
     return false
   }
-
+  
   _handleCreate () {
+    console.log(this.state.fields, "274")
     const data = {
       name: this.state.fields.org_name,
       type: this.state.fields.org_type,
@@ -256,7 +290,9 @@ class OrganizationEditContainer extends Component {
         attorney_province: this.state.fields.att_province,
         attorney_country: this.state.fields.att_country,
         attorney_postalCode: this.state.fields.att_postalCode
-      }
+      },
+      edrms_record: this.state.fields.edrms_record
+      
     }
 
     this.props.addOrganization(data).then((id) => {
@@ -290,6 +326,7 @@ class OrganizationEditContainer extends Component {
             mode={this.props.mode}
             referenceData={this.props.referenceData}
             formIsValid={this.state.formIsValid}
+            edrmsRecordError={this.state.edrmsRecordError}
           />,
           this._modalConfirm()
         ]
@@ -304,6 +341,7 @@ class OrganizationEditContainer extends Component {
             mode={this.props.mode}
             referenceData={this.props.referenceData}
             formIsValid={this.state.formIsValid}
+            edrmsRecordError={this.state.edrmsRecordError}
           />
         )
       default:
@@ -376,7 +414,7 @@ OrganizationEditContainer.propTypes = {
   navigate: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => (console.log(state, "420"),{
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,

@@ -9,9 +9,11 @@ import * as Lang from '../../constants/langEnUs'
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
 import { useNavigate } from 'react-router'
 import NotFound from '../../app/components/NotFound'
+import ExclusionReportingStatusHistory from '../../exclusion_reports/components/ExclusionReportStatusHistory'
 
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
+  console.log(props, "1616")
   const orgStatuses = props.referenceData.organizationStatuses
   if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
     return <NotFound />
@@ -21,13 +23,13 @@ const OrganizationEditForm = (props) => {
       <h1>{props.mode === 'add' ? 'Create ' : 'Edit '} Organization</h1>
       <div className="main-form">
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-5">
             {props.loggedInUser.hasPermission(
               PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS
             ) && (
               <div className="form-group">
                 <label htmlFor="org_status" className="col-sm-4">
-                  <div className="col-sm-4"> Supplier Status: </div>
+                  <div className="col-sm-6"> Registered for transfers: </div>
                   <div className="col-sm-6">
                     <div key={orgStatuses[0].id}>
                       <label htmlFor='org-status-active'>
@@ -39,7 +41,7 @@ const OrganizationEditForm = (props) => {
                         onChange={props.handleInputChange}
                         checked={orgStatuses[0].id === props.fields.org_status}
                       />
-                        <span> {orgStatuses[0].description} </span></label>{' '}
+                        <span> {orgStatuses[0].description === 'Active' && 'Yes' } </span></label>{' '}
                     </div>
                     <div key={orgStatuses[1].id}>
 
@@ -52,7 +54,7 @@ const OrganizationEditForm = (props) => {
                         onChange={props.handleInputChange}
                         checked={orgStatuses[1].id === props.fields.org_status}
                       />
-                      <span> {orgStatuses[1].description}</span></label>{' '}
+                      <span> {orgStatuses[1].description === 'Inactive' && 'No' }</span></label>{' '}
                     </div>
                   </div>
                 </label>
@@ -61,28 +63,75 @@ const OrganizationEditForm = (props) => {
           </div>
           <div className="col-sm-6">
             <div className="form-group">
-              <label htmlFor="org-type">
+            <label htmlFor="org-type">
                 <div className="col-sm-4"> Supplier Type : </div>
-                {props.referenceData.organizationTypes
-                  .filter((t) => t.id !== 1)
-                  .map((t) => (
-                    <div className="col-sm-8" key={t.id}>
-                      {' '}
+              {props.referenceData.organizationTypes
+                .filter((t) => t.id !== 1)
+                .map((t) => (
+                  <div className="col-sm-6" key={t.id}>
                       <input
                         type="radio"
-                        id='org-type'
+                        id={`org-type-${t.id}`}
                         name="org_type"
                         value={t.id}
-                        defaultChecked
                         onChange={props.handleInputChange}
                       />
                       <span> {t.description}</span>
+                  </div>
+                ))}
+                </label>
+            </div>
+          </div>
+          {/* <div className="col-sm-5">
+              <div className="form-group">
+                <label htmlFor="org_status" className="col-sm-4">
+                  <div className="col-sm-4"> Supplier Type : </div>
+                  <div className="col-sm-6">
+                    <div >
+                      <label >
+                      <input
+                        type="radio"
+                        name="supplierType"
+                        value="fuel_supplier"
+                        onChange={props.handleInputChange}
+                      />
+                        <span> Fuel Supplier </span></label>{' '}
                     </div>
-                  ))}
+                    <div>
+
+                      <label >
+                        <input
+                        type="radio"
+                        name="supplierType"
+                        value= "electricity_supplier"
+                        onChange={props.handleInputChange}
+                      />
+                      <span> Electricity Supplier </span></label>{' '}
+                    </div>
+                  </div>
+                </label>
+              </div>
+            
+          </div> */}
+        </div>
+        <div className="row"> 
+            <div className="form-group col-sm-5">
+              <label>
+              <h4>Company Profile, EDRMS Record # (optional):</h4>
+                  <input
+                    className={`form-control ${props.edrmsRecordError ? 'is-invalid' : ''}`}
+                    id="edrms-record"
+                    name="edrms_record"
+                    value={props.fields.edrmsRecord}
+                    onChange={props.handleInputChange}
+                    
+                  />
+                  {props.edrmsRecordError && (
+                  <div className="error-message">{props.edrmsRecordError}</div> // Display the error message
+                )}
               </label>
             </div>
           </div>
-        </div>
         <div className="row">
           <div className="col-sm-5">
             <h3>Head Office:</h3>
