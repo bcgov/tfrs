@@ -137,7 +137,7 @@ class CreditTransferTextRepresentation extends Component {
         compliance unit{this.props.numberOfCredits > 1 && 's'} to
         <span className='value'> {this.creditsTo} </span> for the completion of
         a designated action in an Initiative Agreement has been 
-        <span className='value lowercase'> {this.tradeStatus}</span>
+        <span className='value lowercase'> {this._transformTradeStatus(this.tradeStatus)}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           this.tradeEffectiveDate
         }
@@ -145,6 +145,15 @@ class CreditTransferTextRepresentation extends Component {
       </div>
     )
   }
+
+  _transformTradeStatus(tradeStatus) {
+    if (tradeStatus === 'Refused') {
+      return 'declined'
+    }
+    if (tradeStatus === 'Recorded') {
+      return 'approved'
+    }
+  }  
 
   _renderAdministrativeAdjustment () {
     return (
