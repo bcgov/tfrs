@@ -98,6 +98,9 @@ class Organization(Auditable):
             data['credit_trade_id'] = organization_balance.credit_trade_id
             data['validated_credits'] = organization_balance.validated_credits
 
+            if data['validated_credits'] < 0:
+                data['validated_credits'] = 0
+
             deductions = OrganizationService.get_pending_deductions(
                 self
             )
