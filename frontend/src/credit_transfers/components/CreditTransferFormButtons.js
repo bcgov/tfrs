@@ -4,7 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import * as Lang from '../../constants/langEnUs'
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
 
@@ -134,7 +134,7 @@ const CreditTransferFormButtons = props => {
           data-toggle="modal"
           type="button"
         >
-          <FontAwesomeIcon icon="undo" /> {Lang.BTN_RESCIND}
+          <FontAwesomeIcon icon="undo" /> {Lang.BTN_RESCIND_TRANSFER}
         </button>
         }
         {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
@@ -203,7 +203,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_DECLINE_ISSUANCE}
+            {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(props.tradeType.id) >= 0 ? Lang.BTN_DECLINE_FOR_APPROVAL_1_2 : Lang.BTN_DECLINE_ISSUANCE}
           </button>
         </Tooltip>
         }
@@ -220,7 +220,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_APPROVE_ISSUANCE}
+            {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(props.tradeType.id) >= 0 ? Lang.BTN_APPROVE_1_2 : Lang.BTN_APPROVE_ISSUANCE}
           </button>
         </Tooltip>
         }

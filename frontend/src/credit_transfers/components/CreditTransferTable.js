@@ -60,7 +60,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Compliance Units From',
+    Header: 'Compliance units from',
     id: 'creditsFrom',
     minWidth: 190
   }, {
@@ -74,7 +74,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Credits To',
+    Header: 'Compliance units to',
     id: 'creditsTo',
     minWidth: 190
   }, {
@@ -101,7 +101,7 @@ const CreditTransferTable = (props) => {
     ),
     className: 'col-price',
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Credit',
+    Header: 'Value per unit',
     id: 'fairMarketValuePerCredit',
     minWidth: 65
   }, {

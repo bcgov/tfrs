@@ -198,6 +198,7 @@ const CreditTransferDetails = props => (
             }
             id={props.id}
             isCommenting={props.isCommenting}
+            tradeType={props.tradeType}
             permissions={
               {
                 BTN_SIGN_1_2:
