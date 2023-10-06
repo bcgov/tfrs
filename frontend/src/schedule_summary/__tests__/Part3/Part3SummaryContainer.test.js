@@ -24,6 +24,9 @@ describe('Part3 Summary Container', () => {
       previousReportWasCredit: false,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
@@ -47,6 +50,9 @@ describe('Part3 Summary Container', () => {
       previousReportWasCredit: false,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     part3 = Part3SupplementalData(part3, summary, updateCreditsOffsetA, lastAcceptedOffset, skipFurtherUpdateCreditsOffsetA, complianceReport)
@@ -118,6 +124,9 @@ describe('Part3 Summary Container', () => {
       previousReportWasCredit: false,
       status: {
         fuelSupplierStatus: 'Submitted'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const lastAcceptedOffset = 83106
@@ -168,6 +177,9 @@ describe('Part3 Summary Container', () => {
       previousReportWasCredit: false,
       status: {
         fuelSupplierStatus: 'Submitted'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const lastAcceptedOffset = 68399
