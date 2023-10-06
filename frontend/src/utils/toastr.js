@@ -45,11 +45,13 @@ const toastr = {
   },
   creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit transaction'
-    let newActText = 'Issuance'
-
+    let transfer = true
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
         [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
       text = 'Transfer'
+    } else {
+      transfer = false
+      text = 'Issuance'
     }
 
     if (message !== '') { // message is only used to override
@@ -62,7 +64,7 @@ const toastr = {
         reduxToastr.success('Success!', `${text} signed and submitted.`)
         break
       case CREDIT_TRANSFER_STATUS.approved.id:
-        reduxToastr.success('Success!', `${newActText} approved.`)
+        reduxToastr.success('Success!', `${transfer ? ' Transfer recorded.' : 'Issuance approved.'}`)
         break
       case CREDIT_TRANSFER_STATUS.deleted.id:
         reduxToastr.success('Success!', 'Draft deleted.')
@@ -75,16 +77,16 @@ const toastr = {
         }
         break
       case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
-        reduxToastr.success('Success!', `${newActText} declined.`)
+        reduxToastr.success('Success!', `${transfer ? ' Transfer refused.' : 'Issuance declined.'}`)
         break
       case CREDIT_TRANSFER_STATUS.notRecommended.id:
-        reduxToastr.success('Success!', `${text} not recommended.`)
+        reduxToastr.success('Success!', `${transfer ? 'Recommended refusing transfer.' : `${text} not recommended.`}`)
         break
       case CREDIT_TRANSFER_STATUS.proposed.id:
         reduxToastr.success('Success!', `${text} signed and sent.`)
         break
       case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
-        reduxToastr.success('Success!', `${text} recommended.`)
+        reduxToastr.success('Success!', `${transfer ? 'Recommended recording transfer.' : `${text} recommended.`}`)
         break
       case CREDIT_TRANSFER_STATUS.refused.id:
         reduxToastr.success('Success!', `${text} declined.`)

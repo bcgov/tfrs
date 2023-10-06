@@ -247,7 +247,7 @@ class CreditTransferTextRepresentation extends Component {
           {' '}
           {rescindedBy.user.organization.name}{' '}
         </span>,
-        <span key='rescinded-by-text'>rescinded the proposal.</span>
+        <span key='rescinded-by-text'>rescinded the transfer.</span>
       ]
     }
 
@@ -261,11 +261,11 @@ class CreditTransferTextRepresentation extends Component {
 
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-        return ' sold '
+        return ' transferred '
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to sell '
       default:
-        return ' is proposing to sell '
+        return ' transfers '
     }
   }
 
@@ -277,8 +277,7 @@ class CreditTransferTextRepresentation extends Component {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
       return (
         <span>
-          . <span className='value'> {respondent.name} </span> refused the
-          proposal.
+          . <span className='value'> {respondent.name} </span> declined the transfer.
         </span>
       )
     }
@@ -286,7 +285,7 @@ class CreditTransferTextRepresentation extends Component {
     if (
       this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id
     ) {
-      return <span>. The proposal was declined.</span>
+      return <span>. The transfer was refused.</span>
     }
     return (this.tradeEffectiveDate)
   }

@@ -15,8 +15,8 @@ const ModalSubmitCreditTransfer = props => (
   >
     <h5><b>Transfer Summary</b></h5>
     <p>
-      Compliance units From: {props.item.creditsFrom.name} <br />
-      Compliance units To: {props.item.creditsTo.name} <br />
+      Compliance units from: {props.item.creditsFrom.name} <br />
+      Compliance units to: {props.item.creditsTo.name} <br />
       Number of units to be transferred: {
         numeral(props.item.numberOfCredits).format(NumberFormat.INT)} <br />
       Value per unit: {numeral(props.item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
