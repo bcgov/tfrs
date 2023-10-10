@@ -40,7 +40,7 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   approved: {
     id: 7,
-    description: 'Recorded'
+    description: 'approved'
   },
   deleted: {
     id: 8,

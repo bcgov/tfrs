@@ -111,7 +111,7 @@ class CreditTransferSigningHistory extends Component {
   }
 
   static renderRecorded () {
-    return (<strong>Recorded</strong>)
+    return (<strong>Created</strong>)
   }
 
   static renderRefused () {
