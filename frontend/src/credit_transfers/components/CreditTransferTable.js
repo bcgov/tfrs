@@ -15,6 +15,7 @@ import filterNumber from '../../utils/filters'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 import { useNavigate } from 'react-router'
+import { transformTransactionStatusDesc } from '../../utils/functions'
 
 const CreditTransferTable = (props) => {
   const navigate = useNavigate()
@@ -107,9 +108,7 @@ const CreditTransferTable = (props) => {
   }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
-      : (
-          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-        ).description),
+      : transformTransactionStatusDesc(item.status.id, item.type.id, item.updateTimestamp)),
     className: 'col-status',
     filterMethod: (filter, row) => {
       const values = filter.value.toLowerCase().split(',')
