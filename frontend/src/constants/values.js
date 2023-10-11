@@ -8,6 +8,7 @@ export const STATUS_COMPLETED = 7
 export const STATUS_CANCELLED = 8
 export const STATUS_REJECTED = 9
 export const COMPLIANCE_YEAR = 2023
+export const LCFS_COMPLIANCE_START_DT = new Date('2024-01-01T00:00:01')
 
 export const CREDIT_TRANSFER_STATUS = {
   new: {
@@ -40,7 +41,7 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   approved: {
     id: 7,
-    description: 'approved'
+    description: 'Approved'
   },
   deleted: {
     id: 8,
@@ -48,11 +49,11 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   declinedForApproval: {
     id: 9,
-    description: 'Refused'
+    description: 'Declined'
   },
   refused: {
     id: 10,
-    description: 'Declined'
+    description: 'Refused'
   },
   rescinded: {
     id: 11,

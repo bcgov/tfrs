@@ -11,6 +11,7 @@ import {
   CREDIT_TRANSFER_TYPES,
   ZERO_DOLLAR_REASON
 } from '../../constants/values'
+import { transformTransactionStatusDesc } from '../../utils/functions'
 
 class CreditTransferTextRepresentation extends Component {
   constructor (props) {
@@ -294,7 +295,7 @@ class CreditTransferTextRepresentation extends Component {
     if (
       this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id
     ) {
-      return <span>. The transfer was refused.</span>
+      return <span>. The proposal was {transformTransactionStatusDesc(CREDIT_TRANSFER_STATUS.declinedForApproval.id, this.props.tradeType.id, this.props.updateTimestamp).toLowerCase()}.</span>
     }
     return (this.tradeEffectiveDate)
   }
@@ -338,10 +339,12 @@ CreditTransferTextRepresentation.defaultProps = {
   history: [],
   isRescinded: false,
   tradeEffectiveDate: '',
+  updateTimestamp: '',
   zeroDollarReason: null
 }
 
 CreditTransferTextRepresentation.propTypes = {
+  updateTimestamp: PropTypes.string,
   compliancePeriod: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string

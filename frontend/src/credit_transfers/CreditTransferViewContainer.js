@@ -716,6 +716,7 @@ class CreditTransferViewContainer extends Component {
       categoryDSelected={this.props.item.categoryDSelected}
       toggleCategoryDSelection={this._toggleCategoryDSelection}
       dateOfWrittenAgreement={item.dateOfWrittenAgreement}
+      updateTimestamp={item.updateTimestamp}
     />)
 
     content.push(this._modalDeleteComment())

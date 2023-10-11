@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../../src/constants/values'
-import { arrayMove } from '../../utils/functions'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, LCFS_COMPLIANCE_START_DT } from '../../../src/constants/values'
+import { arrayMove, transformTransactionStatusDesc } from '../../utils/functions'
 
 class CreditTransferSigningHistory extends Component {
   static recordedFound (histories) {
@@ -37,7 +37,7 @@ class CreditTransferSigningHistory extends Component {
     // use effective date as well
     return (
       <li key={history.createTimestamp}>
-        <strong className="text-success">{CreditTransferSigningHistory._isTransferType(history) ? 'Recorded' : 'Approved'} </strong>
+        <strong className="text-success">{transformTransactionStatusDesc(history.status.id, history.creditTrade.type.id, history.createTimestamp)} </strong>
         <span>
           on {moment(history.createTimestamp).format('LL')} by the
           <strong> Director </strong> under the
@@ -65,7 +65,7 @@ class CreditTransferSigningHistory extends Component {
 
     return (
       <li key={history.createTimestamp}>
-        <strong className="text-danger">{CreditTransferSigningHistory._isTransferType(history) ? 'Refused' : 'Declined'} </strong>
+        <strong className="text-danger">{transformTransactionStatusDesc(history.status.id, history.creditTrade.type.id, history.createTimestamp)} </strong>
         {CreditTransferSigningHistory.recordedFound(this.props.history) &&
           <span>
             on {moment(this.props.tradeEffectiveDate).format('LL')} by the
@@ -100,8 +100,9 @@ class CreditTransferSigningHistory extends Component {
   }
 
   static renderNotRecommended (history) {
+    const inputtedDate = new Date(history.createTimestamp)
     return (
-      CreditTransferSigningHistory._isTransferType(history) ? <span><strong>Recommended refusing</strong></span> :
+      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT) ? <span><strong>Recommended refusing</strong></span> :
       <span>
         <strong>Reviewed</strong> and
         <strong className="text-danger"> Not Recommended</strong>
@@ -110,8 +111,9 @@ class CreditTransferSigningHistory extends Component {
   }
 
   static renderRecommended (history) {
+    const inputtedDate = new Date(history.createTimestamp)
     return (
-      CreditTransferSigningHistory._isTransferType(history) ? <span><strong>Recommended recording</strong></span> :
+      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT) ? <span><strong>Recommended recording</strong></span> :
       <span>
         <strong>Reviewed</strong> and
         <strong className="text-success"> Recommended</strong>
