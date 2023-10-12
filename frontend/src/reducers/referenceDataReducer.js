@@ -10,7 +10,6 @@ const referenceData = (state = {
   }
 }, action) => {
   if (action.name === ReducerTypes.REFERENCE_DATA) {
-    console.log(action, "1313")
     switch (action.type) {
       case ActionTypes.GET_REFERENCE_DATA:
         return {
@@ -19,7 +18,6 @@ const referenceData = (state = {
           success: false
         }
       case ActionTypes.RECEIVE_REFERENCE_DATA:
-        console.log(action.data, "2222")
         return {
           ...state,
           isFetching: false,

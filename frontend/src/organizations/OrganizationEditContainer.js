@@ -104,7 +104,6 @@ class OrganizationEditContainer extends Component {
       }
       const edrmsRecord = org.edrmsRecord || ''
       const isEdrmsRecordValid = this._validateEdrmsRecord(edrmsRecord)
-      console.log(org, "104")
       this.setState({
         fields: {
           org_name: props.organization.details.name,
@@ -147,11 +146,10 @@ class OrganizationEditContainer extends Component {
     if (!/^[a-zA-Z0-9]*$/.test(value)) {
       return 'Only letters and numbers are allowed.'
     }
-    return ''
+    return value
   }
 
   _handleInputChange (event) {
-    console.log(event.target, "143:")
     const { value, name } = event.target
     const fieldState = { ...this.state.fields }
     const numericFields = ['org_type', 'org_actionsType', 'org_status']
@@ -161,15 +159,12 @@ class OrganizationEditContainer extends Component {
     } else {
       fieldState[name] = value
     }
-    // if (name === 'supplierType') {
-    //   fieldState[name] = value
-    // }
     if (name === 'edrms_record') {
       const isValidEdrmsRecord = /^[a-zA-Z0-9]*$/.test(value);
       if (isValidEdrmsRecord) {
-        fieldState[name] = value; // Set the state for valid input
+        fieldState[name] = value
         this.setState({
-          edrmsRecordError: '', // Clear the error message when input is valid
+          edrmsRecordError: '',
         });
       } else {
         this.setState({
@@ -184,7 +179,6 @@ class OrganizationEditContainer extends Component {
     this.setState({
       fields: fieldState,
     })
-    console.log(fieldState, "161")
   }
 
   _formIsValid () {
@@ -270,7 +264,6 @@ class OrganizationEditContainer extends Component {
   }
   
   _handleCreate () {
-    console.log(this.state.fields, "274")
     const data = {
       name: this.state.fields.org_name,
       type: this.state.fields.org_type,
@@ -313,7 +306,6 @@ class OrganizationEditContainer extends Component {
     if (isFetching) {
       return <Loading />
     }
-
     switch (this.props.mode) {
       case 'add':
         return [
@@ -414,7 +406,7 @@ OrganizationEditContainer.propTypes = {
   navigate: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => (console.log(state, "420"),{
+const mapStateToProps = (state) => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
