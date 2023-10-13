@@ -36,7 +36,17 @@ const CreditTransferTable = (props) => {
     id: 'compliancePeriod',
     minWidth: 45
   }, {
-    accessor: item => getCreditTransferType(item.type.id),
+    accessor: item => {
+      if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Initiative Agreement' : 'Part 3 Award'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Validation'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' :'Reduction'
+      } else {
+        return getCreditTransferType(item.type.id)
+      }
+    },
     className: 'col-transfer-type',
     Header: 'Type',
     id: 'transactionType',
