@@ -92,12 +92,12 @@ class SpreadSheetBuilder(object):
         """
         Adds a spreadsheet for credit transfers
         """
-        worksheet = self.workbook.add_sheet("Credit Transactions")
+        worksheet = self.workbook.add_sheet("Transactions")
         row_index = 0
 
         columns = [
-            "Transaction ID", "Compliance Period", "Type", "Credits From",
-            "Credits To", "Quantity of Credits", "Value per Credit", "Category",
+            "Transaction ID", "Compliance Period", "Type", "Compliance Units From",
+            "Compliance Units To", "Number of Units", "Value per unit", "Category",
             "Status", "Effective Date", "Comments"
         ]
 

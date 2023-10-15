@@ -93,7 +93,7 @@ const CreditTransferTable = (props) => {
     className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Quantity of Compliance Units',
+    Header: 'Number of units',
     id: 'numberOfCredits',
     minWidth: 75
   }, {
