@@ -21,9 +21,9 @@ export const getCreditTransfers = () => (dispatch) => {
 export const getCreditTransferType = (typeId) => {
   switch (typeId) {
     case CREDIT_TRANSFER_TYPES.validation.id:
-      return 'Validation'
+      return 'Assessment'
     case CREDIT_TRANSFER_TYPES.retirement.id:
-      return 'Reduction'
+      return 'Assessment'
     case CREDIT_TRANSFER_TYPES.part3Award.id:
       return 'Part 3 Award'
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
