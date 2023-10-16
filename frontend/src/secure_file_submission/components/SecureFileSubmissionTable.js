@@ -83,7 +83,7 @@ const SecureFileSubmissionTable = (props) => {
       }
     },
     className: 'col-credit-transaction-id',
-    Header: 'Compliance Unit Transaction ID',
+    Header: 'Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
   }, {

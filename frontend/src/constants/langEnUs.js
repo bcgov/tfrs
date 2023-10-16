@@ -39,7 +39,7 @@ export const BTN_REJECT = 'Reject'
 export const BTN_CANCEL = 'Cancel'
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance'
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval'
-export const BTN_RECOMMEND_FOR_DECISION_1_2 = 'Recommend recording transfer'
+export const BTN_RECOMMEND_FOR_DECISION_1_2 = 'Recommend issuance'
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection'
 export const BTN_REQUEST_SUPPLEMENTAL = 'Request Supplemental'
 export const BTN_RESCIND = 'Rescind'
@@ -79,8 +79,8 @@ export const TEXT_VISIBLE_TO_GOV = 'Visible to government'
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both the organization and government'
 export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
                                   'performing other actions'
-export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
-                                     'be recommended'
+export const TEXT_COMMENT_REQUIRED = 'A comment is required before you can recommend the issuance ' +
+                                     'of compliance units.'
 
 export const TEXT_ERROR_INVALID_CHARACTER = 'Non-numeric characters are not allowed.'
 export const TEXT_ERROR_MAX_DECIMALS = 'Cannot add more decimals.'
