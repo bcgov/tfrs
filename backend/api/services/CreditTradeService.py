@@ -199,8 +199,7 @@ class CreditTradeService(object):
             if 'deductions' in credit_trade.respondent.organization_balance:
                 org_balance -= Decimal(credit_trade.respondent.organization_balance['deductions'])
 
-            # Check if the organization balance would remain below zero
-            if org_balance + credit_trade.number_of_credits < Decimal(0):
+            if org_balance <= 0 and credit_trade.number_of_credits < Decimal(0):
                 raise ValidationError(f"Organization {credit_trade.respondent.name} already has a balance of {org_balance}")
 
             # number_of_credits can be negative so we add to org balance here
