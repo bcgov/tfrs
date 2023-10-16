@@ -86,6 +86,7 @@ const CreditTransferDetails = props => (
           isRescinded={props.isRescinded}
           status={props.status}
           type={props.tradeType}
+          updateTimestamp={props.updateTimestamp}
         />
         <CreditTransferVisualRepresentation
           creditsFrom={props.creditsFrom}
@@ -115,6 +116,7 @@ const CreditTransferDetails = props => (
               categoryDSelected={props.categoryDSelected}
               toggleCategoryDSelection={props.toggleCategoryDSelection}
               loggedInUser={props.loggedInUser}
+              updateTimestamp={props.updateTimestamp}
             />
           </div>
         </div>
@@ -247,13 +249,15 @@ CreditTransferDetails.defaultProps = {
     theType: 'sell'
   },
   comments: [],
-  documents: []
+  documents: [],
+  updateTimestamp: ''
 }
 
 CreditTransferDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
+  updateTimestamp: PropTypes.string,
   compliancePeriod: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string
