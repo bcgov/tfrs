@@ -261,7 +261,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period "
+                    'does_not_exist': "Please specify the compliance period "
                                       "in which the transaction relates."
                 }
             },
@@ -633,7 +633,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period "
+                    'does_not_exist': "Please specify the compliance period "
                                       "in which the transaction relates."
                 }
             },

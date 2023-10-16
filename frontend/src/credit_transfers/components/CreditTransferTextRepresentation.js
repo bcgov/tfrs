@@ -153,6 +153,9 @@ class CreditTransferTextRepresentation extends Component {
     if (tradeStatus === 'Recorded') {
       return 'approved'
     }
+    if (tradeStatus === 'Reviewed') {
+      return 'reviewed'
+    }
   }
 
   _renderAdministrativeAdjustment () {
