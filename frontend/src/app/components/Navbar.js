@@ -107,7 +107,7 @@ class Navbar extends Component {
             id="navbar-credit-transactions"
             to={CREDIT_TRANSACTIONS.LIST}
           >
-            Compliance Units
+            Transactions
           </NavLink>
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
