@@ -11,6 +11,7 @@ import {
   CREDIT_TRANSFER_TYPES,
   ZERO_DOLLAR_REASON
 } from '../../constants/values'
+import { transformTransactionStatusDesc } from '../../utils/functions'
 
 class CreditTransferTextRepresentation extends Component {
   constructor (props) {
@@ -135,13 +136,26 @@ class CreditTransferTextRepresentation extends Component {
         <span className='value'> {this.numberOfCredits} </span>
         compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
         <span className='value'> {this.creditsTo} </span> for the completion of
-        a designated action in an Initiative Agreement,
+        a designated action in an Initiative Agreement has been 
+        <span className='value lowercase'> {this._transformTradeStatus(this.tradeStatus)}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           this.tradeEffectiveDate
         }
         .
       </div>
     )
+  }
+
+  _transformTradeStatus(tradeStatus) {
+    if (tradeStatus === 'Refused') {
+      return 'declined'
+    }
+    if (tradeStatus === 'Recorded') {
+      return 'approved'
+    }
+    if (tradeStatus === 'Reviewed') {
+      return 'reviewed'
+    }
   }
 
   _renderAdministrativeAdjustment () {
@@ -246,7 +260,7 @@ class CreditTransferTextRepresentation extends Component {
           {' '}
           {rescindedBy.user.organization.name}{' '}
         </span>,
-        <span key='rescinded-by-text'>rescinded the proposal.</span>
+        <span key='rescinded-by-text'>rescinded the transfer.</span>
       ]
     }
 
@@ -260,11 +274,11 @@ class CreditTransferTextRepresentation extends Component {
 
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-        return ' sold '
+        return ' transferred '
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to sell '
       default:
-        return ' is proposing to sell '
+        return ' transfers '
     }
   }
 
@@ -276,8 +290,7 @@ class CreditTransferTextRepresentation extends Component {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
       return (
         <span>
-          . <span className='value'> {respondent.name} </span> refused the
-          proposal.
+          . <span className='value'> {respondent.name} </span> declined the transfer.
         </span>
       )
     }
@@ -285,7 +298,7 @@ class CreditTransferTextRepresentation extends Component {
     if (
       this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id
     ) {
-      return <span>. The proposal was declined.</span>
+      return <span>. The proposal was {transformTransactionStatusDesc(CREDIT_TRANSFER_STATUS.declinedForApproval.id, this.props.tradeType.id, this.props.updateTimestamp).toLowerCase()}.</span>
     }
     return (this.tradeEffectiveDate)
   }
@@ -329,10 +342,12 @@ CreditTransferTextRepresentation.defaultProps = {
   history: [],
   isRescinded: false,
   tradeEffectiveDate: '',
+  updateTimestamp: '',
   zeroDollarReason: null
 }
 
 CreditTransferTextRepresentation.propTypes = {
+  updateTimestamp: PropTypes.string,
   compliancePeriod: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string

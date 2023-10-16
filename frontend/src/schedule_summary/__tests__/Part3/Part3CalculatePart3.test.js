@@ -83,6 +83,9 @@ describe('Calculate Part3', () => {
       maxCreditOffset: 86661,
       status: {
         fuelSupplierStatus: 'Submitted'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     // const lastAcceptedOffset = 83106
@@ -99,7 +102,14 @@ describe('Calculate Part3', () => {
       },
       complianceReport,
       recomputedTotals: {
-        scheduleB: 20000
+        scheduleB: {
+          records: [
+            {
+              credits: 0,
+              debits: 500
+            }
+          ]
+        }
       },
       showPenaltyWarning: jest.fn()
     }
@@ -113,6 +123,6 @@ describe('Calculate Part3', () => {
 
     expect(part3[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(500)
     expect(part3[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe('')
-    expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
+    expect(part3[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(1600)
   })
 })

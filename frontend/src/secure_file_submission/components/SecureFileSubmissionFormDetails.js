@@ -24,14 +24,14 @@ class SecureFileSubmissionFormDetails extends Component {
   _getPlaceholders (documentType) {
     if (this.props.documentType && this.props.documentType.theType === 'Application') {
       return {
-        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
+        titlePlaceholder: 'e.g., Co-processing, low carbon fuel production, etc',
         commentPlaceholder: 'Optional: provide any additional information with respect to your Initiative Agreement application'
       }
     }
 
     if (this.props.documentType && this.props.documentType.theType === 'Evidence') {
       return {
-        titlePlaceholder: 'e.g., P3A-23COM1',
+        titlePlaceholder: 'e.g., IA-23COM1',
         commentPlaceholder: 'Optional: provide any additional information with respect to your evidence of completion submission.'
       }
     }

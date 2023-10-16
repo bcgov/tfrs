@@ -34,15 +34,16 @@ export const BTN_PROPOSE = 'Propose'
 export const BTN_PULL_BACK = 'Retract Recommendation'
 export const BTN_RECEIVED = 'Received'
 export const BTN_REFUSE = 'Refuse'
-export const BTN_REFUSE_2 = 'Decline Transfer'
+export const BTN_REFUSE_2 = 'Decline transfer'
 export const BTN_REJECT = 'Reject'
 export const BTN_CANCEL = 'Cancel'
 export const BTN_RECOMMEND_FOR_ACCEPTANCE = 'Recommend for Acceptance'
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval'
-export const BTN_RECOMMEND_FOR_DECISION_1_2 = 'Recommend recording transfer'
+export const BTN_RECOMMEND_FOR_DECISION_1_2 = 'Recommend issuance'
 export const BTN_RECOMMEND_FOR_REJECTION = 'Recommend for Rejection'
 export const BTN_REQUEST_SUPPLEMENTAL = 'Request Supplemental'
 export const BTN_RESCIND = 'Rescind'
+export const BTN_RESCIND_TRANSFER = 'Rescind transfer'
 export const BTN_RESCIND_AS_DRAFT = 'Rescind as Draft'
 export const BTN_RETURN_TO_DRAFT = 'Return to Analyst'
 export const BTN_SAVE = 'Save'
@@ -66,8 +67,8 @@ export const BTN_CANCEL_LINK_CREDIT_TRANSACTION = 'Cancel'
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details'
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
                                                    'recommendations or decisions'
-export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment field will only be ' +
-                                       'visible to government.'
+export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment field will be ' +
+                                       'visible to both the organization and government.'
 export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +
                                                   'will only be visible to government.'
 export const TEXT_ADD_COMMENT_HEADING = 'Add Comment Form'
@@ -78,8 +79,8 @@ export const TEXT_VISIBLE_TO_GOV = 'Visible to government'
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both the organization and government'
 export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
                                   'performing other actions'
-export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
-                                     'be recommended'
+export const TEXT_COMMENT_REQUIRED = 'A comment is required before you can recommend the issuance ' +
+                                     'of compliance units.'
 
 export const TEXT_ERROR_INVALID_CHARACTER = 'Non-numeric characters are not allowed.'
 export const TEXT_ERROR_MAX_DECIMALS = 'Cannot add more decimals.'

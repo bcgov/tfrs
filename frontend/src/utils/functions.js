@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import CONFIG from '../config'
-import { CREDIT_TRANSFER_TYPES } from '../constants/values'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, LCFS_COMPLIANCE_START_DT } from '../constants/values'
 import { getCreditTransferType } from '../actions/creditTransfersActions'
 
 const arrayMove = (arr, currentIndex, targetIndex) => {
@@ -289,8 +289,22 @@ const transformCreditTransferTypeDesc = (typeId) => {
   return getCreditTransferType(typeId)
 }
 
+const transformTransactionStatusDesc = (statusId, typeId, updateTimestamp) => {
+  const inputtedDate = new Date(updateTimestamp)
+  if (getCreditTransferType(typeId) === 'Transfer' && inputtedDate >= LCFS_COMPLIANCE_START_DT) {
+    if (statusId === CREDIT_TRANSFER_STATUS.approved.id) {
+      return "Recorded"
+    } else if (statusId === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
+      return "Refused"
+    }
+  }
+  return (
+    Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === statusId)
+  ).description
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
   formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists,
-  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription, transformCreditTransferTypeDesc
+  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription, transformCreditTransferTypeDesc, transformTransactionStatusDesc
 }

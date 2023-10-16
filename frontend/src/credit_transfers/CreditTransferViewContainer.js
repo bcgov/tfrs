@@ -330,6 +330,8 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmAccept"
         key="confirmAccept"
+        confirmLabel="Sign and submit"
+        cancelLabel="Cancel"
       >
         Are you sure you want to sign and submit this transfer
         to the Government of British Columbia for review?
@@ -367,28 +369,44 @@ class CreditTransferViewContainer extends Component {
       >
         <div className="alert alert-warning">
           <p>
-            Under section 11.11 (3) of the Regulation, the Director may decline to approve a
-            proposed transfer if the Director:
+            Under section 17 of the Low Carbon Fuels Regulation, the Director may refuse to record a transfer under section 16 of the Act if:
           </p>
           <dl>
             <dt>(a)</dt>
             <dd>
-              considers the intent of the transfer is to avoid compliance with the Act or
-              Regulation, or
+              the director considers that
+              <dl>
+                <dt>(i)</dt>
+                <dd>the transfer will be unable to meet the target set under section 12 <i>[low carbon fuel target]</i> of the Act, or</dd>
+              </dl>
+              <dl>
+                <dt>(ii)</dt>
+                <dd>the intent of the transfer is to avoid compliance with the Act, or</dd>
+              </dl>
             </dd>
           </dl>
           <dl>
             <dt>(b)</dt>
             <dd>
-              is not satisfied that the transferor or transferee will be able to comply with the
-              low carbon fuel requirement (section 6 of the Act)
+              all of the following apply:
+              <dl>
+                <dt>(i)</dt>
+                <dd>the director is conducting a reassessment in relation to the transferor;</dd>
+              </dl>
+              <dl>
+                <dt>(ii)</dt>
+                <dd>the director has reason to believe that the transferor was issued a number of compliance units as a result of fraud or misrepresentation, and</dd>
+              </dl>
+              <dl>
+                <dt>(i)</dt>
+                <dd>the director has reason to believe that, if the transfer is recorded, the transferor will have a negative balance on assessment.</dd>
+              </dl>
             </dd>
           </dl>
           <p>
-            This statutory decision is appealable, and you are strongly encouraged to add a comment
-            that provides an explanation as to why the proposed transfer is being declined. The
-            comment will be visible to both Part 3 fuel suppliers involved in the proposed
-            transfer.
+            You are strongly encouraged to add a comment
+            that provides an explanation as to why the proposed transfer is being refused. The
+            comment will be visible to both organizations involved in the transfer.
           </p>
         </div>
 
@@ -507,13 +525,13 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
-        confirmLabel="Recommend recording transfer"
+        confirmLabel="Recommend issuance"
         cancelLabel="Cancel"
       >
-        Are you sure you want to recommend that the Director records the
+        Are you sure you want to recommend issuance of compliance units for this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' transfer'
-          : ' Part 3 Award'}?
+          : ' Initiative Agreement'}?
       </Modal>
     )
   }
@@ -698,6 +716,7 @@ class CreditTransferViewContainer extends Component {
       categoryDSelected={this.props.item.categoryDSelected}
       toggleCategoryDSelection={this._toggleCategoryDSelection}
       dateOfWrittenAgreement={item.dateOfWrittenAgreement}
+      updateTimestamp={item.updateTimestamp}
     />)
 
     content.push(this._modalDeleteComment())

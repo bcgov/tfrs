@@ -96,11 +96,14 @@ function lineData (
 ) {
   const { isSupplemental } = complianceReport
   part3[SCHEDULE_SUMMARY.LINE_26][2].value = summary.creditsOffset
-  part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
-  part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
-    className: 'hidden',
-    value: '0'
+
+  if (period >= COMPLIANCE_YEAR && part3[SCHEDULE_SUMMARY.LINE_28_A]) {
+    part3[SCHEDULE_SUMMARY.LINE_28_A][0].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][1].className = 'hidden'
+    part3[SCHEDULE_SUMMARY.LINE_28_A][2] = {
+      className: 'hidden',
+      value: '0'
+    }
   }
   if (!isSupplemental) {
     part3 = Part3NonSupplimentalLineData(part3, complianceReport, period)

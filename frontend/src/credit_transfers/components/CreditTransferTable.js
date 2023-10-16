@@ -15,6 +15,7 @@ import filterNumber from '../../utils/filters'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 import { useNavigate } from 'react-router'
+import { transformTransactionStatusDesc } from '../../utils/functions'
 
 const CreditTransferTable = (props) => {
   const navigate = useNavigate()
@@ -36,7 +37,17 @@ const CreditTransferTable = (props) => {
     id: 'compliancePeriod',
     minWidth: 45
   }, {
-    accessor: item => getCreditTransferType(item.type.id),
+    accessor: item => {
+      if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Initiative Agreement' : 'Part 3 Award'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Validation'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' :'Reduction'
+      } else {
+        return getCreditTransferType(item.type.id)
+      }
+    },
     className: 'col-transfer-type',
     Header: 'Type',
     id: 'transactionType',
@@ -60,7 +71,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Compliance Units From',
+    Header: 'Compliance units from',
     id: 'creditsFrom',
     minWidth: 190
   }, {
@@ -74,7 +85,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Credits To',
+    Header: 'Compliance units to',
     id: 'creditsTo',
     minWidth: 190
   }, {
@@ -82,7 +93,7 @@ const CreditTransferTable = (props) => {
     className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Quantity of Compliance Units',
+    Header: 'Number of units',
     id: 'numberOfCredits',
     minWidth: 75
   }, {
@@ -101,15 +112,13 @@ const CreditTransferTable = (props) => {
     ),
     className: 'col-price',
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Credit',
+    Header: 'Value per unit',
     id: 'fairMarketValuePerCredit',
     minWidth: 65
   }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
-      : (
-          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-        ).description),
+      : transformTransactionStatusDesc(item.status.id, item.type.id, item.updateTimestamp)),
     className: 'col-status',
     filterMethod: (filter, row) => {
       const values = filter.value.toLowerCase().split(',')
