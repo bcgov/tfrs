@@ -80,7 +80,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         data = cached_page.get(sanitized_cache_key)
         if data is not None:
             return Response(data)
-        fuel_suppliers = Organization.objects.select_related('type').filter(type__type='FuelSupplier').order_by('id')
+        fuel_suppliers = Organization.objects.select_related('type').filter(type__type='Part3FuelSupplier').order_by('id')
         serializer = self.get_serializer(fuel_suppliers, many=True)
         data = serializer.data
         cached_page.set(sanitized_cache_key, data, 60 * 15)
