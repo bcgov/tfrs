@@ -2,17 +2,6 @@
 
 from django.db import migrations, models
 
-def change_organization_types(apps, schema_editor):
-    OrganizationType = apps.get_model('api', 'OrganizationType')
-
-    # Change the type values
-    OrganizationType.objects.filter(type="Part3FuelSupplier").update(type="FuelSupplier")
-    OrganizationType.objects.filter(type="FuelSupplier").update(description="Fuel Supplier")
-
-    # Add a new type
-    OrganizationType.objects.create(type="ElectricitySupplier", description="Electricity Supplier", 
-                                    effective_date="2023-01-01", expiration_date='2117-01-01', display_order=3)
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,7 +9,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(change_organization_types),
         migrations.AddField(
             model_name='organization',
             name='edrms_record',
