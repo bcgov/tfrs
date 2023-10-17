@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import Administration from './Administration'
 import Balance from './Balance'
 import BalanceBCEID from './BalanceBCEID'
-import CreditTradingValue from './CreditTradingValue'
 import CreditTransactions from './CreditTransactions'
 import CreditTransactionsBCEID from './CreditTransactionsBCEID'
 import ComplianceReports from './ComplianceReports'
@@ -90,7 +89,6 @@ const DirectorDashboardPage = obj => (
         />
       }
 
-      <CreditTradingValue />
     </div>
 
     <div className="col-md-5">
@@ -126,7 +124,6 @@ const IDIRDashboardPage = obj => (
         />
       }
 
-      <CreditTradingValue />
     </div>
 
     <div className="col-md-5">

@@ -28,23 +28,6 @@ const BalanceBCEID = props => (
         </Tooltip>
       </div>
     ]}
-
-    <div className="credit-market-report">
-      <a
-        href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        RLCF-017: Credit Market Report
-      </a>
-      <a
-        href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <FontAwesomeIcon icon={['far', 'file-pdf']} />
-      </a>
-    </div>
   </div>
 )
 
