@@ -50,7 +50,7 @@ def update_report_fields(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0008_auto_20230718_0104'),
+        ('api', '0009_organization_edrms_record'),
     ]
 
     operations = [
