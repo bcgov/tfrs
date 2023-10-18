@@ -351,8 +351,11 @@ class CreditTransferEditContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
+        confirmLabel="Recommend issuance"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to recommend approval of this Part 3 Award?
+        Are you sure you want to recommend issuance of compliance units
+        for this Initiative Agreement?
       </Modal>,
       <Modal
         handleSubmit={() => this._deleteCreditTransfer(item.id)}

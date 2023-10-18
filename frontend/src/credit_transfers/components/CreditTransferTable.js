@@ -43,7 +43,7 @@ const CreditTransferTable = (props) => {
       } else if (item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Validation'
       } else if (item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
-        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' :'Reduction'
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Reduction'
       } else {
         return getCreditTransferType(item.type.id)
       }

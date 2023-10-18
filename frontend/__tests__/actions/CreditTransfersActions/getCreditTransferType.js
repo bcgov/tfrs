@@ -4,13 +4,13 @@ import { CREDIT_TRANSFER_TYPES } from '../../../src/constants/values'
 test('getCreditTransferType should return a display value for Validation', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.validation.id)
 
-  expect('Validation').toEqual(data)
+  expect('Assessment').toEqual(data)
 })
 
 test('getCreditTransferType should return a display value for Reduction', () => {
   const data = getCreditTransferType(CREDIT_TRANSFER_TYPES.retirement.id)
 
-  expect('Reduction').toEqual(data)
+  expect('Assessment').toEqual(data)
 })
 
 test('getCreditTransferType should return a display value for Part 3 Award', () => {

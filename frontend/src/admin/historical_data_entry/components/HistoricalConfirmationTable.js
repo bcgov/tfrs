@@ -8,15 +8,15 @@ import Loading from '../../../app/components/Loading'
 import { getOrganizationBalance } from '../../../actions/organizationActions'
 
 const HistoricalConfirmationTable = props => {
-  const { item, organizationBalance, getOrganizationBalance } = props;
+  const { item, organizationBalance, getOrganizationBalance } = props
   const [availableBalance, setAvailableBalance] = useState(0)
 
   useEffect(() => {
     // Check if organization balance is fetching
     if (!organizationBalance.isFetching) {
-      getOrganizationBalance(item.creditsTo.id);
+      getOrganizationBalance(item.creditsTo.id)
     }
-  }, [item.creditsTo.id]);
+  }, [item.creditsTo.id])
 
   // Check if organization balance is still fetching, if so, display a loading indicator
   if (organizationBalance.isFetching) {
@@ -24,16 +24,16 @@ const HistoricalConfirmationTable = props => {
   }
   if (organizationBalance.details &&
      organizationBalance.details.availableBalance !== availableBalance &&
-     item.creditsTo.id == organizationBalance.details.organization) {
+     item.creditsTo.id === organizationBalance.details.organization) {
     setAvailableBalance(organizationBalance.details.availableBalance)
   }
 
-  function decimalViewer(digits = 2) {
+  function decimalViewer (digits = 2) {
     return cell => Number(cell.value).toFixed(digits)
       .toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
-  function buildGrid(item) {
+  function buildGrid (item) {
     const credits = item.numberOfCredits
     const offset = availableBalance + credits
 
@@ -45,12 +45,12 @@ const HistoricalConfirmationTable = props => {
       [{
         className: 'text',
         readOnly: true,
-        value: 'Transaction',
+        value: 'Transaction'
       }, {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: credits, // credits
+        value: credits // credits
       }], [{
         className: 'text',
         readOnly: true,
@@ -59,7 +59,7 @@ const HistoricalConfirmationTable = props => {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: availableBalance, // balance
+        value: availableBalance // balance
       }], [{
         className: 'text',
         readOnly: true,
@@ -68,7 +68,7 @@ const HistoricalConfirmationTable = props => {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: balanceChange, // balance change from this transaction
+        value: balanceChange // balance change from this transaction
       }], [{
         className: 'text',
         readOnly: true,
@@ -77,7 +77,7 @@ const HistoricalConfirmationTable = props => {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: balanceAfterTransaction, // balance after transaction
+        value: balanceAfterTransaction // balance after transaction
       }], [{
         className: 'text',
         readOnly: true,
@@ -86,7 +86,7 @@ const HistoricalConfirmationTable = props => {
         className: 'number',
         readOnly: true,
         valueViewer: decimalViewer(0),
-        value: nonCompliancePenalty, // balance after transaction
+        value: nonCompliancePenalty // balance after transaction
       }]
     ]
     if (nonCompliancePenalty <= 0) {

@@ -12,7 +12,7 @@ import Modal from '../../../app/components/Modal'
 import SuccessAlert from '../../../app/components/SuccessAlert'
 import HistoricalConfirmationTable from './HistoricalConfirmationTable'
 import { CREDIT_TRANSFER_TYPES } from '../../../constants/values'
-import _ from 'lodash';
+import _ from 'lodash'
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT]
 const formActions = [Lang.BTN_ADD_TO_QUEUE]
@@ -22,9 +22,9 @@ const HistoricalDataEntryPage = (props) => {
   const isEmpty = items.length === 0
   const groupedItems = _.cloneDeep(items).filter(item => item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id)
     .reduce((acc, item) => {
-      const existingOrgTrxns = acc.find(trxns => trxns.creditsTo.id === item.creditsTo.id
-        && trxns.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id
-        && item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id)
+      const existingOrgTrxns = acc.find(trxns => trxns.creditsTo.id === item.creditsTo.id &&
+        trxns.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id &&
+        item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id)
 
       if (existingOrgTrxns) {
         existingOrgTrxns.numberOfCredits += item.numberOfCredits
@@ -33,12 +33,12 @@ const HistoricalDataEntryPage = (props) => {
       }
       return acc
     }, [])
-    
-  const shouldShowTableDescription = groupedItems.length > 0;
+
+  const shouldShowTableDescription = groupedItems.length > 0
 
   const isAdminAdjustment = (item) => {
-    return item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id;
-  };
+    return item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id
+  }
 
   return (
     <div className="page_historical_data_entry">

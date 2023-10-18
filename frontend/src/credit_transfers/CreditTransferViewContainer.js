@@ -800,6 +800,7 @@ CreditTransferViewContainer.propTypes = {
     note: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
     dateOfWrittenAgreement: PropTypes.string,
+    updateTimestamp: PropTypes.string,
     comments: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       createTimestamp: PropTypes.string,
