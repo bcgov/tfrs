@@ -114,15 +114,12 @@ const OrganizationDetails = props => {
             <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
           </dl>
         </div>
-        {/* {props.organization.organizationAddress &&
-        props.organization.organizationAddress.attorneyStreetAddress && */}
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Company Profile, EDRMS Record #:</strong></dt>
             <dd><strong>{props.organization.edrmsRecord ? props.organization.edrmsRecord : ''}</strong></dd>
           </dl>
         </div>
-        {/* // } */}
         <div className="status">
           <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Status:</strong></dt>
