@@ -67,6 +67,7 @@ export const BTN_CANCEL_LINK_CREDIT_TRANSACTION = 'Cancel'
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details'
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
                                                    'recommendations or decisions'
+export const TEXT_COMMENT_DISCLOSURE_FOR_TRANSFER = 'Information entered in this comment field will be visible to both parties of the transaction and government.'
 export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment field will be ' +
                                        'visible to both the organization and government.'
 export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +

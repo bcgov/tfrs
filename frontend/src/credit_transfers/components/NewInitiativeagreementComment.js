@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as Lang from '../../constants/langEnUs'
 
-class CreditTransferCommentForm extends Component {
+class NewInitiativeagreementComment extends Component {
   static titleText (props) {
     if (props.isCommentingOnUnsavedCreditTransfer) {
       return Lang.TEXT_ADD_INITIAL_COMMENT
@@ -127,7 +127,7 @@ class CreditTransferCommentForm extends Component {
               <h4 className="alert-heading">Disclosure Notice</h4>
               <p>{this.props.isCreatingPrivilegedComment
                 ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
-                : Lang.TEXT_COMMENT_DISCLOSURE_FOR_TRANSFER}
+                : Lang.TEXT_COMMENT_DISCLOSURE}
               </p>
             </div>
           </div>
@@ -137,7 +137,7 @@ class CreditTransferCommentForm extends Component {
   }
 }
 
-CreditTransferCommentForm.defaultProps = {
+NewInitiativeagreementComment.defaultProps = {
   cancelComment: null,
   comment: '',
   embedded: false,
@@ -149,7 +149,7 @@ CreditTransferCommentForm.defaultProps = {
   selectIdForModal: null
 }
 
-CreditTransferCommentForm.propTypes = {
+NewInitiativeagreementComment.propTypes = {
   comment: PropTypes.string,
   id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
@@ -162,4 +162,4 @@ CreditTransferCommentForm.propTypes = {
   selectIdForModal: PropTypes.func
 }
 
-export default CreditTransferCommentForm
+export default NewInitiativeagreementComment

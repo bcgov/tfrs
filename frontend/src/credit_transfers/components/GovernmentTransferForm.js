@@ -13,13 +13,12 @@ import Tooltip from '../../app/components/Tooltip'
 import * as Lang from '../../constants/langEnUs'
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
 import CreditTransferCommentButtons from './CreditTransferCommentButtons'
-import CreditTransferCommentForm from './CreditTransferCommentForm'
+import NewInitiativeagreementComment from './NewInitiativeagreementComment'
 import GovernmentTransferFormDetails from './GovernmentTransferFormDetails'
 import { useNavigate } from 'react-router'
 
 const GovernmentTransferForm = props => {
   const navigate = useNavigate()
-
   useEffect(() => {
     props.getCompliancePeriods()
   }, [])
@@ -43,7 +42,7 @@ const GovernmentTransferForm = props => {
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
-          <CreditTransferCommentForm
+          <NewInitiativeagreementComment
             comment={props.fields.comment}
             isCommentingOnUnsavedCreditTransfer={props.id === 0}
             isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
