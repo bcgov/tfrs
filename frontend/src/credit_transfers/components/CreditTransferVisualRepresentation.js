@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import numeral from 'numeral'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import moment from 'moment-timezone'
 import * as NumberFormat from '../../constants/numeralFormats'
 import {
   CREDIT_TRANSFER_STATUS,
@@ -23,7 +23,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            compliance unit{this.props.numberOfCredits > 1 && 's'}
+            {this.props.updateTimestamp >= moment('2024-01-01') ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 1 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
           <div>{transformCreditTransferTypeDesc(this.props.tradeType.id)}</div>
@@ -69,7 +69,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            compliance unit{this.props.numberOfCredits > 2 && 's'}
+            {this.props.updateTimestamp >= moment('2024-01-01') ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 2 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>

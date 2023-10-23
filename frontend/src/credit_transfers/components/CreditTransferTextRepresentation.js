@@ -130,22 +130,24 @@ class CreditTransferTextRepresentation extends Component {
     )
   }
 
-  _renderPart3Award () {
-    return (
-      <div className='text-representation'>
-        <span className='value'> {this.numberOfCredits} </span>
-        compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
-        <span className='value'> {this.creditsTo} </span> for the completion of
-        a designated action in an Initiative Agreement has been 
-        <span className='value lowercase'> {this._transformTradeStatus(this.tradeStatus)}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-          this.tradeEffectiveDate
-        }
-        .
-      </div>
-    )
+  _renderPart3Award() {
+    if (this.props.updateTimestamp >= moment('2024-01-01')) {
+      return (
+        <div className='text-representation'>
+          <span className='value'>{this.numberOfCredits}</span> compliance unit{this.props.numberOfCredits > 1 ? 's' : ''} issued to <span className='value'>{this.organization} </span> 
+          for the completion of a designated action in an Initiative Agreement, effective <span className='value'>{this.tradeEffectiveDate}</span>.
+        </div>
+      )
+    } else {
+      return (
+        <div className='text-representation'>
+          An award of <span className='value'>{this.numberOfCredits}</span> credit{this.props.numberOfCredits > 1 ? 's' : ''} earned by <span className='value'>{this.creditsTo} </span> 
+          for the completion of Part 3 Agreement milestone(s) has been <span className='value lowercase'>{this.tradeStatus}</span>
+          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
+        </div>
+      )
+    }
   }
-
   _transformTradeStatus(tradeStatus) {
     if (tradeStatus === 'Refused') {
       return 'declined'
@@ -174,18 +176,25 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _renderRetirement () {
-    return (
-      <div className='text-representation'>
-        <span className='value'> {this.numberOfCredits} </span>
-        compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
-        <span className='value'> {this.creditsFrom}</span>,
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-          this.tradeEffectiveDate
-        }
-        .
+      if (this.props.updateTimestamp >= moment('2024-01-01')) {
+      return (
+        <div className='text-representation'>
+        <span className='value'> {this.numberOfCredits} </span> compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
+        <span className='value'> {this.creditsFrom}</span>, {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
       </div>
-    )
+        )
+      }else {
+        return (
+          <div className='text-representation'>
+            A <span className='value'>reduction </span> of <span className='value'>{this.numberOfCredits} </span> credits earned by <span className='value'>{this.creditsTo}</span>
+            {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+            <span> has been <span className='value'>approved </span> {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.</span>
+          }
+        </div>
+        )
+      }
   }
+
 
   _renderSell () {
     const status = this.props.status
@@ -235,18 +244,25 @@ class CreditTransferTextRepresentation extends Component {
     )
   }
 
-  _renderValidation () {
-    return (
-      <div className='text-representation'>
-        <span className='value'> {this.numberOfCredits} </span>
-        compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
-        <span className='value'> {this.creditsTo}</span>, 
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-          this.tradeEffectiveDate
-        }
-        .
-      </div>
-    )
+  _renderValidation() {
+  
+    if (this.props.updateTimestamp >= moment('2024-01-01')) {
+      return (
+        <div className='text-representation'>
+          <span className='value'> {this.numberOfCredits} </span> compliance unit{this.numberOfCredits > 1 && 's'} issued to
+          <span className='value'> {this.creditsTo}</span>, {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
+        </div>
+      )
+    } else {
+      return (
+        <div className='text-representation'>
+          A <span className='value'>validation </span> of <span className='value'>{this.numberOfCredits} </span> credits earned by <span className='value'>{this.creditsTo}</span>
+          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+            <span> has been <span className='value'>approved </span> {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.</span>
+          }
+        </div>
+      )
+    }
   }
 
   _rescindedBy () {

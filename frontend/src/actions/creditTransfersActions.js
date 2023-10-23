@@ -4,7 +4,7 @@ import ActionTypes from '../constants/actionTypes/CreditTransfers'
 import ReducerTypes from '../constants/reducerTypes/CreditTransfers'
 import * as Routes from '../constants/routes'
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../constants/values'
-
+import moment from 'moment-timezone'
 /*
  * Credit Transfers
  */
@@ -18,12 +18,13 @@ export const getCreditTransfers = () => (dispatch) => {
     })
 }
 
-export const getCreditTransferType = (typeId) => {
+export const getCreditTransferType = (typeId, updateTimestamp=null) => {
+  const jan2024Timestamp = moment('2024-01-01');
   switch (typeId) {
     case CREDIT_TRANSFER_TYPES.validation.id:
-      return 'Assessment'
+      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Validation';
     case CREDIT_TRANSFER_TYPES.retirement.id:
-      return 'Assessment'
+      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Reduction';
     case CREDIT_TRANSFER_TYPES.part3Award.id:
       return 'Part 3 Award'
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id:

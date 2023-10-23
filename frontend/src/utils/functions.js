@@ -3,6 +3,7 @@ import axios from 'axios'
 import CONFIG from '../config'
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, LCFS_COMPLIANCE_START_DT } from '../constants/values'
 import { getCreditTransferType } from '../actions/creditTransfersActions'
+import moment from 'moment-timezone'
 
 const arrayMove = (arr, currentIndex, targetIndex) => {
   arr.splice(targetIndex, 0, arr.splice(currentIndex, 1)[0])
@@ -282,11 +283,16 @@ const transformDocumentTypeDescription = (desc) => {
   return desc
 }
 
-const transformCreditTransferTypeDesc = (typeId) => {
+const transformCreditTransferTypeDesc = (typeId, updateTimestamp=null) => {
   if (typeId === CREDIT_TRANSFER_TYPES.part3Award.id) {
+    if (updateTimestamp >= moment('2024-01-01')) {
     return 'Initiative Agreement'
+    }
+    else {
+      return 'Part 3 Award'
+    }
   }
-  return getCreditTransferType(typeId)
+  return getCreditTransferType(typeId, updateTimestamp)
 }
 
 const transformTransactionStatusDesc = (statusId, typeId, updateTimestamp) => {
