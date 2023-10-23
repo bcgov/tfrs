@@ -30,19 +30,24 @@ class CreditTransferSigningHistory extends Component {
     }
   }
 
-  _renderApproved (history) {
+  _renderApproved(history) {
     // if "recorded" status was found, this means this credit trade
     // was from the historical data entry
     // show "the Director" at all times
     // use effective date as well
+    const approveTimeStamp = history.createTimestamp >= moment('2024-01-01');
     return (
       <li key={history.createTimestamp}>
-        <strong className="text-success">{transformTransactionStatusDesc(history.status.id, history.creditTrade.type.id, history.createTimestamp)} </strong>
+        <strong className="text-success">
+        {transformTransactionStatusDesc(history.status.id, history.creditTrade.type.id, history.createTimestamp)} {' '}
+        </strong>
         <span>
           on {moment(history.createTimestamp).format('LL')} by the
           <strong> Director </strong> under the
         </span>
-        <em> Low Carbon Fuels Act</em>
+        <em>
+          {approveTimeStamp ? ' Low Carbon Fuels Act' : ' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act'}
+        </em>
       </li>
     )
   }
@@ -121,8 +126,9 @@ class CreditTransferSigningHistory extends Component {
     )
   }
 
-  static renderRecorded () {
-    return (<strong>Created</strong>)
+  static renderRecorded (history) {
+    history.createTimestamp >= moment('2024-01-01')
+    return (history.createTimestamp >= moment('2024-01-01') ? <strong>Created</strong> : <strong>Recorded</strong>)
   }
 
   static renderRefused (history) {

@@ -76,7 +76,8 @@ export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment'
 export const TEXT_ADD_INITIAL_COMMENT = 'Add Comment'
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment'
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government'
-export const TEXT_VISIBLE_TO_ALL = 'Visible to both the organization and government'
+export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government'
+export const TEXT_VISIBLE_TO_ALL_AFTER_JAN2024 = 'Visible to both the organization and government'
 export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
                                   'performing other actions'
 export const TEXT_COMMENT_REQUIRED = 'A comment is required before you can recommend the issuance ' +
