@@ -81,12 +81,13 @@ const OrganizationEditForm = (props) => {
                     {props.referenceData.organizationTypes
                       .filter((t) => t.id !== 1)
                       .map((t) => (
-                        <div className="input-wrapper">
+                        <div className="input-wrapper" key={t.id}>
                           <input
                             type="radio"
                             id={`org-type-${t.id}`}
                             name="org_type"
                             value={t.id}
+                            defaultChecked={t.id === 2}
                             onChange={props.handleInputChange}
                           />
                           <span> {t.description}</span>
