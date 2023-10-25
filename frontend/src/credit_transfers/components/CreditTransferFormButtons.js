@@ -259,6 +259,9 @@ CreditTransferFormButtons.propTypes = {
   permissions: PropTypes.shape({
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
+  }),
+  tradeType: PropTypes.shape({
+    id: PropTypes.number
   })
 }
 

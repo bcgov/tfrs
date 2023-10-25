@@ -5,7 +5,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Tooltip from '../../app/components/Tooltip'
 import * as NumberFormat from '../../constants/numeralFormats'
-import ORGANIZATIONS from '../../constants/routes/Organizations'
 import TOOLTIPS from '../../constants/tooltips'
 
 const BalanceBCEID = props => (
