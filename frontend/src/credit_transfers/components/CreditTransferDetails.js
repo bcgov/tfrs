@@ -58,7 +58,7 @@ const CreditTransferDetails = props => (
         </div>
         <h1>
           {props.tradeType.id &&
-            transformCreditTransferTypeDesc(props.tradeType.id)
+            transformCreditTransferTypeDesc(props.tradeType.id, props.updateTimestamp)
           } — ID: {props.id}
         </h1>
         {[
@@ -97,6 +97,7 @@ const CreditTransferDetails = props => (
           totalValue={props.totalValue}
           tradeType={props.tradeType}
           zeroDollarReason={props.zeroDollarReason}
+          updateTimestamp = {props.updateTimestamp}
         />
         <div className="credit-transfer-details">
           <div className="main-form">
