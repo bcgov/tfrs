@@ -299,9 +299,9 @@ const transformTransactionStatusDesc = (statusId, typeId, updateTimestamp) => {
   const inputtedDate = new Date(updateTimestamp)
   if (getCreditTransferType(typeId) === 'Transfer' && inputtedDate >= LCFS_COMPLIANCE_START_DT) {
     if (statusId === CREDIT_TRANSFER_STATUS.approved.id) {
-      return "Recorded"
+      return 'Recorded'
     } else if (statusId === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
-      return "Refused"
+      return 'Refused'
     }
   }
   return (

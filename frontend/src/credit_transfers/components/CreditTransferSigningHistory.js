@@ -107,8 +107,9 @@ class CreditTransferSigningHistory extends Component {
   static renderNotRecommended (history) {
     const inputtedDate = new Date(history.createTimestamp)
     return (
-      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT) ? <span><strong>Recommended refusing</strong></span> :
-      <span>
+      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT)
+        ? <span><strong>Recommended refusing</strong></span>
+        : <span>
         <strong>Reviewed</strong> and
         <strong className="text-danger"> Not Recommended</strong>
       </span>
@@ -118,8 +119,9 @@ class CreditTransferSigningHistory extends Component {
   static renderRecommended (history) {
     const inputtedDate = new Date(history.createTimestamp)
     return (
-      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT) ? <span><strong>Recommended recording</strong></span> :
-      <span>
+      (CreditTransferSigningHistory._isTransferType(history) && inputtedDate >= LCFS_COMPLIANCE_START_DT)
+        ? <span><strong>Recommended recording</strong></span>
+        : <span>
         <strong>Reviewed</strong> and
         <strong className="text-success"> Recommended</strong>
       </span>

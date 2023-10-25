@@ -345,13 +345,13 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => this._approveCreditTransfer(item.id)}
         id="confirmApprove"
         key="confirmApprove"
-        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? "Record transfer" : "Approve issuance"}
+        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? 'Record transfer' : 'Approve issuance'}
         cancelLabel="Cancel"
       >
         Are you sure you want to
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' record this transfer'
-          : ' approve the issuance of credits for this Initiative Agreement?'}?
+          : ' approve the issuance of credits for this Initiative Agreement'}?
       </Modal>
     )
   }
@@ -502,7 +502,7 @@ class CreditTransferViewContainer extends Component {
       >
         <div className="alert alert-warning">
           <p>
-          You are strongly encouraged to add a comment that provides an explanation 
+          You are strongly encouraged to add a comment that provides an explanation
           as to why you are not satisfied by the evidence provided that the organization
            has completed the designated action. This declined transaction will be visible
             to the organization that is a party to the Initiative Agreement.
@@ -800,6 +800,7 @@ CreditTransferViewContainer.propTypes = {
     note: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
     dateOfWrittenAgreement: PropTypes.string,
+    updateTimestamp: PropTypes.string,
     comments: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       createTimestamp: PropTypes.string,
