@@ -647,7 +647,7 @@ class ComplianceReportingEditContainer extends Component {
       }
     </p>,
     <p className="schedule-organization-address" key="organization-attorney-address">
-      {organizationAddress && atLeastOneAttorneyAddressFieldExists(organizationAddress) ? (
+      {organizationAddress && atLeastOneAttorneyAddressFieldExists(organizationAddress) && this.props.loggedInUser.isGovernmentUser ? (
         <>
           Company Profile, EDRMS Record #: {item.organization.edrmsRecord || ''}
         </>
