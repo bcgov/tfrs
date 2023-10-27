@@ -117,11 +117,14 @@ const OrganizationDetails = props => {
         <div className="address">
           <dl className="dl-horizontal">
           {props.loggedInUser.isGovernmentUser && (
+            <>
               <dt style={{ width: '300px' }}>
                 <strong>Company Profile, EDRMS Record #:</strong>
               </dt>
-            )}
+            
             <dd>{props.organization.edrmsRecord ? props.organization.edrmsRecord : ''}</dd>
+            </>
+            )}
           </dl>
         </div>
         <div className="status">
