@@ -46,12 +46,13 @@ class OrganizationSerializer(serializers.ModelSerializer):
     """
     organization_address = serializers.SerializerMethodField()
     organization_balance = serializers.SerializerMethodField()
+    edrms_record = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
         fields = ('id', 'name', 'status', 'status_display', 'actions_type',
                   'actions_type_display', 'create_timestamp', 'type',
-                  'organization_balance', 'organization_address')
+                  'organization_balance', 'organization_address', 'edrms_record')
 
     def get_organization_address(self, obj):
         """
@@ -78,7 +79,14 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
         return obj.organization_balance
 
+    def get_edrms_record(self, obj):
+        request = self.context.get('request')
 
+        if not request.user.has_perm('VIEW_FUEL_SUPPLIERS') and \
+                request.user.organization.id != obj.id:
+            return None
+
+        return obj.edrms_record
 class OrganizationCreateSerializer(serializers.ModelSerializer):
     """
     Serializer for creating organizations
@@ -99,6 +107,7 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         CachedPages.objects.filter(cache_key__icontains='organizations').delete()
         obj = Organization.objects.create(
+            edrms_record = validated_data['edrms_record'],
             name=validated_data['name'],
             type=validated_data['type'],
             actions_type=validated_data['actions_type'],
@@ -118,7 +127,7 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'name', 'type', 'status', 'actions_type',
-                  'organization_address')
+                  'organization_address', 'edrms_record')
         read_only_fields = ('id',)
 
 
@@ -156,9 +165,9 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
                 actions_type = OrganizationActionsType.objects.get(
                     the_type="Sell Only"
                 )
-
             Organization.objects.filter(id=obj.id).update(
                 name=validated_data['name'],
+                edrms_record=validated_data['edrms_record'],
                 actions_type=actions_type,
                 status=status,
                 update_timestamp=timezone.now()
@@ -212,7 +221,7 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'name', 'type', 'status', 'actions_type',
-                  'organization_address', 'update_timestamp')
+                  'organization_address', 'update_timestamp', 'edrms_record')
         read_only_fields = ('id', 'type')
 
 
@@ -250,4 +259,4 @@ class OrganizationDisplaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ('id', 'name', 'organization_address', 'type', 'status')
+        fields = ('id', 'name', 'organization_address', 'type', 'status', 'edrms_record')

@@ -1242,12 +1242,12 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     record.save()
 
             root_report = previous_report.root_report or previous_report
-            new_compliance_report.latest_report = new_compliance_report.supplements
+            new_compliance_report.latest_report = new_compliance_report
             new_compliance_report.root_report = root_report
-            if previous_report.latest_report_id != new_compliance_report.supplements_id:
+            if previous_report.latest_report_id != new_compliance_report.latest_report_id:
                 if not previous_report.status.fuel_supplier_status_id == 'Deleted':
                     new_compliance_report.traversal = previous_report.traversal + 1
-                ComplianceReport.objects.filter(root_report_id=root_report.id).update(latest_report=new_compliance_report.supplements)
+                ComplianceReport.objects.filter(root_report=root_report).update(latest_report=new_compliance_report)
             else:
                 new_compliance_report.traversal = previous_report.traversal
         else:
@@ -1710,7 +1710,11 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
                 'readOnly': "Cannot delete a compliance report that's not a "
                             "draft."
             })
-
+        if compliance_report.is_supplemental:
+            # Revert back the previous report as the latest report
+            ComplianceReport.objects.filter(root_report=compliance_report.root_report) \
+                .update(latest_report=compliance_report.supplements)
+            
         compliance_report.status.fuel_supplier_status = \
             ComplianceReportStatus.objects.get(status="Deleted")
         compliance_report.status.save()

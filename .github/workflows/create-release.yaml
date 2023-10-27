@@ -8,13 +8,22 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    env:
+      releasename: ${{ github.event.pull_request.head.ref }}    
     steps:
       - uses: actions/checkout@v3
+      - name: Replace release name
+        uses: mad9000/actions-find-and-replace-string@4
+        id: newereleasename
+        with:
+          source: ${{ github.event.pull_request.head.ref }}
+          find: 'release-'
+          replace: 'v'
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ github.event.pull_request.head.ref }}
-          tag_name: ${{ github.event.pull_request.head.ref }}
+          name: ${{ steps.newereleasename.outputs.value }}
+          tag_name: ${{ steps.newereleasename.outputs.value }}
           body: |
             ${{ github.event.pull_request.body }}
           token: ${{ secrets.GITHUB_TOKEN }}

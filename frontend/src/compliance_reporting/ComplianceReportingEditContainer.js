@@ -646,6 +646,13 @@ class ComplianceReportingEditContainer extends Component {
         : null
       }
     </p>,
+    <p className="schedule-organization-address" key="organization-attorney-address">
+      {organizationAddress && atLeastOneAttorneyAddressFieldExists(organizationAddress) && this.props.loggedInUser.isGovernmentUser ? (
+        <>
+          Company Profile, EDRMS Record #: {item.organization.edrmsRecord || ''}
+        </>
+      ) : null}
+    </p>,
       <ScheduleTabs
         active={tab}
         compliancePeriod={period}

@@ -40,6 +40,12 @@ class Organization(Auditable):
         max_length=500,
         db_comment="Organization's legal name"
     )
+    edrms_record = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_comment="EDRMS Record Number",
+    )
     status = models.ForeignKey(
         'OrganizationStatus',
         related_name='organizations',
