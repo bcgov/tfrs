@@ -146,11 +146,13 @@ const CreditTransferTable = (props) => {
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
-    return row[id] !== undefined
-      ? String(row[id])
-        .toLowerCase()
-        .includes(filter.value.toLowerCase())
-      : true
+    const filterValues = filter.value.split(',').map(value => value.trim().toLowerCase());
+
+    if (filterValues.length === 0) {
+      return true; // No filter values, so all rows should be included
+    }
+  
+    return row[id] !== undefined && filterValues.some(filterValue => String(row[id].toLowerCase()).includes(filterValue));
   }
 
   const filterable = true
