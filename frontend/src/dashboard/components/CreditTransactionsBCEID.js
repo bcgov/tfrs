@@ -50,10 +50,10 @@ const CreditTransactions = (props) => {
                     value: ''
                   }, {
                     id: 'transactionType',
-                    value: 'Credit Transfer'
+                    value: 'Transfer'
                   }, {
                     id: 'status',
-                    value: 'Proposed,Signed,Draft'
+                    value: 'Sent,Submitted,Draft'
                   }], 'credit-transfers')
 
                   return navigate(CREDIT_TRANSACTIONS.LIST)

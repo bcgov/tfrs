@@ -21,7 +21,7 @@ const SecureFileSubmissionTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
+    accessor: item => (item.createUser !== null && item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
