@@ -69,10 +69,10 @@ const CreditTransactions = (props) => {
                   value: ''
                 }, {
                   id: 'transactionType',
-                  value: 'Credit Transfer'
+                  value: 'Transfer'
                 }, {
                   id: 'status',
-                  value: 'Signed'
+                  value: 'Submitted'
                 }], 'credit-transfers')
 
                 return navigate(CREDIT_TRANSACTIONS.LIST)
@@ -91,7 +91,7 @@ const CreditTransactions = (props) => {
                   value: ''
                 }, {
                   id: 'transactionType',
-                  value: 'Credit Transfer'
+                  value: 'Transfer'
                 }, {
                   id: 'status',
                   value: 'Reviewed'
@@ -124,7 +124,7 @@ const CreditTransactions = (props) => {
                   value: ''
                 }, {
                   id: 'transactionType',
-                  value: 'Part 3 Award'
+                  value: 'Part 3 Award, Initiative Agreement'
                 }, {
                   id: 'status',
                   value: 'Reviewed'
