@@ -51,14 +51,14 @@ const FileSubmissions = (props) => {
               onClick={() => {
                 props.setFilter([{
                   id: 'status',
-                  value: 'Submitted'
+                  value: 'Received'
                 }], 'sfs')
 
-                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST, { state: { items: 'Received'}})
               }}
               type="button"
             >
-              {`${awaitingReview.documentUploads.submitted} `}
+              {`${awaitingReview.documentUploads.received} `}
               awaiting to be marked as received
             </button>
           </div>
@@ -68,14 +68,14 @@ const FileSubmissions = (props) => {
               onClick={() => {
                 props.setFilter([{
                   id: 'status',
-                  value: 'Received'
-                }], 'sfs')
+                  value: 'Submitted'
+                }],'sfs')
 
-                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST,{ state: { items: 'Submitted'}})
               }}
               type="button"
             >
-              {awaitingReview.documentUploads.received} awaiting review and archive
+              {awaitingReview.documentUploads.submitted} awaiting review and archive
             </button>
           </div>
         </div>
