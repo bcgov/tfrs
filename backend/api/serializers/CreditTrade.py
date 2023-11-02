@@ -281,6 +281,11 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                       "the transaction."
                 }
             },
+            'date_of_written_agreement': {
+                'error_messages': {
+                    'invalid': "Please enter a valid date in the Agreement Date field: YYYY-MM-DD."
+                }
+            },
             'trade_effective_date': {
                 'required': False
             }

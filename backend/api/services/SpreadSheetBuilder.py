@@ -178,8 +178,8 @@ class SpreadSheetBuilder(object):
         worksheet.col(4).width = 7500
         worksheet.col(5).width = 4500
         worksheet.col(6).width = 4500
-        worksheet.col(8).width = 3500
-        worksheet.col(9).width = 10000
+        worksheet.col(9).width = 3500
+        worksheet.col(10).width = 10000
 
     def add_fuel_suppliers(self, fuel_suppliers):
         """
