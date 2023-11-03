@@ -24,6 +24,7 @@ jobs:
         with:
           name: ${{ steps.newereleasename.outputs.value }}
           tag_name: ${{ steps.newereleasename.outputs.value }}
+          target_commitish: master
           body: |
             ${{ github.event.pull_request.body }}
           token: ${{ secrets.GITHUB_TOKEN }}
