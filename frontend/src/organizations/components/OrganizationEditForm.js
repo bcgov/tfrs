@@ -9,7 +9,6 @@ import * as Lang from "../../constants/langEnUs";
 import PERMISSIONS_ORGANIZATIONS from "../../constants/permissions/Organizations";
 import { useNavigate } from "react-router";
 import NotFound from "../../app/components/NotFound";
-import ExclusionReportingStatusHistory from "../../exclusion_reports/components/ExclusionReportStatusHistory";
 
 const OrganizationEditForm = (props) => {
   const navigate = useNavigate()
@@ -29,7 +28,7 @@ const OrganizationEditForm = (props) => {
               ) && (
                 <div className="form-group">
                   <label htmlFor="org_status" className="col-sm-4">
-                    <div className="col-sm-6"> Registered for transfers: </div>
+                    <div className="col-sm-6"> Organization status: </div>
                     <div className="col-sm-6">
                       <div key={orgStatuses[0].id}>
                         <label htmlFor="org-status-active">
@@ -45,8 +44,8 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {" "}
-                            {orgStatuses[0].description === "Active" &&
-                              "Yes"}{" "}
+                            {orgStatuses[0].description}
+                            {" "}
                           </span>
                         </label>{" "}
                       </div>
@@ -64,7 +63,7 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {" "}
-                            {orgStatuses[1].description === "Inactive" && "No"}
+                            {orgStatuses[1].description}
                           </span>
                         </label>{" "}
                       </div>

@@ -220,9 +220,10 @@ const ComplianceReportingPage = (props) => {
                 <span className='sr-only'>Toggle Dropdown</span>
               </button>
               <ul className='dropdown-menu'>
-                {props.compliancePeriods.map((compliancePeriod) => (
+                {props.compliancePeriods.map((compliancePeriod) => {
+                  if (compliancePeriod.description >= 2023) return null
+                  return (
                   <li key={compliancePeriod.description}>
-                  {compliancePeriod.description <= 2023 && (
                     <button
                       onClick={() => {
                         const found = items.findIndex(
@@ -248,9 +249,9 @@ const ComplianceReportingPage = (props) => {
                     >
                       {compliancePeriod.description}
                     </button>
-                  )}
                   </li>
-                ))}
+                  )
+                })}
               </ul>
             </div>
 
@@ -334,6 +335,7 @@ const ComplianceReportingPage = (props) => {
             {
               Array.from({ length: new Date().getFullYear() - 2017 }, (_, index) => {
                 const year = new Date().getFullYear() - index + 1
+                if (year >= 2023) return null
                 return (
                 <option key={year} value={year}>
                   {year}
