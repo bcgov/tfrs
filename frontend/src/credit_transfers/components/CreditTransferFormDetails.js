@@ -51,7 +51,7 @@ class CreditTransferFormDetails extends Component {
               onChange={this.props.handleInputChange}
               required="required"
             >
-              <option key="0" value="" default>Select a Fuel Supplier</option>
+              <option key="0" value="" default>Select an Organization</option>
               {this.props.fuelSuppliers &&
               this.props.fuelSuppliers.map(organization => (
                 this.props.fields.initiator.id !== organization.id &&
