@@ -22,7 +22,8 @@ def update_sign_auth_assertion(apps, schema_editor):
         )
         assertion.save()
     except signing_authority_assertion.DoesNotExist:
-        logging.error('Failed to update SigningAuthorityAssertion: No entry found with id "1".')
+        logging.warning('Failed to update SigningAuthorityAssertion: No entry found with id "1".')
+        raise
 
 class Migration(migrations.Migration):
     """
