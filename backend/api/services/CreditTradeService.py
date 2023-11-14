@@ -180,7 +180,7 @@ class CreditTradeService(object):
         status_approved = CreditTradeStatus.objects.get(status="Approved")
 
         # Calculate and assign trade category. Dont assign category if transfer are added through historical data entry or if credit trade type is NOT 1 (buy) or 2 (sell)
-        if not batch_process or credit_trade.type_id == 1 or credit_trade.type_id == 2:
+        if not batch_process and credit_trade.type_id in (1, 2):
             credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
                 credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
 
