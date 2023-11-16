@@ -1,0 +1,122 @@
+
+## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
+## For each release, update lib/config.js: version and releaseBranch
+
+name: TFRS Test Jan Release
+
+on:
+  # push:
+  #   branches: [ main-release-jan-2024 ]
+    # paths:
+    #   - frontend/**
+    #   - backend/**
+    #   - security-scan/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-main-release-jan-2024
+  cancel-in-progress: true
+
+jobs:
+
+  unit-test:
+
+    name: Run Backend Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@@v4.1.1
+        with:
+          ref: main-release-jan-2024
+      
+      - name: Run coverage report for django tests 
+        uses: kuanfandevops/django-test-action@itvr-django-test
+        continue-on-error: true
+        with:
+          settings-dir-path: "backend/api"
+          requirements-file: "backend/requirements.txt"
+          managepy-dir: backend
+  
+  lint:
+
+    name: Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: main-release-jan-2024
+
+      - name: Frontend Linting 
+        continue-on-error: true
+        run: |
+          cd frontend
+          pwd
+          npm install
+          npm run lint        
+
+      - name: Backend linting
+        uses: github/super-linter/slim@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: main-release-jan-2024
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_INCLUDE: .*backend/.*.py
+          VALIDATE_PYTHON_PYLINT: true
+          LOG_LEVEL: WARN
+
+  # when build branch, the suffix sample is -main-release-jan-2024
+  #       the  checkout-ref sample is main-release-jan-2024
+  build:
+    name: Build
+    needs: [unit-test, lint]
+    uses: ./.github/workflows/build-template.yaml
+    with:
+      suffix: -main-release-jan-2024
+      checkout-ref: main-release-jan-2024
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+
+  # The suffix is -test-jan, the deployment names are tfrs-backend-test-jan, tfrs-frontend-test-jan and etc..
+  # The image tags are tfrs-backend:test-main-release-jan-2024, tfrs-frontend:test-main-release-jan-2024 and etc..
+  deploy-on-test: 
+    name: Deploy on Test
+    needs: build
+    steps:
+
+      - name: Log in to Openshift
+        ##uses: redhat-actions/oc-login@v1
+        uses: smlgbl/oc-login@main
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
+
+      - name: Ask for approval for TFRS Test deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,emi-hi,tim738745,kuanfandevops,jig-patel,prv-proton,JulianForeman
+          minimum-approvals: 1
+          issue-title: "TFRS main-release-jan-2024 Test Deployment"
+      
+      # - name: Deploy main-release-jan-2024 on Test
+      #   uses: ./.github/workflows/branch-deploy-template.yaml
+      #   with:
+      #     branch-name: main-release-jan-2024
+      #     suffix: -test-jan
+      #     env-name: test
+      #     database-service-host-name: tfrs-crunchy-test-pgbouncer
+      #     rabbitmq-vhost: tfrs-jan-vhost
+      #   secrets:
+      #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      #     namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-test
+      #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
