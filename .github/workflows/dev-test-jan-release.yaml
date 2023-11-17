@@ -101,6 +101,7 @@ jobs:
 
   deploy-on-test: 
     name: Deploy on Test
+    runs-on: ubuntu-latest
     needs: deploy-on-dev
     timeout-minutes: 60
     steps:
