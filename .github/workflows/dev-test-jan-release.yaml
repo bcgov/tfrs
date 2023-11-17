@@ -2,21 +2,21 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS Test Jan Release
+name: TFRS Dev/Test Jan Release
 
 on:
-  # push:
-  #   branches: [ main-release-jan-2024 ]
+  push:
+    branches: [ main-release-jan-2024 ]
     # paths:
     #   - frontend/**
     #   - backend/**
     #   - security-scan/**
-  workflow_dispatch:
-    branches:
-      - main-release-jan-2024
+    workflow_dispatch:
+      branches:
+        - main-release-jan-2024
 
 concurrency:
-  group: ${{ github.workflow }}-main-release-jan-2024
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -29,9 +29,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@@v4.1.1
-        with:
-          ref: main-release-jan-2024
+        uses: actions/checkout@v3.5.3
       
       - name: Run coverage report for django tests 
         uses: kuanfandevops/django-test-action@itvr-django-test
@@ -49,9 +47,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: main-release-jan-2024
+        uses: actions/checkout@v3.5.3
 
       - name: Frontend Linting 
         continue-on-error: true
@@ -65,7 +61,7 @@ jobs:
         uses: github/super-linter/slim@v4
         continue-on-error: true
         env:
-          DEFAULT_BRANCH: main-release-jan-2024
+          DEFAULT_BRANCH: ${{ github.ref_name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_INCLUDE: .*backend/.*.py
           VALIDATE_PYTHON_PYLINT: true
@@ -78,18 +74,35 @@ jobs:
     needs: [unit-test, lint]
     uses: ./.github/workflows/build-template.yaml
     with:
-      suffix: -main-release-jan-2024
-      checkout-ref: main-release-jan-2024
+      suffix: -${{ github.ref_name }}
+      checkout-ref: ${{ github.ref_name }}
     secrets:
       tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
       openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
       openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
-  # The suffix is -test-jan, the deployment names are tfrs-backend-test-jan, tfrs-frontend-test-jan and etc..
-  # The image tags are tfrs-backend:test-main-release-jan-2024, tfrs-frontend:test-main-release-jan-2024 and etc..
+  # The suffix is -dev-jan, the deployment names are tfrs-backend-dev-jan, tfrs-frontend-dev-jan and etc..
+  # The image tags are tfrs-backend:dev-main-release-jan-2024, tfrs-frontend:dev-main-release-jan-2024 and etc..
+  deploy-on-dev: 
+    name: Deploy on Dev
+    needs: build
+    uses: ./.github/workflows/branch-deploy-template.yaml
+    with:
+      branch-name: ${{ github.ref_name }}
+      suffix: -dev-jan
+      env-name: dev
+      database-service-host-name: tfrs-crunchy-dev-pgbouncer
+      rabbitmq-vhost: tfrs-jan-vhost
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+
   deploy-on-test: 
     name: Deploy on Test
-    needs: build
+    needs: deploy-on-dev
+    timeout-minutes: 60
     steps:
 
       - name: Log in to Openshift
