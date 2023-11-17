@@ -182,7 +182,7 @@ class CreditTransferSigningHistory extends Component {
 
     const lastHistoryItem = history[history.length - 1]
     const createdByGov = history[0].creditTrade?.initiator?.id === 1
-    if (history.length > 0 && loggedInUser.isGovernmentUser && !createdByGov) {
+    if (history.length > 0 && !createdByGov) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
         .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected)
