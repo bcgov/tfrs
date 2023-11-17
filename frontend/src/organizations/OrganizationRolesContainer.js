@@ -19,6 +19,10 @@ const OrganizationRolesContainer = props => {
     <OrganizationDetails
       key="details"
       organization={props.loggedInUser.organization}
+      loggedInUser={{
+        isGovernmentUser: props.loggedInUser.isGovernmentUser,
+        hasPermission: props.loggedInUser.hasPermission
+      }}
     />,
     <OrganizationRoles
       data={props.roles}
