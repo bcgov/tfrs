@@ -11,7 +11,9 @@ on:
     #   - frontend/**
     #   - backend/**
     #   - security-scan/**
-    workflow_dispatch:
+  workflow_dispatch:
+    branches:
+      - main-release-jan-2024
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
