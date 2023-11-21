@@ -123,16 +123,16 @@ jobs:
           minimum-approvals: 1
           issue-title: "TFRS main-release-jan-2024 Test Deployment"
       
-      # - name: Deploy main-release-jan-2024 on Test
-      #   uses: ./.github/workflows/branch-deploy-template.yaml
-      #   with:
-      #     branch-name: main-release-jan-2024
-      #     suffix: -test-jan
-      #     env-name: test
-      #     database-service-host-name: tfrs-crunchy-test-pgbouncer
-      #     rabbitmq-vhost: tfrs-jan-vhost
-      #   secrets:
-      #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-      #     namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-test
-      #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-      #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+      - name: Deploy main-release-jan-2024 on Test
+        uses: ./.github/workflows/branch-deploy-template.yaml
+        with:
+          branch-name: main-release-jan-2024
+          suffix: -test-jan
+          env-name: test
+          database-service-host-name: tfrs-crunchy-test-pgbouncer
+          rabbitmq-vhost: tfrs-jan-vhost
+        secrets:
+          tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-test
+          openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
