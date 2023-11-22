@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0012_update_signing_authority_declaration_statement'),
+        ('api', '0013_create_missing_rescinded_history_records'),
     ]
 
     operations = [

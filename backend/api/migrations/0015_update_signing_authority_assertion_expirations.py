@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
     Attaches the update function to the migration operations
     """
     dependencies = [
-        ('api', '0013_credit_trade_category'),
+        ('api', '0014_credit_trade_category'),
     ]
 
     operations = [

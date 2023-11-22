@@ -51,7 +51,7 @@ def create_missing_credit_trade_history(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0014_update_signing_authority_assertion_expirations'),
+        ('api', '0012_update_signing_authority_declaration_statement'),
     ]
 
     operations = [
