@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
     Attaches the update function to the migration operations
     """
     dependencies = [
-        ('api', '0011_report_history_grouping'),
+        ('api', '0014_report_history_grouping'),
     ]
 
     operations = [

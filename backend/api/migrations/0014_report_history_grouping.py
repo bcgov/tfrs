@@ -45,7 +45,7 @@ def update_report_fields(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0010_merge_20230830_2141'),
+        ('api', '0013_create_missing_rescinded_history_records'),
     ]
 
     operations = [

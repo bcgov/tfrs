@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0013_create_missing_rescinded_history_records'),
+        ('api', '0010_migrate_compliance_report'),
     ]
 
     operations = [
