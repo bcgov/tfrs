@@ -208,7 +208,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0005_cachedpages'),
+        ('api', '0013_create_missing_rescinded_history_records'),
     ]
 
     operations = [
