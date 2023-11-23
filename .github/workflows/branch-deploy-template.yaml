@@ -134,7 +134,7 @@ jobs:
           cd charts/tfrs-apps/charts/tfrs-notification-server
           helm status -n ${{ secrets.namespace }} tfrs-notification-server${{ inputs.suffix }}
           helm upgrade --install \
-            --set scanCoordinatorImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
+            --set notificationServerImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
             --set suffix=${{ inputs.suffix }} \
             --set namespace=${{ secrets.namespace }} \
             --set envName=${{ inputs.env-Name }} \
