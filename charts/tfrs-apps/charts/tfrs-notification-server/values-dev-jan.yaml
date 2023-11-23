@@ -6,11 +6,11 @@ replicaCount: 1
 
 resources:
   limits:
-    cpu: 80m
-    memory: 120Mi
+    cpu: 200m
+    memory: 240Mi
   requests:
-    cpu: 40m
-    memory: 60Mi
+    cpu: 100m
+    memory: 120Mi
 
 route:
   createNotificationServerRoute: true
