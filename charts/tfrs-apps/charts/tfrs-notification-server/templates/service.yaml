@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tfrs-notification-server{{ .Values.suffix }}
+  creationTimestamp:
+spec:
+  ports:
+  - name: notification
+    protocol: TCP
+    port: 8080
+    targetPort: 3000
+  selector:
+    {{- include "tfrs-notification-server.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}
