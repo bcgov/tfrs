@@ -223,7 +223,7 @@ jobs:
       - name: Build TFRS Notification Server
         run: |
           cd openshift-v4/templates/notification
-          oc process -f ./notification-bc.yaml NAME=tfrs \
+          oc process -f ./notification-server-bc.yaml NAME=tfrs \
             SUFFIX=-build${{ inputs.suffix}} \
             VERSION=build${{ inputs.suffix }} \
             GIT_URL=${{ env.GIT_URL }} \
