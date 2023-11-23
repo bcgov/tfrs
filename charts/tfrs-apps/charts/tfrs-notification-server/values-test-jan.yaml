@@ -20,3 +20,6 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 80
+
+keycloak:
+  certsUrl: https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs

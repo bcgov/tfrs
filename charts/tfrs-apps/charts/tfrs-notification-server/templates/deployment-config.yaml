@@ -57,7 +57,7 @@ spec:
         - name: NPM_RUN
           value: start:notifications
         - name: KEYCLOAK_CERTS_URL
-          value: ""
+          value: {{ .Values.keycloak.certsUrl }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
         livenessProbe:
