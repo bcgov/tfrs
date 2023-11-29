@@ -30,21 +30,21 @@ objects:
           from:
             - podSelector:
                 matchLabels:
-                  app.kubernetes.io/instance: tfrs-backend-${ENVIRONMENT}
+                  name: tfrs-backend-${ENVIRONMENT}
         - ports:
             - protocol: TCP
               port: 5432
           from:
             - podSelector:
                 matchLabels:
-                  app.kubernetes.io/instance: tfrs-scan-handler-${ENVIRONMENT}
+                  name: tfrs-scan-handler-${ENVIRONMENT}
         - ports:
             - protocol: TCP
               port: 5432
           from:
             - podSelector:
                 matchLabels:
-                  app.kubernetes.io/instance: tfrs-celery-${ENVIRONMENT}
+                  name: tfrs-celery-${ENVIRONMENT}
         - ports:
             - protocol: TCP
               port: 5432
