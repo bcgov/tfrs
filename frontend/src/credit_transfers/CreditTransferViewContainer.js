@@ -684,6 +684,7 @@ class CreditTransferViewContainer extends Component {
       }
       selectIdForModal={this._selectIdForModal}
       signingAuthorityAssertions={this.props.signingAuthorityAssertions}
+      tradeCategory={item.tradeCategory}
       categoryDSelected={this.props.item.categoryDSelected}
       toggleCategoryDSelection={this._toggleCategoryDSelection}
       dateOfWrittenAgreement={item.dateOfWrittenAgreement}
@@ -788,6 +789,10 @@ CreditTransferViewContainer.propTypes = {
         })
       })
     })),
+    tradeCategory: PropTypes.shape({
+      id: PropTypes.number,
+      category: PropTypes.string
+    }),
     categoryDSelected: PropTypes.bool
   }),
   loggedInUser: PropTypes.shape({

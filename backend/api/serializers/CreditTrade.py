@@ -44,6 +44,7 @@ from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
+from .CreditTradeCategory import CreditTradeCategoryMinSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
@@ -720,6 +721,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     history = serializers.SerializerMethodField()
     signatures = serializers.SerializerMethodField()
     documents = DocumentAuxiliarySerializer(many=True, read_only=True)
+    trade_category = CreditTradeCategoryMinSerializer(read_only=True)
 
     class Meta:
         model = CreditTrade
@@ -732,7 +734,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
                   'signatures', 'history', 'date_of_written_agreement',
-                  'category_d_selected')
+                  'trade_category', 'category_d_selected')
 
     def get_actions(self, obj):
         """

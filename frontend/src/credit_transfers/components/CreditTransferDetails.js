@@ -152,6 +152,7 @@ const CreditTransferDetails = props => (
           <CreditTransferSigningHistory
             tradeEffectiveDate={props.tradeEffectiveDate}
             dateOfWrittenAgreement={props.dateOfWrittenAgreement}
+            tradeCategory={props.tradeCategory}
             categoryDSelected={props.categoryDSelected}
             history={props.history}
             signatures={props.signatures}

@@ -136,10 +136,30 @@ class CreditTransferSigningHistory extends Component {
     return months
   }
 
-  static calculateTransferCategoryAndNextChange (agreementDate, submissionDate, categoryDSelected) {
+  /**
+   * Calculates the credit transfer category and the next change in months.
+   * 
+   * @param {string} agreementDate - The date of the agreement
+   * @param {string} submissionDate - The date of submission
+   * @param {boolean} categoryDSelected - If true, category 'D' is chosen, ignoring other rules
+   * @param {string|null} selectedCategory - A specific category, if provided
+   * @returns {Object} The category and time (in months) until the next change, if any!
+   */
+  static calculateTransferCategoryAndNextChange (agreementDate, submissionDate, categoryDSelected, selectedCategory) {
+    // If category 'D' is already chosen, return it immediately
     if (categoryDSelected) {
       return { category: 'D', nextChangeInMonths: null }
     }
+
+    // If a specific category is selected, use it to determine the next change
+    if (selectedCategory !== null) {
+      const nextChange = (selectedCategory === 'A') ? 6 : 
+                         (selectedCategory === 'B') ? 12 : 
+                         null;
+      return { category: selectedCategory, nextChangeInMonths: nextChange };
+    }
+
+    // Otherwise, calculates based on the time since the agreement
     const now = new Date()
     submissionDate = submissionDate < now ? submissionDate : now
     const differenceInMonths = CreditTransferSigningHistory.monthsBetween(new Date(agreementDate), new Date(submissionDate))
@@ -153,7 +173,7 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderCategoryHistory () {
-    const { history, dateOfWrittenAgreement, categoryDSelected, loggedInUser } = this.props
+    const { history, dateOfWrittenAgreement, tradeCategory, categoryDSelected, loggedInUser } = this.props
     // if there is no agreement date, it means this credit transfer
     // was created before we had this field as not optional
     // We won't show categorization if there is no agreement date.
@@ -165,8 +185,9 @@ class CreditTransferSigningHistory extends Component {
     const createdByGov = history[0].creditTrade?.initiator?.id === 1
     if (history.length > 0 && !createdByGov) {
       const agreementDate = dateOfWrittenAgreement || history[0].createTimestamp
+      const selectedCategory = tradeCategory?.category || null;
       const { category, nextChangeInMonths } = CreditTransferSigningHistory
-        .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected)
+        .calculateTransferCategoryAndNextChange(agreementDate, history[0].createTimestamp, categoryDSelected, selectedCategory)
       let nextChangeDate = null
       if (nextChangeInMonths !== null) {
         nextChangeDate = moment(agreementDate).add(nextChangeInMonths, 'months').format('LL')
@@ -276,6 +297,7 @@ CreditTransferSigningHistory.defaultProps = {
   signatures: [],
   tradeEffectiveDate: null,
   dateOfWrittenAgreement: null,
+  tradeCategory: null,
   categoryDSelected: false
 }
 
@@ -315,6 +337,10 @@ CreditTransferSigningHistory.propTypes = {
   })),
   tradeEffectiveDate: PropTypes.string,
   dateOfWrittenAgreement: PropTypes.string,
+  tradeCategory: PropTypes.shape({
+    id: PropTypes.number,
+    category: PropTypes.string
+  }),
   categoryDSelected: PropTypes.bool,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
