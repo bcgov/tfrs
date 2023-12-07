@@ -7,7 +7,16 @@ import store from '../../store/store'
 import moment from 'moment'
 
 describe('CreditTransferSigningHistory', () => {
-  test('renders the component correctly', () => {
+
+  let agreementDate, submissionDate;
+
+  beforeEach(() => {
+    agreementDate = new Date();
+    submissionDate = new Date();
+  });
+
+  describe('Component Rendering', () => {
+
     const historyMock = [{
       user: {
         firstName: 'John',
@@ -17,86 +26,96 @@ describe('CreditTransferSigningHistory', () => {
         }
       },
       status: {
-        id: 'someStatusId'
+        id: 1
       },
-      createTimestamp: new Date()
+      createTimestamp: new Date().toISOString()
     }]
 
-    const props = {
-      history: historyMock,
-      dateOfWrittenAgreement: moment().format('LL'),
-      categoryDSelected: false
-    }
-
-    const component = renderer.create(
-      <BrowserRouter>
-        <Provider store={store}>
-          <CreditTransferSigningHistory {...props} />
-        </Provider>
-      </BrowserRouter>
-    )
-
-    const tree = component.toJSON()
-    expect(tree).toMatchSnapshot()
-  })
-
-  test('should render the component with dateOfWrittenAgreement as null', () => {
-    const historyMock = [{
-      user: {
-        firstName: 'John',
-        lastName: 'Doe',
-        organization: {
-          name: 'Organization Name'
+    test('renders the component correctly', () => {
+      const props = {
+        history: historyMock,
+        dateOfWrittenAgreement: moment().format('YYYY-MM-DD'),
+        categoryDSelected: false,
+        tradeCategory: {
+          id: 1,
+          category: 'A'
         }
-      },
-      status: {
-        id: 'someStatusId'
-      },
-      createTimestamp: new Date()
-    }]
+      }
 
-    const props = {
-      history: historyMock,
-      dateOfWrittenAgreement: null,
-      categoryDSelected: false
-    }
+      const component = renderer.create(
+        <BrowserRouter>
+          <Provider store={store}>
+            <CreditTransferSigningHistory {...props} />
+          </Provider>
+        </BrowserRouter>
+      )
 
-    const component = renderer.create(
-      <BrowserRouter>
-        <Provider store={store}>
-          <CreditTransferSigningHistory {...props} />
-        </Provider>
-      </BrowserRouter>
-    )
+      const tree = component.toJSON()
+      expect(tree).toMatchSnapshot()
+    })
 
-    const tree = component.toJSON()
-    expect(tree).toMatchSnapshot()
-  })
+    test('should render the component with dateOfWrittenAgreement as null', () => {
+      const props = {
+        history: historyMock,
+        dateOfWrittenAgreement: null,
+        categoryDSelected: false,
+        tradeCategory: null
+      }
 
-  let agreementDate = new Date()
+      const component = renderer.create(
+        <BrowserRouter>
+          <Provider store={store}>
+            <CreditTransferSigningHistory {...props} />
+          </Provider>
+        </BrowserRouter>
+      )
 
-  test('returns category A if differenceInMonths <= 6', () => {
-    agreementDate.setMonth(agreementDate.getMonth() - 5) // Five months ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
-    expect(result).toEqual({ category: 'A', nextChangeInMonths: 2 })
-  })
+      const tree = component.toJSON()
+      expect(tree).toMatchSnapshot()
+    })
+  });
 
-  test('returns category B if differenceInMonths > 6 and differenceInMonths <= 12', () => {
-    agreementDate = new Date()
-    agreementDate.setMonth(agreementDate.getMonth() - 7) // Seven months ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
-    expect(result).toEqual({ category: 'B', nextChangeInMonths: 6 })
-  })
+  describe('Category D selection logic', () => {
+    test('returns category D if categoryDSelected is true', () => {
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, true, null)
+      expect(result).toEqual({ category: 'D', nextChangeInMonths: null })
+    })
+  });
 
-  test('returns category C if differenceInMonths > 12', () => {
-    agreementDate = new Date()
-    agreementDate.setFullYear(agreementDate.getFullYear() - 2) // Two years ago
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, false)
-    expect(result).toEqual({ category: 'C', nextChangeInMonths: null })
-  })
+  describe('When a specific category is selected', () => {
+    test('returns 6 months for next change if selected category is A', () => {
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, 'A');
+      expect(result).toEqual({ category: 'A', nextChangeInMonths: 6 });
+    });
 
-  test('returns category D if categoryDSelected is true', () => {
-    const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, true)
-    expect(result).toEqual({ category: 'D', nextChangeInMonths: null })
-  })
+    test('returns 12 months for next change if selected category is B', () => {
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, 'B');
+      expect(result).toEqual({ category: 'B', nextChangeInMonths: 12 });
+    });
+
+    test('returns null for next change if selected category is C', () => {
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, 'C');
+      expect(result).toEqual({ category: 'C', nextChangeInMonths: null });
+    });
+  });
+
+  describe('Calculating category based on time since agreement', () => {
+    test('returns category A if differenceInMonths <= 6', () => {
+      agreementDate.setMonth(agreementDate.getMonth() - 5) // Five months ago
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, null)
+      expect(result).toEqual({ category: 'A', nextChangeInMonths: 6 })
+    })
+
+    test('returns category B if differenceInMonths > 6 and differenceInMonths <= 12', () => {
+      agreementDate.setMonth(agreementDate.getMonth() - 7) // Seven months ago
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, null)
+      expect(result).toEqual({ category: 'B', nextChangeInMonths: 12 })
+    })
+
+    test('returns category C if differenceInMonths > 12', () => {
+      agreementDate.setFullYear(agreementDate.getFullYear() - 2) // Two years ago
+      const result = CreditTransferSigningHistory.calculateTransferCategoryAndNextChange(agreementDate, submissionDate, false, null)
+      expect(result).toEqual({ category: 'C', nextChangeInMonths: null })
+    })
+  });
 })
