@@ -60,7 +60,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
       },
   prod: {namespace:'0ab226-prod'    , name: `${name}`, phase: 'prod'  , changeId:changeId, suffix: `-prod`  , 
-        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`, dbServiceName: 'tfrs-spilo',
+        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`, dbServiceName: 'tfrs-crunchy-prod-pgbouncer',
         frontendCpuRequest: '40m', frontendCpuLimit: '80m', frontendMemoryRequest: '60Mi', frontendMemoryLimit: '120Mi', frontendReplicas: 4,
             frontendKeycloakAuthority: 'https://loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: 'https://lowcarbonfuels.gov.bc.ca',
             frontendKeycloakLogoutUrl: 'https://lowcarbonfuels.gov.bc.ca', 

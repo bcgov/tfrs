@@ -1,0 +1,87 @@
+# this is for prod tfrs release only (deva nd test still use spilo)
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-crunchy-accepts-prod
+  namespace: 0ab226-prod
+  creationTimestamp:
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: tfrs-crunchy-prod
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: tfrs-crunchy-prod
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-backend-prod
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-scan-handler-prod
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-celery-prod
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - podSelector:
+            matchLabels:
+              openshift.io/deployer-pod.type: hook-mid
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - podSelector:
+            matchLabels:
+              cronjob: tfrs-db-backup
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - namespaceSelector:
+            matchLabels:
+              environment: prod
+              name: 30b186
+        - podSelector:
+            matchLabels:
+              app: metabase
+    - ports:
+        - protocol: TCP
+          port: 9187
+      from:
+        - namespaceSelector:
+            matchLabels:
+              environment: tools
+              name: 0ab226
+        - podSelector:
+            matchLabels:
+              name: crunchy-prometheus
+    - ports:
+        - protocol: TCP
+          port: 5432
+      from:
+        - namespaceSelector:
+            matchLabels:
+              environment: prod
+              name: 30b186
+        - podSelector:
+            matchLabels:
+              app: superset
+  policyTypes:
+    - Ingress
+status: {}
