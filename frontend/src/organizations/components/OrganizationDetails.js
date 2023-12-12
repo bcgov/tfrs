@@ -12,6 +12,7 @@ import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
 import AddressBuilder from '../../app/components/AddressBuilder'
+import { attornyAddressCheck } from '../../utils/functions'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -92,8 +93,7 @@ const OrganizationDetails = props => {
           </dl>
         </div>
         }
-        {props.organization.organizationAddress &&
-        props.organization.organizationAddress.attorneyStreetAddress &&
+        {props.organization.organizationAddress && attornyAddressCheck(props.organization.organizationAddress) &&
         <div className="address">
           <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Corporation or BC Attorney address:</strong></dt>
@@ -121,10 +121,10 @@ const OrganizationDetails = props => {
               <dt style={{ width: '300px' }}>
                 <strong>Company Profile, EDRMS Record #:</strong>
               </dt>
-            
+
             <dd>{props.organization.edrmsRecord ? props.organization.edrmsRecord : ''}</dd>
             </>
-            )}
+          )}
           </dl>
         </div>
         <div className="status">

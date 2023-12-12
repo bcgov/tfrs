@@ -242,7 +242,28 @@ const atLeastOneAttorneyAddressFieldExists = (address) => {
   return false
 }
 
+const attornyAddressCheck = (address) => {
+  if (address) {
+    if (address.attorneyRepresentativename) {
+      return true
+    }
+    if (address.attorneyStreetAddress) {
+      return true
+    }
+    if (address.attorneyAddressOther) {
+      return true
+    }
+    if (address.attorneyCity) {
+      return true
+    }
+    if (address.attorneyPostalCode) {
+      return true
+    }
+  }
+  return false
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists, attornyAddressCheck
 }
