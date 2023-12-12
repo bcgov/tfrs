@@ -184,25 +184,21 @@ class CreditTradeService(object):
             credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
                 credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
 
-        # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
-        # otherwise use trade_effective_date
-        today = timezone.localdate()
-        effective_date = credit_trade.trade_effective_date \
-            if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
-
-        # Only transfer credits if the effective_date is today or in the past
-        if effective_date <= today:
-            CreditTradeService.transfer_credits(
-                credit_trade.credits_from,
-                credit_trade.credits_to,
-                credit_trade.id,
-                credit_trade.number_of_credits,
-                effective_date
-            )
+        # Set the effective_date to today to mark the approval date of the credit trade
+        effective_date = timezone.localdate()
+        
+        CreditTradeService.transfer_credits(
+            credit_trade.credits_from,
+            credit_trade.credits_to,
+            credit_trade.id,
+            credit_trade.number_of_credits,
+            effective_date
+        )
 
         if update_user:
             credit_trade.update_user = update_user
 
+        credit_trade.trade_effective_date = effective_date
         credit_trade.status = status_approved
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
@@ -210,6 +206,7 @@ class CreditTradeService(object):
         return credit_trade
     
 
+    # Deprecated, left for reference
     @staticmethod
     def process_future_effective_dates(organization):
         """
