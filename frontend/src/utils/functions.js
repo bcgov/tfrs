@@ -256,15 +256,9 @@ const attornyAddressCheck = (address) => {
     if (address.attorneyCity) {
       return true
     }
-    // if (address.attorneyProvince) {
-    //   return true
-    // }
     if (address.attorneyPostalCode) {
       return true
     }
-    // if (address.attorneyCountry) {
-    //   return true
-    // }
   }
   return false
 }
