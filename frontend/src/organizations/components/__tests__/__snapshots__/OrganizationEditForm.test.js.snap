@@ -15,10 +15,10 @@ exports[`OrganizationEditForm Should render the component 1`] = `
       className="row"
     >
       <div
-        className="col-sm-6"
+        className="col-sm-5"
       />
       <div
-        className="col-sm-6"
+        className="col-sm-5"
       >
         <div
           className="form-group"
@@ -27,9 +27,9 @@ exports[`OrganizationEditForm Should render the component 1`] = `
             htmlFor="org-type"
           >
             <div
-              className="col-sm-4"
+              className="col-sm-4 text-right"
             >
-               Supplier Type : 
+               Organization Type: 
             </div>
             <div
               className="col-sm-8"
@@ -50,6 +50,25 @@ exports[`OrganizationEditForm Should render the component 1`] = `
             </div>
           </label>
         </div>
+      </div>
+    </div>
+    <div
+      className="row"
+    >
+      <div
+        className="form-group col-sm-5"
+      >
+        <label>
+          <h4>
+            Company Profile, EDRMS Record # (optional):
+          </h4>
+          <input
+            className="form-control "
+            id="edrms-record"
+            name="edrms_record"
+            onChange={[MockFunction]}
+          />
+        </label>
       </div>
     </div>
     <div
