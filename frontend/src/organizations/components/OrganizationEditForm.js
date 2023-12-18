@@ -1,35 +1,35 @@
 /*
  * Presentational component
  */
-import React from "react";
-import PropTypes from "prop-types";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import React from 'react'
+import PropTypes from 'prop-types'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import * as Lang from "../../constants/langEnUs";
-import PERMISSIONS_ORGANIZATIONS from "../../constants/permissions/Organizations";
-import { useNavigate } from "react-router";
-import NotFound from "../../app/components/NotFound";
+import * as Lang from '../../constants/langEnUs'
+import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import { useNavigate } from 'react-router'
+import NotFound from '../../app/components/NotFound'
 
 const OrganizationEditForm = (props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const orgStatuses = props.referenceData.organizationStatuses;
+  const orgStatuses = props.referenceData.organizationStatuses
 
   const getStatusDisplay = (description) => {
-    if (description === "Active") {
-      return "Yes";
-    } else if (description === "Inactive") {
-      return "No";
+    if (description === 'Active') {
+      return 'Yes'
+    } else if (description === 'Inactive') {
+      return 'No'
     }
-    return description; // fallback
-  };
+    return description // fallback
+  }
 
-  if (!props.loggedInUser.isGovernmentUser && props.mode === "edit") {
-    return <NotFound />;
+  if (!props.loggedInUser.isGovernmentUser && props.mode === 'edit') {
+    return <NotFound />
   } else {
     return (
       <div className="organization-edit-details">
-        <h1>{props.mode === "add" ? "Create " : "Edit "} Organization</h1>
+        <h1>{props.mode === 'add' ? 'Create ' : 'Edit '} Organization</h1>
         <div className="main-form">
           <div className="row">
             <div className="col-sm-5">
@@ -38,7 +38,10 @@ const OrganizationEditForm = (props) => {
               ) && (
                 <div className="form-group">
                   <label htmlFor="org_status" className="col-sm-4">
-                    <div className="col-sm-4 text-right"> Registered for transfers: </div>
+                    <div className="col-sm-4 text-right">
+                      {' '}
+                      Registered for transfers:{' '}
+                    </div>
                     <div className="col-sm-8">
                       <div key={orgStatuses[0].id}>
                         <label htmlFor="org-status-active">
@@ -53,10 +56,10 @@ const OrganizationEditForm = (props) => {
                             }
                           />
                           <span>
-                            {" "}
-                            {getStatusDisplay(orgStatuses[0].description)}{" "}
+                            {' '}
+                            {getStatusDisplay(orgStatuses[0].description)}{' '}
                           </span>
-                        </label>{" "}
+                        </label>{' '}
                       </div>
                       <div key={orgStatuses[1].id}>
                         <label htmlFor="org-status-inactive">
@@ -71,10 +74,10 @@ const OrganizationEditForm = (props) => {
                             }
                           />
                           <span>
-                            {" "}
+                            {' '}
                             {getStatusDisplay(orgStatuses[1].description)}
                           </span>
-                        </label>{" "}
+                        </label>{' '}
                       </div>
                     </div>
                   </label>
@@ -84,12 +87,15 @@ const OrganizationEditForm = (props) => {
             <div className="col-sm-5">
               <div className="form-group">
                 <label htmlFor="org-type">
-                  <div className="col-sm-4 text-right"> Organization Type: </div>
+                  <div className="col-sm-4 text-right">
+                    {' '}
+                    Organization Type:{' '}
+                  </div>
                   {props.referenceData.organizationTypes
                     .filter((t) => t.id !== 1)
                     .map((t) => (
                       <div className="col-sm-8" key={t.id}>
-                        {" "}
+                        {' '}
                         <input
                           type="radio"
                           id="org-type"
@@ -99,9 +105,9 @@ const OrganizationEditForm = (props) => {
                           onChange={props.handleInputChange}
                         />
                         <span>
-                          {" "}
-                          {t.description === "Part 3 Fuel Supplier"
-                            ? "Fuel Supplier"
+                          {' '}
+                          {t.description === 'Part 3 Fuel Supplier'
+                            ? 'Fuel Supplier'
                             : t.description}
                         </span>
                       </div>
@@ -116,7 +122,7 @@ const OrganizationEditForm = (props) => {
                 <h4>Company Profile, EDRMS Record # (optional):</h4>
                 <input
                   className={`form-control ${
-                    props.edrmsRecordError ? "is-invalid" : ""
+                    props.edrmsRecordError ? 'is-invalid' : ''
                   }`}
                   id="edrms-record"
                   name="edrms_record"
@@ -164,7 +170,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-address-line-1"
                     name="org_addressLine1"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_addressLine1 || ""}
+                    value={props.fields.org_addressLine1 || ''}
                   />
                 </label>
               </div>
@@ -177,7 +183,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-address-line-2"
                     name="org_addressLine2"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_addressLine2 || ""}
+                    value={props.fields.org_addressLine2 || ''}
                   />
                 </label>
               </div>
@@ -190,7 +196,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-city"
                     name="org_city"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_city || ""}
+                    value={props.fields.org_city || ''}
                   />
                 </label>
               </div>
@@ -203,7 +209,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-state"
                     name="org_state"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_state || ""}
+                    value={props.fields.org_state || ''}
                   />
                 </label>
               </div>
@@ -216,7 +222,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-country"
                     name="org_country"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_country || ""}
+                    value={props.fields.org_country || ''}
                   />
                 </label>
               </div>
@@ -229,7 +235,7 @@ const OrganizationEditForm = (props) => {
                     id="organization-postal-code"
                     name="org_postalCode"
                     onChange={props.handleInputChange}
-                    value={props.fields.org_postalCode || ""}
+                    value={props.fields.org_postalCode || ''}
                   />
                 </label>
               </div>
@@ -239,7 +245,7 @@ const OrganizationEditForm = (props) => {
               <h3>Corporation or Attorney in B.C. (optional)</h3>
               <div className="form-group">
                 <label htmlFor="att-representativeName">
-                  Name of Representative:{" "}
+                  Name of Representative:{' '}
                   <input
                     className="form-control"
                     id="att-representativeName"
@@ -354,16 +360,16 @@ const OrganizationEditForm = (props) => {
           </div>
         </div>
       </div>
-    );
+    )
   }
-};
+}
 
 OrganizationEditForm.defaultProps = {
   fields: {},
   loggedInUser: null,
   referenceData: {},
-  mode: "add",
-};
+  mode: 'add',
+}
 
 OrganizationEditForm.propTypes = {
   fields: PropTypes.shape({
@@ -405,9 +411,9 @@ OrganizationEditForm.propTypes = {
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
     organizationTypes: PropTypes.arrayOf(PropTypes.shape()),
   }),
-  mode: PropTypes.oneOf(["add", "edit", "admin_edit"]),
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']),
   formIsValid: PropTypes.bool.isRequired,
   edrmsRecordError: PropTypes.shape(),
-};
+}
 
-export default OrganizationEditForm;
+export default OrganizationEditForm
