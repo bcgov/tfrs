@@ -29,7 +29,9 @@ exports[`OrganizationEditForm Should render the component 1`] = `
             <div
               className="col-sm-4 text-right"
             >
-               Organization Type: 
+               
+              Organization Type:
+               
             </div>
             <div
               className="col-sm-8"
