@@ -57,7 +57,8 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {' '}
-                            {getStatusDisplay(orgStatuses[0].description)}{' '}
+                            {orgStatuses[0].description}
+                            {' '}
                           </span>
                         </label>{' '}
                       </div>
@@ -368,7 +369,7 @@ OrganizationEditForm.defaultProps = {
   fields: {},
   loggedInUser: null,
   referenceData: {},
-  mode: 'add',
+  mode: 'add'
 }
 
 OrganizationEditForm.propTypes = {
@@ -398,22 +399,22 @@ OrganizationEditForm.propTypes = {
     att_streetAddress: PropTypes.string,
     att_province: PropTypes.string,
     att_postalCode: PropTypes.string,
-    edrms_record: PropTypes.string,
+    edrms_record: PropTypes.string
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
-    isGovernmentUser: PropTypes.bool,
+    isGovernmentUser: PropTypes.bool
   }),
   referenceData: PropTypes.shape({
     organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
     organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
-    organizationTypes: PropTypes.arrayOf(PropTypes.shape()),
+    organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']),
   formIsValid: PropTypes.bool.isRequired,
-  edrmsRecordError: PropTypes.shape(),
+  edrmsRecordError: PropTypes.shape()
 }
 
 export default OrganizationEditForm
