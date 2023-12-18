@@ -57,8 +57,7 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {' '}
-                            {orgStatuses[0].description}
-                            {' '}
+                            {getStatusDisplay(orgStatuses[0].description)}
                           </span>
                         </label>{' '}
                       </div>
