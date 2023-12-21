@@ -38,8 +38,11 @@ const OrganizationEditForm = (props) => {
               ) && (
                 <div className="form-group">
                   <label htmlFor="org_status" className="col-sm-4">
-                    <div className="col-sm-6"> Organization status: </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-4 text-right">
+                      {' '}
+                      Registered for transfers:{' '}
+                    </div>
+                    <div className="col-sm-8">
                       <div key={orgStatuses[0].id}>
                         <label htmlFor="org-status-active">
                           <input
@@ -54,8 +57,7 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {' '}
-                            {orgStatuses[0].description}
-                            {' '}
+                            {getStatusDisplay(orgStatuses[0].description)}
                           </span>
                         </label>{' '}
                       </div>
@@ -73,7 +75,7 @@ const OrganizationEditForm = (props) => {
                           />
                           <span>
                             {' '}
-                            {orgStatuses[1].description}
+                            {getStatusDisplay(orgStatuses[1].description)}
                           </span>
                         </label>{' '}
                       </div>
@@ -82,61 +84,34 @@ const OrganizationEditForm = (props) => {
                 </div>
               )}
             </div>
-            <div className="col-sm-6">
+            <div className="col-sm-5">
               <div className="form-group">
                 <label htmlFor="org-type">
-                  <div className="col-sm-4"> Supplier Type : </div>
-                  <div className="col-sm-6" >
-                    {props.referenceData.organizationTypes
-                      .filter((t) => t.id !== 1)
-                      .map((t) => (
-                        <div className="input-wrapper" key={t.id}>
-                          <input
-                            type="radio"
-                            id={`org-type-${t.id}`}
-                            name="org_type"
-                            value={t.id}
-                            defaultChecked={t.id === 2}
-                            onChange={props.handleInputChange}
-                          />
-                          <span> {t.description}</span>
-                        </div>
-                      ))}
-                    </div>
-                </label>
-              </div>
-            </div>
-            <div className="col-sm-6">
-              <div className="form-group">
-                <label htmlFor="org_status" className="col-sm-4">
-                  <div className="col-sm-6"> Registered for credit transfers: </div>
-                  <div className="col-sm-6">
-                    <div key={orgStatuses[0].id}>
-                      <label htmlFor='org-status-active'>
-                      <input
-                        type="radio"
-                        id='org-status-active'
-                        name="org_status"
-                        value={orgStatuses[0].id}
-                        onChange={props.handleInputChange}
-                        checked={orgStatuses[0].id === props.fields.org_status}
-                      />
-                        <span> {getStatusDisplay(orgStatuses[0].description)} </span></label>{' '}
-                    </div>
-                    <div key={orgStatuses[1].id}>
-
-                      <label htmlFor='org-status-inactive'>
+                  <div className="col-sm-4 text-right">
+                    {' '}
+                    Organization Type:{' '}
+                  </div>
+                  {props.referenceData.organizationTypes
+                    .filter((t) => t.id !== 1)
+                    .map((t) => (
+                      <div className="col-sm-8" key={t.id}>
+                        {' '}
                         <input
-                        type="radio"
-                        id='org-status-inactive'
-                        name="org_status"
-                        value={orgStatuses[1].id}
-                        onChange={props.handleInputChange}
-                        checked={orgStatuses[1].id === props.fields.org_status}
-                      />
-                      <span> {getStatusDisplay(orgStatuses[1].description)}</span></label>{' '}
-                    </div>
-                    </div>
+                          type="radio"
+                          id="org-type"
+                          name="org_type"
+                          value={t.id}
+                          defaultChecked
+                          onChange={props.handleInputChange}
+                        />
+                        <span>
+                          {' '}
+                          {t.description === 'Part 3 Fuel Supplier'
+                            ? 'Fuel Supplier'
+                            : t.description}
+                        </span>
+                      </div>
+                    ))}
                 </label>
               </div>
             </div>
@@ -157,29 +132,6 @@ const OrganizationEditForm = (props) => {
                 {props.edrmsRecordError && (
                   <div className="error-message">{props.edrmsRecordError}</div> // Display the error message
                 )}
-              </label>
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="form-group">
-              <label htmlFor="org-type">
-                <div className="col-sm-4"> Supplier Type : </div>
-                {props.referenceData.organizationTypes
-                  .filter((t) => t.id !== 1)
-                  .map((t) => (
-                    <div className="col-sm-8" key={t.id}>
-                      {' '}
-                      <input
-                        type="radio"
-                        id='org-type'
-                        name="org_type"
-                        value={t.id}
-                        defaultChecked
-                        onChange={props.handleInputChange}
-                      />
-                      <span> {t.description === 'Part 3 Fuel Supplier' ? 'Fuel Supplier' : t.description}</span>
-                    </div>
-                  ))}
               </label>
             </div>
           </div>
