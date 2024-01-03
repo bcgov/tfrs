@@ -369,7 +369,7 @@ class CreditTransferViewContainer extends Component {
       >
         <div className="alert alert-warning">
           <p>
-            Under section 17 of the Low Carbon Fuels Regulation, the Director may refuse to record a transfer under section 16 of the Act if:
+            section 19 of the Low Carbon Fuels (General) Regulation, the director may refuse to record a transfer under section 16 of the Act if:
           </p>
           <dl>
             <dt>(a)</dt>
@@ -377,7 +377,7 @@ class CreditTransferViewContainer extends Component {
               the director considers that
               <dl>
                 <dt>(i)</dt>
-                <dd>the transfer will be unable to meet the target set under section 12 <i>[low carbon fuel target]</i> of the Act, or</dd>
+                <dd>the transferor will be unable to meet the target set under section 12 <i>[low carbon fuel target]</i> of the Act, or</dd>
               </dl>
               <dl>
                 <dt>(ii)</dt>
@@ -398,8 +398,8 @@ class CreditTransferViewContainer extends Component {
                 <dd>the director has reason to believe that the transferor was issued a number of compliance units as a result of fraud or misrepresentation, and</dd>
               </dl>
               <dl>
-                <dt>(i)</dt>
-                <dd>the director has reason to believe that, if the transfer is recorded, the transferor will have a negative balance on assessment.</dd>
+                <dt>(iii)</dt>
+                <dd>the director has reason to believe that, if the transfer is recorded, the transferor will have a negative balance on reassessment.</dd>
               </dl>
             </dd>
           </dl>
