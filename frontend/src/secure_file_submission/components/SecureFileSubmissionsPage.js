@@ -19,9 +19,9 @@ const SecureFileSubmissionsPage = (props) => {
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
       {!props.loggedInUser.isGovernmentUser &&
-      <p className="instructions">
+      <div className="instructions">
         <h4>Securely submit files to the Government of British Columbia.</h4>
-      </p>
+      </div>
       }
       {!props.loggedInUser.isGovernmentUser &&
         <>
