@@ -25,7 +25,7 @@ const FileSubmission = props => {
         <div className="content">
           <button
             onClick={() => {
-              const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '')
+              const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', '2')
 
               return navigate(route)
             }}
