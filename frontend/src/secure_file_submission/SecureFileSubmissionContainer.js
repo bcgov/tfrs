@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import {withRouter} from '../utils/withRouter'
+import { withRouter } from '../utils/withRouter'
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads'
 import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage'
 
@@ -29,11 +29,15 @@ class SecureFileSubmissionContainer extends Component {
   }
 
   componentDidMount () {
-    if(this.props.location.state){
-      this.setState({filters:[{id:'status',value:this.props.location.state.items}]},()=> this.loadData())
+    // Always call loadData initially
+    this.loadData()
+
+    // Check if location state and items are present
+    if (this.props.location.state && this.props.location.state.items) {
+      // If items are present, update the state and then call loadData
+      this.setState({ filters: [{ id: 'status', value: this.props.location.state.items }] }, () => this.loadData())
     }
   }
-  
 
   loadData () {
     this.props.getDocumentUploads(this.state.page, this.state.pageSize, this.state.filters, this.state.sort)
@@ -99,7 +103,8 @@ SecureFileSubmissionContainer.propTypes = {
     isSuccessful: PropTypes.bool
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
-  totalCount: PropTypes.number
+  totalCount: PropTypes.number,
+  location: PropTypes.object
 }
 
 const mapStateToProps = state => ({
