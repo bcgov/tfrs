@@ -105,12 +105,14 @@ const OrganizationDetails = props => {
           </dl>
         </div>
         }
-        <div className="address">
-          <dl className="dl-horizontal">
-            <dt style={{ width: '300px' }}>&nbsp;</dt>
-            <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
-          </dl>
-        </div>
+        {! props.loggedInUser.isGovernmentUser && (
+          <div className="address">
+            <dl className="dl-horizontal">
+              <dt style={{ width: '300px' }}>&nbsp;</dt>
+              <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
+            </dl>
+          </div>
+        )}
         <div className="address">
           <dl className="dl-horizontal">
           {props.loggedInUser.isGovernmentUser && (
