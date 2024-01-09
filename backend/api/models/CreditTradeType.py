@@ -86,3 +86,22 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
             return "Admin Adjustment"
 
         return self.the_type
+
+    @property
+    def notification_name(self):
+        """
+        Front-end Notification language for the Credit Trade Type
+        """
+        if self.the_type in ["Buy", "Sell"]:
+            return "Transfer"
+
+        if self.the_type == "Credit Reduction" or self.the_type == "Credit Validation":
+            return "Assessment"
+        
+        if self.the_type == "Part 3 Award":
+            return "Initiative Agreement"
+        
+        if self.the_type == "Administrative Adjustment":
+            return "Admin Adjustment"
+
+        return self.the_type
