@@ -345,13 +345,12 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => this._approveCreditTransfer(item.id)}
         id="confirmApprove"
         key="confirmApprove"
-        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? 'Approve' : Lang.BTN_APPROVE_ISSUANCE}
+        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? Lang.BTN_APPROVE_1_2 : Lang.BTN_APPROVE_ISSUANCE}
         cancelLabel="Cancel"
       >
-        Are you sure you want to approve
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' this Credit Transfer Proposal'
-          : ' the issuance of credits for this Initiative Agreement'}?
+          ? 'Are you sure you want to record this transfer?'
+          : 'Are you sure you want to approve the issuance of credits for this Initiative Agreement?'}
       </Modal>
     )
   }
