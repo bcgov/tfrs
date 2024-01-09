@@ -22,7 +22,7 @@ route:
   createFrontendRoute: true
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 80
