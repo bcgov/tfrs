@@ -66,9 +66,9 @@ jobs:
           helm upgrade --install \
             --set frontendImageTagName=${{ inputs.env-name }}-${{ inputs.branch-name }} \
             --set suffix=${{ inputs.suffix }} \
-            --set namespace=${{ secrets.namespace }} \
+            --set namespace=0ab226-dev \
             --set envName=${{ inputs.env-name }} \
-            -n ${{ secrets.namespace }} -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
+            -n 0ab226-dev -f ./values${{ inputs.suffix }}.yaml tfrs-frontend${{ inputs.suffix }} .
           
       - name: Deploy tfrs-backend
         shell: bash {0}
