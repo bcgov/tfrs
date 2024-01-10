@@ -69,23 +69,23 @@ jobs:
 
   # when build branch, the suffix sample is -main-release-jan-2024
   #       the  checkout-ref sample is main-release-jan-2024
-  # build:
-  #   name: Build
-  #   needs: [unit-test, lint]
-  #   uses: ./.github/workflows/build-template.yaml
-  #   with:
-  #     suffix: -${{ github.ref_name }}
-  #     checkout-ref: ${{ github.ref_name }}
-  #   secrets:
-  #     tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
-  #     openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
-  #     openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
+  build:
+    name: Build
+    # needs: [unit-test, lint]
+    uses: ./.github/workflows/build-template.yaml
+    with:
+      suffix: -${{ github.ref_name }}
+      checkout-ref: ${{ github.ref_name }}
+    secrets:
+      tools-namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+      openshift-server: ${{ secrets.OPENSHIFT_SERVER }}
+      openshift-token: ${{ secrets.OPENSHIFT_TOKEN }}
 
   # The suffix is -dev-jan, the deployment names are tfrs-backend-dev-jan, tfrs-frontend-dev-jan and etc..
   # The image tags are tfrs-backend:dev-main-release-jan-2024, tfrs-frontend:dev-main-release-jan-2024 and etc..
   deploy-on-dev: 
     name: Deploy on Dev
-    #needs: build
+    needs: build
     uses: ./.github/workflows/branch-deploy-template.yaml
     with:
       branch-name: ${{ github.ref_name }}
