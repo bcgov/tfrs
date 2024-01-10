@@ -21,57 +21,57 @@ concurrency:
 
 jobs:
 
-  # unit-test:
+  unit-test:
 
-  #   name: Run Backend Unit Tests
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
+    name: Run Backend Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3.5.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
       
-  #     - name: Run coverage report for django tests 
-  #       uses: kuanfandevops/django-test-action@itvr-django-test
-  #       continue-on-error: true
-  #       with:
-  #         settings-dir-path: "backend/api"
-  #         requirements-file: "backend/requirements.txt"
-  #         managepy-dir: backend
+      - name: Run coverage report for django tests 
+        uses: kuanfandevops/django-test-action@itvr-django-test
+        continue-on-error: true
+        with:
+          settings-dir-path: "backend/api"
+          requirements-file: "backend/requirements.txt"
+          managepy-dir: backend
   
-  # lint:
+  lint:
 
-  #   name: Linting
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
+    name: Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3.5.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
 
-  #     - name: Frontend Linting 
-  #       continue-on-error: true
-  #       run: |
-  #         cd frontend
-  #         pwd
-  #         npm install
-  #         npm run lint        
+      - name: Frontend Linting 
+        continue-on-error: true
+        run: |
+          cd frontend
+          pwd
+          npm install
+          npm run lint        
 
-  #     - name: Backend linting
-  #       uses: github/super-linter/slim@v4
-  #       continue-on-error: true
-  #       env:
-  #         DEFAULT_BRANCH: ${{ github.ref_name }}
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         FILTER_REGEX_INCLUDE: .*backend/.*.py
-  #         VALIDATE_PYTHON_PYLINT: true
-  #         LOG_LEVEL: WARN
+      - name: Backend linting
+        uses: github/super-linter/slim@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_INCLUDE: .*backend/.*.py
+          VALIDATE_PYTHON_PYLINT: true
+          LOG_LEVEL: WARN
 
   # when build branch, the suffix sample is -main-release-jan-2024
   #       the  checkout-ref sample is main-release-jan-2024
   build:
     name: Build
-    # needs: [unit-test, lint]
+    needs: [unit-test, lint]
     uses: ./.github/workflows/build-template.yaml
     with:
       suffix: -${{ github.ref_name }}
