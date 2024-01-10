@@ -7,7 +7,7 @@ metadata:
     {{- include "tfrs-frontend.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: apps.openshift.io/v1
+    apiVersion: apps/v1
     kind: DeploymentConfig
     name: tfrs-frontend{{ .Values.suffix }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
