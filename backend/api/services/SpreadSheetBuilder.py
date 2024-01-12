@@ -151,7 +151,9 @@ class SpreadSheetBuilder(object):
                 worksheet.write(row_index, 8, credit_trade.status.friendly_name)
 
             # If the trade doesn't have an effective date but meets certain other criteria, write the update timestamp.
-            if credit_trade.update_timestamp:
+            if credit_trade.trade_effective_date:
+                worksheet.write(row_index, 9, credit_trade.trade_effective_date, date_format)
+            elif credit_trade.update_timestamp:
                 # Conditions for using the update timestamp.
                 approved_status = credit_trade.status.status == "Approved"
                 valid_trade_type = credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"]
