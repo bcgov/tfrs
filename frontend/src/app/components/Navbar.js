@@ -214,7 +214,7 @@ class Navbar extends Component {
                   </MenuItem>
                   <MenuItem
                     className="dropdown-hidden-item"
-                    href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
+                    href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
@@ -244,7 +244,7 @@ class Navbar extends Component {
             </NavLink>
             <a
               className="navbar-item"
-              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
+              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
               id="navbar-help"
               rel="noopener noreferrer"
               target="_blank"
@@ -397,7 +397,7 @@ class Navbar extends Component {
           </li>
           <li>
             <a
-              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
+              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >
