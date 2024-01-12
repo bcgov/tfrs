@@ -23,10 +23,10 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            {this.props.updateTimestamp >= moment('2024-01-01') ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 1 && 's'}
+            {moment(this.props.updateTimestamp).isSameOrAfter(moment('2024-01-01')) ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 1 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
-          <div>{transformCreditTransferTypeDesc(this.props.tradeType.id)}</div>
+          <div>{transformCreditTransferTypeDesc(this.props.tradeType.id, this.props.updateTimestamp)}</div>
         </div>
       </div>
     )

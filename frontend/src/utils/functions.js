@@ -285,7 +285,7 @@ const transformDocumentTypeDescription = (desc) => {
 
 const transformCreditTransferTypeDesc = (typeId, updateTimestamp = null) => {
   if (typeId === CREDIT_TRANSFER_TYPES.part3Award.id) {
-    if (updateTimestamp >= moment('2024-01-01')) {
+    if (moment(updateTimestamp).isSameOrAfter(moment('2024-01-01'))) {
       return 'Initiative Agreement'
     } else {
       return 'Part 3 Award'
