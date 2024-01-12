@@ -7,13 +7,13 @@ const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 4,
   code: 'PVR_RECOMMENDED_FOR_APPROVAL',
-  description: 'Recommended Director record',
+  description: 'Recommended issuance',
   key: 'recommended',
   recipients: ['government']
 }, {
   id: 11,
   code: 'PVR_RESCINDED',
-  description: 'Rescinded',
+  description: 'Deleted',
   key: 'rescinded',
   recipients: ['government']
 }, {
