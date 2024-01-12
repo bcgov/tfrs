@@ -524,13 +524,12 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
-        confirmLabel="Recommend issuance"
+        confirmLabel="Recommend recording transfer"
         cancelLabel="Cancel"
       >
-        Are you sure you want to recommend issuance of compliance units for this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' transfer'
-          : ' Initiative Agreement'}?
+          ? 'Are you sure you want to recommend recording this transfer?'
+          : 'Are you sure you want to recommend issuance of compliance units for this Initiative Agreement?'}
       </Modal>
     )
   }
