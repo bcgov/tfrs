@@ -57,7 +57,7 @@ class CreditTransferTextRepresentation extends Component {
     const tradeEffectiveDate = this.getTradeEffectiveDate()
     // If no effective date is available, handle this case
     if (!tradeEffectiveDate) {
-      return <span>.</span>
+      return <span></span>
     }
 
     const formattedDate = moment(tradeEffectiveDate).format('LL')
@@ -65,7 +65,7 @@ class CreditTransferTextRepresentation extends Component {
 
     // Transaction is approved
     if (status.id === CREDIT_TRANSFER_STATUS.approved.id) {
-      return (<span> effective <span className='value'>{formattedDate}</span></span>)
+      return (<span>, effective <span className='value'>{formattedDate}</span></span>)
     }
 
     // Check if tradeEffectiveDate exists and is in the future
@@ -131,11 +131,12 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _renderPart3Award () {
-    if (this.props.updateTimestamp >= moment('2024-01-01')) {
+    if (moment(this.props.updateTimestamp).isSameOrAfter(moment('2024-01-01'))) {
       return (
         <div className='text-representation'>
-          <span className='value'>{this.numberOfCredits}</span> compliance unit{this.props.numberOfCredits > 1 ? 's' : ''} issued to <span className='value'>{this.organization} </span>
-          for the completion of a designated action in an Initiative Agreement, effective <span className='value'>{this.tradeEffectiveDate}</span>.
+          <span className='value'>{this.numberOfCredits}</span> compliance unit{this.props.numberOfCredits > 1 ? 's' : ''} issued to <span className='value'>{this.creditsTo} </span>
+          for the completion of a designated action in an Initiative Agreement has been <span className='value lowercase'>{this.tradeStatus}</span>
+          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
         </div>
       )
     } else {
