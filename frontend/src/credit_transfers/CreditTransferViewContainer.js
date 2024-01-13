@@ -368,7 +368,7 @@ class CreditTransferViewContainer extends Component {
       >
         <div className="alert alert-warning">
           <p>
-            section 19 of the Low Carbon Fuels (General) Regulation, the director may refuse to record a transfer under section 16 of the Act if:
+            Under section 19 of the Low Carbon Fuels (General) Regulation, the director may refuse to record a transfer under section 16 of the Act if:
           </p>
           <dl>
             <dt>(a)</dt>
