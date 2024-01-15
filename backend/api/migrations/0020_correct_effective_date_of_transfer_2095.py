@@ -35,5 +35,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_transfer_effective_date),
+        migrations.RunPython(update_transfer_effective_date, reverse_code=migrations.RunPython.noop),
     ]
