@@ -29,7 +29,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 4,
   code: 'CREDIT_TRANSFER_RECOMMENDED_FOR_APPROVAL',
-  description: 'Recommend Director Approval',
+  description: 'Recommend recording transfer',
   key: 'recommended',
   permission: 'RECOMMEND_CREDIT_TRANSFER',
   recipients: ['government'],
@@ -37,7 +37,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 5,
   code: 'CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION',
-  description: 'Recommend Director Approval Decline',
+  description: 'Recommend refusing transfer',
   key: 'not_recommended',
   permission: 'RECOMMEND_CREDIT_TRANSFER',
   recipients: ['government'],
