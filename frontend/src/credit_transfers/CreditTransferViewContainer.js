@@ -517,6 +517,8 @@ class CreditTransferViewContainer extends Component {
   }
 
   _modalRecommend (item) {
+    const isBuyOrSell = [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0;
+
     return (
       <Modal
         handleSubmit={(event) => {
@@ -524,12 +526,18 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
-        confirmLabel="Recommend recording transfer"
+        confirmLabel={
+          isBuyOrSell
+            ? "Recommend recording transfer"
+            : "Recommend issuance"
+        }
         cancelLabel="Cancel"
       >
-        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? 'Are you sure you want to recommend recording this transfer?'
-          : 'Are you sure you want to recommend issuance of compliance units for this Initiative Agreement?'}
+        {
+          isBuyOrSell
+            ? 'Are you sure you want to recommend recording this transfer?'
+            : 'Are you sure you want to recommend issuance of compliance units for this Initiative Agreement?'
+        }
       </Modal>
     )
   }
