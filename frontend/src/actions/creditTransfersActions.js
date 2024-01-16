@@ -26,7 +26,7 @@ export const getCreditTransferType = (typeId, updateTimestamp=null) => {
     case CREDIT_TRANSFER_TYPES.retirement.id:
       return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Reduction';
     case CREDIT_TRANSFER_TYPES.part3Award.id:
-      return 'Part 3 Award'
+      return 'Initiative Agreement'
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
       return 'Administrative Adjustment'
     default:
