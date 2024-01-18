@@ -178,14 +178,16 @@ class CreditTradeService(object):
         Sets the Credit Transfer to Approved
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
+        effective_date = credit_trade.trade_effective_date
 
         # Calculate and assign trade category. Dont assign category if transfer are added through historical data entry or if credit trade type is NOT 1 (buy) or 2 (sell)
         if not batch_process and credit_trade.type_id in (1, 2):
             credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
                 credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
 
-        # Set the effective_date to today to mark the approval date of the credit trade
-        effective_date = timezone.localdate()
+            # Set the effective_date to today's to mark the approval date of the credit trade
+            # only if it is not added thru HDE
+            effective_date = timezone.localdate()
         
         CreditTradeService.transfer_credits(
             credit_trade.credits_from,
