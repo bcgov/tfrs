@@ -4,6 +4,7 @@ from dateutil.parser import parse
 from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -185,17 +186,38 @@ class CreditTradeService(object):
             credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
                 credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
 
-            # Set the effective_date to today's to mark the approval date of the credit trade
-            # only if it is not added thru HDE
-            effective_date = timezone.localdate()
-        
-        CreditTradeService.transfer_credits(
-            credit_trade.credits_from,
-            credit_trade.credits_to,
-            credit_trade.id,
-            credit_trade.number_of_credits,
-            effective_date
-        )
+        # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
+        # otherwise use trade_effective_date
+        today = timezone.localdate()
+        effective_date = credit_trade.trade_effective_date \
+            if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
+
+        # Check if the transaction is an administrative adjustment and
+        # if it would result in a negative balance for the organization
+        if credit_trade.type.the_type == "Administrative Adjustment":
+            org_balance = Decimal(credit_trade.respondent.organization_balance['validated_credits'])
+
+            # Adjust org_balance to accont for pending deductions
+            if 'deductions' in credit_trade.respondent.organization_balance:
+                org_balance -= Decimal(credit_trade.respondent.organization_balance['deductions'])
+
+            if org_balance <= 0 and credit_trade.number_of_credits < Decimal(0):
+                raise ValidationError(f"Organization {credit_trade.respondent.name} already has a balance of {org_balance}")
+
+            # number_of_credits can be negative so we add to org balance here
+            if org_balance + credit_trade.number_of_credits < Decimal(0):
+                credit_trade.number_of_credits = -org_balance # Adjust the number of credits to prevent a negative balance
+                credit_trade.save()  # Save the updated number_of_credits to the database
+
+        # Only transfer credits if the effective_date is today or in the past
+        if effective_date <= today:
+            CreditTradeService.transfer_credits(
+                credit_trade.credits_from,
+                credit_trade.credits_to,
+                credit_trade.id,
+                credit_trade.number_of_credits,
+                effective_date
+            )
 
         if update_user:
             credit_trade.update_user = update_user

@@ -395,6 +395,454 @@ class SnapshotDisplay extends Component {
     return grid
   }
 
+  static buildLCFSSummaryGrid (snapshot) {
+    const period = Number(snapshot.compliancePeriod.description)
+    const grid = [
+      [{ // p2 gasoline
+        className: 'header',
+        colSpan: 3,
+        value: 'Part 2 - Gasoline'
+      }], [{
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Line'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Information'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 1'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of gasoline class non-renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['1'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 2'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of gasoline class renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['2'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 3'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total volume of gasoline class fuel supplied (Line 1 + Line 2)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['3'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 4'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of Part 2 gasoline class renewable fuel required (5% of Line 3)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['4'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 5'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['5'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 6'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel retained (up to 5% of Line 4)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['6'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 7'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel previously retained (from Line 6 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['7'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 8'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation deferred (up to 5% of Line 4)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['8'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 9'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation added (from Line 8 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['9'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 10'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 2 + Line 5 - Line 6 + Line 7 + Line 8 - Line 9)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['10'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 11'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Gasoline class non-compliance payable (Line 4 - Line 10) x $0.30/L'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['11'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{ // p2 diesel
+        className: 'header',
+        colSpan: 3,
+        value: 'Part 2 - Diesel'
+      }], [{
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Line'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Information'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 12'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of diesel class non-renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['12'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 13'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of diesel class renewable fuel supplied'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['13'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 14'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Total volume of diesel class fuel supplied (Line 12 + Line 13)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['14'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 15'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of Part 2 diesel class renewable fuel required (4% of Line 14)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['15'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 16'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable fuel notionally transferred to and received from other suppliers as reported in Schedule A'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['16'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 17'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel retained (up to 5% of Line 15)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['17'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 18'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable credit (from Line 17 of previous compliance report)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['18'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 19'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable obligation deferred (up to 5% of Line 15)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['19'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 20'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Volume of renewable fuel previously retained (from Line 19 of previous compliance period)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['20'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 21'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net volume of renewable Part 2 gasoline class fuel supplied (Total of Line 13 + Line 16 - Line 17 + Line 18 + Line 19 - Line 20)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['21'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 22'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Diesel class non-compliance payable (Line 15 - Line 21) x $0.45/L'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['22'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{ // p3
+        className: 'header',
+        colSpan: 3,
+        value: 'Low Carbon Fuel Requirement Summary'
+      }], [{
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Line'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Information'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 25'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Net compliance unit balance for compliance period'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['25'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_A
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: `Available compliance unit balance on March 31, ${period + 1}`
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['29A'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_B
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Compliance unit balance change from assessment'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['29B'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }],
+      [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 28'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Non-compliance penalty payable (CAD)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['28'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: '' // Line 29_C
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: `Available compliance unit balance after assessment on March 31, ${period + 1}`
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['29C'],
+        valueViewer: SnapshotDisplay.decimalViewer(0)
+      }],
+      [{ // penalty
+        className: 'header',
+        colSpan: 3,
+        value: 'Part 2 and Part 3 Non-compliance Penalty Payable Summary'
+      }], [{
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Line'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Information'
+      }, {
+        className: 'header underlined',
+        disableEvents: true,
+        value: 'Value'
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 11'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 2 Gasoline class non-compliance payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['11'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 22'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 2 Diesel class non-compliance payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['22'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong center',
+        readOnly: true,
+        value: 'Line 28'
+      }, {
+        className: 'left',
+        readOnly: true,
+        value: 'Part 3 non-compliance penalty payable'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.lines['28'],
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }], [{
+        className: 'strong',
+        colSpan: 2,
+        readOnly: true,
+        value: 'Total non-compliance penalty payable (Line 11 + Line 22 + Line 28)'
+      }, {
+        readOnly: true,
+        value: snapshot.summary.totalPayable,
+        valueViewer: SnapshotDisplay.decimalViewer(2)
+      }]
+    ]
+    if (snapshot.summary.lines['28'] <= 0) {
+      grid[31][0].className = 'hidden'
+      grid[31][1].className = 'hidden'
+      grid[31][2].className = 'hidden'
+    }
+    return grid
+  }
+
   static buildSummaryGrid (snapshot) {
     const grid = [
       [{ // p2 gasoline
@@ -978,7 +1426,9 @@ class SnapshotDisplay extends Component {
             <hr />
             <ReactDataSheet
               className="spreadsheet summary snapshot_summary"
-              data={SnapshotDisplay.buildSummaryGrid(snapshot)}
+              data={(Number(snapshot.compliancePeriod.description) < 2023)
+                ? SnapshotDisplay.buildSummaryGrid(snapshot)
+                : SnapshotDisplay.buildLCFSSummaryGrid(snapshot)}
               valueRenderer={cell => cell.value}
             />
           </div>

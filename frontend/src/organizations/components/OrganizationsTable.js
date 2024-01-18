@@ -8,7 +8,6 @@ import 'react-table/react-table.css'
 import numeral from 'numeral'
 
 import * as NumberFormat from '../../constants/numeralFormats'
-import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
 import ORGANIZATION_STATUSES from '../../constants/organizationStatuses'
 import ReactTable from '../../app/components/StateSavingReactTable'
@@ -29,7 +28,7 @@ const OrganizationsTable = (props) => {
     accessor: item => item.organizationBalance.validatedCredits,
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     className: 'col-credit-balance',
-    Header: 'Credit Balance',
+    Header: 'Compliance Units',
     id: 'creditBalance',
     minWidth: 100
   }, {
@@ -40,43 +39,35 @@ const OrganizationsTable = (props) => {
     id: 'inreserve',
     minWidth: 100
   }, {
-    accessor: item => Object.values(ORGANIZATION_STATUSES)
-      .find(element => element.id === item.status).description,
+    accessor: item => {
+      const orgStatus = Object.values(ORGANIZATION_STATUSES)
+        .find(element => element.id === item.status)
+      if (orgStatus.description === 'Active') {
+        return 'Yes'
+      } else if (orgStatus.description === 'Inactive') {
+        return 'No'
+      }
+      return orgStatus.description // default to the actual description if not Active/Inactive
+    },
     className: 'col-status-display',
-    Header: 'Status',
+    Header: 'Registered',
     id: 'status',
     minWidth: 50,
     filterMethod: (filter, row) => {
       const filterValue = filter.value.toLowerCase()
       const cellValue = row[filter.id].toLowerCase()
-      if (filterValue === cellValue) {
+      // Flexible conditions for "yes"
+      if (cellValue === 'yes' && (filterValue === 'y' || filterValue === 'ye' || filterValue === 'yes')) {
+        return true
+      }
+      // Flexible conditions for "no"
+      if (cellValue === 'no' && (filterValue === 'n' || filterValue === 'no')) {
         return true
       }
       return false
     }
-  }, {
-    accessor: item => item.actionsTypeDisplay,
-    className: 'col-actions-type-display',
-    Header: 'Actions',
-    id: 'actions',
-    minWidth: 75
-  }, {
-    accessor: item => item.organizationBalance.creditTradeId,
-    Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value)
-
-      return <Link to={viewUrl}>{row.value}</Link>
-    },
-    className: 'col-last-transaction',
-    Header: 'Last Transaction',
-    id: 'lastTransaction',
-    minWidth: 75
-  }, {
-    className: 'col-actions',
-    filterable: false,
-    id: 'actions',
-    width: 50
-  }]
+  }
+  ]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id

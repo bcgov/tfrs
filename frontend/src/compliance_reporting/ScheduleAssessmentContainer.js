@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 
 import Loading from '../app/components/Loading'
 import ScheduleAssessmentPage from './components/ScheduleAssessmentPage'
+import { COMPLIANCE_YEAR } from '../constants/values'
 
 class ScheduleAssessmentContainer extends Component {
   componentDidMount () {
@@ -43,6 +44,7 @@ class ScheduleAssessmentContainer extends Component {
 
     // const snap = mostRecentlyReviewed;
     const snap = this.props.snapshot
+    const { period } = this.props
 
     if (!snap || !snap.summary) {
       return <Loading />
@@ -98,8 +100,14 @@ class ScheduleAssessmentContainer extends Component {
 
     let part3Compliant = 'Compliant'
 
-    if (Number(snap.summary.lines[27]) < 0) {
-      part3Compliant = 'Non-compliant'
+    if (period < COMPLIANCE_YEAR) {
+      if (Number(snap.summary.lines[27]) < 0) {
+        part3Compliant = 'Non-compliant'
+      }
+    } else {
+      if (Number(snap.summary.lines['29C']) < 0) {
+        part3Compliant = 'Non-compliant'
+      }
     }
 
     return (
@@ -123,7 +131,8 @@ ScheduleAssessmentContainer.propTypes = {
   complianceReport: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   snapshot: PropTypes.shape(),
-  snapshotIsLoading: PropTypes.bool
+  snapshotIsLoading: PropTypes.bool,
+  period: PropTypes.number
 }
 
 const mapStateToProps = state => ({})

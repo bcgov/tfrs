@@ -3,7 +3,7 @@ import { combineReducers } from 'redux'
 import { approvedCreditTransfers, creditTransfer, creditTransfers } from './creditTransferReducer'
 import { userRequest, userViewRequest, userAdmin } from './userReducer'
 
-import { organizationRequest, organizations, organizationMembers, fuelSuppliersRequest } from './organizationReducer'
+import { organizationRequest, organizations, organizationMembers, fuelSuppliersRequest, organizationBalanceRequest } from './organizationReducer'
 import errorRequest from './errorReducer'
 import compliancePeriods from './compliancePeriodReducer'
 import { documentUpload, documentUploads } from './documentUploadReducer'
@@ -44,6 +44,7 @@ const rootReducer = combineReducers({
   notifications,
   organizationMembers,
   organizationRequest,
+  organizationBalanceRequest,
   organizations,
   referenceData,
   sessionTimeout,

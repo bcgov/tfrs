@@ -14,7 +14,7 @@ update_trade_effective_dates = """
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0013_create_missing_rescinded_history_records'),
+        ('api', '0020_correct_effective_date_of_transfer_2095'),
     ]
 
     operations = [

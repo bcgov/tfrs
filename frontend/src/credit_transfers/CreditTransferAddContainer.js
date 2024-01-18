@@ -233,7 +233,7 @@ class CreditTransferAddContainer extends Component {
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
       .indexOf(this.state.fields.tradeType.id) < 0) {
       this._governmentTransferSubmit(status)
-    } else { // Credit Transfer Submit
+    } else { // Transfer Submit
       this._creditTransferSubmit(status)
     }
 
@@ -275,7 +275,7 @@ class CreditTransferAddContainer extends Component {
         loggedInUser={this.props.loggedInUser}
         signingAuthorityAssertions={this.props.signingAuthorityAssertions}
         terms={this.state.terms}
-        title="New Credit Transfer"
+        title="New Transfer"
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         validationErrors={this.state.validationErrors}
@@ -317,7 +317,7 @@ class CreditTransferAddContainer extends Component {
         isCommenting={this.state.isCommenting}
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
-        title="New Part 3 Award"
+        title="New Initiative Agreement Issuance"
         validationErrors={this.state.validationErrors}
       />,
       <Modal
@@ -326,8 +326,11 @@ class CreditTransferAddContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
+        confirmLabel="Recommend issuance"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to recommend approval of this Part 3 Award?
+        Are you sure you want to recommend issuance of compliance units
+        for this Initiative Agreement?
       </Modal>
     ])
   }

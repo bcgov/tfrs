@@ -6,12 +6,13 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Tooltip from '../../app/components/Tooltip'
 import * as NumberFormat from '../../constants/numeralFormats'
 import { DEFAULT_ORGANIZATION } from '../../constants/values'
+import TOOLTIPS from '../../constants/tooltips'
 
 const Balance = props => (
   <div className="dashboard-card">
     {!props.organization && [
       <h2 key="name">All Organizations</h2>,
-      <h1 key="label">credit balance</h1>,
+      <h1 key="label">Compliance Units</h1>,
       <div className="value" key="value">
         {
           numeral(1000000000000000 -
@@ -22,7 +23,7 @@ const Balance = props => (
     ]}
     {props.organization && props.organization.organizationBalance && [
       <h2 key="name">{props.organization.name}</h2>,
-      <h1 key="label">credit balance</h1>,
+      <h1 key="label">Compliance Units</h1>,
       <div className="value" key="value">
         {numeral(props.organization.organizationBalance.validatedCredits).format(NumberFormat.INT)}
       </div>,
@@ -31,11 +32,7 @@ const Balance = props => (
         <Tooltip
           className="info"
           show
-          title="Reserved credits are the portion of credits in your credit balance that are
-          currently pending the completion of a credit transaction. For example, selling
-          credits to another organization (i.e. Credit Transfer) or being used to offset
-          outstanding debits in a compliance period. Reserved credits cannot be transferred
-          or otherwise used until the pending credit transaction has been completed."
+          title={TOOLTIPS.IN_RESERVE}
         >
           <FontAwesomeIcon icon="info-circle" />
         </Tooltip>
