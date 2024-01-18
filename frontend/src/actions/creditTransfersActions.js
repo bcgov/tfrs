@@ -18,13 +18,13 @@ export const getCreditTransfers = () => (dispatch) => {
     })
 }
 
-export const getCreditTransferType = (typeId, updateTimestamp=null) => {
-  const jan2024Timestamp = moment('2024-01-01');
+export const getCreditTransferType = (typeId, updateTimestamp = null) => {
+  const jan2024Timestamp = moment('2024-01-01')
   switch (typeId) {
     case CREDIT_TRANSFER_TYPES.validation.id:
-      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Validation';
+      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Validation'
     case CREDIT_TRANSFER_TYPES.retirement.id:
-      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Reduction';
+      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Reduction'
     case CREDIT_TRANSFER_TYPES.part3Award.id:
       return 'Initiative Agreement'
     case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
