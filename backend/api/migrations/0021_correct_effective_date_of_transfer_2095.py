@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
     Attaches the update function to the migration operations
     """
     dependencies = [
-        ('api', '0019_update_signing_authority_declaration_statement'),
+        ('api', '0020_update_signing_authority_declaration_statement'),
     ]
 
     operations = [

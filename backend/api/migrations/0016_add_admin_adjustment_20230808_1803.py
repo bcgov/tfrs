@@ -26,7 +26,7 @@ def remove_administrative_adjustment(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0014_new_label_changes'),
+        ('api', '0015_new_label_changes'),
     ]
 
     operations = [

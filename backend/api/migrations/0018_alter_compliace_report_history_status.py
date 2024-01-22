@@ -3,7 +3,7 @@ from django.db import migrations, models, connection
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0016_alter_credittrade_number_of_credits'),
+        ('api', '0017_alter_credittrade_number_of_credits'),
     ]
     # apply migration only to test database
     if connection.settings_dict['NAME'] == 'test_tfrs':
