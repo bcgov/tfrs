@@ -15,6 +15,7 @@ import { download } from '../../utils/functions'
 import * as Routes from '../../constants/routes'
 import * as Lang from '../../constants/langEnUs'
 import { useNavigate } from 'react-router'
+import TOOLTIPS from '../../constants/tooltips'
 
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers
@@ -27,7 +28,7 @@ const CreditTransactionsPage = (props) => {
         {props.loggedInUser.roles &&
           !props.loggedInUser.isGovernmentUser &&
           <h3>
-            Credit Balance: {
+            Compliance Units: {
               numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
                 .format(NumberFormat.INT)
             }
@@ -39,11 +40,7 @@ const CreditTransactionsPage = (props) => {
               <Tooltip
                 className="info"
                 show
-                title="Reserved credits are the portion of credits in your credit balance that are
-                currently pending the completion of a credit transaction. For example, selling
-                credits to another organization (i.e. Credit Transfer) or being used to offset
-                outstanding debits in a compliance period. Reserved credits cannot be transferred
-                or otherwise used until the pending credit transaction has been completed."
+                title={TOOLTIPS.IN_RESERVE}
               >
                 <FontAwesomeIcon icon="info-circle" />
               </Tooltip>
@@ -57,7 +54,7 @@ const CreditTransactionsPage = (props) => {
             <div key="all-organizations-credit-balance">
               <h3>All Organizations</h3>
               <h3>
-                Credit Balance: {
+                Compliance Units: {
                   numeral(1000000000000000 -
                     props.loggedInUser.organization.organizationBalance.validatedCredits)
                     .format(NumberFormat.INT)
@@ -68,7 +65,7 @@ const CreditTransactionsPage = (props) => {
             <div key={props.organization.id}>
               <h3>{props.organization.name}</h3>
               <h3>
-                Credit Balance: {
+                Compliance Units: {
                   numeral(props.organization.organizationBalance.validatedCredits)
                     .format(NumberFormat.INT)
                 } ({
@@ -111,7 +108,7 @@ const CreditTransactionsPage = (props) => {
           (props.loggedInUser.organization.statusDisplay === 'Active' ||
           (props.loggedInUser.organization.organizationBalance &&
           (props.loggedInUser.organization.organizationBalance.validatedCredits > 0))) &&
-          !props.loggedInUser.isGovernmentUser &&
+          !props.loggedInUser.isGovernmentUser && props.loggedInUser.organization.statusDisplay === 'Active' &&
             <button
               id="credit-transfer-new-transfer"
               className="btn btn-primary"

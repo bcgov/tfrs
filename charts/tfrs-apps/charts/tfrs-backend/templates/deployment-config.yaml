@@ -3,7 +3,7 @@ apiVersion: apps.openshift.io/v1
 metadata:
   annotations:
     description: Defines how to deploy the backend application
-  name: {{ include "tfrs-backend.deploymentconfigName" . }}
+  name: tfrs-backend{{ .Values.suffix }}
   labels:
     {{- include "tfrs-backend.labels" . | nindent 4 }}
 spec:
@@ -30,7 +30,7 @@ spec:
         from:
           kind: ImageStreamTag
           namespace: {{ .Values.namespace }}
-          name: {{ include "tfrs-backend.name" . }}:{{ .Values.backendImageTagName }}
+          name: tfrs-backend:{{ .Values.backendImageTagName }}
     - type: ConfigChange
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 10
@@ -79,7 +79,7 @@ spec:
             - name: SMTP_SERVER_PORT
               value: '2500'
             - name: DATABASE_SERVICE_NAME
-              value: {{ .Values.env.databaseServiceName }}
+              value: {{ .Values.databaseServiceHostName }}
             - name: DATABASE_ENGINE
               value: postgresql
             - name: DATABASE_NAME
@@ -98,7 +98,7 @@ spec:
                   name: tfrs-patroni-app
                   key: app-db-password
             - name: POSTGRESQL_SERVICE_HOST
-              value: {{ .Values.env.postgresqlServiceHost }}
+              value: {{ .Values.databaseServiceHostName }}.{{ .Values.namespace }}.svc.cluster.local
             - name: POSTGRESQL_SERVICE_PORT
               value: '5432'
             - name: RABBITMQ_USER
@@ -107,9 +107,9 @@ spec:
                   name: tfrs-rabbitmq-app
                   key: username
             - name: RABBITMQ_VHOST
-              value: tfrs-vhost
+              value: {{ .Values.rabbitmqVHost }}
             - name: RABBITMQ_HOST
-              value: {{ .Values.env.rabbitmqHost }}
+              value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -118,7 +118,7 @@ spec:
             - name: RABBITMQ_PORT
               value: '5672'
             - name: MINIO_ENDPOINT
-              value: {{ .Values.env.minioEndpoint }}
+              value: tfrs-minio-{{ .Values.envName }}.apps.silver.devops.gov.bc.ca:443
             - name: MINIO_USE_SSL
               value: 'true'
             - name: DOCUMENTS_API_ENABLED
@@ -126,13 +126,13 @@ spec:
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.env.minioSecretName }}
-                  key: {{ .Values.env.minioAccessKey}}
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_ACCESS_KEY
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.env.minioSecretName }}
-                  key: {{ .Values.env.minioSecretKey}}
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_SECRET_KEY
             - name: FUEL_CODES_API_ENABLED
               value: '{{ .Values.env.fuelCodesApiEnabled}}'
             - name: CREDIT_CALCULATION_API_ENABLED
@@ -151,8 +151,7 @@ spec:
             - name: KEYCLOAK_AUDIENCE
               value: tfrs-on-gold-4308
             - name: WELL_KNOWN_ENDPOINT
-              value: >-
-                {{ .Values.env.wellKnownEndpoint}}
+              value: https://{{ .Values.envName }}.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration
           ports:
             - containerPort: 8080
               protocol: TCP

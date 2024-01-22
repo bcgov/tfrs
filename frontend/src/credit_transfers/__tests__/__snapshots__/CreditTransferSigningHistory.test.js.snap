@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreditTransferSigningHistory Component Rendering renders the component correctly 1`] = `
+exports[`CreditTransferSigningHistory renders the component correctly 1`] = `
 <div
   className="credit-transfer-signing-history"
 >
@@ -15,7 +15,7 @@ exports[`CreditTransferSigningHistory Component Rendering renders the component 
         Date of written agreement reached between the two organizations: 
       </span>
       <strong>
-        December 7, 2023
+        January 18, 2024
       </strong>
       <span>
          (proposal falls under 
@@ -28,7 +28,7 @@ exports[`CreditTransferSigningHistory Component Rendering renders the component 
       <span>
          if approved by: 
         <strong>
-          June 7, 2024
+          July 18, 2024
         </strong>
         )
       </span>
@@ -43,7 +43,7 @@ exports[`CreditTransferSigningHistory Component Rendering renders the component 
       <span>
          on 
       </span>
-      December 7, 2023
+      January 18, 2024
       <span>
          by 
       </span>
@@ -64,7 +64,7 @@ exports[`CreditTransferSigningHistory Component Rendering renders the component 
 </div>
 `;
 
-exports[`CreditTransferSigningHistory Component Rendering should render the component with dateOfWrittenAgreement as null 1`] = `
+exports[`CreditTransferSigningHistory should render the component with dateOfWrittenAgreement as null 1`] = `
 <div
   className="credit-transfer-signing-history"
 >
@@ -82,7 +82,7 @@ exports[`CreditTransferSigningHistory Component Rendering should render the comp
       <span>
          on 
       </span>
-      December 7, 2023
+      January 18, 2024
       <span>
          by 
       </span>

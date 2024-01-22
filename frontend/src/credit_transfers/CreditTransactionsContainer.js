@@ -115,7 +115,7 @@ class CreditTransactionsContainer extends Component {
         organization={this._selectedOrganization()}
         organizations={this._getUniqueOrganizations()}
         selectOrganization={this._selectOrganization}
-        title="Credit Transactions"
+        title="Transactions"
       />
     )
   }

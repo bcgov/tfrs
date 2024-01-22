@@ -10,17 +10,19 @@ const ModalSubmitCreditTransfer = props => (
     handleSubmit={props.handleSubmit}
     id="confirmSubmit"
     key="confirmSubmit"
+    confirmLabel="Sign and send"
+    cancelLabel="Cancel"
   >
-    <h5><b>Credit Transfer Proposal Summary</b></h5>
+    <h5><b>Transfer Summary</b></h5>
     <p>
-      Credits From: {props.item.creditsFrom.name} <br />
-      Credits To: {props.item.creditsTo.name} <br />
-      Quantity of credits to be transferred: {
+      Compliance units from: {props.item.creditsFrom.name} <br />
+      Compliance units to: {props.item.creditsTo.name} <br />
+      Number of units to be transferred: {
         numeral(props.item.numberOfCredits).format(NumberFormat.INT)} <br />
-      Value per credit: {numeral(props.item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
+      Value per unit: {numeral(props.item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
     </p>
     <p>
-      Are you sure you want to sign and send this Credit Transfer Proposal
+      Are you sure you want to sign and send this transfer
       to {props.item.creditsTo.name}?
     </p>
   </Modal>

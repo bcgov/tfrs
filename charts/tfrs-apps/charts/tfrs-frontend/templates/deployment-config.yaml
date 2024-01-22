@@ -1,0 +1,95 @@
+
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: tfrs-frontend{{ .Values.suffix }}
+  annotations:
+    description: Defines how to deploy the frontend application
+  creationTimestamp: null
+  labels:
+    {{- include "tfrs-frontend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    {{- include "tfrs-frontend.selectorLabels" . | nindent 4 }}
+  strategy:
+    activeDeadlineSeconds: 600
+    recreateParams:
+      timeoutSeconds: 300
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        {{- include "tfrs-frontend.labels" . | nindent 8 }}
+    spec:
+      volumes:
+        - name: tfrs-frontend{{ .Values.suffix }}
+          configMap:
+            name: tfrs-frontend{{ .Values.suffix }}
+      containers:
+        - name: frontend
+          env: null
+          image:
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: tfrs-frontend{{ .Values.suffix }}
+              mountPath: /app/static/js/config
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: RABBITMQ_VHOST
+              value: tfrs{{ .Values.suffix }}-vhost
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: password
+            - name: RABBITMQ_HOST
+              value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
+            - name: RABBITMQ_PORT
+              value: '5672'
+          livenessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 3
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - frontend
+        from:
+          kind: ImageStreamTag
+          name: tfrs-frontend:{{ .Values.frontendImageTagName }}
+        lastTriggeredImage:
+      type: ImageChange
+    - type: ConfigChange

@@ -70,7 +70,6 @@ class CreditTrade(Auditable):
         related_name='credit_trades',
         on_delete=models.PROTECT)
     number_of_credits = models.IntegerField(
-        validators=[validators.CreditTradeNumberOfCreditsValidator],
         db_comment="Number of credits to be transferred on approval"
     )
     fair_market_value_per_credit = models.DecimalField(
@@ -132,8 +131,8 @@ class CreditTrade(Auditable):
         And for type: Buy and Retirement
         Credits From is the Respondent
         """
-        # 3 and 5 is government
-        if self.type.id in [1, 3, 5]:
+        # 3, 5 and 6 is government
+        if self.type.id in [1, 3, 5, 6]:
             return self.initiator
         # elif self.type.id in [2, 4]
         return self.respondent
@@ -246,6 +245,10 @@ class CreditTrade(Auditable):
     @comment.setter
     def comment(self, comment):
         self._comment = comment
+
+    def clean(self):
+        super().clean()
+        validators.CreditTradeNumberOfCreditsValidator(self.number_of_credits, self)
 
     class Meta:
         db_table = 'credit_trade'

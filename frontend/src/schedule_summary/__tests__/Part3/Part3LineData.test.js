@@ -19,7 +19,7 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, 2023, complianceReport)
+    const result = lineData(part3, summary, 2021, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(0)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].className).toBe('numeric')
   })
@@ -38,14 +38,17 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, 2023, complianceReport)
+    const result = lineData(part3, summary, 2021, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
 
   test('is-supplemental ', () => {
     const part3 = new ScheduleSummaryPart3()
     const complianceReport = {
-      isSupplemental: false
+      isSupplemental: false,
+      compliancePeriod: {
+        description: '2023'
+      }
     }
     const summary = {
       lines: {
@@ -57,7 +60,7 @@ describe('Part3 Line Data', () => {
     }
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26][2] = cellFormatNumeric(summary.lines['26'])
-    const result = lineData(part3, summary, 2023, complianceReport)
+    const result = lineData(part3, summary, 2021, complianceReport)
     expect(result[SCHEDULE_SUMMARY.LINE_26][2].value).toBe(20)
   })
 
@@ -67,6 +70,9 @@ describe('Part3 Line Data', () => {
       isSupplemental: true,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const summary = {
@@ -90,6 +96,9 @@ describe('Part3 Line Data', () => {
       isSupplemental: true,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const summary = {
@@ -120,6 +129,9 @@ describe('Part3 Line Data', () => {
       isSupplemental: true,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const summary = {
@@ -138,7 +150,7 @@ describe('Part3 Line Data', () => {
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A'])
 
-    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2022)
+    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2021)
     expect(result[SCHEDULE_SUMMARY.LINE_25][2].value).toBe(-4414)
     expect(result[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(1087)
     expect(result[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)
@@ -153,6 +165,9 @@ describe('Part3 Line Data', () => {
       isSupplemental: true,
       status: {
         fuelSupplierStatus: 'Draft'
+      },
+      compliancePeriod: {
+        description: '2021'
       }
     }
     const summary = {
@@ -171,7 +186,7 @@ describe('Part3 Line Data', () => {
     part3[SCHEDULE_SUMMARY.LINE_25][2] = cellFormatNumeric(summary.lines['25'])
     part3[SCHEDULE_SUMMARY.LINE_26_A][2] = cellFormatNumeric(summary.lines['26A'])
 
-    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2022)
+    const result = lineData(part3, summary, complianceReport, false, false, false, false, 2021)
     expect(result[SCHEDULE_SUMMARY.LINE_25][2].value).toBe(-4414)
     expect(result[SCHEDULE_SUMMARY.LINE_26_A][2].value).toBe(5000)
     expect(result[SCHEDULE_SUMMARY.LINE_26_B][2].value).toBe(0)

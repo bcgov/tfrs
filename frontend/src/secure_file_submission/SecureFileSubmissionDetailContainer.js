@@ -119,7 +119,7 @@ class SecureFileSubmissionDetailContainer extends Component {
         item && item.id === attachment.id)
 
       if (!recordNumber || recordNumber.value === '') {
-        validationMessage.push(`Please provide a TRIM Record # for ${attachment.filename}`)
+        validationMessage.push(`Please provide a EDRMS Record # for ${attachment.filename}`)
       }
     })
 

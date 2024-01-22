@@ -4,17 +4,17 @@ import PropTypes from 'prop-types'
 import Administration from './Administration'
 import Balance from './Balance'
 import BalanceBCEID from './BalanceBCEID'
-import CreditTradingValue from './CreditTradingValue'
 import CreditTransactions from './CreditTransactions'
 import CreditTransactionsBCEID from './CreditTransactionsBCEID'
 import ComplianceReports from './ComplianceReports'
 import ComplianceReportsBCEID from './ComplianceReportsBCEID'
 import DirectorReview from './DirectorReview'
 import Feedback from './Feedback'
+import LcfsWebsiteLink from './LcfsWebsiteLink'
 import FileSubmissions from './FileSubmissions'
 import FuelCodes from './FuelCodes'
 import OrganizationDetails from './OrganizationDetails'
-import Part3Agreements from './Part3Agreements'
+import FileSubmission from './FileSubmission'
 import UserSettings from './UserSettings'
 import CONFIG from '../../config'
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
@@ -31,7 +31,7 @@ const BCEIDDashboardPage = obj => (
       />
 
       <Feedback />
-      <CreditTradingValue />
+      <LcfsWebsiteLink />
     </div>
 
     <div className="col-md-5">
@@ -42,11 +42,6 @@ const BCEIDDashboardPage = obj => (
         loggedInUser={obj.loggedInUser}
         setFilter={obj.setFilter}
       />
-      }
-
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-      obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
-      <Part3Agreements />
       }
 
       {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
@@ -60,6 +55,12 @@ const BCEIDDashboardPage = obj => (
           setFilter={obj.setFilter}
         />
       }
+
+      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
+        <FileSubmission />
+      }
+
     </div>
 
     <div className="col-md-4">
@@ -88,7 +89,6 @@ const DirectorDashboardPage = obj => (
         />
       }
 
-      <CreditTradingValue />
     </div>
 
     <div className="col-md-5">
@@ -124,7 +124,6 @@ const IDIRDashboardPage = obj => (
         />
       }
 
-      <CreditTradingValue />
     </div>
 
     <div className="col-md-5">

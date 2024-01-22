@@ -7,6 +7,8 @@ export const STATUS_APPROVED = 6
 export const STATUS_COMPLETED = 7
 export const STATUS_CANCELLED = 8
 export const STATUS_REJECTED = 9
+export const COMPLIANCE_YEAR = 2023
+export const LCFS_COMPLIANCE_START_DT = new Date('2024-01-01T00:00:01')
 
 export const CREDIT_TRANSFER_STATUS = {
   new: {
@@ -19,11 +21,11 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   proposed: {
     id: 2,
-    description: 'Proposed'
+    description: 'Sent'
   },
   accepted: {
     id: 3,
-    description: 'Signed'
+    description: 'Submitted'
   },
   recommendedForDecision: {
     id: 4,
@@ -78,6 +80,9 @@ export const CREDIT_TRANSFER_TYPES = {
   },
   part3Award: {
     id: 5
+  },
+  adminAdjustment: {
+    id: 6
   }
 }
 
@@ -99,13 +104,13 @@ export const ZERO_DOLLAR_REASON = {
   affiliate: {
     id: 1,
     description: 'Affiliate',
-    formButtonDescription: 'Transfer to Affiliated Organization',
+    formButtonDescription: 'Transfer to affiliated organization',
     textRepresentationDescription: ' it is a transfer between affiliated organizations.'
   },
   other: {
     id: 2,
     description: 'Other',
-    formButtonDescription: 'Other Reason',
+    formButtonDescription: 'Other (specify in comments)',
     textRepresentationDescription: ' reason specified in comments.'
   }
 }

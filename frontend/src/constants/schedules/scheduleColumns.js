@@ -29,7 +29,8 @@ const SCHEDULE_B = {
   EER: 10,
   ENERGY_CONTENT: 11,
   CREDIT: 12,
-  DEBIT: 13
+  DEBIT: 13,
+  COMPLIANCE_UNITS: 12
 }
 
 const SCHEDULE_B_ERROR_KEYS = {
@@ -39,7 +40,8 @@ const SCHEDULE_B_ERROR_KEYS = {
   fuelCode: 4,
   scheduleD_sheetIndex: 4,
   quantity: 5,
-  intensity: 8
+  intensity: 8,
+  COMPLIANCE_UNITS: 9
 }
 
 const SCHEDULE_C = {
@@ -128,6 +130,10 @@ const SCHEDULE_SUMMARY = {
   LINE_26_C: 7,
   LINE_27: 8,
   LINE_28: 9,
+  LINE_29_A: 10,
+  LINE_29_B: 11,
+  LINE_28_A: 12,
+  LINE_29_C: 13,
   PART_2_GASOLINE_PAYABLE: 1,
   PART_2_DIESEL_PAYABLE: 2,
   PART_3_PAYABLE: 3,

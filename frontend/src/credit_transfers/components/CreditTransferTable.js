@@ -15,6 +15,7 @@ import filterNumber from '../../utils/filters'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 import { useNavigate } from 'react-router'
+import { transformTransactionStatusDesc } from '../../utils/functions'
 
 const CreditTransferTable = (props) => {
   const navigate = useNavigate()
@@ -36,20 +37,33 @@ const CreditTransferTable = (props) => {
     id: 'compliancePeriod',
     minWidth: 45
   }, {
-    accessor: item => getCreditTransferType(item.type.id),
+    accessor: item => {
+      if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Initiative Agreement' : 'Part 3 Award'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Validation'
+      } else if (item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
+        return moment(item.updateTimestamp) >= moment('2024-01-01') ? 'Assessment' : 'Reduction'
+      } else {
+        return getCreditTransferType(item.type.id)
+      }
+    },
     className: 'col-transfer-type',
     Header: 'Type',
     id: 'transactionType',
     minWidth: 110
   }, {
     accessor: item => ([
-      CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
+      CREDIT_TRANSFER_TYPES.part3Award.id,
+      CREDIT_TRANSFER_TYPES.adminAdjustment.id,
+      CREDIT_TRANSFER_TYPES.validation.id
     ].includes(item.type.id)
       ? ''
       : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+          row.original.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
+          row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
         )
@@ -57,7 +71,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Credits From',
+    Header: 'Compliance units from',
     id: 'creditsFrom',
     minWidth: 190
   }, {
@@ -71,7 +85,7 @@ const CreditTransferTable = (props) => {
 
       return row.value
     },
-    Header: 'Credits To',
+    Header: 'Compliance units to',
     id: 'creditsTo',
     minWidth: 190
   }, {
@@ -79,12 +93,13 @@ const CreditTransferTable = (props) => {
     className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Quantity of Credits',
+    Header: 'Number of units',
     id: 'numberOfCredits',
     minWidth: 75
   }, {
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return -1 // this is to fix sorting (value can't be negative)
@@ -97,15 +112,13 @@ const CreditTransferTable = (props) => {
     ),
     className: 'col-price',
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Credit',
+    Header: 'Value per unit',
     id: 'fairMarketValuePerCredit',
     minWidth: 65
   }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
-      : (
-          Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
-        ).description),
+      : transformTransactionStatusDesc(item.status.id, item.type.id, item.updateTimestamp)),
     className: 'col-status',
     filterMethod: (filter, row) => {
       const values = filter.value.toLowerCase().split(',')
@@ -133,11 +146,13 @@ const CreditTransferTable = (props) => {
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
-    return row[id] !== undefined
-      ? String(row[id])
-        .toLowerCase()
-        .includes(filter.value.toLowerCase())
-      : true
+    const filterValues = filter.value.split(',').map(value => value.trim().toLowerCase());
+
+    if (filterValues.length === 0) {
+      return true; // No filter values, so all rows should be included
+    }
+  
+    return row[id] !== undefined && filterValues.some(filterValue => String(row[id].toLowerCase()).includes(filterValue));
   }
 
   const filterable = true
