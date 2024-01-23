@@ -166,7 +166,11 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_RECOMMEND_FOR_DECISION_1_3}
+            {
+              props.tradeType.theType === "Part 3 Award"
+                ? Lang.BTN_RECOMMEND_FOR_DECISION_1_2
+                : Lang.BTN_RECOMMEND_FOR_DECISION_1_3
+            }
           </button>
         </Tooltip>
         }
