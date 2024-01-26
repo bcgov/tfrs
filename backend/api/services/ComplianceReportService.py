@@ -196,7 +196,7 @@ class ComplianceReportService(object):
             else:
                 role_id = user.roles.first().id
 
-        history = ComplianceReportHistory.objects.select_related('status').filter(
+        history = ComplianceReportHistory.objects.filter(
             Q(compliance_report_id=compliance_report.id) &
             Q(status__fuel_supplier_status__status=compliance_report.status.fuel_supplier_status_id) &
             Q(status__analyst_status__status=compliance_report.status.analyst_status_id) &
