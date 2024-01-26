@@ -35,7 +35,7 @@ class CreditTransferSigningHistory extends Component {
     // was from the historical data entry
     // show "the Director" at all times
     // use effective date as well
-    const approveTimeStamp = history.createTimestamp >= moment('2024-01-01')
+    const approveTimeStamp = moment(history.tradeEffectiveDate).isSameOrAfter(moment('2024-01-01'))
     return (
       <li key={history.createTimestamp}>
         <strong className="text-success">
