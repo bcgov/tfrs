@@ -697,7 +697,7 @@ function _calculatePart3 (props, state, setState) {
     value: -1 * Math.round(totalDebits)
   }
 
-  const netTotal = totalCredits - totalDebits
+  const netTotal = Math.round(totalCredits) - Math.round(totalDebits)
 
   part3[SCHEDULE_SUMMARY.LINE_25][2] = {
     ...part3[SCHEDULE_SUMMARY.LINE_25][2],
