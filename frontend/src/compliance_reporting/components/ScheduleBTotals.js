@@ -16,7 +16,7 @@ const ScheduleBTotals = (props) => {
 
   const getNetTotal = () => {
     const { credit, debit } = props.totals
-    const value = credit - debit
+    const value = Math.round(credit) - Math.round(debit)
     if (value === 0) {
       return '-'
     }
