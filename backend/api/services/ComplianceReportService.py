@@ -196,6 +196,16 @@ class ComplianceReportService(object):
             else:
                 role_id = user.roles.first().id
 
+        history = ComplianceReportHistory.objects.select_related('status').filter(
+            Q(compliance_report_id=compliance_report.id) &
+            Q(status__fuel_supplier_status__status=compliance_report.status.fuel_supplier_status_id) &
+            Q(status__analyst_status__status=compliance_report.status.analyst_status_id) &
+            Q(status__manager_status__status=compliance_report.status.manager_status_id) &
+            Q(status__director_status__status=compliance_report.status.director_status_id))
+        # if a history record is already present with same status then don't create a new one.
+        if len(history) > 0:
+            return
+        
         created_status = ComplianceReportWorkflowState.objects.create(
             fuel_supplier_status=compliance_report.status.fuel_supplier_status,
             analyst_status=compliance_report.status.analyst_status,
