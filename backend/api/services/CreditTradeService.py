@@ -179,18 +179,19 @@ class CreditTradeService(object):
         Sets the Credit Transfer to Approved
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
-        effective_date = credit_trade.trade_effective_date
+        today = timezone.localdate()
+        effective_date = credit_trade.trade_effective_date if credit_trade.trade_effective_date else today
 
         # Calculate and assign trade category. Dont assign category if transfer are added through historical data entry or if credit trade type is NOT 1 (buy) or 2 (sell)
-        if not batch_process and credit_trade.type_id in (1, 2):
-            credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
-                credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
-
-        # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
-        # otherwise use trade_effective_date
-        today = timezone.localdate()
-        effective_date = credit_trade.trade_effective_date \
-            if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
+        if not batch_process:
+            if credit_trade.type_id in (1, 2):
+                credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
+                    credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
+            # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
+            # only if the transfer is not added through historical data entry
+            # otherwise use trade_effective_date
+            effective_date = credit_trade.trade_effective_date \
+                if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
 
         # Check if the transaction is an administrative adjustment and
         # if it would result in a negative balance for the organization
