@@ -17,7 +17,6 @@
 * Create the new release branch from master
 * Update tfrs-release.yaml
   * name
-  * branches
   * PR_NUMBER
   * RELEASE_NAME
 * Update .pipeline/lib/config.js
