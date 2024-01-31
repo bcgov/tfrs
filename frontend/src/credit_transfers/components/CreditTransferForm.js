@@ -19,23 +19,22 @@ import CreditTransferFormButtons from './CreditTransferFormButtons'
 import CreditTransferTerms from './CreditTransferTerms'
 import CreditTransferCommentForm from './CreditTransferCommentForm'
 import CreditTransferComment from './CreditTransferComment'
-import TOOLTIPS from '../../constants/tooltips'
 
 const CreditTransferForm = (props) => {
   const today = new Date()
   const minDateValue = today.toISOString().split('T')[0]
   const maxDate = new Date()
   maxDate.setMonth(today.getMonth() + 3)
-  // const maxDateValue = maxDate.toISOString().split('T')[0]
+  const maxDateValue = maxDate.toISOString().split('T')[0]
   return (
   <div className="credit-transfer">
     <div className="credit_balance">
       {props.loggedInUser.roles && !props.loggedInUser.isGovernmentUser && (
         <h3>
-          Compliance Units: {
-            numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
-              .format(NumberFormat.INT)
-          }
+          Credit Balance:{' '}
+          {numeral(
+            props.loggedInUser.organization.organizationBalance.validatedCredits
+          ).format(NumberFormat.INT)}
           <div className="reserved">
             (In Reserve:{' '}
             {numeral(
@@ -45,7 +44,11 @@ const CreditTransferForm = (props) => {
             <Tooltip
               className="info"
               show
-              title={TOOLTIPS.IN_RESERVE}
+              title="Reserved credits are the portion of credits in your credit balance that are
+              currently pending the completion of a credit transaction. For example, selling
+              credits to another organization (i.e. Credit Transfer) or being used to offset
+              outstanding debits in a compliance period. Reserved credits cannot be transferred
+              or otherwise used until the pending credit transaction has been completed."
             >
               <FontAwesomeIcon icon="info-circle" />
             </Tooltip>
@@ -56,11 +59,16 @@ const CreditTransferForm = (props) => {
     <h1>{props.title}</h1>
     <h3>
       <p>
-        A transfer is not effective until it is recorded by the Director.
+        Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel
+        Requirements Regulation, a transfer of validated credits is not
+        effective unless the transfer is approved by the Director.
       </p>
       <p>
-        Transfers must indicate whether they are for consideration, and if so,
-        the fair market value of the consideration in Canadian dollars per compliance unit.
+        All credit transfer proposals must include a “fair market value” of any
+        consideration, under section 11.11 (2) (c) (iv) of the Regulation.
+        Transfers deemed to underestimate &quot;fair market value&quot; or those
+        using a &quot;zero dollar&quot; value must include a written explanation
+        justifying the use of the identified credit value.
       </p>
     </h3>
     <CreditTransferProgress
@@ -98,8 +106,8 @@ const CreditTransferForm = (props) => {
       <p className="action-context-menu-available">Agreement Date (required)</p>
       <div className="agreementDate">
         <h3>
-          Date on which the written agreement for the transfer was reached
-          between the organizations:
+          Date on which the written agreement to transfer credits was reached
+          between the suppliers:
         </h3>
         <div>
           <label>Agreement Date:</label>
@@ -193,7 +201,7 @@ CreditTransferForm.defaultProps = {
   handleCommentChanged: null,
   id: 0,
   comments: [],
-  title: 'Transfer',
+  title: 'Credit Transfer',
   validationErrors: {},
   zeroDollarReason: {
     id: null

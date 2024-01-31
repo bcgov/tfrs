@@ -127,7 +127,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please provide the name of the Initiative Agreement to which "
+                    "Please provide the name of the Part 3 Agreement to which "
                     "the submission relates."
                 )
 
@@ -150,8 +150,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please indicate the Designated Action(s) to which the "
-                    "submission relates."
+                    "Please indicate the Milestone(s) to which the submission "
+                    "relates."
                 )
 
         return value
@@ -223,8 +223,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the compliance period "
-                                      "to which the submission relates."
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "to which the request relates."
                 }
             }
         }
@@ -432,7 +432,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         if document.type == DocumentType.objects.get(the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please provide the name of the Initiative Agreement to which "
+                    "Please provide the name of the Part 3 Agreement to which "
                     "the submission relates."
                 )
 
@@ -455,8 +455,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 the_type="Evidence"):
             if not value:
                 raise serializers.ValidationError(
-                    "Please indicate the Designated Action(s) to which the "
-                    "submission relates."
+                    "Please indicate the Milestone(s) to which the submission "
+                    "relates."
                 )
 
         return value
@@ -516,8 +516,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):
                     raise serializers.ValidationError({
-                        'milestone': "Please indicate the Designated "
-                                     "Action(s) to which the submission relates."
+                        'milestone': "Please indicate the Milestone(s) to "
+                                     "which the submission relates."
                     })
 
             current_attachments = document.attachments
@@ -656,8 +656,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the compliance period "
-                                      "to which the submission relates."
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "to which the request relates."
                 }
             },
             'milestone': {

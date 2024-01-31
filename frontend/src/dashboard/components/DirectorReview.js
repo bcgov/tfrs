@@ -44,14 +44,14 @@ const DirectorReview = (props) => {
     creditTransfers.forEach((item) => {
       if (!item.isRescinded) {
         if (
-          ['Recommended', 'Not Recommended','Recorded'].indexOf(item.status.status) >= 0
+          ['Recommended', 'Not Recommended'].indexOf(item.status.status) >= 0
         ) {
           if (['Buy', 'Sell'].indexOf(item.type.theType) >= 0) {
             awaitingReview.creditTransfers += 1
             awaitingReview.total += 1
           }
 
-          if (['Part 3 Award', 'Initiative Agreement'].indexOf(item.type.theType) >= 0) {
+          if (['Part 3 Award'].indexOf(item.type.theType) >= 0) {
             awaitingReview.part3Awards += 1
             awaitingReview.total += 1
           }
@@ -84,7 +84,7 @@ const DirectorReview = (props) => {
                           },
                           {
                             id: 'transactionType',
-                            value: 'Transfer'
+                            value: 'Credit Transfer'
                           },
                           {
                             id: 'status',
@@ -100,7 +100,7 @@ const DirectorReview = (props) => {
                     data-testid="creditTransferBtn"
                   >
 
-                    Transfer(s) awaiting review
+                  Credit transfer(s) for your review and statutory decision
                   </button>
                 </div>
             )}
@@ -130,7 +130,7 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                   Compliance report(s) awaiting review
+                   Compliance / exclusion report(s) awaiting your review
                   </button>
                 </div>
             )}
@@ -151,7 +151,7 @@ const DirectorReview = (props) => {
                           },
                           {
                             id: 'transactionType',
-                            value: 'Part 3 Award, Initiative Agreement'
+                            value: 'Part 3 Award'
                           },
                           {
                             id: 'status',
@@ -165,7 +165,8 @@ const DirectorReview = (props) => {
                     }}
                     type="button"
                   >
-                    Initiative Agreement submission(s) awaiting review
+                    Part 3 Award(s) awaiting your
+                    review
                   </button>
                 </div>
             )}

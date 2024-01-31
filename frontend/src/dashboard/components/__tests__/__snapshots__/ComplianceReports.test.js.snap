@@ -5,7 +5,7 @@ exports[`ComplianceReports Should render the component 1`] = `
   className="dashboard-fieldset compliance-fieldset"
 >
   <h1>
-    Compliance Reporting
+    Compliance &  Exclusion Reports
   </h1>
   <p>
     There are:
@@ -28,7 +28,7 @@ exports[`ComplianceReports Should render the component 1`] = `
           onClick={[Function]}
           type="button"
         >
-          Report(s) in progress:
+          Compliance / Exclusion report(s) in progress:
         </button>
       </div>
     </div>
@@ -71,7 +71,7 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
   className="dashboard-fieldset compliance-fieldset"
 >
   <h1>
-    Compliance Reporting
+    Compliance &  Exclusion Reports
   </h1>
   <p>
     There are:
@@ -94,7 +94,7 @@ exports[`ComplianceReports Should render the component with complianceReports 1`
           onClick={[Function]}
           type="button"
         >
-          Report(s) in progress:
+          Compliance / Exclusion report(s) in progress:
         </button>
       </div>
     </div>

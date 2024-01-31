@@ -31,7 +31,7 @@ class CreditTradeTypeSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'the_type', 'description', 'effective_date',
             'expiration_date',
-            'display_order', 'is_gov_only_type', 'notification_name')
+            'display_order', 'is_gov_only_type')
 
 
 class CreditTradeTypeMinSerializer(serializers.ModelSerializer):

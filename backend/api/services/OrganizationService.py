@@ -1,5 +1,5 @@
 import datetime
-from django.db.models import Q, Sum, Count, Case, When, F
+from django.db.models import Q, Sum, Count
 
 from api.models.ComplianceReport import ComplianceReport
 from api.models.CreditTrade import CreditTrade
@@ -22,6 +22,7 @@ class OrganizationService(object):
                 Q(is_rescinded=False) &
                 (Q(trade_effective_date__gte=datetime.datetime.now()) | Q(trade_effective_date__isnull=True)))
         ).aggregate(total_credits=Sum('number_of_credits'))
+
         if pending_trades['total_credits'] is not None:
             pending_transfers_value = pending_trades['total_credits']
 
@@ -57,6 +58,7 @@ class OrganizationService(object):
                     "Deleted"
                 ])
             ).filter(id=group_id).first()
+
             if compliance_report and compliance_report.summary:
                 if compliance_report.supplements_id and \
                         compliance_report.supplements_id > 0:
@@ -105,11 +107,12 @@ class OrganizationService(object):
                 elif compliance_report.status.director_status_id not in \
                         ["Rejected"]:
                     if compliance_report.summary.credits_offset is not None:
-                            deductions += compliance_report.summary.credits_offset
+                        deductions += compliance_report.summary.credits_offset
 
             # if report.status.director_status_id == 'Accepted' and \
             #         ignore_pending_supplemental:
             #     deductions -= report.summary.credits_offset
+
         if deductions < 0:
             deductions = 0
 
@@ -123,6 +126,7 @@ class OrganizationService(object):
         compliance_period_effective_date = datetime.date(
             int(compliance_year), 1, 1
         )
+
         credits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -145,14 +149,9 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
-            (Q(type__the_type="Administrative Adjustment") &
-                Q(status__status="Approved") &
-                Q(respondent_id=organization.id) &
-                Q(is_rescinded=False) &
-                Q(number_of_credits__gte=0) &
-                Q(trade_effective_date__lte=effective_date_deadline))
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
         ).aggregate(total=Sum('number_of_credits'))
+
         debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
@@ -168,25 +167,8 @@ class OrganizationService(object):
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
-            (Q(type__the_type="Administrative Adjustment") &
-                Q(status__status="Approved") &
-                Q(respondent_id=organization.id) &
-                Q(is_rescinded=False) &
-                Q(number_of_credits__lt=0) &
-                Q(trade_effective_date__lte=effective_date_deadline))
-        ).aggregate(
-            total=Sum(
-                Case(
-                    When(
-                        Q(type__the_type="Administrative Adjustment") &
-                        Q(number_of_credits__lt=0),
-                        then=F('number_of_credits') * -1
-                    ),
-                    default=F('number_of_credits')
-                )
-            )
-        )
+                Q(compliance_period__effective_date__lte=compliance_period_effective_date))
+        ).aggregate(total=Sum('number_of_credits'))
 
         total_in_compliance_period = 0
         if credits and credits.get('total') is not None:
@@ -199,99 +181,6 @@ class OrganizationService(object):
         else:
             pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
         
-        validated_credits = organization.organization_balance.get(
-            'validated_credits', 0
-        )
-        total_balance = validated_credits - pending_deductions
-        total_available_credits = min(total_in_compliance_period, total_balance)
-        if total_available_credits < 0:
-            total_available_credits = 0
-
-        return total_available_credits
-
-
-    @staticmethod
-    def get_max_credit_offset_for_interval(organization, compliance_date):
-        effective_date_deadline = compliance_date.date()
-        effective_year = effective_date_deadline.year
-        if effective_date_deadline < datetime.date(effective_year, 4, 1):
-            effective_year -= 1
-        compliance_period_effective_date = datetime.date(
-            int(effective_year), 1, 1
-        )
-
-        credits = CreditTrade.objects.filter(
-            (Q(status__status="Approved") &
-              Q(type__the_type="Sell") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
-            (Q(status__status="Approved") &
-              Q(type__the_type="Buy") &
-              Q(initiator_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
-            (Q(type__the_type="Part 3 Award") &
-              Q(status__status="Approved") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
-            (Q(type__the_type="Credit Validation") &
-              Q(status__status="Approved") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
-            (Q(type__the_type="Administrative Adjustment") &
-              Q(status__status="Approved") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(number_of_credits__gte=0) &
-              Q(trade_effective_date__lte=effective_date_deadline))
-        ).aggregate(total=Sum('number_of_credits'))
-
-        debits = CreditTrade.objects.filter(
-            (Q(status__status="Approved") &
-              Q(type__the_type="Sell") &
-              Q(initiator_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
-            (Q(status__status="Approved") &
-              Q(type__the_type="Buy") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
-            (Q(type__the_type="Credit Reduction") &
-              Q(status__status="Approved") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
-            (Q(type__the_type="Administrative Adjustment") &
-              Q(status__status="Approved") &
-              Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(number_of_credits__lt=0) &
-              Q(trade_effective_date__lte=effective_date_deadline))
-        ).aggregate(
-            total=Sum(
-                Case(
-                    When(
-                        Q(type__the_type="Administrative Adjustment") &
-                        Q(number_of_credits__lt=0),
-                        then=F('number_of_credits') * -1
-                    ),
-                    default=F('number_of_credits')
-                )
-            )
-        )
-
-        total_in_compliance_period = 0
-        if credits and credits.get('total') is not None:
-            total_in_compliance_period = credits.get('total')
-
-        if debits and debits.get('total') is not None:
-            total_in_compliance_period -= debits.get('total')
-        pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
-
         validated_credits = organization.organization_balance.get(
             'validated_credits', 0
         )

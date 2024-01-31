@@ -9,7 +9,7 @@ import moment from 'moment-timezone'
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import ReactTable from '../../app/components/StateSavingReactTable'
 import { useNavigate } from 'react-router'
-import { calculatePages, transformDocumentTypeDescription } from '../../utils/functions'
+import { calculatePages } from '../../utils/functions'
 
 const SecureFileSubmissionTable = (props) => {
   const navigate = useNavigate()
@@ -21,17 +21,14 @@ const SecureFileSubmissionTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => (item.createUser !== null && item.createUser.organization ? item.createUser.organization.name : ''),
+    accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
     minWidth: 75,
     show: props.loggedInUser.isGovernmentUser
   }, {
-    accessor: item => {
-      const description = item.type ? item.type.description : ''
-      return transformDocumentTypeDescription(description)
-    },
+    accessor: item => (item.type ? item.type.description : ''),
     className: 'col-attachment-type',
     Header: 'Attachment Type',
     id: 'attachment-type',
@@ -83,7 +80,7 @@ const SecureFileSubmissionTable = (props) => {
       }
     },
     className: 'col-credit-transaction-id',
-    Header: 'Transaction ID',
+    Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
     minWidth: 70
   }, {

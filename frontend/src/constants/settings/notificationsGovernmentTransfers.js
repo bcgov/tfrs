@@ -7,25 +7,25 @@ const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 4,
   code: 'PVR_RECOMMENDED_FOR_APPROVAL',
-  description: 'Recommended issuance',
+  description: 'Recommended Director Approval',
   key: 'recommended',
   recipients: ['government']
 }, {
   id: 11,
   code: 'PVR_RESCINDED',
-  description: 'Deleted',
+  description: 'Rescinded',
   key: 'rescinded',
   recipients: ['government']
 }, {
   id: 7,
   code: 'PVR_APPROVED',
-  description: 'Credit issuance',
+  description: 'Director Approval',
   key: 'approved',
   recipients: ['fuel_supplier', 'government']
 }, {
   id: 9,
   code: 'PVR_DECLINED',
-  description: 'Declined to issue',
+  description: 'Director Declined to Approve',
   key: 'declined',
   recipients: ['fuel_supplier', 'government']
 }, {

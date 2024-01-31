@@ -38,7 +38,7 @@ exports[`DirectorReview Should render the component with complianceReports and c
           onClick={[Function]}
           type="button"
         >
-          Transfer(s) awaiting review
+          Credit transfer(s) for your review and statutory decision
         </button>
       </div>
       <div>
@@ -50,7 +50,7 @@ exports[`DirectorReview Should render the component with complianceReports and c
           onClick={[Function]}
           type="button"
         >
-          Compliance report(s) awaiting review
+          Compliance / exclusion report(s) awaiting your review
         </button>
       </div>
       <div>
@@ -62,7 +62,7 @@ exports[`DirectorReview Should render the component with complianceReports and c
           onClick={[Function]}
           type="button"
         >
-          Initiative Agreement submission(s) awaiting review
+          Part 3 Award(s) awaiting your review
         </button>
       </div>
     </div>

@@ -3,7 +3,6 @@ from decimal import Decimal
 from datetime import datetime
 from api.serializers.ComplianceReport import ComplianceReportDetailSerializer, CompliancePeriodSerializer
 from unittest.mock import MagicMock, Mock
-from api.models.Organization import Organization
 
 
 class TestComplianceReportDetailSerializer(TestCase):
@@ -11,8 +10,6 @@ class TestComplianceReportDetailSerializer(TestCase):
         self.serializer = ComplianceReportDetailSerializer()
         self.serializer.compliance_period = CompliancePeriodSerializer()
         self.serializer.summary = None
-        self.serializer.supplements = None
-        self.serializer.organization = Organization.objects.first()
 
         self.serializer.schedule_a = MagicMock(
             net_gasoline_class_transferred=Decimal('10'),

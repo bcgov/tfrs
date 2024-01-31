@@ -47,7 +47,7 @@ class UserSettings extends Component {
         <div className='user-settings-content'>
           <div className="content">
             <Link id="navbar-administration" to={Routes.SETTINGS_PROFILE}>
-              User profile
+              User Profile
             </Link>
           </div>
           <p><br /></p>
@@ -72,14 +72,14 @@ class UserSettings extends Component {
           <p><br /></p>
           <div className="content">
             <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >
               Help
             </a>
             <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >

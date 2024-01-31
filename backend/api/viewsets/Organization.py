@@ -29,7 +29,6 @@ from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 from api.services.CreditTradeService import CreditTradeService
 
 from auditable.views import AuditableMixin
-from api.services.OrganizationService import OrganizationService
 
 
 cached_page = caches['cached_pages']
@@ -69,7 +68,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
     @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def list(self, request, *args, **kwargs):
         """
-        Returns a list of Organizations
+        Returns a list of Fuel Suppliers
         There are two types of organizations: Government and Fuel Suppliers
         The function needs to separate the organizations based on type
         """
@@ -103,24 +102,19 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
         organization = self.get_object()
 
-        # get the latest balance for the organization
+        # Process future effective dates
+        # This future effective_date feature has been disabled so this
+        # service method call has been commented out but left here if
+        # this feature is needed in the future
+        # CreditTradeService.process_future_effective_dates(organization)
 
         balance = OrganizationBalance.objects.get(
             organization=organization,
             expiration_date=None)
 
         serializer = self.get_serializer(balance)
-        # access the credit trade data like effective date and compliance period
-        effective_date_year = datetime.datetime.now().year
-        max_credit_offset = OrganizationService.get_max_credit_offset(organization, effective_date_year)
-        max_credit_offset_exclude_reserved = OrganizationService.get_max_credit_offset(
-            organization, 
-            effective_date_year,
-            exclude_reserved=True)
-        data = serializer.data
-        if data is not None:
-            data['availableBalance'] = min(max_credit_offset, max_credit_offset_exclude_reserved)
-        return Response(data)
+
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def fuel_suppliers(self, request):
@@ -241,7 +235,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
     @method_decorator(permission_required('VIEW_FUEL_SUPPLIERS'))
     def xls(self, request):
         """
-        Exports the Organizations as a spreadsheet
+        Exports the Fuel Suppliers as a spreadsheet
         """
         response = HttpResponse(content_type='application/ms-excel')
         response['Content-Disposition'] = (
@@ -257,7 +251,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
             .order_by('lower_name')
 
         workbook = SpreadSheetBuilder()
-        workbook.add_fuel_suppliers(fuel_suppliers, include_actions=False)
+        workbook.add_fuel_suppliers(fuel_suppliers)
         workbook.save(response)
 
         return response

@@ -14,7 +14,6 @@ import Tooltip from '../../app/components/Tooltip'
 import * as Lang from '../../constants/langEnUs'
 import DOCUMENT_STATUSES from '../../constants/documentStatuses'
 import { useNavigate } from 'react-router'
-import { transformDocumentTypeDescription } from '../../utils/functions'
 
 const SecureFileSubmissionForm = props => {
   const navigate = useNavigate()
@@ -25,7 +24,7 @@ const SecureFileSubmissionForm = props => {
 
   return (
     <div className="credit-transaction-requests">
-      <h1>{props.edit ? 'Edit' : 'New'} {props.documentType ? transformDocumentTypeDescription(props.documentType.description) : ''} Submission</h1>
+      <h1>{props.edit ? 'Edit' : 'New'} {props.documentType ? props.documentType.description : ''} Submission</h1>
       <form
         onSubmit={(event, status) =>
           props.handleSubmit(event, DOCUMENT_STATUSES.draft)}

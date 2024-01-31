@@ -20,7 +20,7 @@ const SecureFileSubmissionFileAttachments = props => (
       <div className="col-xs-6 header">Filename</div>
       <div className="col-xs-3 size header">Size</div>
       <div className="col-xs-3 security-scan-status header">Security Scan</div>
-      <div className="col-xs-3 trim-record-number header">EDRMS Record #</div>
+      <div className="col-xs-3 trim-record-number header">TRIM Record #</div>
     </div>
     {props.attachments.map((attachment, index) => (
       <div className="row" key={attachment.url}>

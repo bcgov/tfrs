@@ -48,8 +48,10 @@ from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
 
-INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate transfer. " \
-    "Your organization does not have enough compliance units for this transfer."
+INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate this Credit Transfer " \
+    "Proposal. Your organization either does not have enough " \
+    "validated credits or has pending Credit Transfer Proposal(s) that " \
+    "could result in an insufficient credit balance for this transfer."
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -133,8 +135,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     the_type__in=[
                         "Credit Validation",
                         "Credit Reduction",
-                        "Part 3 Award",
-                        "Administrative Adjustment"
+                        "Part 3 Award"
                     ]
                 ).only('id')
             )
@@ -259,7 +260,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the compliance period "
+                    'does_not_exist': "Please specify the Compliance Period "
                                       "in which the transaction relates."
                 }
             },
@@ -631,7 +632,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the compliance period "
+                    'does_not_exist': "Please specify the Compliance Period "
                                       "in which the transaction relates."
                 }
             },

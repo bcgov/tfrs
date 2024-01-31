@@ -4,7 +4,9 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { Link, useNavigate } from 'react-router-dom'
 
 import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations'
+import PERMISSIONS_USERS from '../../constants/permissions/Users'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
+import USERS from '../../constants/routes/Users'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -50,13 +52,6 @@ const OrganizationDetails = props => {
       }
 
         <div className="content">
-          <Link id="navbar-administration" to={ORGANIZATIONS.MINE}>
-            User management
-          </Link>
-        </div>
-        <p><br /></p>
-
-        <div className="content">
           <Link id="navbar-administration" to={ORGANIZATIONS.ROLES}>
             Roles
           </Link>
@@ -64,15 +59,29 @@ const OrganizationDetails = props => {
         <p><br /></p>
 
         <div className="content">
+          <Link id="navbar-administration" to={ORGANIZATIONS.MINE}>
+            Users
+          </Link>
+        </div>
+        <p><br /></p>
+
+      {props.loggedInUser &&
+      props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
+        <>
+          <div className="content">
+            <Link to={USERS.ADD}>New user</Link>
+          </div>
+          <p><br /></p>
+        </>
+      }
+
+        <div className="content">
           <a
             href="https://www.bceid.ca/"
             rel="noopener noreferrer"
             target="_blank"
           >
-            <span>
-              Create new BCeID user account
-              <FontAwesomeIcon icon="external-link-alt" />
-            </span>
+            Create new BCeID account
           </a>
         </div>
         <p><br /></p>

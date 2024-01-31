@@ -11,7 +11,6 @@ import {
   CREDIT_TRANSFER_TYPES,
   ZERO_DOLLAR_REASON
 } from '../../constants/values'
-import { transformTransactionStatusDesc } from '../../utils/functions'
 
 class CreditTransferTextRepresentation extends Component {
   constructor (props) {
@@ -57,7 +56,7 @@ class CreditTransferTextRepresentation extends Component {
     const tradeEffectiveDate = this.getTradeEffectiveDate()
     // If no effective date is available, handle this case
     if (!tradeEffectiveDate) {
-      return <span></span>
+      return <span>.</span>
     }
 
     const formattedDate = moment(tradeEffectiveDate).format('LL')
@@ -65,7 +64,7 @@ class CreditTransferTextRepresentation extends Component {
 
     // Transaction is approved
     if (status.id === CREDIT_TRANSFER_STATUS.approved.id) {
-      return (<span>, effective <span className='value'>{formattedDate}</span></span>)
+      return (<span> effective <span className='value'>{formattedDate}</span></span>)
     }
 
     // Check if tradeEffectiveDate exists and is in the future
@@ -92,7 +91,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsTo}</span> {this._buyAction()}
-        <span className='value'> {this.numberOfCredits} </span> compliance unit
+        <span className='value'> {this.numberOfCredits} </span> credit
         {this.props.numberOfCredits > 1 && 's'} from
         <span className='value'> {this.creditsFrom} </span>
         for <span className='value'> {this.fairMarketValuePerCredit} </span> per
@@ -121,7 +120,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         A credit transfer of
-        <span className='value'> {this.numberOfCredits} </span> compliance unit
+        <span className='value'> {this.numberOfCredits} </span> credit
         {this.props.numberOfCredits > 1 && 's'} for
         <span className='value'> {this.creditsTo} </span>
         has been <span className='value lowercase'> {this.tradeStatus} </span>
@@ -131,70 +130,36 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _renderPart3Award () {
-    if (moment(this.props.updateTimestamp).isSameOrAfter(moment('2024-01-01'))) {
-      return (
-        <div className='text-representation'>
-          <span className='value'>{this.numberOfCredits}</span> compliance unit{this.props.numberOfCredits > 1 ? 's' : ''} issued to <span className='value'>{this.creditsTo} </span>
-          for the completion of a designated action in an Initiative Agreement has been <span className='value lowercase'>{this.tradeStatus}</span>
-          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
-        </div>
-      )
-    } else {
-      return (
-        <div className='text-representation'>
-          An award of <span className='value'>{this.numberOfCredits}</span> credit{this.props.numberOfCredits > 1 ? 's' : ''} earned by <span className='value'>{this.creditsTo} </span>
-          for the completion of Part 3 Agreement milestone(s) has been <span className='value lowercase'>{this.tradeStatus}</span>
-          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
-        </div>
-      )
-    }
-  }
-
-  _transformTradeStatus (tradeStatus) {
-    if (tradeStatus === 'Refused') {
-      return 'declined'
-    }
-    if (tradeStatus === 'Recorded') {
-      return 'approved'
-    }
-    if (tradeStatus === 'Reviewed') {
-      return 'reviewed'
-    }
-  }
-
-  _renderAdministrativeAdjustment () {
     return (
       <div className='text-representation'>
-        An <span className='value'>administrative adjustment</span> of
+        An <span className='value'>award</span> of
         <span className='value'> {this.numberOfCredits} </span>
-        compliance unit{Math.abs(this.props.numberOfCredits) > 1 && 's'} has been
-        <span className='value lowercase'> {this.tradeStatus}</span>,
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && (
-            <span className='value'> {this.tradeEffectiveDate}</span>
-        )}
+        credit{this.props.numberOfCredits > 1 && 's'} earned by
+        <span className='value'> {this.creditsTo} </span> for the completion of
+        a Part 3 Agreement milestone(s) has been
+        <span className='value lowercase'> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
         .
       </div>
     )
   }
 
   _renderRetirement () {
-    if (this.props.updateTimestamp >= moment('2024-01-01')) {
-      return (
-        <div className='text-representation'>
-          <span className='value'> {this.numberOfCredits} </span> compliance unit{this.props.numberOfCredits > 1 && 's'} issued to
-          <span className='value'> {this.creditsFrom}</span>, {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
-        </div>
-      )
-    } else {
-      return (
-          <div className='text-representation'>
-            A <span className='value'>reduction </span> of <span className='value'>{this.numberOfCredits} </span> credits earned by <span className='value'>{this.creditsTo}</span>
-            {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-            <span> has been <span className='value'>approved </span> {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.</span>
-          }
-        </div>
-      )
-    }
+    return (
+      <div className='text-representation'>
+        A <span className='value'>reduction</span> of
+        <span className='value'> {this.numberOfCredits} </span>
+        credit{this.props.numberOfCredits > 1 && 's'} earned by
+        <span className='value'> {this.creditsFrom} </span>
+        has been <span className='value lowercase'> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
+        .
+      </div>
+    )
   }
 
   _renderSell () {
@@ -202,17 +167,17 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className='text-representation'>
         <span className='value'>{this.creditsFrom}</span> {this._sellAction()}
-        <span className='value'> {this.numberOfCredits} </span> compliance unit
+        <span className='value'> {this.numberOfCredits} </span> credit
         {this.props.numberOfCredits > 1 && 's'} to
         <span className='value'> {this.creditsTo} </span>
         for <span className='value'> {this.fairMarketValuePerCredit} </span> per
-        compliance unit for a total value of{' '}
+        credit for a total value of{' '}
         <span className='value'> {this.totalValue}</span>
         {this._statusText(this.props.creditsTo)}
         {this.props.zeroDollarReason != null && (
           <div className='zero-reason'>
             <span>
-              The fair market value per compliance unit is zero because:
+              The fair market value per credit is zero because:
               <span className='value'>
                 {
                   Object.values(ZERO_DOLLAR_REASON).find(
@@ -246,23 +211,19 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _renderValidation () {
-    if (this.props.updateTimestamp >= moment('2024-01-01')) {
-      return (
-        <div className='text-representation'>
-          <span className='value'> {this.numberOfCredits} </span> compliance unit{this.numberOfCredits > 1 && 's'} issued to
-          <span className='value'> {this.creditsTo}</span>, {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.
-        </div>
-      )
-    } else {
-      return (
-        <div className='text-representation'>
-          A <span className='value'>validation </span> of <span className='value'>{this.numberOfCredits} </span> credits earned by <span className='value'>{this.creditsTo}</span>
-          {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
-            <span> has been <span className='value'>approved </span> {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id && this.tradeEffectiveDate}.</span>
-          }
-        </div>
-      )
-    }
+    return (
+      <div className='text-representation'>
+        A <span className='value'>validation</span> of
+        <span className='value'> {this.numberOfCredits} </span>
+        credit{this.props.numberOfCredits > 1 && 's'} earned by
+        <span className='value'> {this.creditsTo} </span>
+        has been <span className='value lowercase'> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
+          this.tradeEffectiveDate
+        }
+        .
+      </div>
+    )
   }
 
   _rescindedBy () {
@@ -276,7 +237,7 @@ class CreditTransferTextRepresentation extends Component {
           {' '}
           {rescindedBy.user.organization.name}{' '}
         </span>,
-        <span key='rescinded-by-text'>rescinded the transfer.</span>
+        <span key='rescinded-by-text'>rescinded the proposal.</span>
       ]
     }
 
@@ -290,11 +251,11 @@ class CreditTransferTextRepresentation extends Component {
 
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-        return ' transferred '
+        return ' sold '
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to sell '
       default:
-        return ' transfers '
+        return ' is proposing to sell '
     }
   }
 
@@ -306,7 +267,8 @@ class CreditTransferTextRepresentation extends Component {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
       return (
         <span>
-          . <span className='value'> {respondent.name} </span> declined the transfer.
+          . <span className='value'> {respondent.name} </span> refused the
+          proposal.
         </span>
       )
     }
@@ -314,7 +276,7 @@ class CreditTransferTextRepresentation extends Component {
     if (
       this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id
     ) {
-      return <span>. The proposal was {transformTransactionStatusDesc(CREDIT_TRANSFER_STATUS.declinedForApproval.id, this.props.tradeType.id, this.props.updateTimestamp).toLowerCase()}.</span>
+      return <span>. The proposal was declined.</span>
     }
     return (this.tradeEffectiveDate)
   }
@@ -326,9 +288,6 @@ class CreditTransferTextRepresentation extends Component {
 
       case CREDIT_TRANSFER_TYPES.part3Award.id:
         return this._renderPart3Award()
-
-      case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
-        return this._renderAdministrativeAdjustment()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
         return this._renderRetirement()
@@ -358,12 +317,10 @@ CreditTransferTextRepresentation.defaultProps = {
   history: [],
   isRescinded: false,
   tradeEffectiveDate: '',
-  updateTimestamp: '',
   zeroDollarReason: null
 }
 
 CreditTransferTextRepresentation.propTypes = {
-  updateTimestamp: PropTypes.string,
   compliancePeriod: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string

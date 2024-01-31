@@ -45,13 +45,10 @@ const toastr = {
   },
   creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit transaction'
-    let transfer = true
+
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
         [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
-      text = 'Transfer'
-    } else {
-      transfer = false
-      text = 'Issuance'
+      text = 'Credit Transfer Proposal'
     }
 
     if (message !== '') { // message is only used to override
@@ -61,10 +58,10 @@ const toastr = {
 
     switch (statusId) {
       case CREDIT_TRANSFER_STATUS.accepted.id:
-        reduxToastr.success('Success!', `${text} signed and submitted.`)
+        reduxToastr.success('Success!', `${text} signed.`)
         break
       case CREDIT_TRANSFER_STATUS.approved.id:
-        reduxToastr.success('Success!', `${transfer ? ' Transfer recorded.' : 'Issuance approved.'}`)
+        reduxToastr.success('Success!', `${text} approved.`)
         break
       case CREDIT_TRANSFER_STATUS.deleted.id:
         reduxToastr.success('Success!', 'Draft deleted.')
@@ -77,19 +74,19 @@ const toastr = {
         }
         break
       case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
-        reduxToastr.success('Success!', `${transfer ? ' Transfer refused.' : 'Issuance declined.'}`)
+        reduxToastr.success('Success!', `${text} declined.`)
         break
       case CREDIT_TRANSFER_STATUS.notRecommended.id:
-        reduxToastr.success('Success!', `${transfer ? 'Recommended refusing transfer.' : `${text} not recommended.`}`)
+        reduxToastr.success('Success!', `${text} not recommended.`)
         break
       case CREDIT_TRANSFER_STATUS.proposed.id:
-        reduxToastr.success('Success!', `${text} signed and sent.`)
+        reduxToastr.success('Success!', `${text} sent.`)
         break
       case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
-        reduxToastr.success('Success!', `${transfer ? 'Recommended recording transfer.' : `${text} recommended.`}`)
+        reduxToastr.success('Success!', `${text} recommended.`)
         break
       case CREDIT_TRANSFER_STATUS.refused.id:
-        reduxToastr.success('Success!', `${text} declined.`)
+        reduxToastr.success('Success!', `${text} refused.`)
         break
       case CREDIT_TRANSFER_STATUS.rescinded.id:
         reduxToastr.success('Success!', `${text} rescinded.`)

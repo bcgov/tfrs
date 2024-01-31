@@ -2,33 +2,40 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# backendImageTagName is not in  this file, it comes as a argument from the helm command line
-# helm template command
-# helm template  --set backendImageTagName=dev-main-release-jan-2024 -f ./values-dev-jan.yaml tfrs-backend-dev-jan .
-# helm -n <namespace> --set backendImageTagName=dev-main-release-jan-2024 -f ./values-dev-jan.yaml upgrade tfrs-backend-dev-jan .
-
 replicaCount: 1
 
 resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 400m
-    memory: 1200Mi
+    cpu: 60m
+    memory: 60Mi
   requests:
-    cpu: 200m
-    memory: 600Mi
+    cpu: 30m
+    memory: 30Mi
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 1
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 90
 
 env:
   emailSendingEnabled: true
   djangoDebug: true
+  databaseServiceName: tfrs-spilo
+  postgresqlServiceHost: tfrs-spilo.0ab226-dev.svc.cluster.local
+  rabbitmqHost: tfrs-rabbitmq.0ab226-dev.svc.cluster.local
+  minioEndpoint: tfrs-minio-test.apps.silver.devops.gov.bc.ca:443
   documentsApiEnabled: true
+  minioSecretName: tfrs-minio-test
+  minioAccessKey: MINIO_ACCESS_KEY
+  minioSecretKey: MINIO_SECRET_KEY
   fuelCodesApiEnabled: true
   creditCalculationApiEnabled: true
   complianceReportingApiEnabled: true
   exclusionReportsApiEnabled: true
+  wellKnownEndpoint: https://test.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration

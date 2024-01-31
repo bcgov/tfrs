@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
-import { transformTransactionStatusDesc } from '../../utils/functions'
 
 class CreditTransferProgress extends Component {
   static addStepRescinded () {
@@ -38,7 +37,7 @@ class CreditTransferProgress extends Component {
 : ''}`}
         key={CREDIT_TRANSFER_STATUS.approved.id}
       >
-        <span>{transformTransactionStatusDesc(CREDIT_TRANSFER_STATUS.approved.id, this.props.type.id, this.props.updateTimestamp)}</span>
+        <span>{CREDIT_TRANSFER_STATUS.approved.description}</span>
       </div>
     )
   }
@@ -49,7 +48,7 @@ class CreditTransferProgress extends Component {
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) ? 'current' : ''}`}
         key={CREDIT_TRANSFER_STATUS.declinedForApproval.id}
       >
-        <span>{transformTransactionStatusDesc(CREDIT_TRANSFER_STATUS.declinedForApproval.id, this.props.type.id, this.props.updateTimestamp)}</span>
+        <span>{CREDIT_TRANSFER_STATUS.declinedForApproval.description}</span>
       </div>
     )
   }
@@ -217,9 +216,8 @@ CreditTransferProgress.defaultProps = {
   },
   type: {
     id: CREDIT_TRANSFER_TYPES.sell.id,
-    theType: 'Transfer'
-  },
-  updateTimestamp: '2023-12-31'
+    theType: 'Credit Transfer'
+  }
 }
 
 CreditTransferProgress.propTypes = {
@@ -231,8 +229,7 @@ CreditTransferProgress.propTypes = {
   type: PropTypes.shape({
     id: PropTypes.number,
     theType: PropTypes.string
-  }),
-  updateTimestamp: PropTypes.string
+  })
 }
 
 export default CreditTransferProgress

@@ -91,23 +91,19 @@ class SecureFileSubmissionAddContainer extends Component {
     const validationMessage = []
 
     if (this.state.fields.compliancePeriod.id === 0) {
-      if (this._getDocumentType().theType === 'Evidence') {
-        validationMessage.push('Please specify the compliance period to which the submission relates.')
-      } else {
-        validationMessage.push('Please specify the compliance period to which the request relates.')
-      }
+      validationMessage.push('Please specify the Compliance Period to which the request relates.')
     }
 
     if (this._getDocumentType().theType === 'Evidence') {
       if (this.state.fields.title === '') {
-        validationMessage.push('Please provide the name of the Initiative Agreement to which the submission relates.')
+        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.')
       }
 
       if (this.state.fields.milestone === '') {
-        validationMessage.push('Please indicate the Designated Action(s) to which the submission relates.')
+        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.')
       }
     } else if (this.state.fields.title === '') {
-      validationMessage.push('Please provide a title.')
+      validationMessage.push('Please provide a Title.')
     }
 
     if (this.state.fields.files.length === 0) {

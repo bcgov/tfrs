@@ -26,9 +26,6 @@ describe('ScheduleSummaryContainer', () => {
           gasolineClassRetained: 1,
           creditsOffset: 1,
           creditsOffsetA: 1
-        },
-        compliancePeriod: {
-          description: '2021'
         }
       },
       snapshot: {
@@ -74,9 +71,6 @@ describe('ScheduleSummaryContainer', () => {
           gasolineClassRetained: 1,
           creditsOffset: 1,
           creditsOffsetA: 1
-        },
-        compliancePeriod: {
-          description: '2021'
         }
       },
       scheduleState: {

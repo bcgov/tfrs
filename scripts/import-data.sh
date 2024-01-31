@@ -34,10 +34,6 @@ if [ $1 = "prod" ]; then
   project_name='0ab226-prod'
   pod_name='tfrs-spilo-0'
   env='prod'
-elif [ $1 = "dev" ]; then
-  project_name='0ab226-dev'
-  pod_name='tfrs-spilo-jan-0'
-  env='dev'
 else
   echo '** Using test variables'
   echo
@@ -61,7 +57,7 @@ echo
 
 echo "** Restoring local database"
 docker exec $local_container bash -c 'pg_restore -U tfrs --dbname=tfrs --no-owner --clean --if-exists --verbose /tmp/tfrs.tar' || true
-# docker exec $local_container bash -c 'pg_restore -U tfrs --dbname=tfrs --no-owner --clean --if-exists --verbose /tmp/tfrs.tar'
+docker exec $local_container bash -c 'pg_restore -U tfrs --dbname=tfrs --no-owner --clean --if-exists --verbose /tmp/tfrs.tar'
 echo
 
 echo "** Cleaning up"

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import CheckBox from '../../app/components/CheckBox'
 
 const CreditTransferTerms = props => {

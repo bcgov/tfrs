@@ -9,7 +9,6 @@ import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/Secu
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
 import SecureFileSubmissionTable from './SecureFileSubmissionTable'
 import { useNavigate } from 'react-router'
-import { transformDocumentTypeDescription } from '../../utils/functions'
 
 const SecureFileSubmissionsPage = (props) => {
   const { isFetching, items, itemsCount } = props.documentUploads
@@ -19,21 +18,15 @@ const SecureFileSubmissionsPage = (props) => {
     <div className="page_secure_document_upload">
       <h1>{props.title}</h1>
       {!props.loggedInUser.isGovernmentUser &&
-      <div className="instructions">
-        <h4>Securely submit files to the Government of British Columbia.</h4>
-      </div>
+      <p className="instructions">
+        Use this feature to securely submit Part 3 Agreement applications and milestone
+        evidence to the Government of British Columbia.
+      </p>
       }
       {!props.loggedInUser.isGovernmentUser &&
-        <>
-          <dl className="instructions-list">
-            <dt>Initiative Agreement: Application</dt>
-            <dd>Use this attachment type to submit files related to an application for a new Initiative Agreement.</dd>
-            <dt>Initiative Agreement: Evidence of Completion</dt>
-            <dd>Use this attachment type to submit files related to demonstrating completion of a designated action under an existing Initiative Agreement.</dd>
-            <dt>Other</dt>
-            <dd>Use this attachment type to submit files related to compliance reports, transfers, carbon intensity applications, etc.</dd>
-          </dl>
-        </>
+      <p className="instructions">
+        Use the New Submission category &quot;Other&quot; to submit documents associated with existing: Compliance and Exclusion Reports, Carbon Intensity Applications, Initiative Plans and Credit Transaction Proposals.
+      </p>
       }
       <div className="right-toolbar-container">
         <div className="actions-container">
@@ -45,7 +38,7 @@ const SecureFileSubmissionsPage = (props) => {
               type="button"
               onClick={() => navigate(CREDIT_TRANSACTIONS.ADD)}
             >
-              <FontAwesomeIcon icon="plus-circle" /> New Initiative Agreement Issuance
+              <FontAwesomeIcon icon="plus-circle" /> New Part 3 Award
             </button>
           }
 
@@ -82,7 +75,7 @@ const SecureFileSubmissionsPage = (props) => {
                         }}
                         type="button"
                       >
-                        {transformDocumentTypeDescription(t.description)}
+                        {t.description}
                       </button>
                     </li>
                   )))
