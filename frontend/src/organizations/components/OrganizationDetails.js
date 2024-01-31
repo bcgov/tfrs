@@ -12,6 +12,7 @@ import PERMISSIONS_ORGANIZATIONS from '../../constants/permissions/Organizations
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
 import AddressBuilder from '../../app/components/AddressBuilder'
+import TOOLTIPS from '../../constants/tooltips'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ const OrganizationDetails = props => {
         <div className="credit_balance">
           {props.organization.organizationBalance &&
           <h3>
-            Credit Balance: {
+            Compliance Units: {
               numeral(props.organization.organizationBalance.validatedCredits)
                 .format(NumberFormat.INT)
             }
@@ -46,11 +47,7 @@ const OrganizationDetails = props => {
               }){' '}
               <Tooltip
                 className="info"
-                title="Reserved credits are the portion of credits in your credit balance that are
-                currently pending the completion of a credit transaction. For example, selling
-                credits to another organization (i.e. Credit Transfer) or being used to offset
-                outstanding debits in a compliance period. Reserved credits cannot be transferred
-                or otherwise used until the pending credit transaction has been completed."
+                title={TOOLTIPS.IN_RESERVE}
               >
                 <FontAwesomeIcon icon="info-circle" />
               </Tooltip>
@@ -108,12 +105,14 @@ const OrganizationDetails = props => {
           </dl>
         </div>
         }
-        <div className="address">
-          <dl className="dl-horizontal">
-            <dt style={{ width: '300px' }}>&nbsp;</dt>
-            <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
-          </dl>
-        </div>
+        {! props.loggedInUser.isGovernmentUser && (
+          <div className="address">
+            <dl className="dl-horizontal">
+              <dt style={{ width: '300px' }}>&nbsp;</dt>
+              <dd>Email <a href="mailto:lcfs@gov.bc.ca?subject=TFRS Address Update">lcfs@gov.bc.ca</a> to update address information.</dd>
+            </dl>
+          </div>
+        )}
         <div className="address">
           <dl className="dl-horizontal">
           {props.loggedInUser.isGovernmentUser && (
@@ -129,19 +128,16 @@ const OrganizationDetails = props => {
         </div>
         <div className="status">
           <dl className="dl-horizontal">
-            <dt style={{ width: '300px' }}><strong>Status:</strong></dt>
-            <dd><strong>{props.organization.statusDisplay} — </strong>
+            <dt style={{ width: '300px' }}><strong>Registered for transfers:</strong></dt>
+            <dd>
             {props.organization.statusDisplay === 'Inactive' &&
               <span className="status-description">
-                An inactive organization is not actively supplying fuel in British Columbia
-                and cannot purchase low carbon fuel credits.
+                <strong>No &mdash;</strong> An organization must be registered to transfer compliance units.
               </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
               <span className="status-description">
-                An active organization is one that is actively &quot;supplying&quot; fuel in
-                British Columbia as defined under the
-                  {' Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act '}.
+                <strong>Yes &mdash;</strong> A registered organization is able to transfer compliance units.
               </span>
             }
             </dd>

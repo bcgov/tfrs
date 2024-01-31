@@ -39,11 +39,12 @@ const HistoricalDataTable = (props) => {
     className: 'col-transfer-type'
   }, {
     id: 'creditsFrom',
-    Header: 'Credits From',
+    Header: 'Compliance Units From',
     accessor: item => item.creditsFrom.name,
     minWidth: 200,
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        row.original.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
         row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
@@ -79,6 +80,7 @@ const HistoricalDataTable = (props) => {
     className: 'col-price',
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return -1 // this is to fix sorting (value can't be negative)

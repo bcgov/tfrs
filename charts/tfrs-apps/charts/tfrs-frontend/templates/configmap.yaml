@@ -1,0 +1,28 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: tfrs-frontend{{ .Values.suffix }}
+  creationTimestamp:
+data:
+  features.js: |
+    window.tfrs_config = {
+      "keycloak.realm": "standard",
+      "keycloak.client_id": "{{ .Values.configmap.keycloak.clientId }}",
+      "keycloak.auth_url": "https://{{ .Values.envName }}.loginproxy.gov.bc.ca/auth",
+      "keycloak.callback_url": "https://tfrs{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca",
+      "keycloak.post_logout_url": "https://tfrs{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca",
+      "keycloak.siteminder_logout_url": "{{ .Values.configmap.keycloak.siteminderLogoutUrl }}",
+      "debug.enabled": {{ .Values.configmap.debugEnabled }},
+      "secure_document_upload.enabled": true,
+      "secure_document_upload.max_file_size": 50000000,
+      "fuel_codes.enabled": true,
+      "keycloak.custom_login": true,
+      "credit_transfer.enabled": true,
+      "compliance_reporting.enabled": true,
+      "compliance_reporting.starting_year": 2017,
+      "compliance_reporting.create_effective_date": "2019-01-01",
+      "credit_calculation_api.enabled": true,
+      "exclusion_reports.enabled": true,
+      "exclusion_reports.create_effective_date": "2019-01-01",
+      "api_base": "https://tfrs-backend{{ .Values.suffix }}.apps.silver.devops.gov.bc.ca/api"
+    };

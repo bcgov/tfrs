@@ -37,7 +37,7 @@ const ComplianceReportsBCEID = (props) => {
 
   return (
     <div className="dashboard-fieldset compliance-exclusion-reports">
-      <h1>Compliance &amp; Exclusion Reports</h1>
+      <h1>Compliance Reporting</h1>
       {props.loggedInUser.organization.name} has:
       <div>
         <br/>
@@ -61,7 +61,7 @@ const ComplianceReportsBCEID = (props) => {
             }}
             type="button"
           >
-            Compliance & Exclusion Reports in Progress
+            Report(s) in progress
           </button>
         </div>
         <p><br /></p>
@@ -123,7 +123,7 @@ const ComplianceReportsBCEID = (props) => {
             onClick={() => navigate(COMPLIANCE_REPORTING.LIST)}
             type="button"
           >
-            Start a new compliance report or exclusion report
+            Start a new compliance report
           </button>
         </div>
       )}

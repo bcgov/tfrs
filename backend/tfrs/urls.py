@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 from django.contrib import admin
-import debug_toolbar
+# import debug_toolbar
 from . import views
 from django.urls import path
 

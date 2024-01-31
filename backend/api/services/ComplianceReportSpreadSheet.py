@@ -84,7 +84,7 @@ class ComplianceReportSpreadsheet(object):
             worksheet.write(row_index, 3, record['transfer_type'])
             worksheet.write(row_index, 4, Decimal(record['quantity']), quantity_format)
 
-    def add_schedule_b(self, schedule_b):
+    def add_schedule_b(self, schedule_b, compliance_period):
         worksheet = self.workbook.add_sheet("Schedule B")
         row_index = 0
 
@@ -93,6 +93,12 @@ class ComplianceReportSpreadsheet(object):
             "Quantity", "Units", "Carbon Intensity Limit", "Carbon Intensity of Fuel",
             "Energy Density", "EER", "Energy Content", "Credit", "Debit"
         ]
+        if compliance_period >= 2023:
+            columns = [
+                "Fuel Type", "Fuel Class", "Provision", "Fuel Code or Schedule D Provision",
+                "Quantity", "Units", "Carbon Intensity Limit", "Carbon Intensity of Fuel",
+                "Energy Density", "EER", "Energy Content", "Compliance Units"
+            ]
 
         header_style = xlwt.easyxf('font: bold on')
 
@@ -135,10 +141,18 @@ class ComplianceReportSpreadsheet(object):
             worksheet.write(row_index, 8, Decimal(record['energy_density']))
             worksheet.write(row_index, 9, Decimal(record['eer']))
             worksheet.write(row_index, 10, Decimal(record['energy_content']))
-            if record['credits'] is not None:
-                worksheet.write(row_index, 11, Decimal(record['credits']))
-            if record['debits'] is not None:
-                worksheet.write(row_index, 12, Decimal(record['debits']))
+            if compliance_period < 2023:
+                if record['credits'] is not None:
+                    worksheet.write(row_index, 11, Decimal(record['credits']))
+                if record['debits'] is not None:
+                    worksheet.write(row_index, 12, Decimal(record['debits']))
+            else:
+                compliance_units = None
+                if record['credits'] is not None:
+                    compliance_units = Decimal(record['credits'])
+                if compliance_units is None and record['debits'] is not None:
+                    compliance_units = Decimal(record['debits']) * -1
+                worksheet.write(row_index, 11, compliance_units)
 
     def add_schedule_c(self, schedule_c):
         worksheet = self.workbook.add_sheet("Schedule C")
@@ -243,7 +257,7 @@ class ComplianceReportSpreadsheet(object):
                 worksheet.write(row_index, 0, output['description'])
                 worksheet.write(row_index, 1, Decimal(output['intensity']), value_format)
 
-    def add_schedule_summary(self, summary):
+    def add_schedule_summary(self, summary, compliance_period):
         worksheet = self.workbook.add_sheet("Summary")
         row_index = 0
 
@@ -252,6 +266,8 @@ class ComplianceReportSpreadsheet(object):
         value_format = xlwt.easyxf(num_format_str='#,##0.00')
         currency_format = xlwt.easyxf(num_format_str='$#,##0.00')
         description_format = xlwt.easyxf('align: wrap on')
+        if summary is None:
+            return
 
         line_details = {
             '1': 'Volume of gasoline class non-renewable fuel supplied',
@@ -290,14 +306,17 @@ class ComplianceReportSpreadsheet(object):
             '27': 'Outstanding debit balance',
             '28': 'Part 3 non-compliance penalty payable'
         }
+        if compliance_period >= 2023:
+            line_details['25'] = 'Net compliance unit balance for compliance period'
+            line_details['29A'] = 'Available compliance unit balance on March 31, ' + str(int(compliance_period) + 1)
+            line_details['29B'] = 'Compliance unit balance change from assessment'
+            line_details['29C'] = 'Available compliance unit balance after assessment on March 31, ' + str(int(compliance_period) + 1)
+            line_details['28'] = 'Non-compliance penalty payable (' + str(int(Decimal(summary['lines']['28'])/600)) + ' units * $600 CAD per unit)'
 
         line_format = defaultdict(lambda: quantity_format)
         line_format['11'] = currency_format
         line_format['22'] = currency_format
         line_format['28'] = currency_format
-
-        if summary is None:
-            return
 
         columns = [
             "Part 2 Gasoline Class - 5% Renewable Requirement",
@@ -331,7 +350,7 @@ class ComplianceReportSpreadsheet(object):
 
         row_index += 1
         columns = [
-            "Part 3 - Low Carbon Fuel Requirement Summary",
+            "Part 3 - Low Carbon Fuel Requirement Summary" if compliance_period < 2023 else "Low Carbon Fuel Requirement",
             "Line",
             "Value"
         ]
@@ -339,11 +358,21 @@ class ComplianceReportSpreadsheet(object):
         for col_index, value in enumerate(columns):
             worksheet.write(row_index, col_index, value, header_style)
 
-        for line in range(23, 28+1):
-            row_index += 1
-            worksheet.write(row_index, 0, line_details[str(line)], description_format)
-            worksheet.write(row_index, 1, 'Line {}'.format(line))
-            worksheet.write(row_index, 2, Decimal(summary['lines'][str(line)]), line_format[str(line)])
+        if compliance_period >= 2023:
+            compliance_lines = ['25','29A','29B','28','29C']
+            for line in compliance_lines:
+                if line != '28' or (line == '28' and summary['lines'][line] > 0):
+                    row_index += 1
+                    worksheet.write(row_index, 0, line_details[line], description_format)
+                    if line.isdigit():
+                        worksheet.write(row_index, 1, f'Line {line}')
+                    worksheet.write(row_index, 2, Decimal(summary['lines'][line]), line_format[str(line)])
+        else:
+            for line in range(23, 28+1):
+                row_index += 1
+                worksheet.write(row_index, 0, line_details[str(line)], description_format)
+                worksheet.write(row_index, 1, 'Line {}'.format(line))
+                worksheet.write(row_index, 2, Decimal(summary['lines'][str(line)]), line_format[str(line)])
 
         row_index += 1
         columns = [

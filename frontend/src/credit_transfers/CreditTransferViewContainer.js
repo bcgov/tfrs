@@ -330,9 +330,11 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmAccept"
         key="confirmAccept"
+        confirmLabel="Sign and submit"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to sign and send this Credit Transfer
-        Proposal to the Government of British Columbia?
+        Are you sure you want to sign and submit this transfer
+        to the Government of British Columbia for review?
       </Modal>
     )
   }
@@ -343,11 +345,12 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={() => this._approveCreditTransfer(item.id)}
         id="confirmApprove"
         key="confirmApprove"
+        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? Lang.BTN_APPROVE_1_2 : Lang.BTN_APPROVE_ISSUANCE}
+        cancelLabel="Cancel"
       >
-        Are you sure you want to approve this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
-          : ' Part 3 Award'}?
+          ? 'Are you sure you want to record this transfer?'
+          : 'Are you sure you want to approve the issuance of credits for this Initiative Agreement?'}
       </Modal>
     )
   }
@@ -360,37 +363,55 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
+        confirmLabel="Refuse transfer"
+        cancelLabel="Cancel"
       >
         <div className="alert alert-warning">
           <p>
-            Under section 11.11 (3) of the Regulation, the Director may decline to approve a
-            proposed transfer if the Director:
+            Under section 19 of the Low Carbon Fuels (General) Regulation, the director may refuse to record a transfer under section 16 of the Act if:
           </p>
           <dl>
             <dt>(a)</dt>
             <dd>
-              considers the intent of the transfer is to avoid compliance with the Act or
-              Regulation, or
+              the director considers that
+              <dl>
+                <dt>(i)</dt>
+                <dd>the transferor will be unable to meet the target set under section 12 <i>[low carbon fuel target]</i> of the Act, or</dd>
+              </dl>
+              <dl>
+                <dt>(ii)</dt>
+                <dd>the intent of the transfer is to avoid compliance with the Act, or</dd>
+              </dl>
             </dd>
           </dl>
           <dl>
             <dt>(b)</dt>
             <dd>
-              is not satisfied that the transferor or transferee will be able to comply with the
-              low carbon fuel requirement (section 6 of the Act)
+              all of the following apply:
+              <dl>
+                <dt>(i)</dt>
+                <dd>the director is conducting a reassessment in relation to the transferor;</dd>
+              </dl>
+              <dl>
+                <dt>(ii)</dt>
+                <dd>the director has reason to believe that the transferor was issued a number of compliance units as a result of fraud or misrepresentation, and</dd>
+              </dl>
+              <dl>
+                <dt>(iii)</dt>
+                <dd>the director has reason to believe that, if the transfer is recorded, the transferor will have a negative balance on reassessment.</dd>
+              </dl>
             </dd>
           </dl>
           <p>
-            This statutory decision is appealable, and you are strongly encouraged to add a comment
-            that provides an explanation as to why the proposed transfer is being declined. The
-            comment will be visible to both Part 3 fuel suppliers involved in the proposed
-            transfer.
+            You are strongly encouraged to add a comment
+            that provides an explanation as to why the proposed transfer is being refused. The
+            comment will be visible to both organizations involved in the transfer.
           </p>
         </div>
 
-        Are you sure you want to decline to approve this
+        Are you sure you want to refuse this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -432,16 +453,18 @@ class CreditTransferViewContainer extends Component {
           this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended)
         }}
         canBypassExtraConfirm={false}
-        extraConfirmText="You must provide an explanatory comment if you are not recommending
-          to approve this Credit Transfer Proposal"
+        extraConfirmText="An explanatory comment is required when recommending
+          that the Director refuse a transfer."
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="error"
         id="confirmNotRecommend"
         key="confirmNotRecommend"
+        confirmLabel="Recommend refusing transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to not recommend approval of this
+        Are you sure you want to recommend that the Director refuse this
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
+          ? ' transfer'
           : ' Part 3 Award'}?
       </Modal>
     )
@@ -455,8 +478,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmPullBack"
         key="confirmPullBack"
+        cancelLabel="Cancel"
+        confirmLabel="Retract recommendation"
       >
-        Are you sure you want to retract your recommendation of this Part 3 Award? <br />
+        Are you sure you want to retract your recommendation? <br />
         This will return the transaction to a draft state where
         it will no longer be visible to the Director.
       </Modal>
@@ -471,31 +496,29 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
+        confirmLabel={[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ? 'Decline' : Lang.BTN_DECLINE_ISSUANCE}
+        cancelLabel='Cancel'
       >
         <div className="alert alert-warning">
           <p>
-            Under section 8.01 (6) of the Act, if the director is satisfied by evidence
-            provided under subsection (4)(d) that the Part 3 fuel supplier has completed
-            the action, or a stage of the action, that, under the agreement, entitles
-            the Part 3 fuel supplier to a credit, the director must issue the credit.
-          </p>
-          <p>
-            This decision is appealable, and you are strongly encouraged to add a comment
-            that provides an explanation as to why you are not satisfied by the evidence
-            provided that the supplier has completed the designated action. This declined
-            transaction will be visible to the Part 3 fuel supplier.
+          You are strongly encouraged to add a comment that provides an explanation
+          as to why you are not satisfied by the evidence provided that the organization
+           has completed the designated action. This declined transaction will be visible
+            to the organization that is a party to the Initiative Agreement.
           </p>
         </div>
 
-        Are you sure you want to decline to approve this
+        Are you sure you want to decline
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
-          : ' Part 3 Award'}?
+          ? ' to approve this Credit Transfer Proposal'
+          : ' the issuance of credits for this Initiative Agreement'}?
       </Modal>
     )
   }
 
   _modalRecommend (item) {
+    const isBuyOrSell = [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0;
+
     return (
       <Modal
         handleSubmit={(event) => {
@@ -503,11 +526,18 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
+        confirmLabel={
+          isBuyOrSell
+            ? "Recommend recording transfer"
+            : "Recommend issuance"
+        }
+        cancelLabel="Cancel"
       >
-        Are you sure you want to recommend approval of this
-        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Credit Transfer Proposal'
-          : ' Part 3 Award'}?
+        {
+          isBuyOrSell
+            ? 'Are you sure you want to recommend recording this transfer?'
+            : 'Are you sure you want to recommend issuance of compliance units for this Initiative Agreement?'
+        }
       </Modal>
     )
   }
@@ -520,8 +550,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRefuse"
         key="confirmRefuse"
+        confirmLabel="Decline transfer"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to refuse this transfer?
+        Are you sure you want to decline this transfer?
       </Modal>
     )
   }
@@ -534,9 +566,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmRescind"
         key="confirmRescind"
+        confirmLabel="Rescind transfer"
+        cancelLabel="Cancel"
       >
         Are you sure you want to rescind this transfer?
-        This will cancel the Credit Transfer Proposal.
       </Modal>
     )
   }
@@ -549,8 +582,10 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmReturn"
         key="confirmReturn"
+        confirmLabel="Return to analyst"
+        cancelLabel="Cancel"
       >
-        Are you sure you want to return this Part 3 Award transaction to the Government Analyst?
+        Are you sure you want to return this Initiative Agreement transaction to the Government Analyst?
       </Modal>
     )
   }
@@ -687,6 +722,7 @@ class CreditTransferViewContainer extends Component {
       categoryDSelected={this.props.item.categoryDSelected}
       toggleCategoryDSelection={this._toggleCategoryDSelection}
       dateOfWrittenAgreement={item.dateOfWrittenAgreement}
+      updateTimestamp={item.updateTimestamp}
     />)
 
     content.push(this._modalDeleteComment())
@@ -770,6 +806,7 @@ CreditTransferViewContainer.propTypes = {
     note: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
     dateOfWrittenAgreement: PropTypes.string,
+    updateTimestamp: PropTypes.string,
     comments: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       createTimestamp: PropTypes.string,

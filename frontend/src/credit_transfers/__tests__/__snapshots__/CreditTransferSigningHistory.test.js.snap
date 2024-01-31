@@ -12,10 +12,10 @@ exports[`CreditTransferSigningHistory renders the component correctly 1`] = `
   <p>
     <li>
       <span>
-        Date of written agreement reached between the two suppliers: 
+        Date of written agreement reached between the two organizations: 
       </span>
       <strong>
-        July 11, 2023
+        October 18, 2023
       </strong>
       <span>
          (proposal falls under 
@@ -28,7 +28,7 @@ exports[`CreditTransferSigningHistory renders the component correctly 1`] = `
       <span>
          if approved by: 
         <strong>
-          February 11, 2024
+          April 18, 2024
         </strong>
         )
       </span>
@@ -43,7 +43,7 @@ exports[`CreditTransferSigningHistory renders the component correctly 1`] = `
       <span>
          on 
       </span>
-      July 11, 2023
+      October 18, 2023
       <span>
          by 
       </span>
@@ -75,31 +75,6 @@ exports[`CreditTransferSigningHistory should render the component with dateOfWri
   </h3>
   <p>
     <li>
-      <span>
-        Date of written agreement reached between the two suppliers: 
-      </span>
-      <strong>
-        July 11, 2023
-      </strong>
-      <span>
-         (proposal falls under 
-        <strong>
-          Category 
-          A
-        </strong>
-        
-      </span>
-      <span>
-         if approved by: 
-        <strong>
-          February 11, 2024
-        </strong>
-        )
-      </span>
-    </li>
-  </p>
-  <p>
-    <li>
       <strong>
          
       </strong>
@@ -107,7 +82,7 @@ exports[`CreditTransferSigningHistory should render the component with dateOfWri
       <span>
          on 
       </span>
-      July 11, 2023
+      October 18, 2023
       <span>
          by 
       </span>

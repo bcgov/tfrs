@@ -1,6 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import CONFIG from '../config'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, LCFS_COMPLIANCE_START_DT } from '../constants/values'
+import { getCreditTransferType } from '../actions/creditTransfersActions'
+import moment from 'moment-timezone'
 
 const arrayMove = (arr, currentIndex, targetIndex) => {
   arr.splice(targetIndex, 0, arr.splice(currentIndex, 1)[0])
@@ -196,6 +199,34 @@ const cellFormatNumeric = cellValue => ({
   }
 })
 
+const cellFormatNegativeNumber = cellValue => ({
+  className: 'numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
+const cellFormatCurrencyTotal = cellValue => ({
+  className: 'total numeric',
+  readOnly: true,
+  value: cellValue,
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    return <span>${Number(value).toFixed(0).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+})
 const cellFormatTotal = cellValue => ({
   className: 'numeric',
   readOnly: true,
@@ -242,7 +273,43 @@ const atLeastOneAttorneyAddressFieldExists = (address) => {
   return false
 }
 
+const transformDocumentTypeDescription = (desc) => {
+  if (desc === 'P3A Milestone Evidence') {
+    return 'Initiative Agreement: Evidence of Completion'
+  }
+  if (desc === 'P3A Application') {
+    return 'Initiative Agreement: Application'
+  }
+  return desc
+}
+
+const transformCreditTransferTypeDesc = (typeId, updateTimestamp = null) => {
+  if (typeId === CREDIT_TRANSFER_TYPES.part3Award.id) {
+    if (moment(updateTimestamp).isSameOrAfter(moment('2024-01-01'))) {
+      return 'Initiative Agreement'
+    } else {
+      return 'Part 3 Award'
+    }
+  }
+  return getCreditTransferType(typeId, updateTimestamp)
+}
+
+const transformTransactionStatusDesc = (statusId, typeId, updateTimestamp) => {
+  const inputtedDate = new Date(updateTimestamp)
+  if (getCreditTransferType(typeId) === 'Transfer' && inputtedDate >= LCFS_COMPLIANCE_START_DT) {
+    if (statusId === CREDIT_TRANSFER_STATUS.approved.id) {
+      return 'Recorded'
+    } else if (statusId === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
+      return 'Refused'
+    }
+  }
+  return (
+    Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === statusId)
+  ).description
+}
+
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists
+  formatFacilityNameplate, formatNumeric, validateFiles, calculatePages, cellFormatNumeric, cellFormatTotal, atLeastOneAttorneyAddressFieldExists,
+  cellFormatCurrencyTotal, cellFormatNegativeNumber, transformDocumentTypeDescription, transformCreditTransferTypeDesc, transformTransactionStatusDesc
 }
