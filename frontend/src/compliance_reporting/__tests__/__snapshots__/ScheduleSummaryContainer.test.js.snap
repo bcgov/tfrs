@@ -1684,8 +1684,7 @@ exports[`ScheduleSummaryContainer should render component with no complianceRepo
       className="col-lg-6"
     >
       <h1>
-        Part 3 - 
-        Low Carbon Fuel Requirement Summary
+        Part 3 - Low Carbon Fuel Requirement Summary
       </h1>
       <span
         className="data-grid-container"
@@ -4527,8 +4526,7 @@ exports[`ScheduleSummaryContainer should render component with recomputeRequest 
       className="col-lg-6"
     >
       <h1>
-        Part 3 - 
-        Low Carbon Fuel Requirement Summary
+        Part 3 - Low Carbon Fuel Requirement Summary
       </h1>
       <span
         className="data-grid-container"
@@ -7319,8 +7317,7 @@ exports[`ScheduleSummaryContainer should render the component 1`] = `
       className="col-lg-6"
     >
       <h1>
-        Part 3 - 
-        Low Carbon Fuel Requirement Summary
+        Part 3 - Low Carbon Fuel Requirement Summary
       </h1>
       <span
         className="data-grid-container"
@@ -10176,8 +10173,7 @@ exports[`ScheduleSummaryContainer should rerender component with no readonly fla
       className="col-lg-6"
     >
       <h1>
-        Part 3 - 
-        Low Carbon Fuel Requirement Summary
+        Part 3 - Low Carbon Fuel Requirement Summary
       </h1>
       <span
         className="data-grid-container"

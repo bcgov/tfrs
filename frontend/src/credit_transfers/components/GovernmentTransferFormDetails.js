@@ -13,7 +13,7 @@ const GovernmentTransferFormDetails = props => (
         <div className="form-group col-md-6">
           <label htmlFor="transfer-type">Transaction Type:
             <div className="form-control">
-              Initiative Agreement
+              Part 3 Award
             </div>
           </label>
         </div>
@@ -21,7 +21,7 @@ const GovernmentTransferFormDetails = props => (
 
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="respondent">Compliance units to:
+          <label htmlFor="respondent">Credits To:
             <select
               className="form-control"
               id="respondent"
@@ -30,7 +30,7 @@ const GovernmentTransferFormDetails = props => (
               onChange={props.handleInputChange}
               required="required"
             >
-              <option key="0" value="" default>Select an organization</option>
+              <option key="0" value="" default>Select a Fuel Supplier</option>
               {props.fuelSuppliers &&
                 props.fuelSuppliers.map(organization => (
                   <option key={organization.id} value={organization.id}>
@@ -44,7 +44,7 @@ const GovernmentTransferFormDetails = props => (
 
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="number-of-credits">Number of compliance units
+          <label htmlFor="number-of-credits">Number of Credits:
             <InputWithTooltip
               handleInputChange={props.handleInputChange}
               id="number-of-credits"
@@ -60,7 +60,7 @@ const GovernmentTransferFormDetails = props => (
 
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="compliance-period">Compliance period:
+          <label htmlFor="compliance-period">Compliance Period:
             <select
               className="form-control"
               id="compliance-period"

@@ -4,7 +4,7 @@ import ActionTypes from '../constants/actionTypes/CreditTransfers'
 import ReducerTypes from '../constants/reducerTypes/CreditTransfers'
 import * as Routes from '../constants/routes'
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../constants/values'
-import moment from 'moment-timezone'
+
 /*
  * Credit Transfers
  */
@@ -18,19 +18,16 @@ export const getCreditTransfers = () => (dispatch) => {
     })
 }
 
-export const getCreditTransferType = (typeId, updateTimestamp=null) => {
-  const jan2024Timestamp = moment('2024-01-01');
+export const getCreditTransferType = (typeId) => {
   switch (typeId) {
     case CREDIT_TRANSFER_TYPES.validation.id:
-      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Validation';
+      return 'Validation'
     case CREDIT_TRANSFER_TYPES.retirement.id:
-      return updateTimestamp && moment(updateTimestamp).isAfter(jan2024Timestamp) ? 'Assessment' : 'Reduction';
+      return 'Reduction'
     case CREDIT_TRANSFER_TYPES.part3Award.id:
-      return 'Initiative Agreement'
-    case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
-      return 'Administrative Adjustment'
+      return 'Part 3 Award'
     default:
-      return 'Transfer'
+      return 'Credit Transfer'
   }
 }
 
@@ -63,11 +60,6 @@ export const prepareCreditTransfer = (fields) => {
     case CREDIT_TRANSFER_TYPES.retirement.id.toString():
       data.initiator = DEFAULT_ORGANIZATION.id
       data.respondent = fields.creditsFrom.id
-
-      break
-    case CREDIT_TRANSFER_TYPES.adminAdjustment.id.toString():
-      data.initiator = DEFAULT_ORGANIZATION.id
-      data.respondent = fields.creditsTo.id
 
       break
     default:

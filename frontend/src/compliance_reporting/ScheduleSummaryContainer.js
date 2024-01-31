@@ -23,12 +23,11 @@ import * as DieselSummaryContainer from '../schedule_summary/DieselSummaryContai
 import * as GasolineSummaryConatiner from '../schedule_summary/GasolineSummaryContainer'
 import * as Part3SummaryContainer from '../schedule_summary/Part3SummaryContainer'
 import * as PenaltySummaryContainer from '../schedule_summary/PenaltySummaryContainer'
-import { COMPLIANCE_YEAR } from '../constants/values'
-import SummaryLCFSDeltas from './components/SummaryLCFSDeltas'
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       diesel: new ScheduleSummaryDiesel(props.readOnly),
       gasoline: new ScheduleSummaryGasoline(props.readOnly),
@@ -67,7 +66,7 @@ class ScheduleSummaryContainer extends Component {
   UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
     const { diesel, gasoline, alreadyUpdated } = this.state
     let { part3, penalty, showModal } = this.state
-    const year = this.props.complianceReport.compliancePeriod.description
+
     // If snapshot exists then we are not in edit mode and can just return the tabledata
     if (this.props.complianceReport.hasSnapshot && nextProps.snapshot && nextProps.readOnly) {
       const { summary } = nextProps.snapshot
@@ -193,24 +192,6 @@ class ScheduleSummaryContainer extends Component {
         }
       })
     }
-    if (year >= COMPLIANCE_YEAR) {
-      if (!isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset && part3[SCHEDULE_SUMMARY.LINE_29_B][2].value < 0) {
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value
-          }
-        })
-      } else if (isSupplemental && part3[SCHEDULE_SUMMARY.LINE_26_A][2].value > 0 && part3[SCHEDULE_SUMMARY.LINE_26][2].value !== summary.creditsOffset) {
-        this.props.updateScheduleState({
-          summary: {
-            ...summary,
-            creditsOffset: part3[SCHEDULE_SUMMARY.LINE_26][2].value,
-            creditsOffsetA: part3[SCHEDULE_SUMMARY.LINE_26_A][2].value
-          }
-        })
-      }
-    }
 
     this.setState({
       diesel,
@@ -246,7 +227,7 @@ class ScheduleSummaryContainer extends Component {
           value: numericValue
         }
 
-        grid = Part3SummaryContainer.calculatePart3Payable(grid, this.props.period)
+        grid = Part3SummaryContainer.calculatePart3Payable(grid)
 
         penalty[SCHEDULE_PENALTY.LINE_28][2] = {
           ...penalty[SCHEDULE_PENALTY.LINE_28][2],
@@ -273,7 +254,8 @@ class ScheduleSummaryContainer extends Component {
         const creditOffsetA = Number(String(grid[SCHEDULE_SUMMARY.LINE_26_A][2].value).replace(/,/g, ''))
 
         grid[SCHEDULE_SUMMARY.LINE_26][2].value = creditOffsetA + numericValue
-        grid = Part3SummaryContainer.calculatePart3Payable(grid, this.props.period)
+
+        grid = Part3SummaryContainer.calculatePart3Payable(grid)
 
         penalty[SCHEDULE_PENALTY.LINE_28][2] = {
           ...penalty[SCHEDULE_PENALTY.LINE_28][2],
@@ -486,9 +468,16 @@ class ScheduleSummaryContainer extends Component {
 
       <div className="row">
         <div className="col-lg-6">
-          <h1>{Number(this.props.period) < COMPLIANCE_YEAR ? 'Part 3 - ' : ''}Low Carbon Fuel Requirement Summary</h1>
-          <SummaryLCFSDeltas part3={this.state.part3} complianceData={this.props}
-            handleCellsChanged={this._handleCellsChanged} />
+          <h1>Part 3 - Low Carbon Fuel Requirement Summary</h1>
+
+          <ReactDataSheet
+            className="spreadsheet"
+            data={this.state.part3}
+            onCellsChanged={(changes, addition = null) => {
+              this._handleCellsChanged('part3', changes, addition)
+            }}
+            valueRenderer={cell => cell.value}
+          />
         </div>
 
         <div className="col-lg-6">

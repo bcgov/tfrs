@@ -99,7 +99,7 @@ class Navbar extends Component {
             // }}
             to={ORGANIZATIONS.LIST}
           >
-            Organizations
+            Fuel Suppliers
           </NavLink>
           }
           <NavLink
@@ -107,7 +107,7 @@ class Navbar extends Component {
             id="navbar-credit-transactions"
             to={CREDIT_TRANSACTIONS.LIST}
           >
-            Transactions
+            Credit Transactions
           </NavLink>
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
@@ -136,7 +136,7 @@ class Navbar extends Component {
             // }}
             to={COMPLIANCE_REPORTING.LIST}
           >
-            Compliance Reporting
+            Compliance &amp; Exclusion Reports
           </NavLink>
           }
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
@@ -158,7 +158,7 @@ class Navbar extends Component {
             id="navbar-fuel-codes"
             to={FUEL_CODES.LIST}
           >
-            Administration
+            Fuel Codes
           </NavLink>
           }
           {!this.props.loggedInUser.isGovernmentUser &&
@@ -214,7 +214,7 @@ class Navbar extends Component {
                   </MenuItem>
                   <MenuItem
                     className="dropdown-hidden-item"
-                    href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                    href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
@@ -244,7 +244,7 @@ class Navbar extends Component {
             </NavLink>
             <a
               className="navbar-item"
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               id="navbar-help"
               rel="noopener noreferrer"
               target="_blank"
@@ -295,7 +295,7 @@ class Navbar extends Component {
               // }}
               to={ORGANIZATIONS.LIST}
             >
-              Organizations
+              Fuel Suppliers
             </NavLink>
           </li>
           }
@@ -305,7 +305,7 @@ class Navbar extends Component {
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
-              Compliance Units
+              Credit Transactions
             </NavLink>
           </li>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
@@ -331,7 +331,7 @@ class Navbar extends Component {
               id="collapse-navbar-compliance-reporting"
               to={COMPLIANCE_REPORTING.LIST}
             >
-              Compliance Reporting
+              Compliance &amp; Exclusion Reports
             </NavLink>
           </li>
           }
@@ -357,7 +357,7 @@ class Navbar extends Component {
               id="navbar-fuel-codes"
               to={FUEL_CODES.LIST}
             >
-              Administration
+              Fuel Codes
             </NavLink>
           </li>
           }
@@ -397,7 +397,7 @@ class Navbar extends Component {
           </li>
           <li>
             <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual.pdf`}
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -486,7 +486,7 @@ class Navbar extends Component {
                   {this.props.loggedInUser.roles &&
                   !this.props.loggedInUser.isGovernmentUser &&
                   <span id="organization-balance">
-                      Compliance Units: {
+                      Credit Balance: {
                       numeral(organization.organizationBalance.validatedCredits)
                         .format(NumberFormat.INT)
                     } ({

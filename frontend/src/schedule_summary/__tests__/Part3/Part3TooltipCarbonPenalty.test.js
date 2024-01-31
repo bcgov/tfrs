@@ -15,7 +15,7 @@ describe('Part3 Table Data', () => {
       period: 2022
     }
     const part3 = new ScheduleSummaryPart3(props.period)
-    const result = tableData(part3, summary, { isSupplemental: false, supplementalNumber: 0, compliancePeriod: { description: props.period } })
+    const result = tableData(part3, summary, { isSupplemental: false })
     expect(result[SCHEDULE_SUMMARY.LINE_28][1].value.props.children).toEqual([
       'Line 28 ',
       <Tooltip // eslint-disable-line react/jsx-key
@@ -36,7 +36,7 @@ describe('Part3 Table Data', () => {
       period: 2023
     }
     const part3 = new ScheduleSummaryPart3(props.period)
-    const result = tableData(part3, summary, { isSupplemental: false, supplementalNumber: 0, compliancePeriod: { description: props.period } })
+    const result = tableData(part3, summary, { isSupplemental: false })
     expect(result[SCHEDULE_SUMMARY.LINE_28][1].value.props.children).toEqual([
       'Line 28 ',
       <Tooltip // eslint-disable-line react/jsx-key

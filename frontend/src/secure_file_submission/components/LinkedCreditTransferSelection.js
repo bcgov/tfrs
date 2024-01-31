@@ -31,16 +31,13 @@ const LinkedCreditTransferSelection = (props) => {
     minWidth: 110
   }, {
     accessor: item => ([
-      CREDIT_TRANSFER_TYPES.part3Award.id,
-      CREDIT_TRANSFER_TYPES.adminAdjustment.id,
-      CREDIT_TRANSFER_TYPES.validation.id
+      CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
     ].includes(item.type.id)
       ? ''
       : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-          row.original.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
-          row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return (
           <div className="greyed-out">N/A</div>
         )
@@ -48,7 +45,7 @@ const LinkedCreditTransferSelection = (props) => {
 
       return row.value
     },
-    Header: 'Compliance Units From',
+    Header: 'Credits From',
     id: 'creditsFrom',
     minWidth: 200
   }, {
@@ -62,7 +59,7 @@ const LinkedCreditTransferSelection = (props) => {
 
       return row.value
     },
-    Header: 'Compliance Units To',
+    Header: 'Credits To',
     id: 'creditsTo',
     minWidth: 200
   }, {
@@ -70,13 +67,12 @@ const LinkedCreditTransferSelection = (props) => {
     className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
-    Header: 'Number of Units',
+    Header: 'Quantity of Credits',
     id: 'numberOfCredits',
     minWidth: 100
   }, {
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        item.type.id === CREDIT_TRANSFER_TYPES.adminAdjustment.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
         return -1 // this is to fix sorting (value can't be negative)
@@ -89,7 +85,7 @@ const LinkedCreditTransferSelection = (props) => {
     ),
     className: 'col-price',
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
-    Header: 'Value Per Unit',
+    Header: 'Value Per Credit',
     id: 'fairMarketValuePerCredit',
     minWidth: 100
   }, {

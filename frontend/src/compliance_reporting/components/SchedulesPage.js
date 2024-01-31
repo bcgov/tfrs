@@ -9,12 +9,12 @@ import ScheduleBTotals from './ScheduleBTotals'
 import ValidationMessages from './ValidationMessages'
 
 const SchedulesPage = props => (
-
   <div className="page_schedule spreadsheet-component">
     <div className="draggable-bounds">
-      <h1>{props.title} </h1>
+      <h1>{props.title}</h1>
 
       {props.children}
+
       {!props.readOnly &&
         <ValidationMessages
           key="validation-messages"
@@ -84,7 +84,6 @@ const SchedulesPage = props => (
       {props.scheduleType === 'schedule-b' &&
         <ScheduleBTotals
           totals={props.totals}
-          period={props.complianceReport}
         />
       }
       <div className="clear" />

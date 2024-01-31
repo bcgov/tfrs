@@ -1,6 +1,6 @@
 spilo:
 
-  replicaCount: 1
+  replicaCount: 2
 
   credentials:
     useExistingSecret: true

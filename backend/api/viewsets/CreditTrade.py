@@ -219,23 +219,19 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         """
         Call the approve function on multiple Credit Trades
         """
-        try:
-            status_approved = CreditTradeStatus.objects \
-                .get(status="Recorded")
+        status_approved = CreditTradeStatus.objects \
+            .get(status="Recorded")
 
-            credit_trades = CreditTrade.objects.filter(
-                status_id=status_approved.id).order_by('id')
+        credit_trades = CreditTrade.objects.filter(
+            status_id=status_approved.id).order_by('id')
 
-            CreditTradeService.validate_credits(credit_trades)
+        CreditTradeService.validate_credits(credit_trades)
 
-            for credit_trade in credit_trades:
-                credit_trade.update_user_id = request.user.id
-                CreditTradeService.approve(credit_trade, batch_process=True)
-                CreditTradeService.dispatch_notifications(
-                    None, credit_trade)
-
-        except Exception as e:
-            return Response(e, status=status.HTTP_400_BAD_REQUEST)
+        for credit_trade in credit_trades:
+            credit_trade.update_user_id = request.user.id
+            CreditTradeService.approve(credit_trade,batch_process=True)
+            CreditTradeService.dispatch_notifications(
+                None, credit_trade)
 
         return Response({"message":
                              "Approved credit transactions have been processed."},
@@ -252,7 +248,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "BC-LCFS_transactions_%Y-%m-%d")
+                    "BC-LCFS_credit_transactions_%Y-%m-%d")
             ))
 
         credit_trades = self.get_queryset().filter(
@@ -279,7 +275,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                     type="Part3FuelSupplier")) \
                 .order_by('lower_name')
 
-            workbook.add_fuel_suppliers(fuel_suppliers, include_actions=True)
+            workbook.add_fuel_suppliers(fuel_suppliers)
 
         workbook.save(response)
 

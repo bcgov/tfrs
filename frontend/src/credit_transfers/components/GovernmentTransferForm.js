@@ -13,12 +13,13 @@ import Tooltip from '../../app/components/Tooltip'
 import * as Lang from '../../constants/langEnUs'
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
 import CreditTransferCommentButtons from './CreditTransferCommentButtons'
-import NewInitiativeagreementComment from './NewInitiativeagreementComment'
+import CreditTransferCommentForm from './CreditTransferCommentForm'
 import GovernmentTransferFormDetails from './GovernmentTransferFormDetails'
 import { useNavigate } from 'react-router'
 
 const GovernmentTransferForm = props => {
   const navigate = useNavigate()
+
   useEffect(() => {
     props.getCompliancePeriods()
   }, [])
@@ -42,7 +43,7 @@ const GovernmentTransferForm = props => {
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
-          <NewInitiativeagreementComment
+          <CreditTransferCommentForm
             comment={props.fields.comment}
             isCommentingOnUnsavedCreditTransfer={props.id === 0}
             isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
@@ -101,7 +102,7 @@ const GovernmentTransferForm = props => {
                 disabled={props.fields.comment.length === 0}
                 type="button"
               >
-                {Lang.BTN_RECOMMEND_FOR_DECISION_1_2}
+                {Lang.BTN_RECOMMEND_FOR_DECISION}
               </button>
             </Tooltip>
             }

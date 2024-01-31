@@ -8,28 +8,28 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 2,
   code: 'CREDIT_TRANSFER_SIGNED_1OF2',
-  description: 'Sent',
+  description: 'Proposed',
   key: 'submitted',
   recipients: ['fuel_supplier'],
   feature: 'credit_transfer'
 }, {
   id: 10,
   code: 'CREDIT_TRANSFER_PROPOSAL_REFUSED',
-  description: 'Declined',
+  description: 'Refused',
   key: 'refused',
   recipients: ['fuel_supplier'],
   feature: 'credit_transfer'
 }, {
   id: 3,
   code: 'CREDIT_TRANSFER_SIGNED_2OF2',
-  description: 'Submitted',
+  description: 'Signed',
   key: 'accepted',
   recipients: ['fuel_supplier', 'government'],
   feature: 'credit_transfer'
 }, {
   id: 4,
   code: 'CREDIT_TRANSFER_RECOMMENDED_FOR_APPROVAL',
-  description: 'Recommend recording transfer',
+  description: 'Recommend Director Approval',
   key: 'recommended',
   permission: 'RECOMMEND_CREDIT_TRANSFER',
   recipients: ['government'],
@@ -37,7 +37,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 5,
   code: 'CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION',
-  description: 'Recommend refusing transfer',
+  description: 'Recommend Director Approval Decline',
   key: 'not_recommended',
   permission: 'RECOMMEND_CREDIT_TRANSFER',
   recipients: ['government'],
@@ -45,7 +45,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 7,
   code: 'CREDIT_TRANSFER_APPROVED',
-  description: 'Recorded',
+  description: 'Director Approval',
   key: 'approved',
   permission: 'APPROVE_CREDIT_TRANSFER',
   recipients: ['fuel_supplier', 'government'],
@@ -53,7 +53,7 @@ const CREDIT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 9,
   code: 'CREDIT_TRANSFER_DECLINED',
-  description: 'Refused',
+  description: 'Director Declined to Approve',
   key: 'declined',
   permission: 'DECLINE_CREDIT_TRANSFER',
   recipients: ['fuel_supplier', 'government'],

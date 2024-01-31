@@ -92,14 +92,3 @@
     }
   }
 }
-
-#confirmProcess {
-  .modal-dialog {
-    overflow-y: initial !important
-  }
-
-  .modal-body {
-    max-height: 40vh;
-    overflow-y: auto;
-  }
-}

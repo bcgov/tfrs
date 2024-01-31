@@ -22,7 +22,7 @@ describe('Part3 Table Data', () => {
         28: 600
       }
     }
-    const result = tableData(part3, summary, { isSupplemental: false, supplementalNumber: 0, compliancePeriod: { description: '2021' } })
+    const result = tableData(part3, summary, { isSupplemental: false })
 
     expect(result[SCHEDULE_SUMMARY.LINE_23][2].value).toBe(123)
     expect(result[SCHEDULE_SUMMARY.LINE_24][2].value).toBe(456)
@@ -79,7 +79,7 @@ describe('Part3 Table Data', () => {
         28: 600
       }
     }
-    const result = tableData(part3, summary, { isSupplemental: true, supplementalNumber: 25, compliancePeriod: { description: '2021' } })
+    const result = tableData(part3, summary, { isSupplemental: true, supplementalNumber: 25 })
 
     expect(result[SCHEDULE_SUMMARY.LINE_23][2].value).toBe(123)
     expect(result[SCHEDULE_SUMMARY.LINE_24][2].value).toBe(456)

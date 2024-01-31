@@ -237,7 +237,7 @@ class CreditTransferEditContainer extends Component {
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
       .indexOf(this.state.fields.tradeType.id) < 0) {
       this._governmentTransferSubmit(status)
-    } else { // Transfer Submit
+    } else { // Credit Transfer Submit
       this._creditTransferSubmit(status)
     }
 
@@ -289,7 +289,7 @@ class CreditTransferEditContainer extends Component {
         loggedInUser={this.props.loggedInUser}
         signingAuthorityAssertions={this.props.signingAuthorityAssertions}
         terms={this.state.terms}
-        title="Edit Transfer"
+        title="Edit Credit Transfer"
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         tradeStatus={this.state.tradeStatus}
@@ -351,11 +351,8 @@ class CreditTransferEditContainer extends Component {
         }}
         id="confirmRecommend"
         key="confirmRecommend"
-        confirmLabel="Recommend issuance"
-        cancelLabel="Cancel"
       >
-        Are you sure you want to recommend issuance of compliance units
-        for this Initiative Agreement?
+        Are you sure you want to recommend approval of this Part 3 Award?
       </Modal>,
       <Modal
         handleSubmit={() => this._deleteCreditTransfer(item.id)}

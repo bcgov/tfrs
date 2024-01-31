@@ -12,6 +12,7 @@ import CreditTransferTerms from './CreditTransferTerms'
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation'
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation'
 
+import { getCreditTransferType } from '../../actions/creditTransfersActions'
 import Errors from '../../app/components/Errors'
 import Loading from '../../app/components/Loading'
 import Tooltip from '../../app/components/Tooltip'
@@ -24,8 +25,6 @@ import CreditTransferComment from './CreditTransferComment'
 import CreditTransferCommentButtons from './CreditTransferCommentButtons'
 import CreditTransferSigningHistory from './CreditTransferSigningHistory'
 import CreditTransferDocumentList from './CreditTransferDocumentList'
-import TOOLTIPS from '../../constants/tooltips'
-import { transformCreditTransferTypeDesc } from '../../utils/functions'
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -36,7 +35,7 @@ const CreditTransferDetails = props => (
           {props.loggedInUser.roles &&
             !props.loggedInUser.isGovernmentUser &&
             <h3>
-              Compliance Units: {
+              Credit Balance: {
                 numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
                   .format(NumberFormat.INT)
               }
@@ -48,7 +47,11 @@ const CreditTransferDetails = props => (
                 <Tooltip
                   className="info"
                   show
-                  title={TOOLTIPS.IN_RESERVE}
+                  title="Reserved credits are the portion of credits in your credit balance that are
+                  currently pending the completion of a credit transaction. For example, selling
+                  credits to another organization (i.e. Credit Transfer) or being used to offset
+                  outstanding debits in a compliance period. Reserved credits cannot be transferred
+                  or otherwise used until the pending credit transaction has been completed."
                 >
                   <FontAwesomeIcon icon="info-circle" />
                 </Tooltip>
@@ -58,7 +61,7 @@ const CreditTransferDetails = props => (
         </div>
         <h1>
           {props.tradeType.id &&
-            transformCreditTransferTypeDesc(props.tradeType.id, props.updateTimestamp)
+            getCreditTransferType(props.tradeType.id)
           } — ID: {props.id}
         </h1>
         {[
@@ -68,7 +71,9 @@ const CreditTransferDetails = props => (
         <h3>
           {props.status.id !== CREDIT_TRANSFER_STATUS.approved.id &&
           <p>
-            A transfer is not effective until it is recorded by the Director.
+            Under section 11.11 (1) (a) of the Renewable and Low Carbon Fuel Requirements
+            Regulation, a transfer of validated credits is not effective unless the transfer
+            is approved by the Director.
           </p>
           }
           {[
@@ -76,8 +81,11 @@ const CreditTransferDetails = props => (
             CREDIT_TRANSFER_STATUS.proposed.id
           ].indexOf(props.status.id) >= 0 &&
           <p>
-            Transfers must indicate whether they are for consideration, and if so,
-            the fair market value of the consideration in Canadian dollars per credit.
+            All credit transfer proposals must include a “fair market value” of any
+            consideration, under section 11.11 (2) (c) (iv) of the Regulation. Transfers
+            deemed to underestimate &quot;fair market value&quot; or those using a
+            &quot;zero dollar&quot; value must include a written explanation justifying
+            the use of the identified credit value.
           </p>
           }
         </h3>
@@ -86,7 +94,6 @@ const CreditTransferDetails = props => (
           isRescinded={props.isRescinded}
           status={props.status}
           type={props.tradeType}
-          updateTimestamp={props.updateTimestamp}
         />
         <CreditTransferVisualRepresentation
           creditsFrom={props.creditsFrom}
@@ -97,7 +104,6 @@ const CreditTransferDetails = props => (
           totalValue={props.totalValue}
           tradeType={props.tradeType}
           zeroDollarReason={props.zeroDollarReason}
-          updateTimestamp = {props.updateTimestamp}
         />
         <div className="credit-transfer-details">
           <div className="main-form">
@@ -117,7 +123,6 @@ const CreditTransferDetails = props => (
               categoryDSelected={props.categoryDSelected}
               toggleCategoryDSelection={props.toggleCategoryDSelection}
               loggedInUser={props.loggedInUser}
-              updateTimestamp={props.updateTimestamp}
             />
           </div>
         </div>
@@ -186,7 +191,6 @@ const CreditTransferDetails = props => (
                 BTN_RECOMMEND: [
                   CREDIT_TRANSFER_TYPES.validation.id,
                   CREDIT_TRANSFER_TYPES.retirement.id,
-                  CREDIT_TRANSFER_TYPES.adminAdjustment.id,
                   CREDIT_TRANSFER_TYPES.part3Award.id].includes(props.tradeType.id) &&
                   props.comments.length === 0,
                 BTN_SIGN_1_2: props.fields.terms.filter(term =>
@@ -201,7 +205,6 @@ const CreditTransferDetails = props => (
             }
             id={props.id}
             isCommenting={props.isCommenting}
-            tradeType={props.tradeType}
             permissions={
               {
                 BTN_SIGN_1_2:
@@ -250,15 +253,13 @@ CreditTransferDetails.defaultProps = {
     theType: 'sell'
   },
   comments: [],
-  documents: [],
-  updateTimestamp: ''
+  documents: []
 }
 
 CreditTransferDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
-  updateTimestamp: PropTypes.string,
   compliancePeriod: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string

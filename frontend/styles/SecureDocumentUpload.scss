@@ -6,32 +6,8 @@
     margin: 0;
   }
 
-  .instructions-list {
-    margin-left: 1rem;
-    margin-top: 1.5rem;
+  .instructions {
     margin-bottom: 2rem;
-  }
-  
-  .instructions-list dt {
-    font-weight: bold; 
-    margin-bottom: 0.5rem;
-    color: #333; /* or any color you'd prefer for emphasis */
-  }
-  
-  .instructions-list dd {
-    margin-left: 2rem;
-    margin-bottom: 0.75rem;
-    position: relative;
-    padding-left: 1rem; /* Make space for the bullet point */
-  }
-
-  .instructions-list dd::before {
-    content: '\2022'; /* Unicode for a bullet point */
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2em;
   }
 
   .right-toolbar-container .actions-container {

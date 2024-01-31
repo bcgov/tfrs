@@ -1,5 +1,4 @@
 import datetime
-from decimal import *
 
 from django.core.cache import caches, cache
 from django.db import transaction
@@ -24,7 +23,6 @@ from api.serializers.ExclusionReport import \
     ExclusionReportDetailSerializer, ExclusionReportUpdateSerializer, ExclusionReportValidationSerializer
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.ComplianceReportSpreadSheet import ComplianceReportSpreadsheet
-from api.services.OrganizationService import OrganizationService
 from auditable.views import AuditableMixin
 from api.paginations import BasicPagination
 from django.db.models import Q, F, Value
@@ -116,7 +114,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                             qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('-reports_updatedtime')
                         else:
                             qs = qs.annotate(reports_updatedtime=Max('update_timestamp')).order_by('reports_updatedtime')
-
+                
                 filters = request.data.get('filters')
                 if filters:
                     for filter in filters:
@@ -212,12 +210,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 Q(status__director_status__status='Unreviewed') &
                 Q(status__manager_status__status='Unreviewed')
             )
-
+        
         if 'recommended rejection - analyst'.find(value) != -1 or 'rejection'.find(value) != -1:
             return qs.filter(
                 Q(status__analyst_status__status='Not Recommended')
             )
-
+        
         if 'recommended acceptance - manager'.find(value) != -1 or 'manager'.find(value) != -1:
             return qs.filter(
                 Q(status__manager_status__status='Recommended') &
@@ -230,13 +228,13 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             return qs.filter(
                 Q(status__manager_status__status='Not Recommended')
             )
-
+        
         return qs
-
+    
     def filter_compliance_status(self, qs, value):
         query_result = []
         for val in value:
-            if val == 'Accepted' :
+            if val == 'Accepted' :     
                 qs_accepted = qs.filter(
                     Q(status__director_status__status='Accepted')
                 )
@@ -260,7 +258,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 query_result.extend(qs_draft)
 
             if val == 'For Analyst Review':
-                qs_analyst = qs.filter(
+                qs_analyst = qs.filter(    
                     Q(status__analyst_status__status='Unreviewed') &
                     Q(status__director_status__status='Unreviewed') &
                     Q(status__fuel_supplier_status__status='Submitted') &
@@ -270,12 +268,12 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             if val == 'For Manager Review':
                 qs_manager = qs.filter(
-
+                    
                     Q(status__analyst_status__status='Recommended') &
                     Q(status__director_status__status='Unreviewed') &
                     Q(status__manager_status__status='Unreviewed') &
                     Q(status__fuel_supplier_status__status='Submitted')
-
+                    
                 )
                 query_result.extend(qs_manager)
                 qs_man_rej = qs.filter(
@@ -285,22 +283,22 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                     Q(status__fuel_supplier_status__status='Submitted')
                 )
                 query_result.extend(qs_man_rej)
-
+            
             if val == 'For Director Review':
                 qs_director = qs.filter(
                     Q(status__manager_status__status='Recommended') &
-                    Q(status__director_status__status='Unreviewed')
+                    Q(status__director_status__status='Unreviewed') 
                 )
                 query_result.extend(qs_director)
                 qs_dir_rej = qs.filter(
                     Q(status__manager_status__status='Not Recommended') &
-                    Q(status__director_status__status='Unreviewed')
+                    Q(status__director_status__status='Unreviewed') 
                 )
                 query_result.extend(qs_dir_rej)
 
             if val == 'awaiting government review':
 
-                qs_agr = qs.filter(
+                qs_agr = qs.filter(    
                     Q(status__analyst_status__status='Unreviewed') &
                     Q(status__director_status__status='Unreviewed') &
                     Q(status__fuel_supplier_status__status='Submitted') &
@@ -308,9 +306,9 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                 )
 
                 query_result.extend(qs_agr)
-
+            
         ids = [i.id for i in query_result]
-        qs = qs.filter(id__in = ids)
+        qs = qs.filter(id__in = ids)                             
         return qs
 
     def filter_supplemental_report_status(self, qs, value):
@@ -337,7 +335,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             return qs.filter(
                 Q(status__director_status__status='Rejected')
             )
-
+        
         if 'recommended'.find(value) != -1:
             return qs.filter(
                 (Q(supplements__status__manager_status__status='Recommended') &
@@ -388,7 +386,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     def filter_manager_status(self, qs, value):
         try:
-            supplemental_reports = ComplianceReport.objects.filter(id__in=value)
+            supplemental_reports = ComplianceReport.objects.filter(id__in=value)           
         except Exception as e:
             print(e)
         return supplemental_reports
@@ -401,7 +399,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             latest_supplemental = latest_supplemental.filter(~Q(status__fuel_supplier_status__status='Draft'))
         else:
             latest_supplemental = latest_supplemental.filter(Q(organization=organization))
-
+        
         return latest_supplemental
 
     def get_latest_supplemental_reports(self):
@@ -548,73 +546,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
             sorted_qs, many=True, context={'request': request})
         data = serializer.data
         cached_page.set(sanitized_cache_key, data, 60 * 15)
-
         return Response(data)
-
-    def compliance_to_new_act(self, obj, snapshot):
-        if int(obj.compliance_period.description) > 2022 and snapshot is not None:
-            lines = snapshot.get('summary').get('lines')
-            if lines.get('29A') is None:
-                previous_transactions = []
-                previous_snapshots = []
-                current = obj
-                is_supplemental = False
-
-                if current.supplements:
-                    is_supplemental = True
-
-                available_compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
-                    obj.organization,
-                    obj.update_timestamp
-                )
-                net_compliance_unit_balance = int(lines['25'])
-                desired_net_credit_balance_change = Decimal(0.0)
-                if is_supplemental:
-                    while current.supplements is not None:
-                        current = current.supplements
-                        if current.credit_transaction is not None:
-                            previous_transactions.append(current.credit_transaction)
-                        if current.compliance_report_snapshot is not None:
-                            previous_snapshots.append(current.compliance_report_snapshot.snapshot)
-
-                    total_previous_reduction = Decimal(0.0)
-                    total_previous_validation = Decimal(0.0)
-
-                    for transaction in previous_transactions:
-                        if transaction.type.the_type in ['Credit Validation']:
-                            total_previous_validation += transaction.number_of_credits
-                        if transaction.type.the_type in ['Credit Reduction']:
-                            total_previous_reduction += transaction.number_of_credits
-                    desired_net_credit_balance_change = Decimal(lines['25'])
-                    net_compliance_unit_balance = desired_net_credit_balance_change - \
-                                                  (total_previous_validation - total_previous_reduction)
-
-                adjusted_balance = available_compliance_unit_balance + net_compliance_unit_balance
-                if available_compliance_unit_balance <= 0 and net_compliance_unit_balance < 0:
-                    lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (
-                                adjusted_balance < 0) else 0
-                    lines['29A'] = 0
-                    total_previous_compliance_units = Decimal(0.0)
-                    for snapshots in previous_snapshots:
-                        if snapshots.get("summary").get("lines") is not None:
-                            total_previous_compliance_units += Decimal(snapshots.get("summary").get("lines").get("25"))
-                    lines['29B'] = Decimal(lines['25']) - total_previous_compliance_units
-                    lines['29C'] = 0
-                else:
-                    lines['29A'] = available_compliance_unit_balance
-                    lines['28'] = 0
-                    if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
-                        lines['29B'] = net_compliance_unit_balance
-                    elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
-                        lines['29B'] = net_compliance_unit_balance if (
-                                    adjusted_balance > 0) else -available_compliance_unit_balance
-                        lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (
-                                    adjusted_balance < 0) else 0
-                    lines['29C'] = lines['29A'] + lines['29B']
-                snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines[
-                    '28']
-                snapshot['summary']['lines'] = lines
-        return snapshot
 
     @action(detail=False, methods=['post'])
     def paginated(self, request):
@@ -633,7 +565,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(queryset, many=True)
 
         return Response(serializer.data)
-
+        
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def types(self, request):
@@ -668,8 +600,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         # failure to find an object will trigger an exception that is
         # translated into a 404
         snapshot = ComplianceReportSnapshot.objects.get(compliance_report=obj)
-        snapshot = self.compliance_to_new_act(obj, snapshot.snapshot)
-        return Response(snapshot)
+
+        return Response(snapshot.snapshot)
 
     @action(detail=True, methods=['patch'])
     def compute_totals(self, request, pk=None):
@@ -739,14 +671,11 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         if obj.type.the_type == 'Exclusion Report':
             workbook.add_exclusion_agreement(snapshot['exclusion_agreement'])
         if obj.type.the_type == 'Compliance Report':
-            snapshot = self.compliance_to_new_act(obj, snapshot)
             workbook.add_schedule_a(snapshot['schedule_a'])
-            workbook.add_schedule_b(snapshot['schedule_b'],
-                                    int(snapshot['compliance_period']['description']))
+            workbook.add_schedule_b(snapshot['schedule_b'])
             workbook.add_schedule_c(snapshot['schedule_c'])
             workbook.add_schedule_d(snapshot['schedule_d'])
-            workbook.add_schedule_summary(snapshot['summary'],
-                                          int(snapshot['compliance_period']['description']))
+            workbook.add_schedule_summary(snapshot['summary'])
 
         workbook.save(response)
 
@@ -768,7 +697,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         data = serializer.data
         cached_page.set(sanitized_cache_key, data, 60 * 15)
         return Response(data)
-
+    
     @action(detail=False, methods=['get'])
     def supplemental(self, request):
         query_params = request.GET.urlencode()

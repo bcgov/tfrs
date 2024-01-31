@@ -17,7 +17,7 @@ const OrganizationsContainer = props => {
 
   return (
     <OrganizationsPage
-      title="Organizations"
+      title="Fuel Suppliers"
       organizations={props.organizations}
     />
   )

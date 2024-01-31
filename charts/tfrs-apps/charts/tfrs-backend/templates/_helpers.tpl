@@ -16,13 +16,10 @@ The selector lables:
 .Release.Name comes from command helm install
   example: helm install tfrs-backend-dev ...  or  helm install tfrs-backend-dev-jan ...
 
-.Chart.Name come from the name attribute in Chart.yaml
-
 */}}
 
 {{/*
-Expand the name of the chart. If nameOverride is empty, use .Chart.Name.
-Typically no need to assign value to nameOverride,
+Expand the name of the chart.
 */}}
 {{- define "tfrs-backend.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
@@ -31,7 +28,8 @@ Typically no need to assign value to nameOverride,
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-The .Release.Name is the first parameter of command helm install tfrs-backend-dev or tfrs-backend-dev-jan
+If release name contains chart name it will be used as a full name.
+The .Release.Name is the first parameter of command helm install tfrs-backend
 */}}
 {{- define "tfrs-backend.fullname" -}}
 {{- .Release.Name }}
@@ -62,6 +60,76 @@ Selector labels
 */}}
 {{- define "tfrs-backend.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "tfrs-backend.name" . }}
-app.kubernetes.io/instance: {{ include "tfrs-backend.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Define the deploymentconfig name
+*/}}
+{{- define "tfrs-backend.deploymentconfigName" -}}
+{{- include "tfrs-backend.fullname" . }}
+{{- end }}
+
+{{/*
+Define the deploymentconfig name
+*/}}
+{{- define "tfrs-backend.imagestreamName" -}}
+{{- include "tfrs-backend.fullname" . }}
+{{- end }}
+
+{{/*
+Define the service name
+*/}}
+{{- define "tfrs-backend.serviceName" -}}
+{{- include "tfrs-backend.fullname" . }}
+{{- end }}
+
+
+{{/*
+Define the backend route name
+*/}}
+{{- define "tfrs-backend.routeName" -}}
+{{- include "tfrs-backend.fullname" . }}
+{{- end }}
+
+{{/*
+Define the backend admin route name, used by task queue
+*/}}
+{{- define "tfrs-backend.adminRouteName" -}}
+tfrs-backend-admin{{ .Values.suffix }}
+{{- end }}
+
+{{/*
+Define the backend static route name, used by task queue
+*/}}
+{{- define "tfrs-backend.staticRouteName" -}}
+tfrs-backend-static{{ .Values.suffix }}
+{{- end }}
+
+{{/*
+Define the djangoSecretKey
+*/}}
+{{- define "tfrs-backend.djangoSecretKey" -}}
+{{- randAlphaNum 50 | nospace | b64enc }}
+{{- end }}
+
+{{/*
+Define the djangoSaltKey
+*/}}
+{{- define "tfrs-backend.djangoSaltKey" -}}
+{{- randAlphaNum 50 | nospace | b64enc }}
+{{- end }}
+
+{{/*
+Define the django-secret name
+*/}}
+{{- define "tfrs-backend.django-secret" -}}
+tfrs-django-secret
+{{- end }}
+
+{{/*
+Define the django-salt name
+*/}}
+{{- define "tfrs-backend.django-salt" -}}
+tfrs-django-salt
+{{- end }}

@@ -32,28 +32,6 @@ const organizationMembers = (state = {
   }
 }
 
-const organizationBalanceRequest = (state = {
-  details: {},
-  isFetching: false
-}, action) => {
-  switch (action.type) {
-    case ActionTypes.GET_ORGANIZATION_BALANCE:
-      return {
-        ...state,
-        details: {},
-        isFetching: true
-      }
-    case ActionTypes.RECEIVE_ORGANIZATION_BALANCE:
-      return {
-        ...state,
-        details: action.details,
-        isFetching: false
-      }
-    default:
-      return state
-  }
-}
-
 const organizationRequest = (state = {
   didInvalidate: false,
   fuelSupplier: {},
@@ -142,4 +120,4 @@ const fuelSuppliersRequest = (state = {
   }
 }
 
-export { organizationMembers, organizationRequest, organizations, fuelSuppliersRequest, organizationBalanceRequest }
+export { organizationMembers, organizationRequest, organizations, fuelSuppliersRequest }

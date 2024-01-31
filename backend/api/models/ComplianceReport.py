@@ -233,7 +233,7 @@ class ComplianceReport(Auditable):
         related_name='latest_reports')
     
     traversal = models.IntegerField(
-        default=0,
+        default=1,
         db_comment="Traversal position of this compliance report. "
     )
     
@@ -246,6 +246,7 @@ class ComplianceReport(Auditable):
         max_length=500, blank=True, null=True,
         db_comment='An explanatory note required when submitting a supplemental report'
     )
+
 
     @property
     def generated_nickname(self):

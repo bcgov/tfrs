@@ -13,7 +13,7 @@ const SettingsTabs = props => (
     </li>
     <li role="presentation" className={`${(props.active === 'profile') ? 'active' : ''}`}>
       <Link id="navbar-administration" to={Routes.SETTINGS_PROFILE}>
-        User profile
+        User Profile
       </Link>
     </li>
   </ul>

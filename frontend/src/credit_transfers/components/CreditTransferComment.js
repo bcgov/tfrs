@@ -5,7 +5,6 @@ import * as Lang from '../../constants/langEnUs'
 import LocalTimestamp from '../../app/components/LocalTimestamp'
 import Tooltip from '../../app/components/Tooltip'
 import CreditTransferCommentForm from './CreditTransferCommentForm'
-import moment from 'moment-timezone'
 
 class CreditTransferComment extends Component {
   constructor (props) {
@@ -75,10 +74,7 @@ class CreditTransferComment extends Component {
               {this.props.comment.privilegedAccess ||
               <Tooltip
                 show
-                title={this.props.comment.updateTimestamp >= moment('2024-01-01')
-                ? Lang.TEXT_VISIBLE_TO_ALL_AFTER_JAN2024
-                : Lang.TEXT_VISIBLE_TO_ALL
-                }
+                title={Lang.TEXT_VISIBLE_TO_ALL}
               >
                 <FontAwesomeIcon size="2x" icon="eye" />
               </Tooltip>

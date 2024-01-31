@@ -38,7 +38,7 @@ const NotificationsTable = (props) => {
   }, {
     accessor: (item) => {
       if (item.relatedCreditTrade) {
-        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.notificationName)
+        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType)
       }
 
       if (item.relatedReport) {
