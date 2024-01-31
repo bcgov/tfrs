@@ -1,0 +1,104 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: tfrs-celery{{ .Values.suffix }}
+  labels:
+    {{- include "tfrs-celery.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 300
+    resources: {}
+    activeDeadlineSeconds: 600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - celery
+        from:
+          kind: ImageStreamTag
+          name: tfrs-celery:{{ .Values.celeryImageTagName }}
+    - type: ConfigChange
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    {{- include "tfrs-celery.selectorLabels" . | nindent 4 }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        {{- include "tfrs-celery.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: celery
+          env:
+            - name: RABBITMQ_VHOST
+              value: {{ .Values.rabbitmqVHost }}
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-rabbitmq-app
+                  key: password
+            - name: RABBITMQ_HOST
+              value: tfrs-rabbitmq.{{ .Values.namespace }}.svc.cluster.local
+            - name: RABBITMQ_PORT
+              value: '5672'
+            - name: DATABASE_SERVICE_NAME
+              value: {{ .Values.databaseServiceHostName }}
+            - name: DATABASE_ENGINE
+              value: postgresql
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-name
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-patroni-app
+                  key: app-db-password
+            - name: MINIO_ENDPOINT
+              value: tfrs-minio-{{ .Values.envName }}.apps.silver.devops.gov.bc.ca:443
+            - name: MINIO_USE_SSL
+              value: 'true'
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_ACCESS_KEY
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-{{ .Values.envName }}
+                  key: MINIO_SECRET_KEY
+            - name: MINIO_BUCKET_NAME
+              value: tfrs
+            - name: EMAIL_FROM_ADDRESS
+              value: tfrs@gov.bc.ca
+            - name: EMAIL_SENDING_ENABLED
+              value: 'true'
+            - name: SMTP_SERVER_HOST
+              value: apps.smtp.gov.bc.ca
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler

@@ -3,13 +3,15 @@ from django.core.exceptions import ValidationError
 from .exceptions import PositiveIntegerException
 
 
-def CreditTradeNumberOfCreditsValidator(value):
+def CreditTradeNumberOfCreditsValidator(value, instance):
     """
     Validates and makes sure that the user doesn't
     enter 0 or a negative value for the number of
-    credits
+    credits, unless the credit_trade_type is 'Administrative Adjustment'.
     """
-    if value <= 0:
+    if instance.credit_trade_type == 'Administrative Adjustment':
+        return  # Allow any value for Administrative Adjustment
+    elif value <= 0:
         raise PositiveIntegerException(
             "Please enter at least 1 credit."
         )

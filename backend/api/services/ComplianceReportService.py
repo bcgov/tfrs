@@ -196,6 +196,16 @@ class ComplianceReportService(object):
             else:
                 role_id = user.roles.first().id
 
+        history = ComplianceReportHistory.objects.filter(
+            Q(compliance_report_id=compliance_report.id) &
+            Q(status__fuel_supplier_status__status=compliance_report.status.fuel_supplier_status_id) &
+            Q(status__analyst_status__status=compliance_report.status.analyst_status_id) &
+            Q(status__manager_status__status=compliance_report.status.manager_status_id) &
+            Q(status__director_status__status=compliance_report.status.director_status_id))
+        # if a history record is already present with same status then don't create a new one.
+        if len(history) > 0:
+            return
+        
         created_status = ComplianceReportWorkflowState.objects.create(
             fuel_supplier_status=compliance_report.status.fuel_supplier_status,
             analyst_status=compliance_report.status.analyst_status,
@@ -255,6 +265,7 @@ class ComplianceReportService(object):
             raise InvalidStateException()
 
         snapshot = compliance_report.snapshot
+        COMPLIANCE_PERIOD_2023_AND_ABOVE = int(snapshot['compliance_period']['description']) >= 2023
 
         if 'summary' not in snapshot:
             raise InvalidStateException()
@@ -262,33 +273,45 @@ class ComplianceReportService(object):
             raise InvalidStateException()
 
         lines = snapshot['summary']['lines']
+        if COMPLIANCE_PERIOD_2023_AND_ABOVE:
+            # If a compliance report is in a deficit position(i.e., a negative net compliance unit balance for the
+            # compliance period or negative value in Line 25 in the summary section) that is greater than
+            # the organization’s available credit balance, then the available compliance unit balance needs to be
+            # zeroed out when the director assesses (accepts) the compliance report.
+            if Decimal(lines['25']) < Decimal(0) \
+            and (Decimal(lines['29A']) + Decimal(lines['25'])) < 0:
+                required_credit_transaction = Decimal(lines['29A']) * Decimal(-1.0)
+            else:
+                desired_net_credit_balance_change = Decimal(lines['25'])
+                required_credit_transaction = desired_net_credit_balance_change - \
+                                              (total_previous_validation - total_previous_reduction)
+        else:
+            desired_net_credit_balance_change = Decimal(0.0)
 
-        desired_net_credit_balance_change = Decimal(0.0)
+            if Decimal(lines['25']) > Decimal(0):
+                desired_net_credit_balance_change = Decimal(lines['25'])
+            elif Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
+                desired_net_credit_balance_change = Decimal(lines['26']) * Decimal(-1.0)
 
-        if Decimal(lines['25']) > Decimal(0):
-            desired_net_credit_balance_change = Decimal(lines['25'])
-        elif Decimal(lines['25']) < 0 and Decimal(lines['26']) > Decimal(0):
-            desired_net_credit_balance_change = Decimal(lines['26']) * Decimal(-1.0)
+            required_credit_transaction = desired_net_credit_balance_change - \
+                                        (total_previous_validation - total_previous_reduction)
 
-        required_credit_transaction = desired_net_credit_balance_change - \
-                                      (total_previous_validation - total_previous_reduction)
+            if settings.DEVELOPMENT:
+                print('line 25 of current report: {}'.format(lines['25']))
+                print('desired credit balance change: {}'.format(desired_net_credit_balance_change))
+                print('required transaction to effect change: {}'.format(required_credit_transaction))
 
-        if settings.DEVELOPMENT:
-            print('line 25 of current report: {}'.format(lines['25']))
-            print('desired credit balance change: {}'.format(desired_net_credit_balance_change))
-            print('required transaction to effect change: {}'.format(required_credit_transaction))
+            if is_supplemental and Decimal(lines['25']) < 0 and \
+                    (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
+                required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
 
-        if is_supplemental and Decimal(lines['25']) < 0 and \
-                (Decimal(lines['26']) + Decimal(lines['25'])) > 0:
-            required_credit_transaction = Decimal(lines['26']) + Decimal(lines['25'])
-
-         # Code 26C is used to identify credits that must be refunded to the supplier.
-         # This occurs when our debit position decreases and we have already spent credits. 
-         # In such cases, any excess credits must be returned to the supplier.
-        if is_supplemental and Decimal(lines.get('26C', 0)) > 0:
-            print("*** DIRECTOR 26C Increase to Credits ***")
-            required_credit_transaction = Decimal(lines['26C'])
-
+            # Code 26C is used to identify credits that must be refunded to the supplier.
+            # This occurs when our debit position decreases and we have already spent credits. 
+            # In such cases, any excess credits must be returned to the supplier.
+            if is_supplemental and Decimal(lines['26C']) > 0:
+                print("*** DIRECTOR 26C Increase to Credits ***")
+                required_credit_transaction = Decimal(lines['26C'])
+            
         if required_credit_transaction > Decimal(0):
             # do validation for Decimal(lines['25'])
             credit_transaction = CreditTrade(
@@ -309,7 +332,19 @@ class ComplianceReportService(object):
             CreditTradeService.pvr_notification(None, credit_transaction)
         else:
             if required_credit_transaction < Decimal(0):
-                # do_reduction for Decimal(lines['26'])
+                if COMPLIANCE_PERIOD_2023_AND_ABOVE:
+                    # Fetch the organization's balance from organization_balance property
+                    org_balance = Decimal(compliance_report.organization.organization_balance['validated_credits'])
+                    
+                    # Deduct the pending deductions, if any, from the organization balance.
+                    if 'deductions' in compliance_report.organization.organization_balance:
+                        org_balance -= Decimal(compliance_report.organization.organization_balance['deductions'])
+                    
+                    # If required_credit_transaction is more negative than the organization balance,
+                    # set it to be equal to the organization balance.
+                    if org_balance + required_credit_transaction < Decimal(0):
+                        required_credit_transaction = -org_balance
+
                 credit_transaction = CreditTrade(
                     initiator=Organization.objects.get(id=1),
                     respondent=compliance_report.organization,

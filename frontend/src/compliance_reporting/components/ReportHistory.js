@@ -26,7 +26,7 @@ const Delta = (props) => {
       break
     case 'delta':
       content = (
-        <ScheduleDeltas deltas={props.delta} />
+        <ScheduleDeltas deltas={props.delta} period={props.snapshot.data.compliancePeriod.description} />
       )
       break
     default:

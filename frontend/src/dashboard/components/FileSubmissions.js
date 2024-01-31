@@ -54,7 +54,7 @@ const FileSubmissions = (props) => {
                   value: 'Submitted'
                 }], 'sfs')
 
-                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST, { state: { items: 'Submitted' } })
               }}
               type="button"
             >
@@ -71,7 +71,7 @@ const FileSubmissions = (props) => {
                   value: 'Received'
                 }], 'sfs')
 
-                return navigate(SECURE_DOCUMENT_UPLOAD.LIST)
+                return navigate(SECURE_DOCUMENT_UPLOAD.LIST, { state: { items: 'Received' } })
               }}
               type="button"
             >

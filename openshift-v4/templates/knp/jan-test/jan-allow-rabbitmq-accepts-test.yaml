@@ -1,0 +1,65 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: jan-allow-rabbitmq-accepts-test
+  creationTimestamp: 
+  generation: 1
+  namespace: 0ab226-test
+  labels:
+    template: tfrs-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: tfrs-rabbitmq
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 5672
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-notification-server-test-jan
+    - ports:
+        - protocol: TCP
+          port: 5672
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-backend-test-jan
+    - ports:
+        - protocol: TCP
+          port: 5672
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-scan-handler-test-jan
+    - ports:
+        - protocol: TCP
+          port: 5672
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-scan-coordinator-test-jan
+    - ports:
+        - protocol: TCP
+          port: 5672
+      from:
+        - podSelector:
+            matchLabels:
+              name: tfrs-celery-test-jan
+    - ports:
+        - protocol: TCP
+          port: 5672
+        - protocol: TCP
+          port: 15672
+        - protocol: TCP
+          port: 25672
+        - protocol: TCP
+          port: 4369
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: tfrs-rabbitmq
+  policyTypes:
+    - Ingress
+status: {}

@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScheduleBTotals should match snapshot 1`] = `
+<div
+  className="schedule-totals schedule-b react-draggable"
+  onMouseDown={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchStart={[Function]}
+  style={
+    {
+      "touchAction": "none",
+      "transform": "translate(0px,0px)",
+    }
+  }
+  transform={null}
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-12"
+    >
+      <h2>
+        Totals
+      </h2>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <label
+        htmlFor="total-credit"
+      >
+        Total Credit
+      </label>
+    </div>
+    <div
+      className="col-md-6 value"
+    >
+      3,457
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <label
+        htmlFor="total-debit"
+      >
+        Total Debit
+      </label>
+    </div>
+    <div
+      className="col-md-6 value "
+    >
+      -
+    </div>
+  </div>
+  <div
+    className="row net-total"
+  >
+    <div
+      className="col-md-6"
+    >
+      <label
+        htmlFor="net-total"
+      >
+        Net  
+         Credit or (Debit) 
+      </label>
+    </div>
+    <div
+      className="col-md-6 value "
+    >
+      3,457
+    </div>
+  </div>
+</div>
+`;

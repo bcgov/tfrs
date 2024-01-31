@@ -158,7 +158,7 @@ objects:
                 name: tfrs-patroni-app
                 key: app-db-password
           - name: POSTGRESQL_SERVICE_HOST
-            value: ${DB_SERVICE_NAME}.${NAMESPACE}.svc.cluster.local
+            value: ${DB_SERVICE_NAME}
           - name: POSTGRESQL_SERVICE_PORT
             value: '5432'
           - name: RABBITMQ_USER

@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import numeral from 'numeral'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import moment from 'moment-timezone'
 import * as NumberFormat from '../../constants/numeralFormats'
 import {
   CREDIT_TRANSFER_STATUS,
   CREDIT_TRANSFER_TYPES
 } from '../../constants/values'
 import { getCreditTransferType } from '../../actions/creditTransfersActions'
+import { transformCreditTransferTypeDesc } from '../../utils/functions'
 
 class CreditTransferVisualRepresentation extends Component {
   _renderPart3Award () {
@@ -22,9 +23,35 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            credit{this.props.numberOfCredits > 1 && 's'}
+            {moment(this.props.updateTimestamp).isSameOrAfter(moment('2024-01-01')) ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 1 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />{' '}
+          <div>{transformCreditTransferTypeDesc(this.props.tradeType.id, this.props.updateTimestamp)}</div>
+        </div>
+      </div>
+    )
+  }
+
+  _renderAdministrativeAdjustment () {
+    return (
+      <div className='row visual-representation container'>
+        <div className='col-xs-10 col-sm-8 col-md-4'>
+          <div className='respondent-container'>
+            {this.props.creditsTo && this.props.creditsTo.name}
+          </div>
+        </div>
+        <div className='col-xs-12 col-md-2 arrow'>
+          <div>
+            {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
+            compliance unit{Math.abs(this.props.numberOfCredits) > 1 && 's'}
+          </div>
+          {this.props.numberOfCredits >= 0 &&
+            <FontAwesomeIcon icon='arrow-alt-circle-up' size='4x' />
+          }
+          {this.props.numberOfCredits < 0 &&
+            <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />
+          }
+          {' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
@@ -42,7 +69,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className='col-xs-12 col-md-2 arrow'>
           <div>
             {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-            credit{this.props.numberOfCredits > 2 && 's'}
+            {this.props.updateTimestamp >= moment('2024-01-01') ? 'compliance unit' : 'credit'}{this.props.numberOfCredits > 2 && 's'}
           </div>
           <FontAwesomeIcon icon='arrow-alt-circle-down' size='4x' />{' '}
           <div>{getCreditTransferType(this.props.tradeType.id)}</div>
@@ -75,8 +102,10 @@ class CreditTransferVisualRepresentation extends Component {
   }
 
   _renderCreditTransfer () {
-    const creditsFromStatus = this.props.creditsFrom.statusDisplay
-    const creditsToStatus = this.props.creditsTo.statusDisplay
+    const creditsFromStatus =
+      this.props.creditsFrom.statusDisplay === 'Active' ? 'Registered' : 'Not registered'
+    const creditsToStatus =
+      this.props.creditsTo.statusDisplay === 'Active' ? 'Registered' : 'Not registered'
 
     return (
       <div className='row visual-representation container'>
@@ -92,7 +121,7 @@ class CreditTransferVisualRepresentation extends Component {
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
-                  Credit Balance:
+                  Compliance Units:
                   {this.props.creditsFrom.organizationBalance &&
                     ` ${numeral(
                       this.props.creditsFrom.organizationBalance
@@ -118,7 +147,7 @@ class CreditTransferVisualRepresentation extends Component {
           {Number(this.props.numberOfCredits) > 0 && (
             <div>
               {numeral(this.props.numberOfCredits).format(NumberFormat.INT)}{' '}
-              credit{this.props.numberOfCredits > 1 && 's'}
+              compliance unit{this.props.numberOfCredits > 1 && 's'}
             </div>
           )}
           <FontAwesomeIcon
@@ -144,7 +173,7 @@ class CreditTransferVisualRepresentation extends Component {
             ].indexOf(this.props.status.id) >= 0 &&
               this.props.loggedInUser.isGovernmentUser && (
                 <div className='credit-balance'>
-                  Credit Balance:
+                  Compliance Units:
                   {this.props.creditsTo.organizationBalance &&
                     ` ${numeral(
                       this.props.creditsTo.organizationBalance.validatedCredits
@@ -169,6 +198,9 @@ class CreditTransferVisualRepresentation extends Component {
       case CREDIT_TRANSFER_TYPES.part3Award.id:
       case CREDIT_TRANSFER_TYPES.validation.id:
         return this._renderPart3Award()
+
+      case CREDIT_TRANSFER_TYPES.adminAdjustment.id:
+        return this._renderAdministrativeAdjustment()
 
       case CREDIT_TRANSFER_TYPES.retirement.id:
         return this._renderRetirement()

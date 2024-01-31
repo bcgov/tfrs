@@ -11,7 +11,6 @@ import InputWithTooltip from '../../app/components/InputWithTooltip'
 
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
-    console.log(this.props, "1414")
     return (
       (this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
       this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
@@ -19,14 +18,14 @@ class CreditTransferFormDetails extends Component {
       parseFloat(this.props.fields.fairMarketValuePerCredit) === 0
     )
   }
-  
+
   render () {
     return (
       <div className="credit-transfer-details">
-        <p className="action-context-menu-available">Credit Transfer Details (required)</p>
+        <p className="action-context-menu-available">Transfer Details (required)</p>
         <div className="main-form">
           <span>
-            {`${this.props.fields.initiator && this.props.fields.initiator.name} proposes to sell `}
+            {`${this.props.fields.initiator && this.props.fields.initiator.name} transfers `}
           </span>
           <div className="form-group number-of-credits">
             <InputWithTooltip
@@ -34,14 +33,14 @@ class CreditTransferFormDetails extends Component {
               id="number-of-credits"
               min="0"
               name="numberOfCredits"
-              placeholder="Quantity of Credits"
+              placeholder="Quantity"
               required
               step="1"
               value={this.props.fields.numberOfCredits}
             />
           </div>
           <span>
-            {this.props.fields.tradeType.id === 1 ? 'credits to ' : 'credits from '}
+            {this.props.fields.tradeType.id === 1 ? 'compliance units to ' : 'compliance units from '}
           </span>
           <div className="form-group">
             <select
@@ -52,11 +51,12 @@ class CreditTransferFormDetails extends Component {
               onChange={this.props.handleInputChange}
               required="required"
             >
-              <option key="0" value="" default>Select a Fuel Supplier</option>
+              <option key="0" value="" default>Select an Organization</option>
               {this.props.fuelSuppliers &&
               this.props.fuelSuppliers.map(organization => (
-                this.props.fields.initiator.id !== organization.id && (
-                  <option key={organization.id} value={organization.id}>
+                this.props.fields.initiator.id !== organization.id &&
+                  organization.status.description === 'Active' && (
+                    <option key={organization.id} value={organization.id}>
                     {organization.name}
                   </option>
                 )
@@ -78,12 +78,12 @@ class CreditTransferFormDetails extends Component {
               value={this.props.fields.fairMarketValuePerCredit}
             />
           </div>
-          <span>per credit for a total value of </span>
+          <span>per compliance unit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)} CAD.</span>
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
             <span>
-              This credit transfer has a fair market value of zero dollars per credit because:
+              This transfer is not for consideration because:
             </span>
             <br />
             <div className="form-group">

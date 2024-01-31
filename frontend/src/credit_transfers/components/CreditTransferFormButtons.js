@@ -4,7 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import * as Lang from '../../constants/langEnUs'
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions'
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values'
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
 import Tooltip from '../../app/components/Tooltip'
 import { useNavigate } from 'react-router'
 
@@ -72,7 +72,7 @@ const CreditTransferFormButtons = props => {
             : (props.permissions.BTN_SIGN_1_2
                 ? 'Signing Authority Declaration needs to be accepted'
                 : 'You must be assigned the Signing Authority role in order to sign and send ' +
-            'a Credit Transfer Proposal to another fuel supplier')}
+            'a Transfer Proposal to another fuel supplier')}
         >
           <button
             id="credit-transfer-sign"
@@ -99,7 +99,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE}
+            <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE_2}
           </button>
         </Tooltip>
         }
@@ -113,7 +113,7 @@ const CreditTransferFormButtons = props => {
                 : (props.permissions.BTN_SIGN_2_2
                     ? 'Signing Authority Declaration needs to be accepted'
                     : 'You must be assigned the Signing Authority role in order to sign and send ' +
-            'a Credit Transfer Proposal to the Low Carbon Fuels Branch'))}
+            'a Transfer Proposal to the Low Carbon Fuels Branch'))}
         >
           <button
             id="credit-transfer-accept"
@@ -134,7 +134,7 @@ const CreditTransferFormButtons = props => {
           data-toggle="modal"
           type="button"
         >
-          <FontAwesomeIcon icon="undo" /> {Lang.BTN_RESCIND}
+          <FontAwesomeIcon icon="undo" /> {Lang.BTN_RESCIND_TRANSFER}
         </button>
         }
         {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
@@ -149,7 +149,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
+            {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION_1_2}
           </button>
         </Tooltip>
         }
@@ -166,7 +166,11 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_RECOMMEND_FOR_DECISION}
+            {
+              props.tradeType.theType === "Part 3 Award"
+                ? Lang.BTN_RECOMMEND_FOR_DECISION_1_2
+                : Lang.BTN_RECOMMEND_FOR_DECISION_1_3
+            }
           </button>
         </Tooltip>
         }
@@ -203,7 +207,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_DECLINE_FOR_APPROVAL}
+            {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(props.tradeType.id) >= 0 ? Lang.BTN_DECLINE_FOR_APPROVAL_1_2 : Lang.BTN_DECLINE_ISSUANCE}
           </button>
         </Tooltip>
         }
@@ -220,7 +224,7 @@ const CreditTransferFormButtons = props => {
             data-toggle="modal"
             type="button"
           >
-            {Lang.BTN_APPROVE}
+            {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(props.tradeType.id) >= 0 ? Lang.BTN_APPROVE_1_2 : Lang.BTN_APPROVE_ISSUANCE}
           </button>
         </Tooltip>
         }
@@ -259,6 +263,9 @@ CreditTransferFormButtons.propTypes = {
   permissions: PropTypes.shape({
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
+  }),
+  tradeType: PropTypes.shape({
+    id: PropTypes.number
   })
 }
 

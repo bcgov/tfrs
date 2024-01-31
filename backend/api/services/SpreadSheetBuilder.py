@@ -92,12 +92,12 @@ class SpreadSheetBuilder(object):
         """
         Adds a spreadsheet for credit transfers
         """
-        worksheet = self.workbook.add_sheet("Credit Transactions")
+        worksheet = self.workbook.add_sheet("Transactions")
         row_index = 0
 
         columns = [
-            "Transaction ID", "Compliance Period", "Type", "Credits From",
-            "Credits To", "Quantity of Credits", "Value per Credit", "Category",
+            "Transaction ID", "Compliance Period", "Type", "Compliance Units From",
+            "Compliance Units To", "Number of Units", "Value per unit", "Category",
             "Status", "Effective Date", "Comments"
         ]
 
@@ -151,7 +151,9 @@ class SpreadSheetBuilder(object):
                 worksheet.write(row_index, 8, credit_trade.status.friendly_name)
 
             # If the trade doesn't have an effective date but meets certain other criteria, write the update timestamp.
-            if credit_trade.update_timestamp:
+            if credit_trade.trade_effective_date:
+                worksheet.write(row_index, 9, credit_trade.trade_effective_date, date_format)
+            elif credit_trade.update_timestamp:
                 # Conditions for using the update timestamp.
                 approved_status = credit_trade.status.status == "Approved"
                 valid_trade_type = credit_trade.type.the_type in ["Credit Reduction", "Credit Validation"]
@@ -181,17 +183,18 @@ class SpreadSheetBuilder(object):
         worksheet.col(9).width = 3500
         worksheet.col(10).width = 10000
 
-    def add_fuel_suppliers(self, fuel_suppliers):
+    def add_fuel_suppliers(self, fuel_suppliers, include_actions=False):
         """
         Adds a spreadsheet for fuel suppliers
         """
-        worksheet = self.workbook.add_sheet("Fuel Suppliers")
+        worksheet = self.workbook.add_sheet("Organizations")
         row_index = 0
 
         columns = [
-            "ID", "Organization Name", "Credit Balance", "Status", "Actions"
+            "ID", "Organization Name", "Compliance Units", "Registered"
         ]
-
+        if include_actions:
+            columns.append("Actions")
         header_style = xlwt.easyxf('font: bold on')
 
         # Build Column Headers
@@ -207,13 +210,18 @@ class SpreadSheetBuilder(object):
             worksheet.write(
                 row_index, 2,
                 fuel_supplier.organization_balance['validated_credits'])
-            worksheet.write(row_index, 3, fuel_supplier.status.status)
-            worksheet.write(row_index, 4, fuel_supplier.actions_type.the_type)
+
+            # Adjust the value for the 'Registered' column based on the status
+            registered_status = 'Yes' if fuel_supplier.status.status.lower() == 'active' else 'No'
+            worksheet.write(row_index, 3, registered_status)
+            if include_actions:
+                worksheet.write(row_index, 4, fuel_supplier.actions_type.the_type)
 
         # set the widths for the columns that we expect to be longer
         worksheet.col(1).width = 7500
         worksheet.col(2).width = 3500
-        worksheet.col(4).width = 3500
+        if include_actions:
+            worksheet.col(4).width = 3500
 
     def add_users(self, fuel_supplier_users):
         """

@@ -4,6 +4,7 @@ from dateutil.parser import parse
 from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -178,17 +179,36 @@ class CreditTradeService(object):
         Sets the Credit Transfer to Approved
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
+        today = timezone.localdate()
+        effective_date = credit_trade.trade_effective_date if credit_trade.trade_effective_date else today
 
         # Calculate and assign trade category. Dont assign category if transfer are added through historical data entry or if credit trade type is NOT 1 (buy) or 2 (sell)
-        if not batch_process and credit_trade.type_id in (1, 2):
-            credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
-                credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
+        if not batch_process:
+            if credit_trade.type_id in (1, 2):
+                credit_trade.trade_category = CreditTradeService.calculate_transfer_category(
+                    credit_trade.date_of_written_agreement, credit_trade.create_timestamp, credit_trade.category_d_selected)
+            # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
+            # only if the transfer is not added through historical data entry
+            # otherwise use trade_effective_date
+            effective_date = credit_trade.trade_effective_date \
+                if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
 
-        # Set the effective_date to today if credit_trade's trade_effective_date is null or in the past, 
-        # otherwise use trade_effective_date
-        today = timezone.localdate()
-        effective_date = credit_trade.trade_effective_date \
-            if credit_trade.trade_effective_date and credit_trade.trade_effective_date > today else today
+        # Check if the transaction is an administrative adjustment and
+        # if it would result in a negative balance for the organization
+        if credit_trade.type.the_type == "Administrative Adjustment":
+            org_balance = Decimal(credit_trade.respondent.organization_balance['validated_credits'])
+
+            # Adjust org_balance to accont for pending deductions
+            if 'deductions' in credit_trade.respondent.organization_balance:
+                org_balance -= Decimal(credit_trade.respondent.organization_balance['deductions'])
+
+            if org_balance <= 0 and credit_trade.number_of_credits < Decimal(0):
+                raise ValidationError(f"Organization {credit_trade.respondent.name} already has a balance of {org_balance}")
+
+            # number_of_credits can be negative so we add to org balance here
+            if org_balance + credit_trade.number_of_credits < Decimal(0):
+                credit_trade.number_of_credits = -org_balance # Adjust the number of credits to prevent a negative balance
+                credit_trade.save()  # Save the updated number_of_credits to the database
 
         # Only transfer credits if the effective_date is today or in the past
         if effective_date <= today:
@@ -203,6 +223,7 @@ class CreditTradeService(object):
         if update_user:
             credit_trade.update_user = update_user
 
+        credit_trade.trade_effective_date = effective_date
         credit_trade.status = status_approved
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
@@ -210,6 +231,7 @@ class CreditTradeService(object):
         return credit_trade
     
 
+    # Deprecated, left for reference
     @staticmethod
     def process_future_effective_dates(organization):
         """

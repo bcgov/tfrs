@@ -21,6 +21,30 @@
   "model": "api.fuelcode",
   "pk": 1
 },
+{
+  "model": "api.fuelcode",
+  "pk": 21,
+  "fields": {
+      "fuel_code": "BCLCF",
+      "fuel_code_version": "114",
+      "fuel_code_version_minor": "0",
+      "company": "ETH Alco",
+      "carbon_intensity": "38.12",
+      "application_date": "2021-09-01",
+      "effective_date": "2021-09-02",
+      "expiry_date": "2024-09-01",
+      "fuel": ["LNG"],
+      "feedstock": "MSW",
+      "feedstock_location": "Test",
+      "feedstock_misc": "",
+      "facility_location": "Test",
+      "facility_nameplate": "654",
+      "former_company": "",
+      "approval_date": "2021-09-02",
+      "status": ["Approved"],
+      "renewable_percentage": "50.00"
+  }
+},
   {
     "fields": {
       "fuel_code": 1,

@@ -1,7 +1,7 @@
 'use strict';
 const options= require('@bcgov/pipeline-cli').Util.parseArguments()
 const changeId = options.pr //aka pull-request
-const version = '2.13.0'
+const version = '2.14.0'
 const name = 'tfrs'
 const ocpName = 'apps.silver.devops'
 
@@ -13,7 +13,7 @@ options.git.repository='tfrs'
 const phases = {
   build: {  namespace:'0ab226-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , 
             instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`,
-            releaseBranch: 'release-2.13.0'
+            releaseBranch: 'release-2.14.0'
           },
   dev: {namespace:'0ab226-dev'    , name: `${name}`, phase: 'dev'  , changeId:changeId, suffix: `-dev`  , 
         instance: `${name}-dev`  , version:`${version}`, tag:`dev-${version}`, dbServiceName: 'tfrs-spilo',
@@ -26,6 +26,7 @@ const phases = {
             backendHost: `tfrs-backend-dev.${ocpName}.gov.bc.ca`, backendReplicas: 2,
             backendKeycloakAudience: 'tfrs-on-gold-4308',
             backendWellKnownEndpoint: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
+            backendKeycloakCertsUrl: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
             celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
         scanCoordinatorCpuRequest: '50m', scanCoordinatorCpuLimit: '100m', scanCoordinatorMemoryRequest: '30Mi', scanCoordinatorMemoryLimit: '60Mi',
@@ -48,6 +49,7 @@ const phases = {
             backendHost: `tfrs-backend-test.${ocpName}.gov.bc.ca`, backendReplicas: 4,
             backendKeycloakAudience: 'tfrs-on-gold-4308',
             backendWellKnownEndpoint: 'https://test.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
+            backendKeycloakCertsUrl: 'https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
         celeryCpuRequest: '100m', celeryCpuLimit: '250m', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
         scanCoordinatorCpuRequest: '50m', scanCoordinatorCpuLimit: '100m', scanCoordinatorMemoryRequest: '30Mi', scanCoordinatorMemoryLimit: '60Mi',
@@ -60,7 +62,7 @@ const phases = {
         schemaSpyAuditCpuRequest: '50m', schemaSpyAuditCpuLimit: '300m', schemaSpyAuditMemoryRequest: '256Mi', schemaSpyAuditMemoryLimit: '512Mi'
       },
   prod: {namespace:'0ab226-prod'    , name: `${name}`, phase: 'prod'  , changeId:changeId, suffix: `-prod`  , 
-        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`, dbServiceName: 'tfrs-spilo',
+        instance: `${name}-prod`  , version:`${version}`, tag:`prod-${version}`, dbServiceName: 'tfrs-crunchy-prod-pgbouncer',
         frontendCpuRequest: '40m', frontendCpuLimit: '80m', frontendMemoryRequest: '60Mi', frontendMemoryLimit: '120Mi', frontendReplicas: 4,
             frontendKeycloakAuthority: 'https://loginproxy.gov.bc.ca/auth', frontendKeycloakClientId: 'tfrs-on-gold-4308', frontendKeycloakCallbackUrl: 'https://lowcarbonfuels.gov.bc.ca',
             frontendKeycloakLogoutUrl: 'https://lowcarbonfuels.gov.bc.ca', 
@@ -70,6 +72,7 @@ const phases = {
             backendHost: `tfrs-backend-prod.${ocpName}.gov.bc.ca`, backendReplicas: 4,
             backendKeycloakAudience: 'tfrs-on-gold-4308',
             backendWellKnownEndpoint: 'https://loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration',
+            backendKeycloakCertsUrl: 'https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
         celeryCpuRequest: '100m', celeryCpuLimit: '250mm', celeryMemoryRequest: '1600Mi', celeryMemoryLimit: '3Gi',
         scanHandlerCpuRequest: '25m', scanHandlerCpuLimit: '50m', scanHandlerMemoryRequest: '50Mi', scanHandlerMemoryLimit: '100Mi',
         scanCoordinatorCpuRequest: '50m', scanCoordinatorCpuLimit: '100m', scanCoordinatorMemoryRequest: '30Mi', scanCoordinatorMemoryLimit: '60Mi',

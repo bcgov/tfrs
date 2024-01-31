@@ -221,7 +221,7 @@ const ComplianceReportingPage = (props) => {
               </button>
               <ul className='dropdown-menu'>
                 {props.compliancePeriods.map((compliancePeriod) => {
-                  if (compliancePeriod.description >= 2023) return null
+                  if (compliancePeriod.description >= 2024) return null
                   return (
                   <li key={compliancePeriod.description}>
                     <button

@@ -5,7 +5,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
   className="dashboard-fieldset compliance-exclusion-reports"
 >
   <h1>
-    Compliance & Exclusion Reports
+    Compliance Reporting
   </h1>
   user
    has:
@@ -23,7 +23,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
         onClick={[Function]}
         type="button"
       >
-        Compliance & Exclusion Reports in Progress
+        Report(s) in progress
       </button>
     </div>
     <p>
@@ -65,7 +65,7 @@ exports[`ComplianceReportsBCEID Should render the component 1`] = `
       onClick={[Function]}
       type="button"
     >
-      Start a new compliance report or exclusion report
+      Start a new compliance report
     </button>
   </div>
 </div>
@@ -76,7 +76,7 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
   className="dashboard-fieldset compliance-exclusion-reports"
 >
   <h1>
-    Compliance & Exclusion Reports
+    Compliance Reporting
   </h1>
   user
    has:
@@ -94,7 +94,7 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
         onClick={[Function]}
         type="button"
       >
-        Compliance & Exclusion Reports in Progress
+        Report(s) in progress
       </button>
     </div>
     <p>
@@ -136,7 +136,7 @@ exports[`ComplianceReportsBCEID Should render the component with complianceRepor
       onClick={[Function]}
       type="button"
     >
-      Start a new compliance report or exclusion report
+      Start a new compliance report
     </button>
   </div>
 </div>

@@ -54,6 +54,35 @@ const getMyOrganizationMembers = () => (dispatch) => {
     })
 }
 
+const getOrganizationBalance = id => (dispatch) => {
+  dispatch(getOrganizationBalanceRequest())
+
+  axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}/balance`)
+    .then((response) => {
+      dispatch(getOrganizationBalanceSuccess(response.data))
+    }).catch((error) => {
+      dispatch(getOrganizationBalanceError(error.response))
+    })
+}
+
+const getOrganizationBalanceError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_ORGANIZATION_BALANCE_REQUEST,
+  type: ActionTypes.ERROR
+})
+
+const getOrganizationBalanceSuccess = balance => ({
+  details: balance,
+  name: ReducerTypes.RECEIVE_ORGANIZATION_BALANCE_REQUEST,
+  receivedAt: Date.now(),
+  type: ActionTypes.RECEIVE_ORGANIZATION_BALANCE
+})
+
+const getOrganizationBalanceRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATION_BALANCE_REQUEST,
+  type: ActionTypes.GET_ORGANIZATION_BALANCE
+})
+
 const getOrganization = id => (dispatch) => {
   dispatch(getOrganizationRequest())
 
@@ -200,5 +229,5 @@ const updateOrganizationSuccess = response => ({
 export {
   getFuelSuppliers, getMyOrganization, getMyOrganizationMembers,
   getOrganization, getOrganizationMembers, getOrganizations,
-  addOrganization, updateOrganization
+  addOrganization, updateOrganization, getOrganizationBalance
 }

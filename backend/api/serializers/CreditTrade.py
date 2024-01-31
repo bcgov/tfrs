@@ -44,14 +44,13 @@ from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
+from .CreditTradeCategory import CreditTradeCategoryMinSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer, OrganizationSerializer
 from .User import UserMinSerializer
 
-INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate this Credit Transfer " \
-    "Proposal. Your organization either does not have enough " \
-    "validated credits or has pending Credit Transfer Proposal(s) that " \
-    "could result in an insufficient credit balance for this transfer."
+INSUFFICIENT_CREDITS_MESSAGE = "Unable to initiate transfer. " \
+    "Your organization does not have enough compliance units for this transfer."
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -135,7 +134,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                     the_type__in=[
                         "Credit Validation",
                         "Credit Reduction",
-                        "Part 3 Award"
+                        "Part 3 Award",
+                        "Administrative Adjustment"
                     ]
                 ).only('id')
             )
@@ -260,7 +260,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period "
+                    'does_not_exist': "Please specify the compliance period "
                                       "in which the transaction relates."
                 }
             },
@@ -632,7 +632,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period "
+                    'does_not_exist': "Please specify the compliance period "
                                       "in which the transaction relates."
                 }
             },
@@ -720,6 +720,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     history = serializers.SerializerMethodField()
     signatures = serializers.SerializerMethodField()
     documents = DocumentAuxiliarySerializer(many=True, read_only=True)
+    trade_category = CreditTradeCategoryMinSerializer(read_only=True)
 
     class Meta:
         model = CreditTrade
@@ -732,7 +733,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
                   'signatures', 'history', 'date_of_written_agreement',
-                  'category_d_selected')
+                  'trade_category', 'category_d_selected')
 
     def get_actions(self, obj):
         """

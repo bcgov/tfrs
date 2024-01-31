@@ -53,6 +53,7 @@ from api.serializers.Organization import OrganizationMinSerializer, \
 from api.serializers.constants import ComplianceReportValidation
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
+from api.services.ComplianceReportSummaryService import ComplianceReportSummaryService
 
 class ComplianceReportBaseSerializer:
     def get_last_accepted_offset(self, obj):
@@ -473,7 +474,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    ancestor_snapshot = qs.first().snapshot
+                    ancestor_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                     ancestor_computed = False
                 else:
                     # no snapshot. make one.
@@ -489,7 +490,7 @@ class ComplianceReportDetailSerializer(
                 )
 
                 if qs.exists():
-                    current_snapshot = qs.first().snapshot
+                    current_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
                 else:
                     # no snapshot
                     ser = ComplianceReportDetailSerializer(
@@ -517,6 +518,68 @@ class ComplianceReportDetailSerializer(
             current = current.supplements
 
         return deltas
+    
+    @staticmethod
+    def build_compliance_units(snapshot, obj):
+        lines = snapshot['summary']['lines']
+        if lines.get('29A') is None:
+            previous_transactions = []
+            previous_snapshots = []
+            current = obj
+            is_supplemental = False
+
+            if current.supplements:
+                is_supplemental = True
+
+            available_compliance_unit_balance = OrganizationService.get_max_credit_offset_for_interval(
+                obj.organization,
+                obj.update_timestamp
+            )
+            net_compliance_unit_balance = int(lines['25'])
+            desired_net_credit_balance_change = Decimal(0.0)
+            if is_supplemental:
+                while current.supplements is not None:
+                    current = current.supplements
+                    if current.credit_transaction is not None:
+                        previous_transactions.append(current.credit_transaction)
+                    if current.compliance_report_snapshot is not None:
+                        previous_snapshots.append(current.compliance_report_snapshot.snapshot)
+
+                total_previous_reduction = Decimal(0.0)
+                total_previous_validation = Decimal(0.0)
+
+                for transaction in previous_transactions:
+                    if transaction.type.the_type in ['Credit Validation']:
+                        total_previous_validation += transaction.number_of_credits
+                    if transaction.type.the_type in ['Credit Reduction']:
+                        total_previous_reduction += transaction.number_of_credits
+                desired_net_credit_balance_change = Decimal(lines['25'])
+                net_compliance_unit_balance = desired_net_credit_balance_change - \
+                                              (total_previous_validation - total_previous_reduction)
+
+            adjusted_balance = available_compliance_unit_balance + net_compliance_unit_balance
+            if available_compliance_unit_balance <= 0 and net_compliance_unit_balance < 0:
+                lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
+                lines['29A'] = 0
+                total_previous_compliance_units = Decimal(0.0)
+                for snapshots in previous_snapshots:
+                    if snapshots.get("summary").get("lines") is not None:
+                        total_previous_compliance_units += Decimal(snapshots.get("summary").get("lines").get("25"))
+                lines['29B'] = Decimal(lines['25']) - total_previous_compliance_units
+                lines['29C'] = 0
+            else:
+                lines['29A'] = available_compliance_unit_balance
+                lines['28'] = 0
+                if (net_compliance_unit_balance < 0 <= adjusted_balance) or (net_compliance_unit_balance >= 0):
+                    lines['29B'] = net_compliance_unit_balance
+                elif net_compliance_unit_balance < 0 and adjusted_balance < 0:
+                    lines['29B'] = net_compliance_unit_balance if (adjusted_balance > 0) else -available_compliance_unit_balance
+                    lines['28'] = int((adjusted_balance * Decimal('-600.00')).max(Decimal(0))) if (adjusted_balance < 0) else 0
+                lines['29C'] = lines['29A'] + lines['29B']
+            snapshot['summary']['total_payable'] = Decimal(lines['11']) + Decimal(lines['22']) + lines['28']
+            snapshot['summary']['lines'] = lines
+
+        return snapshot
 
     def get_max_credit_offset(self, obj):
         max_credit_offset = OrganizationService.get_max_credit_offset(
@@ -542,150 +605,17 @@ class ComplianceReportDetailSerializer(
         return max_credit_offset_exclude_reserved
 
     def get_summary(self, obj):
-        total_petroleum_diesel = Decimal(0)
-        total_petroleum_gasoline = Decimal(0)
-        total_renewable_diesel = Decimal(0)
-        total_renewable_gasoline = Decimal(0)
-        total_credits = Decimal(0)
-        total_debits = Decimal(0)
-        net_gasoline_class_transferred = Decimal(0)
-        net_diesel_class_transferred = Decimal(0)
+        """
+        Retrieve a summary that merges synthetic totals with existing summary data.
+        
+        :param obj: The compliance report object containing summary and synthetic details.
+        :return: A dictionary combining synthetic totals with existing summary data.
+        """
+        # Compute the synthetic totals for the provided compliance report object.
+        synthetic_totals = ComplianceReportSummaryService.calculate_synthetic_totals(obj)
 
-        lines = {}
-
-        if obj.summary is not None:
-            lines['6'] = obj.summary.gasoline_class_retained \
-                if obj.summary.gasoline_class_retained is not None \
-                else Decimal(0)
-            lines['7'] = obj.summary.gasoline_class_previously_retained \
-                if obj.summary.gasoline_class_previously_retained is not None \
-                else Decimal(0)
-            lines['8'] = obj.summary.gasoline_class_deferred \
-                if obj.summary.gasoline_class_deferred is not None \
-                else Decimal(0)
-            lines['9'] = obj.summary.gasoline_class_obligation \
-                if obj.summary.gasoline_class_obligation is not None \
-                else Decimal(0)
-            lines['17'] = obj.summary.diesel_class_retained \
-                if obj.summary.diesel_class_retained is not None \
-                else Decimal(0)
-            lines['18'] = obj.summary.diesel_class_previously_retained \
-                if obj.summary.diesel_class_previously_retained is not None \
-                else Decimal(0)
-            lines['19'] = obj.summary.diesel_class_deferred \
-                if obj.summary.diesel_class_deferred is not None \
-                else Decimal(0)
-            lines['20'] = obj.summary.diesel_class_obligation \
-                if obj.summary.diesel_class_obligation is not None \
-                else Decimal(0)
-            lines['26'] = Decimal(obj.summary.credits_offset) \
-                if obj.summary.credits_offset is not None else Decimal(0)
-            lines['26A'] = Decimal(obj.summary.credits_offset_a) \
-                if obj.summary.credits_offset_a is not None else Decimal(0)
-            lines['26B'] = Decimal(obj.summary.credits_offset_b) \
-                if obj.summary.credits_offset_b is not None else Decimal(0)
-            lines['26C'] = Decimal(obj.summary.credits_offset_c) \
-                if obj.summary.credits_offset_c is not None else Decimal(0)
-        else:
-            lines['6'] = Decimal(0)
-            lines['7'] = Decimal(0)
-            lines['8'] = Decimal(0)
-            lines['9'] = Decimal(0)
-            lines['17'] = Decimal(0)
-            lines['18'] = Decimal(0)
-            lines['19'] = Decimal(0)
-            lines['20'] = Decimal(0)
-            lines['26'] = Decimal(0)
-            lines['26A'] = Decimal(0)
-            lines['26B'] = Decimal(0)
-            lines['26C'] = Decimal(0)
-
-        if obj.schedule_a:
-            net_gasoline_class_transferred += \
-                obj.schedule_a.net_gasoline_class_transferred
-            net_diesel_class_transferred += \
-                obj.schedule_a.net_diesel_class_transferred
-
-        lines['5'] = net_gasoline_class_transferred
-        lines['16'] = net_diesel_class_transferred
-
-        if obj.schedule_b:
-            total_petroleum_diesel += obj.schedule_b.total_petroleum_diesel
-            total_petroleum_gasoline += obj.schedule_b.total_petroleum_gasoline
-            total_renewable_diesel += obj.schedule_b.total_renewable_diesel
-            total_renewable_gasoline += obj.schedule_b.total_renewable_gasoline
-            total_credits += obj.schedule_b.total_credits
-            total_debits += obj.schedule_b.total_debits
-
-        if obj.schedule_c:
-            total_petroleum_diesel += obj.schedule_c.total_petroleum_diesel
-            total_petroleum_gasoline += obj.schedule_c.total_petroleum_gasoline
-            total_renewable_diesel += obj.schedule_c.total_renewable_diesel
-            total_renewable_gasoline += obj.schedule_c.total_renewable_gasoline
-
-        lines['1'] = total_petroleum_gasoline
-        lines['2'] = total_renewable_gasoline
-        lines['3'] = lines['1'] + lines['2']
-        lines['4'] = (lines['3'] * Decimal('0.05')).quantize(
-            Decimal('1.'), rounding=ROUND_HALF_UP
-        )  # hardcoded 5% renewable requirement
-        lines['10'] = lines['2'] + lines['5'] - lines['6'] + lines['7'] + \
-            lines['8'] - lines['9']
-        lines['11'] = ((lines['4'] - lines['10']) * Decimal('0.30')).max(
-            Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
-
-        lines['12'] = total_petroleum_diesel
-        lines['13'] = total_renewable_diesel
-        lines['14'] = lines['12'] + lines['13']
-        lines['15'] = (lines['14'] * Decimal('0.04')).quantize(
-            Decimal('1.'), rounding=ROUND_HALF_UP
-        )  # hardcoded 4% renewable requirement
-        lines['21'] = lines['13'] + lines['16'] - lines['17'] + lines['18'] + \
-            lines['19'] - lines['20']
-        lines['22'] = ((lines['15'] - lines['21']) * Decimal('0.45')).max(
-            Decimal(0)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
-
-        lines['23'] = total_credits
-        lines['24'] = total_debits
-        lines['25'] = lines['23'] - lines['24']
-
-        # if current_balance is positive it means the supplier
-        # has a positive amount of credits for this compliance period
-        # and there is no penalty, otherwise use current_balance
-        # to calculate penalty
-        current_balance = lines['25'] + lines['26']
-        if current_balance > 0:
-            lines['27'] = 0
-        else:
-            lines['27'] = current_balance
-
-        # 26C represents credits that need to be returned to the fuel supplier.
-        # Line 27 should end up being zero in this situation because
-        # 26C is the difference between lines 26A and 25 when 26A > 25
-        if lines['26C'] is not None and lines['26C'] > 0:
-            lines['27'] = 0 # eqv. to lines['25'] + lines['26A'] - lines['26C']
-
-        # Penalty adjustment made by business area for
-        # 2023 and above compliance periods
-        if int(obj.compliance_period.description) <= 2022:
-            lines['28'] = (lines['27'] * Decimal('-200.00')).max(Decimal(0))
-        else:
-            lines['28'] = (lines['27'] * Decimal('-600.00')).max(Decimal(0))
-
-        total_payable = lines['11'] + lines['22'] + lines['28']
-
-        synthetic_totals = {
-            "total_petroleum_diesel": total_petroleum_diesel,
-            "total_petroleum_gasoline": total_petroleum_gasoline,
-            "total_renewable_diesel": total_renewable_diesel,
-            "total_renewable_gasoline": total_renewable_gasoline,
-            "net_diesel_class_transferred": net_diesel_class_transferred,
-            "net_gasoline_class_transferred": net_gasoline_class_transferred,
-            "lines": lines,
-            "total_payable": total_payable
-        }
-
-        if obj.summary is not None:
+        # If a summary already exists for the object, merge it with the computed synthetic totals.
+        if obj.summary:
             ser = ScheduleSummaryDetailSerializer(obj.summary)
             data = ser.data
             synthetic_totals = {**data, **synthetic_totals}
@@ -1250,6 +1180,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 ComplianceReport.objects.filter(root_report=root_report).update(latest_report=new_compliance_report)
             else:
                 new_compliance_report.traversal = previous_report.traversal
+            ComplianceReport.objects.filter(root_report_id=root_report.id)\
+                .update(latest_report=new_compliance_report)
         else:
             new_compliance_report.root_report = new_compliance_report
             new_compliance_report.latest_report = new_compliance_report
@@ -1292,6 +1224,7 @@ class ComplianceReportUpdateSerializer(
     )
     actions = serializers.SerializerMethodField()
     actor = serializers.SerializerMethodField()
+    deltas = serializers.SerializerMethodField()
     display_name = SerializerMethodField()
     max_credit_offset = SerializerMethodField()
     max_credit_offset_exclude_reserved = SerializerMethodField()
@@ -1303,6 +1236,7 @@ class ComplianceReportUpdateSerializer(
 
     strip_summary = False
     disregard_status = False
+    skip_deltas = False
 
     def get_display_name(self, obj):
         if obj.nickname is not None and obj.nickname != '':
@@ -1372,6 +1306,69 @@ class ComplianceReportUpdateSerializer(
             return serializer.data
         else:
             return None
+        
+    def get_deltas(self, obj):
+
+        deltas = []
+
+        if self.skip_deltas:
+            return deltas
+
+        current = obj
+
+        while current:
+            if current.supplements:
+                ancestor = current.supplements
+
+                qs = ComplianceReportSnapshot.objects.filter(
+                    compliance_report=ancestor
+                )
+
+                if qs.exists():
+                    ancestor_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                    ancestor_computed = False
+                else:
+                    # no snapshot. make one.
+                    ser = ComplianceReportDetailSerializer(
+                        ancestor, context=self.context
+                    )
+                    ser.skip_deltas = True
+                    ancestor_snapshot = ser.data
+                    ancestor_computed = True
+
+                qs = ComplianceReportSnapshot.objects.filter(
+                    compliance_report=current
+                )
+
+                if qs.exists():
+                    current_snapshot = ComplianceReportDetailSerializer.build_compliance_units(qs.first().snapshot, obj) if int(obj.compliance_period.description) > 2022 else qs.first().snapshot
+                else:
+                    # no snapshot
+                    ser = ComplianceReportDetailSerializer(
+                        current, context=self.context
+                    )
+                    ser.skip_deltas = True
+                    current_snapshot = ser.data
+
+                deltas += [{
+                    'levels_up': 1,
+                    'ancestor_id': ancestor.id,
+                    'ancestor_display_name': ancestor.nickname
+                    if (ancestor.nickname is not None and
+                        ancestor.nickname != '')
+                    else ancestor.generated_nickname,
+                    'delta': ComplianceReportService.compute_delta(
+                        current_snapshot, ancestor_snapshot
+                    ),
+                    'snapshot': {
+                        'data': ancestor_snapshot,
+                        'computed': ancestor_computed
+                    }
+                }]
+
+            current = current.supplements
+
+        return deltas
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
@@ -1390,19 +1387,20 @@ class ComplianceReportUpdateSerializer(
             instance.compliance_period.description
         )
 
-        if summary_data and instance.supplements_id is None and \
-                summary_data.get('credits_offset', 0) and \
-                summary_data.get('credits_offset', 0) > max_credit_offset:
-            raise (serializers.ValidationError(
-                'Insufficient available credit balance. Please adjust Line 26.'
-            ))
+        if int(instance.compliance_period.description) <= 2022:
+            if summary_data and instance.supplements_id is None and \
+                    summary_data.get('credits_offset', 0) and \
+                    summary_data.get('credits_offset', 0) > max_credit_offset:
+                raise (serializers.ValidationError(
+                    'Insufficient available credit balance. Please adjust Line 26.'
+                ))
 
-        if summary_data and instance.supplements_id and \
-                summary_data.get('credits_offset_b', 0) and \
-                summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
-            raise (serializers.ValidationError(
-                'Insufficient available credit balance. Please adjust Line 26b.'
-            ))
+            if summary_data and instance.supplements_id and \
+                    summary_data.get('credits_offset_b', 0) and \
+                    summary_data.get('credits_offset_b', 0) > max_credit_offset and not self.strip_summary:
+                raise (serializers.ValidationError(
+                    'Insufficient available credit balance. Please adjust Line 26b.'
+                ))
 
         if 'status' in validated_data:
             status_data = validated_data.pop('status')
@@ -1679,7 +1677,7 @@ class ComplianceReportUpdateSerializer(
         fields = (
             'status', 'type', 'compliance_period', 'organization',
             'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d',
-            'summary', 'read_only', 'has_snapshot', 'actions', 'actor',
+            'summary', 'read_only', 'has_snapshot', 'actions', 'actor', 'deltas',
             'display_name', 'supplemental_note', 'is_supplemental',
             'max_credit_offset', 'max_credit_offset_exclude_reserved', 'total_previous_credit_reductions',
             'supplemental_number', 'last_accepted_offset', 'history',
@@ -1717,6 +1715,8 @@ class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
             
         compliance_report.status.fuel_supplier_status = \
             ComplianceReportStatus.objects.get(status="Deleted")
+        ComplianceReport.objects.filter(root_report_id=compliance_report.root_report.id)\
+            .update(latest_report=compliance_report.supplements)
         compliance_report.status.save()
 
     class Meta:

@@ -22,6 +22,40 @@ const numericColumn = {
   }
 }
 
+const numericColumnSigned = {
+  className: 'numeric',
+  readOnly: true,
+  value: '',
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+    return <span>{Math.round(Number(value)).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>
+  }
+}
+
+const numericCurrency = {
+  className: 'numeric',
+  readOnly: true,
+  value: '',
+  valueViewer: (data) => {
+    const { value } = data
+
+    if (value === '') {
+      return ''
+    }
+
+    const formattedValue = Number(value).toLocaleString('en-CA', {
+      style: 'currency',
+      currency: 'CAD'
+    })
+
+    return <span>{formattedValue}</span>
+  }
+}
+
 const numericInput = {
   attributes: {
     dataNumberToFixed: 2,
@@ -68,4 +102,4 @@ const totalViewer = {
   }
 }
 
-export { numericColumn, numericInput, totalViewer }
+export { numericColumn, numericInput, totalViewer, numericCurrency, numericColumnSigned }
