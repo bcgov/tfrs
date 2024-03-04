@@ -6,7 +6,7 @@ KNP: allow CronJob to connect to Spilo
 oc process -f ./db-backup-cronjob-2.6.1.yaml \
 JOB_NAME=tfrs-db-backup \
 JOB_PERSISTENT_STORAGE_NAME=backup \
-SCHEDULE="00 08,20 * * *" \
+SCHEDULE="00 07 * * *" \
 TAG_NAME=2.6.1 \
 DATABASE_SERVICE_NAME=tfrs-spilo-readonly \
 DATABASE_DEFAULT_PORT=5432 \

@@ -156,12 +156,12 @@ objects:
             valueFrom:
               secretKeyRef:
                 name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_ACCESS_KEY
+                key: root-user
           - name: MINIO_SECRET_KEY
             valueFrom:
               secretKeyRef:
                 name: ${NAME}-minio-${ENV_NAME}
-                key: MINIO_SECRET_KEY
+                key: root-password
           - name: MINIO_BUCKET_NAME
             value: tfrs
           - name: EMAIL_FROM_ADDRESS
