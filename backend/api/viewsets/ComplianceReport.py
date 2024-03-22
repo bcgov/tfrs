@@ -552,7 +552,8 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(data)
 
     def compliance_to_new_act(self, obj, snapshot):
-        if int(obj.compliance_period.description) > 2022 and snapshot is not None:
+        if int(obj.compliance_period.description) > 2022 \
+          and snapshot is not None and obj.type.the_type != "Exclusion Report":
             lines = snapshot.get('summary').get('lines')
             if lines.get('29A') is None:
                 previous_transactions = []
