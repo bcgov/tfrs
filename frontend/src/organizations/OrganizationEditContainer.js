@@ -51,7 +51,8 @@ class OrganizationEditContainer extends Component {
         edrms_record: ''
       },
       formIsValid: false,
-      edrmsRecordError: ''
+      edrmsRecordError: '',
+      formIsDirty: false
     }
 
     this.submitted = false
@@ -92,7 +93,8 @@ class OrganizationEditContainer extends Component {
   loadPropsToFieldState (props) {
     if (
       Object.keys(props.organization.details).length !== 0 &&
-      !this.submitted
+      !this.submitted &&
+      !this.state.formIsDirty
     ) {
       const org = props.organization.details
       let addr = {}
@@ -178,6 +180,7 @@ class OrganizationEditContainer extends Component {
     }
     this.setState({
       fields: fieldState,
+      formIsDirty: true
     })
   }
 
