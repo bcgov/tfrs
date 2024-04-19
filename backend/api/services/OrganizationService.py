@@ -107,9 +107,11 @@ class OrganizationService(object):
                     if compliance_report.summary.credits_offset is not None:
                             deductions += compliance_report.summary.credits_offset
 
-            if report.status.director_status_id == 'Accepted' and \
-                    ignore_pending_supplemental:
-                deductions -= report.summary.credits_offset
+            if report.status.director_status_id == 'Accepted' and ignore_pending_supplemental:
+                if report.summary is not None:
+                    if report.summary.credits_offset:
+                        deductions -= report.summary.credits_offset
+
         if deductions < 0:
             deductions = 0
 
