@@ -1,0 +1,131 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: tfrs-cleanup
+parameters:
+  - name: LICENSE_PLATE
+    description: license plate for the projec
+    required: true
+  - name: LOGIN_TOKEN_SECRET
+    description: The secret having the login token
+    required: true
+objects:
+  - kind: CronJob
+    apiVersion: batch/v1
+    metadata:
+      name: tfrs-cleanup
+    spec:
+      schedule: 0 7 * * *
+      concurrencyPolicy: Forbid
+      suspend: false
+      jobTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          template:
+            metadata:
+              creationTimestamp: null
+            spec:
+              containers:
+                - resources:
+                    limits:
+                      cpu: 100m
+                      memory: 100Mi
+                    requests:
+                      cpu: 50m
+                      memory: 50Mi
+                  terminationMessagePath: /dev/termination-log
+                  name: oc
+                  command:
+                    - /bin/sh
+                    - "-c"
+                  env:
+                    - name: LOGIN_TOKEN
+                      valueFrom:
+                        secretKeyRef:
+                          name: ${LOGIN_TOKEN_SECRET}
+                          key: token
+                  imagePullPolicy: Always
+                  terminationMessagePolicy: File
+                  image: >-
+                    image-registry.openshift-image-registry.svc:5000/${LICENSE_PLATE}-tools/tfrs-cleanup:prod
+                  args:
+                    - >
+                      date
+
+                      oc login --token=$(LOGIN_TOKEN) --server=https://api.silver.devops.gov.bc.ca:6443
+
+                      oc version
+
+                      echo ""
+
+                      echo "====> Cleaning up ${LICENSE_PLATE}-tools" 
+
+                      echo "==========> Removing expired builds"
+
+                      oc -n ${LICENSE_PLATE}-tools get builds | grep -E "Complete|Failed|Cancelled" | awk '{print $1}' | xargs oc -n ${LICENSE_PLATE}-tools delete build || true
+
+                      echo "==========> Removing expired pods"
+
+                      oc -n ${LICENSE_PLATE}-tools get pods | grep -E "Completed|Error|ContainerStatusUnknown" | grep -v crunchy | grep -v spilo | awk '{print $1}' | xargs oc -n ${LICENSE_PLATE}-tools delete pod || true
+
+                      namespaces=("${LICENSE_PLATE}-dev" "${LICENSE_PLATE}-test")
+
+                      for namespace in "${namespaces[@]}"; do
+
+                          echo ""
+
+                          echo "====> Cleaning up $namespace"
+
+                          echo "==========> Removing expired pods"
+
+                          oc -n $namespace get pods | grep -E "Completed|Error|ContainerStatusUnknown" | grep -v crunchy | grep -v spilo | awk '{print $1}' | xargs oc -n $namespace delete pod || true
+
+                          env=$(echo $namespace | awk -F '-' '{print $NF}')
+
+                          echo "==========> Removing expired backend images"
+
+                          runningBackendImageTag=$(oc -n $namespace describe dc/tfrs-backend-$env | grep Triggers | grep tfrs-backend | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-backend | grep -v $runningBackendImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true
+
+                          echo "==========> Removing expired frontend images"
+
+                          runningFrontendImageTag=$(oc -n $namespace describe dc/tfrs-frontend-$env | grep Triggers | grep tfrs-frontend | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-frontend | grep -v $runningFrontendImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true
+
+                          echo "==========> Removing expired celery images"
+
+                          runningCeleryImageTag=$(oc -n $namespace describe dc/tfrs-celery-$env | grep Triggers | grep tfrs-celery | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-celery | grep -v $runningCeleryImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true
+
+                          echo "==========> Removing expired notification-server images"
+
+                          runningNotificationServerImageTag=$(oc -n $namespace describe dc/tfrs-notification-server-$env | grep Triggers | grep tfrs-notification-server | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-notification-server | grep -v $runningNotificationServerImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true
+
+                          echo "==========> Removing expired scan-handler images"
+
+                          runningScanHandlerImageTag=$(oc -n $namespace describe dc/tfrs-scan-handler-$env | grep Triggers | grep tfrs-scan-handler | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-scan-handler | grep -v $runningScanHandlerImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true                          
+
+                          echo "==========> Removing expired scan-coordinator images"
+
+                          runningScanCoordinatorImageTag=$(oc -n $namespace describe dc/tfrs-scan-coordinator-$env | grep Triggers | grep tfrs-scan-coordinator | awk -F '@' '{print $2}' | awk -F ',' '{print $1}') || true
+                          
+                          oc -n $namespace get imagetags | grep tfrs-scan-coordinator | grep -v $runningScanCoordinatorImageTag | awk '{print $1}' | xargs oc -n $namespace delete imagetag || true   
+                          
+                      done
+
+              restartPolicy: OnFailure
+              terminationGracePeriodSeconds: 30
+              dnsPolicy: ClusterFirst
+              securityContext: {}
+              schedulerName: default-scheduler
+      successfulJobsHistoryLimit: 3
+      failedJobsHistoryLimit: 1
