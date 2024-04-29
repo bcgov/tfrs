@@ -41,7 +41,7 @@ objects:
           cpu: 750m
           memory: 650Mi
       source:
-        contextDir: openshift/templates/cleanup
+        contextDir: openshift-v4/templates/cleanup
         git:
           uri: ${GIT_URL}
           ref: ${GIT_REF}
