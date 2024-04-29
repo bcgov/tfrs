@@ -1,0 +1,52 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: cleanup
+parameters:
+  - name: GIT_URL
+    displayName:
+    description: tfrs repo
+    required: true
+  - name: GIT_REF
+    displayName:
+    description: tfrs branch name of the pr
+    required: true
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: cleanup
+      creationTimestamp: null
+      name: tfrs-cleanup
+    spec:
+      lookupPolicy:
+        local: false
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: tfrs-cleanup
+      creationTimestamp:
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: tfrs-cleanup:prod
+      resources:
+        limits:
+          cpu: 1500m
+          memory: 1300Mi
+        requests:
+          cpu: 750m
+          memory: 650Mi
+      source:
+        contextDir: openshift/templates/cleanup
+        git:
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+        type: Git
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
