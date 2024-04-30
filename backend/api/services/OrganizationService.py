@@ -107,9 +107,11 @@ class OrganizationService(object):
                     if compliance_report.summary.credits_offset is not None:
                             deductions += compliance_report.summary.credits_offset
 
-            # if report.status.director_status_id == 'Accepted' and \
-            #         ignore_pending_supplemental:
-            #     deductions -= report.summary.credits_offset
+            # if report.status.director_status_id == 'Accepted' and ignore_pending_supplemental:
+            #     if report.summary is not None:
+            #         if report.summary.credits_offset:
+            #             deductions -= report.summary.credits_offset
+
         if deductions < 0:
             deductions = 0
 
@@ -117,13 +119,18 @@ class OrganizationService(object):
 
     @staticmethod
     def get_max_credit_offset(organization, compliance_year, exclude_reserved=False):
+        # Calculate the deadline for the compliance period for credit_trades until the end of March the following year.
         effective_date_deadline = datetime.date(
             int(compliance_year) + 1, 3, 31
         )
+        # Define the start date of the compliance period which is the first of January of the compliance year.
         compliance_period_effective_date = datetime.date(
             int(compliance_year), 1, 1
         )
-        credits = CreditTrade.objects.filter(
+
+        # Query to sum up all the approved and non-rescinded credits for the organization until the deadline.
+        # Includes different types of credit transactions like selling, buying, and administrative adjustments.
+        credits_until_deadline = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
                 Q(respondent_id=organization.id) &
@@ -153,28 +160,26 @@ class OrganizationService(object):
                 Q(number_of_credits__gte=0) &
                 Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
-        debits = CreditTrade.objects.filter(
+        
+        # Query to sum up all approved, non-rescinded debits (outgoing credits) for the organization.
+        all_debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
                 Q(type__the_type="Sell") &
                 Q(initiator_id=organization.id) &
-                Q(is_rescinded=False) &
-                Q(trade_effective_date__lte=effective_date_deadline)) |
+                Q(is_rescinded=False)) |
             (Q(status__status="Approved") &
                 Q(type__the_type="Buy") &
                 Q(respondent_id=organization.id) &
-                Q(is_rescinded=False) &
-                Q(trade_effective_date__lte=effective_date_deadline)) |
+                Q(is_rescinded=False)) |
             (Q(type__the_type="Credit Reduction") &
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
-                Q(is_rescinded=False) &
-                Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+                Q(is_rescinded=False)) |
             (Q(type__the_type="Administrative Adjustment") &
                 Q(status__status="Approved") &
                 Q(respondent_id=organization.id) &
                 Q(is_rescinded=False) &
-                Q(number_of_credits__lt=0) &
-                Q(trade_effective_date__lte=effective_date_deadline))
+                Q(number_of_credits__lt=0))
         ).aggregate(
             total=Sum(
                 Case(
@@ -188,39 +193,41 @@ class OrganizationService(object):
             )
         )
 
-        total_in_compliance_period = 0
-        if credits and credits.get('total') is not None:
-            total_in_compliance_period = credits.get('total')
+        # Calculate the net available balance by subtracting debits from credits.
+        net_available_balance = 0
+        if credits_until_deadline and credits_until_deadline.get('total') is not None:
+            net_available_balance = credits_until_deadline.get('total')
 
-        if debits and debits.get('total') is not None:
-            total_in_compliance_period -= debits.get('total')
+        if all_debits and all_debits.get('total') is not None:
+            net_available_balance -= all_debits.get('total')
+        
+        # Check if reserved credits should be excluded and calculate accordingly.
         if exclude_reserved:
             pending_deductions = OrganizationService.get_pending_transfers_value(organization)
         else:
             pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
         
-        validated_credits = organization.organization_balance.get(
-            'validated_credits', 0
-        )
-        total_balance = validated_credits - pending_deductions
-        total_available_credits = min(total_in_compliance_period, total_balance)
-        if total_available_credits < 0:
-            total_available_credits = 0
+        # Deduct pending deductions from the available balance and ensure it does not drop below zero.
+        available_balance_now = net_available_balance - pending_deductions
+        if available_balance_now < 0:
+            available_balance_now = 0
 
-        return total_available_credits
+        # Return the current available balance after all calculations.
+        return available_balance_now
 
 
     @staticmethod
     def get_max_credit_offset_for_interval(organization, compliance_date):
         effective_date_deadline = compliance_date.date()
         effective_year = effective_date_deadline.year
+
         if effective_date_deadline < datetime.date(effective_year, 4, 1):
             effective_year -= 1
         compliance_period_effective_date = datetime.date(
             int(effective_year), 1, 1
         )
 
-        credits = CreditTrade.objects.filter(
+        credits_until_deadline = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
               Q(type__the_type="Sell") &
               Q(respondent_id=organization.id) &
@@ -249,28 +256,24 @@ class OrganizationService(object):
               Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
 
-        debits = CreditTrade.objects.filter(
+        all_debits = CreditTrade.objects.filter(
             (Q(status__status="Approved") &
               Q(type__the_type="Sell") &
               Q(initiator_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(is_rescinded=False)) |
             (Q(status__status="Approved") &
               Q(type__the_type="Buy") &
               Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(trade_effective_date__lte=effective_date_deadline)) |
+              Q(is_rescinded=False)) |
             (Q(type__the_type="Credit Reduction") &
               Q(status__status="Approved") &
               Q(respondent_id=organization.id) &
-              Q(is_rescinded=False) &
-              Q(compliance_period__effective_date__lte=compliance_period_effective_date)) |
+              Q(is_rescinded=False)) |
             (Q(type__the_type="Administrative Adjustment") &
               Q(status__status="Approved") &
               Q(respondent_id=organization.id) &
               Q(is_rescinded=False) &
-              Q(number_of_credits__lt=0) &
-              Q(trade_effective_date__lte=effective_date_deadline))
+              Q(number_of_credits__lt=0))
         ).aggregate(
             total=Sum(
                 Case(
@@ -284,22 +287,18 @@ class OrganizationService(object):
             )
         )
 
-        total_in_compliance_period = 0
-        if credits and credits.get('total') is not None:
-            total_in_compliance_period = credits.get('total')
+        net_available_balance = 0
+        if credits_until_deadline and credits_until_deadline.get('total') is not None:
+            net_available_balance = credits_until_deadline.get('total')
 
-        if debits and debits.get('total') is not None:
-            total_in_compliance_period -= debits.get('total')
+        if all_debits and all_debits.get('total') is not None:
+            net_available_balance -= all_debits.get('total')
+
         pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
 
-        validated_credits = organization.organization_balance.get(
-            'validated_credits', 0
-        )
+        available_balance_now = net_available_balance - pending_deductions
 
-        total_balance = validated_credits - pending_deductions
-        total_available_credits = min(total_in_compliance_period, total_balance)
+        if available_balance_now < 0:
+            available_balance_now = 0
 
-        if total_available_credits < 0:
-            total_available_credits = 0
-
-        return total_available_credits
+        return available_balance_now

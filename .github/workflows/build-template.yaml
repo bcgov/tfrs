@@ -42,7 +42,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
@@ -75,7 +75,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
@@ -109,7 +109,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
@@ -145,7 +145,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
@@ -179,7 +179,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
@@ -213,7 +213,7 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.2
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ secrets.openshift-server }}
           openshift_token: ${{ secrets.openshift-token }}
