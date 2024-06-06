@@ -32,7 +32,7 @@ echo
 # prod variables
 if [ $1 = "prod" ]; then
   project_name='0ab226-prod'
-  pod_name='tfrs-spilo-0'
+  pod_name='tfrs-crunchy-prod-tfrs-trg4-0'
   env='prod'
 elif [ $1 = "dev" ]; then
   project_name='0ab226-dev'
