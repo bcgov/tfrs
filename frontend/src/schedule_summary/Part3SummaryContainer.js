@@ -427,10 +427,14 @@ function Part3SupplementalData (
 function SupplementalComplianceUnitData (complianceReport, lastAcceptedOffset, part3) {
   let availableBalance = Number(Math.min(complianceReport.maxCreditOffsetExcludeReserved, complianceReport.maxCreditOffset))
   availableBalance += complianceReport.totalPreviousCreditReductions
-  // handle the scenario wherein previous balance changed w.r.t initial report
-  if (availableBalance !== complianceReport.maxCreditOffsetExcludeReserved && lastAcceptedOffset === null) {
-    availableBalance = complianceReport.maxCreditOffsetExcludeReserved
-  }
+
+  // Removed June 6 2024 - logic did not match business requirements, left for posterity
+  // Handle the scenario wherein previous balance changed w.r.t initial report
+  // if (availableBalance !== complianceReport.maxCreditOffsetExcludeReserved && lastAcceptedOffset === null) {
+  //   availableBalance = complianceReport.maxCreditOffsetExcludeReserved
+  //   console.log('Updated available balance due to previous balance change:', availableBalance)
+  // }
+
   let totalPreviousValidations = 0
   let totalPreviousReductions = 0
   const totalPreviousComplianceUnits = Number(complianceReport.deltas[0].snapshot.data.summary.lines['25'])

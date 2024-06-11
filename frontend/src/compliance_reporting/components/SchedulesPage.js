@@ -80,13 +80,13 @@ const SchedulesPage = props => (
           totals={props.totals}
         />
       }
-
-      {props.scheduleType === 'schedule-b' &&
+      {/* Removed June 6 2024 due to balance discrepancy with backend */}
+      {/* {props.scheduleType === 'schedule-b' &&
         <ScheduleBTotals
           totals={props.totals}
           period={props.complianceReport}
         />
-      }
+      } */}
       <div className="clear" />
     </div>
   </div>
