@@ -10,7 +10,8 @@ import {
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
-  USERS as ADMIN_USERS
+  USERS as ADMIN_USERS,
+  USER_LOGIN_HISTORY
 } from '../constants/routes/Admin'
 import CONTACT_US from '../constants/routes/ContactUs'
 import CREDIT_CALCULATIONS from '../constants/routes/CreditCalculations'
@@ -51,6 +52,7 @@ import RoleViewContainer from '../admin/roles/RoleViewContainer'
 import UsersContainer from '../admin/users/UsersContainer'
 import UserAddContainer from '../admin/users/UserAddContainer'
 import UserEditContainer from '../admin/users/UserEditContainer'
+import UserLoginHistoryContainer from '../admin/user_login_history/UserLoginHistoryContainer'
 import NotFound from './components/NotFound'
 import ComplianceReportingContainer from '../compliance_reporting/ComplianceReportingContainer'
 import ExclusionReportEditContainer from '../exclusion_reports/ExclusionReportEditContainer'
@@ -72,6 +74,7 @@ import OrganizationEditContainer from '../organizations/OrganizationEditContaine
 import ComplianceReportingEditContainer from '../compliance_reporting/ComplianceReportingEditContainer'
 import ComplianceReportingEditRedirector from '../compliance_reporting/ComplianceReportingEditRedirector'
 import ExclusionReportingEditRedirector from '../exclusion_reports/ExclusionReportingEditRedirector'
+
 
 const Router = routerProps => (
   <Routes>
@@ -213,6 +216,11 @@ const Router = routerProps => (
       exact
       path={RoutePath.NOTIFICATIONS.LIST}
       element={<NotificationsContainer/>}
+    />
+    <Route
+      exact
+      path={USER_LOGIN_HISTORY.LIST}
+      element={<UserLoginHistoryContainer />}
     />
     {CONFIG.FUEL_CODES.ENABLED && [
       <Route
