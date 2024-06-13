@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import {
   CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES,
-  HISTORICAL_DATA_ENTRY, ROLES, USERS
+  HISTORICAL_DATA_ENTRY, ROLES, USERS, USER_LOGIN_HISTORY
 } from '../../constants/routes/Admin'
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations'
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions'
@@ -45,6 +45,15 @@ const AdminTabs = props => (
       >
         <Link id="navbar-administration" to={ROLES.LIST}>
           Roles
+        </Link>
+      </li>,
+      <li
+        role="presentation"
+        className={`${(props.active === 'user-login-history') ? 'active' : ''}`}
+        key="user-login-history"
+      >
+        <Link id="navbar-administration" to={USER_LOGIN_HISTORY.LIST}>
+          User Login History
         </Link>
       </li>
     ]}

@@ -32,10 +32,16 @@ const USERS = {
   LIST: `${BASE_PATH}/users`
 }
 
+const USER_LOGIN_HISTORY = {
+  API: '/user_login_history',
+  LIST: `${BASE_PATH}/user_login_history`
+}
+
 export {
   CREDIT_TRANSACTIONS_HISTORY,
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
-  USERS
+  USERS,
+  USER_LOGIN_HISTORY
 }

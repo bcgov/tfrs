@@ -56,6 +56,7 @@ from .viewsets.ExpectedUse import ExpectedUseViewSet
 from .viewsets.FuelClass import FuelClassViewSet
 from .viewsets.NotionalTransferType import NotionalTransferTypeViewSet
 from .viewsets.TransactionType import TransactionTypeViewSet
+from .viewsets.UserLoginHistory import UserLoginHistoryViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -126,6 +127,11 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
         r'credit_calculation/fuel_types',
         CreditCalculationViewSet
     )
+    ROUTER.register(
+        r'user_login_history', 
+        UserLoginHistoryViewSet
+    )
+
 
 if COMPLIANCE_REPORTING_API['ENABLED'] or TESTING:
     ROUTER.register(r'compliance_reports', ComplianceReportViewSet)

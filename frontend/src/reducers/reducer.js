@@ -27,6 +27,7 @@ import { complianceReporting } from '../actions/complianceReporting'
 import { exclusionReports } from '../actions/exclusionReports'
 import { transactionTypes } from '../actions/transactionTypes'
 import creditCalculation from './creditCalculationReducer'
+import userLoginHistory from './userLoginHistory'
 
 const rootReducer = combineReducers({
   autocomplete,
@@ -54,6 +55,7 @@ const rootReducer = combineReducers({
   userAdmin,
   userRequest,
   userViewRequest,
+  userLoginHistory,
   roles: roles.reducer(),
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
