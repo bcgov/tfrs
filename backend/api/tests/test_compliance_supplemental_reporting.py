@@ -30,6 +30,11 @@ from api.models.NotificationMessage import NotificationMessage
 from api.models.Organization import Organization
 from .base_test_case import BaseTestCase
 from .payloads.supplemental_payloads import *
+from decimal import Decimal
+from unittest.mock import Mock, PropertyMock
+from api.models.ComplianceReport import ComplianceReport
+from api.serializers.ComplianceReport import ComplianceReportBaseSerializer
+
 
 logger = logging.getLogger('supplemental_reporting')
 logger.setLevel(logging.INFO)
@@ -157,3 +162,71 @@ class TestComplianceReporting(BaseTestCase):
                 data=json.dumps(obj['payload'])
             )
             self.assertEqual(response.status_code, 200)
+
+    def create_mock_report(self, credit_transaction=None, director_status="Accepted", supplements=None):
+        report = Mock(spec=ComplianceReport)
+        report.credit_transaction = credit_transaction
+        report.status = Mock()
+        type(report.status).director_status_id = PropertyMock(return_value=director_status)
+        report.supplements = supplements
+        return report
+
+    def create_mock_transaction(self, transaction_type, number_of_credits):
+        transaction = Mock()
+        transaction.type = Mock()
+        type(transaction.type).the_type = PropertyMock(return_value=transaction_type)
+        transaction.number_of_credits = number_of_credits
+        return transaction
+
+    def test_get_total_previous_credit_reductions_no_supplements(self):
+        report = self.create_mock_report(supplements=None)
+        assert ComplianceReportBaseSerializer.get_total_previous_credit_reductions(report) == Decimal('0.0')
+
+    def test_get_total_previous_credit_reductions_single_reduction(self):
+        transaction = self.create_mock_transaction('Credit Reduction', Decimal('10.0'))
+        supplement = self.create_mock_report(credit_transaction=transaction, supplements=None)
+        report = self.create_mock_report(supplements=supplement)
+        
+        assert ComplianceReportBaseSerializer.get_total_previous_credit_reductions(report) == Decimal('10.0')
+
+    def test_get_total_previous_credit_reductions_multiple_reductions(self):
+        transaction1 = self.create_mock_transaction('Credit Reduction', Decimal('10.0'))
+        transaction2 = self.create_mock_transaction('Credit Reduction', Decimal('5.0'))
+        supplement2 = self.create_mock_report(credit_transaction=transaction2, supplements=None)
+        supplement1 = self.create_mock_report(credit_transaction=transaction1, supplements=supplement2)
+        report = self.create_mock_report(supplements=supplement1)
+        
+        assert ComplianceReportBaseSerializer.get_total_previous_credit_reductions(report) == Decimal('15.0')
+
+    def test_get_total_previous_credit_reductions_with_validation(self):
+        transaction1 = self.create_mock_transaction('Credit Reduction', Decimal('10.0'))
+        transaction2 = self.create_mock_transaction('Credit Validation', Decimal('3.0'))
+        supplement2 = self.create_mock_report(credit_transaction=transaction2, supplements=None)
+        supplement1 = self.create_mock_report(credit_transaction=transaction1, supplements=supplement2)
+        report = self.create_mock_report(supplements=supplement1)
+        
+        assert ComplianceReportBaseSerializer.get_total_previous_credit_reductions(report) == Decimal('7.0')
+
+    def test_get_total_previous_credit_reductions_ignore_non_accepted(self):
+        transaction1 = self.create_mock_transaction('Credit Reduction', Decimal('10.0'))
+        transaction2 = self.create_mock_transaction('Credit Reduction', Decimal('5.0'))
+        supplement2 = self.create_mock_report(credit_transaction=transaction2, director_status="Rejected", supplements=None)
+        supplement1 = self.create_mock_report(credit_transaction=transaction1, supplements=supplement2)
+        report = self.create_mock_report(supplements=supplement1)
+        
+        assert ComplianceReportBaseSerializer.get_total_previous_credit_reductions(report) == Decimal('10.0')
+
+    def test_get_supplemental_number_no_supplements(self):
+        report = self.create_mock_report(supplements=None)
+        assert ComplianceReportBaseSerializer.get_supplemental_number(report) == 0
+
+    def test_get_supplemental_number_single_supplement(self):
+        supplement = self.create_mock_report(supplements=None)
+        report = self.create_mock_report(supplements=supplement)
+        assert ComplianceReportBaseSerializer.get_supplemental_number(report) == 1
+
+    def test_get_supplemental_number_multiple_supplements(self):
+        supplement2 = self.create_mock_report(supplements=None)
+        supplement1 = self.create_mock_report(supplements=supplement2)
+        report = self.create_mock_report(supplements=supplement1)
+        assert ComplianceReportBaseSerializer.get_supplemental_number(report) == 2
