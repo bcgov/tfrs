@@ -89,62 +89,21 @@ class ComplianceReportBaseSerializer:
     def get_total_previous_credit_reductions(self, obj):
         # Return the total number of credits for all previous reductions for
         # supplemental reports
-        # previous_transactions = []
-        submitted_reports = []
+        previous_transactions = []
         current = obj
-        submitted_reports_end = False
-        rejected_found = False
-
         total_previous_reduction = Decimal(0.0)
 
-        # this is an attempt to simplify the process of calculation previous
-        # credit reductions
-        # If the last supplemental report was submitted we can just use the
-        # credit offset there as our previous reduction (which is credit offset A)
-        if current.supplements and current.supplements.status and \
-                current.supplements.status.fuel_supplier_status_id in [
-                    "Submitted"
-                ] and current.supplements.status.director_status_id in [
-                    "Unreviewed"
-                ]:
-            total_previous_reduction = current.supplements.summary.credits_offset
-            submitted_reports_end = True
-
-        while current.supplements is not None and not submitted_reports_end:
+        while current.supplements is not None:
             current = current.supplements
-            if current.status.director_status_id in [
-                    "Rejected"
-            ]:
-                rejected_found = True
+            if current.credit_transaction is not None and \
+                    current.status.director_status_id == "Accepted":
+                previous_transactions.append(current.credit_transaction)
 
-            if current.status.director_status_id in [
-                    "Accepted"
-            ]:
-                submitted_reports_end = True
-
-            # if current.credit_transaction is not None and \
-            #         current.status.director_status_id not in ["Rejected"]:
-            #     previous_transactions.append(current.credit_transaction)
-            if current.status.fuel_supplier_status_id == "Submitted" and \
-                    not submitted_reports_end and \
-                    not rejected_found:
-                submitted_reports.append(current)
-
-            if rejected_found and submitted_reports_end and current.summary:
-                # Clear the submitted reports and we only care about the
-                # last accepted one
-                total_previous_reduction = current.summary.credits_offset
-
-        # for transaction in previous_transactions:
-        #     if transaction.type.the_type in ['Credit Reduction']:
-        #         total_previous_reduction += transaction.number_of_credits
-        #     elif transaction.type.the_type in ['Credit Validation']:
-        #         total_previous_reduction -= transaction.number_of_credits
-
-        if not rejected_found:
-            for report in submitted_reports:
-                if report.summary and report.summary.credits_offset_b:
-                    total_previous_reduction += report.summary.credits_offset_b
+        for transaction in previous_transactions:
+            if transaction.type.the_type == 'Credit Reduction':
+                total_previous_reduction += transaction.number_of_credits
+            elif transaction.type.the_type == 'Credit Validation':
+                total_previous_reduction -= transaction.number_of_credits
 
         return total_previous_reduction
 
@@ -1123,8 +1082,24 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                     original_summary.diesel_class_obligation
                 
                 summary.credits_offset = original_summary.credits_offset
-                summary.credits_offset_a = original_summary.credits_offset or \
-                    original_summary.credits_offset_a
+
+                # Calculate the total credits offset from all previous ACCEPTED reports
+                # This is necessary because credits_offset_a should represent the cumulative
+                # credit reductions from all accepted previous reports, not just the most recent one.
+                # We iterate through all previous reports (supplements) and sum up their credit offsets,
+                # but only if the report was accepted by the director.
+                total_accepted_reductions = 0
+                current = previous_report
+
+                while current is not None:
+                    if current.status.director_status_id == 'Accepted' and current.summary:
+                        if current.summary.credits_offset > 0:
+                            total_accepted_reductions += current.summary.credits_offset
+                        elif current.summary.credits_offset_b > 0:
+                            total_accepted_reductions += current.summary.credits_offset_b
+                    current = current.supplements
+
+                summary.credits_offset_a = total_accepted_reductions
 
                 credits_offset_c = original_summary.credits_offset_c
                 if credits_offset_c is not None and credits_offset_c > 0:
