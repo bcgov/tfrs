@@ -10,7 +10,7 @@ on:
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 2894
+  PR_NUMBER: 2908
   RELEASE_NAME: release-2.21.0
 
 concurrency:
