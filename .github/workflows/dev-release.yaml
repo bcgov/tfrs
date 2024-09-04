@@ -1,11 +1,11 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS Dev release-2.20.0
+name: TFRS Dev release-2.21.0
 
 on:
   push:
-    branches: [ release-2.20.0 ]
+    branches: [release-2.21.0]
     paths:
       - frontend/**
       - backend/**
@@ -16,16 +16,14 @@ env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
   PR_NUMBER: 2894
-  RELEASE_NAME: release-2.20.0
+  RELEASE_NAME: release-2.21.0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-
   unit-test:
-
     name: Run Backend Unit Tests
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -33,17 +31,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
-      - name: Run coverage report for django tests 
+
+      - name: Run coverage report for django tests
         uses: kuanfandevops/django-test-action@itvr-django-test
         continue-on-error: true
         with:
           settings-dir-path: "backend/api"
           requirements-file: "backend/requirements.txt"
           managepy-dir: backend
-  
-  lint:
 
+  lint:
     name: Linting
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -52,13 +49,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Frontend Linting 
+      - name: Frontend Linting
         continue-on-error: true
         run: |
           cd frontend
           pwd
           npm install
-          npm run lint        
+          npm run lint
 
       - name: Backend linting
         uses: github/super-linter/slim@v4
@@ -71,13 +68,11 @@ jobs:
           LOG_LEVEL: WARN
 
   build:
-
     name: Build TFRS on Openshift
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
     steps:
-
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
         uses: actions/checkout@v3
@@ -96,17 +91,15 @@ jobs:
         run: |
           cd .pipeline
           npm install
-          npm run build -- --pr=${{ env.PR_NUMBER }} --env=build 
+          npm run build -- --pr=${{ env.PR_NUMBER }} --env=build
 
   deploy-on-dev:
-
     name: Deploy TFRS on Dev
     runs-on: ubuntu-latest
     timeout-minutes: 240
     needs: build
 
     steps:
-
       ## it will checkout to /home/runner/work/itvr/itvr
       - name: Check out repository
         uses: actions/checkout@v3
@@ -117,11 +110,10 @@ jobs:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
           insecure_skip_tls_verify: true
-          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools    
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
 
       - name: Run deploy
         run: |
           cd .pipeline
           npm install
-          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=dev 
-
+          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=dev
