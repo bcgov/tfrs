@@ -30,7 +30,8 @@ class OrganizationService(object):
     @staticmethod
     def get_pending_deductions(
             organization,
-            ignore_pending_supplemental=True
+            ignore_pending_supplemental=True,
+            compliance_period=None
     ):
         deductions = 0
         deductions += OrganizationService.get_pending_transfers_value(organization)
@@ -112,6 +113,36 @@ class OrganizationService(object):
             #         if report.summary.credits_offset:
             #             deductions -= report.summary.credits_offset
 
+
+        # Adjust deductions for reports in the current compliance period
+        # This addresses a specific scenario where credits from the most recent
+        # submitted but not accepted report in the current period should not be
+        # considered as unavailable
+        if compliance_period:
+            # Get all unique report chains for the current compliance period
+            report_chains = ComplianceReport.objects.filter(
+                organization_id=organization.id,
+                compliance_period__description=str(compliance_period)
+            ).values('id').distinct()
+
+            for chain in report_chains:
+                # Get all reports in this chain, ordered from newest to oldest
+                reports_in_chain = ComplianceReport.objects.filter(
+                    id=chain['id']
+                ).order_by('-id')
+                # Traverse the chain backwards, looking for the first submitted
+                # but not accepted report
+                for report in reports_in_chain:
+                    if report.status.fuel_supplier_status.status in ["Submitted"] and \
+                      report.status.director_status.status not in ["Accepted", "Rejected"]:
+                        # Subtract the credits_offset of this report from the total deductions
+                        # This ensures that credits from the most recent relevant report
+                        # are not incorrectly marked as unavailable
+                        if report.summary and report.summary.credits_offset is not None:
+                            deductions -= report.summary.credits_offset
+                        # Break after processing the first relevant report in the chain
+                        break
+
         if deductions < 0:
             deductions = 0
 
@@ -160,6 +191,8 @@ class OrganizationService(object):
                 Q(number_of_credits__gte=0) &
                 Q(trade_effective_date__lte=effective_date_deadline))
         ).aggregate(total=Sum('number_of_credits'))
+
+        # print("CREDITS -- ", credits_until_deadline)
         
         # Query to sum up all approved, non-rescinded debits (outgoing credits) for the organization.
         all_debits = CreditTrade.objects.filter(
@@ -192,6 +225,7 @@ class OrganizationService(object):
                 )
             )
         )
+        # print("DEBITS -- ", all_debits)
 
         # Calculate the net available balance by subtracting debits from credits.
         net_available_balance = 0
@@ -205,8 +239,9 @@ class OrganizationService(object):
         if exclude_reserved:
             pending_deductions = OrganizationService.get_pending_transfers_value(organization)
         else:
-            pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False)
+            pending_deductions = OrganizationService.get_pending_deductions(organization, ignore_pending_supplemental=False, compliance_period=compliance_year)
         
+        # print("PENDING DEDUCTIONS -- ", pending_deductions)
         # Deduct pending deductions from the available balance and ensure it does not drop below zero.
         available_balance_now = net_available_balance - pending_deductions
         if available_balance_now < 0:

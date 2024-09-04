@@ -60,7 +60,7 @@ objects:
           RUN git clone https://github.com/bcgov/tfrs.git
           WORKDIR /app/tfrs
           RUN git checkout $TFRS_RELEASE
-          RUN pip install --upgrade pip \
+          RUN pip install --upgrade pip==24.0 \
               && pip install -r backend/requirements.txt
           RUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d
           RUN chgrp -R root /var/log/supervisor
@@ -90,7 +90,7 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-celery:${VERSION}
-      resources: 
+      resources:
         limits:
           cpu: 1500m
           memory: 1300Mi

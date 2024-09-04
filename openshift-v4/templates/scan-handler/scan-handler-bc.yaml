@@ -5,97 +5,97 @@ metadata:
   name: scan-handler-bc
   creationTimestamp:
 parameters:
-- name: NAME
-  displayName:
-  description: the module name entered when run yo bcdk:pipeline, which is tfrs
-  required: true
-- name: SUFFIX
-  displayName:
-  description: sample is -pr-0
-  required: true
-- name: VERSION
-  displayName:
-  description:  image tag name for output
-  required: true
-- name: RELEASE_BRANCH
-  displayName:
-  description: the release branch name
-  required: true  
+  - name: NAME
+    displayName:
+    description: the module name entered when run yo bcdk:pipeline, which is tfrs
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -pr-0
+    required: true
+  - name: VERSION
+    displayName:
+    description: image tag name for output
+    required: true
+  - name: RELEASE_BRANCH
+    displayName:
+    description: the release branch name
+    required: true
 objects:
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      description: Keeps track of changes in the celery image
-    labels:
-      shared: "true"
-    creationTimestamp: null
-    name: ${NAME}-scan-handler
-  spec:
-    lookupPolicy:
-      local: false
-  status:
-    dockerImageRepository: "" 
-- kind: BuildConfig
-  apiVersion: build.openshift.io/v1
-  metadata:
-    name: ${NAME}-scan-handler${SUFFIX}
-    creationTimestamp:
-  spec:
-    triggers: []
-    runPolicy: Serial
-    source:
-      type: Dockerfile
-      dockerfile: |
-        FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.9.15
-        RUN apt-get update \
-            && apt-get install -y git \
-            && apt-get install -y supervisor
-        WORKDIR /app
-        RUN git clone https://github.com/bcgov/tfrs.git
-        WORKDIR /app/tfrs
-        RUN git checkout ${tfrs_release}
-        RUN pip install --upgrade pip \
-            && pip install -r backend/requirements.txt
-        RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d && \
-            chgrp -R root /var/log/supervisor && \
-            chmod -R g+w /var/log/supervisor && \
-            chmod -R g+w /run || : && \
-            chmod -R g+w /app
-        # RUN sed -i "s/chmod=0700/chmod=0770/g" /etc/supervisor/supervisord.conf
-        CMD ["supervisord"]
-    strategy:
-      type: Docker
-      dockerStrategy:
-        noCache: true
-        env:
-        - name: tfrs_release
-          value: ${RELEASE_BRANCH}
-        - name: ARTIFACTORY_USER
-          valueFrom:
-            secretKeyRef:
-              name: artifacts-default-cgcynz
-              key: username
-        - name: ARTIFACTORY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: artifacts-default-cgcynz
-              key: password          
-        forcePull: true
-    output:
-      to:
-        kind: ImageStreamTag
-        name: ${NAME}-scan-handler:${VERSION}
-    resources: 
-      limits:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: Keeps track of changes in the celery image
+      labels:
+        shared: "true"
+      creationTimestamp: null
+      name: ${NAME}-scan-handler
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: ""
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      name: ${NAME}-scan-handler${SUFFIX}
+      creationTimestamp:
+    spec:
+      triggers: []
+      runPolicy: Serial
+      source:
+        type: Dockerfile
+        dockerfile: |
+          FROM artifacts.developer.gov.bc.ca/docker-remote/python:3.9.15
+          RUN apt-get update \
+              && apt-get install -y git \
+              && apt-get install -y supervisor
+          WORKDIR /app
+          RUN git clone https://github.com/bcgov/tfrs.git
+          WORKDIR /app/tfrs
+          RUN git checkout ${tfrs_release}
+          RUN pip install --upgrade pip==24.0 \
+              && pip install -r backend/requirements.txt
+          RUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d && \
+              chgrp -R root /var/log/supervisor && \
+              chmod -R g+w /var/log/supervisor && \
+              chmod -R g+w /run || : && \
+              chmod -R g+w /app
+          # RUN sed -i "s/chmod=0700/chmod=0770/g" /etc/supervisor/supervisord.conf
+          CMD ["supervisord"]
+      strategy:
+        type: Docker
+        dockerStrategy:
+          noCache: true
+          env:
+            - name: tfrs_release
+              value: ${RELEASE_BRANCH}
+            - name: ARTIFACTORY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artifacts-default-cgcynz
+                  key: username
+            - name: ARTIFACTORY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artifacts-default-cgcynz
+                  key: password
+          forcePull: true
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${NAME}-scan-handler:${VERSION}
+      resources:
+        limits:
           cpu: 1500m
           memory: 1300Mi
-      requests:
+        requests:
           cpu: 750m
-          memory: 650Mi        
-    postCommit: {}
-    nodeSelector:
-    successfulBuildsHistoryLimit: 5
-    failedBuildsHistoryLimit: 5
-  status:
-    lastVersion: 0
+          memory: 650Mi
+      postCommit: {}
+      nodeSelector:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+    status:
+      lastVersion: 0
