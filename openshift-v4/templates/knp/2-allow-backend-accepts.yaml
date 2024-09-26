@@ -27,6 +27,17 @@ objects:
             - podSelector:
                 matchLabels:
                   name: tfrs-frontend-${ENVIRONMENT}
+        - ports:
+            - protocol: TCP
+              port: 8080
+          from:
+            - namespaceSelector:
+                matchLabels:
+                  environment: ${ENVIRONMENT}
+                  name: d2bd59
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: lcfs-backend-${ENVIRONMENT}
       policyTypes:
         - Ingress
     status: {}
