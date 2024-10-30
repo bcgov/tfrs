@@ -1,0 +1,33 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: tfrs-network-policy
+metadata:
+  name: allow-rabbitmq-accepts-lcfs-backend
+parameters:
+  - name: ENVIRONMENT
+    displayName: null
+    description: such as dev, test or prod
+    required: true  
+objects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-rabbitmq-accepts-lcfs-backend-${ENVIRONMENT}
+    spec:
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: tfrs-rabbitmq
+      ingress:
+        - ports:
+            - protocol: TCP
+              port: 5672
+          from:
+            - namespaceSelector:
+                matchLabels:
+                  environment: ${ENVIRONMENT}
+                  name: d2bd59
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: lcfs-backend-${ENVIRONMENT}
