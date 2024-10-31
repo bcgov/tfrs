@@ -31,3 +31,4 @@ objects:
             - podSelector:
                 matchLabels:
                   app.kubernetes.io/instance: lcfs-backend-${ENVIRONMENT}
+                  # app.kubernetes.io/name: lcfs-backend     this is for dev only, it allows lcfs backend pods including pr build ones to access tfrs rabbitmq dev
