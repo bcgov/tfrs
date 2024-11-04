@@ -164,9 +164,9 @@ class CreditTradeService(object):
         delta = relativedelta(proposal_date, agreement_date)
         difference_in_months = delta.years * 12 + delta.months
 
-        if difference_in_months <= 6:
+        if (difference_in_months == 6 and delta.days == 0) or difference_in_months < 6:
             return CreditTradeCategory.objects.get(category="A")
-        elif 6 < difference_in_months <= 12:
+        elif (difference_in_months == 12 and delta.days == 0) or (6 < difference_in_months < 12):
             return CreditTradeCategory.objects.get(category="B")
         else:
             return CreditTradeCategory.objects.get(category="C")
