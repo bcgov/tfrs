@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router'
 import AddressBuilder from '../../app/components/AddressBuilder'
 import { attornyAddressCheck } from '../../utils/functions'
 import TOOLTIPS from '../../constants/tooltips'
+import CONFIG from '../../config'
 
 const OrganizationDetails = props => {
   const navigate = useNavigate()
@@ -32,78 +33,83 @@ const OrganizationDetails = props => {
     attorneyCountry
   } = (props.organization.organizationAddress ? props.organization.organizationAddress : {})
 
+  const userType = props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID';
+  const tearDownConfig = CONFIG.TEAR_DOWN[userType];
+
   return (
     <div className="page_organization">
       <div>
-        <div className="credit_balance">
-          {props.organization.organizationBalance &&
-          <h3>
-            Compliance Units: {
-              numeral(props.organization.organizationBalance.validatedCredits)
+        {!tearDownConfig.ORGANIZATION.CREDIT_INFORMATION && (
+          <div className="credit_balance">
+            {props.organization.organizationBalance &&
+              <h3>
+              Compliance Units: {
+                numeral(props.organization.organizationBalance.validatedCredits)
+                  .format(NumberFormat.INT)
+              }
+              <div className="reserved">
+                (In Reserve: {numeral(props.organization.organizationBalance.deductions)
                 .format(NumberFormat.INT)
+                }){' '}
+                <Tooltip
+                  className="info"
+                  title={TOOLTIPS.IN_RESERVE}
+                >
+                  <FontAwesomeIcon icon="info-circle" />
+                </Tooltip>
+              </div>
+            </h3>
             }
-            <div className="reserved">
-              (In Reserve: {numeral(props.organization.organizationBalance.deductions)
-              .format(NumberFormat.INT)
-              }){' '}
-              <Tooltip
-                className="info"
-                title={TOOLTIPS.IN_RESERVE}
-              >
-                <FontAwesomeIcon icon="info-circle" />
-              </Tooltip>
-            </div>
-          </h3>
-          }
-        </div>
+          </div>
+        )}
         <h1>
           {props.organization.name}
         </h1>
         <div className="actions-container">
           {props.loggedInUser &&
-          props.loggedInUser.isGovernmentUser &&
+            props.loggedInUser.isGovernmentUser &&
           (props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS) ||
             props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIER)
           ) &&
-          <button
-            id="edit-organization"
-            className="btn btn-info"
-            type="button"
+              <button
+                id="edit-organization"
+                className="btn btn-info"
+                type="button"
             onClick={() => navigate(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}
-          >
-            <FontAwesomeIcon icon="edit" /> Edit
-          </button>
+              >
+                <FontAwesomeIcon icon="edit" /> Edit
+              </button>
           }
         </div>
         {props.organization.organizationAddress &&
-        <div className="address">
-          <dl className="dl-horizontal">
+          <div className="address">
+            <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Head Office Address:</strong></dt>
             <dd>{AddressBuilder({
-              address_line_1: addressLine1,
-              address_line_2: addressLine2,
-              city,
-              state,
-              postal_code: postalCode,
-              country
+                  address_line_1: addressLine1,
+                  address_line_2: addressLine2,
+                  city,
+                  state,
+                  postal_code: postalCode,
+                  country
             })}</dd>
-          </dl>
-        </div>
+            </dl>
+          </div>
         }
         {props.organization.organizationAddress && attornyAddressCheck(props.organization.organizationAddress) &&
-        <div className="address">
-          <dl className="dl-horizontal">
+            <div className="address">
+              <dl className="dl-horizontal">
             <dt style={{ width: '300px' }}><strong>Corporation or BC Attorney address:</strong></dt>
             <dd>{AddressBuilder({
-              address_line_1: attorneyStreetAddress,
-              address_line_2: attorneyAddressOther,
-              city: attorneyCity,
-              state: attorneyProvince,
-              postal_code: attorneyPostalCode,
-              country: attorneyCountry
+                    address_line_1: attorneyStreetAddress,
+                    address_line_2: attorneyAddressOther,
+                    city: attorneyCity,
+                    state: attorneyProvince,
+                    postal_code: attorneyPostalCode,
+                    country: attorneyCountry
             })}</dd>
-          </dl>
-        </div>
+              </dl>
+            </div>
         }
         {!props.loggedInUser.isGovernmentUser && (
           <div className="address">
@@ -115,15 +121,15 @@ const OrganizationDetails = props => {
         )}
         <div className="address">
           <dl className="dl-horizontal">
-          {props.loggedInUser.isGovernmentUser && (
-            <>
-              <dt style={{ width: '300px' }}>
-                <strong>Company Profile, EDRMS Record #:</strong>
-              </dt>
+            {props.loggedInUser.isGovernmentUser && (
+              <>
+                <dt style={{ width: '300px' }}>
+                  <strong>Company Profile, EDRMS Record #:</strong>
+                </dt>
 
-            <dd>{props.organization.edrmsRecord ? props.organization.edrmsRecord : ''}</dd>
-            </>
-          )}
+                <dd>{props.organization.edrmsRecord ? props.organization.edrmsRecord : ''}</dd>
+              </>
+            )}
           </dl>
         </div>
         <div className="status">
@@ -131,14 +137,14 @@ const OrganizationDetails = props => {
             <dt style={{ width: '300px' }}><strong>Registered for transfers:</strong></dt>
             <dd>
             {props.organization.statusDisplay === 'Inactive' &&
-              <span className="status-description">
+                <span className="status-description">
                 <strong>No &mdash;</strong> An organization must be registered to transfer compliance units.
-              </span>
+                </span>
             }
             {props.organization.statusDisplay !== 'Inactive' &&
-              <span className="status-description">
+                <span className="status-description">
                 <strong>Yes &mdash;</strong> A registered organization is able to transfer compliance units.
-              </span>
+                </span>
             }
             </dd>
           </dl>
@@ -155,8 +161,8 @@ OrganizationDetails.defaultProps = {
 OrganizationDetails.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
-    isGovernmentUser: PropTypes.bool
-  }),
+    isGovernmentUser: PropTypes.bool.isRequired
+  }).isRequired,
   organization: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
