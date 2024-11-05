@@ -1093,9 +1093,9 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
 
                 while current is not None:
                     if current.status.director_status_id == 'Accepted' and current.summary:
-                        if current.summary.credits_offset > 0:
+                        if current.summary.credits_offset is not None and current.summary.credits_offset > 0:
                             total_accepted_reductions += current.summary.credits_offset
-                        elif current.summary.credits_offset_b > 0:
+                        elif current.summary.credits_offset_b is not None and current.summary.credits_offset_b > 0:
                             total_accepted_reductions += current.summary.credits_offset_b
                     current = current.supplements
 
