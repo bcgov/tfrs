@@ -166,7 +166,7 @@ class CreditTradeService(object):
 
         if (difference_in_months == 6 and delta.days == 0) or difference_in_months < 6:
             return CreditTradeCategory.objects.get(category="A")
-        elif (difference_in_months == 12 and delta.days == 0) or (6 < difference_in_months < 12):
+        elif (difference_in_months == 12 and delta.days == 0) or (6 <= difference_in_months < 12):
             return CreditTradeCategory.objects.get(category="B")
         else:
             return CreditTradeCategory.objects.get(category="C")
