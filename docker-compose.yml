@@ -110,7 +110,18 @@ services:
       dockerfile: Dockerfile-smtplogger
     ports:
       - 2500:2500
+  redis:
+    container_name: tfrs-redis
+    restart: "no"
+    image: bitnami/redis:6.2.5
+    environment:
+      REDIS_PASSWORD: development_only
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/bitnami/redis/data
 volumes:
   node_modules:
   postgres_data:
   minio_data:
+  redis_data:
