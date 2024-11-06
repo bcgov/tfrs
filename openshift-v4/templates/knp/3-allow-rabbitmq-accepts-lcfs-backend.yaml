@@ -4,7 +4,7 @@ kind: Template
 labels:
   template: tfrs-network-policy
 metadata:
-  name: allow-backend-accepts
+  name: allow-rabbitmq-accepts-lcfs-backend
 parameters:
   - name: ENVIRONMENT
     displayName: null
@@ -14,22 +14,15 @@ objects:
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
-      name: allow-backend-accepts-${ENVIRONMENT}
+      name: allow-rabbitmq-accepts-lcfs-backend-${ENVIRONMENT}
     spec:
       podSelector:
         matchLabels:
-          name: tfrs-backend-${ENVIRONMENT}
+          app.kubernetes.io/instance: tfrs-rabbitmq
       ingress:
         - ports:
             - protocol: TCP
-              port: 8080
-          from:
-            - podSelector:
-                matchLabels:
-                  name: tfrs-frontend-${ENVIRONMENT}
-        - ports:
-            - protocol: TCP
-              port: 8080
+              port: 5672
           from:
             - namespaceSelector:
                 matchLabels:
@@ -38,6 +31,4 @@ objects:
             - podSelector:
                 matchLabels:
                   app.kubernetes.io/instance: lcfs-backend-${ENVIRONMENT}
-      policyTypes:
-        - Ingress
-    status: {}
+                  # app.kubernetes.io/name: lcfs-backend     use this for dev env instead of the line above, it allows lcfs backend pods including pr build ones to access tfrs rabbitmq dev
