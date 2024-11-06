@@ -35,7 +35,10 @@ from db_comments.db_actions import create_db_comments, \
     create_db_comments_from_models
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, \
     EMAIL, RUNSERVER
+from django.core.cache import caches
+import random
 
+redis_cache = caches['redis']
 
 class APIAppConfig(AppConfig):
     """Django configuration class"""
@@ -51,11 +54,27 @@ class APIAppConfig(AppConfig):
         if RUNSERVER:
             try:
                 check_external_services()
+                # Seed data in Redis cache
+                self.seed_redis_cache()
             except RuntimeError as error:
                 print('Startup checks failed. Not starting.')
                 print(error)
                 exit(-1)  # Django doesn't seem to do this automatically.
 
+    def seed_redis_cache(self):
+        """Seed initial data into Redis cache"""
+        try:
+            # Check if data has already been seeded to avoid duplicates
+            if not redis_cache.get('redis_seeded'):
+                for seq in range(1, 101):  # Adjust the range to create more entries if needed
+                    key = f"balance_{seq}_2024"
+                    value = random.randint(10000, 99999)  # Generates a random 5-digit number
+                    redis_cache.set(key, value)
+
+                redis_cache.set('redis_seeded', True)  # Set a flag to indicate seeding is done
+                print('Successfully seeded Redis cache')
+        except Exception as e:
+            print(f'Error seeding Redis cache: {e}')
 
 def check_external_services():
     """Called after initialization. Use it to validate settings"""
