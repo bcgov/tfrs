@@ -57,6 +57,8 @@ const phases = {
       "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration",
     backendKeycloakCertsUrl:
       "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+    redisHost: "lcfs-redis-dev-master.d2bd59-dev.svc.cluster.local",
+    redisPort: 6379,
     celeryCpuRequest: "100m",
     celeryCpuLimit: "250m",
     celeryMemoryRequest: "1600Mi",
@@ -133,6 +135,8 @@ const phases = {
       "https://test.loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration",
     backendKeycloakCertsUrl:
       "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+    redisHost: "lcfs-redis-test-master.d2bd59-test.svc.cluster.local",
+    redisPort: 6379,
     celeryCpuRequest: "100m",
     celeryCpuLimit: "250m",
     celeryMemoryRequest: "1600Mi",
@@ -209,6 +213,8 @@ const phases = {
       "https://loginproxy.gov.bc.ca/auth/realms/standard/.well-known/openid-configuration",
     backendKeycloakCertsUrl:
       "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+    redisHost: "lcfs-redis-prod-master.d2bd59-prod.svc.cluster.local",
+    redisPort: 6379,
     celeryCpuRequest: "100m",
     celeryCpuLimit: "250mm",
     celeryMemoryRequest: "1600Mi",
