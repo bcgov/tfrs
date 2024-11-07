@@ -38,7 +38,7 @@ module.exports = (settings) => {
           REPLICAS: phases[phase].backendReplicas,
           DB_SERVICE_NAME: phases[phase].dbServiceName,
           WELL_KNOWN_ENDPOINT: phases[phase].backendWellKnownEndpoint,
-          REDIS_HOST: phases[phase].redistHost,
+          REDIS_HOST: phases[phase].redisHost,
           REDIS_PORT: phases[phase].redisPort,
         },
       }
