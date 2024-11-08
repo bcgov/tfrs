@@ -9,11 +9,17 @@ import OrganizationsTable from './OrganizationsTable'
 import * as Routes from '../../constants/routes'
 import { download } from '../../utils/functions'
 import { useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
 
 const OrganizationsPage = (props) => {
   const navigate = useNavigate()
   const { isFetching, items } = props.organizations
   const isEmpty = items.length === 0
+
+  const loggedInUser = useSelector(
+    (state) => state.rootReducer.userRequest.loggedInUser
+  )
+
   return (
     <div className="page_organizations">
       <h1>{props.title}</h1>
@@ -62,13 +68,14 @@ const OrganizationsPage = (props) => {
         </button>
       </div>
       {isFetching && <Loading />}
-      {!isFetching &&
-      <OrganizationsTable
-        items={items}
-        isFetching={isFetching}
-        isEmpty={isEmpty}
-      />
-      }
+      {!isFetching && (
+        <OrganizationsTable
+          items={items}
+          isFetching={isFetching}
+          isEmpty={isEmpty}
+          loggedInUser={loggedInUser}
+        />
+      )}
     </div>
   )
 }

@@ -41,6 +41,55 @@ const CONFIG = {
   EXCLUSION_REPORTS: {
     ENABLED: getConfig('exclusion_reports.enabled', false),
     CREATE_EFFECTIVE_DATE: getConfig('exclusion_reports.create_effective_date', '2013-07-01')
+  },
+
+  // Tear down configuration manages UI visibility for BCeID and IDIR roles.
+  TEAR_DOWN: {
+    BCeID: {
+      WIDGETS: {
+        BALANCE: getConfig('tear_down.bceid.widgets.balance', false),
+        FEEDBACK: getConfig('tear_down.bceid.widgets.feedback', false),
+        WEBSITE: getConfig('tear_down.bceid.widgets.website', false),
+        CREDIT_TRANSACTIONS: getConfig('tear_down.bceid.widgets.creditTransactions', false),
+        FILE_SUBMISSIONS: getConfig('tear_down.bceid.widgets.fileSubmissions', false)
+      },
+      HEADER: {
+        CREDIT_INFORMATION: getConfig('tear_down.bceid.header.creditInformation', false)
+      },
+      NAVIGATION: {
+        TRANSACTIONS: getConfig('tear_down.bceid.navigation.transactions', false),
+        FILE_SUBMISSIONS: getConfig('tear_down.bceid.navigation.fileSubmissions', false),
+        HELP_LINK: getConfig('tear_down.bceid.navigation.helpLink', false)
+      },
+      ORGANIZATION: {
+        CREDIT_INFORMATION: getConfig('tear_down.bceid.organization.creditInformation', false),
+        ROLES: {
+          FILE_SUBMISSION: getConfig('tear_down.bceid.organization.roles.fileSubmission', false),
+          CREDIT_TRANSFERS: getConfig('tear_down.bceid.organization.roles.creditTransfers', false)
+        }
+      }
+    },
+    IDIR: {
+      WIDGETS: {
+        BALANCE: getConfig('tear_down.idir.widgets.balance', false),
+        CREDIT_TRANSACTIONS: getConfig('tear_down.idir.widgets.creditTransactions', false),
+        FILE_SUBMISSIONS: getConfig('tear_down.idir.widgets.fileSubmissions', false)
+      },
+      NAVIGATION: {
+        TRANSACTIONS: getConfig('tear_down.idir.navigation.transactions', false),
+        FILE_SUBMISSIONS: getConfig('tear_down.idir.navigation.fileSubmissions', false),
+        HELP_LINK: getConfig('tear_down.idir.navigation.helpLink', false)
+      },
+      ORGANIZATIONS: {
+        TABLE_COLUMNS: {
+          COMPLIANCE_UNITS: getConfig('tear_down.idir.organizations.tableColumns.complianceUnits', false),
+          IN_RESERVE: getConfig('tear_down.idir.organizations.tableColumns.inReserve', false)
+        }
+      },
+      ORGANIZATION: {
+        CREDIT_INFORMATION: getConfig('tear_down.idir.organization.creditInformation', false)
+      }
+    }
   }
 }
 

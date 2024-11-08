@@ -8,20 +8,41 @@ import 'react-table/react-table.css'
 
 import { ROLES } from '../../constants/routes/Admin'
 import ReactTable from '../../app/components/StateSavingReactTable'
+import CONFIG from '../../config'
 
 const OrganizationRolesTable = (props) => {
   const navigate = useNavigate()
+  const { items, loggedInUser } = props
+
+  // Only apply tear down for BCeID users
+  let filteredItems = items
+
+  if (!loggedInUser.isGovernmentUser) {
+    const tearDownConfig = CONFIG.TEAR_DOWN.BCeID
+
+    const rolesToTearDown = []
+    if (tearDownConfig.ORGANIZATION.ROLES.FILE_SUBMISSION) {
+      rolesToTearDown.push(10) // Role ID for File Submission
+    }
+    if (tearDownConfig.ORGANIZATION.ROLES.CREDIT_TRANSFERS) {
+      rolesToTearDown.push(4) // Role ID for Credit Transfers
+    }
+
+    // Filter out the roles that need to be torn down based on their IDs
+    filteredItems = items.filter((item) => !rolesToTearDown.includes(item.id))
+  }
+
   const columns = [{
-    accessor: 'id',
-    className: 'col-id',
-    Header: 'ID',
-    maxWidth: 50,
-    resizable: false
-  }, {
-    accessor: item => (item.description),
-    Header: 'Role',
-    id: 'role'
-  }]
+      accessor: 'id',
+      className: 'col-id',
+      Header: 'ID',
+      maxWidth: 50,
+      resizable: false
+    }, {
+      accessor: item => (item.description),
+      Header: 'Role',
+      id: 'role'
+    }]
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -38,7 +59,7 @@ const OrganizationRolesTable = (props) => {
     <ReactTable
       stateKey="organizations-roles"
       className="searchable"
-      data={props.items}
+      data={filteredItems}
       defaultFilterMethod={filterMethod}
       defaultSorted={[{
         id: 'role'
@@ -64,7 +85,10 @@ const OrganizationRolesTable = (props) => {
 }
 
 OrganizationRolesTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool.isRequired,
+  }).isRequired,
 }
 
 export default OrganizationRolesTable

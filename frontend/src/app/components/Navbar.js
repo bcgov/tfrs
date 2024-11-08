@@ -64,6 +64,8 @@ class Navbar extends Component {
 
   render () {
     const { organization } = this.props.loggedInUser
+    const userType = this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'
+    const tearDownConfig = CONFIG.TEAR_DOWN[userType]
 
     const SecondLevelNavigation = (
       <div className="level2Navigation">
@@ -102,17 +104,20 @@ class Navbar extends Component {
             Organizations
           </NavLink>
           }
-          <NavLink
-            // activeClassName="active"
-            id="navbar-credit-transactions"
-            to={CREDIT_TRANSACTIONS.LIST}
-          >
-            Transactions
-          </NavLink>
+          {!tearDownConfig.NAVIGATION.TRANSACTIONS &&
+            <NavLink
+              // activeClassName="active"
+              id="navbar-credit-transactions"
+              to={CREDIT_TRANSACTIONS.LIST}
+            >
+              Transactions
+            </NavLink>
+          }
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           !this.props.loggedInUser.isGovernmentUser &&
+          !tearDownConfig.NAVIGATION.FILE_SUBMISSIONS &&
           <NavLink
             // activeClassName="active"
             id="navbar-secure-document-upload"
@@ -143,6 +148,7 @@ class Navbar extends Component {
           typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           this.props.loggedInUser.isGovernmentUser &&
+          !tearDownConfig.NAVIGATION.FILE_SUBMISSIONS &&
           <NavLink
             // activeClassName="active"
             id="navbar-secure-document-upload"
@@ -212,13 +218,15 @@ class Navbar extends Component {
                   >
                     <FontAwesomeIcon icon="cog" /> Settings
                   </MenuItem>
-                  <MenuItem
-                    className="dropdown-hidden-item"
-                    href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
-                    target="_blank"
-                  >
-                    <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
-                  </MenuItem>
+                  {!tearDownConfig.NAVIGATION.HELP_LINK &&
+                    <MenuItem
+                      className="dropdown-hidden-item"
+                      href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                      target="_blank"
+                    >
+                      <FontAwesomeIcon icon={['far', 'question-circle']} /> Help
+                    </MenuItem>
+                  }
                   <MenuItem onClick={(e) => {
                     e.preventDefault()
                     this.props.logout()
@@ -242,17 +250,19 @@ class Navbar extends Component {
                 }
               </div>
             </NavLink>
-            <a
-              className="navbar-item"
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
-              id="navbar-help"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <div>
-                <FontAwesomeIcon icon={['far', 'question-circle']} />
-              </div>
-            </a>
+            {!tearDownConfig.NAVIGATION.HELP_LINK &&
+              <a
+                className="navbar-item"
+                href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                id="navbar-help"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div>
+                  <FontAwesomeIcon icon={['far', 'question-circle']} />
+                </div>
+              </a>
+            }
           </div>
         </div>
       </div>
@@ -395,15 +405,17 @@ class Navbar extends Component {
               Settings
             </NavLink>
           </li>
-          <li>
-            <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Help
-            </a>
-          </li>
+          {!tearDownConfig.NAVIGATION.HELP_LINK &&
+            <li>
+              <a
+                href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Help
+              </a>
+            </li>
+          }
           <li>
             <NavLink
               id="navbar-logout"
@@ -485,6 +497,7 @@ class Navbar extends Component {
                   </h5>
                   {this.props.loggedInUser.roles &&
                   !this.props.loggedInUser.isGovernmentUser &&
+                  !tearDownConfig.HEADER.CREDIT_INFORMATION &&
                   <span id="organization-balance">
                       Compliance Units: {
                       numeral(organization.organizationBalance.validatedCredits)
