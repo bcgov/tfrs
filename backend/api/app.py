@@ -71,7 +71,7 @@ class APIAppConfig(AppConfig):
                     value = random.randint(10000, 99999)  # Generates a random 5-digit number
                     redis_cache.set(key, value)
 
-                redis_cache.set('redis_seeded', True)  # Set a flag to indicate seeding is done
+                redis_cache.set('redis_seeded', 1)  # Set a flag to indicate seeding is done
                 print('Successfully seeded Redis cache')
         except Exception as e:
             print(f'Error seeding Redis cache: {e}')
