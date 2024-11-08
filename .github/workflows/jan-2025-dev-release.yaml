@@ -1,11 +1,11 @@
-name: PR Build for Jan-2025 on Dev
+name: TFRS Jan-2025 build on Dev
 
 on:
   push:
     branches: [new-pipeline-jan-2025]
-    paths:
-      - frontend/**
-      - backend/**
+    # paths:
+    #   - frontend/**
+    #   - backend/**
   workflow_dispatch:
 
 env:
