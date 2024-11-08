@@ -1,5 +1,41 @@
 #!/bin/bash
-
+# 
+# This script manages Docker Compose services for two applications: TFRS and LCFS.
+# It provides functionality to start one application while ensuring the other is stopped,
+# along with checking and managing dependencies like Redis and RabbitMQ.
+#
+# Usage:
+#   ./script.sh <application_name>
+#   <application_name> can be either 'tfrs' or 'lcfs'.
+#
+# Requirements:
+#   - Docker and Docker Compose installed on the system.
+#   - Defined `docker-compose.yml` files in the relevant directories for both TFRS and LCFS applications.
+#   - Environment variables for LCFS_COMPOSE_DIR (optional).
+#
+# Variables:
+#   - TFRS_COMPOSE_FILE: Docker Compose file for TFRS application (assumed to be in the current directory).
+#   - REDIS_SERVICE: Name of the Redis service in the LCFS Docker Compose configuration.
+#   - RABBITMQ_SERVICE: Name of the RabbitMQ service in the TFRS Docker Compose configuration.
+#   - DEFAULT_LCFS_COMPOSE_DIR: Default directory path for the LCFS Docker Compose file.
+#
+# Functions:
+#   - start_tfrs: Stops LCFS containers and starts TFRS containers.
+#   - start_lcfs: Stops TFRS containers and starts LCFS containers.
+#   - check_redis: Checks if Redis is running and starts it if not.
+#   - check_rabbitmq: Checks if RabbitMQ is running and starts it if not.
+#
+# Example:
+#   To start TFRS application and ensure LCFS is stopped:
+#       ./script.sh tfrs
+#
+#   To start LCFS application and ensure TFRS is stopped:
+#       ./script.sh lcfs
+#
+# Note:
+#   - If LCFS_COMPOSE_DIR is not defined, the script will prompt for its path.
+#   - Ensure both Docker Compose files are available in the specified directories.
+# 
 # Define application names and paths
 TFRS_COMPOSE_FILE="docker-compose.yml"
 REDIS_SERVICE="redis"
