@@ -5,13 +5,13 @@
 # along with checking and managing dependencies like Redis and RabbitMQ.
 #
 # Usage:
-#   ./script.sh <application_name>
+#   ./switch_application.sh <application_name>
 #   <application_name> can be either 'tfrs' or 'lcfs'.
 #
 # Requirements:
 #   - Docker and Docker Compose installed on the system.
 #   - Defined `docker-compose.yml` files in the relevant directories for both TFRS and LCFS applications.
-#   - Environment variables for LCFS_COMPOSE_DIR (optional).
+#   - Environment variables for LCFS_COMPOSE_DIR, or hard code DEFAULT_LCFS_COMPOSE_DIR value to the LCFS repo path in local.
 #
 # Variables:
 #   - TFRS_COMPOSE_FILE: Docker Compose file for TFRS application (assumed to be in the current directory).
@@ -27,10 +27,10 @@
 #
 # Example:
 #   To start TFRS application and ensure LCFS is stopped:
-#       ./script.sh tfrs
+#       ./switch_application.sh tfrs
 #
 #   To start LCFS application and ensure TFRS is stopped:
-#       ./script.sh lcfs
+#       ./switch_application.sh lcfs
 #
 # Note:
 #   - If LCFS_COMPOSE_DIR is not defined, the script will prompt for its path.
