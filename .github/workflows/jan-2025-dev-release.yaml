@@ -95,7 +95,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4.1.1
         with:
-          ref: new-pipeline-jan-2025
+          ref: ${{ env.GIT_REF }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
