@@ -19,17 +19,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  set-pre-release:
-    name: Calculate pre-release number
-    runs-on: ubuntu-latest
-
-    outputs:
-      PRE_RELEASE: ${{ steps.set-pre-release.outputs.PRE_RELEASE }}
-
-    steps:
-      - id: set-pre-release
-        run: |
-          echo "PRE_RELEASE=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
   get-version:
     name: Get the version
@@ -47,10 +36,10 @@ jobs:
     name: Build tfrs Backend
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [set-pre-release,get-version]
+    needs: [get-version]
 
     env:
-      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
     steps:
       - name: Check out repository
@@ -82,10 +71,10 @@ jobs:
   #   name: Build TFRS Frontend
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 60
-  #   needs: [set-pre-release,get-version]
+  #   needs: [get-version]
     
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
   #   steps:
   #     - name: Check out repository
@@ -117,10 +106,10 @@ jobs:
   #   name: Build TFRS Celery
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 60
-  #   needs: [set-pre-release,get-version]
+  #   needs: [get-version]
     
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
   #   steps:
   #     - name: Check out repository
@@ -152,10 +141,10 @@ jobs:
   #   name: Build TFRS scan-coordinator
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 60
-  #   needs: [set-pre-release,get-version]
+  #   needs: [get-version]
     
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
   #   steps:
   #     - name: Check out repository
@@ -187,10 +176,10 @@ jobs:
   #   name: Build TFRS scan-handler
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 60
-  #   needs: [set-pre-release,get-version]
+  #   needs: [get-version]
     
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
   #   steps:
   #     - name: Check out repository
@@ -222,10 +211,10 @@ jobs:
   #   name: Build TFRS Notification Server
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 60
-  #   needs: [set-pre-release,get-version]
+  #   needs: [get-version]
     
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
 
   #   steps:
   #     - name: Check out repository
@@ -257,20 +246,20 @@ jobs:
     name: Deploy Release jan-2025 on Dev
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [set-pre-release, get-version, build-backend]
-    # needs: [set-pre-release, get-version, build-backend, build-frontend, build-celery, build-scan-handler, build-scan-coordinator, build-notification-server]
+    needs: [get-version, build-backend]
+    # needs: [get-version, build-backend, build-frontend, build-celery, build-scan-handler, build-scan-coordinator, build-notification-server]
 
     env:
-      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}-${{ needs.set-pre-release.outputs.PRE_RELEASE }}
+      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
       VERSION: ${{ needs.get-version.outputs.VERSION }}
 
     steps:
-      # - name: Checkout Manifest repository
-      #   uses: actions/checkout@v4.1.1
-      #   with:
-      #     repository: bcgov-c/tenant-gitops-0ab226
-      #     ref: main
-      #     ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+      - name: Checkout Manifest repository
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: bcgov-c/tenant-gitops-0ab226
+          ref: main
+          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
 
       - name: Update tags
         uses: mikefarah/yq@v4.40.5
@@ -278,14 +267,14 @@ jobs:
           cmd: |
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-dev-jan-2025.yaml
 
-      # - name: GitHub Commit & Push
-      #   shell: bash {0}
-      #   run: |
-      #     git config --global user.email "actions@github.com"
-      #     git config --global user.name "GitHub Actions"
-      #     git add itvr/values-dev.yaml
-      #     git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Dev"
-      #     git push
+      - name: GitHub Commit & Push
+        shell: bash {0}
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add itvr/values-dev.yaml
+          git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Dev"cd 
+          git push
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -305,7 +294,8 @@ jobs:
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
-      # - name: Helm Deployment
-      #   run: |
-      #     cd tfrs/charts/backend
-      #     helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev-${{ ENV.VERSION }} . 
+      - name: Helm Deployment
+        run: |
+          cd tfrs/charts/backend
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev-${{ ENV.VERSION }} . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
