@@ -294,7 +294,6 @@ jobs:
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
-          
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
