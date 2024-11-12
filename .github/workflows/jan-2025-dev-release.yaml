@@ -294,8 +294,11 @@ jobs:
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
+          
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
           helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev-${{ ENV.VERSION }} . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+
+        
