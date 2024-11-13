@@ -242,7 +242,7 @@ jobs:
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-notification-server-${{ env.BUILD_SUFFIX }} --wait=true
 
   deploy:
-    name: Deploy Release jan-2025 on Dev
+    name: Deploy new-pipeline release on Dev
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # needs: [get-version, build-frontend]
@@ -306,8 +306,8 @@ jobs:
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-backend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../frontend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-frontend-dev . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
