@@ -1,4 +1,4 @@
-name: TFRS Jan-2025 Dev Release
+name: TFRS New Pipeline Dev
 
 on:
   push:
@@ -273,8 +273,8 @@ jobs:
         uses: mikefarah/yq@v4.40.5
         with:
           cmd: |
-            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-dev-jan-2025.yaml
-            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-dev-jan-2025.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-dev.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-dev.yaml
 
       - name: GitHub Commit & Push
         shell: bash {0}
@@ -306,8 +306,8 @@ jobs:
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev-${{ ENV.VERSION }} . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd tfrs/charts/frontend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-frontend-dev-${{ ENV.VERSION }} . \
+          cd ../frontend
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-frontend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
