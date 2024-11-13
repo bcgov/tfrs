@@ -1,0 +1,304 @@
+name: TFRS Jan-2025 Dev Release
+
+on:
+  push:
+    branches: [new-pipeline-2.22.0]
+    # paths:
+    #   - frontend/**
+    #   - backend/**
+  workflow_dispatch:
+
+env:
+  GIT_URL: https://github.com/bcgov/tfrs.git
+  TOOLS_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  DEV_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
+  GIT_REF: "new-pipeline-2.22.0"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get-version:
+    name: Get the version
+    runs-on: ubuntu-latest
+
+    outputs:
+      VERSION: ${{ steps.get-version.outputs.VERSION }}
+
+    steps:
+      - id: get-version
+        run: |
+          echo "VERSION=new-pipeline" >> $GITHUB_OUTPUT
+
+  # build-backend:
+  #   name: Build tfrs Backend
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: [get-version]
+
+  #   env:
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         ref: ${{ env.GIT_REF }}
+
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.3
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+
+  #     - name: Build tfrs Backend
+  #       run: |
+  #         cd openshift-v4/templates/backend
+  #         oc process -f ./backend-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+  #         sleep 2s
+  #         for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-backend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+  #           echo "canceling $build"
+  #           oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+  #         done
+  #         sleep 2s
+  #         oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-backend-${{ env.BUILD_SUFFIX }} --wait=true
+
+  build-frontend:
+    name: Build TFRS Frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [get-version]
+
+    env:
+      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ env.GIT_REF }}
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TOOLS_NAMESPACE }}
+
+      - name: Build TFRS Frontend
+        run: |
+          cd openshift-v4/templates/frontend
+          oc process -f ./frontend-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+          sleep 2s
+          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-frontend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+            echo "canceling $build"
+            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          done
+          sleep 2s
+          oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-frontend-${{ env.BUILD_SUFFIX }} --wait=true
+
+  # build-celery:
+  #   name: Build TFRS Celery
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: [get-version]
+
+  #   env:
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         ref: ${{ env.GIT_REF }}
+
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.3
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+
+  #     - name: Build TFRS Celery
+  #       run: |
+  #         cd openshift-v4/templates/celery
+  #         oc process -f ./celery-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+  #         sleep 2s
+  #         for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-celery-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+  #           echo "canceling $build"
+  #           oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+  #         done
+  #         sleep 2s
+  #         oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-celery-${{ env.BUILD_SUFFIX }} --wait=true
+
+  # build-scan-coordinator:
+  #   name: Build TFRS scan-coordinator
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: [get-version]
+
+  #   env:
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         ref: ${{ env.GIT_REF }}
+
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.3
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+
+  #     - name: Build TFRS scan-coordinator
+  #       run: |
+  #         cd openshift-v4/templates/scan-coordinator
+  #         oc process -f ./scan-coordinator-bc.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+  #         sleep 2s
+  #         for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+  #           echo "canceling $build"
+  #           oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+  #         done
+  #         sleep 2s
+  #         oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} --wait=true
+
+  # build-scan-handler:
+  #   name: Build TFRS scan-handler
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: [get-version]
+
+  #   env:
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         ref: ${{ env.GIT_REF }}
+
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.3
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+
+  #     - name: Build TFRS scan-handler
+  #       run: |
+  #         cd openshift-v4/templates/scan-handler
+  #         oc process -f ./scan-handler-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+  #         sleep 2s
+  #         for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-handler-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+  #           echo "canceling $build"
+  #           oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+  #         done
+  #         sleep 2s
+  #         oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-scan-handler-${{ env.BUILD_SUFFIX }} --wait=true
+
+  # build-notification-server:
+  #   name: Build TFRS Notification Server
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: [get-version]
+
+  #   env:
+  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         ref: ${{ env.GIT_REF }}
+
+  #     - name: Log in to Openshift
+  #       uses: redhat-actions/oc-login@v1.3
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+
+  #     - name: Build TFRS Notification Server
+  #       run: |
+  #         cd openshift-v4/templates/notification
+  #         oc process -f ./notification-server-bc.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+  #         sleep 2s
+  #         for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-notification-server-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+  #           echo "canceling $build"
+  #           oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+  #         done
+  #         sleep 2s
+  #         oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-notification-server-${{ env.BUILD_SUFFIX }} --wait=true
+
+  deploy:
+    name: Deploy Release jan-2025 on Dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [get-version, build-frontend]
+    # needs: [get-version, build-backend, build-frontend, build-celery, build-scan-handler, build-scan-coordinator, build-notification-server]
+
+    env:
+      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+      VERSION: ${{ needs.get-version.outputs.VERSION }}
+
+    steps:
+      - name: Checkout Manifest repository
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: bcgov-c/tenant-gitops-0ab226
+          ref: main
+          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+
+      - name: Update tags
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: |
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-dev-jan-2025.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-dev-jan-2025.yaml
+
+      - name: GitHub Commit & Push
+        shell: bash {0}
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add itvr/values-dev.yaml
+          git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Dev"cd 
+          git push
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TOOLS_NAMESPACE }}
+
+      - name: Tag and deploy to Dev
+        run: |
+          helm -n ${{ env.DEV_NAMESPACE }} list
+          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+
+      - name: Helm Deployment
+        run: |
+          cd tfrs/charts/backend
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-backend-dev-${{ ENV.VERSION }} . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd tfrs/charts/frontend
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev-jan-2025.yaml upgrade --install tfrs-frontend-dev-${{ ENV.VERSION }} . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
