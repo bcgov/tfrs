@@ -275,6 +275,7 @@ jobs:
           cmd: |
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-dev.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-dev.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/notification-server/values-dev.yaml
 
       - name: GitHub Commit & Push
         shell: bash {0}
@@ -301,7 +302,7 @@ jobs:
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
       - name: Helm Deployment
         run: |
@@ -310,4 +311,7 @@ jobs:
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../frontend
           helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev-new-pipeline . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../notification-server
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-notification-server-dev-new-pipeline . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
