@@ -302,8 +302,8 @@ jobs:
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
       - name: Helm Deployment
@@ -320,6 +320,9 @@ jobs:
           # cd ../celery
           # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-celery-dev-new-pipeline . \
           #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../scan-coordinator
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-coordinator-dev-new-pipeline . \
+          # cd ../scan-coordinator
+          # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-coordinator-dev-new-pipeline . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-handler
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-handler-dev-new-pipeline . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
