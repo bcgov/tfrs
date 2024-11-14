@@ -278,6 +278,7 @@ jobs:
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/notification-server/values-dev.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/celery/values-dev.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-coordinator/values-dev.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-handler/values-dev.yaml
 
       - name: GitHub Commit & Push
         shell: bash {0}
