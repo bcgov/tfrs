@@ -277,6 +277,7 @@ jobs:
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-dev.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/notification-server/values-dev.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/celery/values-dev.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-coordinator/values-dev.yaml
 
       - name: GitHub Commit & Push
         shell: bash {0}
@@ -298,24 +299,27 @@ jobs:
       - name: Tag and deploy to Dev
         run: |
           helm -n ${{ env.DEV_NAMESPACE }} list
-          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
           # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TOOLS_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
 
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-backend-dev-new-pipeline . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../frontend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev-new-pipeline . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../notification-server
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-notification-server-dev-new-pipeline . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../celery
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-celery-dev-new-pipeline . \
+          # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-backend-dev-new-pipeline . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../frontend
+          # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev-new-pipeline . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../notification-server
+          # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-notification-server-dev-new-pipeline . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../celery
+          # helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-celery-dev-new-pipeline . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-coordinator
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-coordinator-dev-new-pipeline . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
