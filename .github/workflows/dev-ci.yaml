@@ -101,41 +101,6 @@ jobs:
           sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-frontend-${{ env.BUILD_SUFFIX }} --wait=true
 
-  build-celery:
-    name: Build TFRS Celery
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    needs: [get-version]
-
-    env:
-      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ env.GIT_REF }}
-
-      - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
-
-      - name: Build TFRS Celery
-        run: |
-          cd openshift-v4/templates/celery
-          oc process -f ./celery-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
-          sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-celery-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
-          oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-celery-${{ env.BUILD_SUFFIX }} --wait=true
-
   build-scan-coordinator:
     name: Build TFRS scan-coordinator
     runs-on: ubuntu-latest
@@ -171,11 +136,46 @@ jobs:
           sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} --wait=true
 
+  build-celery:
+    name: Build TFRS Celery
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
+
+    env:
+      BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ env.GIT_REF }}
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TOOLS_NAMESPACE }}
+
+      - name: Build TFRS Celery
+        run: |
+          cd openshift-v4/templates/celery
+          oc process -f ./celery-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
+          sleep 2s
+          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-celery-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+            echo "canceling $build"
+            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          done
+          sleep 2s
+          oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-celery-${{ env.BUILD_SUFFIX }} --wait=true
+
   build-scan-handler:
     name: Build TFRS scan-handler
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [get-version]
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -210,7 +210,7 @@ jobs:
     name: Build TFRS Notification Server
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [get-version]
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
