@@ -242,7 +242,7 @@ jobs:
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-notification-server-${{ env.BUILD_SUFFIX }} --wait=true
 
   deploy:
-    name: Deploy new-pipeline release on Dev
+    name: Deploy on Dev
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # needs: [get-version]
@@ -310,20 +310,20 @@ jobs:
       - name: Helm Deployment
         run: |
           cd tfrs/charts/backend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-backend-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-backend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../frontend
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-frontend-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../notification-server
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-notification-server-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-notification-server-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../celery
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-celery-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-celery-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../scan-coordinator
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-coordinator-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-coordinator-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
           cd ../scan-handler
-          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-handler-dev-new-pipeline . \
+          helm -n ${{ env.DEV_NAMESPACE }} -f ./values-dev.yaml upgrade --install tfrs-scan-handler-dev . \
             --set podAnnotations.rolloutTriggered="A$(date +%s)E"
