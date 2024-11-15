@@ -2,7 +2,7 @@ name: TFRS New Pipeline Dev
 
 on:
   push:
-    branches: [new-pipeline-2.22.0]
+    branches: [release-2.22.0]
     # paths:
     #   - frontend/**
     #   - backend/**
@@ -12,7 +12,7 @@ env:
   GIT_URL: https://github.com/bcgov/tfrs.git
   TOOLS_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
   DEV_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  GIT_REF: "new-pipeline-2.22.0"
+  GIT_REF: "release-2.22.0"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,7 +29,7 @@ jobs:
     steps:
       - id: get-version
         run: |
-          echo "VERSION=new-pipeline" >> $GITHUB_OUTPUT
+          echo "VERSION=2.22.0" >> $GITHUB_OUTPUT
 
   build-backend:
     name: Build tfrs Backend
