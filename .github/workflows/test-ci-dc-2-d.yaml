@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Dev
+name: TFRS replace DC with D on Test
 
 on:
   workflow_dispatch:
