@@ -1,6 +1,8 @@
 name: TFRS replace DC with D on Test 2.21.1
 
 on:
+  push:
+    branches: [release-2.21.1]
   workflow_dispatch:
 
 env:
