@@ -1,0 +1,78 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: tfrs-bc-docker
+  creationTimestamp:
+parameters:
+  - name: NAME
+    displayName:
+    description: the module name entered when run yo bcdk:pipeline, which is tfrs
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -pr-0
+    required: true
+  - name: VERSION
+    displayName:
+    description: image tag name for output
+    required: true
+  - name: GIT_URL
+    displayName:
+    description: tfrs repo
+    required: true
+  - name: GIT_REF
+    displayName:
+    description: tfrs branch name of the pr
+    required: true
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: Keeps track of changes in the backend image
+      labels:
+        shared: "true"
+      creationTimestamp: null
+      name: ${NAME}-backend
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: ""
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      name: ${NAME}-backend${SUFFIX}
+      creationTimestamp:
+      annotations:
+        description: Defines how to build the application
+    spec:
+      runPolicy: SerialLatestOnly
+      source:
+        type: Git
+        git:
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+        contextDir: backend
+      strategy:
+        dockerStrategy:
+          dockerfilePath: ./Dockerfile-Openshift
+          pullSecret:
+            name: artifacts-default-mogbga
+        type: Docker
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${NAME}-backend:${VERSION}
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
+      postCommit: {}
+      nodeSelector:
+    status:
+      lastVersion: 0
