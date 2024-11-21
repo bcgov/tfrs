@@ -3,9 +3,10 @@ name: TFRS New Pipeline Dev
 on:
   push:
     branches: [release-2.22.0]
-    # paths:
-    #   - frontend/**
-    #   - backend/**
+    paths:
+      - frontend/**
+      - backend/**
+      - security-scan/**
   workflow_dispatch:
 
 env:
