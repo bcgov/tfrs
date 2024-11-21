@@ -33,7 +33,7 @@ jobs:
         run: |
           build_suffix=$(oc -n ${{ env.DEV_NAMESPACE }} describe deployment/tfrs-frontend-dev | grep Image | awk -F ':' '{print $NF}')
           echo "Validating $build_suffix"
-          if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]+-[0-9]{14}$ ]]; then
+          if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
             echo "Build suffix $build_suffix format is valid."
             echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
           else
