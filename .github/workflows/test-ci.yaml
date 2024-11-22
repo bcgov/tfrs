@@ -48,7 +48,7 @@ jobs:
   #   needs: [get-build-suffix]
 
   #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-version.outputs.BUILD_SUFFIX }}
+  #     BUILD_SUFFIX: ${{ needs.get-build-suffix.outputs.BUILD_SUFFIX }}
 
   #   steps:
   #     - name: Checkout Manifest repository
