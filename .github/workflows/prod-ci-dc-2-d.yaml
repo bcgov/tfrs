@@ -3,10 +3,10 @@ name: TFRS replace DC with D on Prod 2.21.1
 on:
   push:
     branches: [release-2.21.1]
-    paths:
-      - frontend/**
-      - backend/**
-      - security-scan/**
+    # paths:
+    #   - frontend/**
+    #   - backend/**
+    #   - security-scan/**
   workflow_dispatch:
 
 env:
