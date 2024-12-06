@@ -20,7 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import date
+from datetime import date, datetime
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import serializers
@@ -37,7 +37,9 @@ from api.models.UserRole import UserRole
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
 from .OrganizationStatus import OrganizationMinStatusSerializer
 from ..models.CachedPages import CachedPages
+from django.core.cache import caches
 
+redis_cache = caches['redis']
 
 class OrganizationSerializer(serializers.ModelSerializer):
     """
@@ -76,7 +78,11 @@ class OrganizationSerializer(serializers.ModelSerializer):
         if not request.user.has_perm('VIEW_FUEL_SUPPLIERS') and \
                 request.user.organization.id != obj.id:
             return None
-
+        balance = redis_cache.get(f"balance_{obj.id}_{datetime.now().year}")
+        if balance is not None:
+            organization_balance = obj.organization_balance.copy()  # Copy to avoid modifying the original
+            organization_balance['validated_credits'] = balance
+            return organization_balance
         return obj.organization_balance
 
     def get_edrms_record(self, obj):
