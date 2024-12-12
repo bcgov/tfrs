@@ -1,4 +1,6 @@
 import json
+from decimal import Decimal
+
 import pika
 from pika.exceptions import AMQPError
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
@@ -13,8 +15,9 @@ class TransactionDeliveryFailure(Exception):
 class TransactionMessageService:
     @staticmethod
     def send_transaction_message(
-        tfrs_id: int, organization_id: int, compliance_units_amount: int
+            tfrs_id: int, organization_id: int, compliance_units_amount: Decimal
     ):
+
         try:
             # Use existing AMQP connection parameters from settings
             parameters = AMQP_CONNECTION_PARAMETERS
@@ -28,7 +31,7 @@ class TransactionMessageService:
             message = {
                 "tfrs_id": tfrs_id,
                 "organization_id": organization_id,
-                "compliance_units_amount": compliance_units_amount,
+                "compliance_units_amount": int(compliance_units_amount.to_integral_value()),
             }
 
             # Publish the message to the queue
