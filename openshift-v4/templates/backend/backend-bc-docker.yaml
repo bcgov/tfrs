@@ -59,7 +59,9 @@ objects:
         dockerStrategy:
           dockerfilePath: ./Dockerfile-Openshift
           pullSecret:
-            name: artifacts-default-mogbga
+            name: artifacts-pull-default-mogbga
+          noCache: true
+          forcePull: true
         type: Docker
       output:
         to:
