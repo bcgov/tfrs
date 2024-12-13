@@ -58,7 +58,7 @@ objects:
       type: Docker
       dockerStrategy:
         pullSecret:
-          name: artifacts-pull-default-mogbga
+          name: artifacts-pull-default-huwoxc
         noCache: true
         forcePull: true
     output:

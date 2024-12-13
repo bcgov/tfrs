@@ -58,7 +58,7 @@ objects:
       dockerStrategy:
         dockerfilePath: openshift-v4/templates/scan-handler/Dockerfile
         pullSecret:
-          name: artifacts-pull-default-mogbga
+          name: artifacts-pull-default-huwoxc
         noCache: true
         forcePull: true
     output:
