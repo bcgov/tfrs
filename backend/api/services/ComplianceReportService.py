@@ -14,7 +14,6 @@ from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.Organization import Organization
 from api.services.CreditTradeService import CreditTradeService
-from api.services.TransactionMessageService import TransactionMessageService
 
 from api.notifications.notification_types import NotificationType
 from api.async_tasks import async_send_notifications
@@ -331,13 +330,6 @@ class ComplianceReportService(object):
             compliance_report.credit_transaction = credit_transaction
             compliance_report.save()
             CreditTradeService.pvr_notification(None, credit_transaction)
-
-            # **Send a transaction message to the LCFS/TFRS message queue**
-            TransactionMessageService.send_transaction_message(
-                tfrs_id=compliance_report.id,
-                organization_id=compliance_report.organization.id,
-                compliance_units_amount=required_credit_transaction,
-            )
         else:
             if required_credit_transaction < Decimal(0):
                 if COMPLIANCE_PERIOD_2023_AND_ABOVE:
@@ -371,13 +363,6 @@ class ComplianceReportService(object):
                 compliance_report.credit_transaction = credit_transaction
                 compliance_report.save()
                 CreditTradeService.pvr_notification(None, credit_transaction)
-
-                # **Send a transaction message to the LCFS/TFRS message queue**
-                TransactionMessageService.send_transaction_message(
-                    tfrs_id=compliance_report.id,
-                    organization_id=compliance_report.organization.id,
-                    compliance_units_amount=required_credit_transaction,
-                )
 
     @staticmethod
     def dispatch_notifications(

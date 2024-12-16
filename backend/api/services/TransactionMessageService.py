@@ -1,8 +1,12 @@
 import json
 from decimal import Decimal
+from typing import Optional
 
 import pika
 from pika.exceptions import AMQPError
+
+from api.models.ComplianceReport import ComplianceReport
+from api.models.User import User
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
@@ -14,10 +18,12 @@ class TransactionDeliveryFailure(Exception):
 
 class TransactionMessageService:
     @staticmethod
-    def send_transaction_message(
-            tfrs_id: int, organization_id: int, compliance_units_amount: Decimal
+    def sync_compliance_report_to_lcfs(
+        compliance_report: ComplianceReport,
+        action: str,
+        user: User,
+        credits: Optional[Decimal],
     ):
-
         try:
             # Use existing AMQP connection parameters from settings
             parameters = AMQP_CONNECTION_PARAMETERS
@@ -29,10 +35,16 @@ class TransactionMessageService:
 
             # Create the message body
             message = {
-                "tfrs_id": tfrs_id,
-                "organization_id": organization_id,
-                "compliance_units_amount": int(compliance_units_amount.to_integral_value()),
+                "tfrs_id": compliance_report.original_report_id,
+                "organization_id": compliance_report.organization_id,
+                "compliance_period": compliance_report.compliance_period.description,
+                "nickname": compliance_report.nickname,
+                "action": action,
+                "user_id": user.id,
             }
+
+            if credits is not None:
+                message["credits"] = int(credits.to_integral_value())
 
             # Publish the message to the queue
             channel.basic_publish(
