@@ -150,7 +150,7 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
           minimum-approvals: 1
-          issue-title: "TFRS ${{ env.GIT_REF }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
       - name: Helm Deployment
         run: |

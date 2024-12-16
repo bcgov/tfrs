@@ -54,7 +54,7 @@ jobs:
         with:
           path: /usr/local/bin/oc
           key: oc-cli-${{ runner.os }}
-          
+
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
         with:
@@ -147,7 +147,7 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
           minimum-approvals: 2
-          issue-title: "TFRS ${{ env.GIT_REF }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
   #     - name: Helm Deployment
   #       run: |
