@@ -138,14 +138,19 @@ jobs:
       #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
       #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
       #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
-
+      
+      - id: get-current-time
+        run: |
+          TZ="America/Vancouver"
+          echo "CURRENT_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
+      
       - name: Ask for approval for TFRS Test deployment
         uses: trstringer/manual-approval@v1.6.0
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
           minimum-approvals: 1
-          issue-title: eval ("TFRS ${{ env.GIT_REF }} Test Deployment at " + $(date '+%Y-%m-%d %H:%M:%S %Z') )
+          issue-title: "TFRS ${{ env.GIT_REF }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
   #     - name: Helm Deployment
   #       run: |
