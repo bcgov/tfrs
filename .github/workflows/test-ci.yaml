@@ -24,7 +24,7 @@ jobs:
 
       - name: Set up cache for OpenShift CLI
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4.2.0
         with:
           path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
           key: oc-cli-${{ runner.os }}
@@ -52,7 +52,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4.1.1
 
-      - name: Restore Cache
+      - name: Restore oc command from Cßache
         uses: actions/cache@v4.2.0
         with:
           path: /usr/local/bin/oc
@@ -66,34 +66,34 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ env.DEV_NAMESPACE }}
 
-  #     - id: get-build-suffix
-  #       run: |
-  #         build_suffix=$(oc -n ${{ env.DEV_NAMESPACE }} describe deployment/tfrs-frontend-dev | grep Image | awk -F ':' '{print $NF}')
-  #         echo "Validating $build_suffix"
-  #         if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
-  #           echo "Build suffix $build_suffix format is valid."
-  #           echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
-  #         else
-  #           echo "Error: Build suffix $build_suffix format is invalid!"
-  #           exit 1
-  #         fi
+      - id: get-build-suffix
+        run: |
+          build_suffix=$(oc -n ${{ env.DEV_NAMESPACE }} describe deployment/tfrs-frontend-dev | grep Image | awk -F ':' '{print $NF}')
+          echo "Validating $build_suffix"
+          if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
+            echo "Build suffix $build_suffix format is valid."
+            echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
+          else
+            echo "Error: Build suffix $build_suffix format is invalid!"
+            exit 1
+          fi
 
-  # deploy:
-  #   name: Deploy on Test
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   needs: [get-build-suffix]
+  deploy:
+    name: Deploy on Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [get-build-suffix]
 
-  #   env:
-  #     BUILD_SUFFIX: ${{ needs.get-build-suffix.outputs.BUILD_SUFFIX }}
+    env:
+      BUILD_SUFFIX: ${{ needs.get-build-suffix.outputs.BUILD_SUFFIX }}
 
-  #   steps:
-  #     - name: Checkout Manifest repository
-  #       uses: actions/checkout@v4.1.1
-  #       with:
-  #         repository: bcgov-c/tenant-gitops-0ab226
-  #         ref: main
-  #         ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+    steps:
+      - name: Checkout Manifest repository
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: bcgov-c/tenant-gitops-0ab226
+          ref: main
+          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
 
   #     - name: Update tags
   #       uses: mikefarah/yq@v4.40.5
@@ -115,23 +115,37 @@ jobs:
   #         git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Test"
   #         git push
 
-  #     - name: Log in to Openshift
-  #       uses: redhat-actions/oc-login@v1.3
-  #       with:
-  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-  #         insecure_skip_tls_verify: true
-  #         namespace: ${{ env.TOOLS_NAMESPACE }}
+      - name: Restore oc command from Cßache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
-  #     - name: Tag and deploy to Test
-  #       run: |
-  #         helm -n ${{ env.TEST_NAMESPACE }} list
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TOOLS_NAMESPACE }}
+
+      - name: Tag and deploy to Test
+        run: |
+          helm -n ${{ env.TEST_NAMESPACE }} list
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
   #         oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+
+      - name: Ask for approval for TFRS Test deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
+          minimum-approvals: 1
+          issue-title: "TFRS ${{ env.GIT_REF }} Test Deployment at $(date '+%Y-%m-%d %H:%M:%S %Z')"
 
   #     - name: Helm Deployment
   #       run: |
