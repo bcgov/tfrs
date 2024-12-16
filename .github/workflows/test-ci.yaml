@@ -106,14 +106,14 @@ jobs:
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-coordinator/values-test.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-handler/values-test.yaml
 
-      # - name: GitHub Commit & Push
-      #   shell: bash {0}
-      #   run: |
-      #     git config --global user.email "actions@github.com"
-      #     git config --global user.name "GitHub Actions"
-      #     git add -A
-      #     git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Test"
-      #     git push
+      - name: GitHub Commit & Push
+        shell: bash {0}
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add -A
+          git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Test"
+          git push
 
       - name: Restore oc command from Cache
         uses: actions/cache@v4.2.0
@@ -129,15 +129,15 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ env.TOOLS_NAMESPACE }}
 
-      # - name: Tag and deploy to Test
-      #   run: |
-      #     helm -n ${{ env.TEST_NAMESPACE }} list
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
-      #     oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+      - name: Tag and deploy to Test
+        run: |
+          helm -n ${{ env.TEST_NAMESPACE }} list
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
       
       - id: get-current-time
         run: |
@@ -152,23 +152,23 @@ jobs:
           minimum-approvals: 1
           issue-title: "TFRS ${{ env.GIT_REF }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
-  #     - name: Helm Deployment
-  #       run: |
-  #         cd tfrs/charts/backend
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-backend-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-  #         cd ../frontend
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-frontend-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-  #         cd ../notification-server
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-notification-server-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-  #         cd ../celery
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-celery-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-  #         cd ../scan-coordinator
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-coordinator-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-  #         cd ../scan-handler
-  #         helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-handler-test . \
-  #           --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+      - name: Helm Deployment
+        run: |
+          cd tfrs/charts/backend
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-backend-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../frontend
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-frontend-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../notification-server
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-notification-server-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../celery
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-celery-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-coordinator
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-coordinator-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-handler
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-handler-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
