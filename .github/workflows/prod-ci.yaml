@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Prod
+name: TFRS New Pipeline Prod release-2.22.0
 
 on:
   workflow_dispatch:

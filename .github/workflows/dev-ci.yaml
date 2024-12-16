@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Dev
+name: TFRS New Pipeline Dev release-2.22.0
 
 on:
   push:
@@ -20,9 +20,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  install-oc:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up cache for OpenShift CLI
+        id: cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          key: oc-cli-${{ runner.os }}
+
+      - name: Install OpenShift CLI (if not cached)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar -xvf openshift-client-linux.tar.gz
+          sudo mv oc /usr/local/bin/
+          oc version --client
+
+      - name: Confirm OpenShift CLI is Available
+        run: oc version --client
+
   get-version:
     name: Get the version
     runs-on: ubuntu-latest
+    needs: [install-oc]
 
     outputs:
       VERSION: ${{ steps.get-version.outputs.VERSION }}
@@ -47,12 +75,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -89,12 +116,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -131,12 +157,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -162,7 +187,7 @@ jobs:
     name: Build TFRS Celery
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
+    needs: [build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -173,12 +198,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -204,7 +228,7 @@ jobs:
     name: Build TFRS scan-handler
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
+    needs: [build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -215,12 +239,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -246,7 +269,7 @@ jobs:
     name: Build TFRS Notification Server
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
+    needs: [build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -257,12 +280,11 @@ jobs:
         with:
           ref: ${{ env.GIT_REF }}
 
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
@@ -288,10 +310,8 @@ jobs:
     name: Deploy on Dev
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    # needs: [get-version]
     needs:
       [
-        get-version,
         build-backend,
         build-frontend,
         build-celery,
@@ -311,13 +331,6 @@ jobs:
           repository: bcgov-c/tenant-gitops-0ab226
           ref: main
           ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
-          
-      - name: Install OpenShift CLI
-        run: |
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar -xvf openshift-client-linux.tar.gz
-          sudo mv oc kubectl /usr/local/bin/
-          oc version --client
 
       - name: Update tags
         uses: mikefarah/yq@v4.40.5
@@ -338,6 +351,12 @@ jobs:
           git add -A
           git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Dev"
           git push
+
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
