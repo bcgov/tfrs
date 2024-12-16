@@ -13,14 +13,51 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  
+  install-oc:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up cache for OpenShift CLI
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          key: oc-cli-${{ runner.os }}-${{ hashFiles('~/.github/scripts/install-oc.sh') }}
+
+      - name: Install OpenShift CLI (if not cached)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar -xvf openshift-client-linux.tar.gz
+          sudo mv oc /usr/local/bin/
+          oc version --client
+
+      - name: Confirm OpenShift CLI is Available
+        run: oc version --client
+
   get-build-suffix:
     name: Find Dev deployment build suffix 
+    needs: install-oc
     runs-on: ubuntu-latest
 
     outputs:
       BUILD_SUFFIX: ${{ steps.get-build-suffix.outputs.BUILD_SUFFIX }}
 
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Restore Cache
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}-${{ hashFiles('~/.github/scripts/install-oc.sh') }}
+
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
         with:
@@ -29,17 +66,17 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ env.DEV_NAMESPACE }}
 
-      - id: get-build-suffix
-        run: |
-          build_suffix=$(oc -n ${{ env.DEV_NAMESPACE }} describe deployment/tfrs-frontend-dev | grep Image | awk -F ':' '{print $NF}')
-          echo "Validating $build_suffix"
-          if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
-            echo "Build suffix $build_suffix format is valid."
-            echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
-          else
-            echo "Error: Build suffix $build_suffix format is invalid!"
-            exit 1
-          fi
+  #     - id: get-build-suffix
+  #       run: |
+  #         build_suffix=$(oc -n ${{ env.DEV_NAMESPACE }} describe deployment/tfrs-frontend-dev | grep Image | awk -F ':' '{print $NF}')
+  #         echo "Validating $build_suffix"
+  #         if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
+  #           echo "Build suffix $build_suffix format is valid."
+  #           echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
+  #         else
+  #           echo "Error: Build suffix $build_suffix format is invalid!"
+  #           exit 1
+  #         fi
 
   # deploy:
   #   name: Deploy on Test
