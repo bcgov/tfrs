@@ -49,6 +49,12 @@ jobs:
       BUILD_SUFFIX: ${{ steps.get-build-suffix.outputs.BUILD_SUFFIX }}
 
     steps:
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
+          
       - name: Log in to Openshift
         uses: redhat-actions/oc-login@v1.3
         with:
@@ -140,7 +146,7 @@ jobs:
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
-          minimum-approvals: 1
+          minimum-approvals: 2
           issue-title: "TFRS ${{ env.GIT_REF }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
   #     - name: Helm Deployment
