@@ -142,27 +142,27 @@ jobs:
       - name: Tag and deploy to Test
         run: |
           helm -n ${{ env.TEST_NAMESPACE }} list
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
-          # oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
-          # cd tfrs/charts/backend
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-backend-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          # cd ../frontend
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-frontend-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          # cd ../notification-server
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-notification-server-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          # cd ../celery
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-celery-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          # cd ../scan-coordinator
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-coordinator-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          # cd ../scan-handler
-          # helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-handler-test . \
-          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.DEV_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+          cd tfrs/charts/backend
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-backend-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../frontend
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-frontend-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../notification-server
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-notification-server-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../celery
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-celery-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-coordinator
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-coordinator-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-handler
+          helm -n ${{ env.TEST_NAMESPACE }} -f ./values-test.yaml upgrade --install tfrs-scan-handler-test . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
