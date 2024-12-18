@@ -312,6 +312,7 @@ jobs:
     timeout-minutes: 60
     needs:
       [
+        get-version,
         build-backend,
         build-frontend,
         build-celery,
@@ -322,7 +323,6 @@ jobs:
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
-      VERSION: ${{ needs.get-version.outputs.VERSION }}
 
     steps:
       - name: Checkout Manifest repository
