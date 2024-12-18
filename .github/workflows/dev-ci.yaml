@@ -187,7 +187,7 @@ jobs:
     name: Build TFRS Celery
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [build-backend, build-frontend, build-scan-coordinator]
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -228,7 +228,7 @@ jobs:
     name: Build TFRS scan-handler
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [build-backend, build-frontend, build-scan-coordinator]
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}
@@ -269,7 +269,7 @@ jobs:
     name: Build TFRS Notification Server
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [build-backend, build-frontend, build-scan-coordinator]
+    needs: [get-version, build-backend, build-frontend, build-scan-coordinator]
 
     env:
       BUILD_SUFFIX: ${{ needs.get-version.outputs.VERSION }}

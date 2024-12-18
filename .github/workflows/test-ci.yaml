@@ -141,8 +141,7 @@ jobs:
       
       - id: get-current-time
         run: |
-          TZ="America/Vancouver"
-          echo "CURRENT_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
+          echo "CURRENT_TIME=$(TZ="America/Vancouver" date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
       
       - name: Ask for approval for TFRS Test deployment
         uses: trstringer/manual-approval@v1.6.0
