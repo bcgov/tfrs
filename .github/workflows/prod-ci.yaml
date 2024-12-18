@@ -85,6 +85,18 @@ jobs:
       BUILD_SUFFIX: ${{ needs.get-build-suffix.outputs.BUILD_SUFFIX }}
 
     steps:
+      - id: get-current-time
+        run: |
+          echo "CURRENT_TIME=$(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
+    
+      - name: Ask for approval for TFRS Prod deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
+          minimum-approvals: 2
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+
       - name: Checkout Manifest repository
         uses: actions/checkout@v4.1.1
         with:
@@ -102,19 +114,6 @@ jobs:
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/celery/values-prod.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-coordinator/values-prod.yaml
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-handler/values-prod.yaml
-
-      - id: get-current-time
-        run: |
-          TZ="America/Vancouver"
-          echo "CURRENT_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
-    
-      - name: Ask for approval for TFRS Prod deployment
-        uses: trstringer/manual-approval@v1.6.0
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
-          minimum-approvals: 2
-          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
 
       - name: GitHub Commit & Push
         shell: bash {0}
@@ -142,30 +141,27 @@ jobs:
       - name: Tag and deploy to Prod
         run: |
           helm -n ${{ env.PROD_NAMESPACE }} list
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
-          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
-
-      - name: Helm Deployment
-        run: |
-          cd tfrs/charts/backend
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-backend-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../frontend
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-frontend-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../notification-server
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-notification-server-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../celery
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-celery-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../scan-coordinator
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-coordinator-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
-          cd ../scan-handler
-          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-handler-prod . \
-            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          # oc tag ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+          # cd tfrs/charts/backend
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-backend-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../frontend
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-frontend-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../notification-server
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-notification-server-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../celery
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-celery-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../scan-coordinator
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-coordinator-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          # cd ../scan-handler
+          # helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-handler-prod . \
+          #   --set podAnnotations.rolloutTriggered="A$(date +%s)E"
