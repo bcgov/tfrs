@@ -19,9 +19,6 @@ jobs:
     outputs:
       cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4.1.1
-
       - name: Set up cache for OpenShift CLI
         id: cache
         uses: actions/cache@v4.2.0
