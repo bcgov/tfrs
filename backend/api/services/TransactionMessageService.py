@@ -35,10 +35,10 @@ class TransactionMessageService:
 
             # Create the message body
             message = {
-                "tfrs_id": compliance_report.original_report_id,
+                "root_report_id": compliance_report.original_report_id,
+                "tfrs_id": compliance_report.id,
                 "organization_id": compliance_report.organization_id,
                 "compliance_period": compliance_report.compliance_period.description,
-                "nickname": compliance_report.nickname,
                 "action": action,
                 "user_id": user.id,
             }
