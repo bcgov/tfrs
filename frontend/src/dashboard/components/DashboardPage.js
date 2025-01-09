@@ -80,8 +80,9 @@ const BCEIDDashboardPage = obj => (
 const DirectorDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-        obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
+      {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.BALANCE &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
         <Balance
           loggedInUser={obj.loggedInUser}
           organization={obj.organization}
@@ -118,12 +119,12 @@ const IDIRDashboardPage = obj => (
       {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.BALANCE &&
       typeof obj.loggedInUser.hasPermission === 'function' &&
       obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
-      <Balance
-        loggedInUser={obj.loggedInUser}
-        organization={obj.organization}
-        organizations={obj.organizations}
-        selectOrganization={obj.selectOrganization}
-      />
+        <Balance
+          loggedInUser={obj.loggedInUser}
+          organization={obj.organization}
+          organizations={obj.organizations}
+          selectOrganization={obj.selectOrganization}
+        />
       }
 
     </div>
