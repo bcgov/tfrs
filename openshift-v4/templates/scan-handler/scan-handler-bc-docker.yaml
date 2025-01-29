@@ -57,18 +57,9 @@ objects:
       type: Docker
       dockerStrategy:
         dockerfilePath: openshift-v4/templates/scan-handler/Dockerfile
+        pullSecret:
+          name: artifacts-pull-default-huwoxc
         noCache: true
-        env:
-        - name: ARTIFACTORY_USER
-          valueFrom:
-            secretKeyRef:
-              name: artifacts-default-cgcynz
-              key: username
-        - name: ARTIFACTORY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: artifacts-default-cgcynz
-              key: password          
         forcePull: true
     output:
       to:

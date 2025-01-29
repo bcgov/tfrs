@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import * as Routes from '../../constants/routes'
+import CONFIG from '../../config'
 
 class UserSettings extends Component {
   constructor () {
@@ -33,6 +34,9 @@ class UserSettings extends Component {
   }
 
   render () {
+    const userType = this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'
+    const tearDownConfig = CONFIG.TEAR_DOWN[userType]
+
     return (
       <div className="dashboard-fieldset user-settings">
         <h1>User Settings</h1>
@@ -70,23 +74,27 @@ class UserSettings extends Component {
             </Link>
           </div>
           <p><br /></p>
-          <div className="content">
-            <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Help
-            </a>
-            <a
-              href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={['far', 'file-pdf']} />
-            </a>
-          </div>
-          <p><br /></p>
+          {!tearDownConfig.NAVIGATION.HELP_LINK && (
+            <>
+              <div className="content">
+                <a
+                  href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Help
+                </a>
+                <a
+                  href={`https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/transportation_fuels_reporting_system_${this.props.loggedInUser.isGovernmentUser ? 'idir' : 'bceid'}_user_guide.pdf`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <FontAwesomeIcon icon={['far', 'file-pdf']} />
+                </a>
+              </div>
+              <p><br /></p>
+            </>
+          )}
           </div>
       </div>
     )

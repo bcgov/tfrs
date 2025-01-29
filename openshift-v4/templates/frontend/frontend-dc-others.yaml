@@ -5,102 +5,124 @@ metadata:
   name: tfrs-frontend-dc
   creationTimestamp:
 parameters:
-- name: NAME
-  description: tfrs
-  value: tfrs
-  required: true
-- name: SUFFIX
-  displayName:
-  description: sample is -pr-0
-  required: true
-- name: VERSION
-  displayName:
-  description:  image tag name for output
-  required: true
-- name: KEYCLOAK_AUTHORITY
-  displayName: keycloak.authority
-  description: 
-  required: true
-- name: KEYCLOAK_CLIENT_ID
-  displayName: keycloak.client_id
-  description: Values tfrs-dev tfrs tfrs
-  required: true
-- name: KEYCLOAK_CALLBACK_URL
-  displayName: keycloak.callback_url
-  description: 
-- name: KEYCLOAK_LOGOUT_URL
-  displayName: keycloak.post_logout_url
-  description: 
-  required: true
-- name: FRONTEND_HOST
-  displayName: Frontend route host name
-  description: 
-  required: true
-- name: BACKEND_HOST
-  displayName: Backend route host name
-  description: 
-  required: true  
+  - name: NAME
+    description: tfrs
+    value: tfrs
+    required: true
+  - name: SUFFIX
+    displayName:
+    description: sample is -pr-0
+    required: true
+  - name: VERSION
+    displayName:
+    description: image tag name for output
+    required: true
+  - name: KEYCLOAK_AUTHORITY
+    displayName: keycloak.authority
+    description:
+    required: true
+  - name: KEYCLOAK_CLIENT_ID
+    displayName: keycloak.client_id
+    description: Values tfrs-dev tfrs tfrs
+    required: true
+  - name: KEYCLOAK_CALLBACK_URL
+    displayName: keycloak.callback_url
+    description:
+  - name: KEYCLOAK_LOGOUT_URL
+    displayName: keycloak.post_logout_url
+    description:
+    required: true
+  - name: FRONTEND_HOST
+    displayName: Frontend route host name
+    description:
+    required: true
+  - name: BACKEND_HOST
+    displayName: Backend route host name
+    description:
+    required: true
 objects:
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: ${NAME}-frontend${SUFFIX}
-  spec:
-    ports:
-    - name: web
-      protocol: TCP
-      port: 8080
-      targetPort: 8080
-    selector:
+  - kind: Service
+    apiVersion: v1
+    metadata:
       name: ${NAME}-frontend${SUFFIX}
-    type: ClusterIP
-    sessionAffinity: None
-  status:
-    loadBalancer: {}
-- kind: Route
-  apiVersion: v1
-  metadata:
-    name: ${NAME}-frontend${SUFFIX}
-    creationTimestamp:
-    labels:
-      frontend: 'true'
-    annotations: {}
-  spec:
-    host: ${FRONTEND_HOST}
-    to:
-      kind: Service
+    spec:
+      ports:
+        - name: web
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: ${NAME}-frontend${SUFFIX}
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+  - kind: Route
+    apiVersion: v1
+    metadata:
       name: ${NAME}-frontend${SUFFIX}
-      weight: 100
-    port:
-      targetPort: web
-    tls:
-      termination: edge
-      insecureEdgeTerminationPolicy: Redirect
-    wildcardPolicy: None
-- kind: ConfigMap
-  apiVersion: v1
-  metadata:
-    name: ${NAME}-keycloak-config${SUFFIX}
-    creationTimestamp:
-  data:
-    features.js: |
-      window.tfrs_config = {
-        "keycloak.enabled": true,
-        "keycloak.authority": "${KEYCLOAK_AUTHORITY}" , 
-        "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
-        "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
-        "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
-        "debug.enabled": false,
-        "secure_document_upload.enabled": true,
-        "secure_document_upload.max_file_size": 50000000,
-        "fuel_codes.enabled": true,
-        "keycloak.custom_login": true,
-        "credit_transfer.enabled": true,
-        "compliance_reporting.enabled": true,
-        "credit_calculation_api.enabled": true,
-        "compliance_reporting.starting_year": 2017,
-        "compliance_reporting.create_effective_date": "2019-01-01",
-        "exclusion_reports.create_effective_date": "2019-01-01",
-        "exclusion_reports.enabled": true,
-        "api_base": "https://${BACKEND_HOST}/api"
-      };
+      creationTimestamp:
+      labels:
+        frontend: "true"
+      annotations: {}
+    spec:
+      host: ${FRONTEND_HOST}
+      to:
+        kind: Service
+        name: ${NAME}-frontend${SUFFIX}
+        weight: 100
+      port:
+        targetPort: web
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+      wildcardPolicy: None
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-keycloak-config${SUFFIX}
+      creationTimestamp:
+    data:
+      features.js: |
+        window.tfrs_config = {
+          "keycloak.enabled": true,
+          "keycloak.authority": "${KEYCLOAK_AUTHORITY}" , 
+          "keycloak.client_id": "${KEYCLOAK_CLIENT_ID}",
+          "keycloak.callback_url": "${KEYCLOAK_CALLBACK_URL}",
+          "keycloak.post_logout_url": "${KEYCLOAK_LOGOUT_URL}",
+          "debug.enabled": false,
+          "secure_document_upload.enabled": true,
+          "secure_document_upload.max_file_size": 50000000,
+          "fuel_codes.enabled": true,
+          "keycloak.custom_login": true,
+          "credit_transfer.enabled": true,
+          "compliance_reporting.enabled": true,
+          "credit_calculation_api.enabled": true,
+          "compliance_reporting.starting_year": 2017,
+          "compliance_reporting.create_effective_date": "2019-01-01",
+          "exclusion_reports.create_effective_date": "2019-01-01",
+          "exclusion_reports.enabled": true,
+          "api_base": "https://${BACKEND_HOST}/api",
+
+          "tear_down.bceid.widgets.balance": true,
+          "tear_down.bceid.widgets.feedback": true,
+          "tear_down.bceid.widgets.website": true,
+          "tear_down.bceid.widgets.creditTransactions": true,
+          "tear_down.bceid.widgets.fileSubmissions": true,
+          "tear_down.bceid.header.creditInformation": true,
+          "tear_down.bceid.navigation.transactions": true,
+          "tear_down.bceid.navigation.fileSubmissions": true,
+          "tear_down.bceid.navigation.helpLink": true,
+          "tear_down.bceid.organization.creditInformation": true,
+          "tear_down.bceid.organization.roles.fileSubmission": true,
+          "tear_down.bceid.organization.roles.creditTransfers": true,
+          "tear_down.idir.widgets.balance": true,
+          "tear_down.idir.widgets.creditTransactions": true,
+          "tear_down.idir.widgets.fileSubmissions": true,
+          "tear_down.idir.navigation.transactions": true,
+          "tear_down.idir.navigation.fileSubmissions": true,
+          "tear_down.idir.navigation.helpLink": true,
+          "tear_down.idir.organizations.tableColumns.complianceUnits": true,
+          "tear_down.idir.organizations.tableColumns.inReserve": true,
+          "tear_down.idir.organization.creditInformation": true
+        };

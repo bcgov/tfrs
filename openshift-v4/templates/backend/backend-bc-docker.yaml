@@ -2,7 +2,7 @@
 kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
-  name: tfrs-bc
+  name: tfrs-bc-docker
   creationTimestamp:
 parameters:
   - name: NAME
@@ -34,7 +34,6 @@ objects:
       labels:
         shared: "true"
       creationTimestamp: null
-      generation: 643
       name: ${NAME}-backend
     spec:
       lookupPolicy:
@@ -49,10 +48,6 @@ objects:
       annotations:
         description: Defines how to build the application
     spec:
-      triggers:
-        - type: ImageChange
-          imageChange: {}
-        - type: ConfigChange
       runPolicy: SerialLatestOnly
       source:
         type: Git
@@ -61,13 +56,13 @@ objects:
           ref: ${GIT_REF}
         contextDir: backend
       strategy:
-        type: Source
-        sourceStrategy:
-          from:
-            kind: ImageStreamTag
-            name: python-39:1-74
-          forcePull: true
+        dockerStrategy:
+          dockerfilePath: ./Dockerfile-Openshift
+          pullSecret:
+            name: artifacts-pull-default-huwoxc
           noCache: true
+          forcePull: true
+        type: Docker
       output:
         to:
           kind: ImageStreamTag

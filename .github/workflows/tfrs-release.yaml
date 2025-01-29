@@ -1,7 +1,7 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS release-2.21.0
+name: TFRS release-2.22.0
 
 on:
   workflow_dispatch:
@@ -10,8 +10,8 @@ on:
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 2908
-  RELEASE_NAME: release-2.21.0
+  PR_NUMBER: 2913
+  RELEASE_NAME: release-2.22.0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -88,46 +88,47 @@ jobs:
           cd .pipeline
           npm install
           npm run build -- --pr=${{ env.PR_NUMBER }} --env=build
+  
+  # comment out deploy-on-test as the deployment configs have been repaced by deployments at 2.21.1
+  # deploy-on-test:
+  #   name: Deploy TFRS on Test
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 240
+  #   needs: build
 
-  deploy-on-test:
-    name: Deploy TFRS on Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 240
-    needs: build
+  #   steps:
+  #     ## it will checkout to /home/runner/work/itvr/itvr
+  #     - name: Check out repository
+  #       uses: actions/checkout@v3
 
-    steps:
-      ## it will checkout to /home/runner/work/itvr/itvr
-      - name: Check out repository
-        uses: actions/checkout@v3
+  #     - name: Log in to Openshift
+  #       ##uses: redhat-actions/oc-login@v1
+  #       uses: smlgbl/oc-login@main
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+  #         insecure_skip_tls_verify: true
+  #         namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
 
-      - name: Log in to Openshift
-        ##uses: redhat-actions/oc-login@v1
-        uses: smlgbl/oc-login@main
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
+  #     - name: Ask for approval for TFRS Test deployment
+  #       uses: trstringer/manual-approval@v1.6.0
+  #       with:
+  #         secret: ${{ github.TOKEN }}
+  #         approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
+  #         minimum-approvals: 1
+  #         issue-title: "TFRS ${{ env.RELEASE_NAME }} Test Deployment"
 
-      - name: Ask for approval for TFRS Test deployment
-        uses: trstringer/manual-approval@v1.6.0
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
-          minimum-approvals: 1
-          issue-title: "TFRS ${{ env.RELEASE_NAME }} Test Deployment"
-
-      - name: Run deploy
-        run: |
-          cd .pipeline
-          npm install
-          npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=test
+  #     - name: Run deploy
+  #       run: |
+  #         cd .pipeline
+  #         npm install
+  #         npm run deploy -- --pr=${{ env.PR_NUMBER }} --env=test
 
   deploy-on-prod:
     name: Deploy TFRS on Prod
     runs-on: ubuntu-latest
     timeout-minutes: 2880
-    needs: deploy-on-test
+    needs: build
 
     steps:
       ## it will checkout to /home/runner/work/itvr/itvr

@@ -26,16 +26,16 @@ import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/Secu
 const BCEIDDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      <BalanceBCEID
-        loggedInUser={obj.loggedInUser}
-      />
-
-      <Feedback />
-      <LcfsWebsiteLink />
+      {!CONFIG.TEAR_DOWN.BCeID.WIDGETS.BALANCE && (
+        <BalanceBCEID loggedInUser={obj.loggedInUser} />
+      )}
+      {!CONFIG.TEAR_DOWN.BCeID.WIDGETS.FEEDBACK && <Feedback />}
+      {!CONFIG.TEAR_DOWN.BCeID.WIDGETS.WEBSITE && <LcfsWebsiteLink />}
     </div>
 
     <div className="col-md-5">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      {(!CONFIG.TEAR_DOWN.BCeID.WIDGETS.CREDIT_TRANSACTIONS && 
+      typeof obj.loggedInUser.hasPermission === 'function' &&
       obj.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
       <CreditTransactionsBCEID
         creditTransfers={obj.creditTransfers}
@@ -56,8 +56,9 @@ const BCEIDDashboardPage = obj => (
         />
       }
 
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-        obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
+      {(!CONFIG.TEAR_DOWN.BCeID.WIDGETS.FILE_SUBMISSIONS &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
         <FileSubmission />
       }
 
@@ -79,8 +80,9 @@ const BCEIDDashboardPage = obj => (
 const DirectorDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-        obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
+      {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.BALANCE &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
         <Balance
           loggedInUser={obj.loggedInUser}
           organization={obj.organization}
@@ -114,8 +116,9 @@ const DirectorDashboardPage = obj => (
 const IDIRDashboardPage = obj => (
   <div className="row dashboard-page">
     <div className="col-md-3">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-        obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
+      {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.BALANCE &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
+      obj.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.VIEW)) &&
         <Balance
           loggedInUser={obj.loggedInUser}
           organization={obj.organization}
@@ -127,12 +130,13 @@ const IDIRDashboardPage = obj => (
     </div>
 
     <div className="col-md-5">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
-      obj.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
-      <CreditTransactions
-        creditTransfers={obj.creditTransfers}
-        setFilter={obj.setFilter}
-      />
+      {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.CREDIT_TRANSACTIONS &&
+        typeof obj.loggedInUser.hasPermission === 'function' &&
+        obj.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.VIEW)) &&
+        <CreditTransactions
+          creditTransfers={obj.creditTransfers}
+          setFilter={obj.setFilter}
+        />
       }
 
       {(CONFIG.COMPLIANCE_REPORTING.ENABLED &&
@@ -155,7 +159,8 @@ const IDIRDashboardPage = obj => (
     </div>
 
     <div className="col-md-4">
-      {(typeof obj.loggedInUser.hasPermission === 'function' &&
+      {(!CONFIG.TEAR_DOWN.IDIR.WIDGETS.FILE_SUBMISSIONS &&
+      typeof obj.loggedInUser.hasPermission === 'function' &&
       obj.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW)) &&
       CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
       <FileSubmissions

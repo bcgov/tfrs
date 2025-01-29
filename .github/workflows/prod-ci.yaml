@@ -1,0 +1,164 @@
+name: TFRS New Pipeline Prod release-2.22.0
+
+on:
+  workflow_dispatch:
+
+env:
+  GIT_URL: https://github.com/bcgov/tfrs.git
+  TEST_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-test
+  PROD_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-prod
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  install-oc:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: Set up cache for OpenShift CLI
+        id: cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          key: oc-cli-${{ runner.os }}
+
+      - name: Install OpenShift CLI (if not cached)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar -xvf openshift-client-linux.tar.gz
+          sudo mv oc /usr/local/bin/
+          oc version --client
+
+      - name: Confirm OpenShift CLI is Available
+        run: oc version --client
+
+  get-build-suffix:
+    name: Find Test deployment build suffix 
+    runs-on: ubuntu-latest
+    needs: [install-oc]
+
+    outputs:
+      BUILD_SUFFIX: ${{ steps.get-build-suffix.outputs.BUILD_SUFFIX }}
+
+    steps:
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TEST_NAMESPACE }}
+
+      - id: get-build-suffix
+        run: |
+          build_suffix=$(oc -n ${{ env.TEST_NAMESPACE }} describe deployment/tfrs-frontend-test | grep Image | awk -F ':' '{print $NF}')
+          echo "Validating $build_suffix"
+          if [[ "$build_suffix" =~ ^[0-9]+\.[0-9]+\.[0-9]$ ]]; then
+            echo "Build suffix $build_suffix format is valid."
+            echo "BUILD_SUFFIX=$build_suffix" >> $GITHUB_OUTPUT
+          else
+            echo "Error: Build suffix $build_suffix format is invalid!"
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy on Prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [get-build-suffix]
+
+    env:
+      BUILD_SUFFIX: ${{ needs.get-build-suffix.outputs.BUILD_SUFFIX }}
+
+    steps:
+      - id: get-current-time
+        run: |
+          echo "CURRENT_TIME=$(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
+    
+      - name: Ask for approval for TFRS Prod deployment
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
+          minimum-approvals: 2
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+
+      - name: Checkout Manifest repository
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: bcgov-c/tenant-gitops-0ab226
+          ref: main
+          ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
+
+      - name: Update tags
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: |
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-prod.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/frontend/values-prod.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/notification-server/values-prod.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/celery/values-prod.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-coordinator/values-prod.yaml
+            yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/scan-handler/values-prod.yaml
+
+      - name: GitHub Commit & Push
+        shell: bash {0}
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add -A
+          git commit -m "Update the image tag to ${{ env.BUILD_SUFFIX }} on Prod"
+          git push
+
+      - name: Restore oc command from Cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: /usr/local/bin/oc
+          key: oc-cli-${{ runner.os }}
+
+      - name: Log in to Openshift
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.TEST_NAMESPACE }}
+
+      - name: Tag and deploy to Prod
+        run: |
+          helm -n ${{ env.PROD_NAMESPACE }} list
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-backend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-frontend:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-celery:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-coordinator:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-scan-handler:${{ env.BUILD_SUFFIX }}
+          oc tag ${{ env.TEST_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }} ${{ env.PROD_NAMESPACE }}/tfrs-notification-server:${{ env.BUILD_SUFFIX }}
+          cd tfrs/charts/backend
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-backend-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../frontend
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-frontend-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../notification-server
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-notification-server-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../celery
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-celery-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-coordinator
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-coordinator-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"
+          cd ../scan-handler
+          helm -n ${{ env.PROD_NAMESPACE }} -f ./values-prod.yaml upgrade --install tfrs-scan-handler-prod . \
+            --set podAnnotations.rolloutTriggered="A$(date +%s)E"

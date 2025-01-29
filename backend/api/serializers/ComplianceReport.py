@@ -42,7 +42,6 @@ from api.models.ExclusionReportAgreement import ExclusionAgreement, \
     ExclusionAgreementRecord
 from api.models.Organization import Organization
 from api.permissions.ComplianceReport import ComplianceReportPermissions
-from api.serializers import CreditTradeMinSerializer
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.ComplianceReportSchedules import \
     ScheduleCDetailSerializer, ScheduleADetailSerializer, \
@@ -51,6 +50,7 @@ from api.serializers.ComplianceReportSchedules import \
 from api.serializers.Organization import OrganizationMinSerializer, \
     OrganizationDisplaySerializer
 from api.serializers.constants import ComplianceReportValidation
+from api.services import TransactionMessageService
 from api.services.ComplianceReportService import ComplianceReportService
 from api.services.OrganizationService import OrganizationService
 from api.services.ComplianceReportSummaryService import ComplianceReportSummaryService
@@ -1161,6 +1161,16 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
             new_compliance_report.root_report = new_compliance_report
             new_compliance_report.latest_report = new_compliance_report
         new_compliance_report.save()
+
+        # Send a transaction message to the LCFS/TFRS message queue
+        request = self.context['request']
+        TransactionMessageService.TransactionMessageService.sync_compliance_report_to_lcfs(
+            new_compliance_report,
+            "Created",
+            request.user,
+            None
+        )
+
         return new_compliance_report
 
     def save(self, **kwargs):
@@ -1633,6 +1643,10 @@ class ComplianceReportUpdateSerializer(
                 create_timestamp=datetime.now(),
                 snapshot=snap
             )
+            # Send a transaction message to the LCFS/TFRS message queue
+            TransactionMessageService.TransactionMessageService.sync_compliance_report_to_lcfs(
+                instance, "Submitted", request.user, snap["summary"]["lines"]["25"]
+            )
 
         if previous_director_status not in ['Accepted'] and \
                 instance.status.director_status.status in ['Accepted']:
@@ -1641,9 +1655,15 @@ class ComplianceReportUpdateSerializer(
                 instance, request.user
             )
 
+            # Send a transaction message to the LCFS/TFRS message queue
+            TransactionMessageService.TransactionMessageService.sync_compliance_report_to_lcfs(
+                instance, "Approved", request.user, None
+            )
+
+
         instance.update_user = request.user
         instance.save()
-        
+
         # all other fields are read-only
         return instance
 

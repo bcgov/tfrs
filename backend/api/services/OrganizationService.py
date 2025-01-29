@@ -3,8 +3,9 @@ from django.db.models import Q, Sum, Count, Case, When, F
 
 from api.models.ComplianceReport import ComplianceReport
 from api.models.CreditTrade import CreditTrade
+from django.core.cache import caches
 
-
+redis_cache = caches['redis']
 class OrganizationService(object):
     @staticmethod
     def get_pending_transfers_value(organization):
@@ -150,6 +151,9 @@ class OrganizationService(object):
 
     @staticmethod
     def get_max_credit_offset(organization, compliance_year, exclude_reserved=False):
+        cached_balance = redis_cache.get(f"balance_{organization.id}_{compliance_year}")
+        if cached_balance is not None:
+            return cached_balance
         # Calculate the deadline for the compliance period for credit_trades until the end of March the following year.
         effective_date_deadline = datetime.date(
             int(compliance_year) + 1, 3, 31

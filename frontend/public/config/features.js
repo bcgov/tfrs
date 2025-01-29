@@ -16,5 +16,27 @@ window.tfrs_config = {
   'credit_transfer.enabled': true,
   'compliance_reporting.enabled': true,
   'credit_calculation_api.enabled': true,
-  'exclusion_reports.enabled': true
+  'exclusion_reports.enabled': true,
+
+  'tear_down.bceid.widgets.balance': true,
+  'tear_down.bceid.widgets.feedback': true,
+  'tear_down.bceid.widgets.website': true,
+  'tear_down.bceid.widgets.creditTransactions': true,
+  'tear_down.bceid.widgets.fileSubmissions': true,
+  'tear_down.bceid.header.creditInformation': true,
+  'tear_down.bceid.navigation.transactions': true,
+  'tear_down.bceid.navigation.fileSubmissions': true,
+  'tear_down.bceid.navigation.helpLink': true,
+  "tear_down.bceid.organization.creditInformation": true,
+  'tear_down.bceid.organization.roles.fileSubmission': true,
+  'tear_down.bceid.organization.roles.creditTransfers': true,
+  'tear_down.idir.widgets.balance': true,
+  'tear_down.idir.widgets.creditTransactions': true,
+  'tear_down.idir.widgets.fileSubmissions': true,
+  'tear_down.idir.navigation.transactions': true,
+  'tear_down.idir.navigation.fileSubmissions': true,
+  'tear_down.idir.navigation.helpLink': true,
+  'tear_down.idir.organizations.tableColumns.complianceUnits': true,
+  'tear_down.idir.organizations.tableColumns.inReserve': true,
+  'tear_down.idir.organization.creditInformation': true
 }

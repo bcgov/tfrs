@@ -9,9 +9,23 @@ import AutocompletedInput from '../../../app/components/AutocompletedInput'
 
 import CheckBox from '../../../app/components/CheckBox'
 // import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
+import CONFIG from '../../../config'
 
-const UserFormDetails = props => (
-  <div className="user-details">
+const UserFormDetails = props => {
+  // Access the BCeID tear-down configuration
+  const tearDownConfig = CONFIG.TEAR_DOWN.BCeID
+
+  // Define the roles to be torn down based on the configuration
+  const rolesToTearDown = []
+  if (tearDownConfig.ORGANIZATION.ROLES.FILE_SUBMISSION) {
+    rolesToTearDown.push(10) // Role ID for File Submission
+  }
+  if (tearDownConfig.ORGANIZATION.ROLES.CREDIT_TRANSFERS) {
+    rolesToTearDown.push(4) // Role ID for Credit Transfers
+  }
+
+  return (
+    <div className="user-details">
     <div className="main-form">
       <div className="row">
         <div className="col-sm-6">
@@ -257,64 +271,72 @@ const UserFormDetails = props => (
           </div>
         </div>
       </div>
-
+      
       {props.editPrimaryFields &&
-      props.roles &&
-        <div className="form-group">
-          <div className="row">
-            <div className="col-sm-6">
-              <label htmlFor="status">Role(s):</label>
-            </div>
-          </div>
-
-          <div className="row roles" id="user-roles">
-            {props.roles.items.filter((role) => {
-              if (document.location.pathname.indexOf('/admin/users/') >= 0) {
-                return role.isGovernmentRole
-              }
-
-              return !role.isGovernmentRole
-            }).map(role => (
-              <div className="col-sm-4 checkbox-group" key={role.id}>
-                <CheckBox
-                  addToFields={props.addToFields}
-                  className="checkbox"
-                  fields={props.fields.roles}
-                  id={role.id}
-                  toggleCheck={props.toggleCheck}
-                />
-                <OverlayTrigger
-                  placement="top"
-                  overlay={(
-                    <Tooltip id={`tooltip-${role.id}`} placement="top">
-                      <ul>
-                        <div className="heading">This role will have the ability to:</div>
-                        {role.permissions &&
-                          role.permissions.map(permission => (
-                            <li className="permission" key={permission.id}>{permission.name}</li>
-                          ))
-                        }
-                      </ul>
-                    </Tooltip>
-                  )}
-                >
-                  <span className="text">{role.description}</span>
-                </OverlayTrigger>
+          props.roles &&
+            <div className="form-group">
+              <div className="row">
+                <div className="col-sm-6">
+                  <label htmlFor="status">Role(s):</label>
+                </div>
               </div>
-            ))
-            }
-          </div>
 
-          <div className="row">
-            <div className="col-sm-12">
-            * Hover over the roles to view the permissions available to that role.
+              <div className="row roles" id="user-roles">
+                {props.roles.items
+                  .filter((role) => {
+                    // For BCeID users, filter out roles based on tear-down configuration
+                    if (
+                      !props.loggedInUser.isGovernmentUser &&
+                      rolesToTearDown.includes(role.id)
+                    ) {
+                      return false
+                    }
+                    if (document.location.pathname.indexOf('/admin/users/') >= 0) {
+                      return role.isGovernmentRole
+                    }
+                    return !role.isGovernmentRole
+                  }).map(role => (
+                    <div className="col-sm-4 checkbox-group" key={role.id}>
+                      <CheckBox
+                        addToFields={props.addToFields}
+                        className="checkbox"
+                        fields={props.fields.roles}
+                        id={role.id}
+                        toggleCheck={props.toggleCheck}
+                      />
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(
+                          <Tooltip id={`tooltip-${role.id}`} placement="top">
+                            <ul>
+                              <div className="heading">This role will have the ability to:</div>
+                              {role.permissions &&
+                                role.permissions.map(permission => (
+                                  <li className="permission" key={permission.id}>{permission.name}</li>
+                                ))
+                              }
+                            </ul>
+                          </Tooltip>
+                        )}
+                      >
+                        <span className="text">{role.description}</span>
+                      </OverlayTrigger>
+                    </div>
+                  ))
+                  }
+              </div>
+
+              <div className="row">
+                <div className="col-sm-12">
+                  * Hover over the roles to view the permissions available to that role.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      }
+          }
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 UserFormDetails.defaultProps = {
   fuelSuppliers: null,

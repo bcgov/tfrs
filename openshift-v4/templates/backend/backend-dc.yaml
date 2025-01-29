@@ -60,6 +60,14 @@ parameters:
   displayName: The database service name
   description: The database service name
   required: true
+- name: REDIS_HOST
+  displayName: The Redis Host Name
+  description: The Redis Host Name
+  required: true
+- name: REDIS_PORT
+  displayName: The Redis Port
+  description: The Redis Port
+  required: true
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -212,6 +220,15 @@ objects:
             value: "${KEYCLOAK_AUDIENCE}"            
           - name: WELL_KNOWN_ENDPOINT
             value: "${WELL_KNOWN_ENDPOINT}"
+          - name: REDIS_HOST
+            value: "${REDIS_HOST}"
+          - name: REDIS_PORT
+            value: "${REDIS_PORT}"
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lcfs-redis-${ENV_NAME}-connection
+                key: redis-password
           resources:
             limits:
               cpu: "${CPU_LIMIT}"

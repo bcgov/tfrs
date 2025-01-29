@@ -5,7 +5,7 @@ RUN apt-get update \
 WORKDIR /app/tfrs
 COPY . .
 COPY ./security-scan/scan-handler/celery.conf /etc/supervisor/conf.d
-RUN pip install --upgrade pip \
+RUN pip install --upgrade pip==24.0 \
   && pip install -r backend/requirements.txt \
   && chgrp -R root /var/log/supervisor \
   && chmod -R g+w /var/log/supervisor \

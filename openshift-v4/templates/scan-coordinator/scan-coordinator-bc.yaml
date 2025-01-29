@@ -57,17 +57,8 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
-        env:
-          - name: ARTIFACTORY_USER
-            valueFrom:
-              secretKeyRef:
-                name: artifacts-default-cgcynz
-                key: username
-          - name: ARTIFACTORY_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: artifacts-default-cgcynz
-                key: password
+        pullSecret:
+          name: artifacts-pull-default-huwoxc
         noCache: true
         forcePull: true
     output:

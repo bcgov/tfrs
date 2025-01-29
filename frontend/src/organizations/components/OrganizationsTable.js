@@ -11,9 +11,17 @@ import * as NumberFormat from '../../constants/numeralFormats'
 import ORGANIZATIONS from '../../constants/routes/Organizations'
 import ORGANIZATION_STATUSES from '../../constants/organizationStatuses'
 import ReactTable from '../../app/components/StateSavingReactTable'
+import CONFIG from '../../config'
 
 const OrganizationsTable = (props) => {
-  const columns = [{
+  const { loggedInUser } = props
+  const userType = loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'
+  const tearDownConfig = CONFIG.TEAR_DOWN[userType]
+
+  const columns = []
+
+  // Always include the Organization Name column
+  columns.push({
     accessor: item => item.name,
     className: 'col-name',
     Header: 'Organization Name',
@@ -23,22 +31,35 @@ const OrganizationsTable = (props) => {
       const viewUrl = ORGANIZATIONS.DETAILS.replace(':id', row.original.id)
 
       return <Link to={viewUrl}>{row.value}</Link>
-    }
-  }, {
-    accessor: item => item.organizationBalance.validatedCredits,
-    Cell: row => numeral(row.value).format(NumberFormat.INT),
-    className: 'col-credit-balance',
-    Header: 'Compliance Units',
-    id: 'creditBalance',
-    minWidth: 100
-  }, {
-    accessor: item => item.organizationBalance.deductions,
-    Cell: row => numeral(row.value).format(NumberFormat.INT),
-    className: 'col-deductions',
-    Header: 'In Reserve',
-    id: 'inreserve',
-    minWidth: 100
-  }, {
+    },
+  })
+
+  // Conditionally include "Compliance Units" column
+  if (!tearDownConfig.ORGANIZATIONS.TABLE_COLUMNS.COMPLIANCE_UNITS) {
+    columns.push({
+      accessor: item => item.organizationBalance.validatedCredits,
+      Cell: row => numeral(row.value).format(NumberFormat.INT),
+      className: 'col-credit-balance',
+      Header: 'Compliance Units',
+      id: 'creditBalance',
+      minWidth: 100
+    })
+  }
+
+  // Conditionally include "In Reserve" column
+  if (!tearDownConfig.ORGANIZATIONS.TABLE_COLUMNS.IN_RESERVE) {
+    columns.push({
+      accessor: item => item.organizationBalance.deductions,
+      Cell: row => numeral(row.value).format(NumberFormat.INT),
+      className: 'col-deductions',
+      Header: 'In Reserve',
+      id: 'inreserve',
+      minWidth: 100,
+    })
+  }
+
+  // Always include the Registered column
+  columns.push({
     accessor: item => {
       const orgStatus = Object.values(ORGANIZATION_STATUSES)
         .find(element => element.id === item.status)
@@ -66,8 +87,7 @@ const OrganizationsTable = (props) => {
       }
       return false
     }
-  }
-  ]
+  })
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id
@@ -87,7 +107,7 @@ const OrganizationsTable = (props) => {
       data={props.items}
       defaultPageSize={10}
       defaultSorted={[{
-        id: 'name',
+          id: 'name',
         desc: false
       }]}
       filterable={filterable}
@@ -101,7 +121,10 @@ const OrganizationsTable = (props) => {
 OrganizationsTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool.isRequired,
+  }).isRequired,
 }
 
 export default OrganizationsTable

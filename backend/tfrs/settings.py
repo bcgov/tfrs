@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
-
 from pika import ConnectionParameters, PlainCredentials
 
 from . import minio
@@ -258,10 +257,23 @@ CORS_ORIGIN_WHITELIST = ()
 CORS_EXPOSE_HEADERS = [
     "Content-Disposition"
 ]
-
+# Redis settings from environment variables
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "development_only")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    },
+    "redis": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0",  # Using Redis database 0
+        'KEY_FUNCTION': lambda key, key_prefix, version: key,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": REDIS_PASSWORD,
+        },
+        "VERSION": 0
     },
     'keycloak': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -291,6 +303,8 @@ CACHES = {
     },
 }
 
+# Celery configuration to use Redis as the broker
+CELERY_BROKER_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/1"  # Using Redis database 1 for Celery
 
 # Uncomment this stanza to see database calls in the log (quite verbose)
 # import logging
