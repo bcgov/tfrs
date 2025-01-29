@@ -1,7 +1,7 @@
 ## For each release, the value of name, branches, RELEASE_NAME and PR_NUMBER need to be adjusted accordingly
 ## For each release, update lib/config.js: version and releaseBranch
 
-name: TFRS release-2.22.0
+name: TFRS release-3.0.0
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
   PR_NUMBER: 2913
-  RELEASE_NAME: release-2.22.0
+  RELEASE_NAME: release-3.0.0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
