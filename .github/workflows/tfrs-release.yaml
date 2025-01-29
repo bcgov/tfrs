@@ -10,7 +10,7 @@ on:
 env:
   ## The pull request number of the Tracking pull request to merge the release branch to main
   ## Also remember to update the version in .pipeline/lib/config.js
-  PR_NUMBER: 2913
+  PR_NUMBER: 2956
   RELEASE_NAME: release-3.0.0
 
 concurrency:
@@ -88,7 +88,7 @@ jobs:
           cd .pipeline
           npm install
           npm run build -- --pr=${{ env.PR_NUMBER }} --env=build
-  
+
   # comment out deploy-on-test as the deployment configs have been repaced by deployments at 2.21.1
   # deploy-on-test:
   #   name: Deploy TFRS on Test
