@@ -28,7 +28,7 @@
     "jest-environment-jsdom": "^29.4.3",
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^2.0.0",
-    "keycloak-js": "^19.0.3",
+    "keycloak-js": "^26.1.2",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.6.1",
     "minimist": "^1.2.7",
