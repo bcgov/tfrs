@@ -1,7 +1,7 @@
 "use strict";
 const options = require("@bcgov/pipeline-cli").Util.parseArguments();
 const changeId = options.pr; //aka pull-request
-const version = "2.22.0";
+const version = "3.0.0";
 const name = "tfrs";
 const ocpName = "apps.silver.devops";
 
@@ -20,7 +20,7 @@ const phases = {
     instance: `${name}-build-${changeId}`,
     version: `${version}-${changeId}`,
     tag: `build-${version}-${changeId}`,
-    releaseBranch: "release-2.22.0",
+    releaseBranch: "release-3.0.0",
   },
   dev: {
     namespace: "0ab226-dev",

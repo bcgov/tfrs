@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Test release-2.22.0
+name: TFRS New Pipeline Test release-3.0.0
 
 on:
   workflow_dispatch:

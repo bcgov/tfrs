@@ -59,13 +59,18 @@ export const logoutKeycloakUser = () => ({
 })
 
 export const login = (idpHint = IDENTITY_PROVIDERS.IDIR) => (dispatch) => {
-  const kc = keycloak()
-  kc.login({
-    pkceMethod: 'S256',
-    redirectUri: CONFIG.KEYCLOAK.CALLBACK_URL,
-    idpHint
-  })
-}
+    const kc = keycloak()
+
+    const currentPath = window.location.pathname + window.location.search + window.location.hash
+    const callbackWithoutSlash = CONFIG.KEYCLOAK.CALLBACK_URL.replace(/\/$/,"")
+    const redirectUri = `${callbackWithoutSlash}${currentPath}`
+
+    kc.login({
+      pkceMethod: 'S256',
+      redirectUri,
+      idpHint
+    })
+  }
 
 export const logout = () => (dispatch) => {
   const userAuth = store.getState().userAuth
