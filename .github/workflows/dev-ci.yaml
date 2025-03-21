@@ -1,8 +1,8 @@
-name: TFRS New Pipeline Dev release-3.0.0
+name: TFRS New Pipeline Dev release-3.0.1
 
 on:
   push:
-    branches: [release-3.0.0]
+    branches: [release-3.0.1]
     paths:
       - frontend/**
       - backend/**
@@ -13,14 +13,13 @@ env:
   GIT_URL: https://github.com/bcgov/tfrs.git
   TOOLS_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
   DEV_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  GIT_REF: "release-3.0.0"
+  GIT_REF: "release-3.0.1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-
   install-oc:
     runs-on: ubuntu-latest
     outputs:
@@ -33,7 +32,7 @@ jobs:
         id: cache
         uses: actions/cache@v4.2.0
         with:
-          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          path: /usr/local/bin/oc # Path where the `oc` binary will be installed
           key: oc-cli-${{ runner.os }}
 
       - name: Install OpenShift CLI (if not cached)
@@ -58,7 +57,7 @@ jobs:
     steps:
       - id: get-version
         run: |
-          echo "VERSION=3.0.0" >> $GITHUB_OUTPUT
+          echo "VERSION=3.0.1" >> $GITHUB_OUTPUT
 
   build-backend:
     name: Build tfrs Backend

@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Prod release-3.0.0
+name: TFRS New Pipeline Prod release-3.0.1
 
 on:
   workflow_dispatch:
@@ -13,7 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   install-oc:
     runs-on: ubuntu-latest
     outputs:
@@ -23,7 +22,7 @@ jobs:
         id: cache
         uses: actions/cache@v4.2.0
         with:
-          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          path: /usr/local/bin/oc # Path where the `oc` binary will be installed
           key: oc-cli-${{ runner.os }}
 
       - name: Install OpenShift CLI (if not cached)
@@ -38,7 +37,7 @@ jobs:
         run: oc version --client
 
   get-build-suffix:
-    name: Find Test deployment build suffix 
+    name: Find Test deployment build suffix
     runs-on: ubuntu-latest
     needs: [install-oc]
 
@@ -85,14 +84,14 @@ jobs:
       - id: get-current-time
         run: |
           echo "CURRENT_TIME=$(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
-    
+
       - name: Ask for approval for TFRS Prod deployment
         uses: trstringer/manual-approval@v1.6.0
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
           minimum-approvals: 2
-          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}"
 
       - name: Checkout Manifest repository
         uses: actions/checkout@v4.1.1

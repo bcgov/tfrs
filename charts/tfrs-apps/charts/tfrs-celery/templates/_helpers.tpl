@@ -5,7 +5,7 @@ The labels for all components:
     helm.sh/chart: tfrs-celery-1.0.0
     app.kubernetes.io/name: tfrs-celery
     app.kubernetes.io/instance: tfrs-celery-dev    or    tfrs-celery-dev-jan
-    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/version: "3.0.1"
     app.kubernetes.io/managed-by: Helm
 
 The selector lables:
