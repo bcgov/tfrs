@@ -36,10 +36,14 @@ services:
       - FUEL_CODES_API_ENABLED=True
       - CREDIT_CALCULATION_API_ENABLED=True
       - COMPLIANCE_REPORTING_API_ENABLED=True
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=development_only
     env_file:
       - minio.env
     depends_on:
       - db
+      - redis
     build:
       dockerfile: Dockerfile-django
       context: ./backend
@@ -48,6 +52,7 @@ services:
       "pip install -q -r requirements.txt &&
       /wfi/wait-for-it.sh -t 14400 rabbit:5672 &&
       /wfi/wait-for-it.sh -t 14400 db:5432 &&
+      /wfi/wait-for-it.sh -t 14400 redis:6379 &&
       /wfi/wait-for-it.sh -t 14400 minio:9000 &&
       /wfi/wait-for-it.sh -t 14400 smtplogger:2500 &&
       python3 manage.py makemigrations &&
@@ -110,7 +115,17 @@ services:
       dockerfile: Dockerfile-smtplogger
     ports:
       - 2500:2500
+  redis:
+    platform: linux/amd64
+    image: redis:7-alpine
+    container_name: tfrs_redis
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass development_only
+    volumes:
+      - redis_data:/data
 volumes:
   node_modules:
   postgres_data:
   minio_data:
+  redis_data:
