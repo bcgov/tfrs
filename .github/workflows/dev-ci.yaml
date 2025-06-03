@@ -1,8 +1,8 @@
-name: TFRS New Pipeline Dev release-3.0.1
+name: TFRS New Pipeline Dev release-3.1.0
 
 on:
   push:
-    branches: [release-3.0.1]
+    branches: [release-3.1.0]
     paths:
       - frontend/**
       - backend/**
@@ -13,7 +13,7 @@ env:
   GIT_URL: https://github.com/bcgov/tfrs.git
   TOOLS_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-tools
   DEV_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE_PLATE }}-dev
-  GIT_REF: "release-3.0.1"
+  GIT_REF: "release-3.1.0"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -57,7 +57,7 @@ jobs:
     steps:
       - id: get-version
         run: |
-          echo "VERSION=3.0.1" >> $GITHUB_OUTPUT
+          echo "VERSION=3.1.0" >> $GITHUB_OUTPUT
 
   build-backend:
     name: Build tfrs Backend
@@ -93,11 +93,11 @@ jobs:
           cd openshift-v4/templates/backend
           oc process -f ./backend-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-backend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-backend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-backend-${{ env.BUILD_SUFFIX }} --wait=true
 
   build-frontend:
@@ -134,11 +134,11 @@ jobs:
           cd openshift-v4/templates/frontend
           oc process -f ./frontend-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-frontend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-frontend-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-frontend-${{ env.BUILD_SUFFIX }} --wait=true
 
   build-scan-coordinator:
@@ -175,11 +175,11 @@ jobs:
           cd openshift-v4/templates/scan-coordinator
           oc process -f ./scan-coordinator-bc.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-scan-coordinator-${{ env.BUILD_SUFFIX }} --wait=true
 
   build-celery:
@@ -216,11 +216,11 @@ jobs:
           cd openshift-v4/templates/celery
           oc process -f ./celery-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-celery-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-celery-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-celery-${{ env.BUILD_SUFFIX }} --wait=true
 
   build-scan-handler:
@@ -257,11 +257,11 @@ jobs:
           cd openshift-v4/templates/scan-handler
           oc process -f ./scan-handler-bc-docker.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-handler-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-scan-handler-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-scan-handler-${{ env.BUILD_SUFFIX }} --wait=true
 
   build-notification-server:
@@ -298,11 +298,11 @@ jobs:
           cd openshift-v4/templates/notification
           oc process -f ./notification-server-bc.yaml NAME=tfrs SUFFIX=-${{ env.BUILD_SUFFIX }} VERSION=${{ env.BUILD_SUFFIX }} GIT_URL=${{ env.GIT_URL }} GIT_REF=${{ env.GIT_REF }} | oc apply --wait=true -f - -n ${{ env.TOOLS_NAMESPACE }}
           sleep 2s
-          for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-notification-server-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
-            echo "canceling $build"
-            oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
-          done
-          sleep 2s
+          # for build in $(oc -n ${{ env.TOOLS_NAMESPACE }} get builds -l buildconfig=tfrs-notification-server-${{ env.BUILD_SUFFIX }} -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}'); do
+          #   echo "canceling $build"
+          #   oc -n ${{ env.TOOLS_NAMESPACE }} cancel-build $build
+          # done
+          # sleep 2s
           oc -n ${{ env.TOOLS_NAMESPACE }} start-build tfrs-notification-server-${{ env.BUILD_SUFFIX }} --wait=true
 
   deploy:

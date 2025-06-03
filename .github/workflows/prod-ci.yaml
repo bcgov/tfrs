@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Prod release-3.0.1
+name: TFRS New Pipeline Prod release-3.1.0
 
 on:
   workflow_dispatch:
