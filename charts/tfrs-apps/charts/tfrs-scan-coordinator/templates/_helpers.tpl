@@ -5,7 +5,7 @@ The labels for all components:
     helm.sh/chart: tfrs-scan-coordinator-1.0.0
     app.kubernetes.io/name: tfrs-scan-coordinator
     app.kubernetes.io/instance: tfrs-scan-coordinator-dev    or    tfrs-scan-coordinator-dev-jan
-    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/version: "3.0.1"
     app.kubernetes.io/managed-by: Helm
 
 The selector lables:

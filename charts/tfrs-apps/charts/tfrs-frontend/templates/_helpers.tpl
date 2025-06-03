@@ -5,7 +5,7 @@ The labels for all components:
     helm.sh/chart: tfrs-frontend-1.0.0
     app.kubernetes.io/name: tfrs-frontend
     app.kubernetes.io/instance: tfrs-frontend-dev    or    tfrs-frontend-dev-jan
-    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/version: "3.0.1"
     app.kubernetes.io/managed-by: Helm
 
 The selector lables:

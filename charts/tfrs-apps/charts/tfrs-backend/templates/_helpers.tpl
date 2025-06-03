@@ -5,7 +5,7 @@ The labels for all components:
     helm.sh/chart: tfrs-backend-1.0.0
     app.kubernetes.io/name: tfrs-backend
     app.kubernetes.io/instance: tfrs-backend-dev    or    tfrs-backend-dev-jan
-    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/version: "3.0.1"
     app.kubernetes.io/managed-by: Helm
 
 The selector lables:

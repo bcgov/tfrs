@@ -1,4 +1,4 @@
-name: TFRS New Pipeline Test release-3.0.0
+name: TFRS New Pipeline Test release-3.0.1
 
 on:
   workflow_dispatch:
@@ -13,18 +13,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  
   install-oc:
     runs-on: ubuntu-latest
     outputs:
       cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
-
       - name: Set up cache for OpenShift CLI
         id: cache
         uses: actions/cache@v4.2.0
         with:
-          path: /usr/local/bin/oc  # Path where the `oc` binary will be installed
+          path: /usr/local/bin/oc # Path where the `oc` binary will be installed
           key: oc-cli-${{ runner.os }}
 
       - name: Install OpenShift CLI (if not cached)
@@ -39,7 +37,7 @@ jobs:
         run: oc version --client
 
   get-build-suffix:
-    name: Find Dev deployment build suffix 
+    name: Find Dev deployment build suffix
     needs: install-oc
     runs-on: ubuntu-latest
 
@@ -96,7 +94,7 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
           minimum-approvals: 1
-          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}" 
+          issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}"
 
       - name: Checkout Manifest repository
         uses: actions/checkout@v4.1.1
