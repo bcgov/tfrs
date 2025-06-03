@@ -24,7 +24,7 @@ parameters:
   - name: GIT_REF
     displayName:
     description: tfrs repo ref
-    required: true    
+    required: true
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
@@ -52,7 +52,7 @@ objects:
         git:
           uri: ${GIT_URL}
           ref: ${GIT_REF}
-        type: Git        
+        type: Git
       strategy:
         type: Docker
         dockerStrategy:
@@ -65,16 +65,11 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-celery:${VERSION}
-      resources: 
-        limits:
-          cpu: 1500m
-          memory: 1300Mi
+      resources:
         requests:
-          cpu: 750m
-          memory: 650Mi
+          cpu: 500m
+          memory: 2Gi
       postCommit: {}
       nodeSelector:
       successfulBuildsHistoryLimit: 5
       failedBuildsHistoryLimit: 5
-    status:
-      lastVersion: 0
