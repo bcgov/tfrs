@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { toastr as reduxToastr } from 'react-redux-toastr'
 import PropTypes from 'prop-types'
 
 import { complianceReporting } from '../actions/complianceReporting'
@@ -20,6 +21,8 @@ import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTran
 import PERMISSIONS_FUEL_CODES from '../constants/permissions/FuelCodes'
 import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations'
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../constants/permissions/SecureDocumentUpload'
+import * as Lang from '../constants/langEnUs'
+import { REPORT_CREATION_ENABLED } from '../constants/featureFlags'
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
 import CONFIG from '../config'
@@ -76,28 +79,38 @@ class DashboardContainer extends Component {
   }
 
   _createComplianceReport (compliancePeriodDescription) {
-    const currentYear = new Date().getFullYear()
+    if (!REPORT_CREATION_ENABLED) {
+      reduxToastr.error('Unavailable', Lang.MSG_REPORT_CREATION_DISABLED)
+      return
+    }
+
+    const targetPeriod = compliancePeriodDescription || new Date().getFullYear()
 
     const payload = {
       status: {
         fuelSupplierStatus: 'Draft'
       },
       type: 'Compliance Report',
-      compliancePeriod: currentYear
+      compliancePeriod: targetPeriod
     }
 
     this.props.createComplianceReport(payload)
   }
 
   _createExclusionReport (compliancePeriodDescription) {
-    const currentYear = new Date().getFullYear()
+    if (!REPORT_CREATION_ENABLED) {
+      reduxToastr.error('Unavailable', Lang.MSG_REPORT_CREATION_DISABLED)
+      return
+    }
+
+    const targetPeriod = compliancePeriodDescription || new Date().getFullYear()
 
     const payload = {
       status: {
         fuelSupplierStatus: 'Draft'
       },
       type: 'Exclusion Report',
-      compliancePeriod: currentYear
+      compliancePeriod: targetPeriod
     }
 
     this.props.createExclusionReport(payload)

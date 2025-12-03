@@ -71,7 +71,6 @@ class ExclusionReportEditContainer extends Component {
       autosaveState: {},
       exclusionAgreement: {},
       terms: [],
-      createSupplementalCalled: false,
       supplementalNoteRequired: (props.exclusionReports.item &&
         props.exclusionReports.item.isSupplemental &&
         props.exclusionReports.item.actions.includes('SUBMIT')),
@@ -80,7 +79,6 @@ class ExclusionReportEditContainer extends Component {
 
     this._addToFields = this._addToFields.bind(this)
     this._toggleCheck = this._toggleCheck.bind(this)
-    this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this)
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this)
   }
 
@@ -182,21 +180,6 @@ class ExclusionReportEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.params.id })
-  }
-
-  _handleCreateSupplemental (event, compliancePeriodDescription) {
-    this.setState({
-      createSupplementalCalled: true
-    })
-
-    this.props.createComplianceReport({
-      status: {
-        fuelSupplierStatus: 'Draft'
-      },
-      type: 'Exclusion Report',
-      compliancePeriod: compliancePeriodDescription,
-      supplements: Number(this.props.params.id)
-    })
   }
 
   _handleSupplementalNoteUpdate (event) {
@@ -459,13 +442,6 @@ class ExclusionReportEditContainer extends Component {
         Are you sure you want to delete this draft?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleCreateSupplemental(event, period)}
-        id="confirmCreateSupplemental"
-        key="confirmCreateSupplemental"
-      >
-        Are you sure you want to create a supplemental exclusion report?
-      </Modal>,
-      <Modal
         handleSubmit={event => this._handleSubmit(event, { analystStatus: 'Requested Supplemental' })}
         id="confirmAnalystRequestSupplemental"
         key="confirmAnalystRequestSupplemental"
@@ -543,7 +519,6 @@ ExclusionReportEditContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
-  createComplianceReport: PropTypes.func.isRequired,
   validateExclusionReport: PropTypes.func.isRequired,
   complianceReporting: PropTypes.shape({
     isGetting: PropTypes.bool,
@@ -622,7 +597,6 @@ const
     addSigningAuthorityConfirmation,
     deleteComplianceReport: exclusionReports.remove,
     getComplianceReports: complianceReporting.find,
-    createComplianceReport: complianceReporting.create,
     getExclusionReport: exclusionReports.get,
     validateExclusionReport: exclusionReports.validate,
     getSnapshotRequest: complianceReporting.getSnapshot,
