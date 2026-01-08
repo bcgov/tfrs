@@ -4,6 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import CONFIG from '../../config'
 import * as Lang from '../../constants/langEnUs'
+import { REPORT_CREATION_ENABLED } from '../../constants/featureFlags'
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
 import ComplianceReportingTable from './ComplianceReportingTable'
 
@@ -196,69 +197,11 @@ const ComplianceReportingPage = (props) => {
         PERMISSIONS_COMPLIANCE_REPORT.MANAGE
       ) && (
         <div className='right-toolbar-container'>
-          <div className='actions-container'>
-            <div className='btn-group'>
-              <button
-                id='new-compliance-report'
-                className='btn btn-primary'
-                data-toggle='dropdown'
-                aria-haspopup='true'
-                aria-expanded='false'
-                type='button'
-              >
-                <FontAwesomeIcon icon='plus-circle' />{' '}
-                {Lang.BTN_NEW_COMPLIANCE_REPORT}
-              </button>
-              <button
-                type='button'
-                className='btn btn-primary dropdown-toggle'
-                data-toggle='dropdown'
-                aria-haspopup='true'
-                aria-expanded='false'
-              >
-                <span className='caret' />
-                <span className='sr-only'>Toggle Dropdown</span>
-              </button>
-              <ul className='dropdown-menu'>
-                {props.compliancePeriods.map((compliancePeriod) => {
-                  if (compliancePeriod.description >= 2024) return null
-                  return (
-                  <li key={compliancePeriod.description}>
-                    <button
-                      onClick={() => {
-                        const found = items.findIndex(
-                          (item) =>
-                            item.status.fuelSupplierStatus === 'Submitted' &&
-                            item.compliancePeriod.id === compliancePeriod.id &&
-                            item.type === 'Compliance Report'
-                        )
-
-                        if (found >= 0) {
-                          props.selectComplianceReport(
-                            'compliance',
-                            compliancePeriod.description
-                          )
-                          props.showModal(true)
-                        } else {
-                          props.createComplianceReport(
-                            compliancePeriod.description
-                          )
-                        }
-                      }}
-                      type='button'
-                    >
-                      {compliancePeriod.description}
-                    </button>
-                  </li>
-                  )
-                })}
-              </ul>
-            </div>
-
-            {CONFIG.EXCLUSION_REPORTS.ENABLED && (
+          {REPORT_CREATION_ENABLED ? (
+            <div className='actions-container'>
               <div className='btn-group'>
                 <button
-                  id='new-exclusion-report'
+                  id='new-compliance-report'
                   className='btn btn-primary'
                   data-toggle='dropdown'
                   aria-haspopup='true'
@@ -266,7 +209,7 @@ const ComplianceReportingPage = (props) => {
                   type='button'
                 >
                   <FontAwesomeIcon icon='plus-circle' />{' '}
-                  {Lang.BTN_NEW_EXCLUSION_REPORT}
+                  {Lang.BTN_NEW_COMPLIANCE_REPORT}
                 </button>
                 <button
                   type='button'
@@ -279,27 +222,27 @@ const ComplianceReportingPage = (props) => {
                   <span className='sr-only'>Toggle Dropdown</span>
                 </button>
                 <ul className='dropdown-menu'>
-                  {props.compliancePeriods.map((compliancePeriod) => (
+                  {props.compliancePeriods.map((compliancePeriod) => {
+                    if (compliancePeriod.description >= 2024) return null
+                    return (
                     <li key={compliancePeriod.description}>
-                    {compliancePeriod.description <= 2023 && (
                       <button
                         onClick={() => {
                           const found = items.findIndex(
                             (item) =>
                               item.status.fuelSupplierStatus === 'Submitted' &&
-                              item.compliancePeriod.id ===
-                                compliancePeriod.id &&
-                              item.type === 'Exclusion Report'
+                              item.compliancePeriod.id === compliancePeriod.id &&
+                              item.type === 'Compliance Report'
                           )
 
                           if (found >= 0) {
                             props.selectComplianceReport(
-                              'exclusion',
+                              'compliance',
                               compliancePeriod.description
                             )
                             props.showModal(true)
                           } else {
-                            props.createExclusionReport(
+                            props.createComplianceReport(
                               compliancePeriod.description
                             )
                           }
@@ -308,13 +251,79 @@ const ComplianceReportingPage = (props) => {
                       >
                         {compliancePeriod.description}
                       </button>
-                    )}
                     </li>
-                  ))}
+                    )
+                  })}
                 </ul>
               </div>
-            )}
-          </div>
+
+              {CONFIG.EXCLUSION_REPORTS.ENABLED && (
+                <div className='btn-group'>
+                  <button
+                    id='new-exclusion-report'
+                    className='btn btn-primary'
+                    data-toggle='dropdown'
+                    aria-haspopup='true'
+                    aria-expanded='false'
+                    type='button'
+                  >
+                    <FontAwesomeIcon icon='plus-circle' />{' '}
+                    {Lang.BTN_NEW_EXCLUSION_REPORT}
+                  </button>
+                  <button
+                    type='button'
+                    className='btn btn-primary dropdown-toggle'
+                    data-toggle='dropdown'
+                    aria-haspopup='true'
+                    aria-expanded='false'
+                  >
+                    <span className='caret' />
+                    <span className='sr-only'>Toggle Dropdown</span>
+                  </button>
+                  <ul className='dropdown-menu'>
+                    {props.compliancePeriods.map((compliancePeriod) => (
+                      <li key={compliancePeriod.description}>
+                      {compliancePeriod.description <= 2023 && (
+                        <button
+                          onClick={() => {
+                            const found = items.findIndex(
+                              (item) =>
+                                item.status.fuelSupplierStatus === 'Submitted' &&
+                                item.compliancePeriod.id ===
+                                  compliancePeriod.id &&
+                                item.type === 'Exclusion Report'
+                            )
+
+                            if (found >= 0) {
+                              props.selectComplianceReport(
+                                'exclusion',
+                                compliancePeriod.description
+                              )
+                              props.showModal(true)
+                            } else {
+                              props.createExclusionReport(
+                                compliancePeriod.description
+                              )
+                            }
+                          }}
+                          type='button'
+                        >
+                          {compliancePeriod.description}
+                        </button>
+                      )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className='actions-container'>
+              <div className='alert alert-info creation-disabled-message'>
+                {Lang.MSG_REPORT_CREATION_DISABLED}
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div className='compliance-filters-parent'>

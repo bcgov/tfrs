@@ -115,7 +115,6 @@ class ComplianceReportingEditContainer extends Component {
       schedules: {},
       terms: [],
       getCalled: false,
-      createSupplementalCalled: false,
       showPenaltyWarning: false,
       supplementalNoteRequired: (props.complianceReporting.item &&
         props.complianceReporting.item.isSupplemental &&
@@ -131,7 +130,6 @@ class ComplianceReportingEditContainer extends Component {
 
     this.state = initialState
     this._addToFields = this._addToFields.bind(this)
-    this._handleCreateSupplemental = this._handleCreateSupplemental.bind(this)
     this._handleRecomputeRequest = this._handleRecomputeRequest.bind(this)
     this._handleSupplementalNoteUpdate = this._handleSupplementalNoteUpdate.bind(this)
     this._showPenaltyWarning = this._showPenaltyWarning.bind(this)
@@ -359,25 +357,6 @@ class ComplianceReportingEditContainer extends Component {
 
   _handleDelete () {
     this.props.deleteComplianceReport({ id: this.props.params.id })
-
-    setTimeout(() => {
-      this.props.getUpdatedLoggedInUser()
-    }, 2000)
-  }
-
-  _handleCreateSupplemental (event, compliancePeriodDescription) {
-    this.setState({
-      createSupplementalCalled: true
-    })
-
-    this.props.createComplianceReport({
-      status: {
-        fuelSupplierStatus: 'Draft'
-      },
-      type: 'Compliance Report',
-      compliancePeriod: compliancePeriodDescription,
-      supplements: Number(this.props.params.id)
-    })
 
     setTimeout(() => {
       this.props.getUpdatedLoggedInUser()
@@ -765,13 +744,6 @@ class ComplianceReportingEditContainer extends Component {
         Are you sure you want to save this compliance report?
       </Modal>,
       <Modal
-        handleSubmit={event => this._handleCreateSupplemental(event, period)}
-        id="confirmCreateSupplemental"
-        key="confirmCreateSupplemental"
-      >
-        Are you sure you want to create a supplemental compliance report?
-      </Modal>,
-      <Modal
         disabled={(this.state.supplementalNoteRequired &&
           (this.state.supplementalNote.trim().length === 0)) ||
         (this.state.terms.filter(term => term.value === true).length <
@@ -914,7 +886,6 @@ ComplianceReportingEditContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()),
     isFinding: PropTypes.bool
   }).isRequired,
-  createComplianceReport: PropTypes.func.isRequired,
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
@@ -952,7 +923,6 @@ ComplianceReportingEditContainer.propTypes = {
 const
   mapDispatchToProps = {
     addSigningAuthorityConfirmation,
-    createComplianceReport: complianceReporting.create,
     deleteComplianceReport: complianceReporting.remove,
     getComplianceReport: complianceReporting.get,
     getComplianceReports: complianceReporting.find,

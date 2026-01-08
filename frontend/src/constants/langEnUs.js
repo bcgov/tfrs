@@ -55,6 +55,7 @@ export const BTN_SIGN_2_2 = 'Sign and submit'
 export const BTN_SUBMIT = 'Submit'
 export const BTN_UPDATE = 'Update'
 export const BTN_YES = 'Yes'
+export const MSG_REPORT_CREATION_DISABLED = 'Creation of new compliance and exclusion reports including supplemental is currently unavailable. Please contact the lcfs@gov.bc.ca for assistance.'
 
 export const BTN_COMMENT = 'Add Comment'
 export const BTN_COMMENT_PRIVILEGED = 'Add Internal Comment'
