@@ -30,10 +30,9 @@ const getValidationMessages = (props) => {
     item.type === type
   ))
   if (found && !props.exclusionReports.item.isSupplemental) {
-    return `An ${type} for ${period} has already been submitted to the Government of British Columbia. 
-      If the information in the previous report does not completely and accurately disclose the information 
-      required to be included in the report, please create a supplemental report by opening the previous
-       report and clicking on the "Create Supplemental Report" button.`
+    return `An ${type} for ${period} has already been submitted to the Government of British Columbia.
+      If changes are required, please contact the LCFS team for assistance as
+      supplemental report creation is currently unavailable.`
   }
 
   return ''
@@ -82,17 +81,6 @@ const ExclusionReportButtons = props => {
         >
           <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
         </button>
-        {props.actions.includes('CREATE_SUPPLEMENTAL') &&
-        props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
-        <button
-          className="btn btn-primary"
-          data-target="#confirmCreateSupplemental"
-          data-toggle="modal"
-          type="button"
-        >
-          <FontAwesomeIcon icon="clone" /> {Lang.BTN_CREATE_SUPPLEMENTAL}
-        </button>
-        }
         {props.actions.includes('SUBMIT') &&
         props.loggedInUser.hasPermission(PERMISSIONS_COMPLIANCE_REPORT.MANAGE) &&
         <Tooltip

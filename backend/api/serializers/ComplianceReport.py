@@ -914,6 +914,9 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     """
     Create Serializer for the Compliance Report
     """
+    SUPPLEMENTAL_DISABLED_ERROR = 'Supplemental report creation is currently unavailable.'
+    CREATION_DISABLED_ERROR = 'Report creation is currently unavailable.'
+
     status = ComplianceReportWorkflowStateSerializer()
 
     type = SlugRelatedField(
@@ -933,18 +936,9 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     organization = OrganizationMinSerializer(read_only=True)
 
     def validate_supplements(self, value):
-        user = self.context.get('request').user
-        original = value
-        relationship = ComplianceReportPermissions.get_relationship(
-            original, user
-        )
-        actions = ComplianceReportPermissions.get_available_actions(
-            original, relationship
-        )
-        if 'CREATE_SUPPLEMENTAL' not in actions:
-            raise serializers.ValidationError(
-                'Cannot create a supplemental report'
-            )
+        if value is not None:
+            raise serializers.ValidationError(self.SUPPLEMENTAL_DISABLED_ERROR)
+
         return value
 
     def validate(self, data):
@@ -953,7 +947,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
         if not request.user.has_perm('COMPLIANCE_REPORT_MANAGE'):
             raise PermissionDenied(
                 'You do not have permission to create a report')
-        return data
+
+        raise ValidationError(self.CREATION_DISABLED_ERROR)
 
     def validate_status(self, value):
         if value['fuel_supplier_status'].status not in ['Draft']:

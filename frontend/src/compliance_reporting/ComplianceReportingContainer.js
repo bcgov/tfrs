@@ -14,6 +14,8 @@ import { exclusionReports } from '../actions/exclusionReports'
 import CallableModal from '../app/components/CallableModal'
 import ComplianceReportingPage from './components/ComplianceReportingPage'
 import CONFIG from '../config'
+import * as Lang from '../constants/langEnUs'
+import { REPORT_CREATION_ENABLED } from '../constants/featureFlags'
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting'
 import EXCLUSION_REPORTS from '../constants/routes/ExclusionReports'
 import toastr from '../utils/toastr'
@@ -101,6 +103,11 @@ class ComplianceReportingContainer extends Component {
   }
 
   createComplianceReport (compliancePeriodDescription) {
+    if (!REPORT_CREATION_ENABLED) {
+      reduxToastr.error('Unavailable', Lang.MSG_REPORT_CREATION_DISABLED)
+      return
+    }
+
     const payload = {
       status: {
         fuelSupplierStatus: 'Draft'
@@ -113,6 +120,11 @@ class ComplianceReportingContainer extends Component {
   }
 
   createExclusionReport (compliancePeriodDescription) {
+    if (!REPORT_CREATION_ENABLED) {
+      reduxToastr.error('Unavailable', Lang.MSG_REPORT_CREATION_DISABLED)
+      return
+    }
+
     const payload = {
       status: {
         fuelSupplierStatus: 'Draft'
@@ -188,20 +200,26 @@ class ComplianceReportingContainer extends Component {
         key='confirmCreate'
         show={this.state.showModal}
       >
-        <p>
-          Your organization has already submitted {this.state.reportType === 'exclusion' ? 'an ' : 'a ' }
-          {this.state.reportType} report for the {this.state.selectedComplianceYear} compliance period.
-          Are you trying to provide new or updated information to the
-          Government of British Columbia?
-        </p>
-        <p>
-          If yes, please create a supplemental report using the
-          &quot;Create Supplemental Report&quot; button located within the existing report.
-        </p>
-        <p>
-          If not, you can create another report for internal use but you will not be permitted
-          to submit it to government. Do you want to create a new report?
-        </p>
+        {REPORT_CREATION_ENABLED ? (
+          <>
+            <p>
+              Your organization has already submitted {this.state.reportType === 'exclusion' ? 'an ' : 'a ' }
+              {this.state.reportType} report for the {this.state.selectedComplianceYear} compliance period.
+              Are you trying to provide new or updated information to the
+              Government of British Columbia?
+            </p>
+            <p>
+              If yes, please contact the LCFS team for assistance as
+              supplemental report creation is currently unavailable.
+            </p>
+            <p>
+              If not, you can create another report for internal use but you will not be permitted
+              to submit it to government. Do you want to create a new report?
+            </p>
+          </>
+        ) : (
+          <p>{Lang.MSG_REPORT_CREATION_DISABLED}</p>
+        )}
       </CallableModal>
     ])
   }
@@ -237,9 +255,7 @@ ComplianceReportingContainer.propTypes = {
       PropTypes.shape()
     ])
   }),
-  createComplianceReport: PropTypes.func.isRequired,
   getOrganizations: PropTypes.func.isRequired,
-  createExclusionReport: PropTypes.func.isRequired,
   exclusionReports: PropTypes.shape({
     isCreating: PropTypes.bool,
     success: PropTypes.bool,
@@ -258,6 +274,8 @@ ComplianceReportingContainer.propTypes = {
       PropTypes.shape()
     ])
   }),
+  createComplianceReport: PropTypes.func.isRequired,
+  createExclusionReport: PropTypes.func.isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
@@ -297,10 +315,10 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  createComplianceReport: complianceReporting.create,
-  createExclusionReport: exclusionReports.create,
   getCompliancePeriods,
   getComplianceReports: complianceReporting.findPaginated,
+  createComplianceReport: complianceReporting.create,
+  createExclusionReport: exclusionReports.create,
   getOrganizations,
   saveTableState
 }
