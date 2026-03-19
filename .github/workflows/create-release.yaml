@@ -11,16 +11,16 @@ jobs:
     env:
       releasename: ${{ github.event.pull_request.head.ref }}    
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6.0.2
       - name: Replace release name
-        uses: mad9000/actions-find-and-replace-string@4
+        uses: mad9000/actions-find-and-replace-string@5
         id: newereleasename
         with:
           source: ${{ github.event.pull_request.head.ref }}
           find: 'release-'
           replace: 'v'
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.6.1
         with:
           name: ${{ steps.newereleasename.outputs.value }}
           tag_name: ${{ steps.newereleasename.outputs.value }}
