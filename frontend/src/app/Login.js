@@ -50,17 +50,6 @@ class Login extends React.Component {
               <div className="oidc">
                 <button
                   type="button"
-                  onClick={() => login(IDENTITY_PROVIDERS.BCEID_BUSINESS)}
-                  id="link-bceid"
-                  className="button"
-                >
-                  <span className="text"> Login with </span>
-                  <span className="display-name"> BCeID </span>
-                </button>
-              </div>
-              <div className="oidc">
-                <button
-                  type="button"
                   onClick={() => login(IDENTITY_PROVIDERS.IDIR)}
                   id="link-idir"
                   className="button"
