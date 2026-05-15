@@ -1,4 +1,4 @@
-FROM artifacts.developer.gov.bc.ca/docker-remote/golang:1.19
+FROM artifacts.developer.gov.bc.ca/docker-remote/golang:1.24
 
 WORKDIR /usr/src/app
 
