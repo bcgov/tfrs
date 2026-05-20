@@ -19,7 +19,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from django.conf.urls import url, include
+from django.urls import include, re_path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
@@ -138,8 +138,8 @@ if EXCLUSION_REPORTS_API['ENABLED'] or TESTING:
 
 urlpatterns = [
     # Swagger documentation
-    url(r'^doc/', include_docs_urls(title='TFRS API Documentation')),
-    url(r'^', include(ROUTER.urls))
+    re_path(r'^doc/', include_docs_urls(title='TFRS API Documentation')),
+    re_path(r'^', include(ROUTER.urls))
 ]
 
 urlpatterns += ROUTER.urls

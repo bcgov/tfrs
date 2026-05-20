@@ -35,13 +35,11 @@ class PatchedField(Field):
     _db_comment = None
 
     def __init__(self, *args, **kwargs):
-        """Strip the db_comment kwarg (if any) and delegate to super"""
+        """Delegate to super; Django 4.2+ accepts db_comment natively and our
+        setter routes the value into self._db_comment for the property getter
+        below to read."""
 
         self._db_comment = None
-
-        if 'db_comment' in kwargs:
-            self._db_comment = kwargs['db_comment']
-            del kwargs['db_comment']
 
         super().__init__(*args, **kwargs)
 
@@ -76,6 +74,13 @@ class PatchedField(Field):
                 return None
 
         return self._db_comment
+
+    @db_comment.setter
+    def db_comment(self, value):
+        """Receive db_comment assignments from Django 4.2+ Field.__init__
+        (which does ``self.db_comment = db_comment``) and store the raw
+        value for the getter to format."""
+        self._db_comment = value
 
 
 def patch_fields():
