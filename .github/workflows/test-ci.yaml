@@ -92,7 +92,7 @@ jobs:
         uses: trstringer/manual-approval@v1.12.0
         with:
           secret: ${{ github.TOKEN }}
-          approvers: AlexZorkin,kuanfandevops,prv-proton,JulianForeman,kevin-hashimoto,dhaselhan
+          approvers: AlexZorkin,kuanfandevops,prv-proton,kevin-hashimoto
           minimum-approvals: 1
           issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Test Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}"
 
