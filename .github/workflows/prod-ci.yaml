@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Set up cache for OpenShift CLI
         id: cache
-        uses: actions/cache@v4.2.0
+        uses: actions/cache@v5.0.4
         with:
           path: /usr/local/bin/oc # Path where the `oc` binary will be installed
           key: oc-cli-${{ runner.os }}
@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - name: Restore oc command from Cache
-        uses: actions/cache@v4.2.0
+        uses: actions/cache@v5.0.4
         with:
           path: /usr/local/bin/oc
           key: oc-cli-${{ runner.os }}
@@ -86,7 +86,7 @@ jobs:
           echo "CURRENT_TIME=$(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
 
       - name: Ask for approval for TFRS Prod deployment
-        uses: trstringer/manual-approval@v1.6.0
+        uses: trstringer/manual-approval@v1.12.0
         with:
           secret: ${{ github.TOKEN }}
           approvers: AlexZorkin,kuanfandevops,prv-proton,kevin-hashimoto
@@ -94,14 +94,14 @@ jobs:
           issue-title: "TFRS ${{ env.BUILD_SUFFIX }} Prod Deployment at ${{ steps.get-current-time.outputs.CURRENT_TIME }}"
 
       - name: Checkout Manifest repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v6.0.2
         with:
           repository: bcgov-c/tenant-gitops-0ab226
           ref: main
           ssh-key: ${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}
 
       - name: Update tags
-        uses: mikefarah/yq@v4.40.5
+        uses: mikefarah/yq@v4.52.4
         with:
           cmd: |
             yq -i '.image.tag = "${{ env.BUILD_SUFFIX }}"' tfrs/charts/backend/values-prod.yaml
@@ -121,7 +121,7 @@ jobs:
           git push
 
       - name: Restore oc command from Cache
-        uses: actions/cache@v4.2.0
+        uses: actions/cache@v5.0.4
         with:
           path: /usr/local/bin/oc
           key: oc-cli-${{ runner.os }}

@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Loading from '../../app/components/Loading'
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting'
 import PERMISSIONS_COMPLIANCE_REPORT from '../../constants/permissions/ComplianceReport'
+import * as Lang from '../../constants/langEnUs'
+import { REPORT_CREATION_ENABLED } from '../../constants/featureFlags'
 import { useNavigate } from 'react-router'
 
 const ComplianceReportsBCEID = (props) => {
@@ -117,15 +118,21 @@ const ComplianceReportsBCEID = (props) => {
       {props.loggedInUser.hasPermission(
         PERMISSIONS_COMPLIANCE_REPORT.MANAGE
       ) && (
-        <div className="add-button">
-          <FontAwesomeIcon icon="play" />{' '}
-          <button
-            onClick={() => navigate(COMPLIANCE_REPORTING.LIST)}
-            type="button"
-          >
-            Start a new compliance report
-          </button>
-        </div>
+        REPORT_CREATION_ENABLED ? (
+          <div className="add-button">
+            <FontAwesomeIcon icon="play" />{' '}
+            <button
+              onClick={() => navigate(COMPLIANCE_REPORTING.LIST)}
+              type="button"
+            >
+              Start a new compliance report
+            </button>
+          </div>
+        ) : (
+          <div className="alert alert-info creation-disabled-message">
+            {Lang.MSG_REPORT_CREATION_DISABLED}
+          </div>
+        )
       )}
     </div>
   )
