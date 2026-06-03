@@ -1,5 +1,5 @@
 import { put, takeLatest, delay } from 'redux-saga/effects'
-import { getNotifications, getNotificationsCount } from '../actions/notificationActions'
+import { getNotifications } from '../actions/notificationActions'
 import UserActionTypes from '../constants/actionTypes/Users'
 import NotificationActionTypes from '../constants/actionTypes/Notifications'
 
@@ -9,12 +9,11 @@ const TRIGGERING_ACTIONS = [
   NotificationActionTypes.SUCCESS_NOTIFICATIONS
 ]
 
+// Post-login unread-count poll disabled: notifications are a historical-only
+// feature, and a 500 from /api/notifications/count was tripping the global
+// error reducer and locking users out of the app entirely.
 function * fetchNotifications (store) {
   yield delay(1000) // debounce
-  if (store.getState().rootReducer.userRequest.isAuthenticated &&
-        store.getState().rootReducer.userRequest.loggedInUser?.id) {
-    yield put(getNotificationsCount())
-  }
 
   if (store.getState().rootReducer.notifications.onNotificationsPage) {
     yield put(getNotifications())

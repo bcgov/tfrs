@@ -1,14 +1,12 @@
-from django.conf.urls import url
-from django.urls import path, include
+from django.urls import include, path, re_path
 from django.contrib import admin
 # import debug_toolbar
 from . import views
-from django.urls import path
 
 urlpatterns = [
-    url(r'^$', views.blank),
-    url(r'^api/', include('api.urls')),
-    url(r'^health$', views.health),
-    url(r'^api_admin/', admin.site.urls),
+    re_path(r'^$', views.blank),
+    re_path(r'^api/', include('api.urls')),
+    re_path(r'^health$', views.health),
+    re_path(r'^api_admin/', admin.site.urls),
     # path('__debug__/', include(debug_toolbar.urls)),
 ]

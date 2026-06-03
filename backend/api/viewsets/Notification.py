@@ -149,19 +149,10 @@ class NotificationViewSet(AuditableMixin,
     @never_cache
     @action(detail=False, methods=['get'])
     def count(self, request):
-        user = self.request.user
-
-        count = NotificationMessage.objects.filter(
-            is_archived=False,
-            is_read=False,
-            user=user
-        ).count()
-
-        data = {
-            'unreadCount': count
-        }
-
-        return JsonResponse(data)
+        # Short-circuit to a stable 200: notifications are a historical-only
+        # feature and the live unread-count query was 500-ing in prod, which
+        # tripped the frontend's global error handler and locked users out.
+        return JsonResponse({'unreadCount': 0})
 
     @never_cache
     def list(self, request, *args, **kwargs):
