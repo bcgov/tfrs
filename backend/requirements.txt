@@ -8,7 +8,7 @@ charset-normalizer==2.1.1
 coreapi==2.3.3
 coreschema==0.0.4
 coverage==6.5.0
-cryptography==46.0.7
+cryptography==48.0.1
 Django==4.2.30
 django-celery-beat==2.5.0
 django-cors-headers==3.10.1
