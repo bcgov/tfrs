@@ -81,12 +81,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build tfrs Backend
         run: |
@@ -122,12 +119,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build TFRS Frontend
         run: |
@@ -163,12 +157,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build TFRS scan-coordinator
         run: |
@@ -204,12 +195,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build TFRS Celery
         run: |
@@ -245,12 +233,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build TFRS scan-handler
         run: |
@@ -286,12 +271,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Build TFRS Notification Server
         run: |
@@ -358,12 +340,9 @@ jobs:
           key: oc-cli-${{ runner.os }}
 
       - name: Log in to Openshift
-        uses: redhat-actions/oc-login@v1.3
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          insecure_skip_tls_verify: true
-          namespace: ${{ env.TOOLS_NAMESPACE }}
+        run: |
+          oc login --server="${{ secrets.OPENSHIFT_SERVER }}" --token="${{ secrets.OPENSHIFT_TOKEN }}" --insecure-skip-tls-verify=true
+          oc project "${{ env.TOOLS_NAMESPACE }}"
 
       - name: Tag and deploy to Dev
         run: |
