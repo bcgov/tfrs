@@ -1,0 +1,78 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: tfrs-minio
+  namespace: 0ab226-prod
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: tfrs-minio-prod
+  template:
+    metadata:
+      labels:
+        name: tfrs-minio-prod
+    spec:
+      volumes:
+        - name: minio-data
+          persistentVolumeClaim:
+            claimName: tfrs-minio-prod
+      containers:
+        - resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+                - mkdir -p /data/tfrs
+            initialDelaySeconds: 25
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: minio
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 35
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-prod
+                  key: MINIO_ACCESS_KEY
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tfrs-minio-prod
+                  key: MINIO_SECRET_KEY
+            - name: MINIO_CONFIG_DIR
+              value: /tmp
+            - name: MINIO_DATA_DIR
+              value: /data
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: minio-data
+              mountPath: /data
+          terminationMessagePolicy: File
+          image: 'image-registry.openshift-image-registry.svc:5000/0ab226-tools/minio@sha256:03cabbe69e2887b7829e0c74a5f8e68ccba8ed33547d029470e672a2f9b3749a'
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+
